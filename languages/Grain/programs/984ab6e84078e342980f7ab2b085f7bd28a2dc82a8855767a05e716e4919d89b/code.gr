@@ -1,0 +1,36 @@
+module BinaryTree
+
+enum Tree<a> {
+  Empty,
+  Node(a, Tree<a>, Tree<a>)
+}
+
+let rec insert = (value, tree) => {
+  match (tree) {
+    Empty => Node(value, Empty, Empty),
+    Node(val, left, right) => {
+      if (value < val) {
+        Node(val, insert(value, left), right)
+      } else if (value > val) {
+        Node(val, left, insert(value, right))
+      } else {
+        tree
+      }
+    }
+  }
+}
+
+let rec contains = (value, tree) => {
+  match (tree) {
+    Empty => false,
+    Node(val, left, right) => {
+      if (value == val) {
+        true
+      } else if (value < val) {
+        contains(value, left)
+      } else {
+        contains(value, right)
+      }
+    }
+  }
+}

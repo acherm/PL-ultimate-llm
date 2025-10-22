@@ -6,12 +6,14 @@ One "turn":
 - Pick a model from the pool
 - Show it the current PL list
 - Ask for ONE new language + ONE real program (JSON)
+- Prefer OpenRouter Structured Outputs (json_schema) when model supports it
+- Fallbacks: json_object -> no json mode -> model failover
 - Validate + coerce common variants
 - Write contribution to repo
 - Make ONE git commit with trailers (List-Digest, Model, Temperature)
-- Log the entire session to logs/turn-YYYYMMDD.jsonl
+- Log the entire session to logs/turn-YYYYMMDD.jsonl (if logger.py exists)
 
-Dependencies: pydantic, requests, pyyaml
+Deps: pydantic, requests, pyyaml
 """
 
 import os
@@ -28,15 +30,14 @@ import yaml
 from schema import Proposal
 from templates import SYSTEM, USER
 from util import read_pl_list
-from contribute import write_contribution, list_digest  # reuse existing functions
+from contribute import write_contribution, list_digest  # writing + digest
 
-# -------- Optional logger (graceful fallback if logger.py not present) --------
+# ---------- optional logger (no-op if missing) ----------
 try:
     from logger import write_event  # type: ignore
 except Exception:  # pragma: no cover
 
     def write_event(event: Dict[str, Any], *, suffix: str = "turn") -> None:
-        # no-op logger
         pass
 
 
@@ -45,7 +46,7 @@ DATA = ROOT / "data"
 TOOLS = ROOT / "tools"
 CONFIG = TOOLS / "config.yaml"
 
-# -------- Coercion helpers to tolerate minor model key-mismatches --------
+# ---------- coercion helpers ----------
 COMMON_EXT = {
     "python": ".py",
     "rust": ".rs",
@@ -66,6 +67,17 @@ COMMON_EXT = {
     "lua": ".lua",
     "kotlin": ".kt",
     "swift": ".swift",
+    "csharp": ".cs",
+    "c#": ".cs",
+    "julia": ".jl",
+    "elixir": ".exs",
+    "erlang": ".erl",
+    "nim": ".nim",
+    "zig": ".zig",
+    "fortran": ".f90",
+    "matlab": ".m",
+    "wolfram": ".wl",
+    "j": ".ijs",
 }
 
 
@@ -95,61 +107,142 @@ def infer_ext(lang_name: str, origin_url: str) -> Optional[str]:
         ".kt",
         ".swift",
         ".cs",
+        ".jl",
+        ".ex",
+        ".exs",
+        ".erl",
+        ".nim",
+        ".zig",
+        ".f90",
+        ".m",
+        ".wl",
+        ".ijs",
     }:
         if origin_url.lower().endswith(ext):
             return ext
     return None
 
 
-# tools/turn.py (inside coerce_proposal_shape)
 def coerce_proposal_shape(raw_json_str: str) -> dict:
+    """Coerce common model mistakes into our exact schema keys."""
     obj = json.loads(raw_json_str)
+
+    # language
     lang = obj.get("language", {}) or {}
     if "aliases" not in lang or not isinstance(lang.get("aliases"), list):
         lang["aliases"] = []
     obj["language"] = lang
 
+    # program
     prog = obj.get("program", {}) or {}
 
+    # name -> title
     if "title" not in prog and "name" in prog:
         prog["title"] = prog.pop("name")
 
-    # Map common alt keys to filename_ext
+    # map alt keys to filename_ext
     if "filename_ext" not in prog:
         for k in ("ext", "extension", "file_extension", "suffix"):
             if k in prog:
                 prog["filename_ext"] = prog.pop(k)
                 break
 
-    # If missing or malformed, infer or normalize to start with "."
+    # ensure extension starts with "."
     ext = str(prog.get("filename_ext", "")).strip()
     if not ext or not ext.startswith("."):
         guessed = infer_ext(lang.get("name", ""), prog.get("origin_url", "") or "")
         if guessed:
             ext = guessed
-        elif ext:  # we had something like "jl" -> ".jl"
+        elif ext:
             ext = "." + ext.lstrip(".")
         else:
-            ext = ".txt"  # last-resort safe default (should be rare)
+            ext = ".txt"  # last-resort safe default
     prog["filename_ext"] = ext
 
     obj["program"] = prog
     return obj
 
 
-# -------- Model selection & prompt building --------
+# ---------- model support detection ----------
+def _model_supports_json_object(model: str) -> bool:
+    m = model.lower()
+    # good: OpenAI, Llama, Mistral, Qwen, DeepSeek
+    if any(
+        m.startswith(p)
+        for p in ("openai/", "meta-llama/", "mistralai/", "qwen/", "deepseek/")
+    ):
+        return True
+    # generally not via OpenRouter: Gemini (google/)
+    if m.startswith("google/") or "gemini" in m:
+        return False
+    return False
+
+
+def _model_supports_json_schema(model: str) -> bool:
+    m = model.lower()
+    # OpenAI + some others accept json_schema structured outputs on OpenRouter
+    if any(
+        m.startswith(p)
+        for p in ("openai/", "meta-llama/", "mistralai/", "qwen/", "deepseek/")
+    ):
+        return True
+    # conservative: not Gemini via OpenRouter
+    if m.startswith("google/") or "gemini" in m:
+        return False
+    return False
+
+
 def pick_model(cfg: dict) -> str:
     return random.choice(cfg["models_pool"])
 
 
-def build_language_list(pl_names, max_items=2000, max_chars=12000) -> str:
+def build_language_list(pl_names, max_items=2000, max_chars=8000) -> str:
     joined = "\n".join(pl_names)
     if len(joined) > max_chars:
         return "\n".join(pl_names[:max_items])
     return joined
 
 
-# -------- OpenRouter call with logging --------
+# ---------- JSON schema for Structured Outputs ----------
+def proposal_json_schema() -> dict:
+    """JSON Schema matching our Proposal model."""
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "language": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "aliases": {"type": "array", "items": {"type": "string"}},
+                    "evidence_url": {"type": "string", "format": "uri"},
+                },
+                "required": ["name", "aliases", "evidence_url"],
+            },
+            "program": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "title": {"type": "string", "minLength": 1},
+                    "origin_url": {"type": "string", "format": "uri"},
+                    "filename_ext": {"type": "string", "minLength": 1},
+                    "code": {"type": "string", "minLength": 1},
+                    "license_guess": {"type": ["string", "null"]},
+                },
+                "required": ["title", "origin_url", "filename_ext", "code"],
+            },
+        },
+        "required": ["language", "program"],
+    }
+
+
+# ---------- OpenRouter call with Structured Outputs & fallbacks ----------
+def _choose_fallback(cfg: dict, exclude: set[str]) -> Optional[str]:
+    c = [m for m in cfg["models_pool"] if m not in exclude]
+    return random.choice(c) if c else None
+
+
 def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str):
     api_key = os.environ.get(cfg["openrouter"]["api_key_env"])
     if not api_key:
@@ -158,77 +251,203 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
         )
 
     url = cfg["openrouter"]["base_url"]
-    payload = {
-        "model": model,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
-        ],
-        "response_format": {"type": "json_object"},
-        "temperature": 0.4,  # tweak here; it will be logged & committed
-    }
+
+    def payload(mode: str) -> dict:
+        """
+        mode: 'schema' | 'json' | 'none'
+        """
+        p = {
+            "model": model,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": 0.4,
+            "max_tokens": 1200,
+        }
+        if mode == "schema":
+            p["response_format"] = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "proposal",
+                    "strict": True,
+                    "schema": proposal_json_schema(),
+                },
+            }
+        elif mode == "json":
+            p["response_format"] = {"type": "json_object"}
+        return p
+
     headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
+        "X-Title": "PL-ultimate-llm",
+        "HTTP-Referer": "http://localhost",  # change to your site if you have one
     }
 
-    t0 = time.time()
-    r = requests.post(url, headers=headers, json=payload, timeout=120)
-    dt = time.time() - t0
+    tried: set[str] = set()
+    attempt = 0
+    backoff = 1.5
 
-    req_id = r.headers.get("x-request-id") or r.headers.get("X-Request-Id")
+    # choose best initial mode for this model
+    if _model_supports_json_schema(model):
+        modes = ["schema", "json", "none"]
+    elif _model_supports_json_object(model):
+        modes = ["json", "none"]
+    else:
+        modes = ["none"]
 
-    write_event(
-        {
-            "kind": "openrouter.request",
-            "model": model,
-            "temperature": payload["temperature"],
-            "url": url,
-            "status_code": r.status_code,
-            "latency_s": round(dt, 3),
-            "request_headers": {"Content-Type": "application/json"},
-            "request_payload": payload,  # contains prompts
-            "response_headers": dict(r.headers),
-            "response_body_raw": r.text,
-            "openrouter_request_id": req_id,
-        }
-    )
+    mode_index = 0
 
-    r.raise_for_status()
-    content = r.json()["choices"][0]["message"]["content"]
+    while True:
+        attempt += 1
+        use_mode = modes[mode_index]
+        pl = payload(use_mode)
 
-    write_event(
-        {
-            "kind": "openrouter.content",
-            "model": model,
-            "temperature": payload["temperature"],
-            "content": content,
-        }
-    )
+        t0 = time.time()
+        r = requests.post(url, headers=headers, json=pl, timeout=120)
+        dt = time.time() - t0
 
-    return content, payload["temperature"], model
+        req_id = r.headers.get("x-request-id") or r.headers.get("X-Request-Id")
+        write_event(
+            {
+                "kind": "openrouter.request",
+                "attempt": attempt,
+                "model": model,
+                "temperature": pl["temperature"],
+                "mode": use_mode,
+                "status_code": r.status_code,
+                "latency_s": round(dt, 3),
+                "request_payload_meta": {
+                    "has_response_format": "response_format" in pl
+                },
+                "response_body_raw": r.text,
+                "openrouter_request_id": req_id,
+            }
+        )
+
+        if r.ok:
+            content = r.json()["choices"][0]["message"]["content"]
+            write_event(
+                {
+                    "kind": "openrouter.content",
+                    "model": model,
+                    "temperature": pl["temperature"],
+                    "mode": use_mode,
+                    "content": content,
+                }
+            )
+            return content, pl["temperature"], model
+
+        status = r.status_code
+        try:
+            body = r.json()
+        except Exception:
+            body = {"text": r.text}
+        msg = (
+            body.get("error") or body.get("message") or body.get("text") or ""
+        ).lower()
+
+        # 400: try next mode (schema -> json -> none). If exhausted, failover model.
+        if status == 400:
+            if mode_index + 1 < len(modes):
+                write_event(
+                    {
+                        "kind": "openrouter.retry",
+                        "reason": "400_next_mode",
+                        "from": use_mode,
+                        "to": modes[mode_index + 1],
+                        "model": model,
+                        "msg": msg,
+                    }
+                )
+                mode_index += 1
+                continue
+            # failover
+            tried.add(model)
+            fb = _choose_fallback(cfg, tried)
+            if fb:
+                write_event(
+                    {
+                        "kind": "openrouter.failover",
+                        "from_model": model,
+                        "to_model": fb,
+                        "reason": "400_all_modes_failed",
+                        "msg": msg,
+                    }
+                )
+                model = fb
+                # recompute modes for the fallback
+                if _model_supports_json_schema(model):
+                    modes = ["schema", "json", "none"]
+                elif _model_supports_json_object(model):
+                    modes = ["json", "none"]
+                else:
+                    modes = ["none"]
+                mode_index = 0
+                continue
+            r.raise_for_status()
+
+        # rate limits / transient
+        if status in (429, 500, 502, 503, 504):
+            write_event(
+                {
+                    "kind": "openrouter.backoff",
+                    "model": model,
+                    "status": status,
+                    "sleep_s": round(backoff, 1),
+                    "msg": msg,
+                }
+            )
+            time.sleep(backoff)
+            backoff = min(60, backoff * 1.8)
+            continue
+
+        # other errors: try one failover
+        tried.add(model)
+        fb = _choose_fallback(cfg, tried)
+        if fb:
+            write_event(
+                {
+                    "kind": "openrouter.failover",
+                    "from_model": model,
+                    "to_model": fb,
+                    "reason": f"status_{status}",
+                    "msg": msg,
+                }
+            )
+            model = fb
+            if _model_supports_json_schema(model):
+                modes = ["schema", "json", "none"]
+            elif _model_supports_json_object(model):
+                modes = ["json", "none"]
+            else:
+                modes = ["none"]
+            mode_index = 0
+            continue
+
+        r.raise_for_status()
 
 
-# -------- Main turn logic --------
+# ---------- main turn ----------
 def main():
     cfg = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
     model = pick_model(cfg)
 
-    # Read current state for context + digest we will record
+    # current PL list + digest
     pl_names = read_pl_list(str(DATA / "pl_list.txt"))
     digest_before = list_digest()
 
     user_prompt = USER.format(language_list=build_language_list(pl_names))
 
-    # 1st attempt
+    # attempt
     raw, used_temp, used_model = call_openrouter(cfg, SYSTEM, user_prompt, model)
 
-    # Validate strictly, then with a coercion pass if needed
+    # strict validate -> coerce -> strict retry
     coerced_obj = None
     try:
         prop = Proposal.model_validate_json(raw)
-    except Exception as e1:
-        # Coerce common mistakes once
+    except Exception:
         try:
             coerced_obj = coerce_proposal_shape(raw)
             prop = Proposal.model_validate(coerced_obj)
@@ -243,7 +462,6 @@ def main():
                     "repo_list_digest": digest_before,
                 }
             )
-            # Strict reprompt
             strict_user = (
                 user_prompt
                 + "\nWARNING: Your previous output was invalid JSON. Return ONLY valid JSON, with EXACT keys!"
@@ -251,7 +469,6 @@ def main():
             raw2, used_temp, used_model = call_openrouter(
                 cfg, SYSTEM, strict_user, model
             )
-            # Final attempt with coercion
             try:
                 coerced_obj2 = coerce_proposal_shape(raw2)
                 prop = Proposal.model_validate(coerced_obj2)
@@ -268,7 +485,7 @@ def main():
                 )
                 raise
 
-    # Membership check: must be new
+    # must be a NEW language
     existing = {n.lower() for n in pl_names}
     if prop.language.name.lower() in existing:
         write_event(
@@ -283,7 +500,7 @@ def main():
         )
         raise SystemExit(f"LLM proposed existing language: {prop.language.name}")
 
-    # Accept: write files
+    # accept + write files
     write_event(
         {
             "kind": "proposal.accepted",
@@ -296,7 +513,7 @@ def main():
 
     sha = write_contribution(prop)
 
-    # Create ONE commit (include trailers for audit)
+    # one commit with trailers
     commit_msg = (
         f"turn: add {prop.language.name} (+1 program)\n\n"
         f"List-Digest: {list_digest()}\n"

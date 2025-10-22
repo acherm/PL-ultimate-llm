@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import argparse, json, os, subprocess, sys, time
-from datetime import datetime, timedelta
 from pathlib import Path
+from datetime import datetime, timedelta, UTC  # add UTC
 
 ROOT = Path(__file__).resolve().parents[1]
 LOGS = ROOT / "logs"
@@ -13,8 +13,9 @@ LOGS.mkdir(exist_ok=True)
 
 
 def log_event(ev: dict, suffix="loop"):
-    p = LOGS / f"{suffix}-{datetime.utcnow():%Y%m%d}.jsonl"
-    ev = {"ts": datetime.utcnow().isoformat() + "Z", **ev}
+    now = datetime.now(UTC)
+    p = LOGS / f"{suffix}-{now:%Y%m%d}.jsonl"
+    ev = {"ts": now.isoformat(), **ev}  # already timezone-aware
     with p.open("a", encoding="utf-8") as f:
         f.write(json.dumps(ev, ensure_ascii=False) + "\n")
 
@@ -92,10 +93,11 @@ def main():
         print(f"[loop] lock error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    start = datetime.utcnow()
+    start = datetime.now(UTC)
     deadline = (
         start + timedelta(minutes=args.max_minutes) if args.max_minutes > 0 else None
     )
+
     successes = 0
     consecutive_fails = 0
     backoff = args.fail_backoff

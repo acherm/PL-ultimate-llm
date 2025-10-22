@@ -101,44 +101,37 @@ def infer_ext(lang_name: str, origin_url: str) -> Optional[str]:
     return None
 
 
+# tools/turn.py (inside coerce_proposal_shape)
 def coerce_proposal_shape(raw_json_str: str) -> dict:
-    """
-    Accept common variants from models and coerce to our exact schema keys.
-    - program.name -> program.title
-    - program.ext/extension/file_extension/suffix -> program.filename_ext
-    - infer filename_ext from lang or origin_url when missing
-    - ensure language.aliases exists (list)
-    """
     obj = json.loads(raw_json_str)
-
-    # language block
-    lang = obj.get("language", {})
-    if not isinstance(lang, dict):
-        lang = {}
+    lang = obj.get("language", {}) or {}
     if "aliases" not in lang or not isinstance(lang.get("aliases"), list):
         lang["aliases"] = []
     obj["language"] = lang
 
-    # program block
-    prog = obj.get("program", {})
-    if not isinstance(prog, dict):
-        prog = {}
+    prog = obj.get("program", {}) or {}
 
     if "title" not in prog and "name" in prog:
         prog["title"] = prog.pop("name")
 
+    # Map common alt keys to filename_ext
     if "filename_ext" not in prog:
         for k in ("ext", "extension", "file_extension", "suffix"):
             if k in prog:
                 prog["filename_ext"] = prog.pop(k)
                 break
 
-    if "filename_ext" not in prog or not str(prog.get("filename_ext", "")).startswith(
-        "."
-    ):
+    # If missing or malformed, infer or normalize to start with "."
+    ext = str(prog.get("filename_ext", "")).strip()
+    if not ext or not ext.startswith("."):
         guessed = infer_ext(lang.get("name", ""), prog.get("origin_url", "") or "")
         if guessed:
-            prog["filename_ext"] = guessed
+            ext = guessed
+        elif ext:  # we had something like "jl" -> ".jl"
+            ext = "." + ext.lstrip(".")
+        else:
+            ext = ".txt"  # last-resort safe default (should be rare)
+    prog["filename_ext"] = ext
 
     obj["program"] = prog
     return obj

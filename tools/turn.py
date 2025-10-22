@@ -246,7 +246,7 @@ def proposal_json_schema() -> dict:
                 "properties": {
                     "name": {"type": "string", "minLength": 1},
                     "aliases": {"type": "array", "items": {"type": "string"}},
-                    "evidence_url": {"type": "string", "format": "url"},
+                    "evidence_url": {"type": "string"},
                 },
                 "required": ["name", "aliases", "evidence_url"],
             },
@@ -255,7 +255,7 @@ def proposal_json_schema() -> dict:
                 "additionalProperties": False,
                 "properties": {
                     "title": {"type": "string", "minLength": 1},
-                    "origin_url": {"type": "string", "format": "url"},
+                    "origin_url": {"type": "string"},
                     "filename_ext": {"type": "string", "minLength": 1},
                     "code": {"type": "string", "minLength": 1},
                     "license_guess": {"type": ["string", "null"]},

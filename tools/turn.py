@@ -246,7 +246,7 @@ def proposal_json_schema() -> dict:
                 "properties": {
                     "name": {"type": "string", "minLength": 1},
                     "aliases": {"type": "array", "items": {"type": "string"}},
-                    "evidence_url": {"type": "string", "format": "uri"},
+                    "evidence_url": {"type": "string", "format": "url"},
                 },
                 "required": ["name", "aliases", "evidence_url"],
             },
@@ -255,7 +255,7 @@ def proposal_json_schema() -> dict:
                 "additionalProperties": False,
                 "properties": {
                     "title": {"type": "string", "minLength": 1},
-                    "origin_url": {"type": "string", "format": "uri"},
+                    "origin_url": {"type": "string", "format": "url"},
                     "filename_ext": {"type": "string", "minLength": 1},
                     "code": {"type": "string", "minLength": 1},
                     "license_guess": {"type": ["string", "null"]},
@@ -286,7 +286,7 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
                 {"role": "user", "content": user_prompt},
             ],
             "temperature": 0.4,
-            "max_tokens": 1200,
+            "max_tokens": 4000,
         }
         if mode == "schema":
             p["response_format"] = {

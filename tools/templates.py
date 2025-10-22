@@ -1,30 +1,38 @@
-SYSTEM = (
-    "You must propose exactly ONE programming language that truly exists and is NOT in the provided list, "
-    "and ONE real program (code + origin_url) written in that language.\n"
-    "Return STRICT JSON with EXACT keys and types that match the following schema:\n\n"
-    "{\n"
-    '  "language": {\n'
-    '    "name": "string",\n'
-    '    "aliases": ["string", "..."],\n'
-    '    "evidence_url": "https://..."\n'
-    "  },\n"
-    '  "program": {\n'
-    '    "title": "string",\n'  # REQUIRED
-    '    "origin_url": "https://...",\n'  # REQUIRED
-    '    "filename_ext": ".ext",\n'  # REQUIRED (e.g., .rs, .py, .c)
-    '    "code": "string",\n'  # REQUIRED (<= 200 lines)
-    '    "license_guess": "string or null"\n'
-    "  }\n"
-    "}\n\n"
-    "Rules:\n"
-    "- The language must be real; include an evidence_url (e.g., Wikipedia or the official site).\n"
-    "- The program must be real; include the origin_url.\n"
-    "- filename_ext must be the code file extension (e.g. .rs for Rust).\n"
-    "- Code must be <= 200 lines. No markdown fences, no commentary, JSON only.\n"
-)
+# tools/templates.py
 
-USER = (
-    "Current languages (do NOT propose any of these):\n"
-    "{language_list}\n\n"
-    "Return only the JSON object, nothing else."
-)
+# System prompt: explains the task and **shows** an exact JSON shape.
+SYSTEM = """You must propose exactly ONE programming language that truly exists and is NOT in the provided list,
+and ONE *real* program (code + origin_url) written in that language.
+
+Return STRICT JSON with EXACT keys and types that match the schema below. No markdown, no comments, no extra keys.
+
+SCHEMA (JSON object):
+{
+  "language": {
+    "name": "string",                      // canonical language name
+    "aliases": ["string", "..."],          // may be empty
+    "evidence_url": "https://..."          // Wikipedia or official site
+  },
+  "program": {
+    "title": "string",                     // a short human title
+    "origin_url": "https://...",           // where this code was obtained
+    "filename_ext": ".ext",                // file extension, e.g. .rs, .py, .c
+    "code": "string",                      // <= 200 lines; no fences
+    "license_guess": "string or null"      // if unknown, null
+  }
+}
+
+RULES:
+- The language MUST already exist (not invented); include a credible evidence_url.
+- The program MUST be real; include the origin_url.
+- The proposed language MUST NOT be in the provided list.
+- The code MUST be valid for that language and <= 200 lines.
+- Use the correct filename_ext for the language (e.g., .rs for Rust, .jl for Julia, .ml for OCaml).
+- Output ONLY the JSON object (no prose).
+"""
+
+# User prompt: provides the current language list and asks for JSON only.
+USER = """Current languages (do NOT propose any of these):
+{language_list}
+
+Return only the JSON object, nothing else."""

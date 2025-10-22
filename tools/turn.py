@@ -4,33 +4,33 @@
 """
 One "turn":
 - Pick a model from the pool
-- Show it the current PL list
-- Ask for ONE new language + ONE real program (JSON)
-- Prefer OpenRouter Structured Outputs (json_schema) when the model supports it
-- Fallbacks: json_schema -> json_object -> no JSON mode -> model failover
-- Validate + coerce common variants
-- Write contribution
-- Make ONE git commit with trailers (List-Digest, Model, Temperature)
-- Log the session to logs/turn-YYYYMMDD.jsonl if tools/logger.py exists
+- Show current PL list (names only)
+- Prefer Structured Outputs (json_schema) when supported; fallback chain otherwise
+- Parse robustly (strip fences), coerce common key errors
+- Validate: new language, ext<->language compatibility, non-trivial code
+- Write contribution and make ONE commit with trailers
+- Log attempts/errors if tools/logger.py exists
 
 Deps: pydantic, requests, pyyaml
 """
 
 import os
+import re
 import json
+import time
 import random
 import subprocess
 import sys
-import time
 from pathlib import Path
 from typing import Optional, Dict, Any
 
 import requests
 import yaml
+
 from schema import Proposal
 from templates import SYSTEM, USER
 from util import read_pl_list
-from contribute import write_contribution, list_digest  # writing + digest
+from contribute import write_contribution, list_digest
 
 # ---------- optional logger (no-op if missing) ----------
 try:
@@ -44,7 +44,39 @@ DATA = ROOT / "data"
 TOOLS = ROOT / "tools"
 CONFIG = TOOLS / "config.yaml"
 
-# ---------- coercion helpers ----------
+
+def _err_to_str(obj) -> str:
+    """Best-effort stringify OpenRouter error bodies."""
+    if obj is None:
+        return ""
+    if isinstance(obj, str):
+        return obj
+    try:
+        return json.dumps(obj, ensure_ascii=False)
+    except Exception:
+        return str(obj)
+
+# ---------- helpers: JSON extraction/coercion ----------
+def extract_json_str(s: str) -> str:
+    """
+    Extract a JSON object string from a model reply.
+    - Prefer fenced ```json ... ``` or ``` ... ```
+    - Else take the outermost { ... }
+    """
+    if not isinstance(s, str):
+        raise ValueError("Reply is not a string")
+
+    fence = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", s, flags=re.DOTALL | re.IGNORECASE)
+    if fence:
+        return fence.group(1).strip()
+
+    first = s.find("{")
+    last = s.rfind("}")
+    if first != -1 and last != -1 and last > first:
+        return s[first:last + 1].strip()
+
+    return s.strip()
+
 COMMON_EXT = {
     "python": ".py",
     "rust": ".rs",
@@ -78,7 +110,6 @@ COMMON_EXT = {
     "j": ".ijs",
 }
 
-
 def infer_ext(lang_name: str, origin_url: str) -> Optional[str]:
     ln = (lang_name or "").strip().lower()
     if ln in COMMON_EXT:
@@ -92,7 +123,6 @@ def infer_ext(lang_name: str, origin_url: str) -> Optional[str]:
         if origin_url.lower().endswith(ext):
             return ext
     return None
-
 
 def coerce_proposal_shape(raw_json_str: str) -> dict:
     """Coerce common model mistakes into our exact schema keys."""
@@ -111,7 +141,7 @@ def coerce_proposal_shape(raw_json_str: str) -> dict:
     if "title" not in prog and "name" in prog:
         prog["title"] = prog.pop("name")
 
-    # map alt keys to filename_ext
+    # alt keys -> filename_ext
     if "filename_ext" not in prog:
         for k in ("ext", "extension", "file_extension", "suffix"):
             if k in prog:
@@ -133,37 +163,71 @@ def coerce_proposal_shape(raw_json_str: str) -> dict:
     obj["program"] = prog
     return obj
 
+# ---------- gates: ext<->language & trivial code ----------
+EXT_ALLOW = {
+    ".rs": {"rust"},
+    ".py": {"python"},
+    ".c": {"c"},
+    ".cc": {"c++", "cpp"},
+    ".cpp": {"c++", "cpp"},
+    ".java": {"java"},
+    ".js": {"javascript"},
+    ".ts": {"typescript"},
+    ".go": {"go"},
+    ".ml": {"ocaml"},
+    ".hs": {"haskell"},
+    ".rb": {"ruby"},
+    ".pl": {"perl"},
+    ".php": {"php"},
+    ".scala": {"scala"},
+    ".r": {"r"},
+    ".lua": {"lua"},
+    ".kt": {"kotlin"},
+    ".swift": {"swift"},
+    ".cs": {"c#", "csharp"},
+    ".jl": {"julia"},
+    ".erl": {"erlang"},
+    ".ex": {"elixir"},
+    ".exs": {"elixir"},
+    ".nim": {"nim"},
+    ".zig": {"zig"},
+    ".f90": {"fortran"},
+    ".m": {"matlab"},
+    ".wl": {"wolfram"},
+    ".ijs": {"j"},
+    ".rex": {"rexx", "oorexx", "netrexx"},
+}
+
+MIN_CODE_LINES = 3
+
+def ext_language_compatible(lang_name: str, ext: str) -> bool:
+    ln = (lang_name or "").strip().lower()
+    ok = EXT_ALLOW.get(ext.lower())
+    return (ok is None) or (ln in ok)
+
+def is_trivial_code(lang_name: str, code: str) -> bool:
+    lines = [ln for ln in code.splitlines() if ln.strip()]
+    return len(lines) < MIN_CODE_LINES
 
 # ---------- model support detection ----------
 def _model_supports_json_object(model: str) -> bool:
     m = model.lower()
-    # generally good: OpenAI, Llama, Mistral, Qwen, DeepSeek via OpenRouter
-    if any(m.startswith(p) for p in (
-        "openai/", "meta-llama/", "mistralai/", "qwen/", "deepseek/"
-    )):
+    if any(m.startswith(p) for p in ("openai/", "meta-llama/", "mistralai/", "qwen/", "deepseek/")):
         return True
-    # generally not via OpenRouter: Gemini
     if m.startswith("google/") or "gemini" in m:
         return False
     return False
-
 
 def _model_supports_json_schema(model: str) -> bool:
     m = model.lower()
-    # OpenAI + several OSS routes accept json_schema structured outputs on OpenRouter
-    if any(m.startswith(p) for p in (
-        "openai/", "meta-llama/", "mistralai/", "qwen/", "deepseek/"
-    )):
+    if any(m.startswith(p) for p in ("openai/", "meta-llama/", "mistralai/", "qwen/", "deepseek/")):
         return True
-    # conservative: not Gemini via OpenRouter
     if m.startswith("google/") or "gemini" in m:
         return False
     return False
 
-
 def pick_model(cfg: dict) -> str:
     return random.choice(cfg["models_pool"])
-
 
 def build_language_list(pl_names, max_items=2000, max_chars=8000) -> str:
     joined = "\n".join(pl_names)
@@ -171,10 +235,7 @@ def build_language_list(pl_names, max_items=2000, max_chars=8000) -> str:
         return "\n".join(pl_names[:max_items])
     return joined
 
-
-# ---------- JSON schema for Structured Outputs ----------
 def proposal_json_schema() -> dict:
-    """JSON Schema matching our Proposal model."""
     return {
         "type": "object",
         "additionalProperties": False,
@@ -205,12 +266,10 @@ def proposal_json_schema() -> dict:
         "required": ["language", "program"],
     }
 
-
-# ---------- OpenRouter call with Structured Outputs & fallbacks ----------
+# ---------- OpenRouter call with SO + fallbacks ----------
 def _choose_fallback(cfg: dict, exclude: set[str]) -> Optional[str]:
     c = [m for m in cfg["models_pool"] if m not in exclude]
     return random.choice(c) if c else None
-
 
 def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str):
     api_key = os.environ.get(cfg["openrouter"]["api_key_env"])
@@ -220,9 +279,6 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
     url = cfg["openrouter"]["base_url"]
 
     def payload(mode: str) -> dict:
-        """
-        mode: 'schema' | 'json' | 'none'
-        """
         p = {
             "model": model,
             "messages": [
@@ -249,7 +305,7 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
         "X-Title": "PL-ultimate-llm",
-        "HTTP-Referer": "http://localhost",  # change to your site if you have one
+        "HTTP-Referer": "http://localhost",
         "Referer": "http://localhost",
     }
 
@@ -257,7 +313,6 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
     attempt = 0
     backoff = 1.5
 
-    # choose best initial mode for this model
     if _model_supports_json_schema(model):
         modes = ["schema", "json", "none"]
     elif _model_supports_json_object(model):
@@ -306,24 +361,24 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
             body = r.json()
         except Exception:
             body = {"text": r.text}
-        error_msg = body.get("error") or body.get("message") or body.get("text") or ""
-        msg = str(error_msg).lower()
-
-        # 400: try next mode (schema -> json -> none). If exhausted, failover model.
+        
+        # msg = (body.get("error") or body.get("message") or body.get("text") or "").lower()
+        raw_msg = _err_to_str(body.get("error") or body.get("message") or body.get("text") or "")
+        msg = raw_msg.lower()
+        
         if status == 400:
             if mode_index + 1 < len(modes):
-                write_event({"kind": "openrouter.retry", "reason": "400_next_mode", "from": use_mode,
-                             "to": modes[mode_index+1], "model": model, "msg": msg})
+                write_event({"kind": "openrouter.retry", "reason": "400_next_mode",
+                             "from": use_mode, "to": modes[mode_index + 1],
+                             "model": model, "msg": msg})
                 mode_index += 1
                 continue
-            # failover
             tried.add(model)
             fb = _choose_fallback(cfg, tried)
             if fb:
                 write_event({"kind": "openrouter.failover", "from_model": model, "to_model": fb,
                              "reason": "400_all_modes_failed", "msg": msg})
                 model = fb
-                # recompute modes for the fallback
                 if _model_supports_json_schema(model):
                     modes = ["schema", "json", "none"]
                 elif _model_supports_json_object(model):
@@ -334,7 +389,6 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
                 continue
             r.raise_for_status()
 
-        # rate limits / transient
         if status in (429, 500, 502, 503, 504):
             write_event({"kind": "openrouter.backoff", "model": model,
                          "status": status, "sleep_s": round(backoff, 1), "msg": msg})
@@ -342,7 +396,6 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
             backoff = min(60, backoff * 1.8)
             continue
 
-        # other errors: try one failover
         tried.add(model)
         fb = _choose_fallback(cfg, tried)
         if fb:
@@ -360,90 +413,106 @@ def call_openrouter(cfg: dict, system_prompt: str, user_prompt: str, model: str)
 
         r.raise_for_status()
 
+# ---------- turn-level retry with dynamic rejects ----------
+def build_user_prompt(pl_names: list[str], also_avoid: list[str] | None = None) -> str:
+    base = build_language_list(pl_names)
+    extra = ""
+    if also_avoid:
+        extra = "\n\nAdditionally, DO NOT propose any of these (rejected this turn):\n" + "\n".join(sorted(set(also_avoid)))
+    return USER.format(language_list=base) + extra
 
-# ---------- main turn ----------
 def main():
     cfg = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
-    model = pick_model(cfg)
+    model0 = pick_model(cfg)
 
-    # current PL list + digest
     pl_names = read_pl_list(str(DATA / "pl_list.txt"))
     digest_before = list_digest()
 
-    user_prompt = USER.format(language_list=build_language_list(pl_names))
+    rejects: list[str] = []
+    max_attempts = 5
+    used_model = model0
+    used_temp = 0.4
 
-    # attempt with structured outputs preference
-    raw, used_temp, used_model = call_openrouter(cfg, SYSTEM, user_prompt, model)
+    for attempt in range(1, max_attempts + 1):
+        user_prompt = build_user_prompt(pl_names, rejects)
 
-    # strict validate -> coerce -> strict retry
-    coerced_obj = None
-    try:
-        prop = Proposal.model_validate_json(raw)
-    except Exception:
+        raw, used_temp, used_model = call_openrouter(cfg, SYSTEM, user_prompt, used_model)
+
+        # Parse strictly -> cleaned -> coerce -> reprompt
         try:
-            coerced_obj = coerce_proposal_shape(raw)
-            prop = Proposal.model_validate(coerced_obj)
-        except Exception as e2:
-            write_event({
-                "kind": "validation.error",
-                "model": used_model,
-                "temperature": used_temp,
-                "error": f"{type(e2).__name__}: {e2}",
-                "raw": raw,
-                "repo_list_digest": digest_before,
-            })
-            strict_user = user_prompt + "\nWARNING: Your previous output was invalid JSON. Return ONLY valid JSON, with EXACT keys!"
-            raw2, used_temp, used_model = call_openrouter(cfg, SYSTEM, strict_user, model)
+            prop = Proposal.model_validate_json(raw)
+        except Exception:
+            cleaned = extract_json_str(raw)
             try:
-                coerced_obj2 = coerce_proposal_shape(raw2)
-                prop = Proposal.model_validate(coerced_obj2)
-            except Exception as e3:
-                write_event({
-                    "kind": "validation.fail",
-                    "model": used_model,
-                    "temperature": used_temp,
-                    "error": f"{type(e3).__name__}: {e3}",
-                    "raw": raw2,
-                    "repo_list_digest": digest_before,
-                })
-                raise
+                prop = Proposal.model_validate_json(cleaned)
+            except Exception:
+                try:
+                    prop = Proposal.model_validate(coerce_proposal_shape(cleaned))
+                except Exception as e2:
+                    write_event({
+                        "kind": "validation.error",
+                        "attempt": attempt,
+                        "model": used_model,
+                        "temperature": used_temp,
+                        "error": f"{type(e2).__name__}: {e2}",
+                        "raw": raw,
+                        "raw_cleaned": cleaned,
+                        "repo_list_digest": digest_before,
+                    })
+                    strict_user = user_prompt + "\nWARNING: Return ONLY a bare JSON object with EXACT keys. No markdown."
+                    raw2, used_temp, used_model = call_openrouter(cfg, SYSTEM, strict_user, used_model)
+                    cleaned2 = extract_json_str(raw2)
+                    try:
+                        prop = Proposal.model_validate_json(cleaned2)
+                    except Exception:
+                        prop = Proposal.model_validate(coerce_proposal_shape(cleaned2))
 
-    # must be a NEW language
-    existing = {n.lower() for n in pl_names}
-    if prop.language.name.lower() in existing:
+        # NEW: language must be new
+        existing = {n.lower() for n in pl_names}
+        if prop.language.name.lower() in existing:
+            rejects.append(prop.language.name)
+            write_event({"kind": "membership.reject", "attempt": attempt,
+                         "language": prop.language.name, "repo_list_digest": digest_before})
+            continue
+
+        # gates: ext compatibility + non-trivial code
+        if not ext_language_compatible(prop.language.name, prop.program.filename_ext):
+            write_event({"kind": "program.ext_mismatch", "attempt": attempt,
+                         "language": prop.language.name, "ext": prop.program.filename_ext})
+            rejects.append(prop.language.name)
+            continue
+
+        if is_trivial_code(prop.language.name, prop.program.code):
+            write_event({"kind": "program.too_trivial", "attempt": attempt,
+                         "language": prop.language.name, "title": prop.program.title})
+            rejects.append(prop.language.name)
+            continue
+
+        # accept and write
         write_event({
-            "kind": "membership.reject",
+            "kind": "proposal.accepted",
+            "attempt": attempt,
             "model": used_model,
             "temperature": used_temp,
-            "language": prop.language.name,
-            "reason": "already exists",
+            "proposal_json": prop.model_dump(mode="json"),
             "repo_list_digest": digest_before,
         })
-        raise SystemExit(f"LLM proposed existing language: {prop.language.name}")
 
-    # accept + write files
-    write_event({
-        "kind": "proposal.accepted",
-        "model": used_model,
-        "temperature": used_temp,
-        "proposal_json": prop.model_dump(mode="json"),
-        "repo_list_digest": digest_before,
-    })
+        sha = write_contribution(prop)
 
-    sha = write_contribution(prop)
+        commit_msg = (
+            f"turn: add {prop.language.name} (+1 program)\n\n"
+            f"List-Digest: {list_digest()}\n"
+            f"Model: {used_model}\n"
+            f"Temperature: {used_temp}\n"
+        )
+        subprocess.run(["git", "add", "-A"], check=True)
+        subprocess.run(["git", "commit", "-m", commit_msg], check=True)
 
-    # one commit with trailers
-    commit_msg = (
-        f"turn: add {prop.language.name} (+1 program)\n\n"
-        f"List-Digest: {list_digest()}\n"
-        f"Model: {used_model}\n"
-        f"Temperature: {used_temp}\n"
-    )
-    subprocess.run(["git", "add", "-A"], check=True)
-    subprocess.run(["git", "commit", "-m", commit_msg], check=True)
+        print(f"[turn] accepted: {prop.language.name} | {prop.program.title} | sha={sha}")
+        return  # success
 
-    print(f"[turn] accepted: {prop.language.name} | {prop.program.title} | sha={sha}")
-
+    raise SystemExit(f"No acceptable proposal after {max_attempts} attempts (rejects this turn: {', '.join(rejects)})")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,30 @@
+contract @"BasicWallet"(@init, return) = {
+  new balanceStore in {
+    match init {
+      Int => {
+        @"stdout"!("Initial balance is ${init}")
+        |
+        balanceStore!(init)
+        |
+        contract @[*return, "deposit"](@amount, depositReturnCh) = {
+          new resultCh in {
+            for (@balance <- balanceStore) {
+              match amount {
+                Int => {
+                  balanceStore!(balance + amount)
+                  |
+                  depositReturnCh!(true)
+                }
+                _ => {
+                  balanceStore!(balance)
+                  |
+                  depositReturnCh!(false)
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+maintenance:
+  title: Check HbA1c levels;;
+  mlmname: a1c_check;;
+  arden: version 2.5;;
+  version: 1.00;;
+  institution: Example Healthcare;;
+  author: John Smith;
+  specialist: ;;
+  date: 2017-01-01;;
+  validation: testing;;
+
+library:
+  purpose: Emits an alert when HbA1c is greater than 8%;
+  explanation: High HbA1c levels indicate poor glycemic control;
+  keywords: diabetes; HbA1c; alert;;
+  citations: ;;
+  links: ;;
+
+knowledge:
+  type: data_driven;;
+  data:
+    last_hba1c := read last ({HBA1C}); 
+    ;;
+  evoke: data_driven;;
+  logic:
+    if last_hba1c is not null and
+       last_hba1c > 8 then
+      alert_text := "HbA1c level is " || last_hba1c || "%";
+      return true;
+    endif;
+    return false;
+    ;;
+  action:
+    write alert_text;;

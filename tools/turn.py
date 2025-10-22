@@ -62,20 +62,30 @@ def extract_json_str(s: str) -> str:
     Extract a JSON object string from a model reply.
     - Prefer fenced ```json ... ``` or ``` ... ```
     - Else take the outermost { ... }
+    - Reject empty strings
     """
     if not isinstance(s, str):
         raise ValueError("Reply is not a string")
 
     fence = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", s, flags=re.DOTALL | re.IGNORECASE)
     if fence:
-        return fence.group(1).strip()
+        result = fence.group(1).strip()
+        if not result:
+            raise ValueError("Empty JSON found in fenced block")
+        return result
 
     first = s.find("{")
     last = s.rfind("}")
     if first != -1 and last != -1 and last > first:
-        return s[first:last + 1].strip()
+        result = s[first:last + 1].strip()
+        if not result:
+            raise ValueError("Empty JSON object found")
+        return result
 
-    return s.strip()
+    result = s.strip()
+    if not result:
+        raise ValueError("Empty response string")
+    return result
 
 COMMON_EXT = {
     "python": ".py",
@@ -246,7 +256,7 @@ def proposal_json_schema() -> dict:
                 "properties": {
                     "name": {"type": "string", "minLength": 1},
                     "aliases": {"type": "array", "items": {"type": "string"}},
-                    "evidence_url": {"type": "string"},
+                    "evidence_url": {"type": "string", "format": "uri"},
                 },
                 "required": ["name", "aliases", "evidence_url"],
             },
@@ -255,7 +265,7 @@ def proposal_json_schema() -> dict:
                 "additionalProperties": False,
                 "properties": {
                     "title": {"type": "string", "minLength": 1},
-                    "origin_url": {"type": "string"},
+                    "origin_url": {"type": "string", "format": "uri"},
                     "filename_ext": {"type": "string", "minLength": 1},
                     "code": {"type": "string", "minLength": 1},
                     "license_guess": {"type": ["string", "null"]},

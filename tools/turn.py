@@ -130,59 +130,59 @@ def extract_json_str(s: str) -> str:
     return result
 
 def _fix_common_json_issues(json_str: str) -> str:
-    """Fix common JSON issues like unterminated strings, unescaped quotes, etc."""
-    import re
-    
-    # First, try to fix unterminated strings by looking for patterns
-    # Handle cases where strings are not properly closed
-    lines = json_str.split('\n')
-    fixed_lines = []
-    in_multiline_string = False
-    string_start_line = -1
-    
-    for i, line in enumerate(lines):
-        if in_multiline_string:
-            # We're in a multiline string, look for the end
-            if '"' in line and not line.strip().endswith('\\'):
-                # Found the end of the string
-                in_multiline_string = False
-                fixed_lines.append(line)
+    """Best-effort fixes for common model JSON issues.
+    - Escapes raw newlines inside strings (\n)
+    - Escapes interior quotes inside strings (\") while keeping closing quote intact
+    """
+    result_chars: list[str] = []
+    in_string = False
+    escape_next = False
+    i = 0
+    n = len(json_str)
+
+    while i < n:
+        ch = json_str[i]
+
+        if escape_next:
+            result_chars.append(ch)
+            escape_next = False
+            i += 1
+            continue
+
+        if ch == "\\":
+            result_chars.append(ch)
+            escape_next = True
+            i += 1
+            continue
+
+        if ch == '"':
+            if not in_string:
+                in_string = True
+                result_chars.append(ch)
             else:
-                # Still in the string, add the line as-is
-                fixed_lines.append(line)
-        else:
-            # Check if this line starts a string that's not closed
-            quote_count = line.count('"')
-            if quote_count % 2 == 1 and not line.strip().endswith('\\'):
-                # Odd number of quotes, might be unterminated
-                if line.strip().endswith(','):
-                    # Try to close the string before the comma
-                    line = line.rstrip(',') + '",'
-                elif line.strip().endswith(':'):
-                    # This might be a key-value separator, close the string
-                    line = line + '"'
+                # Decide if this is a closing quote or interior quote
+                j = i + 1
+                while j < n and json_str[j] in (' ', '\t', '\r', '\n'):
+                    j += 1
+                if j >= n or json_str[j] in (',', '}', ']'):
+                    in_string = False
+                    result_chars.append(ch)
                 else:
-                    # Check if the next line might continue the string
-                    if i + 1 < len(lines) and not lines[i + 1].strip().startswith('"'):
-                        # Next line doesn't start with quote, close this string
-                        line = line + '"'
-                    else:
-                        # Next line might continue the string
-                        in_multiline_string = True
-                        string_start_line = i
-            fixed_lines.append(line)
-    
-    result = '\n'.join(fixed_lines)
-    
-    # Additional fixes for common issues
-    # Fix unescaped newlines in strings
-    result = re.sub(r'(?<!\\)"([^"]*)\n([^"]*)"', r'"\1\\n\2"', result)
-    
-    # Fix unescaped quotes in strings (basic attempt)
-    # This is tricky, so we'll be conservative
-    result = re.sub(r'(?<!\\)"([^"]*)"([^"]*)"([^"]*)"', r'"\1\\"\2\\"\3"', result)
-    
-    return result
+                    # Interior quote -> escape it
+                    result_chars.append('\\')
+                    result_chars.append(ch)
+            i += 1
+            continue
+
+        if in_string and ch in ('\n', '\r'):
+            result_chars.append('\\n')
+            i += 1
+            continue
+
+        result_chars.append(ch)
+        i += 1
+
+    return "".join(result_chars)
 
 COMMON_EXT = {
     "python": ".py",

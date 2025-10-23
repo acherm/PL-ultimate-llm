@@ -63,10 +63,12 @@ def extract_json_str(s: str) -> str:
     - Prefer fenced ```json ... ``` or ``` ... ```
     - Else take the outermost { ... }
     - Reject empty strings
+    - Handle unterminated strings and malformed JSON
     """
     if not isinstance(s, str):
         raise ValueError("Reply is not a string")
 
+    # Try fenced blocks first
     fence = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", s, flags=re.DOTALL | re.IGNORECASE)
     if fence:
         result = fence.group(1).strip()
@@ -74,17 +76,112 @@ def extract_json_str(s: str) -> str:
             raise ValueError("Empty JSON found in fenced block")
         return result
 
+    # Find JSON object boundaries more carefully
     first = s.find("{")
-    last = s.rfind("}")
-    if first != -1 and last != -1 and last > first:
-        result = s[first:last + 1].strip()
-        if not result:
-            raise ValueError("Empty JSON object found")
-        return result
-
-    result = s.strip()
+    if first == -1:
+        raise ValueError("No JSON object found in response")
+    
+    # Find the matching closing brace by counting braces
+    brace_count = 0
+    last = -1
+    in_string = False
+    escape_next = False
+    
+    for i, char in enumerate(s[first:], first):
+        if escape_next:
+            escape_next = False
+            continue
+            
+        if char == '\\':
+            escape_next = True
+            continue
+            
+        if char == '"' and not escape_next:
+            in_string = not in_string
+            continue
+            
+        if not in_string:
+            if char == '{':
+                brace_count += 1
+            elif char == '}':
+                brace_count -= 1
+                if brace_count == 0:
+                    last = i
+                    break
+    
+    if last == -1 or last <= first:
+        raise ValueError("Unterminated JSON object")
+    
+    result = s[first:last + 1].strip()
     if not result:
-        raise ValueError("Empty response string")
+        raise ValueError("Empty JSON object found")
+    
+    # Try to validate the JSON before returning
+    try:
+        json.loads(result)
+    except json.JSONDecodeError as e:
+        # If JSON is malformed, try to fix common issues
+        result = _fix_common_json_issues(result)
+        try:
+            json.loads(result)
+        except json.JSONDecodeError:
+            raise ValueError(f"Invalid JSON: {e}")
+    
+    return result
+
+def _fix_common_json_issues(json_str: str) -> str:
+    """Fix common JSON issues like unterminated strings, unescaped quotes, etc."""
+    import re
+    
+    # First, try to fix unterminated strings by looking for patterns
+    # Handle cases where strings are not properly closed
+    lines = json_str.split('\n')
+    fixed_lines = []
+    in_multiline_string = False
+    string_start_line = -1
+    
+    for i, line in enumerate(lines):
+        if in_multiline_string:
+            # We're in a multiline string, look for the end
+            if '"' in line and not line.strip().endswith('\\'):
+                # Found the end of the string
+                in_multiline_string = False
+                fixed_lines.append(line)
+            else:
+                # Still in the string, add the line as-is
+                fixed_lines.append(line)
+        else:
+            # Check if this line starts a string that's not closed
+            quote_count = line.count('"')
+            if quote_count % 2 == 1 and not line.strip().endswith('\\'):
+                # Odd number of quotes, might be unterminated
+                if line.strip().endswith(','):
+                    # Try to close the string before the comma
+                    line = line.rstrip(',') + '",'
+                elif line.strip().endswith(':'):
+                    # This might be a key-value separator, close the string
+                    line = line + '"'
+                else:
+                    # Check if the next line might continue the string
+                    if i + 1 < len(lines) and not lines[i + 1].strip().startswith('"'):
+                        # Next line doesn't start with quote, close this string
+                        line = line + '"'
+                    else:
+                        # Next line might continue the string
+                        in_multiline_string = True
+                        string_start_line = i
+            fixed_lines.append(line)
+    
+    result = '\n'.join(fixed_lines)
+    
+    # Additional fixes for common issues
+    # Fix unescaped newlines in strings
+    result = re.sub(r'(?<!\\)"([^"]*)\n([^"]*)"', r'"\1\\n\2"', result)
+    
+    # Fix unescaped quotes in strings (basic attempt)
+    # This is tricky, so we'll be conservative
+    result = re.sub(r'(?<!\\)"([^"]*)"([^"]*)"([^"]*)"', r'"\1\\"\2\\"\3"', result)
+    
     return result
 
 COMMON_EXT = {
@@ -451,31 +548,102 @@ def main():
         # Parse strictly -> cleaned -> coerce -> reprompt
         try:
             prop = Proposal.model_validate_json(raw)
-        except Exception:
-            cleaned = extract_json_str(raw)
+        except Exception as e1:
+            write_event({
+                "kind": "validation.raw_failed",
+                "attempt": attempt,
+                "model": used_model,
+                "temperature": used_temp,
+                "error": f"{type(e1).__name__}: {e1}",
+                "raw_preview": raw[:500] + "..." if len(raw) > 500 else raw,
+            })
+            
+            try:
+                cleaned = extract_json_str(raw)
+                write_event({
+                    "kind": "validation.extracted",
+                    "attempt": attempt,
+                    "cleaned_preview": cleaned[:500] + "..." if len(cleaned) > 500 else cleaned,
+                })
+            except Exception as e2:
+                write_event({
+                    "kind": "validation.extraction_failed",
+                    "attempt": attempt,
+                    "model": used_model,
+                    "temperature": used_temp,
+                    "error": f"{type(e2).__name__}: {e2}",
+                    "raw_preview": raw[:500] + "..." if len(raw) > 500 else raw,
+                })
+                # Skip to next attempt if we can't even extract JSON
+                continue
+            
             try:
                 prop = Proposal.model_validate_json(cleaned)
-            except Exception:
+            except Exception as e3:
+                write_event({
+                    "kind": "validation.cleaned_failed",
+                    "attempt": attempt,
+                    "model": used_model,
+                    "temperature": used_temp,
+                    "error": f"{type(e3).__name__}: {e3}",
+                    "cleaned_preview": cleaned[:500] + "..." if len(cleaned) > 500 else cleaned,
+                })
+                
                 try:
                     prop = Proposal.model_validate(coerce_proposal_shape(cleaned))
-                except Exception as e2:
+                except Exception as e4:
                     write_event({
-                        "kind": "validation.error",
+                        "kind": "validation.coerce_failed",
                         "attempt": attempt,
                         "model": used_model,
                         "temperature": used_temp,
-                        "error": f"{type(e2).__name__}: {e2}",
+                        "error": f"{type(e4).__name__}: {e4}",
                         "raw": raw,
                         "raw_cleaned": cleaned,
                         "repo_list_digest": digest_before,
                     })
                     strict_user = user_prompt + "\nWARNING: Return ONLY a bare JSON object with EXACT keys. No markdown."
                     raw2, used_temp, used_model = call_openrouter(cfg, SYSTEM, strict_user, used_model)
-                    cleaned2 = extract_json_str(raw2)
+                    try:
+                        cleaned2 = extract_json_str(raw2)
+                    except Exception as e5:
+                        write_event({
+                            "kind": "validation.second_extraction_failed",
+                            "attempt": attempt,
+                            "model": used_model,
+                            "temperature": used_temp,
+                            "error": f"{type(e5).__name__}: {e5}",
+                            "raw2_preview": raw2[:500] + "..." if len(raw2) > 500 else raw2,
+                        })
+                        # Skip to next attempt if we can't extract JSON from second attempt
+                        continue
+                    
                     try:
                         prop = Proposal.model_validate_json(cleaned2)
-                    except Exception:
-                        prop = Proposal.model_validate(coerce_proposal_shape(cleaned2))
+                    except Exception as e6:
+                        write_event({
+                            "kind": "validation.second_cleaned_failed",
+                            "attempt": attempt,
+                            "model": used_model,
+                            "temperature": used_temp,
+                            "error": f"{type(e6).__name__}: {e6}",
+                            "cleaned2_preview": cleaned2[:500] + "..." if len(cleaned2) > 500 else cleaned2,
+                        })
+                        try:
+                            prop = Proposal.model_validate(coerce_proposal_shape(cleaned2))
+                        except Exception as e7:
+                            write_event({
+                                "kind": "validation.final_coerce_failed",
+                                "attempt": attempt,
+                                "model": used_model,
+                                "temperature": used_temp,
+                                "error": f"{type(e7).__name__}: {e7}",
+                                "raw2": raw2,
+                                "cleaned2": cleaned2,
+                                "repo_list_digest": digest_before,
+                            })
+                            # Skip to next attempt if all parsing methods fail
+                            continue
 
         # NEW: language must be new
         existing = {n.lower() for n in pl_names}

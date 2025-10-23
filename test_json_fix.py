@@ -5,6 +5,7 @@ Test script to verify JSON extraction improvements
 
 import sys
 import os
+import json
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'tools'))
 
 from turn import extract_json_str, _fix_common_json_issues
@@ -49,10 +50,7 @@ def test_json_extraction():
   },
   "program": {
     "title": "Hello World",
-    "code": "program HelloWorld;
-begin
-  writeln('Hello, World!');
-end."
+    "code": "program HelloWorld;\nbegin\n  writeln('Hello, World!');\nend."
   }
 }'''
     try:
@@ -61,6 +59,15 @@ end."
         print(f"  Extracted: {result3[:50]}...")
     except Exception as e:
         print(f"✗ Test 3 (unterminated string): FAILED - {e}")
+        try:
+            fixed3 = _fix_common_json_issues(test3)
+            json.loads(fixed3)
+            print("  After fix, JSON loads. Preview:")
+            print(fixed3[:120].replace('\n','\\n') + '...')
+        except Exception as efix:
+            print("  After fix, still invalid.")
+            print(f"  Preview: {fixed3[:120].replace('\n','\\n')}...")
+            print(f"  Error: {efix}")
     
     # Test case 4: Malformed JSON with unescaped quotes
     test4 = '''{
@@ -79,6 +86,15 @@ end."
         print(f"  Extracted: {result4[:50]}...")
     except Exception as e:
         print(f"✗ Test 4 (unescaped quotes): FAILED - {e}")
+        try:
+            fixed4 = _fix_common_json_issues(test4)
+            json.loads(fixed4)
+            print("  After fix, JSON loads. Preview:")
+            print(fixed4[:120].replace('\n','\\n') + '...')
+        except Exception as efix:
+            print("  After fix, still invalid.")
+            print(f"  Preview: {fixed4[:120].replace('\n','\\n')}...")
+            print(f"  Error: {efix}")
 
 if __name__ == "__main__":
     print("Testing JSON extraction improvements...")

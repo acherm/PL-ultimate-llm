@@ -164,7 +164,7 @@ def _fix_common_json_issues(json_str: str) -> str:
                 j = i + 1
                 while j < n and json_str[j] in (' ', '\t', '\r', '\n'):
                     j += 1
-                if j >= n or json_str[j] in (',', '}', ']'):
+                if j >= n or json_str[j] in (',', '}', ']', ':'):
                     in_string = False
                     result_chars.append(ch)
                 else:

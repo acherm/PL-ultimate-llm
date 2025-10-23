@@ -1,0 +1,31 @@
+// Datalog program for path-finding in a graph
+//
+// The program computes the transitive closure of
+// a graph.
+
+// -- relations --
+
+// Edges of a graph
+.decl edge(x:number, y:number)
+
+// Path in a graph
+.decl path(x:number, y:number)
+
+// -- facts --
+
+// A graph with 4 nodes and 4 edges
+edge(1,2).
+edge(2,3).
+edge(3,4).
+edge(4,1).
+
+// -- rules --
+
+// A path is an edge
+path(x,y) :- edge(x,y).
+
+// A path is a path followed by an edge
+path(x,z) :- path(x,y), edge(y,z).
+
+// -- output --
+.output path()

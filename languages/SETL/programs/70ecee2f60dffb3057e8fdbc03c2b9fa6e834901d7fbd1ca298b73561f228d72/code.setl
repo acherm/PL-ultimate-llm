@@ -1,0 +1,31 @@
+proc queens(n);
+  count := 0;
+  cols := {};
+  diag1 := {};
+  diag2 := {};
+
+  proc solve(y);
+    if y > n then
+      count := count + 1;
+    else
+      for x in {1..n} - cols loop
+        if not (x+y in diag1 or x-y in diag2) then
+          cols with:= x;
+          diag1 with:= x+y;
+          diag2 with:= x-y;
+          solve(y+1);
+          cols less:= x;
+          diag1 less:= x+y;
+          diag2 less:= x-y;
+        end if;
+      end loop;
+    end if;
+  end proc;
+
+  solve(1);
+  return count;
+end proc;
+
+for n in [1..10] loop
+  print(n, queens(n));
+end loop;

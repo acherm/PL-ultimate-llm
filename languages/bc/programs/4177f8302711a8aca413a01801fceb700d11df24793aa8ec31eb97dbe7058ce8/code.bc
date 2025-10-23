@@ -1,0 +1,32 @@
+/*
+ *
+ * Towers of Hanoi
+ *
+ * By: P.H. Hirst
+ *
+ * hanoi(n) will print the moves to solve the
+ * Towers of Hanoi puzzle with n disks.
+ *
+ * hanoi(n,s,d,u) will print the moves to transfer
+ * n disks from spire s to spire d using spire u
+ * as an intermediate.
+ *
+ */
+
+define hanoi(n,s,d,u) {
+    auto i, os
+
+    if (n <= 0) { return }
+
+    if (s == 0) { s = 1 }
+    if (d == 0) { d = 3 }
+    if (u == 0) { u = 2 }
+
+    hanoi(n-1, s, u, d)
+
+    os = scale; scale = 0
+    print "Move disk ", n, " from ", s, " to ", d, "\n"
+    scale = os
+
+    hanoi(n-1, u, d, s)
+}

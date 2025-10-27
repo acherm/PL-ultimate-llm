@@ -1,0 +1,48 @@
+namespace NSMain;
+
+concept Tree provides {
+    root: Node;
+}
+
+concept Node provides {
+    value: Int;
+    left: Node?;
+    right: Node?;
+}
+
+function sum(t: Tree): Int {
+    return sum(t.root);
+}
+
+function sum(n: Node?): Int {
+    if(n == none) {
+        return 0;
+    }
+    else {
+        return n.value + sum(n.left) + sum(n.right);
+    }
+}
+
+entrypoint function main(): Int {
+    var t: Tree = Tree@{
+        root: Node@{
+            value: 5,
+            left: Node@{
+                value: 3,
+                left: none,
+                right: none
+            },
+            right: Node@{
+                value: 2,
+                left: Node@{
+                    value: 8,
+                    left: none,
+                    right: none
+                },
+                right: none
+            }
+        }
+    };
+
+    return sum(t);
+}

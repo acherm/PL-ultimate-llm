@@ -1,0 +1,32 @@
+import cp.
+
+queens(N, Q) =>
+    Q = queens_solution(N).
+
+queens_solution(N) ?->
+    NewBoard = board(N),
+    place_queens(NewBoard, 1, N, []).
+
+place_queens(_, I, N, Q) ?-> I > N =>
+    Q = Q.
+place_queens(Board, I, N, Q0) ?->
+    Row = row(I),
+    Col = nth(I, Board),
+    if safe(Row, Col, Q0) then
+        Q1 := Q0 ++ [Row/Col],
+        place_queens(Board, I+1, N, Q1)
+    end.
+
+safe(_, _, []) => true.
+safe(Row, Col, Q) ?->
+    Q = [R/C | Q1],
+    Row #= R, Col #= C =>
+        fail
+    ; Row - R #= Col - C =>
+        fail
+    ; Row - R #= C - Col =>
+        fail
+    ; otherwise =>
+        safe(Row, Col, Q1).
+
+board(N) = [0* N].

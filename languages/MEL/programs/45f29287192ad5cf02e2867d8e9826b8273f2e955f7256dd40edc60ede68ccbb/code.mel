@@ -1,0 +1,53 @@
+/*
+MEL Command: randKeys
+Author: Morgan Evans
+Website: www.morganevans.net
+Date: 2006/09/20
+Version: 1.0
+Requires: Maya 6.0 or greater
+Description: Randomizes selected keys in the graph editor within a user defined range.
+Installation: Place this script in your scripts directory and type "randKeys" in the command line.
+*/
+
+global proc randKeys()
+{
+	// check to see if the window exists
+	if (`window -exists randKeysWindow`)
+		deleteUI randKeysWindow;
+
+	// create the window
+	window -title "Randomize Keys" -width 200 randKeysWindow;
+
+		// create the main layout
+		columnLayout;
+
+			// create the controls
+			floatSliderGrp -label "Amount" -field true -minValue 0 -maxValue 100 -value 10 amountSlider;
+			button -label "Randomize" -command "randKeysGo";
+			button -label "Close" -command "deleteUI randKeysWindow";
+
+	// show the window
+	showWindow randKeysWindow;
+}
+
+global proc randKeysGo()
+{
+	// get the amount from the slider
+	float $amount = `floatSliderGrp -query -value amountSlider`;
+
+	// get the selected keys
+	string $keys[] = `keyframe -query -name`;
+
+	// loop through the keys
+	for ($key in $keys)
+	{
+		// get the value of the key
+		float $value = `keyframe -query -valueChange $key`;
+
+		// get the random value
+		float $rand = `rand (-$amount) $amount`;
+
+		// set the new value
+		keyframe -edit -valueChange ($value + $rand) $key;
+	}
+}

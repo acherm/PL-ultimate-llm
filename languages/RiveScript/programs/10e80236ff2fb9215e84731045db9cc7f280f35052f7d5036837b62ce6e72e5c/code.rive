@@ -1,0 +1,71 @@
+! version = 2.0
+
+// The user's name is a global variable.
+! global name = unknown
+
+// The bot's name is a bot variable.
+! var name = Super Bot
+! var age = 5
+
+// Some substitutions.
+! sub i'm = i am
+! sub i've = i have
+! sub i'll = i will
+! sub i'd = i would
+! sub don't = do not
+! sub isn't = is not
+! sub you're = you are
+! sub you've = you have
+! sub you'll = you will
+! sub you'd = you would
+! sub he's = he is
+! sub she's = she is
+! sub it's = it is
+! sub what's = what is
+! sub whats = what is
+! sub who's = who is
+! sub where's = where is
+! sub when's = when is
+! sub why's = why is
+! sub how's = how is
+! sub \s+ = " "
+
+// Some person substitutions.
+! person i am = you are
+! person you are = I am
+! person i = you
+! person you = me
+! person my = your
+! person your = my
+
+// Set the default topic.
+> topic random
+
+  // A trigger to learn the user's name.
+  + my name is *
+  - <set name=<formal>>Nice to meet you, <get name>.
+
+  // A trigger to ask the user's name, if we don't know it.
+  + *
+  % what is my name
+  - I don't know your name.{topic=askname}
+
+  // A trigger to repeat the user's name.
+  + what is my name
+  - Your name is <get name>, right?
+
+  // A trigger to ask the bot's name.
+  + what is your name
+  - You can call me <bot name>.
+
+  // A catch-all trigger.
+  + *
+  - I don't know what to say to "<star>".
+< topic
+
+// A topic for asking the user's name.
+> topic askname
+  + *
+  - What is your name?
+  - What should I call you?
+< topic

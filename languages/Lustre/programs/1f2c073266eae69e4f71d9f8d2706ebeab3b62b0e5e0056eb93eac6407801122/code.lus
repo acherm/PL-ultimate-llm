@@ -1,0 +1,17 @@
+-- A simple counter that increments its value at each step, unless a
+-- reset signal is received.
+node counter(reset: bool) returns (c: int);
+let
+  c = if reset then 0 else (0 -> pre c) + 1;
+tel
+
+-- The top-level node of the system.
+node top() returns (c: int);
+var reset: bool;
+let
+  -- The reset signal is true only at the first two instants.
+  reset = true -> true -> false;
+  c = counter(reset);
+  -- The property to be proved.
+  --%PROPERTY "c is always non-negative" c >= 0;
+tel

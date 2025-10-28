@@ -1,0 +1,6 @@
+(defun c:line2pts ( / p1 p2 )
+  (setq p1 (getpoint "\nSelect first point: "))
+  (setq p2 (getpoint p1 "\nSelect second point: "))
+  (command "LINE" p1 p2 "")
+  (princ)
+)

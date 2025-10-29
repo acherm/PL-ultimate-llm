@@ -1,0 +1,71 @@
+// Guided filter for images. Joint bilateral filter where the range
+// kernel is defined by a guidance image. See He et al, "Guided Image Filtering", ECCV 2010.
+
+#include <Halide.h>
+
+using namespace Halide;
+
+class GuidedFilter : public Halide::Generator<GuidedFilter> {
+public:
+    GeneratorInput<Buffer<float>>  input{"input", 3};
+    GeneratorInput<Buffer<float>>  guidance{"guidance", 3};
+    GeneratorParam<int32_t>        radius{"radius", 4};
+    GeneratorParam<float>          eps{"eps", Float(32).min()};
+    GeneratorOutput<Buffer<float>> output{"output", 3};
+
+    void generate() {
+        /* THE ALGORITHM */
+        Var x, y, c;
+
+        // Compute local linear statistics I/r * sum p and 1/r * sum p*I
+        RDom r(0, radius, 0, radius);
+        Func mean_p   = Statistics("mean_p").define(  Sum().define( input(x, y, c) / r_mean(x, y), {r} ) );
+        Func mean_I   = Statistics("mean_I").define(  Sum().define( guidance(x + r.x - radius/2, y + r.y - radius/2, c) / r_mean(x, y), {r} ) );
+        Func mean_Ip  = Statistics("mean_Ip").define( Sum().define( guidance(x, y, c) * input(x + r.x - radius/2, y + r.y - radius/2, c) / r_mean(x, y), {r} ) );
+
+        // Compute cross correlation: 1/r * sum (I - mean_I) * (p - mean_p)
+        Func corr_I   = Statistics("corr_I").define(   Sum().define( pow2(guidance(x, y, c) - mean_I(x, y, c)), {r} ) / r_mean(x, y) );
+        Func corr_Ip  = Statistics("corr_Ip").define(  Sum().define( (guidance(x + r.x - radius/2, y + r.y - radius/2, c) - mean_I(x, y, c)) * (input(x + r.x - radius/2, y + r.y - radius/2, c) - mean_p(x, y, c)), {r} ) / r_mean(x, y) );
+
+        // Solve for the local linear model
+        RDom rc(0, input.channels());
+        Func a("a");
+        a(x, y, c) = (corr_Ip(x, y, c) / (corr_I(x, y, c) + eps));
+        Func b("b");
+        b(x, y, c) = mean_p(x, y, c) - a(x, y, c) * mean_I(x, y, c);
+
+        // Apply the local linear model
+        output(x, y, c) = clamp(a(x, y, c) * guidance(x, y, c) + b(x, y, c), 0.0f, 1.0f);
+
+        /* THE SCHEDULE */
+        // Nothing to see here. It's all box-filtering.
+    }
+
+private:
+    Var xi, yi;
+    Func r_mean("r_mean");
+    r_mean(x, y) = (radius+1)*(radius+1);
+
+    // Statistics is a helper that does a box filter
+    template<typename T>
+    class Statistics : public Func {
+    public:
+        Statistics(std::string name) : Func(name) {}
+        template<typename Body>
+        Statistics &define(Body body, const std::vector<Expr> &over) {
+            this(x, y, c) = body;
+            // Box filter
+            this(x, y, c) = boxfilter(this, radius, {x, y});
+            return *this;
+        }
+    };
+
+    Func boxfilter(Func in, Expr r, const std::vector<Var> &over) {
+        Func f("box");
+        RDom rx(0, r+1, 0, r+1);
+        f(x, y, c) = sum( in(x + rx.x - r/2, y + rx.y - r/2, c), {rx} ) / ((r+1)*(r+1));
+        return f;
+    }
+};
+
+HALIDE_REGISTER_GENERATOR(GuidedFilter, guided_filter)

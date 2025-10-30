@@ -1,0 +1,25 @@
+// Quicksort in Cat
+//
+// This is a fairly direct translation of the standard
+// recursive quicksort algorithm.
+
+define smaller {
+  [<] filter
+}
+
+define larger_or_equal {
+  [>=] filter
+}
+
+define qsort {
+  [
+    [null]
+    [uncons [dup larger_or_equal] dip [smaller] bi qsort]
+    [enconcat]
+  ]
+  [[]]
+  case
+}
+
+// Example:
+[2 1 4 3 5] qsort

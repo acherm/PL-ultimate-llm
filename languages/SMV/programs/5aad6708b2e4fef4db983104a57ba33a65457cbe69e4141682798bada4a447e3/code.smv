@@ -1,0 +1,16 @@
+MODULE counter
+
+VAR
+  state : 0 .. 15;
+
+VAR
+  out : boolean;
+
+ASSIGN
+  init(state) := 0;
+  next(state) := case
+    state = 15 : 0;
+    TRUE : state+1;
+  esac;
+
+  out := state = 15;

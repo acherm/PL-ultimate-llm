@@ -1,0 +1,49 @@
+' Gambas class file
+
+PUBLIC SUB _new()
+
+  FMain.Center
+  FMain.Resizable = FALSE
+
+END
+
+PUBLIC SUB Form_Open()
+
+  txtNumber.SetFocus
+
+END
+
+PUBLIC SUB btnConvert_Click()
+
+  DIM sNumber AS String
+  DIM iBaseFrom AS Integer
+  DIM iBaseTo AS Integer
+  DIM vResult AS Variant
+
+  sNumber = txtNumber.Text
+  iBaseFrom = CInt(txtBaseFrom.Text)
+  iBaseTo = CInt(txtBaseTo.Text)
+
+  TRY vResult = CONV(sNumber, iBaseFrom, iBaseTo)
+  IF ERROR THEN
+    Message.Error(Error.Text)
+    RETURN
+  END IF
+
+  txtResult.Text = vResult
+
+END
+
+PUBLIC SUB btnClear_Click()
+
+  txtNumber.Clear
+  txtResult.Clear
+  txtNumber.SetFocus
+
+END
+
+PUBLIC SUB btnClose_Click()
+
+  FMain.Close
+
+END

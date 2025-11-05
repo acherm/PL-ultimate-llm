@@ -1,0 +1,49 @@
+; Script:   GetIP.kix
+; Author:   John F. Sceski
+; Date:     01/21/2002
+;
+; This script will get the IP address, Subnet Mask and Default Gateway
+; for the local machine. It will then display the information in a message
+; box.
+;
+; It has been tested on Windows 95, 98, ME, NT4 and 2000 Pro.
+;
+; It uses the external program 'ipconfig.exe' to get the information.
+;
+; Note: For Windows 95, 98 and ME you must use 'winipcfg.exe /batch'
+;       and the output file is different.
+;
+;       This script only works for Windows NT4 and 2000 Pro.
+
+Dim $GetIP, $IPAddress, $SubnetMask, $DefaultGateway, $TempFile
+
+$TempFile = "%TEMP%\GetIP.tmp"
+
+$GetIP = Run('ipconfig.exe > "$TempFile"')
+
+If @ERROR = 0
+   $IPAddress = ReadProfileString("$TempFile", "   IP Address. . . . . . . . . . . :", "")
+   $SubnetMask = ReadProfileString("$TempFile", "   Subnet Mask . . . . . . . . . . :", "")
+   $DefaultGateway = ReadProfileString("$TempFile", "   Default Gateway . . . . . . . . :", "")
+
+   $CRLF = Chr(13) + Chr(10)
+
+   ? "IP Address is: " + $IPAddress
+   ? "Subnet Mask is: " + $SubnetMask
+   ? "Default Gateway is: " + $DefaultGateway
+
+   $Message = "IP Address is: " + $IPAddress + $CRLF + "Subnet Mask is: " + $SubnetMask + $CRLF + "Default Gateway is: " + $DefaultGateway
+
+   $MBOK = 0
+   $MBIconInformation = 64
+
+   $Return = MessageBox($Message, "IP Information", $MBOK + $MBIconInformation)
+
+   $GetIP = Del("$TempFile")
+Else
+   ? "Error running ipconfig.exe"
+   ? "Error code: " + @ERROR
+   ? "Windows error code: " + @WERROR
+EndIf
+
+Exit @ERROR

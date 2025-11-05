@@ -1,0 +1,48 @@
+:- module(hanoi, [hanoi/0, hanoi/1], [classic, assertions]).
+
+:- comment(title, "The classical ``Towers of Hanoi'' puzzle").
+
+:- comment(author, "The Ciao/Prolog documentation system processor").
+
+:- comment(summary, "This program writes to the standard output a sequence of
+   moves to solve the ``Towers of Hanoi'' puzzle for a given number of
+   disks.").
+
+:- comment(module, "This is a very simple program which is self-documented
+   and also includes some checking assertions. It is included as a demo of
+   the Ciao assertion language and preprocessor, and of the Ciao
+   documentation generator.").
+
+:- pred hanoi/0.
+
+hanoi :-
+        hanoi(5).
+
+:- pred hanoi(N) : int(N) => true.
+
+hanoi(N) :-
+        move(N, left, center, right).
+
+:- pred move(N, A, B, C) : (int(N), pole(A), pole(B), pole(C)) => true
+   # "Move @var{N} disks from pole @var{A} to pole @var{B} using
+     @var{C} as auxiliary.".
+
+move(0, _, _, _) :- !.
+move(N, A, B, C) :-
+        N > 0,
+        M is N - 1,
+        move(M, A, C, B),
+        inform_user(A, B),
+        move(M, C, B, A).
+
+:- pred inform_user(A, B) : (pole(A), pole(B)) => true
+   # "Inform the user of a move from pole @var{A} to pole @var{B}.".
+
+inform_user(A, B) :-
+        display('Move a disk from '),
+        display(A),
+        display(' to '),
+        display(B),
+        nl.
+
+:- type pole ---> left ; center ; right.

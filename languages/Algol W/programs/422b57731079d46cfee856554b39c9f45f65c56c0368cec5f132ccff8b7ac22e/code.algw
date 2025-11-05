@@ -1,0 +1,21 @@
+% The Towers of Hanoi %
+
+BEGIN
+    % N is the number of disks %
+    INTEGER N;
+
+    % The procedure that does the actual work %
+    PROCEDURE HANOI(INTEGER VALUE M; STRING(1) VALUE A, B, C);
+    BEGIN
+        IF M > 0 THEN
+        BEGIN
+            HANOI(M-1, A, C, B);
+            WRITE("Move disk from ", A, " to ", B);
+            HANOI(M-1, C, B, A)
+        END
+    END;
+
+    WRITE("Enter number of disks");
+    READ(N);
+    HANOI(N, "A", "B", "C")
+END.

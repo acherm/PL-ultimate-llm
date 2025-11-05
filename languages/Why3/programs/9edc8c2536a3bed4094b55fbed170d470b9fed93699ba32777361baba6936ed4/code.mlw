@@ -1,0 +1,29 @@
+(*
+  This file is part of the Why3 platform, distributed under the terms
+  of the Lesser General Public License version 2.1, with the special
+  clause on the linking of executable modules.
+  Copyright (C) 2009-2023  CNRS
+    Jean-Christophe Filliâtre (filliatre@lri.fr)
+
+  François Bobot (bobot@lri.fr)
+
+  Claude Marché (marché@lri.fr)
+
+  Guillaume Melquiond (melquiond@lri.fr)
+
+  Andrei Paskevich (paskevich@lri.fr)
+*)
+
+module Intro
+
+  use import int.Int
+
+  let even (n:int) : bool = n mod 2 = 0
+
+  goal G1: forall n:int. even n <-> n mod 2 = 0
+    intros n. unfold even. reflexivity. qed
+
+  goal G2: forall n:int. even (n + 2) <-> even n
+    intros n. unfold even. rewrite (plus_remainder n 2). ring. qed
+
+end

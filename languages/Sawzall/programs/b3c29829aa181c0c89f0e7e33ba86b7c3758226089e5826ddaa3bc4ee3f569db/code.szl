@@ -1,0 +1,17 @@
+# Copyright 2009 The Go Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+# Count the number of pages viewed by each user.
+# Input is a stream of weblogs.
+# Output is a table mapping user name to a count of pages.
+
+# define the input record format
+proto "weblogs.proto"
+input_record: record Weblog.LogRecord
+
+# define the output table
+pages_by_user: table sum of int;
+
+# for each record, increment the count for that user
+emit pages_by_user[input_record.user] <- 1;

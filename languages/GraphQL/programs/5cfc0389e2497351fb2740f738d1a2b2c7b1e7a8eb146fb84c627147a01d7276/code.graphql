@@ -1,0 +1,30 @@
+scalar ObjectId
+
+type Movie {
+  _id: ObjectId!
+  plot: String
+  title: String!
+}
+
+type MoviesPage {
+  movies: [Movie!]!
+  total: Int!
+}
+
+input MovieFilters {
+  title: String
+}
+
+type Query {
+  movie(query: MovieFilters): Movie
+  movies(limit: Int = 10, offset: Int = 0): MoviesPage
+}
+
+input MovieUpdateInput {
+  plot: String
+  title: String
+}
+
+type Mutation {
+  updateMovie(query: MovieFilters!, set: MovieUpdateInput!): Movie
+}

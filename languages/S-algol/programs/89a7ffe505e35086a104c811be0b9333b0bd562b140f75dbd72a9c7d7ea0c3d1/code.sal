@@ -1,0 +1,31 @@
+! -----------------------------------------------------------------------------
+! 
+! Towers of Hanoi
+! 
+! -----------------------------------------------------------------------------
+
+let read.a.disc = proc( string s -> int )
+begin
+    write "type number of discs for ", s, ": "
+    let d = readi
+    if d < 0 or d > 10 do
+    begin
+        write "number must be in range 0..10\n"
+        0
+    end
+    else d
+end
+
+let hanoi = proc( int n, from, to, using )
+! move n discs from tower 'from' to tower 'to' using tower 'using'
+begin
+    if n > 0 do
+    begin
+        hanoi( n - 1, from, using, to )
+        write n, " from ", from, " to ", to, "\n"
+        hanoi( n - 1, using, to, from )
+    end
+end
+
+let discs = read.a.disc( "Hanoi" )
+if discs ~= 0 do hanoi( discs, 1, 3, 2 )

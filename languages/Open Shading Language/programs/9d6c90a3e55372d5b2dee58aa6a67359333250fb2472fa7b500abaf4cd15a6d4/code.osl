@@ -1,0 +1,138 @@
+/*
+Copyright (c) 2009-2010 Sony Pictures Imageworks Inc., et al.
+All Rights Reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+* Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+* Neither the name of Sony Pictures Imageworks nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
+// A veritable cornucopia of noise-based functions.
+
+
+shader noise
+    (
+        string type = "perlin",
+        int dimensions = 3,
+        float frequency = 1,
+        float lacunarity = 2,
+        float gain = 0.5,
+        int octaves = 4,
+        float amplitude = 1,
+        int signed = 0,
+        point p = P,
+        output float F = 0,
+        output color C = 0
+    )
+{
+    // We need to declare these temporary variables because you can't
+    // take the address of an output param in a function call.
+    float ftmp;
+    color ctmp;
+
+    // Call the right noise function based on the 'type' string
+    if (type == "perlin" || type == "noise") {
+        if (dimensions == 2)
+            ftmp = noise ("perlin", point(p[0]*frequency, p[1]*frequency, 0));
+        else if (dimensions == 4)
+            ftmp = noise ("perlin", p, frequency);  // 4-D version
+        else
+            ftmp = noise ("perlin", p * frequency);
+    } else if (type == "uperlin" || type == "unoise") {
+        if (dimensions == 2)
+            ftmp = noise ("uperlin", point(p[0]*frequency, p[1]*frequency, 0));
+        else if (dimensions == 4)
+            ftmp = noise ("uperlin", p, frequency);  // 4-D version
+        else
+            ftmp = noise ("uperlin", p * frequency);
+    } else if (type == "cell" || type == "cellnoise") {
+        if (dimensions == 2)
+            ftmp = cellnoise (point(p[0]*frequency, p[1]*frequency, 0));
+        else if (dimensions == 4)
+            ftmp = cellnoise (p, frequency);
+        else
+            ftmp = cellnoise (p * frequency);
+    } else if (type == "hash" || type == "hashnoise") {
+        if (dimensions == 2)
+            ftmp = hashnoise (point(p[0]*frequency, p[1]*frequency, 0));
+        else if (dimensions == 4)
+            ftmp = hashnoise (p, frequency);
+        else
+            ftmp = hashnoise (p * frequency);
+    } else if (type == "worley") {
+        if (dimensions == 2)
+            ftmp = worleynoise (point(p[0]*frequency, p[1]*frequency, 0), lacunarity, ftmp, ctmp);
+        else if (dimensions == 4)
+            ftmp = worleynoise (p, frequency, lacunarity, ftmp, ctmp);
+        else
+            ftmp = worleynoise (p * frequency, lacunarity, ftmp, ctmp);
+    } else if (type == "fbm") {
+        if (dimensions == 2)
+            ftmp = fbm (point(p[0]*frequency, p[1]*frequency, 0), octaves, lacunarity, gain);
+        else
+            ftmp = fbm (p*frequency, octaves, lacunarity, gain);
+    } else if (type == "turbulence" || type == "turb") {
+        if (dimensions == 2)
+            ftmp = turbulence (point(p[0]*frequency, p[1]*frequency, 0), octaves, lacunarity, gain);
+        else
+            ftmp = turbulence (p*frequency, octaves, lacunarity, gain);
+    } else if (type == "vnoise") {
+        if (dimensions == 2)
+            ctmp = vnoise (point(p[0]*frequency, p[1]*frequency, 0));
+        else if (dimensions == 4)
+            ctmp = vnoise (p, frequency);
+        else
+            ctmp = vnoise (p * frequency);
+    } else if (type == "vfbm") {
+        if (dimensions == 2)
+            ctmp = vfbm (point(p[0]*frequency, p[1]*frequency, 0), octaves, lacunarity, gain);
+        else
+            ctmp = vfbm (p*frequency, octaves, lacunarity, gain);
+    } else if (type == "vturbulence" || type == "vturb") {
+        if (dimensions == 2)
+            ctmp = vturbulence (point(p[0]*frequency, p[1]*frequency, 0), octaves, lacunarity, gain);
+        else
+            ctmp = vturbulence (p*frequency, octaves, lacunarity, gain);
+    } else {
+        // Unknown noise type -- just output 0
+        ftmp = 0;
+        ctmp = 0;
+    }
+
+
+    if (isconnected(C)) {
+        // If C is hooked up, assume they want the color version
+        if (signed)
+            C = ctmp * amplitude;
+        else
+            C = (ctmp * 0.5 + 0.5) * amplitude;
+        F = luminance(C);
+    } else {
+        // If C is not hooked up, assume they want the float version
+        if (signed)
+            F = ftmp * amplitude;
+        else
+            F = (ftmp * 0.5 + 0.5) * amplitude;
+        C = F;
+    }
+}

@@ -1,0 +1,59 @@
+proc do_ftp { } {
+    local cmd x y z
+    local passive on
+    local verbose on
+    local hash off
+    local binary on
+    local prompt on
+    local status on
+    local debug off
+    local macdef off
+    local proxy off
+    local runique off
+    local sunique off
+    local glob on
+    local mcase off
+    local nmap off
+    local ntrans off
+    local helpstr
+
+    if not defined \%a exit 1 "usage: ftp host"
+    if not defined \v(version) exit 1 "This script requires C-Kermit 7.0"
+    if \v(version) < 700000 exit 1 "This script requires C-Kermit 7.0"
+
+    set network type tcp/ip
+    set host \%a
+    if defined \%b set port \%b
+    if fail exit 1
+
+    echo
+    echo Trying \v(host)...
+    if fail exit 1
+
+    input 10 Connected
+    if fail {
+	echo Sorry, connection refused.
+	exit 1
+    }
+    echo \v(input)
+    input 30 220
+    if fail {
+	echo FTP server not responding.
+	exit 1
+    }
+    echo \v(input)
+
+    while true {
+	if \m(prompt) {
+	    ask cmd ftp>
+	} else {
+	    input 10000000
+	    let cmd \v(input)
+	}
+	if fail break
+	if not defined cmd continue
+	xcmd \m(cmd)
+    }
+    hangup
+    exit 0
+}

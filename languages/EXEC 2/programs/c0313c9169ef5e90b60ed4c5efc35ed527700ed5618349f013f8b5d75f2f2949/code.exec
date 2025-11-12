@@ -1,0 +1,28 @@
+&TRACE OFF
+*
+* WHOIS EXEC - simple WHOIS client for VM/CMS
+*
+* Lynn Wheeler - v1.0 - 27 Feb 2001
+*
+&GOTO .START
+.USAGE
+&TYPE
+&TYPE Usage: WHOIS name [server]
+&TYPE
+&EXIT 1
+.START
+&STACK FIFO
+&READ VARS &1 &2 &3
+&IF '&1' EQ '' &GOTO .USAGE
+&IF '&2' EQ '' &DATA WHOIS.ARPA
+&IF '&2' NE '' &DATA &2
+&READ VARS SERVER
+&IF '&3' NE '' &PUNCH &1 &2 &3
+&IF '&3' EQ '' &PUNCH &1
+PUNCH
+&READ VARS
+PIPE <PUNCH>
+ | SPECS 1-* 1 /&/ 172 A
+ | NETVIEW TCPCLI &SERVER 43
+ | CONSOLE
+&EXIT 0

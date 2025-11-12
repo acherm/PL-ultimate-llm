@@ -1,0 +1,33 @@
+STACK[element_type: type]: THEORY
+  BEGIN
+    IMPORTING sequences[element_type]
+
+    stack: type = # s: seq[element_type] #
+
+    empty_stack: stack = # [] #
+
+    is_empty(s: stack): bool = s`s = []
+
+    top(s: stack): element_type =
+      IF is_empty(s) THEN error
+      ELSE s`s(s`s`length)
+      ENDIF
+
+    pop(s: stack): stack =
+      IF is_empty(s) THEN error
+      ELSE # s`s(1, s`s`length - 1) #
+      ENDIF
+
+    push(e: element_type, s: stack): stack =
+      # e || s`s #
+
+    AXIOMS
+      forall (s: stack): not is_empty(push(e, s))
+        FORALL e: element_type
+
+      forall (s: stack, e: element_type): top(push(e, s)) = e
+
+      forall (s: stack, e: element_type): pop(push(e, s)) = s
+
+      forall (s: stack): is_empty(pop(s)) OR top(pop(s)) = top(s)
+  END STACK

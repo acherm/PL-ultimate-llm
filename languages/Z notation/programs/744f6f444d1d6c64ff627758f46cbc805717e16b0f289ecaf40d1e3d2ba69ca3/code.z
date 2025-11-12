@@ -1,0 +1,37 @@
+[NAME, DATE]
+
+----------------- BirthdayBook -----------------
+known: P NAME
+birthday: NAME -> DATE
+------------------------------------------------
+known = dom birthday
+------------------------------------------------
+
+
+----------- AddBirthday ------------------------
+Xi BirthdayBook
+name?: NAME
+date?: DATE
+------------------------------------------------
+name? not_in known
+birthday' = birthday U {name? |-> date?}
+------------------------------------------------
+
+
+----------- FindBirthday -----------------------
+Xi BirthdayBook
+name?: NAME
+date!: DATE
+------------------------------------------------
+name? in known
+date! = birthday(name?)
+------------------------------------------------
+
+
+----------- Remind -----------------------------
+Xi BirthdayBook
+today?: DATE
+cards!: P NAME
+------------------------------------------------
+cards! = {n: known | birthday(n) = today?}
+------------------------------------------------

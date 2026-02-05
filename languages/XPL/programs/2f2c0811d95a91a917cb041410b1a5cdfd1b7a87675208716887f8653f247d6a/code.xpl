@@ -1,0 +1,5 @@
+/* Simple XPL program to print text */
+DECLARE OUTPUT CHARACTER;
+
+OUTPUT = 'HELLO, WORLD!';
+CALL PRINT_STRING(OUTPUT);

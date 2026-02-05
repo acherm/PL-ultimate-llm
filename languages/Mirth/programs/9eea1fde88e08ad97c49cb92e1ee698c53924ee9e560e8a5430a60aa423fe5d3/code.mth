@@ -1,0 +1,181 @@
+module examples.fractal
+
+import std.prelude
+import std.number
+import std.world
+import std.list
+import std.maybe
+import std.ctypes
+import std.buffer
+
+import examples.sdl2
+
+##############
+# Mandelbrot Game #
+##############
+
+def main {
+    +Mandelbrot.Init!
+    loop!
+    quit!
+}
+
+struct +Mandelbrot {
+    +platform: +FractalUI
+    running: Bool
+}
+
+struct +FractalUI {
+    +SDL
+    +window: +SDL_Window
+    +surface: +SDL_Surface
+    +renderer: +SDL_Renderer
+    +event-buffer: +Buffer
+}
+
+def +FractalUI.sdl(f) { /+FractalUI f +FractalUI }
+
+def WIDTH { 800 }
+def HEIGHT { 800 }
+def SNAKE_WINDOW_FLAGS { SDL_WINDOW_HIDDEN }
+def SNAKE_RENDERER_FLAGS { SDL_RENDERER_ACCELERATED SDL_RENDERER_PRESENTVSYNC or }
+
+def +FractalUI.Init! [ +World -- +World +FractalUI ] {
+    SDL_INIT_VIDEO >flags
+    SDL_Init unwrap!
+
+    "Mandelbrot!" >title
+    100 >x 100 >y
+    WIDTH >w
+    HEIGHT >h
+    SNAKE_WINDOW_FLAGS >flags
+    create-window! unwrap!
+    >+window
+
+    -1 >index
+    SNAKE_RENDERER_FLAGS >flags
+    create-renderer! unwrap!
+    >+renderer
+
+    SDL_GetWindowSurface >+surface
+
+    256 bytes +Buffer.New >+event-buffer
+
+    +FractalUI
+}
+
+def +Mandelbrot.Init! [ +World -- +World +Mandelbrot ] {
+    +FractalUI.Init! >+platform
+    True >running
+    +Mandelbrot
+}
+
+def +Mandelbrot.loop! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    process-events!
+    present!
+    while(running,
+        10 >U32-clamp >ticks +platform:sdl:delay!
+        process-events!
+    )
+}
+
+def +Mandelbrot.quit! [ +World +Mandelbrot -- +World ] {
+    /+Mandelbrot +platform> quit! ldrop
+}
+
+def +FractalUI.quit! [ +World +FractalUI -- +World ] {
+    /+FractalUI
+    destroy-renderer!
+    destroy-window!
+
+    +event-buffer> rdrop
+    +surface> /+SDL_Surface drop
+
+    quit!
+}
+
+def rgba [ Int Int Int Int -- r:CInt g:CInt b:CInt a:CInt ] { >CInt >a >CInt >b >CInt >g >CInt >r }
+def background-color { 0 0 0 255 rgba }
+
+def BAIL_OUT { 2.0 }
+def FLIPS { 24 }
+
+external(
+    F64.pow -> pow [ F64 F64 -- F64 ]
+    F64.log10 -> log10 [ F64 -- F64 ]
+    cset_pixel -> set_pixel [ +surface:+SDL_Surface CInt CInt CInt -- +surface:+SDL_Surface ]
+)
+
+def set_pixel [ +surface:+SDL_Surface Int Int Int -- +surface:+SDL_Surface ] {
+    dip(dip:>CInt >CInt) >CInt cset_pixel
+}
+
+def +Mandelbrot.plot! [ +Mandelbrot x:Int y:Int Int -- +Mandelbrot ] {
+    >iterations x> y> iterations> +platform:sdl:set_pixel
+}
+
+def scale_x [ Int -- F64 ] {
+    2.47 WIDTH / *
+    2.0 -
+}
+
+def scale_y [ Int -- F64 ] {
+    2.24 HEIGHT / *
+    1.12 -
+}
+
+def +Mandelbrot.present! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    +platform:sdl:show-window!
+    +platform:clear!
+
+    0 \py while(
+        @py HEIGHT <,
+        0 \px while(
+            @px WIDTH <,
+
+            @px scale_x >real
+            @py scale_y >imag Complex \z0
+            0.0 >real 0.0 >imag Complex \z
+
+            0 \iteration
+            while(
+                @iteration 250 <
+                @z magsq 4 <=
+                and,
+
+                @z(dup * @z0 +)
+                @iteration:1+
+            )
+
+            @iteration 250 < then(
+                @px >x @py >y
+                @iteration plot!
+            )
+            @px:1+
+        )
+        @py:1+
+    )
+
+    +platform:sdl:SDL_UpdateWindowSurface drop
+}
+
+def +FractalUI.clear! [ +FractalUI -- +FractalUI ] {
+    background-color sdl:SDL_SetRenderDrawColor
+    sdl:SDL_RenderClear
+}
+
+def +Mandelbrot.&event [ +Mandelbrot -- +Mandelbrot SDL_Event ] {
+    +platform:+event-buffer:base SDL_Event
+}
+
+def +Mandelbrot.process-events! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    while(&event +platform:sdl:SDL_PollEvent >Int 0>, process-event!)
+}
+
+def +Mandelbrot.process-event! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    &event type@ match {
+        { SDL_QUIT ->
+            False running! }
+        { _ -> drop }
+    }
+}

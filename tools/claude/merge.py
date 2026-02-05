@@ -104,6 +104,14 @@ def is_duplicate(language: str, existing: set[str], merged_this_batch: set[str])
     return lang_lower in existing or lang_lower in merged_this_batch
 
 
+def get_list_digest() -> str:
+    """Get SHA256 digest of pl_list.txt (first 8 chars)."""
+    import hashlib
+    pl_path = DATA / "pl_list.txt"
+    content = pl_path.read_bytes() if pl_path.exists() else b""
+    return hashlib.sha256(content).hexdigest()[:8]
+
+
 def merge_branch(branch: str) -> tuple[bool, str | None]:
     """
     Merge a branch into main.
@@ -115,9 +123,13 @@ def merge_branch(branch: str) -> tuple[bool, str | None]:
         (success, error_message)
     """
     try:
+        # Get List-Digest for commit-msg hook requirement
+        digest = get_list_digest()
+        merge_msg = f"Merge branch '{branch}'\n\nList-Digest: {digest}"
+
         # Merge with --no-ff to preserve branch history
         result = subprocess.run(
-            ["git", "merge", "--no-ff", "-m", f"Merge branch '{branch}'", branch],
+            ["git", "merge", "--no-ff", "-m", merge_msg, branch],
             capture_output=True,
             text=True,
             cwd=ROOT,

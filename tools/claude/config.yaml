@@ -1,0 +1,50 @@
+# tools/claude/config.yaml
+# Configuration for Claude Code Agent System
+
+# Model settings
+models:
+  # Models to rotate between agents
+  # Available: sonnet, opus, haiku
+  pool:
+    - sonnet
+    - opus
+
+# Per-agent settings
+agent:
+  # Maximum execution time per agent (seconds)
+  timeout_seconds: 300
+
+  # Maximum cost per agent invocation (USD)
+  # Note: May not be enforced by all Claude CLI versions
+  max_budget_usd: 1.00
+
+  # Maximum turns the agent can take
+  max_turns: 50
+
+# Orchestrator settings
+orchestrator:
+  # Number of parallel agents per batch
+  parallel_agents: 3
+
+  # Pause between successful batches (seconds)
+  pause_between_batches: 10
+
+  # Backoff after batch with no merges (seconds)
+  fail_backoff_seconds: 30
+
+  # Stop after this many consecutive failed batches
+  max_consecutive_fails: 5
+
+# Web search settings
+web_search:
+  # Default web search mode (can be overridden with --web-search / --no-web-search)
+  default: true
+
+# Logging settings
+logging:
+  # Log directory (relative to project root)
+  directory: logs
+
+  # Log file pattern
+  # {date} is replaced with YYYYMMDD
+  file_pattern: "claude-{date}.jsonl"

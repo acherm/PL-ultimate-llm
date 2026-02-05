@@ -1,0 +1,54 @@
+procedure init(int n, stack list)
+ local int q=0
+
+ n += 4
+ q+=9 push(list,q)
+ q+=7 push(list,q)
+ q+=1 push(list,q)
+ q+=5 push(list,q)
+
+ delocal int q=0
+
+procedure makeidperm(int n, stack perm)
+ local int i=0
+ local int z=0
+
+ from  i=0
+ do    skip
+ loop  push(perm,z)
+       perm[i] += i
+       i += 1
+ until i=n
+ i -= n
+
+ delocal int z=0
+ delocal int i=0
+
+procedure sort(int n, stack list, stack perm)
+ local int i=0
+ local int j=0
+
+ from  i = 0
+ do    skip
+ loop  j += n-2
+       from  j = n-2
+       do    skip
+       loop  if   list[j] > list[j+1]
+             then list[j] <=> list[j+1]
+                  perm[j] <=> perm[j+1]
+             else skip
+             fi   perm[j] > perm[j+1]
+             j -= 1
+       until j = i-1
+       j -= i-1
+       i += 1
+ until i = n-1
+ i -= n-1
+
+ delocal int j=0
+ delocal int i=0
+
+procedure main(int n, stack list, stack perm)
+ call init(n,list)
+ call makeidperm(n,perm)
+ call sort(n,list,perm)

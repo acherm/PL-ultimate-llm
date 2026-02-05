@@ -63,16 +63,16 @@ def get_list_digest() -> str:
 def create_branch(branch_name: str) -> bool:
     """Create and checkout a new branch from main."""
     try:
-        # Ensure we're on main first
+        # Create branch from main without checkout first (avoids parallel race)
         subprocess.run(
-            ["git", "checkout", "main"],
+            ["git", "branch", branch_name, "main"],
             capture_output=True,
             cwd=ROOT,
             check=True,
         )
-        # Create new branch
+        # Checkout the new branch
         subprocess.run(
-            ["git", "checkout", "-b", branch_name],
+            ["git", "checkout", branch_name],
             capture_output=True,
             cwd=ROOT,
             check=True,

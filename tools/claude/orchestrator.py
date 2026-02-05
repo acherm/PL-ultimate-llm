@@ -13,7 +13,7 @@ import os
 import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+# Note: Agents run sequentially since git operations don't parallelize in same worktree
 from dataclasses import dataclass
 from datetime import datetime, timedelta, UTC
 from pathlib import Path
@@ -148,49 +148,42 @@ def run_parallel_batch(
     for branch, model in agent_configs:
         print(f"  - {branch} ({model})")
 
-    # Run agents in parallel
+    # Run agents sequentially (git operations don't parallelize well in same worktree)
     successful_branches = []
     failures = 0
 
-    with ThreadPoolExecutor(max_workers=n_agents) as executor:
-        futures = {}
-        for branch, model in agent_configs:
-            future = executor.submit(
-                run_agent_subprocess,
+    for branch, model in agent_configs:
+        print(f"[orchestrator] Running agent {branch} ({model})...")
+        try:
+            result = run_agent_subprocess(
                 branch=branch,
                 model=model,
                 web_search=web_search,
                 timeout=timeout,
             )
-            futures[future] = branch
-
-        for future in as_completed(futures):
-            branch = futures[future]
-            try:
-                result = future.result()
-                if result["success"]:
-                    print(f"[orchestrator] Agent {branch} SUCCESS: {result['language']}")
-                    successful_branches.append(branch)
-                else:
-                    print(f"[orchestrator] Agent {branch} FAILED: {result['error']}")
-                    failures += 1
-
-                # Log individual result
-                log_event({
-                    "kind": "agent.complete",
-                    "batch_id": batch_id,
-                    **result,
-                })
-
-            except Exception as e:
-                print(f"[orchestrator] Agent {branch} EXCEPTION: {e}")
+            if result["success"]:
+                print(f"[orchestrator] Agent {branch} SUCCESS: {result['language']}")
+                successful_branches.append(branch)
+            else:
+                print(f"[orchestrator] Agent {branch} FAILED: {result['error']}")
                 failures += 1
-                log_event({
-                    "kind": "agent.exception",
-                    "batch_id": batch_id,
-                    "branch": branch,
-                    "error": str(e),
-                })
+
+            # Log individual result
+            log_event({
+                "kind": "agent.complete",
+                "batch_id": batch_id,
+                **result,
+            })
+
+        except Exception as e:
+            print(f"[orchestrator] Agent {branch} EXCEPTION: {e}")
+            failures += 1
+            log_event({
+                "kind": "agent.exception",
+                "batch_id": batch_id,
+                "branch": branch,
+                "error": str(e),
+            })
 
     # Merge successful branches
     merged = 0

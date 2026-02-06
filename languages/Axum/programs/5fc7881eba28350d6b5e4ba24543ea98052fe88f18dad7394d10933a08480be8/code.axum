@@ -1,0 +1,24 @@
+using System;
+
+namespace HelloWorld
+{
+    agent HelloAgent : channel HelloChannel
+    {
+        public HelloAgent()
+        {
+            receive(HelloChannel)
+            {
+                Console.WriteLine("Hello from Axum!");
+            }
+        }
+    }
+
+    domain HelloDomain
+    {
+        public HelloDomain()
+        {
+            var agent = new HelloAgent();
+            agent::HelloChannel <- ();
+        }
+    }
+}

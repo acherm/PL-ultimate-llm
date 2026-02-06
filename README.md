@@ -46,3 +46,16 @@ pl-loop/
   .githooks/
     pre-commit             # validates & regenerates catalog.csv
     commit-msg             # enforces a small trailer
+
+## Static website (browse + stats)
+
+To browse the collected languages/programs as a static website:
+
+```bash
+python3 web/build_site.py
+python3 -m http.server --directory web/dist 8000
+```
+
+Then open `http://localhost:8000`.
+
+The Stats page also summarizes **agents/models used** based on git commit trailers (`Model:`, `Agent:`, `Temperature:`, `WebSearch:`) in `turn: add …` commits.

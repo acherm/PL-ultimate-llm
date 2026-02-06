@@ -1,0 +1,35 @@
+program HelloConcurrent;
+
+process Writer(id: integer; ch: channel of char);
+var
+  i: integer;
+begin
+  for i := 1 to 5 do
+  begin
+    write(ch, 'A' + id);
+    delay(100)
+  end
+end;
+
+process Reader(ch: channel of char);
+var
+  c: char;
+  i: integer;
+begin
+  for i := 1 to 10 do
+  begin
+    read(ch, c);
+    writeln('Received: ', c)
+  end
+end;
+
+var
+  ch: channel of char;
+begin
+  init(ch);
+  cobegin
+    Writer(0, ch);
+    Writer(1, ch);
+    Reader(ch)
+  coend
+end.

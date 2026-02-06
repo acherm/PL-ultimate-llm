@@ -1,0 +1,25 @@
+{% comment %}
+  Product listing template
+{% endcomment %}
+
+<h1>{{ shop.name }}</h1>
+
+{% if products.size > 0 %}
+  <ul class="products">
+    {% for product in products %}
+      <li class="product">
+        <h2>{{ product.title | upcase }}</h2>
+        <p>{{ product.description | truncate: 100 }}</p>
+        <span class="price">{{ product.price | money }}</span>
+
+        {% if product.available %}
+          <button>Add to Cart</button>
+        {% else %}
+          <span class="sold-out">Sold Out</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No products available.</p>
+{% endif %}

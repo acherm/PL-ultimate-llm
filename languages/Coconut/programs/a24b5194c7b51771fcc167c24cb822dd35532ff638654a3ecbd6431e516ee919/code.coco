@@ -1,0 +1,20 @@
+# Fibonacci sequence using pattern matching
+def fib(0) = 0
+def fib(1) = 1
+def fib(n) = fib(n-1) + fib(n-2)
+
+# List comprehension with pipeline operator
+result = range(10) |> map$(fib) |> list
+
+# Print results
+print("Fibonacci sequence:", result)
+
+# Infinite list using iterators
+def fibs() = iterate(
+    (0, 1),
+    (a, b) -> (b, a + b)
+) |> map$((x) -> x[0])
+
+# Take first 15 Fibonacci numbers
+first_15 = fibs() |> take$(15) |> list
+print("First 15:", first_15)

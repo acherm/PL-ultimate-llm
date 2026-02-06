@@ -1,0 +1,37 @@
+ELLA_PROGRAM full_adder;
+
+TYPE bit = (0, 1);
+
+FN xor(a, b: bit) RETURNS bit =
+  CASE (a, b) OF
+    (0, 0) -> 0,
+    (0, 1) -> 1,
+    (1, 0) -> 1,
+    (1, 1) -> 0
+  ESAC;
+
+FN and(a, b: bit) RETURNS bit =
+  CASE (a, b) OF
+    (0, 0) -> 0,
+    (0, 1) -> 0,
+    (1, 0) -> 0,
+    (1, 1) -> 1
+  ESAC;
+
+FN or(a, b: bit) RETURNS bit =
+  CASE (a, b) OF
+    (0, 0) -> 0,
+    (0, 1) -> 1,
+    (1, 0) -> 1,
+    (1, 1) -> 1
+  ESAC;
+
+FN full_adder(a, b, cin: bit) RETURNS (sum, cout: bit) =
+  LET s1 = xor(a, b),
+      c1 = and(a, b),
+      sum = xor(s1, cin),
+      c2 = and(s1, cin),
+      cout = or(c1, c2)
+  IN (sum, cout);
+
+END full_adder.

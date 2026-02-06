@@ -1,0 +1,21 @@
+C     QUADRATIC EQUATION SOLVER IN WATFIV
+C     SOLVES AX**2 + BX + C = 0
+      PROGRAM QUAD
+      REAL A, B, C, DISC, X1, X2
+      READ(5,100) A, B, C
+100   FORMAT(3F10.2)
+      DISC = B**2 - 4.0*A*C
+      IF(DISC) 200, 300, 400
+200   PRINT 201
+201   FORMAT(' ROOTS ARE COMPLEX')
+      STOP
+300   X1 = -B/(2.0*A)
+      PRINT 301, X1
+301   FORMAT(' DOUBLE ROOT AT X = ', F10.4)
+      STOP
+400   X1 = (-B + SQRT(DISC))/(2.0*A)
+      X2 = (-B - SQRT(DISC))/(2.0*A)
+      PRINT 401, X1, X2
+401   FORMAT(' ROOTS: X1 = ', F10.4, ' X2 = ', F10.4)
+      STOP
+      END

@@ -1,0 +1,27 @@
+DECLARATION SECTION
+  QUANTITY:
+    x {
+      IndexDomain: (i);
+      Range: nonnegative;
+    }
+  VARIABLE:
+    TotalProfit {
+      Definition: sum(i, profit(i) * x(i));
+    }
+  CONSTRAINT:
+    ResourceLimit {
+      IndexDomain: (r);
+      Definition: sum(i, resource_usage(r,i) * x(i)) <= capacity(r);
+    }
+  MATHEMATICAL PROGRAM:
+    ProductionPlan {
+      Objective: TotalProfit;
+      Direction: maximize;
+      Constraints: AllConstraints;
+      Variables: AllVariables;
+    }
+END DECLARATION SECTION
+
+PROCEDURE MainExecution {
+  solve ProductionPlan;
+}

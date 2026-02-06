@@ -1,0 +1,29 @@
+* MIXAL Program to find the maximum of a sequence
+* From: The Art of Computer Programming, Vol 1
+        ORIG    3000
+START   ENT1    0           Entry point
+        LD1     N           Load N (number of elements)
+        ENT2    0           rI2 <- 0 (index)
+        LDA     X,2         Load first element into rA
+        INC2    1           Increment index
+LOOP    CMPA    X,2         Compare rA with X[rI2]
+        JGE     *+3         If rA >= X[rI2], skip next 2 instructions
+        LDA     X,2         Load new maximum
+        INC2    1           Increment index
+        CMP2    N           Compare index with N
+        JLE     LOOP        If index <= N, continue loop
+        STA     MAX         Store maximum
+        HLT                 Halt
+N       CON     10          Number of elements
+X       CON     5           First element
+        CON     12
+        CON     3
+        CON     18
+        CON     7
+        CON     15
+        CON     2
+        CON     11
+        CON     9
+        CON     6
+MAX     CON     0           Result storage
+        END     START

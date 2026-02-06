@@ -1,0 +1,77 @@
+routines (
+   prelude postlude mark_regions
+   RV R1 R2
+   standard_suffix
+)
+
+externals ( stem )
+
+booleans ( is_verb is_noun )
+
+groupings ( v )
+
+stringescapes {}
+
+stringdef a  hex 'E1'
+stringdef e  hex 'E9'
+stringdef i  hex 'ED'
+stringdef o  hex 'F3'
+stringdef u  hex 'FA'
+
+define v 'aeiou{a}{e}{i}{o}{u}'
+
+define mark_regions as (
+
+    $pV = limit
+    $p1 = limit
+    $p2 = limit
+
+    do (
+        gopast v  gopast non-v  setmark pV
+    )
+    do (
+        gopast v  gopast non-v  setmark p1
+        gopast v  gopast non-v  setmark p2
+    )
+)
+
+define prelude as (
+    test repeat (
+        [substring] among(
+            'qu' (hop 2)
+            '' (next)
+        )
+    )
+)
+
+define postlude as repeat (
+
+    [substring] among(
+        '{a~}' (<- 'a')
+        '{e~}' (<- 'e')
+        '{i~}' (<- 'i')
+        '{o~}' (<- 'o')
+        '{u~}' (<- 'u')
+    )
+)
+
+define RV as $pV <= cursor
+define R1 as $p1 <= cursor
+define R2 as $p2 <= cursor
+
+define standard_suffix as (
+    [substring] R1 among(
+        'ances' 'ancias' 'ancias' 'logias' 'encias' 'amente'
+        'ismos' 'ables' 'ibles' 'istas' 'adora' 'acion'
+        'antes' 'ancia' 'encia' 'mente' 'ancia' 'eria'
+            (delete)
+    )
+)
+
+define stem as (
+    do prelude
+    do mark_regions
+    backwards
+        do standard_suffix
+    do postlude
+)

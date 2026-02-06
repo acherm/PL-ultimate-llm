@@ -1,0 +1,17 @@
+PROBLEM: PEARLEX;
+
+DCL start_time DURATION;
+DCL end_time DURATION;
+
+TaskExample: TASK;
+  start_time := NOW;
+  CALL PUT ('Task starting at: ', start_time) BY A, D(15,3), SKIP;
+
+  AFTER 2 SEC RESUME;
+
+  end_time := NOW;
+  CALL PUT ('Task ending at: ', end_time) BY A, D(15,3), SKIP;
+  CALL PUT ('Elapsed time: ', end_time - start_time) BY A, D(15,3), SKIP;
+END;
+
+MODEND;

@@ -1,0 +1,20 @@
+% A simple Alma-0 agent program
+% Agent that handles greetings
+
+agent GreetingAgent {
+
+    knows(greeting(Name)) :-
+        tell(response("Hello " + Name)).
+
+    maintains(polite) :-
+        always(response(R)) :- R starts_with "Hello".
+
+    init() :-
+        knows(greeting("World")).
+}
+
+% Main execution
+main() :-
+    create(GreetingAgent, agent1),
+    send(agent1, greeting("Alice")),
+    send(agent1, greeting("Bob")).

@@ -1,0 +1,51 @@
+(literalize goal
+  status)
+
+(literalize monkey-status
+  location
+  on-top-of
+  holding)
+
+(literalize object
+  name
+  location
+  on-top-of
+  weight)
+
+(p initial-facts
+  -->
+  (make goal ^status get-bananas)
+  (make monkey-status ^location t5-7 ^on-top-of floor ^holding blank)
+  (make object ^name bananas ^location t2-2 ^on-top-of ceiling ^weight light)
+  (make object ^name ladder ^location t4-4 ^on-top-of floor ^weight heavy))
+
+(p walk-to-ladder
+  (goal ^status get-bananas)
+  (monkey-status ^location <> t4-4 ^on-top-of floor)
+  (object ^name ladder ^location <l>)
+  -->
+  (modify 2 ^location <l>)
+  (write |Monkey walks to ladder|))
+
+(p climb-ladder
+  (goal ^status get-bananas)
+  (monkey-status ^location <l> ^on-top-of floor)
+  (object ^name ladder ^location <l>)
+  -->
+  (modify 2 ^on-top-of ladder)
+  (write |Monkey climbs ladder|))
+
+(p grab-bananas
+  (goal ^status get-bananas)
+  (monkey-status ^on-top-of ladder ^holding blank ^location <l>)
+  (object ^name bananas ^location <l>)
+  -->
+  (modify 2 ^holding bananas)
+  (modify 1 ^status eat-bananas)
+  (write |Monkey grabs bananas|))
+
+(p eat-bananas
+  (goal ^status eat-bananas)
+  -->
+  (write |Monkey eats bananas|)
+  (halt))

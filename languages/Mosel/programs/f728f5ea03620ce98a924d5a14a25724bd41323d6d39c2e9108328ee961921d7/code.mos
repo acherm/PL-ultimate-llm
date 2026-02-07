@@ -1,0 +1,35 @@
+model Transportation
+uses "mmxprs"
+
+declarations
+  SOURCES = 1..2
+  DESTINATIONS = 1..3
+  
+  supply: array(SOURCES) of integer
+  demand: array(DESTINATIONS) of integer
+  cost: array(SOURCES, DESTINATIONS) of real
+  
+  ship: array(SOURCES, DESTINATIONS) of mpvar
+end-declarations
+
+supply :: [20, 30]
+demand :: [15, 20, 15]
+
+cost :: [2, 3, 4,
+         3, 2, 1]
+
+forall(i in SOURCES)
+  sum(j in DESTINATIONS) ship(i,j) <= supply(i)
+
+forall(j in DESTINATIONS)
+  sum(i in SOURCES) ship(i,j) >= demand(j)
+
+TotalCost := sum(i in SOURCES, j in DESTINATIONS) cost(i,j) * ship(i,j)
+
+minimize(TotalCost)
+
+writeln("Optimal cost: ", getobjval)
+forall(i in SOURCES, j in DESTINATIONS | getsol(ship(i,j)) > 0)
+  writeln("Ship ", getsol(ship(i,j)), " from ", i, " to ", j)
+
+end-model

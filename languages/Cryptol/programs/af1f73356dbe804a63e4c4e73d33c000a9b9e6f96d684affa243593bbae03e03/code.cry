@@ -1,0 +1,14 @@
+// SHA-256 implementation example
+module SHA256Example where
+
+// Simple function to demonstrate Cryptol
+rightRotate : {n} (fin n, n >= 1) => [n] -> [8] -> [n]
+rightRotate x s = (x >> s) || (x << (fromInteger n - s))
+    where n = `n
+
+// Example property: rotating 32 times returns original value
+property rotateIdentity x = rightRotate`{32} x 32 == x
+
+// Simple hash demonstration - first 32 bits of SHA-256 initial value
+h0 : [32]
+h0 = 0x6a09e667

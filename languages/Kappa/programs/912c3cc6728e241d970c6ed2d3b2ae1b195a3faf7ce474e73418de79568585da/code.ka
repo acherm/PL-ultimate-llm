@@ -1,0 +1,19 @@
+// Simple dimerization model
+%agent: A(x)
+%agent: B(x)
+
+// Binding rule
+'bind' A(x[.]), B(x[.]) -> A(x[1]), B(x[1]) @ 1.0
+
+// Unbinding rule
+'unbind' A(x[1]), B(x[1]) -> A(x[.]), B(x[.]) @ 0.1
+
+// Initial conditions
+%init: 1000 A()
+%init: 1000 B()
+
+// Observation
+%obs: 'dimers' |A(x[1]), B(x[1])|
+
+// Stop condition
+%var: 'sim_time' 100.0

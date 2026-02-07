@@ -1,0 +1,30 @@
+begin-report
+  do Init-Report
+  do Process-Main
+  do Reset
+end-report
+
+begin-procedure Init-Report
+  move 'Employee Report' to $ReportTitle
+  display $ReportTitle
+end-procedure
+
+begin-procedure Process-Main
+begin-SELECT
+EMPLID
+NAME
+DEPTID
+SALARY
+  do Print-Record
+FROM PS_EMPLOYEES
+WHERE STATUS = 'A'
+ORDER BY DEPTID, NAME
+end-SELECT
+end-procedure
+
+begin-procedure Print-Record
+  print &EMPLID    (+1,1,11)
+  print &NAME      (0,15,30)
+  print &DEPTID    (0,50,10)
+  print &SALARY    (0,65,12) edit 999,999.99
+end-procedure

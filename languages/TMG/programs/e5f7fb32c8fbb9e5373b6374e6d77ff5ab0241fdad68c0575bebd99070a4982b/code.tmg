@@ -1,0 +1,16 @@
+# Simple expression parser in TMG
+# Parses arithmetic expressions with +, -, *, /
+
+expr: term ( <+> term <add> | <-> term <sub> )* ;
+
+term: factor ( <*> factor <mul> | </> factor <div> )* ;
+
+factor: <(> expr <)> | number ;
+
+number: <[0-9]>+ <num> ;
+
+add: { add() } ;
+sub: { sub() } ;
+mul: { mul() } ;
+div: { div() } ;
+num: { push_number() } ;

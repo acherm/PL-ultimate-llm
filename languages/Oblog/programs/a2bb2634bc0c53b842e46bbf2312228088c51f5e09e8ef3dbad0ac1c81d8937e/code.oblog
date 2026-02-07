@@ -1,0 +1,18 @@
+% Oblog program: simple family relationships
+class person(name).
+
+class family.
+  method parent(person(P), person(C)) :-
+    P = 'John', C = 'Mary'.
+  method parent(person(P), person(C)) :-
+    P = 'John', C = 'Tom'.
+  method parent(person(P), person(C)) :-
+    P = 'Mary', C = 'Ann'.
+
+  method grandparent(person(GP), person(GC)) :-
+    self.parent(GP, P),
+    self.parent(P, GC).
+end.
+
+% Query: who is Ann's grandparent?
+:- family F, F.grandparent(GP, person('Ann')), write(GP).

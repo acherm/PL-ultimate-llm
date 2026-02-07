@@ -1,0 +1,24 @@
+%typeterm Term {
+  implement { Term }
+  is_sort(t) { t instanceof Term }
+}
+
+%op Term a() {
+  is_fsym(t) { t instanceof A }
+  make() { new A() }
+}
+
+%op Term f(x:Term) {
+  is_fsym(t) { t instanceof F }
+  get_slot(x,t) { ((F)t).getX() }
+  make(t) { new F(t) }
+}
+
+public class SimpleMatch {
+  %match(subject) {
+    f(a()) -> { return "Matched f(a())"; }
+    f(x) -> { return "Matched f(" + `x + ")"; }
+    x -> { return "Matched " + `x; }
+  }
+  return "No match";
+}

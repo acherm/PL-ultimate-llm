@@ -1,0 +1,25 @@
+# Compute the 10th Fibonacci number
+# Stack: [] -> [n]
+push.10
+exec.fib
+# Fibonacci procedure
+proc.fib.2
+    dup.0
+    push.1
+    lte
+    if.true
+        # Base case: fib(0) = 0, fib(1) = 1
+        dup.0
+    else
+        # Recursive case: fib(n) = fib(n-1) + fib(n-2)
+        dup.0
+        push.1
+        sub
+        exec.fib
+        swap
+        push.2
+        sub
+        exec.fib
+        add
+    end
+end

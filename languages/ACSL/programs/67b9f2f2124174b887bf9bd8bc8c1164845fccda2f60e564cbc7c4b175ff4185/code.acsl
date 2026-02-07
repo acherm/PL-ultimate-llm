@@ -1,0 +1,12 @@
+PROGRAM Spring damper system
+CONSTANT m = 1.0, k = 10.0, c = 0.5
+INITIAL
+  x = 1.0
+  v = 0.0
+END
+DERIVATIVE
+  v = INTEG((-k*x - c*v)/m, 0.0)
+  x = INTEG(v, 1.0)
+END
+TERMINAL(T .GE. 10.0)
+END

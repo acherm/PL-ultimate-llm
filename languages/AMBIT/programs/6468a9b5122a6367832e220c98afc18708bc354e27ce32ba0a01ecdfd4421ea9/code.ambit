@@ -1,0 +1,12 @@
+# AMBIT pattern matching example
+# Replace all occurrences of 'a' with 'b' in a string
+
+(DEFINE REPLACE-A-WITH-B (LAMBDA (S)
+  (IF (NULL S) NIL
+    (IF (EQ (CAR S) 'A)
+      (CONS 'B (REPLACE-A-WITH-B (CDR S)))
+      (CONS (CAR S) (REPLACE-A-WITH-B (CDR S)))))))
+
+# Test the function
+(REPLACE-A-WITH-B '(H E L L O A W O R L D A))
+# Result: (H E L L O B W O R L D B)

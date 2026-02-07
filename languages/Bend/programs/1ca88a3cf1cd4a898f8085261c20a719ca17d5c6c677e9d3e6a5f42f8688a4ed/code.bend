@@ -1,0 +1,12 @@
+# Fibonacci sequence in Bend
+def fib(n):
+  switch n:
+    case 0:
+      return 0
+    case 1:
+      return 1
+    case _:
+      return fib(n - 1) + fib(n - 2)
+
+def main():
+  return fib(10)

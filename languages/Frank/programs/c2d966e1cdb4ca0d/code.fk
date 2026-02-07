@@ -1,0 +1,13 @@
+interface State X = get : X
+                   | put : X -> Unit
+
+state : X -> <State X>Y -> Y
+state x <get -> k>    = state x (k x)
+state x <put x' -> k> = state x' (k unit)
+state x y             = y
+
+prog : {[State Int]Int}
+prog! = put 5; put (get! + 1); get!
+
+main : {[Console]Unit}
+main! = print (state 0 prog!)

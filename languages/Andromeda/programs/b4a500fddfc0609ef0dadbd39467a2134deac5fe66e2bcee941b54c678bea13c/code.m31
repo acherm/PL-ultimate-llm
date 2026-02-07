@@ -1,0 +1,11 @@
+(* Simple proof of conjunction commutativity *)
+constant and_comm : forall A B : Type, A /\ B -> B /\ A :=
+  fun A B p =>
+    match p with
+    | (x, y) => (y, x)
+    end.
+
+(* Proof that implication is transitive *)
+constant impl_trans : forall A B C : Type,
+  (A -> B) -> (B -> C) -> (A -> C) :=
+  fun A B C f g x => g (f x).

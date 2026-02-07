@@ -1,0 +1,28 @@
+module factorial.
+
+import basics.
+
+export factorial.
+
+type nat ::= zero | s(nat).
+
+function
+  factorial: nat -> nat.
+
+rules
+  factorial(zero) => s(zero);
+  factorial(s(N)) => times(s(N), factorial(N)).
+
+function
+  times: nat * nat -> nat.
+
+rules
+  times(zero, _) => zero;
+  times(s(N), M) => plus(M, times(N, M)).
+
+function
+  plus: nat * nat -> nat.
+
+rules
+  plus(zero, M) => M;
+  plus(s(N), M) => s(plus(N, M)).

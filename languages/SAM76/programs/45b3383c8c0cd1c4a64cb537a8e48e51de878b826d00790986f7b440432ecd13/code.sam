@@ -1,0 +1,22 @@
+; Factorial program in SAM76
+; Computes factorial of N
+        LOD  N      ; Load N
+        STO  RESULT ; Store in RESULT
+        LOD  N      ; Load N again
+        SUB  ONE    ; Subtract 1
+        STO  COUNTER; Initialize counter
+LOOP:   LOD  COUNTER; Load counter
+        JZE  DONE   ; If zero, done
+        LOD  RESULT ; Load result
+        MUL  COUNTER; Multiply by counter
+        STO  RESULT ; Store result
+        LOD  COUNTER; Load counter
+        SUB  ONE    ; Decrement
+        STO  COUNTER; Store counter
+        JMP  LOOP   ; Loop
+DONE:   LOD  RESULT ; Load final result
+        HLT         ; Halt
+N:      5           ; Input value
+ONE:    1           ; Constant 1
+RESULT: 0           ; Result storage
+COUNTER:0           ; Loop counter

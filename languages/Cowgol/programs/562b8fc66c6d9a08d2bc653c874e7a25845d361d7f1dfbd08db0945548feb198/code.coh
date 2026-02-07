@@ -1,0 +1,32 @@
+# Fibonacci calculator in Cowgol
+include "cowgol.coh";
+
+sub fibonacci(n: uint16): (result: uint16) is
+    var a: uint16 := 0;
+    var b: uint16 := 1;
+    var i: uint16 := 0;
+    var temp: uint16;
+
+    if n == 0 then
+        result := 0;
+        return;
+    end if;
+
+    if n == 1 then
+        result := 1;
+        return;
+    end if;
+
+    while i < n - 1 loop
+        temp := a + b;
+        a := b;
+        b := temp;
+        i := i + 1;
+    end loop;
+
+    result := b;
+end sub;
+
+print("Fibonacci(10) = ");
+print_i16(fibonacci(10));
+print_newline();

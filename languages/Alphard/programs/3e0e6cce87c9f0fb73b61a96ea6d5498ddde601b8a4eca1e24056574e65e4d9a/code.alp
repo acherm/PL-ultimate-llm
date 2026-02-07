@@ -1,0 +1,27 @@
+form stack(size: integer) =
+    integer array s[1:size];
+    integer top initially 0;
+    invariant 0 <= top <= size;
+
+    function push(x: integer)
+        pre top < size
+        post top = old top + 1 and s[top] = x;
+    begin
+        top := top + 1;
+        s[top] := x
+    end;
+
+    function pop returns integer
+        pre top > 0
+        post top = old top - 1 and pop = old s[top];
+    begin
+        pop := s[top];
+        top := top - 1
+    end;
+
+    function is_empty returns boolean
+        post is_empty = (top = 0);
+    begin
+        is_empty := (top = 0)
+    end
+end stack

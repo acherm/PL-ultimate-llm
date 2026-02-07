@@ -1,0 +1,16 @@
+TITLE Simple Harmonic Oscillator
+CONSTANT K = 1.0, M = 1.0
+INITIAL
+  X = 1.0
+  V = 0.0
+END
+DYNAMIC
+  A = -K * X / M
+  V = INTEG(A, 0.0)
+  X = INTEG(V, 1.0)
+END
+TERMINAL T .GE. 10.0
+METHOD RKSFX
+TIMER DELT = 0.01, FINTIM = 10.0, PRDEL = 0.1
+PRINT X, V
+END

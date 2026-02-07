@@ -1,0 +1,9 @@
+\func +-assoc (x y z : Nat) : (x + y) + z = x + (y + z) \elim z
+  | 0 => idp
+  | suc z => pmap suc (+-assoc x y z)
+
+\func +-comm (x y : Nat) : x + y = y + x
+  | 0, 0 => idp
+  | 0, suc y => pmap suc (+-comm 0 y)
+  | suc x, 0 => pmap suc (+-comm x 0)
+  | suc x, suc y => pmap suc (+-comm (suc x) y *> pmap suc (inv (+-comm x y)) *> +-comm x (suc y))

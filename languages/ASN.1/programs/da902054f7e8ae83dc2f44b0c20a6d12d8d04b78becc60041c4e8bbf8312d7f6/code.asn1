@@ -1,0 +1,27 @@
+PersonnelRecord ::= SET {
+    name Name,
+    title [0] VisibleString,
+    number EmployeeNumber,
+    dateOfHire [1] Date,
+    nameOfSpouse [2] Name,
+    children [3] IMPLICIT SEQUENCE OF ChildInformation DEFAULT {}
+}
+
+ChildInformation ::= SET {
+    name Name,
+    dateOfBirth [0] Date
+}
+
+Name ::= SEQUENCE {
+    givenName VisibleString,
+    initial VisibleString,
+    familyName VisibleString
+}
+
+EmployeeNumber ::= INTEGER
+
+Date ::= SEQUENCE {
+    year INTEGER,
+    month INTEGER,
+    day INTEGER
+}

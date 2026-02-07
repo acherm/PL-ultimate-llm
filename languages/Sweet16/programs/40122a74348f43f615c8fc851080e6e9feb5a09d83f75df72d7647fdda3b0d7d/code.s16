@@ -1,0 +1,20 @@
+; Sweet16 Factorial Program
+; Compute factorial of a number
+
+SET R1, 5        ; Load 5 into R1 (number to compute factorial of)
+SET R2, 1        ; Load 1 into R2 (accumulator for result)
+SET R3, 1        ; Load 1 into R3 (counter)
+
+LOOP:
+LD R3            ; Load counter
+SUB R1           ; Subtract input number
+BGT END          ; If counter > input, we're done
+LD R2            ; Load accumulator
+MUL R3           ; Multiply by counter
+ST R2            ; Store back to accumulator
+INC R3           ; Increment counter
+BR LOOP          ; Branch back to loop
+
+END:
+LD R2            ; Load result
+RTS              ; Return to system

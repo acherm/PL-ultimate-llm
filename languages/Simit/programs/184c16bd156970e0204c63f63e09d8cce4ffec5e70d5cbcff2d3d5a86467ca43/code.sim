@@ -1,0 +1,27 @@
+element Point
+  x : float;
+  v : float;
+  m : float;
+end
+
+element Spring
+  k : float;
+  l : float;
+end
+
+extern points : set{Point};
+extern springs : set{Spring}(points,points);
+
+func compute_forces(s : Spring, p : (Point*2)) -> (f : (float*2))
+  var dx = p(1).x - p(0).x;
+  var stretch = dx - s.l;
+  var force = s.k * stretch;
+  f(0) = force;
+  f(1) = -force;
+end
+
+export func main()
+  forces = map compute_forces to springs reduce +;
+  points.v = points.v + (forces / points.m) * 0.01;
+  points.x = points.x + points.v * 0.01;
+end

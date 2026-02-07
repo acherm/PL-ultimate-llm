@@ -1,0 +1,13 @@
+type Buffer = { data : U8!, len : U32 }
+
+buffer_sum : Buffer -> U32
+buffer_sum buf =
+  let data = buf.data
+  and len = buf.len
+  in loop (0, 0) (\(i, acc).
+    if i < len then
+      let val = data[i]
+      in (i + 1, acc + val)
+    else
+      break acc
+  )

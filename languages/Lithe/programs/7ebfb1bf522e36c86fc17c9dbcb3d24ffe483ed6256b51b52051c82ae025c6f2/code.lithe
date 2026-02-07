@@ -1,0 +1,28 @@
+/* Parallel vector addition in Lithe */
+function vector_add(a, b, n)
+{
+    result = new_array(n);
+
+    parfor (i = 0; i < n; i++) {
+        result[i] = a[i] + b[i];
+    }
+
+    return result;
+}
+
+function main()
+{
+    n = 1000;
+    a = new_array(n);
+    b = new_array(n);
+
+    for (i = 0; i < n; i++) {
+        a[i] = i;
+        b[i] = i * 2;
+    }
+
+    c = vector_add(a, b, n);
+
+    print("First element: ", c[0]);
+    print("Last element: ", c[n-1]);
+}

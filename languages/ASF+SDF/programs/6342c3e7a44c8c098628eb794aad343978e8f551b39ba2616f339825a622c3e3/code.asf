@@ -1,0 +1,21 @@
+module ArithExpr
+imports basic/Integers
+exports
+  sorts Expr
+  context-free syntax
+    Integer -> Expr {cons("int")}
+    Expr "+" Expr -> Expr {left, cons("add")}
+    Expr "*" Expr -> Expr {left, cons("mul")}
+    "(" Expr ")" -> Expr {bracket}
+
+hiddens
+  variables
+    "$Expr"[0-9]* -> Expr
+
+  equations
+    [add-zero] $Expr0 + 0 = $Expr0
+    [zero-add] 0 + $Expr0 = $Expr0
+    [mul-zero] $Expr0 * 0 = 0
+    [zero-mul] 0 * $Expr0 = 0
+    [mul-one] $Expr0 * 1 = $Expr0
+    [one-mul] 1 * $Expr0 = $Expr0

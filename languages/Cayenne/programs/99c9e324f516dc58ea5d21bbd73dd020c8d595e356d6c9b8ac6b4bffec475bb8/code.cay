@@ -1,0 +1,17 @@
+-- Natural numbers and addition in Cayenne
+data Nat : # = Zero : Nat | Succ : Nat -> Nat;
+
+plus : Nat -> Nat -> Nat;
+plus = \m n ->
+  case m of
+    Zero -> n;
+    Succ m' -> Succ (plus m' n);
+
+-- Identity proof: forall n. plus Zero n = n
+plusZeroLeft : (n : Nat) -> Eq Nat (plus Zero n) n;
+plusZeroLeft = \n -> Refl Nat n;
+
+-- Successor property: plus (Succ m) n = Succ (plus m n)
+plusSuccLeft : (m : Nat) -> (n : Nat) -> 
+               Eq Nat (plus (Succ m) n) (Succ (plus m n));
+plusSuccLeft = \m n -> Refl Nat (Succ (plus m n));

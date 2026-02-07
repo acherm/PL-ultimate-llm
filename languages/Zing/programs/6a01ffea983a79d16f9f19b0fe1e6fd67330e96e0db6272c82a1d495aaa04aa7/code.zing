@@ -1,0 +1,27 @@
+// Simple concurrent counter in Zing
+class Counter {
+    int value;
+
+    void Increment() {
+        atomic {
+            value = value + 1;
+        }
+    }
+
+    int GetValue() {
+        return value;
+    }
+}
+
+process Main() {
+    Counter counter = new Counter();
+    counter.value = 0;
+
+    activate {
+        counter.Increment();
+    }
+
+    activate {
+        counter.Increment();
+    }
+}

@@ -1,0 +1,27 @@
+monitor BoundedBuffer(size: integer);
+  var buffer: array[1..size] of integer;
+  var count, in_ptr, out_ptr: integer;
+
+  procedure deposit(item: integer);
+  begin
+    if count = size then wait;
+    buffer[in_ptr] := item;
+    in_ptr := (in_ptr mod size) + 1;
+    count := count + 1;
+    signal;
+  end;
+
+  procedure remove(): integer;
+  begin
+    if count = 0 then wait;
+    remove := buffer[out_ptr];
+    out_ptr := (out_ptr mod size) + 1;
+    count := count - 1;
+    signal;
+  end;
+
+begin
+  count := 0;
+  in_ptr := 1;
+  out_ptr := 1;
+end;

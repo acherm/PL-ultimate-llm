@@ -1,0 +1,32 @@
+theory SimpleAuth
+begin
+
+/* Declare built-in functions */
+functions: pk/1, sign/2, verify/3, true/0
+
+/* Public key infrastructure */
+rule Register_pk:
+  [ Fr(~sk) ]
+  -->
+  [ !Pk($A, pk(~sk)), !Sk($A, ~sk) ]
+
+/* Client initiates authentication */
+rule Client_Init:
+  [ !Sk($C, ~sk), Fr(~nonce) ]
+  -->
+  [ Out(<$C, ~nonce, sign{~nonce}~sk>),
+    Client_Sent($C, ~nonce) ]
+
+/* Server verifies authentication */
+rule Server_Verify:
+  [ In(<$C, nonce, signature>),
+    !Pk($C, pk) ]
+  --[ Authentic($C, nonce),
+      Eq(verify(signature, nonce, pk), true) ]->
+  [ Server_Accepted($C, nonce) ]
+
+/* Verification lemma */
+lemma authentication:
+  "All c n #i. Authentic(c, n) @i ==> Ex #j. Client_Sent(c, n) @j & j < i"
+
+end

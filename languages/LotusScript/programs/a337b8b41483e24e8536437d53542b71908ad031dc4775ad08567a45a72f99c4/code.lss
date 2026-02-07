@@ -1,0 +1,27 @@
+Sub Initialize
+    Dim session As New NotesSession
+    Dim db As NotesDatabase
+    Dim doc As NotesDocument
+    Dim item As NotesItem
+    
+    ' Get current database
+    Set db = session.CurrentDatabase
+    
+    ' Create a new document
+    Set doc = db.CreateDocument()
+    
+    ' Set document fields
+    Call doc.ReplaceItemValue("Form", "Memo")
+    Call doc.ReplaceItemValue("Subject", "Hello from LotusScript")
+    
+    ' Create a rich text field
+    Set item = doc.CreateRichTextItem("Body")
+    Call item.AppendText("This is a sample LotusScript program.")
+    Call item.AddNewLine(2)
+    Call item.AppendText("LotusScript is used for IBM Notes/Domino applications.")
+    
+    ' Save the document
+    Call doc.Save(True, True)
+    
+    Print "Document created successfully!"
+End Sub

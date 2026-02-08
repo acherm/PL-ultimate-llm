@@ -1,0 +1,36 @@
+effect Flip(): Boolean
+effect Fail(): Nothing
+
+def choice(n: Int): Int / { Flip, Fail } = {
+  if (n < 1) { do Fail() }
+  else if (do Flip()) { n }
+  else { choice(n - 1) }
+}
+
+def triple(n: Int): (Int, Int, Int) / { Flip, Fail } = {
+  val i = choice(n)
+  val j = choice(i - 1)
+  val k = choice(j - 1)
+  if ((i * i) == (j * j) + (k * k)) {
+    (i, j, k)
+  } else {
+    do Fail()
+  }
+}
+
+def solutions(n: Int): List[(Int, Int, Int)] = {
+  try {
+    val t = triple(n)
+    [t]
+  } with Flip {
+    () => resume(true).append(resume(false))
+  } with Fail {
+    () => []
+  }
+}
+
+def main() = {
+  solutions(20).foreach { t =>
+    println(t)
+  }
+}

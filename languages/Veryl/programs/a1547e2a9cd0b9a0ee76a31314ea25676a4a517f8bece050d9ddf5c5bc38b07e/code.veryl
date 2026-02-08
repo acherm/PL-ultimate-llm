@@ -1,0 +1,17 @@
+module Counter (
+    i_clk: input logic,
+    i_rst: input logic,
+    o_count: output logic<8>
+) {
+    var count: logic<8>;
+
+    always_ff (i_clk, i_rst) {
+        if_reset {
+            count = 0;
+        } else {
+            count += 1;
+        }
+    }
+
+    assign o_count = count;
+}

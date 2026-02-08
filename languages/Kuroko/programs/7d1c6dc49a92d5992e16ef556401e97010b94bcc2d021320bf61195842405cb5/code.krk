@@ -1,0 +1,28 @@
+def fibonacci(n):
+    if n <= 0:
+        return []
+    if n == 1:
+        return [0]
+    let result = [0, 1]
+    for i in range(2, n):
+        result.append(result[i - 1] + result[i - 2])
+    return result
+
+def main():
+    let n = 20
+    let fibs = fibonacci(n)
+    print(f'First {n} Fibonacci numbers:')
+    for i in range(len(fibs)):
+        print(f'  F({i}) = {fibs[i]}')
+
+    # Demonstrate list comprehension
+    let evens = [x for x in fibs if x % 2 == 0]
+    print(f'Even Fibonacci numbers: {evens}')
+
+    # Demonstrate sum using reduce-like pattern
+    let total = 0
+    for x in fibs:
+        total += x
+    print(f'Sum of first {n} Fibonacci numbers: {total}')
+
+main()

@@ -1,0 +1,30 @@
+module Main exposing (main)
+
+import Node
+
+main : Node.Program
+main =
+    Node.defineProgram
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        }
+
+type alias Model =
+    {}
+
+type Msg
+    = NoOp
+
+init : Node.Environment -> Node.Init Model Msg
+init _ =
+    Node.startProgram {}
+        |> Node.withCmd (Node.log "Hello, World!")
+
+update : Msg -> Model -> Node.Update Model Msg
+update msg model =
+    Node.update model
+
+subscriptions : Model -> Node.Subscriptions Msg
+subscriptions _ =
+    Node.none

@@ -1,0 +1,52 @@
+(story title)    Haunted Cabin
+(story author)   Example
+
+(intro)
+    You wake up in a dark cabin. The air smells of dust and old wood.
+
+#room = #cabin.
+
+#cabin
+(room *)
+(name *)    dark cabin
+(look *)
+    The cabin is small and cramped. Moonlight filters through
+    a cracked window. There is a door to the north.
+
+#forest
+(room *)
+(name *)    forest clearing
+(look *)
+    You stand in a clearing surrounded by tall pines.
+    A narrow path leads south back to the cabin.
+
+(from #cabin go #north to #forest)
+
+#lantern
+(name *)    brass lantern
+(item *)
+(* is #in #cabin)
+(descr *)
+    An old brass lantern, tarnished but functional.
+
+#key
+(name *)    rusty key
+(item *)
+(* is #in #forest)
+(descr *)
+    A small rusty key. It might unlock something.
+
+(perform [take $Obj])
+    (if) ($Obj is #in (current room $Room) $Room) (then)
+        ($Obj is now #heldby #player)
+        You pick up (the $Obj).
+    (else)
+        You don't see that here.
+    (endif)
+
+(perform [look])
+    (current room $Room)
+    (look $Room)
+    (exhaust) *($Obj is #in $Room) (then)
+        You see (a $Obj) here.
+    (stopping)

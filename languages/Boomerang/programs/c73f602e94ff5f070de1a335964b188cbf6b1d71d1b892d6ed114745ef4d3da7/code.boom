@@ -1,0 +1,11 @@
+(* Swap lens - swaps two comma-separated fields *)
+
+let ALPHA : regexp = [A-Za-z]+
+
+let swap : lens =
+  copy ALPHA . del "," . copy ALPHA
+  <->
+  copy ALPHA . ins "," . copy ALPHA
+
+test swap.get "hello,world" = "world,hello"
+test swap.put "world,hello" into "hello,world" = "world,hello"

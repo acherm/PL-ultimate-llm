@@ -1,0 +1,29 @@
+TYPE TPlanet
+	x
+	y
+	radius%
+	density%
+	mass%
+
+	FUNCTION Create:
+		self.x = RND(600)+100.0
+		self.y = RND(380)+50.0
+		self.density = RND(3)+1
+		self.radius = RND(60)+20
+		self.mass = self.density * self.radius * self.radius * 3.1415 * 0.001
+	ENDFUNCTION
+
+	FUNCTION Draw:
+		FOR i=0 TO 360 STEP 36 / self.density
+			DRAWLINE self.x,self.y, self.x+COS(i)*self.radius, self.y-SIN(i)*self.radius, RGB(self.density*60,255-self.density*40, 140+self.density*30)
+		NEXT
+	ENDFUNCTION
+
+	FUNCTION Overlaps: aOther AS TPlanet
+		LOCAL dx, dy, dist
+		dx = self.x - aOther.x
+		dy = self.y - aOther.y
+		dist = SQR(dx*dx + dy*dy)
+		RETURN dist <= (self.radius + aOther.radius)
+	ENDFUNCTION
+ENDTYPE

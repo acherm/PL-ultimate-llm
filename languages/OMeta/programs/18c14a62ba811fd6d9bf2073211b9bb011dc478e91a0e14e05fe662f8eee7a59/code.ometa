@@ -1,0 +1,11 @@
+ometa Calculator {
+  digit = ^digit:d -> d.digitValue(),
+  number = digit+:ds -> ds.join('').toNumber(),
+  addExpr = mulExpr:x ('+' mulExpr:y -> x + y
+                       |'-' mulExpr:y -> x - y)*,
+  mulExpr = primExpr:x ('*' primExpr:y -> x * y
+                        |'/' primExpr:y -> x / y)*,
+  primExpr = '(' addExpr:x ')' -> x
+           | number,
+  expr = addExpr
+}

@@ -1,0 +1,21 @@
+% Natural numbers
+LF nat : type =
+  | z : nat
+  | s : nat -> nat
+;
+
+% Addition
+LF add : nat -> nat -> nat -> type =
+  | add_z : add z N N
+  | add_s : add (s N) M (s P) <- add N M P
+;
+
+% Proof that addition is commutative
+rec add_comm : (g : cxt) {N : [g ⊢ nat]} {M : [g ⊢ nat]}
+  [g ⊢ add N M P] -> [g ⊢ add M N P] =
+  / total n (add_comm g n) /
+  fn n => fn m => fn p =>
+    case p of
+    | [g ⊢ add_z] => ?
+    | [g ⊢ add_s D] => ?
+;

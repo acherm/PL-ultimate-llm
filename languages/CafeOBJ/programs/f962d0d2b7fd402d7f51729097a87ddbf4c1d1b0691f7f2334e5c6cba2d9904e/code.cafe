@@ -1,0 +1,17 @@
+mod! PEANO-NAT {
+  [ Zero NzNat < Nat ]
+  op 0 : -> Zero {constr}
+  op s : Nat -> NzNat {constr}
+  op _+_ : Nat Nat -> Nat
+  op _*_ : Nat Nat -> Nat
+  vars N M : Nat
+  eq 0 + N = N .
+  eq s(N) + M = s(N + M) .
+  eq 0 * N = 0 .
+  eq s(N) * M = M + (N * M) .
+}
+
+open PEANO-NAT .
+  reduce s(s(0)) + s(s(s(0))) .
+  reduce s(s(0)) * s(s(s(0))) .
+close

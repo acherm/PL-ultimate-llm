@@ -1,0 +1,6 @@
+EXPR = TERM $ ( '+' TERM $ .OUT('ADD') / '-' TERM $ .OUT('SUB') ) * ;
+
+TERM = FACTOR $ ( '*' FACTOR $ .OUT('MUL') / '/' FACTOR $ .OUT('DIV') ) * ;
+
+FACTOR = .NUMBER $ .OUT('NUM' *)
+       / '(' EXPR ')' ;

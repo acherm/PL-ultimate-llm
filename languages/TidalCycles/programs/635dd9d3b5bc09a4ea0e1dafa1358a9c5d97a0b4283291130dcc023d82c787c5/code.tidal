@@ -1,0 +1,27 @@
+-- Simple TidalCycles drum pattern with effects
+-- Demonstrates pattern composition, effects, and structure
+
+d1 $ stack [
+  s "bd bd ~ bd ~ bd bd ~",
+  s "~ hh ~ hh ~ hh ~ hh",
+  s "~ ~ cp ~ ~ ~ cp ~"
+  ]
+
+d2 $ every 4 (fast 2)
+  $ s "arpy arpy:2 arpy:4 arpy:5"
+  # speed "1 0.5 1.5 2"
+  # pan (sine)
+  # room 0.3
+  # sz 0.5
+
+d3 $ whenmod 8 6 (striate 4)
+  $ sound "jvbass jvbass:1 jvbass:2 jvbass:3"
+  # gain 0.9
+  # lpf (range 400 4000 $ slow 4 sine)
+  # resonance 0.2
+
+d4 $ sometimesBy 0.3 (# crush 4)
+  $ s "tabla:0 tabla:4 tabla:2 tabla:5"
+  # gain 0.8
+
+hush

@@ -1,0 +1,48 @@
+module Demo;
+
+interface Counter {
+    Unit increment();
+    Int getValue();
+}
+
+class CounterImpl implements Counter {
+    Int value = 0;
+
+    Unit increment() {
+        value = value + 1;
+    }
+
+    Int getValue() {
+        return value;
+    }
+}
+
+interface Worker {
+    Unit doWork(Counter c, Int times);
+}
+
+class WorkerImpl implements Worker {
+    Unit doWork(Counter c, Int times) {
+        Int i = 0;
+        while (i < times) {
+            c!increment();
+            i = i + 1;
+        }
+    }
+}
+
+{
+    Counter c = new CounterImpl();
+    Worker w1 = new WorkerImpl();
+    Worker w2 = new WorkerImpl();
+
+    Fut<Unit> f1 = w1!doWork(c, 5);
+    Fut<Unit> f2 = w2!doWork(c, 5);
+
+    f1.get;
+    f2.get;
+
+    Fut<Int> fv = c!getValue();
+    Int result = fv.get;
+    println("Counter value: " ++ toString(result));
+}

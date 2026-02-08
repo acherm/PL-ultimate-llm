@@ -1,0 +1,40 @@
+module Iou where
+
+template Iou
+  with
+    issuer : Party
+    owner : Party
+    currency : Text
+    amount : Decimal
+  where
+    signatory issuer
+    observer owner
+
+    choice Transfer : ContractId Iou
+      with
+        newOwner : Party
+      controller owner
+      do create this with owner = newOwner
+
+    choice Split : (ContractId Iou, ContractId Iou)
+      with
+        splitAmount : Decimal
+      controller owner
+      do
+        let rest = amount - splitAmount
+        assert (splitAmount > 0.0)
+        assert (rest > 0.0)
+        iouSplit <- create this with amount = splitAmount
+        iouRest <- create this with amount = rest
+        return (iouSplit, iouRest)
+
+    choice Merge : ContractId Iou
+      with
+        otherCid : ContractId Iou
+      controller owner
+      do
+        otherIou <- fetch otherCid
+        assert (issuer == otherIou.issuer)
+        assert (currency == otherIou.currency)
+        archive otherCid
+        create this with amount = amount + otherIou.amount

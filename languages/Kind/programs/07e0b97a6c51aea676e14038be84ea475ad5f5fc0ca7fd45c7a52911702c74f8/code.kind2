@@ -1,0 +1,32 @@
+// Natural numbers
+Nat : * =
+  | zero
+  | succ (pred: Nat)
+
+// Addition of natural numbers
+add (a: Nat) (b: Nat) : Nat =
+  match a {
+    zero => b
+    succ => succ (add a.pred b)
+  }
+
+// Multiplication of natural numbers
+mul (a: Nat) (b: Nat) : Nat =
+  match a {
+    zero => zero
+    succ => add b (mul a.pred b)
+  }
+
+// Fibonacci
+fib (n: Nat) : Nat =
+  match n {
+    zero => zero
+    succ => match n.pred {
+      zero => succ zero
+      succ => add (fib n.pred) (fib n.pred.pred)
+    }
+  }
+
+// Main: compute fib(5)
+Main : Nat =
+  fib (succ (succ (succ (succ (succ zero)))))

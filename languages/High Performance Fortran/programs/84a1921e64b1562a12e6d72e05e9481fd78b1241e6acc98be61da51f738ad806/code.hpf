@@ -1,0 +1,29 @@
+program matrix_add
+    implicit none
+    integer, parameter :: n = 100
+    real, dimension(n,n) :: a, b, c
+    integer :: i, j
+
+!HPF$ DISTRIBUTE a(BLOCK,BLOCK)
+!HPF$ DISTRIBUTE b(BLOCK,BLOCK)
+!HPF$ DISTRIBUTE c(BLOCK,BLOCK)
+!HPF$ ALIGN b WITH a
+!HPF$ ALIGN c WITH a
+
+    ! Initialize matrices
+    forall (i = 1:n, j = 1:n)
+        a(i,j) = real(i + j)
+        b(i,j) = real(i * j)
+    end forall
+
+    ! Parallel matrix addition using FORALL
+    forall (i = 1:n, j = 1:n)
+        c(i,j) = a(i,j) + b(i,j)
+    end forall
+
+    ! Print sample result
+    print *, 'c(1,1) =', c(1,1)
+    print *, 'c(50,50) =', c(50,50)
+    print *, 'Matrix addition complete'
+
+end program matrix_add

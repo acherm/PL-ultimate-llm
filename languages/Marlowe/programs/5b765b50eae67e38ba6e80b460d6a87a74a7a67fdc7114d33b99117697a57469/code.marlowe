@@ -1,0 +1,42 @@
+When
+    [Case
+        (Deposit
+            (Role "investor")
+            (Role "investor")
+            (Token "" "")
+            (ConstantParam "Amount")
+        )
+        (Pay
+            (Role "investor")
+            (Party (Role "issuer"))
+            (Token "" "")
+            (ConstantParam "Amount")
+            (When
+                [Case
+                    (Deposit
+                        (Role "issuer")
+                        (Role "issuer")
+                        (Token "" "")
+                        (AddValue
+                            (ConstantParam "Amount")
+                            (ConstantParam "Interest")
+                        )
+                    )
+                    (Pay
+                        (Role "issuer")
+                        (Party (Role "investor"))
+                        (Token "" "")
+                        (AddValue
+                            (ConstantParam "Amount")
+                            (ConstantParam "Interest")
+                        )
+                        Close
+                    )
+                ]
+                (TimeParam "Maturity Date")
+                Close
+            )
+        )
+    ]
+    (TimeParam "Deposit Deadline")
+    Close

@@ -1,0 +1,16 @@
+;; Xtlang factorial function
+(bind-func factorial
+  (lambda (n:i64)
+    (if (<= n 1)
+        1
+        (* n (factorial (- n 1))))))
+
+;; Test the factorial function
+(bind-func test_factorial
+  (lambda ()
+    (let ((result (factorial 5)))
+      (printf "Factorial of 5 is: %lld\n" result)
+      result)))
+
+;; Call the test
+(test_factorial)

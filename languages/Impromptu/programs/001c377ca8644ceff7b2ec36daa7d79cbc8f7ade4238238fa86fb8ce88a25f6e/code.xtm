@@ -1,0 +1,10 @@
+;; Simple Impromptu example - repeating musical pattern
+(define loop
+  (lambda (beat dur)
+    (play (now) piano (random 60 85) 80 dur)
+    (callback (*metro* (+ beat (* .5 dur))) 'loop
+              (+ beat dur)
+              dur)))
+
+;; Start the loop
+(loop (*metro* 'get-beat 4) 1)

@@ -1,0 +1,20 @@
+enum Op {
+    Add,
+    Mul
+}
+
+pipeline(1) mul(clk: clock, x: int<18>, y: int<18>) -> int<36> {
+    let result = x * y;
+  reg;
+    result
+}
+
+pipeline(1) compute(clk: clock, op: Op, x: int<18>, y: int<18>) -> int<36> {
+    let sum = x + y;
+    let prod = inst(1) mul(clk, x, y);
+  reg;
+    match op {
+      Op::Add => sext(sum),
+      Op::Mul => prod,
+    }
+}

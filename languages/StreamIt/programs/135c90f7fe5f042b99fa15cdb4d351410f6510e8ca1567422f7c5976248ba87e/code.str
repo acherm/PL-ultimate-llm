@@ -1,0 +1,46 @@
+void->void pipeline FIRProgram {
+    add FloatSource(100);
+    add FIRFilter(5);
+    add FloatPrinter();
+}
+
+float->float filter FIRFilter(int N) {
+    float[N] weights;
+
+    init {
+        for (int i = 0; i < N; i++) {
+            weights[i] = 1.0 / N;
+        }
+    }
+
+    work push 1 pop 1 peek N {
+        float result = 0.0;
+        for (int i = 0; i < N; i++) {
+            result += peek(i) * weights[i];
+        }
+        pop();
+        push(result);
+    }
+}
+
+void->float filter FloatSource(int total) {
+    int count;
+
+    init {
+        count = 0;
+    }
+
+    work push 1 {
+        push((float) count);
+        count++;
+        if (count >= total) {
+            count = 0;
+        }
+    }
+}
+
+float->void filter FloatPrinter() {
+    work pop 1 {
+        println(pop());
+    }
+}

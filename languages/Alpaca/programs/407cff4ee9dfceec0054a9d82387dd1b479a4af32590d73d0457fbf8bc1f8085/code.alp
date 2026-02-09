@@ -1,0 +1,24 @@
+module simple_math
+
+export add/2, factorial/1, map/2
+
+let add x y = x + y
+
+let factorial n =
+  match n with
+    0 -> 1
+  | _ -> n * (factorial (n - 1))
+
+let map f l =
+  match l with
+    [] -> []
+  | h :: t -> (f h) :: (map f t)
+
+let double x = x * 2
+
+let test_it () =
+  let nums = [1, 2, 3, 4, 5] in
+  let doubled = map double nums in
+  let sum = add 10 20 in
+  let fact_5 = factorial 5 in
+  (doubled, sum, fact_5)

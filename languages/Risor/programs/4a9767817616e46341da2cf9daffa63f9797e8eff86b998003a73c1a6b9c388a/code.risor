@@ -1,0 +1,14 @@
+func work(count) {
+    mychan := chan(5)
+    go func() {
+        for i := 0; i < count; i++ {
+            mychan <- rand.float()
+        }
+        close(mychan)
+    }()
+    return mychan
+}
+
+for i, value := range work(5) {
+    print(i, value)
+}

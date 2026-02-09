@@ -1,0 +1,22 @@
+/* JSONata expression to transform an order into an invoice summary */
+$sum := function($arr) { $reduce($arr, function($prev, $curr) { $prev + $curr }, 0) };
+
+{
+  "invoice": {
+    "customer": Account.Name,
+    "date": $now(),
+    "items": Account.Order.Product.{
+      "name": `Product Name`,
+      "quantity": Quantity,
+      "unit_price": Price,
+      "total": Quantity * Price
+    },
+    "subtotal": $sum(Account.Order.Product.(Quantity * Price)),
+    "tax_rate": 0.08,
+    "tax": $sum(Account.Order.Product.(Quantity * Price)) * 0.08,
+    "grand_total": $sum(Account.Order.Product.(Quantity * Price)) * 1.08,
+    "item_count": $count(Account.Order.Product),
+    "most_expensive": Account.Order.Product^(>Price)[0].`Product Name`,
+    "discount": $sum(Account.Order.Product.(Quantity * Price)) > 500 ? "10% loyalty discount applied" : "No discount"
+  }
+}

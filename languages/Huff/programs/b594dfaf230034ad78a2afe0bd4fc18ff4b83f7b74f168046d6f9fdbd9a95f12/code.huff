@@ -1,0 +1,42 @@
+/* Simple Counter Contract in Huff */
+
+/* Interface */
+#define function getValue() view returns (uint256)
+#define function setValue(uint256) nonpayable returns ()
+
+/* Storage Slots */
+#define constant VALUE_LOCATION = FREE_STORAGE_POINTER()
+
+/* Getter Macro */
+#define macro GET_VALUE() = takes (0) returns (0) {
+    [VALUE_LOCATION]   // [value_location]
+    sload              // [value]
+    0x00 mstore        // []
+    0x20 0x00 return   // []
+}
+
+/* Setter Macro */
+#define macro SET_VALUE() = takes (0) returns (0) {
+    0x04 calldataload  // [value]
+    [VALUE_LOCATION]   // [value, value_location]
+    sstore             // []
+    stop               // []
+}
+
+/* Main Entry Point */
+#define macro MAIN() = takes (0) returns (0) {
+    // Get the function selector
+    0x00 calldataload 0xE0 shr
+
+    // Jump to the implementation of the function
+    dup1 __FUNC_SIG(getValue) eq getvalue jumpi
+    dup1 __FUNC_SIG(setValue) eq setvalue jumpi
+
+    // Revert if no match
+    0x00 0x00 revert
+
+    getvalue:
+        GET_VALUE()
+    setvalue:
+        SET_VALUE()
+}

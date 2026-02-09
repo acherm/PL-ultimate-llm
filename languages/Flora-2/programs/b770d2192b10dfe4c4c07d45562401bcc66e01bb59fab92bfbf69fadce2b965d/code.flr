@@ -1,0 +1,26 @@
+// Flora-2 example: Object-oriented knowledge base with inheritance
+// Demonstrates F-logic frames, class hierarchy, and queries
+
+:- use_argumentation_theory.
+
+person[|name => \string, age => \integer|].
+student::person.
+graduate_student::student.
+
+bob:student[name -> 'Bob', age -> 25].
+alice:graduate_student[name -> 'Alice', age -> 28, advisor -> tom].
+tom:person[name -> 'Tom', age -> 55].
+
+// Method definition: full_info
+person[|full_info => \string|].
+?X[full_info -> ?Info] :-
+    ?X:person[name -> ?N, age -> ?A],
+    fmt_write_string(?Info, '%s (age %d)', args(?N, ?A))@\prolog.
+
+// Query: find all students
+?- student[|name => \string|].
+?- ?X:student[name -> ?N], fmt_write('Student: %s\n', args(?N))@\prolog.
+
+// Query: find graduate students with advisors
+?- ?X:graduate_student[name -> ?N, advisor -> ?A[name -> ?AN]],
+   fmt_write('%s is advised by %s\n', args(?N, ?AN))@\prolog.

@@ -1,0 +1,36 @@
+#lang rhombus
+
+def pi = 3.14159265
+
+interface Shape:
+  method area() :: Real
+
+class Circle(radius):
+  implements Shape
+  override area():
+    pi * radius * radius
+
+class Rectangle(width, height):
+  implements Shape
+  nonfinal
+  override area():
+    width * height
+
+class Square(color):
+  extends Rectangle
+  constructor(side):
+    super(side, side)("blue")
+
+fun describe(s :: Shape):
+  match s
+  | c :: Circle:
+      "Circle with radius " +& c.radius +& " has area " +& c.area()
+  | r :: Rectangle:
+      "Rectangle " +& r.width +& "x" +& r.height +& " has area " +& r.area()
+
+fun main():
+  def shapes = [Circle(5), Rectangle(3, 4), Square(7)]
+  for (s in shapes):
+    println(describe(s))
+
+main()

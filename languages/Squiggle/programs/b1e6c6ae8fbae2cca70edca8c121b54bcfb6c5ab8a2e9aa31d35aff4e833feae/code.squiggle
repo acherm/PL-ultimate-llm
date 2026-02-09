@@ -1,0 +1,31 @@
+populationOfNewYork2022 = 8.1M to 8.4M
+
+proportionOfPopulationWithPianos = {
+ percentage = (.2 to 1)
+ percentage * 0.01
+}
+pianoTunersPerPiano = {
+ pianosPerPianoTuner = 2k to 50k
+ 1 / pianosPerPianoTuner
+}
+
+//We only mean to make an estimate for the next 10 years.
+startYear = 2024
+endYear = 2034
+domain = [startYear, endYear]
+
+/** Time in years after 2024 */
+populationAtTime(t: domain) = {
+ averageYearlyPercentageChange = normal({p5:-0.01, p95:0.05})
+ populationOfNewYork2022 * ((averageYearlyPercentageChange + 1) ^ (t - startYear))
+}
+totalTunersAtTime(t: domain) = (
+populationAtTime(t) *
+proportionOfPopulationWithPianos *
+pianoTunersPerPiano
+)
+
+{
+ populationAtTime,
+ totalTunersAtTimeMedian: {|t: domain| median(totalTunersAtTime(t))}
+}

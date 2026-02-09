@@ -1,0 +1,49 @@
+package fsm;
+
+require kermeta
+
+using kermeta::standard
+
+class State {
+    attribute name : String
+    reference transitions : Transition[0..*]#source
+
+    operation step(c : String) : State is do
+        var found : Boolean init false
+        transitions.each { t |
+            if not found then
+                if t.input == c then
+                    stdio.writeln("Transition from " + name + " to " + t.target.name + " on " + c)
+                    result := t.target
+                    found := true
+                end
+            end
+        }
+        if not found then
+            stdio.writeln("No transition from " + name + " on " + c)
+            result := self
+        end
+    end
+}
+
+class Transition {
+    attribute input : String
+    attribute output : String
+    reference source : State#transitions
+    reference target : State
+}
+
+class FSM {
+    attribute states : State[0..*]
+    reference initialState : State
+    reference currentState : State
+
+    operation run(inputs : Sequence<String>) : Void is do
+        currentState := initialState
+        stdio.writeln("Starting in state " + currentState.name)
+        inputs.each { c |
+            currentState := currentState.step(c)
+        }
+        stdio.writeln("Final state: " + currentState.name)
+    end
+}

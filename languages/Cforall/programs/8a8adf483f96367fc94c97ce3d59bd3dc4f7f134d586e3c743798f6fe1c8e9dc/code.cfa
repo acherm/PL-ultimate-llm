@@ -1,0 +1,36 @@
+#include <fstream.hfa>
+#include <stdlib.hfa>
+
+// Fibonacci using Cforall coroutine
+coroutine Fibonacci {
+    int fn;
+};
+
+void main( Fibonacci & fib ) with( fib ) {
+    int fn1, fn2;
+    fn = 0;
+    fn1 = fn;
+    suspend;
+    fn = 1;
+    fn2 = fn1;
+    fn1 = fn;
+    suspend;
+    for () {
+        fn = fn1 + fn2;
+        fn2 = fn1;
+        fn1 = fn;
+        suspend;
+    }
+}
+
+int next( Fibonacci & fib ) {
+    resume( fib );
+    return fib.fn;
+}
+
+int main() {
+    Fibonacci fib;
+    for ( 20 ) {
+        sout | next( fib );
+    }
+}

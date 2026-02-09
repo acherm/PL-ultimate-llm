@@ -1,0 +1,45 @@
+def gcd(x int, y int) int {
+  while(y) {
+    x, y = y, x mod y
+  }
+  x
+}
+
+def factorial(i int) int {
+  match(i) {
+    0 => 1
+    n => n * factorial(n - 1)
+  }
+}
+
+// Concurrent GCD computations using isolates
+calc1 = gcd(8, 20)!
+calc2 = gcd(6, 45)!
+
+// Pick the larger GCD result
+calc3 = calc1 if calc1 > calc2 else calc2
+
+// Compute factorials in parallel
+results = parfor(b in 0 to 10) {
+  factorial(b)
+}
+
+// Actor for thread-safe counting
+actor Counter {
+  -count = 0
+  def increment() {
+    count++
+  }
+  def getCount() => count
+}
+
+counter = new Counter()
+sync {
+  {counter.increment()}!
+  {counter.increment()}!
+  {counter.increment()}!
+}
+
+System.out.println("GCD result: " + calc3)
+System.out.println("Factorials: " + results)
+System.out.println("Counter: " + counter.getCount())

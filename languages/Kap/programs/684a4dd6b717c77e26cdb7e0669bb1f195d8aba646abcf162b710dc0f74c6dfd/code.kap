@@ -1,0 +1,23 @@
+⍝ Returns an array of v numbers between low and high
+∇ range (low;high;v) {
+	low+((⍳v)×(high-low))÷v
+}
+
+⍝ Try to determine if x is part of the mandelbrot set
+∇ (iterations) m (x) {
+	n ← 0
+	({n←n+1 ◊ x+⍵×⍵}⍣{(2<|⍺) ∨ n≥iterations}) 0
+	n
+}
+
+⍝ Compute the mandelbrot set at the resolution given in Size
+⍝ Limit the number of iterations to Iterations
+∇ (n) mandelbrot (size) {
+	(h w z) ← size
+	n ÷⍨ n m¨∥ (0J1×range(¯2+z;2-z;h)) +⌻ range(¯2.5+z;1-z;w)
+}
+
+∇ mandelbrotDemo (x) {
+	gui:draw 50.0 mandelbrot 800 800 0
+	0
+}

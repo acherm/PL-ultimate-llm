@@ -1,0 +1,43 @@
+func iterFibonacci(num: Integer): Integer {
+    require num >= 0;
+    var previous = 1;
+    var current = 0;
+    for (val _ in range(1, num, :incl)) {
+        val next = current + previous;
+        previous = current;
+        current = next;
+    }
+    return current;
+}
+
+assert iterFibonacci(0) == 0;
+assert iterFibonacci(1) == 1;
+assert iterFibonacci(5) == 5;
+assert iterFibonacci(10) == 55;
+
+func recFibonacci(num: Integer): Integer {
+    require num >= 0;
+    match {
+        num == 0: return 0;
+        num == 1: return 1;
+        else: return recFibonacci(num - 1) + recFibonacci(num - 2);
+    }
+}
+
+assert recFibonacci(0) == 0;
+assert recFibonacci(1) == 1;
+assert recFibonacci(5) == 5;
+assert recFibonacci(10) == 55;
+
+func negFibonacci(num: Integer): Integer {
+    match {
+        num >= 0: return iterFibonacci(num);
+        num.mod(2) != 0: return iterFibonacci(-num);
+        else: return -iterFibonacci(-num);
+    }
+}
+
+assert negFibonacci(0) == 0;
+assert negFibonacci(1) == 1;
+assert negFibonacci(-5) == 5;
+assert negFibonacci(-10) == -55;

@@ -1,0 +1,41 @@
+(define (sample-coin weight num-flips)
+  (if (= num-flips 0)
+      '()
+      (cons (if (flip weight) 'h 't)
+            (sample-coin weight (- num-flips 1)))))
+
+(define (count-heads lst)
+  (if (null? lst)
+      0
+      (+ (if (eq? (first lst) 'h) 1 0)
+         (count-heads (rest lst)))))
+
+(define (coin-model observed-heads num-flips)
+  (rejection-query
+    (define fair-weight 0.5)
+    (define biased-weight 0.9)
+    (define is-fair (flip 0.5))
+    (define weight (if is-fair fair-weight biased-weight))
+    (define flips (sample-coin weight num-flips))
+    (define heads (count-heads flips))
+    is-fair
+    (= heads observed-heads)))
+
+(define num-samples 1000)
+(define num-flips 10)
+(define observed-heads 8)
+
+(define samples
+  (repeat num-samples
+    (lambda () (coin-model observed-heads num-flips))))
+
+(define fair-count
+  (length (filter (lambda (x) x) samples)))
+
+(display "Probability coin is fair given ")
+(display observed-heads)
+(display " heads in ")
+(display num-flips)
+(display " flips: ")
+(display (/ fair-count num-samples))
+(newline)

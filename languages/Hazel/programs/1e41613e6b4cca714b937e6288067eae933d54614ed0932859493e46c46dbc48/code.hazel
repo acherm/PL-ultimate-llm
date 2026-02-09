@@ -1,0 +1,27 @@
+let rec fib : Int -> Int =
+  fun n ->
+    if n < 2
+    then n
+    else fib(n - 1) + fib(n - 2)
+in
+
+let rec factorial : Int -> Int =
+  fun n ->
+    if n == 0
+    then 1
+    else n * factorial(n - 1)
+in
+
+let rec map : (Int -> Int) -> [Int] -> [Int] =
+  fun f xs ->
+    case xs
+    | [] => []
+    | hd :: tl => f(hd) :: map(f, tl)
+    end
+in
+
+let numbers : [Int] = 1 :: 2 :: 3 :: 4 :: 5 :: 6 :: 7 :: 8 :: 9 :: 10 :: [] in
+let fibs = map(fib, numbers) in
+let facts = map(factorial, numbers) in
+
+(fibs, facts)

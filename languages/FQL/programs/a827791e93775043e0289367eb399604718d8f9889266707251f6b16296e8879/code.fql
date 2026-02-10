@@ -1,0 +1,7 @@
+SELECT name, email, birthday_date
+FROM user
+WHERE uid IN (
+  SELECT uid2 FROM friend WHERE uid1 = me()
+)
+ORDER BY birthday_date
+LIMIT 10

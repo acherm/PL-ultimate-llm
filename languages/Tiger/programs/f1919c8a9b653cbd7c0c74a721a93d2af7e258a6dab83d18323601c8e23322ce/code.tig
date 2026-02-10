@@ -1,0 +1,62 @@
+/* Merge sort in Tiger */
+let
+    type intArray = array of int
+
+    function merge(arr: intArray, left: int, mid: int, right: int) =
+        let
+            var n1 := mid - left + 1
+            var n2 := right - mid
+            var L := intArray [n1] of 0
+            var R := intArray [n2] of 0
+            var i := 0
+            var j := 0
+            var k := left
+        in
+            for i := 0 to n1-1 do
+                L[i] := arr[left + i];
+            for j := 0 to n2-1 do
+                R[j] := arr[mid + 1 + j];
+            i := 0;
+            j := 0;
+            while i < n1 & j < n2 do (
+                if L[i] <= R[j] then (
+                    arr[k] := L[i];
+                    i := i + 1
+                ) else (
+                    arr[k] := R[j];
+                    j := j + 1
+                );
+                k := k + 1
+            );
+            while i < n1 do (
+                arr[k] := L[i];
+                i := i + 1;
+                k := k + 1
+            );
+            while j < n2 do (
+                arr[k] := R[j];
+                j := j + 1;
+                k := k + 1
+            )
+        end
+
+    function mergeSort(arr: intArray, left: int, right: int) =
+        if left < right then
+            let
+                var mid := left + (right - left) / 2
+            in
+                mergeSort(arr, left, mid);
+                mergeSort(arr, mid + 1, right);
+                merge(arr, left, mid, right)
+            end
+
+    var arr := intArray [6] of 0
+in
+    arr[0] := 12;
+    arr[1] := 11;
+    arr[2] := 13;
+    arr[3] := 5;
+    arr[4] := 6;
+    arr[5] := 7;
+    mergeSort(arr, 0, 5)
+end

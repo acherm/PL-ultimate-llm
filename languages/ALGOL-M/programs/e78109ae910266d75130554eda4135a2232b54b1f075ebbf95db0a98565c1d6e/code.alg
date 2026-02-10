@@ -1,0 +1,20 @@
+BEGIN
+   INTEGER N, F, I;
+
+   PROCEDURE FACTORIAL(N);
+      VALUE N;
+      INTEGER N;
+   BEGIN
+      INTEGER I, RESULT;
+      RESULT := 1;
+      FOR I := 1 STEP 1 UNTIL N DO
+         RESULT := RESULT * I;
+      FACTORIAL := RESULT;
+   END;
+
+   N := 5;
+   F := FACTORIAL(N);
+   OUTINTEGER(1, N);
+   OUTSTRING(1, "! = ");
+   OUTINTEGER(1, F);
+END

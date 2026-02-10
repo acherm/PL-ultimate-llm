@@ -1,0 +1,14 @@
+% Fibonacci computation using KL1 concurrent logic programming
+% This program computes Fibonacci numbers using parallel streams
+
+fib(0, 1) :- true.
+fib(1, 1) :- true.
+fib(N, F) :-
+    N > 1,
+    N1 := N - 1,
+    N2 := N - 2,
+    fib(N1, F1) & fib(N2, F2),
+    F := F1 + F2.
+
+% Main goal to compute fib(10)
+:- fib(10, Result), write(Result).

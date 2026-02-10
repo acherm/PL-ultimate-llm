@@ -1,0 +1,25 @@
+% Natural numbers
+Kind nat type.
+Type z nat.
+Type s nat -> nat.
+
+% Addition
+Define plus : nat -> nat -> nat -> prop by
+  plus z N N ;
+  plus (s M) N (s P) := plus M N P.
+
+% Theorem: Addition is commutative
+Theorem plus_z : forall N, plus N z N.
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_s : forall M N P, plus M N P -> plus M (s N) (s P).
+induction on 1. intros. case H1.
+  search.
+  apply IH to H2. search.
+
+Theorem plus_comm : forall M N P, plus M N P -> plus N M P.
+induction on 1. intros. case H1.
+  apply plus_z to _. search.
+  apply IH to H2. apply plus_s to H3. search.

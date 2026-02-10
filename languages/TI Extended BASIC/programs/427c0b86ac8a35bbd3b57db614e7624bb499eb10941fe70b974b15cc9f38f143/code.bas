@@ -1,0 +1,14 @@
+100 REM Number Guessing Game
+110 RANDOMIZE
+120 LET TARGET=INT(RND*100)+1
+130 LET TRIES=0
+140 PRINT "I'm thinking of a number between 1 and 100"
+150 PRINT
+160 INPUT "Enter your guess: ":GUESS
+170 LET TRIES=TRIES+1
+180 IF GUESS=TARGET THEN 240
+190 IF GUESS<TARGET THEN PRINT "Too low! Try again."
+200 IF GUESS>TARGET THEN PRINT "Too high! Try again."
+210 GOTO 160
+240 PRINT "Correct! You got it in";TRIES;"tries!"
+250 END

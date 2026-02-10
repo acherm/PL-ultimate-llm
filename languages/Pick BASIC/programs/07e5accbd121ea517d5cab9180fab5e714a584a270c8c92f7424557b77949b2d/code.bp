@@ -1,0 +1,34 @@
+* Simple Pick BASIC Program
+* Display customer information
+PROGRAM CUSTOMER.LIST
+*
+* Open the CUSTOMERS file
+OPEN 'CUSTOMERS' TO CUST.FILE ELSE
+  PRINT 'Cannot open CUSTOMERS file'
+  STOP
+END
+*
+* Read and display customer records
+SELECT CUST.FILE
+LOOP
+  READNEXT CUST.ID ELSE EXIT
+  READ CUST.REC FROM CUST.FILE, CUST.ID ELSE
+    PRINT 'Error reading customer ': CUST.ID
+    CONTINUE
+  END
+  *
+  * Extract fields
+  CUST.NAME = CUST.REC<1>
+  CUST.ADDR = CUST.REC<2>
+  CUST.PHONE = CUST.REC<3>
+  *
+  * Display information
+  PRINT 'Customer ID: ': CUST.ID
+  PRINT 'Name: ': CUST.NAME
+  PRINT 'Address: ': CUST.ADDR
+  PRINT 'Phone: ': CUST.PHONE
+  PRINT
+REPEAT
+*
+PRINT 'End of customer list'
+END

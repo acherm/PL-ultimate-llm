@@ -1,0 +1,10 @@
+SELECT Id, Name, Type, Industry, AnnualRevenue,
+       (SELECT FirstName, LastName, Email FROM Contacts
+        WHERE Email != null
+        ORDER BY LastName)
+FROM Account
+WHERE Industry IN ('Technology', 'Finance', 'Healthcare')
+  AND AnnualRevenue > 1000000
+  AND CreatedDate = LAST_N_DAYS:30
+ORDER BY AnnualRevenue DESC
+LIMIT 100

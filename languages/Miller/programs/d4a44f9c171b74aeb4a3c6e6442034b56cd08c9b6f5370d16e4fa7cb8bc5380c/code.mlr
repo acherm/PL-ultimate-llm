@@ -1,0 +1,29 @@
+# Calculate average and sum of values by category
+# This Miller script processes CSV data
+
+begin {
+    @total_sum = 0;
+    @total_count = 0;
+}
+
+{
+    @sum_by_category[$category] += $value;
+    @count_by_category[$category] += 1;
+    @total_sum += $value;
+    @total_count += 1;
+}
+
+end {
+    for (category, sum in @sum_by_category) {
+        count = @count_by_category[category];
+        avg = sum / count;
+        print "Category: " . category;
+        print "  Sum: " . sum;
+        print "  Count: " . count;
+        print "  Average: " . avg;
+        print "";
+    }
+    print "Overall sum: " . @total_sum;
+    print "Overall count: " . @total_count;
+    print "Overall average: " . (@total_sum / @total_count);
+}

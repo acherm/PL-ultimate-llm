@@ -1,0 +1,24 @@
+let greet (name: String) : String =
+  if name == ""
+  then "Hello, World!"
+  else "Hello, " ++ name ++ "!"
+
+let factorial (n: Int) : Int =
+  if n <= 1
+  then 1
+  else n * (factorial (n - 1))
+
+let fizzbuzz (n: Int) : String =
+  if Int.remainder n 15 == Ok 0
+  then "FizzBuzz"
+  else if Int.remainder n 3 == Ok 0
+  then "Fizz"
+  else if Int.remainder n 5 == Ok 0
+  then "Buzz"
+  else Int.toString n
+
+let main =
+  let message = greet "Dark"
+  let fact5 = factorial 5
+  let results = List.map (List.range 1 21) (fun n -> fizzbuzz n)
+  (message, fact5, results)

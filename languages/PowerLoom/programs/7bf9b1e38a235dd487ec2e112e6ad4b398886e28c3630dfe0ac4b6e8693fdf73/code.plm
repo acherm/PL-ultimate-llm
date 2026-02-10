@@ -1,0 +1,22 @@
+(in-module "FAMILY")
+
+(defconcept PERSON (?p))
+(defconcept MALE (?m) :=> (PERSON ?m))
+(defconcept FEMALE (?f) :=> (PERSON ?f))
+
+(defrelation PARENT (?p ?c)
+  :documentation "?p is a parent of ?c")
+
+(defrelation FATHER (?f ?c)
+  :=> (and (MALE ?f) (PARENT ?f ?c)))
+
+(defrelation MOTHER (?m ?c)
+  :=> (and (FEMALE ?m) (PARENT ?m ?c)))
+
+(assert (MALE John))
+(assert (FEMALE Mary))
+(assert (MALE Tom))
+(assert (PARENT John Tom))
+(assert (PARENT Mary Tom))
+
+(retrieve all (?f ?c) (FATHER ?f ?c))

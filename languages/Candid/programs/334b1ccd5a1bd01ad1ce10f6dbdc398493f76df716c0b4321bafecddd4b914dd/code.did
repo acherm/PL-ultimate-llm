@@ -1,0 +1,23 @@
+type User = record {
+  name : text;
+  age : nat;
+  email : opt text;
+};
+
+type Message = record {
+  id : nat;
+  author : principal;
+  content : text;
+  timestamp : int;
+};
+
+service : {
+  createUser : (text, nat, opt text) -> (nat);
+  getUser : (nat) -> (opt User) query;
+  updateUser : (nat, User) -> (bool);
+  deleteUser : (nat) -> (bool);
+
+  postMessage : (text) -> (nat);
+  getMessage : (nat) -> (opt Message) query;
+  listMessages : (nat, nat) -> (vec Message) query;
+}

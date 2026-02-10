@@ -1,0 +1,16 @@
+# Rats example: A normal hierarchical model
+model {
+   for (i in 1:N) {
+      for (j in 1:T) {
+         Y[i,j] ~ dnorm(mu[i], tau.c)
+      }
+      mu[i] ~ dnorm(mu.overall, tau.mu)
+   }
+
+   mu.overall ~ dnorm(0.0, 1.0E-6)
+   tau.c ~ dgamma(0.001, 0.001)
+   tau.mu ~ dgamma(0.001, 0.001)
+
+   sigma.c <- 1 / sqrt(tau.c)
+   sigma.mu <- 1 / sqrt(tau.mu)
+}

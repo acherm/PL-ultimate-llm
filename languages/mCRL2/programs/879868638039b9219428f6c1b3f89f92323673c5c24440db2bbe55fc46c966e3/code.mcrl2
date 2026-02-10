@@ -1,0 +1,35 @@
+% Dining Philosophers problem in mCRL2
+% Adapted from the mCRL2 official examples
+
+sort PhilId = struct p1 | p2 | p3;
+sort ForkId = struct f1 | f2 | f3;
+
+map left, right: PhilId -> ForkId;
+eqn left(p1) = f1;
+    left(p2) = f2;
+    left(p3) = f3;
+    right(p1) = f2;
+    right(p2) = f3;
+    right(p3) = f1;
+
+act get, put, up, dn: PhilId # ForkId;
+    lock, free: PhilId # ForkId;
+    eat: PhilId;
+
+proc
+  Phil(id: PhilId) =
+    get(id, left(id)) . get(id, right(id)) .
+    eat(id) .
+    put(id, left(id)) . put(id, right(id)) .
+    Phil(id);
+
+  Fork(id: ForkId) =
+    sum p: PhilId . dn(p, id) . up(p, id) . Fork(id);
+
+init
+  allow({ lock, free, eat },
+    comm({ get|dn -> lock, put|up -> free },
+      Phil(p1) || Phil(p2) || Phil(p3) ||
+      Fork(f1) || Fork(f2) || Fork(f3)
+    )
+  );

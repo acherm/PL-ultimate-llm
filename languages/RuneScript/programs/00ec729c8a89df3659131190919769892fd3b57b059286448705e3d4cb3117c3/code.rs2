@@ -1,0 +1,20 @@
+[proc,npc_talk]
+if_close;
+npc_say("Hello adventurer! Welcome to my shop.");
+~chatplayer_say("What do you have for sale?");
+npc_say("I sell a variety of potions and magical items.");
+
+[clientscript,shop_interface](int $interface)
+if_setsize(0, 0, 200, 300, ^setsize_abs, ^setposh_abs_centre, ^setposv_abs_centre, $interface);
+if_settext("Shop Inventory", $interface);
+cc_create($interface, ^iftype_text, 0);
+cc_setsize(0, 20, 200, 0, ^setsize_abs, ^setsize_abs);
+cc_settext("Available Items:");
+
+[queue,process_purchase](int $item, int $amount)
+if (inv_total(inv, $item) < $amount) {
+    mes("You don't have enough coins.");
+    return;
+}
+inv_del(inv, $item, $amount);
+mes("Purchase complete!");

@@ -1,0 +1,46 @@
+using System;
+using Microsoft.Contracts;
+
+public class BankAccount
+{
+    private decimal balance;
+    invariant balance >= 0;
+
+    public BankAccount()
+        ensures balance == 0;
+    {
+        balance = 0;
+    }
+
+    public void Deposit(decimal amount)
+        requires amount > 0;
+        ensures balance == old(balance) + amount;
+    {
+        balance += amount;
+    }
+
+    public void Withdraw(decimal amount)
+        requires amount > 0;
+        requires amount <= balance;
+        ensures balance == old(balance) - amount;
+    {
+        balance -= amount;
+    }
+
+    public decimal GetBalance()
+        ensures result >= 0;
+    {
+        return balance;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        BankAccount account = new BankAccount();
+        account.Deposit(100.00m);
+        account.Withdraw(30.00m);
+        Console.WriteLine("Balance: $" + account.GetBalance());
+    }
+}

@@ -1,0 +1,39 @@
+{-# STDLIB_VERSION 5 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+@Callable(i)
+func deposit() = {
+  let pmt = i.payments[0].value()
+  (
+    [
+      IntegerEntry(toBase58String(i.caller.bytes), pmt)
+    ],
+    unit
+  )
+}
+
+@Callable(i)
+func withdraw(amount: Int) = {
+  let currentKey = toBase58String(i.caller.bytes)
+  let currentAmount = this.getInteger(currentKey).valueOrElse(0)
+  let newAmount = currentAmount - amount
+
+  if (amount < 0)
+    then throw("Can't withdraw negative amount")
+  else if (newAmount < 0)
+    then throw("Not enough balance")
+  else
+    (
+      [
+        IntegerEntry(currentKey, newAmount),
+        ScriptTransfer(i.caller, amount, unit)
+      ],
+      unit
+    )
+}
+
+@Verifier(tx)
+func verify() = {
+  sigVerify(tx.bodyBytes, tx.proofs[0], tx.senderPublicKey)
+}

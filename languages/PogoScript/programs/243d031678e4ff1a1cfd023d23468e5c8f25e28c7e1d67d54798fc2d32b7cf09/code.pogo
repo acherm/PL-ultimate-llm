@@ -1,0 +1,8 @@
+fib (n) =
+    if (n < 2)
+        n
+    else
+        fib (n - 1) + fib (n - 2)
+
+for n in [0..10]
+    print "fib(#(n)) = #(fib(n))"

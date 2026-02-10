@@ -1,0 +1,22 @@
+; Subleq "Hello World" program
+; Outputs "H" (72) and "i" (105)
+; Format: subleq a, b, c means: mem[b] = mem[b] - mem[a]; if mem[b] <= 0 goto c
+
+; Output 'H' (ASCII 72)
+Z, Z, 3       ; Clear Z
+MINUS_72, Z, 6 ; Z = 72
+Z, OUT, 9     ; Output 72 ('H')
+
+; Output 'i' (ASCII 105)
+Z, Z, 12      ; Clear Z
+MINUS_105, Z, 15 ; Z = 105
+Z, OUT, 18    ; Output 105 ('i')
+
+; Halt
+Z, Z, -1
+
+; Data section
+MINUS_72: -72
+MINUS_105: -105
+Z: 0
+OUT: -1       ; Output port

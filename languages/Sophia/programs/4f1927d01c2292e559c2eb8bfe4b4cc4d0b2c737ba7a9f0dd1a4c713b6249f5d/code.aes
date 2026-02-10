@@ -1,0 +1,23 @@
+contract SimpleToken =
+  record state =
+    { owner : address,
+      total_supply : int,
+      balances : map(address, int) }
+
+  stateful entrypoint init(initial_supply : int) : state =
+    { owner = Call.caller,
+      total_supply = initial_supply,
+      balances = {[Call.caller] = initial_supply} }
+
+  entrypoint get_balance(account : address) : int =
+    Map.lookup_default(account, state.balances, 0)
+
+  stateful entrypoint transfer(to : address, value : int) =
+    require(value > 0, "Value must be positive")
+    let sender_balance = get_balance(Call.caller)
+    require(sender_balance >= value, "Insufficient balance")
+    put(state{ balances[Call.caller] = sender_balance - value,
+               balances[to] = get_balance(to) + value })
+
+  entrypoint total_supply() : int =
+    state.total_supply

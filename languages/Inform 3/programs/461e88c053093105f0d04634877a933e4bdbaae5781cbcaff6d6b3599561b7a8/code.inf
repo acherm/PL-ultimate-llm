@@ -1,0 +1,32 @@
+! A Simple Room - Inform 3 Example
+! Based on classic Inform 3 syntax
+
+Constant Story "A Simple Room";
+Constant Headline "^An Interactive Fiction^";
+
+Include "Parser";
+Include "VerbLib";
+
+Object StartRoom "A Simple Room"
+  with description
+    "You are in a simple room. There is a door to the north.",
+  n_to corridor,
+  has light;
+
+Object corridor "Corridor"
+  with description
+    "A long corridor stretches before you. The room is to the south.",
+  s_to StartRoom,
+  has light;
+
+Object -> box "wooden box"
+  with name 'wooden' 'box',
+    description "A simple wooden box.",
+  has container openable;
+
+[ Initialise;
+  location = StartRoom;
+  "^Welcome to A Simple Room!^";
+];
+
+Include "Grammar";

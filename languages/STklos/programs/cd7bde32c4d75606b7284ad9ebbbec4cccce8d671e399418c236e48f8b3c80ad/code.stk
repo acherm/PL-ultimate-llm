@@ -1,0 +1,18 @@
+;;; Fibonacci sequence generator using STklos objects
+(define-class <fibonacci> ()
+  ((n :init-keyword :n :initform 10 :accessor fib-n)))
+
+(define-method fib ((obj <fibonacci>) (n <integer>))
+  (cond
+    ((<= n 1) n)
+    (else (+ (fib obj (- n 1))
+             (fib obj (- n 2))))))
+
+(define-method compute ((obj <fibonacci>))
+  (let ((limit (fib-n obj)))
+    (do ((i 0 (+ i 1)))
+        ((>= i limit))
+      (format #t "fib(~a) = ~a~%" i (fib obj i)))))
+
+(let ((f (make <fibonacci> :n 10)))
+  (compute f))

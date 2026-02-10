@@ -1,0 +1,12 @@
+// Simple VEX shader for Houdini
+// Displaces geometry based on noise
+
+vector pos = @P;
+float freq = 1.0;
+float amp = 0.5;
+
+// Generate 3D noise
+float n = noise(pos * freq);
+
+// Displace along normal
+@P += @N * n * amp;

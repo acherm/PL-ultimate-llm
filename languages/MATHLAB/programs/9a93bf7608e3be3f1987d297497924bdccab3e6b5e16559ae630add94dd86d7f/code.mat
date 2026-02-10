@@ -1,0 +1,39 @@
+COMMENT MATHLAB program to differentiate polynomials;
+
+PROCEDURE DIFF(EXPR, VAR);
+BEGIN
+  COMMENT Differentiate EXPR with respect to VAR;
+  IF ATOM(EXPR) THEN
+    IF EXPR = VAR THEN RETURN 1
+    ELSE RETURN 0
+  ELSE IF CAR(EXPR) = PLUS THEN
+    RETURN CONS(PLUS, MAPCAR(LAMBDA(X, DIFF(X, VAR)), CDR(EXPR)))
+  ELSE IF CAR(EXPR) = TIMES THEN
+    COMMENT Product rule: d(uv)/dx = u*dv/dx + v*du/dx;
+    BEGIN
+      SCALAR U, V;
+      U := CAR(CDR(EXPR));
+      V := CAR(CDR(CDR(EXPR)));
+      RETURN CONS(PLUS,
+        LIST(CONS(TIMES, LIST(U, DIFF(V, VAR))),
+             CONS(TIMES, LIST(V, DIFF(U, VAR)))))
+    END
+  ELSE IF CAR(EXPR) = EXPT THEN
+    COMMENT Power rule: d(x^n)/dx = n*x^(n-1);
+    BEGIN
+      SCALAR BASE, EXP;
+      BASE := CAR(CDR(EXPR));
+      EXP := CAR(CDR(CDR(EXPR)));
+      RETURN CONS(TIMES,
+        LIST(EXP,
+             CONS(EXPT, LIST(BASE, CONS(PLUS, LIST(EXP, -1)))),
+             DIFF(BASE, VAR)))
+    END
+END;
+
+COMMENT Test the differentiation;
+EXPR1 := CONS(EXPT, LIST(X, 3));
+PRINT("d/dx(x^3) =", DIFF(EXPR1, X));
+
+EXPR2 := CONS(TIMES, LIST(X, CONS(EXPT, LIST(X, 2))));
+PRINT("d/dx(x*x^2) =", DIFF(EXPR2, X));

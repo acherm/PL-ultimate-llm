@@ -1,0 +1,41 @@
+interface Buffer begin
+  with Producer
+    op put(x: Int)
+  with Consumer
+    op get(out x: Int)
+end
+
+class BoundedBuffer(max: Int) implements Buffer begin
+  var buf: List[Int] := nil
+  var n: Int := 0
+
+  with Producer
+    op put(x: Int) ==
+      await n < max;
+      buf := buf |- x;
+      n := n + 1
+
+  with Consumer
+    op get(out x: Int) ==
+      await n > 0;
+      x := head(buf);
+      buf := tail(buf);
+      n := n - 1
+end
+
+class Producer(b: Buffer) begin
+  var count: Int := 0
+
+  op run ==
+    while count < 10 do
+      b.put(count);
+      count := count + 1
+    end
+end
+
+class Consumer(b: Buffer) begin
+  op run ==
+    var x: Int;
+    b.get(x);
+    !run()
+end

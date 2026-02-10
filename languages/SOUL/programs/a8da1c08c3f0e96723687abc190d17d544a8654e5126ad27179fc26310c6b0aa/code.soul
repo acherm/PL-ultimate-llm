@@ -1,0 +1,21 @@
+processor SineOscillator (float frequency)
+{
+    output stream float out;
+
+    void run()
+    {
+        float phase = 0.0f;
+        let phaseIncrement = float (frequency * twoPi / processor.frequency);
+
+        loop
+        {
+            out << sin (phase);
+            phase += phaseIncrement;
+
+            if (phase >= twoPi)
+                phase -= twoPi;
+
+            advance();
+        }
+    }
+}

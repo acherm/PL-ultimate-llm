@@ -1,0 +1,23 @@
+define
+  person sub entity,
+    owns name,
+    owns age,
+    plays friendship:friend;
+
+  name sub attribute,
+    value string;
+
+  age sub attribute,
+    value long;
+
+  friendship sub relation,
+    relates friend;
+
+insert
+  $p1 isa person, has name "Alice", has age 30;
+  $p2 isa person, has name "Bob", has age 25;
+  (friend: $p1, friend: $p2) isa friendship;
+
+match
+  $x isa person, has name $n;
+get $n;

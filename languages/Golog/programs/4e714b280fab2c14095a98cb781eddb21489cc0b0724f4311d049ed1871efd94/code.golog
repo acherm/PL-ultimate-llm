@@ -1,0 +1,32 @@
+/* Elevator Controller in Golog */
+
+/* Primitive actions */
+prim_action(open_door).
+prim_action(close_door).
+prim_action(move_up).
+prim_action(move_down).
+
+/* Preconditions */
+poss(open_door, S) :- at_floor(F, S), not(door_open(S)).
+poss(close_door, S) :- door_open(S).
+poss(move_up, S) :- current_floor(F, S), F < 10, not(door_open(S)).
+poss(move_down, S) :- current_floor(F, S), F > 1, not(door_open(S)).
+
+/* Main control procedure */
+proc(serve_floor(F),
+    [current_floor(F)?;
+     open_door;
+     wait(3);
+     close_door]
+).
+
+proc(go_to_floor(Target),
+    while(current_floor(F) & F < Target, move_up);
+    while(current_floor(F) & F > Target, move_down)
+).
+
+proc(elevator_control,
+    while(true,
+        pi(f, requested(f)?; go_to_floor(f); serve_floor(f))
+    )
+).

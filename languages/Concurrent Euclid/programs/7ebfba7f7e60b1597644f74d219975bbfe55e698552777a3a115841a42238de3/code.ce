@@ -1,0 +1,42 @@
+% Bounded Buffer Monitor in Concurrent Euclid
+% A classic producer-consumer synchronization example
+
+module BoundedBuffer
+  exports
+    procedure deposit (item : integer)
+    procedure remove (var item : integer)
+
+  const
+    bufferSize = 10
+
+  var
+    buffer : array 1 .. bufferSize of integer
+    count : integer := 0
+    in_ptr : integer := 1
+    out_ptr : integer := 1
+
+  procedure deposit (item : integer)
+    begin
+      % Wait until buffer is not full
+      while count = bufferSize do
+        delay
+      end while
+
+      buffer[in_ptr] := item
+      in_ptr := (in_ptr mod bufferSize) + 1
+      count := count + 1
+    end deposit
+
+  procedure remove (var item : integer)
+    begin
+      % Wait until buffer is not empty
+      while count = 0 do
+        delay
+      end while
+
+      item := buffer[out_ptr]
+      out_ptr := (out_ptr mod bufferSize) + 1
+      count := count - 1
+    end remove
+
+end BoundedBuffer

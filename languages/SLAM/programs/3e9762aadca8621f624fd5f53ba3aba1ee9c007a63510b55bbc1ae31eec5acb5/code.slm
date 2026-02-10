@@ -1,0 +1,21 @@
+C SLAM II Network Simulation Example
+C Simple queueing system with single server
+GEN,MATHIEU,SLAM EXAMPLE,2/10/2026,1,Y,Y,Y,Y,72;
+LIMITS,5,5,500;
+NETWORK;
+C Customer arrival process
+CREATE,EXPON(10.0),,,1;
+C Queue for service
+QUEUE(1),SERVER;
+C Server with exponential service time
+ACT,,SERVER(1);
+ACT,,EXPON(8.0);
+C Release server and count
+FREE,SERVER(1);
+ACT;
+COLCT,INT(1),TIME IN SYSTEM;
+TERM;
+C End network
+ENDNETWORK;
+INIT,0.0,1000.0;
+FIN;

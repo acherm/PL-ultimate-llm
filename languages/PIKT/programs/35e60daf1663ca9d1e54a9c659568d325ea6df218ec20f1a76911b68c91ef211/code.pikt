@@ -1,0 +1,15 @@
+// PIKT script to check disk usage
+// Alerts when disk usage exceeds threshold
+
+#include "macros.h"
+
+rule
+    if $df(/) > 90%
+        output mail "$HOST: Root filesystem at $df(/)% capacity"
+        restart
+    fi
+    if $df(/home) > 85%
+        output mail "$HOST: Home filesystem at $df(/home)% capacity"
+        restart
+    fi
+end

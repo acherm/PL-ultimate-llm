@@ -1,0 +1,30 @@
+// Identity function
+id : {A : Type} -> A -> A
+  {A} (x) x
+
+// Natural numbers
+Nat : Type
+  $self
+  {~P : Nat -> Type}
+  -> (succ : {n : Nat} -> P(n) -> P(Nat.succ(n)))
+  -> (zero : P(Nat.zero))
+  -> P(self)
+
+// Zero
+Nat.zero : Nat
+  {~P} (succ) (zero)
+  zero
+
+// Successor
+Nat.succ : Nat -> Nat
+  (n)
+  {~P} (succ) (zero)
+  succ{n}(n{~P}(succ)(zero))
+
+// Addition
+Nat.add : Nat -> Nat -> Nat
+  (a) (b)
+  a{~(x) Nat}(
+    {a.pred} (b.pred)
+    Nat.succ(b.pred)
+  )(b)

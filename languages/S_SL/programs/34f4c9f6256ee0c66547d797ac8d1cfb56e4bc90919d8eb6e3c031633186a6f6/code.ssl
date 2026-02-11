@@ -1,0 +1,39 @@
+input:
+    sIdentifier
+    sInteger
+    sString
+
+output:
+    oEmitValue
+
+error:
+    eUnexpectedChar
+
+mechanism Buffer 100
+
+rules
+
+Scan:
+    [ @Letter
+        ?oEmitValue
+        {[
+            @Letter or @Digit
+            ?oEmitValue
+        ]}
+        >>sIdentifier
+    | @Digit
+        ?oEmitValue
+        {[
+            @Digit
+            ?oEmitValue
+        ]}
+        >>sInteger
+    | '"'
+        {[
+            not '"'
+            ?oEmitValue
+        ]}
+        >>sString
+    | #eUnexpectedChar
+    ]
+end;

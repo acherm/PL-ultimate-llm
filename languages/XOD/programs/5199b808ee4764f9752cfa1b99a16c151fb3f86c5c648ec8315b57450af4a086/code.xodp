@@ -1,0 +1,59 @@
+{
+  "description": "Blinks the built-in LED",
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "xod/core/clock",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "values": {
+        "IVAL": 1
+      }
+    },
+    {
+      "id": "flip-flop",
+      "type": "xod/core/flip-flop",
+      "position": {
+        "x": 0,
+        "y": 100
+      }
+    },
+    {
+      "id": "led",
+      "type": "xod/common-hardware/led",
+      "position": {
+        "x": 0,
+        "y": 200
+      },
+      "values": {
+        "PORT": "LED_BUILTIN"
+      }
+    }
+  ],
+  "links": [
+    {
+      "id": "link1",
+      "output": {
+        "nodeId": "clock",
+        "pinKey": "TICK"
+      },
+      "input": {
+        "nodeId": "flip-flop",
+        "pinKey": "TGL"
+      }
+    },
+    {
+      "id": "link2",
+      "output": {
+        "nodeId": "flip-flop",
+        "pinKey": "MEM"
+      },
+      "input": {
+        "nodeId": "led",
+        "pinKey": "LUM"
+      }
+    }
+  ]
+}

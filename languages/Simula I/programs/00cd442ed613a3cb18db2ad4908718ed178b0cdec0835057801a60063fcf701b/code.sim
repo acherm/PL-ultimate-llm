@@ -1,0 +1,32 @@
+BEGIN
+   COMMENT Simple queuing system simulation;
+   INTEGER customers, served;
+   REAL arrival_time, service_time, total_wait;
+   
+   customers := 0;
+   served := 0;
+   total_wait := 0.0;
+   
+   arrival_time := 0.0;
+   service_time := 5.0;
+   
+   WHILE arrival_time < 100.0 DO
+   BEGIN
+      customers := customers + 1;
+      total_wait := total_wait + (service_time * served);
+      arrival_time := arrival_time + 10.0;
+      
+      IF customers > 0 THEN
+      BEGIN
+         customers := customers - 1;
+         served := served + 1;
+      END;
+   END;
+   
+   OUTTEXT("Total customers served: ");
+   OUTINT(served, 5);
+   OUTIMAGE;
+   OUTTEXT("Average wait time: ");
+   OUTFIX(total_wait / served, 3, 10);
+   OUTIMAGE;
+END

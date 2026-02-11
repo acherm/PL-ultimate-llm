@@ -1,0 +1,8 @@
+SELECT p.id, p.name, p.email, COUNT(o.id) AS order_count, SUM(o.total) AS total_spent
+FROM users AS p
+LEFT JOIN orders AS o ON p.id = o.user_id
+WHERE p.created_at > '2020-01-01'
+GROUP BY p.id, p.name, p.email
+HAVING COUNT(o.id) > 0
+ORDER BY total_spent DESC
+LIMIT 10

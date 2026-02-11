@@ -1,0 +1,10 @@
+10 REM Oric BASIC Graphics Demo
+20 PAPER 0: INK 7: CLS
+30 FOR I = 0 TO 10
+40 CIRCLE 20 + I * 10, 20 + I * 10, I * 5, I MOD 7 + 1
+50 NEXT I
+60 FOR X = 0 TO 200 STEP 10
+70 DRAW X, 0, X, 100, 3
+80 NEXT X
+90 PRINT "Oric Graphics Demo"
+100 END

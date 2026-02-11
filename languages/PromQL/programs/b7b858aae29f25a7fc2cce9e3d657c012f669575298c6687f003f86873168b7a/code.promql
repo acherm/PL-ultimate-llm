@@ -1,0 +1,19 @@
+# Query to calculate the per-second rate of HTTP requests over the last 5 minutes
+# Grouped by status code and handler, filtered for non-2xx responses
+sum by (status, handler) (
+  rate(http_requests_total{status!~"2.."}[5m])
+) > 0.01
+
+# Query to calculate 95th percentile request duration
+histogram_quantile(0.95,
+  sum by (le) (
+    rate(http_request_duration_seconds_bucket[5m])
+  )
+)
+
+# Query to detect high error rates (>5% errors)
+(
+  sum(rate(http_requests_total{status=~"5.."}[5m]))
+  /
+  sum(rate(http_requests_total[5m]))
+) > 0.05

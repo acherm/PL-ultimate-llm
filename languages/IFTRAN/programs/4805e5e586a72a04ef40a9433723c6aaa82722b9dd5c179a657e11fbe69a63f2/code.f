@@ -1,0 +1,17 @@
+C     FACTORIAL CALCULATOR IN IFTRAN
+      PROGRAM FACTOR
+      INTEGER N, FACT, I
+
+      WRITE(6,100)
+100   FORMAT(' ENTER N FOR FACTORIAL:')
+      READ(5,*) N
+
+      FACT = 1
+      DO 10 I = 1, N
+         FACT = FACT * I
+10    CONTINUE
+
+      WRITE(6,200) N, FACT
+200   FORMAT(' FACTORIAL OF ',I3,' IS ',I10)
+      STOP
+      END

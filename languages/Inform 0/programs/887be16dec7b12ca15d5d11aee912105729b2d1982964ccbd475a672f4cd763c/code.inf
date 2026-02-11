@@ -1,0 +1,27 @@
+Constant Story "CAVE ADVENTURE";
+Constant Headline "^An Interactive Fiction^";
+
+Include "Parser";
+Include "VerbLib";
+
+Object Cave "Cave Entrance"
+  with description "You are standing at the entrance to a dark cave.",
+       n_to Forest,
+  has  light;
+
+Object Forest "Forest"
+  with description "You are in a dense forest. A cave lies to the south.",
+       s_to Cave,
+  has  light;
+
+Object -> torch "torch"
+  with name 'torch',
+       description "A wooden torch.",
+  has  light;
+
+[ Initialise;
+  location = Cave;
+  "^^^Welcome to Cave Adventure!^^^";
+];
+
+Include "Grammar";

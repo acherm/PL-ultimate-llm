@@ -1,0 +1,14 @@
+% Simple Lolly example: Linear implication
+% From the Lolly examples
+
+% Define a simple linear logic specification
+define mult : nat -> nat -> nat -> prop by
+  mult z N z;
+  mult (s N) M (plus M R) := mult N M R.
+
+define plus : nat -> nat -> nat -> prop by
+  plus z N N;
+  plus (s N) M (s R) := plus N M R.
+
+% Query to compute 2 * 3
+?- mult (s (s z)) (s (s (s z))) R.

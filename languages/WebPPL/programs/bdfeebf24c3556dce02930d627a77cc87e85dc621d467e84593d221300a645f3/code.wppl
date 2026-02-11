@@ -1,0 +1,14 @@
+// Bayesian coin flip inference
+var model = function() {
+  var weight = uniform(0, 1);
+  observe(Bernoulli({p: weight}), true);
+  observe(Bernoulli({p: weight}), true);
+  observe(Bernoulli({p: weight}), false);
+  observe(Bernoulli({p: weight}), true);
+  return weight;
+};
+
+var posterior = Infer({method: 'MCMC', samples: 10000}, model);
+
+print("Expected weight: " + expectation(posterior));
+viz(posterior);

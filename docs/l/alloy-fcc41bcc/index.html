@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alloy · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=A">Browse</a> · Alloy
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Alloy</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T15:51:38Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Alloy_(specification_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit a744a97a20 · authored 2025-10-23T17:51:38+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Address Book Model in Alloy</h2>
+                      <div class="muted"><a href='https://github.com/AlloyTools/models/blob/master/examples/systems/addressBook.als' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/e60ec0f884c3ecbeea423fe8d3005fbed3d2b4c67837b00ff0391a5f497d02b3/code.als' download>Download</a> · <a href='../../code/e60ec0f884c3ecbeea423fe8d3005fbed3d2b4c67837b00ff0391a5f497d02b3/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.als · license: MIT License · added: 2025-10-23T15:51:38Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">/*
+ * An address book is a mapping from names to addresses.
+ * The address book may have multiple addresses for a name,
+ * and multiple names for an address.
+ *
+ * This is a model of an address book, with two different
+ * representations, and an assertion that they are equivalent.
+ *
+ * The first representation is a set of entries, each of which
+ * is a pair of a name and an address.
+ *
+ * The second representation is a pair of relations, one from
+ * book to name, and one from book to address, with a third
+ * relation, &quot;map&quot;, that ties them together.
+ *
+ * Daniel Jackson
+ * Jan 2, 2004
+ */
+
+module examples/systems/addressBook
+
+abstract sig Target {}
+sig Name, Addr extends Target {}
+
+// an address book is a set of name/address entries
+sig Book {
+  entries: Name -&gt; Addr
+}
+
+// an address book is a pair of relations, with a mapping
+sig Book&#x27; {
+  names: set Name,
+  addrs: set Addr,
+  map: names -&gt; addrs
+}
+
+// for every book, there is an equivalent book&#x27;
+assert equiv1 {
+  all b: Book | some b&#x27;: Book&#x27; |
+    b.entries = b&#x27;.map
+}
+
+// for every book&#x27;, there is an equivalent book
+assert equiv2 {
+  all b&#x27;: Book&#x27; | some b: Book |
+    b.entries = b&#x27;.map
+}
+
+// check the assertions for a scope of 3
+check equiv1 for 3
+check equiv2 for 3
+
+// a lookup operation
+pred lookup (b: Book, n: Name, A: set Addr) {
+  A = n.(b.entries)
+}
+
+// an add operation
+pred add (b, b&#x27;: Book, n: Name, a: Addr) {
+  b&#x27;.entries = b.entries + n-&gt;a
+}
+
+// a delete operation
+pred del (b, b&#x27;: Book, n: Name, a: Addr) {
+  b&#x27;.entries = b.entries - n-&gt;a
+}
+
+// some simple test cases
+run lookup for 3
+run add for 3
+run del for 3
+
+// show that adding an entry and then deleting it
+// is not the same as doing nothing
+assert add_del_same {
+  all b, b&#x27;: Book, n: Name, a: Addr |
+    add [b, b&#x27;, n, a] and del [b&#x27;, b, n, a] implies b.entries = b&#x27;.entries
+}
+check add_del_same for 3
+// counterexample: b has n-&gt;a already
+
+// a better assertion
+assert add_del_same_better {
+  all b, b&#x27;, b&#x27;&#x27;: Book, n: Name, a: Addr |
+    n-&gt;a not in b.entries and
+    add [b, b&#x27;, n, a] and
+    del [b&#x27;, b&#x27;&#x27;, n, a]
+  implies
+    b.entries = b&#x27;&#x27;.entries
+}
+check add_del_same_better for 3
+// this one is valid
+
+// show that adding an entry that is already there
+// has no effect
+assert add_redundant {
+  all b, b&#x27;: Book, n: Name, a: Addr |
+    n-&gt;a in b.entries and
+    add [b, b&#x27;, n, a]
+  implies
+    b.entries = b&#x27;.entries
+}
+check add_redundant for 3
+// this one is valid</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/alice-ml-28e40d06/" aria-label="Previous language">← Alice ML</a>
+          <a href="../../l/altran-b7a5da63/" aria-label="Next language">ALTRAN →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

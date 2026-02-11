@@ -1,0 +1,29 @@
+use Gtk
+use Cairo
+
+func main(Args : Basic_Args) is
+    var Window : Gtk_Window_Record;
+    Gtk_Init(Args);
+    Gtk_Window_New(Window, Gtk_Window_Toplevel);
+    Gtk_Window_Set_Title(Window, "Drawing");
+    Gtk_Window_Set_Default_Size(Window, 400, 400);
+
+    Gtk_Signal_Connect(Window, "destroy", Gtk_Main_Quit, null);
+
+    var Area := new Gtk_Drawing_Area_Record;
+    Gtk_Drawing_Area_New(Area);
+    Gtk_Container_Add(Window, Area);
+    Gtk_Signal_Connect(Area, "draw", on_draw, null);
+
+    Gtk_Widget_Show_All(Window);
+    Gtk_Main();
+end func main;
+
+func on_draw(Widget : Gtk_Widget; Cr : Cairo_Context; User_Data : Univ_Ptr) -> Gboolean is
+    Cairo_Set_Source_Rgb(Cr, 0.0, 0.0, 0.0);
+    Cairo_Select_Font_Face(Cr, "Sans", Cairo_Font_Slant_Normal, Cairo_Font_Weight_Normal);
+    Cairo_Set_Font_Size(Cr, 40.0);
+    Cairo_Move_To(Cr, 10.0, 50.0);
+    Cairo_Show_Text(Cr, "Hello, World");
+    return False;
+end on_draw;

@@ -1,0 +1,12 @@
+-- Ackermann function
+-- From http://rosettacode.org/wiki/Ackermann_function
+
+ack(m,n) ==
+    m < 0 or n < 0 => error "ack is not defined for negative integers"
+    m = 0 => n + 1
+    n = 0 => ack(m - 1, 1)
+    ack(m - 1, ack(m, n - 1))
+
+for m in 0..3 repeat
+    for n in 0..9 repeat
+        output [m, n, ack(m, n)]

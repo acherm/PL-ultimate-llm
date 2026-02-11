@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PeopleCode · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=P">Browse</a> · PeopleCode
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">PeopleCode</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-07T13:13:08Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/PeopleCode" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit ecd57db9a9 · authored 2025-11-07T14:13:08+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">PeopleCode Style Guide Example</h2>
+                      <div class="muted"><a href='https://github.com/psadmin-io/peoplecode-style-guide/blob/master/good-code.pc' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/e16077c911b8c306342e7d01a1930ce5fe658c7191bfd18120e636715e550b34/code.pc' download>Download</a> · <a href='../../code/e16077c911b8c306342e7d01a1930ce5fe658c7191bfd18120e636715e550b34/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.pc · license: MIT · added: 2025-11-07T13:13:08Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">import PS_STRINGS:StringUtils;
+
+class StyleGuide
+   method StyleGuide();
+   method findUsers(searchString As string) returns array of string;
+
+   property string searchString get set;
+
+private
+   instance string &amp;searchString;
+end-class;
+
+method StyleGuide
+   %This.searchString = &quot;PSADMIN&quot;;
+end-method;
+
+/**
+ * Find oprids that match the search string
+ */
+method findUsers
+   /+ &amp;searchString as String +/
+   /+ Returns Array of String +/
+
+   local array of string &amp;users = CreateArrayRept(&quot;&quot;, 0);
+   local string &amp;oprid;
+
+   /* Use the StringUtils class to check for blank */
+   local PS_STRINGS:StringUtils &amp;stringUtils = create PS_STRINGS:StringUtils();
+   if (&amp;stringUtils.isNotBlank(&amp;searchString)) then
+      /* If search string is not blank, query PSOPRDEFN */
+      Local SQL &amp;userSql = CreateSQL(&quot;%SelectAll(:1) WHERE OPRID LIKE :2&quot;, Record.PSOPRDEFN, &amp;searchString);
+
+      while &amp;userSql.Fetch(&amp;oprid)
+         &amp;users.Push(&amp;oprid);
+      end-while;
+   end-if;
+
+   return &amp;users;
+end-method;</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/pcf-36009e8c/" aria-label="Previous language">← PCF</a>
+          <a href="../../l/perl-eca37636/" aria-label="Next language">Perl →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

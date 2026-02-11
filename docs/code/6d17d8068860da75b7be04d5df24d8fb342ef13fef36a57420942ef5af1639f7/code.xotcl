@@ -1,0 +1,21 @@
+package require XOTcl
+namespace import -force xotcl::*
+
+Class Counter
+Counter instproc init {start} {
+    my instvar count
+    set count $start
+}
+Counter instproc increment {} {
+    my instvar count
+    incr count
+}
+Counter instproc value {} {
+    my instvar count
+    return $count
+}
+
+Counter c1 -start 0
+c1 increment
+c1 increment
+puts "Counter value: [c1 value]"

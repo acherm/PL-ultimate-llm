@@ -59,3 +59,9 @@ python3 -m http.server --directory web/dist 8000
 Then open `http://localhost:8000`.
 
 The Stats page also summarizes **agents/models used** based on git commit trailers (`Model:`, `Agent:`, `Temperature:`, `WebSearch:`) in `turn: add …` commits.
+
+For data-quality checks (duplicates, integrity checks, clustering hints), run:
+
+```bash
+python3 tools/audit_repo.py --out web/dist/data/audit.json
+```

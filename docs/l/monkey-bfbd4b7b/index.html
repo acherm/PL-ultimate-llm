@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Monkey · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=M">Browse</a> · Monkey
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Monkey</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T10:01:17Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://github.com/blitz-research/monkey" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Monkey-X, MonkeyX</div>
+          <div class='muted'>Provenance: commit 20ea12bcb8 · authored 2025-10-22T12:01:17+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Simple Platformer Game</h2>
+                      <div class="muted"><a href='https://github.com/skn3/monkeygame/blob/master/simple_platformer.monkey' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/b6bfa99775e11ef2c245eb3112a52df2e623ca2abe41348ef3bae47e9ffbacf0/code.monkey' download>Download</a> · <a href='../../code/b6bfa99775e11ef2c245eb3112a52df2e623ca2abe41348ef3bae47e9ffbacf0/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.monkey · license: MIT · added: 2025-10-22T10:01:17Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">Import mojo
+
+Class Player
+	Field x:Float
+	Field y:Float
+	Field speed:Float = 4.0
+	Field jumping:Bool
+	Field gravity:Float = 0.5
+	Field velocity:Float = 0.0
+	
+	Method New(x:Float, y:Float)
+		Self.x = x
+		Self.y = y
+	End
+	
+	Method Update()
+		If KeyDown(KEY_LEFT) Then x -= speed
+		If KeyDown(KEY_RIGHT) Then x += speed
+		
+		If KeyHit(KEY_SPACE) And Not jumping
+			velocity = -12.0
+			jumping = True
+		EndIf
+		
+		velocity += gravity
+		y += velocity
+		
+		If y &gt; 400
+			y = 400
+			velocity = 0
+			jumping = False
+		EndIf
+	End
+	
+	Method Draw()
+		DrawRect x, y, 32, 32
+	End
+End
+
+Class MyGame Extends App
+	Field player:Player
+	
+	Method OnCreate()
+		player = New Player(100, 100)
+	End
+	
+	Method OnUpdate()
+		player.Update()
+	End
+	
+	Method OnRender()
+		Cls
+		player.Draw()
+	End
+End
+
+Function Main()
+	New MyGame
+End</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/mojo-ca24760b/" aria-label="Previous language">← Mojo</a>
+          <a href="../../l/moonscript-193189e5/" aria-label="Next language">MoonScript →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

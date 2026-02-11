@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agda · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=A">Browse</a> · Agda
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Agda</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T15:12:35Z</span>
+            <span class='pill'>Model: anthropic/claude-4.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Agda_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: agda</div>
+          <div class='muted'>Provenance: commit 19ea5c31fe · authored 2025-10-22T17:12:35+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Natural Number Addition Proof</h2>
+                      <div class="muted"><a href='https://github.com/agda/agda/blob/master/examples/Introduction/Nat.agda' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/35fb4e464f6e6c3a5fb8335279f63798cefdacf5c6cda7bae656f8bbfc5816fb/code.agda' download>Download</a> · <a href='../../code/35fb4e464f6e6c3a5fb8335279f63798cefdacf5c6cda7bae656f8bbfc5816fb/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.agda · license: MIT · added: 2025-10-22T15:12:35Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">module Nat where
+
+data Nat : Set where
+  zero : Nat
+  suc  : Nat → Nat
+
+{-# BUILTIN NATURAL Nat #-}
+
+infixl 6 _+_
+
+_+_ : Nat → Nat → Nat
+zero  + m = m
+suc n + m = suc (n + m)
+
+infixl 7 _*_
+
+_*_ : Nat → Nat → Nat
+zero  * m = zero
+suc n * m = m + n * m
+
+infixl 6 _∸_
+
+_∸_ : Nat → Nat → Nat
+m     ∸ zero  = m
+zero  ∸ suc n = zero
+suc m ∸ suc n = m ∸ n
+
+data _≤_ : Nat → Nat → Set where
+  z≤n : ∀ {n}                 → zero  ≤ n
+  s≤s : ∀ {m n} (m≤n : m ≤ n) → suc m ≤ suc n
+
+infix 4 _≤_
+
+≤-refl : ∀ {n} → n ≤ n
+≤-refl {zero}  = z≤n
+≤-refl {suc n} = s≤s ≤-refl
+
+≤-trans : ∀ {l m n} → l ≤ m → m ≤ n → l ≤ n
+≤-trans z≤n       _         = z≤n
+≤-trans (s≤s l≤m) (s≤s m≤n) = s≤s (≤-trans l≤m m≤n)
+
+≤-antisym : ∀ {m n} → m ≤ n → n ≤ m → m ≡ n
+≤-antisym z≤n       z≤n       = refl
+≤-antisym (s≤s m≤n) (s≤s n≤m) = cong suc (≤-antisym m≤n n≤m)
+
+data _≡_ {A : Set} (x : A) : A → Set where
+  refl : x ≡ x
+
+infix 4 _≡_
+
+{-# BUILTIN EQUALITY _≡_ #-}
+
+sym : ∀ {A : Set} {x y : A} → x ≡ y → y ≡ x
+sym refl = refl
+
+trans : ∀ {A : Set} {x y z : A} → x ≡ y → y ≡ z → x ≡ z
+trans refl refl = refl
+
+cong : ∀ {A B : Set} (f : A → B) {x y} → x ≡ y → f x ≡ f y
+cong f refl = refl
+
++-assoc : ∀ m n p → (m + n) + p ≡ m + (n + p)
++-assoc zero    n p = refl
++-assoc (suc m) n p = cong suc (+-assoc m n p)
+
++-identity : ∀ n → n + zero ≡ n
++-identity zero    = refl
++-identity (suc n) = cong suc (+-identity n)
+
++-suc : ∀ m n → m + suc n ≡ suc (m + n)
++-suc zero    n = refl
++-suc (suc m) n = cong suc (+-suc m n)
+
++-comm : ∀ m n → m + n ≡ n + m
++-comm m zero    = +-identity m
++-comm m (suc n) = trans (+-suc m n) (cong suc (+-comm m n))</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/ada-99a563ab/" aria-label="Previous language">← Ada</a>
+          <a href="../../l/agentspeak-1c3ea856/" aria-label="Next language">AgentSpeak →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

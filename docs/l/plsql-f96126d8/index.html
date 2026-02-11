@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PL/SQL · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=P">Browse</a> · PL/SQL
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">PL/SQL</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T08:17:48Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/PL/SQL" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: PLSQL</div>
+          <div class='muted'>Provenance: commit f1bd50da34 · authored 2025-10-23T10:17:48+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">utPLSQL &#x27;be true&#x27; matcher</h2>
+                      <div class="muted"><a href='https://github.com/utPLSQL/utPLSQL/blob/main/source/core/matchers/ut_be_true_matcher.pkb' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/13f8ec2a983fe6cc887007c2ec8f9a6cfa4b5ac17d4a8e4eed4eb363cbdd3d86/code.pkb' download>Download</a> · <a href='../../code/13f8ec2a983fe6cc887007c2ec8f9a6cfa4b5ac17d4a8e4eed4eb363cbdd3d86/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.pkb · license: Apache-2.0 · added: 2025-10-23T08:17:48Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">create or replace package body ut_be_true_matcher is
+
+  /*
+  utPLSQL - Version 3
+  Copyright 2016 - 2021 utPLSQL Project
+
+  Licensed under the Apache License, Version 2.0 (the &quot;License&quot;):
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  */
+
+  function process_expectation(a_expectation in out nocopy ut_expectation) return ut_expectation_result is
+    l_result ut_expectation_result;
+    l_passed boolean;
+  begin
+    l_passed := (a_expectation.actual.data_value is not null and a_expectation.actual.data_value.is_boolean() and a_expectation.actual.to_boolean());
+    if l_passed = a_expectation.to_be_not then
+      a_expectation.message := ut_utils.tr(
+        &#x27;ut_be_true_failure&#x27;
+        ,coalesce(ut_utils.to_string(a_expectation.actual), &#x27;NULL&#x27;)
+        ,case when a_expectation.to_be_not then &#x27;&#x27; else ut_utils.tr(&#x27;ut_not&#x27;) end
+      );
+    end if;
+    l_result := ut_expectation_result(a_passed =&gt; (l_passed != a_expectation.to_be_not));
+    return l_result;
+  end;
+
+end ut_be_true_matcher;
+/
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/pls-3d30eb60/" aria-label="Previous language">← PL/S</a>
+          <a href="../../l/pl360-4a266c87/" aria-label="Next language">PL360 →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

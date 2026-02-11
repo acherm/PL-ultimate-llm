@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Efene · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=E">Browse</a> · Efene
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Efene</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-07T13:01:13Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://github.com/efene/efene" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 66cd3a438a · authored 2025-11-07T14:01:13+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">TCP Echo Server</h2>
+                      <div class="muted"><a href='https://github.com/efene/efene/blob/master/examples/tcp_echo.ef' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/618737b2401e3121913fe872e8c61eb9bb00bf3b8e250becace0aff2f9dff636/code.ef' download>Download</a> · <a href='../../code/618737b2401e3121913fe872e8c61eb9bb00bf3b8e250becace0aff2f9dff636/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ef · license: Apache-2.0 · added: 2025-11-07T13:01:13Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">#
+# A simple TCP echo server
+#
+# To run:
+#
+#   $ efene tcp_echo.ef
+#   Starting server at port 8000
+#
+# And in another terminal:
+#
+#   $ telnet localhost 8000
+#   Trying 127.0.0.1...
+#   Connected to localhost.
+#   Escape character is &#x27;^]&#x27;.
+#   hi
+#   hi
+#   hello
+#   hello
+#
+
+@public
+def start(port = 8000):
+    &quot;&quot;&quot;
+    Starts a TCP echo server
+    &quot;&quot;&quot;
+    print(&quot;Starting server at port {port}&quot;)
+
+    case gen_tcp.listen(port, [binary, {packet: 0}, {active: false}]):
+        {ok, listen_socket} -&gt;
+            accept(listen_socket)
+        {error, reason} -&gt;
+            print(&quot;Error starting server: {reason}&quot;)
+
+@private
+def accept(listen_socket):
+    &quot;&quot;&quot;
+    Accepts a connection
+    &quot;&quot;&quot;
+    case gen_tcp.accept(listen_socket):
+        {ok, socket} -&gt;
+            spawn(fn(): loop(socket))
+            accept(listen_socket)
+        {error, reason} -&gt;
+            print(&quot;Error accepting connection: {reason}&quot;)
+
+@private
+def loop(socket):
+    &quot;&quot;&quot;
+    Waits for data and echos it back
+    &quot;&quot;&quot;
+    case gen_tcp.recv(socket, 0):
+        {ok, data} -&gt;
+            gen_tcp.send(socket, data)
+            loop(socket)
+        {error, reason} -&gt;
+            print(&quot;Connection closed: {reason}&quot;)
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/ecl-7ab1fe96/" aria-label="Previous language">← ECL</a>
+          <a href="../../l/eff-4a136225/" aria-label="Next language">Eff →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

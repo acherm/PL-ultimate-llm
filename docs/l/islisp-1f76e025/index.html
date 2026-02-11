@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ISLISP · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=I">Browse</a> · ISLISP
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ISLISP</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-12T08:47:02Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/ISLISP" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit ce27bbe9e9 · authored 2025-11-12T09:47:02+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Animal Guessing Game</h2>
+                      <div class="muted"><a href='http://islisp.info/programs.html' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/523101958969c79ca60e8db816596292082c27e6b7258f2bf1f5d95de3fb69d9/code.lisp' download>Download</a> · <a href='../../code/523101958969c79ca60e8db816596292082c27e6b7258f2bf1f5d95de3fb69d9/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.lisp · added: 2025-11-12T08:47:02Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">;;;
+;;; animal.lsp
+;;;
+;;;   Animal Guessing Game
+;;;
+;;;
+;;; Copyright (C) 2006-2022 by T.Shido
+;;;
+
+(defclass &lt;pair&gt; ()
+    ((key   :accessor pair-key   :initform nil)
+     (value :accessor pair-value :initform nil)))
+
+(defun make-pair (key value)
+    (let ((p (create (class &lt;pair&gt;))))
+        (setf (pair-key p) key)
+        (setf (pair-value p) value)
+        p))
+
+(defun yes-or-no ()
+    (let ((c (read-char)))
+        (while (and (not (char= c #\y))
+                    (not (char= c #\n)))
+            (setq c (read-char)))
+        (char= c #\y)))
+
+(defun ask (question)
+    (format (standard-output) &quot;~A? (y/n) &quot; question)
+    (finish-output (standard-output))
+    (yes-or-no))
+
+(defun animal ()
+    (let ((root (make-pair &quot;Is it a mammal&quot;
+                           (make-pair &quot;Does it have stripes&quot;
+                                      (make-pair &quot;a tiger&quot; nil)
+                                      (make-pair &quot;a lion&quot; nil))
+                           (make-pair &quot;Is it a bird&quot;
+                                      (make-pair &quot;a penguin&quot; nil)
+                                      (make-pair &quot;a snake&quot; nil)))))
+        (while t
+            (format (standard-output) &quot;Think of an animal.~%&quot;)
+            (let ((node root))
+                (while (pair-value node)
+                    (if (ask (pair-key node))
+                        (setq node (pair-key (pair-value node)))
+                        (setq node (pair-value (pair-value node)))))
+                (if (ask (format-to-string &quot;Is it ~A&quot; (pair-key node)))
+                    (format (standard-output) &quot;I knew it!~%&quot;)
+                    (progn
+                        (format (standard-output) &quot;What is it? &quot;)
+                        (let ((new-animal (read-line)))
+                            (format (standard-output) &quot;What is a question to distinguish ~A from ~A? &quot;
+                                new-animal (pair-key node))
+                            (let ((new-question (read-line)))
+                                (format (standard-output) &quot;For ~A, what is the answer to the question? (y/n) &quot;
+                                    new-animal)
+                                (if (yes-or-no)
+                                    (setf (pair-value node)
+                                          (make-pair (make-pair new-animal nil)
+                                                     (make-pair (pair-key node) nil)))
+                                    (setf (pair-value node)
+                                          (make-pair (make-pair (pair-key node) nil)
+                                                     (make-pair new-animal nil))))
+                                (setf (pair-key node) new-question)))))))))</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/isetl-14384430/" aria-label="Previous language">← ISETL</a>
+          <a href="../../l/iswim-8bcb7cc3/" aria-label="Next language">ISWIM →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OCL · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=O">Browse</a> · OCL
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">OCL</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-06T12:07:14Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: disabled</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Object_Constraint_Language" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Object Constraint Language</div>
+          <div class='muted'>Provenance: commit 1d29703e28 · authored 2026-02-06T13:08:08+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Person and Company Constraints</h2>
+                      <div class="muted"><a href='https://www.omg.org/spec/OCL/2.4/PDF' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/854bf3dae89157d92d2d946b55786e9c89bfb4e87eef4dac400466eaf8b98738/code.ocl' download>Download</a> · <a href='../../code/854bf3dae89157d92d2d946b55786e9c89bfb4e87eef4dac400466eaf8b98738/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ocl · added: 2026-02-06T12:07:14Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">context Person
+inv: self.age &gt;= 0 and self.age &lt;= 150
+
+context Person::income : Real
+init: 0.0
+
+context Person::birthday()
+post: self.age = self.age@pre + 1
+
+context Company
+inv: self.employees-&gt;forAll(e | e.age &gt;= 18)
+inv: self.employees-&gt;size() &gt; 0
+
+context Company::hire(p : Person)
+pre: p.age &gt;= 18
+post: self.employees-&gt;includes(p)
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/occam-e4c2d326/" aria-label="Previous language">← Occam</a>
+          <a href="../../l/octave-eb32aea5/" aria-label="Next language">Octave →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

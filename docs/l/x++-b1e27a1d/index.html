@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>X++ · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=X">Browse</a> · X++
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">X++</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-12T11:44:37Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/X%2B%2B" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 2b16ae27d5 · authored 2025-11-12T12:44:37+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">X++ Class to Query and Print Customer Data</h2>
+                      <div class="muted"><a href='https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/dev-tools/write-xpp-code' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/27bc1ac8daa6ef53b2498134e4c967d78086b6b2fb777062b7beede9f388dcf4/code.xpp' download>Download</a> · <a href='../../code/27bc1ac8daa6ef53b2498134e4c967d78086b6b2fb777062b7beede9f388dcf4/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.xpp · license: MIT License · added: 2025-11-12T11:44:37Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">class TestCustomer
+{
+    /// &lt;summary&gt;
+    /// The main method, which is the entry point for the class.
+    /// &lt;/summary&gt;
+    /// &lt;param name = &quot;_args&quot;&gt;The arguments.&lt;/param&gt;
+    public static void main(Args _args)
+    {
+        // Declare a variable for the CustTable table.
+        CustTable custTable;
+        // Create a query that selects all customers.
+        Query query = new Query();
+        // The query should select from the CustTable table.
+        QueryBuildDataSource qbds = query.addDataSource(tableNum(CustTable));
+        // Restrict the results to the first 100 records.
+        qbds.addRange(fieldNum(CustTable, RecId)).value(SysQuery::range(1, 100));
+        // Create a query runner that will execute the query.
+        QueryRun queryRun = new QueryRun(query);
+        // Check whether the query can be run.
+        if (queryRun.prompt())
+        {
+            // Loop through the results.
+            while (queryRun.next())
+            {
+                // Get the current record from the query.
+                custTable = queryRun.get(tableNum(CustTable));
+                // Print the account number and name of the customer.
+                info(strFmt(&quot;%1, %2&quot;, custTable.AccountNum, custTable.name()));
+            }
+        }
+    }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/wyvern-d8e7ff4d/" aria-label="Previous language">← Wyvern</a>
+          <a href="../../l/x10-66ec310e/" aria-label="Next language">X10 →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

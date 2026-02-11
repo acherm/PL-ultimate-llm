@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Oberon-2 · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=O">Browse</a> · Oberon-2
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Oberon-2</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T15:35:03Z</span>
+            <span class='pill'>Model: anthropic/claude-4.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Oberon-2" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Oberon2</div>
+          <div class='muted'>Provenance: commit f89a0550ad · authored 2025-10-22T17:35:03+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Binary Search Tree Implementation</h2>
+                      <div class="muted"><a href='https://rosettacode.org/wiki/Binary_search_tree#Oberon-2' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/2fd1453017268acf66a915b05a7ed62c92e9f5b2a7944ccc909dde4474161879/code.ob2' download>Download</a> · <a href='../../code/2fd1453017268acf66a915b05a7ed62c92e9f5b2a7944ccc909dde4474161879/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ob2 · added: 2025-10-22T15:35:03Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">MODULE BinaryTree;
+IMPORT Out;
+
+TYPE
+  Tree = POINTER TO Node;
+  Node = RECORD
+    data: INTEGER;
+    left, right: Tree;
+  END;
+
+VAR
+  root: Tree;
+
+PROCEDURE NewNode(data: INTEGER): Tree;
+VAR
+  node: Tree;
+BEGIN
+  NEW(node);
+  node.data := data;
+  node.left := NIL;
+  node.right := NIL;
+  RETURN node;
+END NewNode;
+
+PROCEDURE Insert(VAR tree: Tree; data: INTEGER);
+BEGIN
+  IF tree = NIL THEN
+    tree := NewNode(data);
+  ELSIF data &lt; tree.data THEN
+    Insert(tree.left, data);
+  ELSIF data &gt; tree.data THEN
+    Insert(tree.right, data);
+  END;
+END Insert;
+
+PROCEDURE Search(tree: Tree; data: INTEGER): BOOLEAN;
+BEGIN
+  IF tree = NIL THEN
+    RETURN FALSE;
+  ELSIF data = tree.data THEN
+    RETURN TRUE;
+  ELSIF data &lt; tree.data THEN
+    RETURN Search(tree.left, data);
+  ELSE
+    RETURN Search(tree.right, data);
+  END;
+END Search;
+
+PROCEDURE InOrder(tree: Tree);
+BEGIN
+  IF tree # NIL THEN
+    InOrder(tree.left);
+    Out.Int(tree.data, 4);
+    InOrder(tree.right);
+  END;
+END InOrder;
+
+BEGIN
+  root := NIL;
+  Insert(root, 5);
+  Insert(root, 3);
+  Insert(root, 7);
+  Insert(root, 1);
+  Insert(root, 4);
+  Insert(root, 6);
+  Insert(root, 9);
+  
+  Out.String(&quot;In-order traversal: &quot;);
+  InOrder(root);
+  Out.Ln;
+  
+  IF Search(root, 4) THEN
+    Out.String(&quot;Found 4&quot;);
+  ELSE
+    Out.String(&quot;Not found 4&quot;);
+  END;
+  Out.Ln;
+  
+  IF Search(root, 8) THEN
+    Out.String(&quot;Found 8&quot;);
+  ELSE
+    Out.String(&quot;Not found 8&quot;);
+  END;
+  Out.Ln;
+END BinaryTree.</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/oberon-07-90e4a98a/" aria-label="Previous language">← Oberon-07</a>
+          <a href="../../l/obix-981665ef/" aria-label="Next language">Obix →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

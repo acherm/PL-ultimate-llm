@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Linden Scripting Language · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=L">Browse</a> · Linden Scripting Language
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Linden Scripting Language</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-28T06:42:12Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Linden_Scripting_Language" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: LSL</div>
+          <div class='muted'>Provenance: commit e860b87fb4 · authored 2025-10-28T07:42:12+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Simple LSL Door Script</h2>
+                      <div class="muted"><a href='https://wiki.secondlife.com/wiki/Simple_Door' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/81a4949cbaa1425fe5961e2dbefa64571236d90c727a79f5529831c6997c383d/code.lsl' download>Download</a> · <a href='../../code/81a4949cbaa1425fe5961e2dbefa64571236d90c727a79f5529831c6997c383d/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.lsl · license: Creative Commons Attribution-ShareAlike 4.0 International · added: 2025-10-28T06:42:12Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// Simple Door Script
+// by F-Script
+//
+// Put this script in a prim, and it will become a simple door.
+// The door will swing on the Z axis.
+// It will open when touched, and close itself after a few seconds.
+
+// The number of seconds the door will stay open.
+float openTime = 3.0;
+
+// The angle (in degrees) the door will swing open.
+float swing = 90.0;
+
+// These are used by the script. You don&#x27;t need to change them.
+integer doorState = FALSE; // FALSE = closed, TRUE = open
+rotation rotClosed;
+rotation rotOpen;
+
+default
+{
+    state_entry()
+    {
+        // When the script starts, it will figure out the open and closed rotations.
+        // It assumes the door is closed when the script is first run.
+        rotClosed = llGetLocalRot();
+        rotOpen = rotClosed * llEuler2Rot(0, 0, swing * DEG_TO_RAD);
+    }
+
+    touch_start(integer total_number)
+    {
+        // When touched, toggle the door&#x27;s state.
+        if (doorState == FALSE)
+        {
+            // It&#x27;s closed, so open it.
+            doorState = TRUE;
+            llSetRot(rotOpen);
+            llSetTimerEvent(openTime);
+        }
+        else
+        {
+            // It&#x27;s open, so close it.
+            doorState = FALSE;
+            llSetRot(rotClosed);
+            llSetTimerEvent(0); // Turn off the timer.
+        }
+    }
+
+    timer()
+    {
+        // When the timer goes off, it means the door has been open long enough.
+        // So, we close it.
+        doorState = FALSE;
+        llSetRot(rotClosed);
+        llSetTimerEvent(0); // Turn off the timer.
+    }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/linda-1bda9e50/" aria-label="Previous language">← Linda</a>
+          <a href="../../l/lingo-bb75d927/" aria-label="Next language">Lingo →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

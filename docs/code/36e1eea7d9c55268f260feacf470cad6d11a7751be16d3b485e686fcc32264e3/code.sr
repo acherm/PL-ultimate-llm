@@ -1,0 +1,31 @@
+resource main()
+  var producer_count := 5
+  var consumer_count := 3
+  var buffer_size := 10
+
+  global buffer : cap (buffer_size) of int
+
+  process producer(id : int)
+    var item : int
+    fa i := 1 to 5 ->
+      item := id * 10 + i
+      send buffer(item)
+    af
+  end
+
+  process consumer(id : int)
+    var item : int
+    fa i := 1 to 5 ->
+      receive buffer(item)
+      write("Consumer", id, "got item", item)
+    af
+  end
+
+  fa i := 1 to producer_count ->
+    create producer(i)
+  af
+
+  fa i := 1 to consumer_count ->
+    create consumer(i)
+  af
+end

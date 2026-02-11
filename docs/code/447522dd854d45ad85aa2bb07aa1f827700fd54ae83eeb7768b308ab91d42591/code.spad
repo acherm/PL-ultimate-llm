@@ -1,0 +1,18 @@
+)abbrev domain UP UnivariatePolynomial
+UnivariatePolynomial(R : Ring, var : Symbol) : Exports == Implementation where
+  Exports ==> PolynomialCategory(R, SingletonAsOrderedSet var, NonNegativeInteger)
+  Implementation ==> add
+    Rep := SparseUnivariatePolynomial R
+    coerce(p : %) : OutputForm ==
+      empty? p => 0::OutputForm
+      degree p = 0 => leadingCoefficient(p)::OutputForm
+      sum : OutputForm := 0
+      for i in 0..degree p | not zero? coefficient(p, i) repeat
+        ci := coefficient(p, i)::OutputForm
+        if i = 0 then sum := sum + ci
+        else if ci = 1 then
+          if i = 1 then sum := sum + var::OutputForm
+          else sum := sum + (var::OutputForm ** i::OutputForm)
+        else
+          if i = 1 then sum := sum + (ci * var::OutputForm)
+          else sum := sum + (ci * (var::OutputForm ** i::OutputForm))

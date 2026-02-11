@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Standard ML · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=S">Browse</a> · Standard ML
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Standard ML</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T15:04:08Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://smlfamily.github.io/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: SML, ML</div>
+          <div class='muted'>Provenance: commit a3b40f26fe · authored 2025-10-22T17:04:08+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Binary Search Tree Implementation in SML</h2>
+                      <div class="muted"><a href='https://github.com/kvalle/strangeloop-sml/blob/master/examples/bst.sml' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/5028b78a777fec074edbe9f9e9e3da6ac7b9f5ea9b6615f043cb9ebd2521848b/code.sml' download>Download</a> · <a href='../../code/5028b78a777fec074edbe9f9e9e3da6ac7b9f5ea9b6615f043cb9ebd2521848b/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.sml · license: MIT · added: 2025-10-22T15:04:08Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">datatype &#x27;a tree = Empty | Node of &#x27;a tree * &#x27;a * &#x27;a tree
+
+fun insert (x, Empty) = Node(Empty, x, Empty)
+  | insert (x, Node(left, y, right)) =
+      if x &lt; y
+      then Node(insert(x, left), y, right)
+      else if x &gt; y
+      then Node(left, y, insert(x, right))
+      else Node(left, x, right)
+
+fun member (x, Empty) = false
+  | member (x, Node(left, y, right)) =
+      if x &lt; y
+      then member(x, left)
+      else if x &gt; y
+      then member(x, right)
+      else true
+
+fun fromList xs = foldr insert Empty xs</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/stan-317ecd32/" aria-label="Previous language">← Stan</a>
+          <a href="../../l/starlark-05afda13/" aria-label="Next language">Starlark →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

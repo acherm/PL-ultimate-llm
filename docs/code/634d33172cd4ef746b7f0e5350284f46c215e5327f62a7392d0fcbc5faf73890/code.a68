@@ -1,0 +1,38 @@
+# Sieve of Eratosthenes - Algol 68 version #
+# The original Sieve of Eratosthenes algorithm #
+
+PROC sieve = (INT limit, REF[]BOOL primes)VOID:
+BEGIN
+  # Initialise the array to all TRUE #
+  FOR i FROM LWB primes TO UPB primes DO primes[i] := TRUE OD;
+
+  # Set 0 and 1 to not be prime #
+  primes[0] := primes[1] := FALSE;
+
+  # For all numbers from 2 up to the square root of the limit #
+  FOR i FROM 2 TO ENTIER sqrt(limit) DO
+    # If the number is prime #
+    IF primes[i] THEN
+      # Mark all of its multiples as not prime #
+      FOR j FROM i*i BY i TO limit DO
+        primes[j] := FALSE
+      OD
+    FI
+  OD
+END; # sieve #
+
+# Main program #
+BEGIN
+  INT limit = 100;
+  [0:limit]BOOL primes;
+
+  sieve(limit, primes);
+
+  print(("Primes up to ", limit, ":", newline));
+  FOR i FROM LWB primes TO UPB primes DO
+    IF primes[i] THEN
+      print((whole(i,0), " "))
+    FI
+  OD;
+  print(newline)
+END

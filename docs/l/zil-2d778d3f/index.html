@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ZIL · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=Z">Browse</a> · ZIL
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ZIL</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-05T12:02:19Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/ZIL_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Zork Implementation Language</div>
+          <div class='muted'>Provenance: commit f39fbd0372 · authored 2025-11-05T13:02:19+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">The Main Parser Routine from Zork I</h2>
+                      <div class="muted"><a href='https://github.com/historicalsource/zork/blob/main/parser.zil' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/32aa1bc21c68c70f855fc25eb9f350129bbb3dee70b24e214663408ca3e9c65c/code.zil' download>Download</a> · <a href='../../code/32aa1bc21c68c70f855fc25eb9f350129bbb3dee70b24e214663408ca3e9c65c/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.zil · license: MIT · added: 2025-11-05T12:02:19Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">&lt;ROUTINE PARSER (&quot;AUX&quot; ICNT WCNT CNT)
+ &lt;SET ICNT &lt;GETP ,P-INBUF 1&gt;&gt;
+ &lt;SET WCNT 0&gt;
+ &lt;SET CNT 2&gt;
+ &lt;REPEAT ()
+  &lt;SET WCNT &lt;+ .WCNT 1&gt;&gt;
+  &lt;COND (&lt;G? .WCNT ,P-MAXOWORDS&gt;
+	 &lt;RFALSE&gt;)&gt;
+  &lt;SET &lt;GET ,P-LEXV .WCNT&gt; &lt;GETP ,P-INBUF .CNT&gt;&gt;
+  &lt;SET &lt;GET ,P-LEXL .WCNT&gt; &lt;GETP ,P-INBUF &lt;+ .CNT 1&gt;&gt;&gt;
+  &lt;SET CNT &lt;+ .CNT 2&gt;&gt;
+  &lt;COND (&lt;EQUAL? .CNT &lt;+ .ICNT 2&gt;&gt;
+	 &lt;SET &lt;GET ,P-LEXV 0&gt; .WCNT&gt;
+	 &lt;RTRUE&gt;)&gt;&gt;
+ &lt;SETG P-CONT 0&gt;
+ &lt;SETG P-PRSA &lt;&gt;&gt;
+ &lt;SETG P-PRSI &lt;&gt;&gt;
+ &lt;SETG P-PRSO &lt;&gt;&gt;
+ &lt;SETG P-ADJ &lt;&gt;&gt;
+ &lt;SETG P-DIR &lt;&gt;&gt;
+ &lt;SETG P-IND &lt;&gt;&gt;
+ &lt;SETG P-SYNTAX &lt;&gt;&gt;
+ &lt;SETG P-MATCHLEN 0&gt;
+ &lt;SETG P-NOTFOUND &lt;&gt;&gt;
+ &lt;SETG P-OFLAG &lt;&gt;&gt;
+ &lt;SETG P-MERGED 0&gt;
+ &lt;SETG P-IT-FOUND &lt;&gt;&gt;
+ &lt;SETG P-HIM-FOUND &lt;&gt;&gt;
+ &lt;SETG P-HER-FOUND &lt;&gt;&gt;
+ &lt;SETG P-THEM-FOUND &lt;&gt;&gt;
+ &lt;SETG P-MULT &lt;&gt;&gt;
+ &lt;SETG P-WALK-DIR &lt;&gt;&gt;
+ &lt;SETG P-STR &lt;&gt;&gt;
+ &lt;SETG P-NUM 0&gt;
+ &lt;SETG P-MAXLEN 0&gt;
+ &lt;SETG P-WC 0&gt;
+ &lt;SETG P-WON 0&gt;
+ &lt;SETG P-WOF 0&gt;
+ &lt;SETG P-LEXSTART 1&gt;
+ &lt;SETG P-LEXEND &lt;GET ,P-LEXV 0&gt;&gt;
+ &lt;SETG P-SCAN &lt;&gt;&gt;
+ &lt;SETG P-STP &lt;&gt;&gt;
+ &lt;SETG P-SOPER &lt;&gt;&gt;
+ &lt;SETG P-SOBJ &lt;&gt;&gt;
+ &lt;SETG P-SINDIR &lt;&gt;&gt;
+ &lt;SETG P-SADJ &lt;&gt;&gt;
+ &lt;SETG P-SSTR &lt;&gt;&gt;
+ &lt;SETG P-SNUM 0&gt;
+ &lt;SETG P-SWC 0&gt;
+ &lt;SETG P-SWON 0SWOF&gt;
+ &lt;SETG P-SWOF 0&gt;
+ &lt;SETG P-SLEXSTART 0&gt;
+ &lt;SETG P-SLEXEND 0&gt;
+ &lt;SETG P-SSCAN &lt;&gt;&gt;
+ &lt;SETG P-SSTP &lt;&gt;&gt;
+ &lt;SETG P-MULTFLAG &lt;&gt;&gt;
+ &lt;COND (&lt;PARSE-COMMAND&gt;
+	&lt;RTRUE&gt;)
+       (ELSE
+	&lt;RFALSE&gt;)&gt;&gt;</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/zig-358a4ac7/" aria-label="Previous language">← Zig</a>
+          <a href="../../l/zimbu-f9fa5565/" aria-label="Next language">Zimbu →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

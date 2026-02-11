@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Red · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=R">Browse</a> · Red
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Red</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T10:09:19Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://www.red-lang.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Red/System</div>
+          <div class='muted'>Provenance: commit 39edd77e34 · authored 2025-10-22T12:09:19+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Conway&#x27;s Game of Life in Red</h2>
+                      <div class="muted"><a href='https://github.com/red/code/blob/master/Samples/games/life.red' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/c23b074e78ce2edafa419e1553e64e55e399b30abce8c1696241bf703d16a54e/code.red' download>Download</a> · <a href='../../code/c23b074e78ce2edafa419e1553e64e55e399b30abce8c1696241bf703d16a54e/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.red · license: BSD-3-Clause · added: 2025-10-22T10:09:19Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">Red [
+    Title: &quot;Game of Life&quot;
+    Author: &quot;Nenad Rakocevic&quot;
+]
+
+size: 60x40
+cell: 10
+board: array/initial size/x * size/y no
+offsets: [1x0 1x1 0x1 -1x1 -1x0 -1x-1 0x-1 1x-1]
+
+view [
+    title &quot;Conway&#x27;s Game of Life&quot;
+    canvas: base size * cell black
+    rate 20
+    on-time [
+        next-gen: copy board
+        repeat y size/y [
+            repeat x size/x [
+                cnt: 0
+                pos: as-pair x y
+                foreach offset offsets [
+                    p: pos + offset
+                    if all [p/x &gt; 0 p/x &lt;= size/x p/y &gt; 0 p/y &lt;= size/y][
+                        if board/((p/y - 1 * size/x) + p/x)[
+                            cnt: cnt + 1
+                        ]
+                    ]
+                ]
+                idx: (y - 1 * size/x) + x
+                either board/:idx [
+                    if cnt &lt; 2 [next-gen/:idx: no]
+                    if cnt &gt; 3 [next-gen/:idx: no]
+                ][
+                    if cnt = 3 [next-gen/:idx: yes]
+                ]
+            ]
+        ]
+        board: next-gen
+        canvas/draw: clear []
+        repeat y size/y [
+            repeat x size/x [
+                if board/((y - 1 * size/x) + x) [
+                    append canvas/draw [
+                        fill-pen white box
+                        (as-pair x - 1 y - 1 * cell)
+                        (as-pair x y * cell)
+                    ]
+                ]
+            ]
+        ]
+    ]
+    on-down [
+        pos: event/offset / cell + 1x1
+        if all [pos/x &gt; 0 pos/x &lt;= size/x pos/y &gt; 0 pos/y &lt;= size/y][
+            idx: (pos/y - 1 * size/x) + pos/x
+            board/:idx: not board/:idx
+        ]
+    ]
+]</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/rebol-1a1738d3/" aria-label="Previous language">← REBOL</a>
+          <a href="../../l/redsystem-52e63a7f/" aria-label="Next language">Red/System →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RenderMan Shading Language · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=R">Browse</a> · RenderMan Shading Language
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">RenderMan Shading Language</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-05T08:01:37Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/RenderMan_Shading_Language" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: RSL</div>
+          <div class='muted'>Provenance: commit 3e4869ac57 · authored 2025-11-05T09:01:37+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Wood Texture Shader</h2>
+                      <div class="muted"><a href='https://github.com/syoyo/advanced-renderman-book-archive/blob/master/shaders/chapter.11/wood.sl' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/947dff6b9f56695df7b8ca08f9d85118ae731250821b55d54177b71979a35020/code.sl' download>Download</a> · <a href='../../code/947dff6b9f56695df7b8ca08f9d85118ae731250821b55d54177b71979a35020/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.sl · added: 2025-11-05T08:01:37Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">/*
+ * wood.sl: a wood texture shader
+ *
+ * (c) Copyright 1990, 1995 by Aptech Systems, Inc.
+ * All Rights Reserved.
+ *
+ * This code is based on the original wood shader from &quot;The
+ * RenderMan Companion&quot; by Steve Upstill.  This version of the
+ * shader has been modified to use the filtered noise function
+ * and to add a few more controls.
+ *
+ * The original shader is (c) Copyright 1988 Pixar.
+ * All Rights Reserved.
+ */
+
+surface
+wood(
+  /* light wood color */
+  color C1 = color (0.5, 0.2, 0.07);
+  /* dark wood color */
+  color C2 = color (0.15, 0.08, 0.03);
+  /* specular color */
+  color spec = color (0.5, 0.5, 0.5);
+  /* ambient intensity */
+  float Ka = 0.2;
+  /* diffuse intensity */
+  float Kd = 0.8;
+  /* specular intensity */
+  float Ks = 0.2;
+  /* specular roughness */
+  float roughness = 0.1;
+  /* scale of the texture */
+  float scale = 1;
+  /* ring thickness */
+  float ring_thickness = 10;
+  /* amount of waviness in the grain */
+  float wavy = 0.1;
+  /* amount of noise to add to the texture */
+  float noise_amp = 0.1;
+  /* frequency of the noise */
+  float noise_freq = 2;
+  )
+{
+  point PP;
+  float r, r2, in_ring;
+  float f;
+  color Ct;
+  
+  /* transform the point to texture space */
+  PP = transform(&quot;shader&quot;, P);
+  PP *= scale;
+
+  /* give the grain a wavy appearance */
+  PP[0] += wavy * snoise(PP);
+
+  /* calculate the radius from the center */
+  r = sqrt(PP[0]*PP[0] + PP[1]*PP[1]);
+
+  /* add some noise to the radius */
+  r += noise_amp * snoise(PP * noise_freq);
+
+  /* determine the ring based on the radius */
+  r2 = r * ring_thickness;
+  in_ring = mod(r2, 1);
+  
+  /* use a smoothstep to make the transition between rings */
+  f = smoothstep(0.4, 0.6, in_ring);
+
+  /* mix the two colors based on the ring pattern */
+  Ct = mix(C1, C2, f);
+
+  /* set the opacity */
+  Oi = Os;
+
+  /* calculate the final color with lighting */
+  Ci = Oi * Ct * (Ka*ambient() + Kd*diffuse(normalize(N))) +
+       spec * Ks*specular(normalize(N),-normalize(I),roughness);
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/renpy-baf52dd5/" aria-label="Previous language">← Ren&#x27;Py</a>
+          <a href="../../l/rescript-03178c40/" aria-label="Next language">ReScript →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

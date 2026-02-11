@@ -1,0 +1,19 @@
+FOR u IN users
+  LET numRecommendations = LENGTH(
+    FOR r IN recommendations
+      FILTER r.userId == u._key
+      RETURN 1
+  )
+  LET numRelations = LENGTH(
+    FOR r IN relations
+      FILTER r.from == u._key || r.to == u._key
+      RETURN 1
+  )
+  FILTER numRecommendations > 2 && numRelations > 1
+  SORT numRecommendations DESC
+  LIMIT 5
+  RETURN {
+    user: u.name,
+    recommendations: numRecommendations,
+    relations: numRelations
+  }

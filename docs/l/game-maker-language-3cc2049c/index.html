@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game Maker Language · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=G">Browse</a> · Game Maker Language
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Game Maker Language</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-28T06:41:37Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Game_Maker_Language" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: GML</div>
+          <div class='muted'>Provenance: commit cdbae749f0 · authored 2025-10-28T07:41:37+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Simple State Machine</h2>
+                      <div class="muted"><a href='https://github.com/offalynne/gml-state-machine/blob/master/scripts/scr_state_machine/scr_state_machine.gml' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/542f13a5c2867316d0bac2355a0b8a9dfa232c44fd44388f3a1db475cc103ec9/code.gml' download>Download</a> · <a href='../../code/542f13a5c2867316d0bac2355a0b8a9dfa232c44fd44388f3a1db475cc103ec9/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.gml · license: MIT License · added: 2025-10-28T06:41:37Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// Feather disable all
+
+/// @function                scr_state_machine()
+/// @description             A simple state machine.
+/// @returns {Struct}
+function scr_state_machine() constructor {
+    
+    // The current state
+    state = noone;
+    
+    // The previous state
+    previous_state = noone;
+    
+    /// @function                step()
+    /// @description             Steps the state machine.
+    static step = function() {
+        if (is_struct(state)) {
+            if (variable_struct_exists(state, &quot;step&quot;)) {
+                state.step();
+            }
+        }
+    }
+    
+    /// @function                set_state(_state)
+    /// @description             Changes the state of the state machine.
+    /// @param {Struct} _state   The state to change to.
+    static set_state = function(_state) {
+        if (state != _state) {
+            previous_state = state;
+            state = _state;
+            
+            if (is_struct(previous_state)) {
+                if (variable_struct_exists(previous_state, &quot;on_exit&quot;)) {
+                    previous_state.on_exit();
+                }
+            }
+            
+            if (is_struct(state)) {
+                if (variable_struct_exists(state, &quot;on_enter&quot;)) {
+                    state.on_enter();
+                }
+            }
+        }
+    }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/gambas-a9ea34a4/" aria-label="Previous language">← Gambas</a>
+          <a href="../../l/gamemonkey-script-28605e39/" aria-label="Next language">GameMonkey Script →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

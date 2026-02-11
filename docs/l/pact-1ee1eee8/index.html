@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pact · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=P">Browse</a> · Pact
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Pact</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-07T13:48:44Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Pact_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit e9e587bf33 · authored 2025-11-07T14:48:44+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Simple Accounts Smart Contract</h2>
+                      <div class="muted"><a href='https://pact-language.readthedocs.io/en/stable/pact-walkthrough.html' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/3cfd1753a2c261b362e35e5455d54664c3afd236d2fc1a341ff25a14ee801633/code.pact' download>Download</a> · <a href='../../code/3cfd1753a2c261b362e35e5455d54664c3afd236d2fc1a341ff25a14ee801633/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.pact · license: Apache-2.0 · added: 2025-11-07T13:48:44Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">(module accounts-admin GOVERNANCE
+  &quot;An accounts module to demonstrate reading data from other modules.&quot;
+
+  (defcap GOVERNANCE ()
+    &quot;Give the admin full access to the module.&quot;
+    (enforce-guard (keyset-ref-guard &#x27;accounts-admin-keyset)))
+)
+
+(module accounts &#x27;accounts-admin-keyset
+  &quot;A simple accounts module.&quot;
+
+  (defschema account
+    &quot;Row type for accounts table.&quot;
+    balance:decimal
+    data:object)
+
+  (deftable accounts:{account})
+
+  (defun create-account (id:string initial-balance:decimal)
+    &quot;Create a new account.&quot;
+    (insert accounts id
+      { &quot;balance&quot;: initial-balance,
+        &quot;data&quot;: {} }))
+
+  (defun get-balance (id:string)
+    &quot;Get an account&#x27;s balance.&quot;
+    (with-read accounts id { &quot;balance&quot; := balance }
+      balance))
+
+  (defun pay (from:string to:string amount:decimal)
+    &quot;Pay money from one account to another.&quot;
+    (with-read accounts from { &quot;balance&quot; := from-balance }
+      (with-read accounts to { &quot;balance&quot; := to-balance }
+        (enforce (&gt; amount 0.0) &quot;Negative Transaction Amount&quot;)
+        (enforce (&gt;= from-balance amount) &quot;Insufficient Funds&quot;)
+        (update accounts from
+          { &quot;balance&quot;: (- from-balance amount) })
+        (update accounts to
+          { &quot;balance&quot;: (+ to-balance amount) })
+        (format &quot;{} paid {} to {}&quot; [from, amount, to]))))
+)
+
+(create-table accounts)</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/p4-e05184c1/" aria-label="Previous language">← P4</a>
+          <a href="../../l/pal-e9c3e9be/" aria-label="Next language">PAL →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

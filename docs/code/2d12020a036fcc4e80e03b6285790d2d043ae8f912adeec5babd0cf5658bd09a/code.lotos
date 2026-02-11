@@ -1,0 +1,13 @@
+specification VendingMachine [coin, coffee, tea] : noexit
+behaviour
+  VendingMachine [coin, coffee, tea]
+where
+  process VendingMachine [coin, coffee, tea] : noexit :=
+    coin;
+    (
+      coffee; VendingMachine [coin, coffee, tea]
+      []
+      tea; VendingMachine [coin, coffee, tea]
+    )
+endproc
+endspec

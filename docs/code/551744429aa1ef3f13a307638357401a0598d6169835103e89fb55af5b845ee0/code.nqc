@@ -1,0 +1,34 @@
+// LineFollow.nqc - a simple line following program
+// by David Baum
+
+// This program will cause the robot to follow the
+// left edge of a black line on a white surface.
+
+// A light sensor should be connected to sensor 2.
+// The sensor should be calibrated so that it returns
+// a value of around 40-45 on the white surface, and
+// a value of 60-65 on the black line.
+
+task main()
+{
+  SetSensor(SENSOR_2, SENSOR_LIGHT);
+
+  // this is the 'black' threshold
+  int threshold = 55;
+
+  while(true)
+  {
+    if (SENSOR_2 < threshold)
+    {
+      // on white, turn left
+      OnFwd(OUT_C);
+      OnRev(OUT_A);
+    }
+    else
+    {
+      // on black, turn right
+      OnFwd(OUT_A);
+      OnRev(OUT_C);
+    }
+  }
+}

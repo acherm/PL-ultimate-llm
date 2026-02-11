@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ParaSail · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=P">Browse</a> · ParaSail
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ParaSail</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-12T08:42:37Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/ParaSail_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 098de760dc · authored 2025-11-12T09:42:37+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Graphical Hello World with GTK and Cairo</h2>
+                      <div class="muted"><a href='https://rosettacode.org/wiki/Hello_world/Graphical#ParaSail' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/e5f93612f1f79c762998a200729cb3fb91b86532a1bcc3fcb85fab35a3c801b3/code.psi' download>Download</a> · <a href='../../code/e5f93612f1f79c762998a200729cb3fb91b86532a1bcc3fcb85fab35a3c801b3/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.psi · license: GNU Free Documentation License 1.2 · added: 2025-11-12T08:42:37Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">use Gtk
+use Cairo
+
+func main(Args : Basic_Args) is
+    var Window : Gtk_Window_Record;
+    Gtk_Init(Args);
+    Gtk_Window_New(Window, Gtk_Window_Toplevel);
+    Gtk_Window_Set_Title(Window, &quot;Drawing&quot;);
+    Gtk_Window_Set_Default_Size(Window, 400, 400);
+
+    Gtk_Signal_Connect(Window, &quot;destroy&quot;, Gtk_Main_Quit, null);
+
+    var Area := new Gtk_Drawing_Area_Record;
+    Gtk_Drawing_Area_New(Area);
+    Gtk_Container_Add(Window, Area);
+    Gtk_Signal_Connect(Area, &quot;draw&quot;, on_draw, null);
+
+    Gtk_Widget_Show_All(Window);
+    Gtk_Main();
+end func main;
+
+func on_draw(Widget : Gtk_Widget; Cr : Cairo_Context; User_Data : Univ_Ptr) -&gt; Gboolean is
+    Cairo_Set_Source_Rgb(Cr, 0.0, 0.0, 0.0);
+    Cairo_Select_Font_Face(Cr, &quot;Sans&quot;, Cairo_Font_Slant_Normal, Cairo_Font_Weight_Normal);
+    Cairo_Set_Font_Size(Cr, 40.0);
+    Cairo_Move_To(Cr, 10.0, 50.0);
+    Cairo_Show_Text(Cr, &quot;Hello, World&quot;);
+    return False;
+end on_draw;</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/pal-e9c3e9be/" aria-label="Previous language">← PAL</a>
+          <a href="../../l/parigp-66013075/" aria-label="Next language">PARI/GP →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

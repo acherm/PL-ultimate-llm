@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beef · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=B">Browse</a> · Beef
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Beef</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T10:03:29Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://www.beeflang.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: BeefLang</div>
+          <div class='muted'>Provenance: commit 9f1d82b42a · authored 2025-10-22T12:03:29+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Simple HTTP Server</h2>
+                      <div class="muted"><a href='https://github.com/beefytech/Beef/blob/main/IDE/src/Debug/HttpServer.bf' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/79446406e2274fe44bd8c0d90f34f4cea8115c54429ca1e7f2b3a3b54c175e5f/code.bf' download>Download</a> · <a href='../../code/79446406e2274fe44bd8c0d90f34f4cea8115c54429ca1e7f2b3a3b54c175e5f/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.bf · license: MIT · added: 2025-10-22T10:03:29Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">using System;
+using System.Net;
+using System.Collections;
+
+namespace IDE.Debug
+{
+    class HttpServer
+    {
+        TcpListener mListener;
+        List&lt;HttpConnection&gt; mConnections = new List&lt;HttpConnection&gt;(); 
+        public bool mKeepGoing = true;
+
+        public ~this()
+        {
+            delete mConnections;
+        }
+
+        public void Listen(int32 port)
+        {
+            mListener = new TcpListener(IPAddress.Parse(&quot;127.0.0.1&quot;), port);
+            mListener.Start();
+
+            while (mKeepGoing)
+            {
+                Socket socket = mListener.AcceptSocket();
+                HttpConnection connection = new HttpConnection(socket);
+                mConnections.Add(connection);
+            }
+        }
+    }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/beatnik-f922fb7b/" aria-label="Previous language">← Beatnik</a>
+          <a href="../../l/befunge-bca540e8/" aria-label="Next language">Befunge →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

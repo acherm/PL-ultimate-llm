@@ -1,0 +1,17 @@
+#!/usr/bin/env stap
+
+global syscall_count
+
+probe begin {
+    printf("Starting system call monitoring...\n")
+}
+
+probe kernel.function("sys_*") {
+    syscall_count[probefunc()]++
+}
+
+probe end {
+    printf("\nSystem call statistics:\n")
+    foreach (syscall in syscall_count-)
+        printf("%s: %d\n", syscall, syscall_count[syscall])
+}

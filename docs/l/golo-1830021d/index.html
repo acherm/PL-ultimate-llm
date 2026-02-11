@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Golo · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=G">Browse</a> · Golo
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Golo</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-30T17:53:10Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://www.eclipse.org/golo/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 3596e05a72 · authored 2025-10-30T18:53:10+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">File Tree Walker</h2>
+                      <div class="muted"><a href='https://github.com/eclipse/golo-lang/blob/master/samples/golo-samples/src/main/golo/fts/FileTreeWalker.golo' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/35b1589ad11972c8629b77f9f64cf18691678837e994e76752351a2feca0d57e/code.golo' download>Download</a> · <a href='../../code/35b1589ad11972c8629b77f9f64cf18691678837e994e76752351a2feca0d57e/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.golo · license: EPL-1.0 · added: 2025-10-30T17:53:10Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">module fts.FileTreeWalker
+
+import java.nio.file.Path
+import java.nio.file.Files
+import java.nio.file.FileVisitor
+import java.nio.file.SimpleFileVisitor
+import java.nio.file.FileVisitResult
+import java.nio.file.attribute.BasicFileAttributes
+
+# Walks a file tree from a root path.
+#
+# The walk is controlled by a visitor that has the following functions:
+#
+# - `onFile(path, attributes)`
+# - `onDirectory(path, attributes)`
+# - `onVisitFileFailed(path, exception)`
+# - `onPreVisitDirectory(path, attributes)`
+# - `onPostVisitDirectory(path, exception)`
+#
+# Each of these functions is optional. They all shall return one of:
+#
+# - `FileVisitResult.CONTINUE`
+# - `FileVisitResult.TERMINATE`
+# - `FileVisitResult.SKIP_SUBTREE`
+# - `FileVisitResult.SKIP_SIBLINGS`
+#
+# The default return value is `FileVisitResult.CONTINUE`.
+#
+# The visitor can be given as a map, for instance:
+#
+# ----
+# var visitor = map[
+#   [&quot;onFile&quot;, |path, attrs| {
+#     println(path)
+#     return FileVisitResult.CONTINUE
+#   }]
+# ]
+# ----
+#
+# It can also be an object with the corresponding methods.
+#
+function walk = |root, visitor| {
+
+  var visitorAdapter = object: SimpleFileVisitor&lt;Path&gt;() {
+
+    function preVisitDirectory = |path, attrs| {
+      if visitor: has(&quot;onPreVisitDirectory&quot;) {
+        return visitor: onPreVisitDirectory(path, attrs)
+      }
+      return FileVisitResult.CONTINUE
+    }
+
+    function postVisitDirectory = |path, exc| {
+      if visitor: has(&quot;onPostVisitDirectory&quot;) {
+        return visitor: onPostVisitDirectory(path, exc)
+      }
+      return FileVisitResult.CONTINUE
+    }
+
+    function visitFile = |path, attrs| {
+      if visitor: has(&quot;onFile&quot;) {
+        return visitor: onFile(path, attrs)
+      }
+      return FileVisitResult.CONTINUE
+    }
+
+    function visitFileFailed = |path, exc| {
+      if visitor: has(&quot;onVisitFileFailed&quot;) {
+        return visitor: onVisitFileFailed(path, exc)
+      }
+      return FileVisitResult.CONTINUE
+    }
+  }
+  Files.walkFileTree(root, visitorAdapter)
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/golfscript-4b78d5f9/" aria-label="Previous language">← GolfScript</a>
+          <a href="../../l/gosu-1419bea6/" aria-label="Next language">Gosu →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

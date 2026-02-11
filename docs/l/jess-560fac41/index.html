@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JESS · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=J">Browse</a> · JESS
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">JESS</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-06T13:56:00.443194Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: disabled</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Jess_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Java Expert System Shell</div>
+          <div class='muted'>Provenance: commit 4d71385aad · authored 2026-02-06T14:56:39+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Factorial Calculator</h2>
+                      <div class="muted"><a href='https://rosettacode.org/wiki/Factorial#JESS' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/6380301d0a0fbfe4a3aa6efe1931ff75ae8961c53f6a4fb355ca4a310f668454/code.clp' download>Download</a> · <a href='../../code/6380301d0a0fbfe4a3aa6efe1931ff75ae8961c53f6a4fb355ca4a310f668454/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.clp · added: 2026-02-06T13:56:00.443194Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">(deftemplate factorial
+   (slot n)
+   (slot result))
+
+(defrule calculate-factorial
+   ?f &lt;- (factorial (n ?n) (result nil))
+   (test (&gt; ?n 0))
+   =&gt;
+   (bind ?fact 1)
+   (bind ?i ?n)
+   (while (&gt; ?i 0)
+      (bind ?fact (* ?fact ?i))
+      (bind ?i (- ?i 1)))
+   (modify ?f (result ?fact)))
+
+(defrule print-result
+   (factorial (n ?n) (result ?result))
+   (test (neq ?result nil))
+   =&gt;
+   (printout t &quot;Factorial of &quot; ?n &quot; is &quot; ?result crlf))
+
+(deffacts startup
+   (factorial (n 5) (result nil))
+   (factorial (n 10) (result nil)))
+
+(reset)
+(run)
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/jcl-ef6ebc5e/" aria-label="Previous language">← JCL</a>
+          <a href="../../l/jolie-32c22656/" aria-label="Next language">Jolie →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

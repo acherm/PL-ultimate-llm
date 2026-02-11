@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EGL · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=E">Browse</a> · EGL
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">EGL</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-05T11:18:16Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/EGL_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Enterprise Generation Language</div>
+          <div class='muted'>Provenance: commit dbd195e830 · authored 2025-11-05T12:18:17+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">EGL Batch File Processing Program</h2>
+                      <div class="muted"><a href='https://community.ibm.com/community/user/ibmz-and-linuxone/blogs/paige-mulhern/2021/01/22/egl-batch-part-2' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/cfe503ab6d9218a2ee1d512270bfed55584086508ce3c810133ae87b1655d6e8/code.egl' download>Download</a> · <a href='../../code/cfe503ab6d9218a2ee1d512270bfed55584086508ce3c810133ae87b1655d6e8/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.egl · added: 2025-11-05T11:18:16Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">Program ReadFile
+	// This record defines the layout of the input file
+	Record InRec type BasicRecord
+		custNo 	String(5);
+		custName String(20);
+		custAddr String(25);
+		custCity String(15);
+		custState String(2);
+		custZip String(5);
+		custPhone String(10);
+	end
+
+	// This record defines the layout of the output file
+	Record OutRec type BasicRecord
+		custNo 	String(5);
+		custName String(20);
+		custPhone String(10);
+	end
+
+	// File definitions
+	inFile file InRec;
+	outFile file OutRec;
+
+	Function main()
+		// Open the files
+		open inFile for input;
+		open outFile for output;
+
+		// Read the first record
+		get inFile into InRec;
+
+		// Loop through the input file
+		while (sysVar.ioStatus == 0)
+			// Call the program to format the phone number
+			call FormatPhone(InRec, OutRec);
+
+			// Write the output record
+			add outFile from OutRec;
+
+			// Read the next record
+			get inFile into InRec;
+		end
+
+		// Close the files
+		close inFile;
+		close outFile;
+	end
+end</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/egison-bff65e0f/" aria-label="Previous language">← Egison</a>
+          <a href="../../l/eiffel-aab538b7/" aria-label="Next language">Eiffel →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

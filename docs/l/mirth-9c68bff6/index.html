@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mirth · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=M">Browse</a> · Mirth
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Mirth</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T19:52:58Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://concatenative.org/wiki/view/Mirth" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 0f668a7cbb · authored 2026-02-05T20:53:58+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Mandelbrot Fractal</h2>
+                      <div class="muted"><a href='https://raw.githubusercontent.com/mirth-lang/mirth/master/examples/fractal.mth' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/9eea1fde88e08ad97c49cb92e1ee698c53924ee9e560e8a5430a60aa423fe5d3/code.mth' download>Download</a> · <a href='../../code/9eea1fde88e08ad97c49cb92e1ee698c53924ee9e560e8a5430a60aa423fe5d3/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.mth · added: 2026-02-05T19:52:58Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">module examples.fractal
+
+import std.prelude
+import std.number
+import std.world
+import std.list
+import std.maybe
+import std.ctypes
+import std.buffer
+
+import examples.sdl2
+
+##############
+# Mandelbrot Game #
+##############
+
+def main {
+    +Mandelbrot.Init!
+    loop!
+    quit!
+}
+
+struct +Mandelbrot {
+    +platform: +FractalUI
+    running: Bool
+}
+
+struct +FractalUI {
+    +SDL
+    +window: +SDL_Window
+    +surface: +SDL_Surface
+    +renderer: +SDL_Renderer
+    +event-buffer: +Buffer
+}
+
+def +FractalUI.sdl(f) { /+FractalUI f +FractalUI }
+
+def WIDTH { 800 }
+def HEIGHT { 800 }
+def SNAKE_WINDOW_FLAGS { SDL_WINDOW_HIDDEN }
+def SNAKE_RENDERER_FLAGS { SDL_RENDERER_ACCELERATED SDL_RENDERER_PRESENTVSYNC or }
+
+def +FractalUI.Init! [ +World -- +World +FractalUI ] {
+    SDL_INIT_VIDEO &gt;flags
+    SDL_Init unwrap!
+
+    &quot;Mandelbrot!&quot; &gt;title
+    100 &gt;x 100 &gt;y
+    WIDTH &gt;w
+    HEIGHT &gt;h
+    SNAKE_WINDOW_FLAGS &gt;flags
+    create-window! unwrap!
+    &gt;+window
+
+    -1 &gt;index
+    SNAKE_RENDERER_FLAGS &gt;flags
+    create-renderer! unwrap!
+    &gt;+renderer
+
+    SDL_GetWindowSurface &gt;+surface
+
+    256 bytes +Buffer.New &gt;+event-buffer
+
+    +FractalUI
+}
+
+def +Mandelbrot.Init! [ +World -- +World +Mandelbrot ] {
+    +FractalUI.Init! &gt;+platform
+    True &gt;running
+    +Mandelbrot
+}
+
+def +Mandelbrot.loop! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    process-events!
+    present!
+    while(running,
+        10 &gt;U32-clamp &gt;ticks +platform:sdl:delay!
+        process-events!
+    )
+}
+
+def +Mandelbrot.quit! [ +World +Mandelbrot -- +World ] {
+    /+Mandelbrot +platform&gt; quit! ldrop
+}
+
+def +FractalUI.quit! [ +World +FractalUI -- +World ] {
+    /+FractalUI
+    destroy-renderer!
+    destroy-window!
+
+    +event-buffer&gt; rdrop
+    +surface&gt; /+SDL_Surface drop
+
+    quit!
+}
+
+def rgba [ Int Int Int Int -- r:CInt g:CInt b:CInt a:CInt ] { &gt;CInt &gt;a &gt;CInt &gt;b &gt;CInt &gt;g &gt;CInt &gt;r }
+def background-color { 0 0 0 255 rgba }
+
+def BAIL_OUT { 2.0 }
+def FLIPS { 24 }
+
+external(
+    F64.pow -&gt; pow [ F64 F64 -- F64 ]
+    F64.log10 -&gt; log10 [ F64 -- F64 ]
+    cset_pixel -&gt; set_pixel [ +surface:+SDL_Surface CInt CInt CInt -- +surface:+SDL_Surface ]
+)
+
+def set_pixel [ +surface:+SDL_Surface Int Int Int -- +surface:+SDL_Surface ] {
+    dip(dip:&gt;CInt &gt;CInt) &gt;CInt cset_pixel
+}
+
+def +Mandelbrot.plot! [ +Mandelbrot x:Int y:Int Int -- +Mandelbrot ] {
+    &gt;iterations x&gt; y&gt; iterations&gt; +platform:sdl:set_pixel
+}
+
+def scale_x [ Int -- F64 ] {
+    2.47 WIDTH / *
+    2.0 -
+}
+
+def scale_y [ Int -- F64 ] {
+    2.24 HEIGHT / *
+    1.12 -
+}
+
+def +Mandelbrot.present! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    +platform:sdl:show-window!
+    +platform:clear!
+
+    0 \py while(
+        @py HEIGHT &lt;,
+        0 \px while(
+            @px WIDTH &lt;,
+
+            @px scale_x &gt;real
+            @py scale_y &gt;imag Complex \z0
+            0.0 &gt;real 0.0 &gt;imag Complex \z
+
+            0 \iteration
+            while(
+                @iteration 250 &lt;
+                @z magsq 4 &lt;=
+                and,
+
+                @z(dup * @z0 +)
+                @iteration:1+
+            )
+
+            @iteration 250 &lt; then(
+                @px &gt;x @py &gt;y
+                @iteration plot!
+            )
+            @px:1+
+        )
+        @py:1+
+    )
+
+    +platform:sdl:SDL_UpdateWindowSurface drop
+}
+
+def +FractalUI.clear! [ +FractalUI -- +FractalUI ] {
+    background-color sdl:SDL_SetRenderDrawColor
+    sdl:SDL_RenderClear
+}
+
+def +Mandelbrot.&amp;event [ +Mandelbrot -- +Mandelbrot SDL_Event ] {
+    +platform:+event-buffer:base SDL_Event
+}
+
+def +Mandelbrot.process-events! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    while(&amp;event +platform:sdl:SDL_PollEvent &gt;Int 0&gt;, process-event!)
+}
+
+def +Mandelbrot.process-event! [ +World +Mandelbrot -- +World +Mandelbrot ] {
+    &amp;event type@ match {
+        { SDL_QUIT -&gt;
+            False running! }
+        { _ -&gt; drop }
+    }
+}
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/mirc-scripting-language-d6821695/" aria-label="Previous language">← mIRC Scripting Language</a>
+          <a href="../../l/mixal-97133f8b/" aria-label="Next language">MIXAL →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

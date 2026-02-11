@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Move · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=M">Browse</a> · Move
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Move</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-30T07:32:58Z</span>
+            <span class='pill'>Model: x-ai/grok-4-fast</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Move_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 1e8030559d · authored 2025-10-30T08:32:58+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Basic Cookie Jar Module</h2>
+                      <div class="muted"><a href='https://move-language.github.io/move/tutorials/the-first-module.html' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/7f87faf38d937f401c6776d76f47863d9b4ddc39e90fe091c999c758194b9f93/code.move' download>Download</a> · <a href='../../code/7f87faf38d937f401c6776d76f47863d9b4ddc39e90fe091c999c758194b9f93/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.move · license: Apache-2.0 · added: 2025-10-30T07:32:58Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// In file: sources/tutorial.move
+
+module 0x0::tutorial {
+
+    use std::vector;
+
+    struct Cookie has store, drop {
+        val: u8,
+    }
+
+    struct CookieJar has key {
+        cookies: vector::Vector&lt;Cookie&gt;,
+    }
+
+    fun init_module(sender: &amp;signer) {
+        move_to(sender, CookieJar { cookies: vector::empty() });
+    }
+
+    public entry fun add_cookie(jar: &amp;mut CookieJar, val: u8) {
+        vector::push_back(&amp;mut jar.cookies, Cookie { val });
+    }
+
+    public entry fun remove_cookie(jar: &amp;mut CookieJar): u8 {
+        vector::pop_back(&amp;mut jar.cookies).val
+    }
+
+    public entry fun get_cookies_length(jar: &amp;signer CookieJar): u64 {
+        vector::length(&amp;jar.cookies)
+    }
+
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/mouse-55c15208/" aria-label="Previous language">← Mouse</a>
+          <a href="../../l/mql5-a7c6ce33/" aria-label="Next language">MQL5 →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

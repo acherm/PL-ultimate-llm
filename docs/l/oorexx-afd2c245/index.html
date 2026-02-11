@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ooRexx · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=O">Browse</a> · ooRexx
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ooRexx</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T15:54:33Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://www.oorexx.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Open Object Rexx, Object REXX</div>
+          <div class='muted'>Provenance: commit a6893f87f6 · authored 2025-10-23T17:54:33+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Ackermann function (iterative with stack)</h2>
+                      <div class="muted"><a href='https://github.com/oorexx/oorexx-samples/blob/master/rosettacode/Ackermann_function.rex' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/bcbaad951d26996ed586e427ee5078d1c436966ea6297466eb3c452ce895c720/code.rex' download>Download</a> · <a href='../../code/bcbaad951d26996ed586e427ee5078d1c436966ea6297466eb3c452ce895c720/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.rex · license: Common Public License 1.0 · added: 2025-10-23T15:54:33Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">/* REXX program to calculate the Ackermann function. */
+/* This version uses a stack to avoid recursion limits. */
+
+parse arg m n .
+if m = &#x27;&#x27; | n = &#x27;&#x27; then do
+  say &quot;Usage: ack m n&quot;
+  say &quot;where m and n are non-negative integers.&quot;
+  exit
+end
+
+if \datatype(m, &#x27;W&#x27;) | \datatype(n, &#x27;W&#x27;) then do
+  say &quot;Error: m and n must be non-negative integers.&quot;
+  exit
+end
+
+stack = .list~new
+stack~push(m)
+
+do while stack~size &gt; 0
+  m = stack~pop
+  if m = 0 then
+    n = n + 1
+  else if n = 0 then do
+    n = 1
+    stack~push(m - 1)
+  end
+  else do
+    stack~push(m - 1)
+    stack~push(m)
+    n = n - 1
+  end
+end
+
+say n
+exit
+
+::class &#x27;list&#x27; public
+::method init
+  expose items
+  items = .array~new
+
+::method push
+  expose items
+  use arg item
+  items~append(item)
+
+::method pop
+  expose items
+  if items~items = 0 then
+    return .nil
+  item = items[items~items]
+  items~remove(items~items)
+  return item
+
+::method size
+  expose items
+  return items~items</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/ook-4fdc349f/" aria-label="Previous language">← Ook!</a>
+          <a href="../../l/opa-d5968db7/" aria-label="Next language">Opa →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

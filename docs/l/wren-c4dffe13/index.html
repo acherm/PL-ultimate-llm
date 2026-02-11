@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wren · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=W">Browse</a> · Wren
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Wren</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T09:58:34Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://wren.io/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: wren-lang</div>
+          <div class='muted'>Provenance: commit 8d9aef760f · authored 2025-10-22T11:58:34+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Conway&#x27;s Game of Life in Wren</h2>
+                      <div class="muted"><a href='https://github.com/wren-lang/wren/blob/main/example/life.wren' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/150a4b397404b77cd3111946b41f8955e5f679ef3dca2ca09751f8e7ed89b09f/code.wren' download>Download</a> · <a href='../../code/150a4b397404b77cd3111946b41f8955e5f679ef3dca2ca09751f8e7ed89b09f/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.wren · license: MIT · added: 2025-10-22T09:58:34Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">class Life {
+  construct new() {
+    _width = 80
+    _height = 40
+    _cells = List.filled(_width * _height, false)
+
+    // Add a glider.
+    this[2, 0] = true
+    this[2, 1] = true
+    this[2, 2] = true
+    this[1, 2] = true
+    this[0, 1] = true
+  }
+
+  [x, y] { _cells[y * _width + x] }
+  [x, y]=(value) { _cells[y * _width + x] = value }
+
+  neighbors(x, y) {
+    var count = 0
+    for (y1 in (y - 1)..(y + 1)) {
+      for (x1 in (x - 1)..(x + 1)) {
+        if (x1 == x &amp;&amp; y1 == y) continue
+
+        var x2 = x1
+        if (x2 &lt; 0) x2 = _width - 1
+        if (x2 &gt;= _width) x2 = 0
+
+        var y2 = y1
+        if (y2 &lt; 0) y2 = _height - 1
+        if (y2 &gt;= _height) y2 = 0
+
+        if (this[x2, y2]) count = count + 1
+      }
+    }
+    return count
+  }
+
+  step() {
+    var new = List.filled(_width * _height, false)
+
+    for (y in 0..._height) {
+      for (x in 0..._width) {
+        var n = neighbors(x, y)
+        var value = this[x, y]
+        new[y * _width + x] = (value &amp;&amp; n &gt;= 2 &amp;&amp; n &lt;= 3) ||
+            (!value &amp;&amp; n == 3)
+      }
+    }
+
+    _cells = new
+  }
+
+  toString {
+    var result = &quot;&quot;
+    for (y in 0..._height) {
+      for (x in 0..._width) {
+        result = result + (this[x, y] ? &quot;█&quot; : &quot; &quot;)
+      }
+      result = result + &quot;\n&quot;
+    }
+    return result
+  }
+}
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/wollok-f4054116/" aria-label="Previous language">← Wollok</a>
+          <a href="../../l/wyvern-d8e7ff4d/" aria-label="Next language">Wyvern →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

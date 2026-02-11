@@ -1,0 +1,52 @@
+-- A number guessing game.
+module Guess is
+    -- We need to import the `Random` module to generate random numbers, and the
+    -- `IO` module to print to the screen and read from the keyboard.
+    import Standard.Random (RandomState, random_int_in_range);
+    import Standard.IO (print_line, read_line);
+    import Standard.Integer (parse_int);
+    import Standard.Memory (free);
+    import Standard.String (String);
+    import Standard.Error (handle_error);
+
+    -- The entrypoint of the program.
+    generic [R: Region]
+    function main(): ExitCode is
+        -- Create a new random number generator state.
+        let state: RandomState := RandomState();
+        -- Generate a random integer between 1 and 100.
+        let secret: Int64 := random_int_in_range(state, 1, 100);
+        -- Free the random state, we don't need it anymore.
+        free(state);
+        print_line("I'm thinking of a number between 1 and 100.");
+        -- Start the game loop.
+        return game_loop(secret);
+    end;
+
+    -- The game loop.
+    generic [R: Region]
+    function game_loop(secret: Int64): ExitCode is
+        loop
+            print_line("Take a guess: ");
+            -- Read a line from the user.
+            let line: String[R] := read_line();
+            -- Try to parse the line as an integer.
+            let maybe_guess: Either[Int64, String[R]] := parse_int(line);
+            case maybe_guess of
+                when Left(let guess: Int64) do
+                    if guess < secret then
+                        print_line("Too low.");
+                    else if guess > secret then
+                        print_line("Too high.");
+                    else
+                        print_line("You win!");
+                        return ExitSuccess();
+                    end if;
+                end;
+                when Right(let err: String[R]) do
+                    print_line("Error: not a valid integer.");
+                    handle_error(err);
+                end;
+            end case;
+        end loop;
+    end;

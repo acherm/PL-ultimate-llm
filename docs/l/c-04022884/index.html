@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>C# · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=C">Browse</a> · C#
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">C#</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T16:38:39Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: csharp</div>
+          <div class='muted'>Provenance: commit 3c0274cf11 · authored 2025-10-22T18:38:39+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">ResizeSize Model for PowerToys ImageResizer</h2>
+                      <div class="muted"><a href='https://github.com/microsoft/PowerToys/blob/main/src/modules/imageresizer/ui/Models/ResizeSize.cs' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/08a55774f7edb0800e5540c42926c61a87b8198b01e86841f842083c19ee9340/code.cs' download>Download</a> · <a href='../../code/08a55774f7edb0800e5540c42926c61a87b8198b01e86841f842083c19ee9340/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.cs · license: MIT · added: 2025-10-22T16:38:39Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// Copyright (c) Microsoft Corporation
+// The Microsoft Corporation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Globalization;
+using System.Text.Json.Serialization;
+using System.Windows;
+using ImageResizer.Properties;
+using ImageResizer.Utilities;
+
+namespace ImageResizer.Models
+{
+    public class ResizeSize
+    {
+        [JsonPropertyName(&quot;name&quot;)]
+        public string Name { get; set; }
+
+        [JsonPropertyName(&quot;width&quot;)]
+        public double Width { get; set; }
+
+        [JsonPropertyName(&quot;height&quot;)]
+        public double Height { get; set; }
+
+        [JsonPropertyName(&quot;unit&quot;)]
+        public ResizeUnit Unit { get; set; }
+
+        [JsonPropertyName(&quot;fit&quot;)]
+        public ResizeFit Fit { get; set; }
+
+        [JsonIgnore]
+        public string Description
+        {
+            get
+            {
+                string unit = Unit switch
+                {
+                    ResizeUnit.Centimeter =&gt; Resources.Centimeter,
+                    ResizeUnit.Inch =&gt; Resources.Inch,
+                    ResizeUnit.Percent =&gt; Resources.Percent,
+                    _ =&gt; Resources.Pixel,
+                };
+
+                string fit = Fit switch
+                {
+                    ResizeFit.Fill =&gt; Resources.Fill,
+                    ResizeFit.Fit =&gt; Resources.Fit,
+                    _ =&gt; Resources.Stretch,
+                };
+
+                return string.Format(
+                    CultureInfo.CurrentCulture,
+                    &quot;{0} ({1})&quot;,
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        &quot;{0} x {1} {2}&quot;,
+                        Width,
+                        Height,
+                        unit),
+                    fit);
+            }
+        }
+
+        public Size GetPixelSize(int originalWidth, int originalHeight)
+        {
+            double width = 0;
+            double height = 0;
+
+            if (Unit == ResizeUnit.Percent)
+            {
+                width = originalWidth * Width / 100;
+                height = originalHeight * Height / 100;
+            }
+            else
+            {
+                width = UnitConverter.ConvertToPixels(Width, Unit);
+                height = UnitConverter.ConvertToPixels(Height, Unit);
+            }
+
+            if (Fit == ResizeFit.Fit)
+            {
+                double ratio = Math.Min(width / originalWidth, height / originalHeight);
+                width = originalWidth * ratio;
+                height = originalHeight * ratio;
+            }
+            else if (Fit == ResizeFit.Fill)
+            {
+                double ratio = Math.Max(width / originalWidth, height / originalHeight);
+                width = originalWidth * ratio;
+                height = originalHeight * ratio;
+            }
+
+            return new Size(Math.Max(1, width), Math.Max(1, height));
+        }
+    }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/c-shell-63fbda03/" aria-label="Previous language">← C Shell</a>
+          <a href="../../l/c++-f1deb75f/" aria-label="Next language">C++ →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

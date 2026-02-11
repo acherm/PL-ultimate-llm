@@ -1,0 +1,14 @@
+|| Sundaram Sieve
+sundaram n = [2*i+1 | i<-[1..n]]; (map (2*) (sundaram n)) ++ [2]
+ 
+|| Eratosthenes Sieve
+sieve [] = []
+sieve (p:xs) = p : sieve [x | x <- xs; x mod p ~= 0]
+ 
+primes n = sieve [2..n]
+ 
+|| Main
+shownumsl n = lay [[num n | n<-[s..e]] | (s,e) <- takewhile (\(s,e). s<=n) (map (\i.(i,i+9)) [1,11..])]
+ 
+main = lay ["Sundaram Sieve:", shownumsl 100 (sundaram 100),
+            "Eratosthenes Sieve:", shownumsl 100 (primes 100)]

@@ -1,0 +1,25 @@
+*
+*       GPSS/H Student Version
+*       A Simple Queuing System
+*
+        SIMULATE
+*
+*       Model Segment 1:  Transactions represent customers
+*
+        GENERATE     18,6      ;Customers arrive every 18 +/- 6 minutes
+        QUEUE        WaitLine  ;Enter the line
+        SEIZE        Joe       ;Capture the barber
+        DEPART       WaitLine  ;Leave the line
+        ADVANCE      15,3      ;Get a haircut in 15 +/- 3 minutes
+        RELEASE      Joe       ;Free the barber
+        TERMINATE    1         ;Leave the shop
+*
+*       Model Segment 2:  Run control
+*
+        GENERATE     480       ;Create a timer transaction after 8 hours
+        TERMINATE    1         ;Shut down the run
+*
+*       Control Statements
+*
+        START        1         ;Start the run
+        END                    ;End of model file

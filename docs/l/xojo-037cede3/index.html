@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Xojo · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=X">Browse</a> · Xojo
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Xojo</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-07T13:47:35Z</span>
+            <span class='pill'>Model: x-ai/grok-4-fast</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Xojo" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: REALbasic, REAL Studio</div>
+          <div class='muted'>Provenance: commit a9df107507 · authored 2025-11-07T14:47:35+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">JSONItem Utility Module</h2>
+                      <div class="muted"><a href='https://github.com/maximumbob/Xojo-Utils/blob/master/JSONItem.xojo_code' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/f5a352b2d6f0b0c6632c7679d8f77701778ac85432e99b3eaf50df38d9c92f4e/code.xojo_code' download>Download</a> · <a href='../../code/f5a352b2d6f0b0c6632c7679d8f77701778ac85432e99b3eaf50df38d9c92f4e/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.xojo_code · added: 2025-11-07T13:47:35Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">Protected Function Operator_Convert() As String
+  Return Me.ToString
+End Function
+
+Protected Function Operator_Lookup(key As String) As JSONItem
+  If mType = kTypeObject Then
+    If mChildren.HasKey(key) Then
+      Return mChildren.Value(key)
+    End If
+  End If
+  
+  Return Nil
+End Function
+
+Protected Function Operator_Lookup(index As Integer) As JSONItem
+  If mType = kTypeArray And index &gt;= 0 And index &lt;= UBound(mChildrenArray) Then
+    Var child As JSONItem = mChildrenArray(index)
+    Return child
+  End If
+  
+  Return Nil
+End Function
+
+Sub Append(item As JSONItem)
+  If mType &lt;&gt; kTypeArray Then
+    Raise New NilObjectException
+  End If
+  
+  mChildrenArray.Add(item)
+End Sub
+
+Sub Constructor()
+  mChildren = New Dictionary
+  mChildrenArray = New JSONItem()
+  mType = kTypeNull
+End Sub
+
+Sub Constructor(source As String)
+  mChildren = New Dictionary
+  mChildrenArray = New JSONItem()
+  Parse(source)
+End Sub
+
+Sub Constructor(value As Variant)
+  mChildren = New Dictionary
+  mChildrenArray = New JSONItem()
+  
+  If value IsA String Then
+    mType = kTypeString
+    mValue = value.StringValue
+  ElseIf value IsA Integer Then
+    mType = kTypeNumber
+    mValue = value.IntegerValue
+  ElseIf value IsA Double Then
+    mType = kTypeNumber
+    mValue = value.DoubleValue
+  ElseIf value IsA Boolean Then
+    mType = kTypeBoolean
+    mValue = value.BooleanValue
+  ElseIf value IsA JSONItem Then
+    mType = value.Type
+    mValue = value.Value
+    If mType = kTypeObject Then
+      mChildren = value.mChildren
+    ElseIf mType = kTypeArray Then
+      mChildrenArray = value.mChildrenArray
+    End If
+  Else
+    mType = kTypeNull
+  End If
+End Sub
+
+Function IndexOf(item As JSONItem) As Integer
+  If mType &lt;&gt; kTypeArray Then
+    Raise New NilObjectException
+  End If
+  
+  For i As Integer = 0 To mChildrenArray.LastIndex
+    If mChildrenArray(i) = item Then
+      Return i
+    End If
+  Next
+  
+  Return -1
+End Function
+
+Function IndentString(level As Integer) As String
+  Var s As String
+  For i As Integer = 1 To level
+    s = s + &quot;  &quot;
+  Next
+  Return s
+End Function
+
+Sub Insert(index As Integer, item As JSONItem)
+  If mType &lt;&gt; kTypeArray Then
+    Raise New NilObjectException
+  End If
+  
+  If index &lt; 0 Or index &gt; mChildrenArray.LastIndex + 1 Then
+    Raise New OutOfBoundsException
+  End If
+  
+  mChildrenArray.Add(index, item)
+End Sub
+
+Function IsNull() As Boolean
+  Return mType = kTypeNull
+End Function
+
+Sub Parse(source As String)
+  // Simple JSON parser - this is a basic implementation
+  // For production, use a proper parser
+  mSource = source.Trim
+  mIndex = 0
+  SkipWhitespace
+  
+  If Not mSource.Middle(mIndex, 1) = &quot;{&quot; And Not mSource.Middle(mIndex, 1) = &quot;[&quot; Then
+    // Assume it&#x27;s a primitive value
+    ParseValue
+  Else
+    ParseObjectOrArray
+  End If
+End Sub
+
+Private Sub ParseObjectOrArray
+  If mSource.Middle(mIndex, 1) = &quot;{&quot; Then
+    mType = kTypeObject
+    mIndex = mIndex + 1
+    SkipWhitespace
+    While mIndex &lt; mSource.Len And mSource.Middle(mIndex, 1) &lt;&gt; &quot;}&quot;
+      Var key As String = ParseString
+      SkipWhitespace
+      If mSource.Middle(mIndex, 1) &lt;&gt; &quot;:&quot; Then
+        // Error
+        Return
+      End If
+      mIndex = mIndex + 1
+      SkipWhitespace
+      Var value As JSONItem = ParseValue
+      mChildren.Value(key) = value
+      SkipWhitespace
+      If mSource.Middle(mIndex, 1) = &quot;,&quot; Then
+        mIndex = mIndex + 1
+        SkipWhitespace
+      End If
+    Wend
+    If mIndex &lt; mSource.Len Then
+      mIndex = mIndex + 1 // Skip }
+    End If
+  ElseIf mSource.Middle(mIndex, 1) = &quot;[&quot; Then
+    mType = kTypeArray
+    mIndex = mIndex + 1
+    SkipWhitespace
+    While mIndex &lt; mSource.Len And mSource.Middle(mIndex, 1) &lt;&gt; &quot;]&quot;
+      Var value As JSONItem = ParseValue
+      mChildrenArray.Add(value)
+      SkipWhitespace
+      If mSource.Middle(mIndex, 1) = &quot;,&quot; Then
+        mIndex = mIndex + 1
+        SkipWhitespace
+      End If
+    Wend
+    If mIndex &lt; mSource.Len Then
+      mIndex = mIndex + 1 // Skip ]
+    End If
+  End If
+End Sub
+
+Private Function ParseString() As String
+  If mSource.Middle(mIndex, 1) &lt;&gt; &quot;\&quot; Then
+    // Error
+    Return &quot;&quot;
+  End If
+  mIndex = mIndex + 1
+  Var start As Integer = mIndex
+  While mIndex &lt; mSource.Len And mSource.Middle(mIndex, 1) &lt;&gt; &quot;\&quot;&quot;
+    mIndex = mIndex + 1
+  Wend
+  Var s As String = mSource.Middle(start, mIndex - start)
+  mIndex = mIndex + 1 // Skip closing &quot;
+  Return s
+End Function
+
+Private Function ParseValue() As JSONItem
+  SkipWhitespace
+  Var c As String = mSource.Middle(mIndex, 1)
+  Var item As New JSONItem
+  If c = &quot;{&quot;
+    item = New JSONItem
+    item.mType = kTypeObject
+    // Parse object
+  ElseIf c = &quot;[&quot;
+    item = New JSONItem
+    item.mType = kTypeArray
+    // Parse array
+  ElseIf c = &quot;\&quot;&quot;
+    item = New JSONItem(ParseString)
+    item.mType = kTypeString
+  ElseIf c = &quot;true&quot;
+    item = New JSONItem(True)
+    mIndex = mIndex + 4
+  ElseIf c = &quot;false&quot;
+    item = New JSONItem(False)
+    mIndex = mIndex + 5
+  ElseIf c = &quot;null&quot;
+    item = New JSONItem
+    mIndex = mIndex + 4
+  Else
+    // Number
+    Var start As Integer = mIndex
+    While mIndex &lt; mSource.Len And IsNumeric(mSource.Middle(mIndex, 1)) Or mSource.Middle(mIndex, 1) = &quot;.&quot; Or mSource.Middle(mIndex, 1) = &quot;-&quot; Or mSource.Middle(mIndex, 1) = &quot;e&quot; Or mSource.Middle(mIndex, 1) = &quot;E&quot;
+      mIndex = mIndex + 1
+    Wend
+    Var numStr As String = mSource.Middle(start, mIndex - start)
+    If numStr.IndexOf(&quot;.&quot;) &gt; 0 Or numStr.IndexOf(&quot;e&quot;) &gt; 0 Or numStr.IndexOf(&quot;E&quot;) &gt; 0 Then
+      item = New JSONItem.CDbl(numStr)
+    Else
+      item = New JSONItem.CInt(numStr)
+    End If
+    item.mType = kTypeNumber
+  End If
+  Return item
+End Function
+
+Private Sub SkipWhitespace
+  While mIndex &lt; mSource.Len And (mSource.Middle(mIndex, 1) = &quot; &quot; Or mSource.Middle(mIndex, 1) = Chr(9) Or mSource.Middle(mIndex, 1) = Chr(10) Or mSource.Middle(mIndex, 1) = Chr(13))
+    mIndex = mIndex + 1
+  Wend
+End Sub
+
+Function ToString(pretty As Boolean = False, indentLevel As Integer = 0) As String
+  Var indent As String = If(pretty, IndentString(indentLevel), &quot;&quot;)
+  
+  Select Case mType
+  Case kTypeNull
+    Return &quot;null&quot;
+  Case kTypeString
+    Return &quot;\&quot;&quot; + mValue.StringValue.ReplaceAll(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;) + &quot;\&quot;&quot;
+  Case kTypeNumber
+    Return mValue.StringValue
+  Case kTypeBoolean
+    Return If(mValue.BooleanValue, &quot;true&quot;, &quot;false&quot;)
+  Case kTypeArray
+    Var s As String = &quot;[&quot;
+    If pretty Then s = s + EndOfLine
+    For i As Integer = 0 To mChildrenArray.LastIndex
+      Var child As JSONItem = mChildrenArray(i)
+      If i &gt; 0 Then s = s + If(pretty, IndentString(indentLevel + 1), &quot;&quot;) + &quot;,&quot; + If(pretty, EndOfLine, &quot; &quot;)
+      s = s + If(pretty, IndentString(indentLevel + 1), &quot;&quot;) + child.ToString(pretty, indentLevel + 1)
+    Next
+    If pretty And mChildrenArray.LastIndex &gt;= 0 Then s = s + EndOfLine
+    s = s + indent + &quot;]&quot;
+    Return s
+  Case kTypeObject
+    Var s As String = &quot;{&quot; + If(pretty, EndOfLine, &quot; &quot;)
+    Var keys() As Variant = mChildren.Keys
+    For i As Integer = 0 To keys.LastIndex
+      Var key As String = keys(i)
+      Var value As JSONItem = mChildren.Value(key)
+      If i &gt; 0 Then s = s + &quot;,&quot; + If(pretty, EndOfLine, &quot; &quot;)
+      s = s + If(pretty, IndentString(indentLevel + 1), &quot;&quot;) + &quot;\&quot;&quot; + key.ReplaceAll(&quot;\&quot;&quot;, &quot;\\\&quot;&quot;) + &quot;\&quot;:&quot; + If(pretty, &quot; &quot;, &quot;&quot;) + value.ToString(pretty, indentLevel + 1)
+    Next
+    If pretty And keys.LastIndex &gt;= 0 Then s = s + EndOfLine
+    s = s + indent + &quot;}&quot;
+    Return s
+  End Select
+End Function
+
+Property Type As JSONTypes
+  Return mType
+End Property
+
+Property Value As Variant
+  If mType = kTypeNull Then
+    Return Nil
+  End If
+  Return mValue
+End Property</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/xl-f365705b/" aria-label="Previous language">← XL</a>
+          <a href="../../l/xonsh-d85dbb26/" aria-label="Next language">Xonsh →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

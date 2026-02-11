@@ -1,0 +1,56 @@
+#
+# A simple TCP echo server
+#
+# To run:
+#
+#   $ efene tcp_echo.ef
+#   Starting server at port 8000
+#
+# And in another terminal:
+#
+#   $ telnet localhost 8000
+#   Trying 127.0.0.1...
+#   Connected to localhost.
+#   Escape character is '^]'.
+#   hi
+#   hi
+#   hello
+#   hello
+#
+
+@public
+def start(port = 8000):
+    """
+    Starts a TCP echo server
+    """
+    print("Starting server at port {port}")
+
+    case gen_tcp.listen(port, [binary, {packet: 0}, {active: false}]):
+        {ok, listen_socket} ->
+            accept(listen_socket)
+        {error, reason} ->
+            print("Error starting server: {reason}")
+
+@private
+def accept(listen_socket):
+    """
+    Accepts a connection
+    """
+    case gen_tcp.accept(listen_socket):
+        {ok, socket} ->
+            spawn(fn(): loop(socket))
+            accept(listen_socket)
+        {error, reason} ->
+            print("Error accepting connection: {reason}")
+
+@private
+def loop(socket):
+    """
+    Waits for data and echos it back
+    """
+    case gen_tcp.recv(socket, 0):
+        {ok, data} ->
+            gen_tcp.send(socket, data)
+            loop(socket)
+        {error, reason} ->
+            print("Connection closed: {reason}")

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ECL · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=E">Browse</a> · ECL
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ECL</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-28T10:36:32Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Enterprise_Control_Language" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Enterprise Control Language</div>
+          <div class='muted'>Provenance: commit 868346ae34 · authored 2025-10-28T11:36:32+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">DEDUP vs SELECTN Example</h2>
+                      <div class="muted"><a href='https://github.com/hpcc-systems/HPCC-Platform/blob/master/docs/EN_US/ECLLanguageReference/ECL_LangRef/examples/DEDUP_vs_SELECTN.ecl' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/83e8a360b15bbecb1a34cbcb725a2799145017e7d04617adcc9171aeb8c9aac4/code.ecl' download>Download</a> · <a href='../../code/83e8a360b15bbecb1a34cbcb725a2799145017e7d04617adcc9171aeb8c9aac4/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ecl · license: Apache-2.0 · added: 2025-10-28T10:36:32Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">/*##############################################################################
+## HPCC SYSTEMS software Copyright (C) 2012 HPCC Systems®.  All rights reserved.
+############################################################################## */
+// DEDUP vs. SELECTN
+//For each person, create a list of the 2 states they lived in the longest
+//Assume the data is sorted by person id, then by years in state descending
+
+Rec := RECORD
+  UNSIGNED4 PersonID;
+  STRING15  FirstName;
+  STRING25  LastName;
+  STRING2   State;
+  UNSIGNED2 YearsInState;
+END;
+
+People := DATASET([ {1,&#x27;Kevin&#x27;,&#x27;Hall&#x27;,&#x27;FL&#x27;,4},
+                    {1,&#x27;Kevin&#x27;,&#x27;Hall&#x27;,&#x27;GA&#x27;,2},
+                    {1,&#x27;Kevin&#x27;,&#x27;Hall&#x27;,&#x27;PA&#x27;,1},
+                    {2,&#x27;Liz&#x27;,&#x27;Smith&#x27;,&#x27;AZ&#x27;,3},
+                    {2,&#x27;Liz&#x27;,&#x27;Smith&#x27;,&#x27;CA&#x27;,2},
+                    {3,&#x27;John&#x27;,&#x27;X&#x27;,&#x27;FL&#x27;,8},
+                    {3,&#x27;John&#x27;,&#x27;X&#x27;,&#x27;GA&#x27;,7},
+                    {3,&#x27;John&#x27;,&#x27;X&#x27;,&#x27;NY&#x27;,6},
+                    {3,&#x27;John&#x27;,&#x27;X&#x27;,&#x27;CA&#x27;,5},
+                    {4,&#x27;Jane&#x27;,&#x27;Doe&#x27;,&#x27;CA&#x27;,10},
+                    {4,&#x27;Jane&#x27;,&#x27;Doe&#x27;,&#x27;FL&#x27;,1} ], Rec);
+
+//Using DEDUP
+OUTPUT(DEDUP(People,PersonID,KEEP 2));
+
+//Using SELECTN
+OUTPUT(People,CHOOSEN(ROWS(LEFT),2),PersonID);</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/ec-061b1215/" aria-label="Previous language">← eC</a>
+          <a href="../../l/efene-899651c0/" aria-label="Next language">Efene →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

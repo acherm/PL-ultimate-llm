@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hy · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=H">Browse</a> · Hy
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Hy</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T10:01:43Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://docs.hylang.org/en/stable/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: hylang</div>
+          <div class='muted'>Provenance: commit 009a516f13 · authored 2025-10-22T12:01:43+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Conway&#x27;s Game of Life in Hy</h2>
+                      <div class="muted"><a href='https://github.com/hylang/hy/blob/master/examples/game-of-life/life.hy' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/69121b70db6cc56e6b5ac3990d919f1bfae48ea26522636e5f57b25b31118521/code.hy' download>Download</a> · <a href='../../code/69121b70db6cc56e6b5ac3990d919f1bfae48ea26522636e5f57b25b31118521/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.hy · license: MIT · added: 2025-10-22T10:01:43Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">(import [time [sleep]]
+        [random [randint]])
+
+(defn create-board [width height]
+  (list-comp
+    (list-comp
+      (if (= 1 (randint 0 1)) &quot;*&quot; &quot; &quot;)
+      [x (range width)])
+    [y (range height)]))
+
+(defn count-neighbours [board x y width height]
+  (setv count 0)
+  (for [i (range -1 2)]
+    (for [j (range -1 2)]
+      (if (and
+            (!= (+ i j) 0)
+            (&lt; -1 (+ x i) width)
+            (&lt; -1 (+ y j) height)
+            (= (get-in board [(+ y j) (+ x i)]) &quot;*&quot;))
+        (setv count (+ count 1)))))
+  count)
+
+(defn step [board width height]
+  (setv new-board
+    (list-comp
+      (list-comp
+        (get-in board [y x])
+        [x (range width)])
+      [y (range height)]))
+  (for [y (range height)]
+    (for [x (range width)]
+      (setv n (count-neighbours board x y width height))
+      (setv cell (get-in board [y x]))
+      (cond [(and (= cell &quot;*&quot;) (&lt; n 2))
+             (setv (get-in new-board [y x]) &quot; &quot;)]
+            [(and (= cell &quot;*&quot;) (&gt; n 3))
+             (setv (get-in new-board [y x]) &quot; &quot;)]
+            [(and (= cell &quot; &quot;) (= n 3))
+             (setv (get-in new-board [y x]) &quot;*&quot;)])))
+  new-board)
+
+(defn print-board [board width height]
+  (print &quot;\033[2J\033[H&quot;)
+  (for [y (range height)]
+    (for [x (range width)]
+      (print (get-in board [y x]) :end &quot;&quot;))
+    (print)))
+
+(defmain [&amp;rest args]
+  (setv width 30)
+  (setv height 15)
+  (setv board (create-board width height))
+  (while True
+    (print-board board width height)
+    (setv board (step board width height))
+    (sleep 0.1)))</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/hume-41d8b6b7/" aria-label="Previous language">← Hume</a>
+          <a href="../../l/hypertalk-4142bc62/" aria-label="Next language">HyperTalk →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

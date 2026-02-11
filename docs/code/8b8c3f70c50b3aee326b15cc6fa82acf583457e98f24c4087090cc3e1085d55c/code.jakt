@@ -1,0 +1,40 @@
+import jakt::random
+import jakt::io { print, println, read_line }
+import jakt::string { String }
+import jakt::utilities { to_string }
+import jakt::error { Error }
+import jakt::platform { arch, os }
+
+function main() {
+    println("Guess the number!")
+
+    let secret_number = random::random_in_range(1, 101)
+
+    loop {
+        print("Please input your guess: ")
+        let mut line = read_line()
+        if line.is_empty() {
+            break
+        }
+        let guess_or_error: Error? | u64 = line.to_int()
+
+        match guess_or_error {
+            error: Error => {
+                println("{}", error)
+                continue
+            }
+            guess: u64 => {
+                println("You guessed: {}", guess)
+
+                if guess < secret_number {
+                    println("Too small!")
+                } else if guess > secret_number {
+                    println("Too big!")
+                } else {
+                    println("You win!")
+                    break
+                }
+            }
+        }
+    }
+}

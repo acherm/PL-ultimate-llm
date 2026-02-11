@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quipper · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=Q">Browse</a> · Quipper
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Quipper</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T21:01:16Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Quipper_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit fecb83af80 · authored 2026-02-05T22:01:37+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Deutsch-Jozsa Algorithm</h2>
+                      <div class="muted"><a href='https://chrisheunen.github.io/iqpl/quipper.html' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/6c0cb39a45137ea0eb0771654d9b9d876083cc997f83f84e988796b39f70b812/code.hs' download>Download</a> · <a href='../../code/6c0cb39a45137ea0eb0771654d9b9d876083cc997f83f84e988796b39f70b812/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.hs · added: 2026-02-05T21:01:10Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">-- Deutsch-Jozsa Algorithm in Quipper
+-- Determines whether a boolean function is constant or balanced
+
+import Quipper
+
+-- Oracle function for the algorithm
+oracle :: Qubit -&gt; Qubit -&gt; Qubit -&gt; Circ (Qubit, Qubit, Qubit)
+oracle x y z = do
+  qnot_at z `controlled` [x, y]
+  return (x,y,z)
+
+-- Main Deutsch-Jozsa algorithm
+deutschjozsa :: (Qubit -&gt; Qubit -&gt; Qubit -&gt; Circ (Qubit, Qubit, Qubit))
+                -&gt; Circ (Bit, Bit)
+deutschjozsa oracle = do
+  x &lt;- qinit False
+  y &lt;- qinit False
+  z &lt;- qinit True
+  hadamard x
+  hadamard y
+  hadamard z
+  (x,y,z) &lt;- oracle x y z
+  hadamard x
+  hadamard y
+  (a,b) &lt;- measure (x,y)
+  return (a,b)
+
+-- Run the algorithm
+main :: IO ()
+main = do
+  print_simple Preview (deutschjozsa oracle)</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/quil-95ff07bd/" aria-label="Previous language">← Quil</a>
+          <a href="../../l/quorum-18ed8b6c/" aria-label="Next language">Quorum →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

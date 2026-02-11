@@ -1,0 +1,25 @@
+() recv_internal(int msg_value, cell in_msg, slice in_msg_body) impure {
+    var cs = in_msg.begin_parse();
+    var flags = cs~load_uint(4);
+    slice sender_address = cs~load_msg_addr();
+
+    int op = in_msg_body~load_uint(32);
+
+    slice ds = get_data().begin_parse();
+    int counter = ds~load_uint(64);
+
+    if (op == 1) {
+        counter += 1;
+    } elseif (op == 2) {
+        counter -= 1;
+    }
+
+    set_data(begin_cell()
+        .store_uint(counter, 64)
+        .end_cell());
+}
+
+int get_counter() method_id {
+    slice ds = get_data().begin_parse();
+    return ds~load_uint(64);
+}

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PlusCal · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=P">Browse</a> · PlusCal
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">PlusCal</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-12T09:06:44Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://lamport.azurewebsites.net/tla/pluscal.html" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit ff74dde13d · authored 2025-11-12T10:06:44+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Two-Phase Commit Algorithm in PlusCal</h2>
+                      <div class="muted"><a href='https://github.com/tlaplus/Examples/blob/master/specifications/TwoPhase/TwoPhase.tla' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/39630ce87d57701ad2df90cd2ffcbcc1ce632938f24d50ab4c98b9e9548c315a/code.tla' download>Download</a> · <a href='../../code/39630ce87d57701ad2df90cd2ffcbcc1ce632938f24d50ab4c98b9e9548c315a/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.tla · license: Community Specification License v1.0 · added: 2025-11-12T09:06:44Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">(*--algorithm TwoPhase
+
+variables rm_state = [r \in RM |-&gt; &quot;working&quot;],
+          tm_state = &quot;init&quot;,
+          tm_decision,
+          msgs = {};
+
+define
+  PreparedRMs == {r \in RM : rm_state[r] = &quot;prepared&quot;}
+  RMReplies(M)  == {m \in msgs : m.type = M}
+end define;
+
+process TM = &quot;TM&quot;
+variables vote_reqs = RM;
+begin
+  T1: \* Send vote requests to all RMs
+      while vote_reqs /= {} do
+        with r \in vote_reqs do
+          msgs := msgs \union {[type |-&gt; &quot;VoteRequest&quot;, dest |-&gt; r]};
+          vote_reqs := vote_reqs \ {r};
+        end with;
+      end while;
+      tm_state := &quot;waiting&quot;;
+
+  T2: \* Wait for votes from all RMs
+      await \A r \in RM : \E m \in RMReplies(&quot;Vote&quot;): m.rm = r;
+
+  T3: either \* Commit
+        await \A m \in RMReplies(&quot;Vote&quot;): m.vote = &quot;commit&quot;;
+        tm_decision := &quot;commit&quot;;
+        tm_state := &quot;committed&quot;;
+      or \* Abort
+        await \E m \in RMReplies(&quot;Vote&quot;): m.vote = &quot;abort&quot;;
+        tm_decision := &quot;abort&quot;;
+        tm_state := &quot;aborted&quot;;
+      end either;
+
+  T4: either \* Send commit messages
+        await tm_decision = &quot;commit&quot;;
+        with r \in RM do
+          msgs := msgs \union {[type |-&gt; &quot;Commit&quot;, dest |-&gt; r]};
+        end with;
+      or \* Send abort messages
+        await tm_decision = &quot;abort&quot;;
+        with r \in RM do
+          msgs := msgs \union {[type |-&gt; &quot;Abort&quot;, dest |-&gt; r]};
+        end with;
+      end either;
+end process;
+
+process RMProc \in RM
+variable vote;
+begin
+  R1: \* Receive vote request
+      await \E m \in msgs: (m.type = &quot;VoteRequest&quot;) /\ (m.dest = self);
+      rm_state[self] := &quot;prepared&quot;;
+
+  R2: either \* Vote to commit
+        vote := &quot;commit&quot;;
+      or \* Vote to abort
+        vote := &quot;abort&quot;;
+      end either;
+      msgs := msgs \union {[type |-&gt; &quot;Vote&quot;, rm |-&gt; self, vote |-&gt; vote]};
+
+  R3: either \* Receive commit
+        await \E m \in msgs: (m.type = &quot;Commit&quot;) /\ (m.dest = self);
+        rm_state[self] := &quot;committed&quot;;
+      or \* Receive abort
+        await \E m \in msgs: (m.type = &quot;Abort&quot;) /\ (m.dest = self);
+        rm_state[self] := &quot;aborted&quot;;
+      end either;
+end process;
+
+end algorithm; *)</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/plorth-03e39ba9/" aria-label="Previous language">← Plorth</a>
+          <a href="../../l/pony-5cb47a9b/" aria-label="Next language">Pony →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

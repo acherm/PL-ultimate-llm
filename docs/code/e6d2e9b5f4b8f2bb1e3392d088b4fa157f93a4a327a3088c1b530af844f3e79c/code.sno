@@ -1,0 +1,15 @@
+*
+* FREQ - WORD FREQUENCY COUNTER
+*
+         DEFINE('FREQ(S)TEXT,W')
+         DEFINE('FREQP()F,K')
+FREQ     TEXT = S
+         &ANCHOR = 1
+FREQ2    TEXT W = BREAK(' ') . W SPAN(' ') =
+         F<W> = F<W> + 1                       :F(RETURN)S(FREQ2)
+FREQP    OUTPUT = 'WORD FREQUENCIES:'
+         F = TABLE()
+FREQP2   F K = CONVERT(F, 'ARRAY')
+         OUTPUT = K ' ' F<K>                   :S(FREQP2)
+         RETURN
+END

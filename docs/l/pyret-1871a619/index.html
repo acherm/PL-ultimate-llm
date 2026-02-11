@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pyret · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=P">Browse</a> · Pyret
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Pyret</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T20:56:06Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: opus</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://pyret.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit f38a379d88 · authored 2026-02-05T21:56:49+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Functional Queue</h2>
+                      <div class="muted"><a href='https://github.com/brownplt/pyret-lang/blob/master/examples/queue.arr' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/aba6672d283e5b3fccd8ec9ac95c2b49083b88ae1eddbc8f0c731016af75ff1c/code.arr' download>Download</a> · <a href='../../code/aba6672d283e5b3fccd8ec9ac95c2b49083b88ae1eddbc8f0c731016af75ff1c/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.arr · added: 2026-02-05T20:56:06Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">#lang pyret
+
+data Queue:
+ | queue(from-front, from-back)
+end
+
+mt-queue = queue([list: ], [list: ])
+
+fun enqueue(q, elt):
+ queue(link(elt, q.from-front), q.from-back)
+where:
+ enqueue(mt-queue, 4) is queue([list: 4], [list: ])
+ mt-queue
+ ^ enqueue(_, 4)
+ ^ enqueue(_, 5) is queue([list: 5, 4], [list: ])
+ full-q = queue([list: ], [list: 4])
+ full-q
+ ^ enqueue(_, 5)
+ ^ enqueue(_, 6) is queue([list: 6, 5], [list: 4])
+end
+
+fun size(q):
+ q.from-front.length() + q.from-back.length()
+end
+
+fun dequeue(q):
+ cases(List) q.from-back:
+  | empty =&gt;
+   cases(List) q.from-front:
+    | empty =&gt; raise(&quot;Dequeue on an empty queue&quot;)
+    | link(_, _) =&gt;
+     new-from-back = q.from-front.reverse()
+     new-queue = queue([list: ], new-from-back.rest)
+     result = new-from-back.first
+     { q: new-queue, v: result }
+    end
+  | link(f, r) =&gt; { q: queue(q.from-front, r), v: f }
+ end
+where:
+ little-q = queue([list: ], [list: 4])
+ dequeue(little-q) is { q: queue([list: ], [list: ]), v: 4 }
+ dequeue(dequeue(little-q).q) raises &quot;empty queue&quot;
+
+ full-q2 = queue([list: 1, 2, 3], [list: 4, 5, 6])
+
+ dq1 = dequeue(full-q2)
+ dq1 is { q: queue([list: 1, 2, 3], [list: 5, 6]), v: 4 }
+ dq1.q ^ dequeue(_) is { q: queue([list: 1, 2, 3], [list: 6]), v: 5 }
+ (dq1.q ^ dequeue(_)).q ^ dequeue(_) is { q: queue([list: 1, 2, 3], [list: ]), v: 6 }
+ ((dq1.q ^ dequeue(_)).q ^ dequeue(_)).q ^ dequeue(_) is { q: queue([list: ], [list: 2, 1]), v: 3 }
+end
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/pvs-ed662ac2/" aria-label="Previous language">← PVS</a>
+          <a href="../../l/python-18885f27/" aria-label="Next language">Python →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

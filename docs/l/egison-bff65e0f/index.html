@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Egison · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=E">Browse</a> · Egison
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Egison</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T21:04:17Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: opus</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://www.egison.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 8b754f5b74 · authored 2026-02-05T22:05:04+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Poker Hand Classification</h2>
+                      <div class="muted"><a href='https://github.com/egison/egison/blob/master/sample/poker-hands.egi' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/be34d1e3fee04b96ae807488779a6b3a60b023db7505100ddd2d231684332f6a/code.egi' download>Download</a> · <a href='../../code/be34d1e3fee04b96ae807488779a6b3a60b023db7505100ddd2d231684332f6a/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.egi · license: MIT · added: 2026-02-05T21:04:17Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">def suit := algebraicDataMatcher
+  | spade
+  | heart
+  | club
+  | diamond
+
+def card := algebraicDataMatcher
+  | card suit (mod 13)
+
+def poker cs :=
+  match cs as multiset card with
+  | [card $s $n, card #s #(n-1), card #s #(n-2), card #s #(n-3), card #s #(n-4)]
+    -&gt; &quot;Straight flush&quot;
+  | [card _ $n, card _ #n, card _ #n, card _ #n, _]
+    -&gt; &quot;Four of a kind&quot;
+  | [card _ $m, card _ #m, card _ #m, card _ $n, card _ #n]
+    -&gt; &quot;Full house&quot;
+  | [card $s _, card #s _, card #s _, card #s _, card #s _]
+    -&gt; &quot;Flush&quot;
+  | [card _ $n, card _ #(n-1), card _ #(n-2), card _ #(n-3), card _ #(n-4)]
+    -&gt; &quot;Straight&quot;
+  | [card _ $n, card _ #n, card _ #n, _, _]
+    -&gt; &quot;Three of a kind&quot;
+  | [card _ $m, card _ #m, card _ $n, card _ #n, _]
+    -&gt; &quot;Two pair&quot;
+  | [card _ $n, card _ #n, _, _, _]
+    -&gt; &quot;One pair&quot;
+  | [_, _, _, _, _] -&gt; &quot;Nothing&quot;
+
+assertEqual &quot;poker hand 1&quot;
+  (poker [Card Spade 5, Card Spade 6, Card Spade 7, Card Spade 8, Card Spade 9])
+  &quot;Straight flush&quot;
+
+assertEqual &quot;poker hand 2&quot;
+  (poker [Card Spade 5, Card Diamond 5, Card Spade 7, Card Club 5, Card Heart 5])
+  &quot;Four of a kind&quot;
+
+assertEqual &quot;poker hand 3&quot;
+  (poker [Card Spade 5, Card Diamond 5, Card Spade 7, Card Club 5, Card Heart 7])
+  &quot;Full house&quot;
+
+assertEqual &quot;poker hand 4&quot;
+  (poker [Card Spade 5, Card Spade 6, Card Spade 7, Card Spade 13, Card Spade 9])
+  &quot;Flush&quot;
+
+assertEqual &quot;poker hand 5&quot;
+  (poker [Card Spade 5, Card Club 6, Card Spade 7, Card Spade 8, Card Spade 9])
+  &quot;Straight&quot;
+
+assertEqual &quot;poker hand 6&quot;
+  (poker [Card Spade 5, Card Diamond 5, Card Spade 7, Card Club 5, Card Heart 8])
+  &quot;Three of a kind&quot;
+
+assertEqual &quot;poker hand 7&quot;
+  (poker [Card Spade 5, Card Diamond 10, Card Spade 7, Card Club 5, Card Heart 10])
+  &quot;Two pair&quot;
+
+assertEqual &quot;poker hand 8&quot;
+  (poker [Card Spade 5, Card Diamond 10, Card Spade 7, Card Club 5, Card Heart 8])
+  &quot;One pair&quot;
+
+assertEqual &quot;poker hand 9&quot;
+  (poker [Card Spade 5, Card Spade 6, Card Spade 7, Card Spade 8, Card Diamond 11])
+  &quot;Nothing&quot;
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/eff-4a136225/" aria-label="Previous language">← Eff</a>
+          <a href="../../l/egl-025b8c61/" aria-label="Next language">EGL →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

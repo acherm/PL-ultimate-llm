@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KiXtart · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=K">Browse</a> · KiXtart
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">KiXtart</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-05T20:16:40Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/KiXtart" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 8c81c2d374 · authored 2025-11-05T21:16:41+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Get IP address, Subnet Mask and Default Gateway</h2>
+                      <div class="muted"><a href='http://www.kixtart.org/scripts/script.php?id=12' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/4781c1b4b8cfa0edf3f204bfab09a0dbb83059adf4f5831560d3bd578a276bb2/code.kix' download>Download</a> · <a href='../../code/4781c1b4b8cfa0edf3f204bfab09a0dbb83059adf4f5831560d3bd578a276bb2/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.kix · added: 2025-11-05T20:16:40Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">; Script:   GetIP.kix
+; Author:   John F. Sceski
+; Date:     01/21/2002
+;
+; This script will get the IP address, Subnet Mask and Default Gateway
+; for the local machine. It will then display the information in a message
+; box.
+;
+; It has been tested on Windows 95, 98, ME, NT4 and 2000 Pro.
+;
+; It uses the external program &#x27;ipconfig.exe&#x27; to get the information.
+;
+; Note: For Windows 95, 98 and ME you must use &#x27;winipcfg.exe /batch&#x27;
+;       and the output file is different.
+;
+;       This script only works for Windows NT4 and 2000 Pro.
+
+Dim $GetIP, $IPAddress, $SubnetMask, $DefaultGateway, $TempFile
+
+$TempFile = &quot;%TEMP%\GetIP.tmp&quot;
+
+$GetIP = Run(&#x27;ipconfig.exe &gt; &quot;$TempFile&quot;&#x27;)
+
+If @ERROR = 0
+   $IPAddress = ReadProfileString(&quot;$TempFile&quot;, &quot;   IP Address. . . . . . . . . . . :&quot;, &quot;&quot;)
+   $SubnetMask = ReadProfileString(&quot;$TempFile&quot;, &quot;   Subnet Mask . . . . . . . . . . :&quot;, &quot;&quot;)
+   $DefaultGateway = ReadProfileString(&quot;$TempFile&quot;, &quot;   Default Gateway . . . . . . . . :&quot;, &quot;&quot;)
+
+   $CRLF = Chr(13) + Chr(10)
+
+   ? &quot;IP Address is: &quot; + $IPAddress
+   ? &quot;Subnet Mask is: &quot; + $SubnetMask
+   ? &quot;Default Gateway is: &quot; + $DefaultGateway
+
+   $Message = &quot;IP Address is: &quot; + $IPAddress + $CRLF + &quot;Subnet Mask is: &quot; + $SubnetMask + $CRLF + &quot;Default Gateway is: &quot; + $DefaultGateway
+
+   $MBOK = 0
+   $MBIconInformation = 64
+
+   $Return = MessageBox($Message, &quot;IP Information&quot;, $MBOK + $MBIconInformation)
+
+   $GetIP = Del(&quot;$TempFile&quot;)
+Else
+   ? &quot;Error running ipconfig.exe&quot;
+   ? &quot;Error code: &quot; + @ERROR
+   ? &quot;Windows error code: &quot; + @WERROR
+EndIf
+
+Exit @ERROR</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/kitten-12d6736f/" aria-label="Previous language">← Kitten</a>
+          <a href="../../l/koka-c40ffc0a/" aria-label="Next language">Koka →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

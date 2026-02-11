@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FoxPro · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=F">Browse</a> · FoxPro
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">FoxPro</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-03T04:59:09Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Visual_FoxPro" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Visual FoxPro, VFP</div>
+          <div class='muted'>Provenance: commit 137536c188 · authored 2025-11-03T05:59:09+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Text to HTML Converter</h2>
+                      <div class="muted"><a href='https://github.com/RickStrahl/VFP-Text-to-HTML/blob/master/TextToHTML.prg' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/9d9f67cfe5b4a05243df82d582cecff95dbd81d4dce249c7a0abe4cf5cfebbd3/code.prg' download>Download</a> · <a href='../../code/9d9f67cfe5b4a05243df82d582cecff95dbd81d4dce249c7a0abe4cf5cfebbd3/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.prg · added: 2025-11-03T04:59:09Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">************************************************************************
+*  TextToHTML
+*
+FUNCTION TextToHTML(tcText,llNoHtml)
+************************************************************************
+*  Author: Rick Strahl
+*          (c) West Wind Technologies, 1996-2003
+*          http://www.west-wind.com/
+*
+* Converted from a C# function I wrote
+* http://www.west-wind.com/weblog/posts/1154.aspx
+*
+* Pass in a block of text and it will be converted to &#x27;HTML&#x27;
+* Specifically it encodes the text and then replaces carriage returns
+* with &lt;br&gt; tags.
+*
+* It can also optionally wrap the text in &lt;pre&gt; tags which is
+* useful for displaying code.
+*
+* llNoHtml - if .t. doesn&#x27;t HTML encode the text
+************************************************************************
+LPARAMETERS tcText, llNoHtml, llPreTag
+LOCAL lcText
+
+IF EMPTY(tcText)
+   RETURN &quot;&quot;
+ENDIF
+
+IF VARTYPE(llNoHtml) # &quot;L&quot;
+   llNoHtml = .f.
+ENDIF
+IF VARTYPE(llPreTag) # &quot;L&quot;
+   llPreTag = .f.
+ENDIF
+
+IF !llNoHtml
+   lcText = HtmlEncode(tcText)
+ELSE
+   lcText = tcText
+ENDIF
+
+IF llPreTag
+   lcText = &quot;&lt;pre&gt;&quot; + lcText + &quot;&lt;/pre&gt;&quot;
+ELSE
+   lcText = STRTRAN(lcText,CHR(13),&quot;&quot;,1)
+   lcText = STRTRAN(lcText,CHR(10),&quot;&lt;br /&gt;&quot; + CHR(10))
+ENDIF
+
+RETURN lcText
+* EOF TextToHTML()
+
+
+************************************************************************
+*  HtmlEncode
+*
+FUNCTION HtmlEncode(cString)
+************************************************************************
+*  Turns an string into an HTML encoded string
+************************************************************************
+cString = STRTRAN(cString,&quot;&amp;&quot;,&quot;&amp;amp;&quot;)
+cString = STRTRAN(cString,&quot;&lt;&quot;,&quot;&amp;lt;&quot;)
+cString = STRTRAN(cString,&quot;&gt;&quot;,&quot;&amp;gt;&quot;)
+cString = STRTRAN(cString,&#x27;&quot;&#x27;,&quot;&amp;quot;&quot;)
+cString = STRTRAN(cString,&quot;&#x27;&quot;,&quot;&amp;#39;&quot;)
+
+* For &lt;pre&gt; formatting
+cString = STRTRAN(cString,CHR(9),&quot;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&quot;)
+
+RETURN cString
+* EOF HtmlEncode()</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/fortress-fea4f8f7/" aria-label="Previous language">← Fortress</a>
+          <a href="../../l/fp-848951c7/" aria-label="Next language">FP →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TypeScript · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=T">Browse</a> · TypeScript
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">TypeScript</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T09:34:48Z</span>
+            <span class='pill'>Model: openai/gpt-4o-mini</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://www.typescriptlang.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: TS</div>
+          <div class='muted'>Provenance: commit 4c0578e4f9 · authored 2025-10-22T11:34:48+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">To-Do List App</h2>
+                      <div class="muted"><a href='https://github.com/microsoft/TypeScript-Node-Starter' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/6fcb85267be897ebc312fa8b9b2859ba0c2db2dc22937c7ba24d9a23c9a0ddc4/code.ts' download>Download</a> · <a href='../../code/6fcb85267be897ebc312fa8b9b2859ba0c2db2dc22937c7ba24d9a23c9a0ddc4/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ts · license: MIT · added: 2025-10-22T09:34:48Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">import express from &#x27;express&#x27;;
+import bodyParser from &#x27;body-parser&#x27;;
+
+const app = express();
+const port = 3000;
+
+app.use(bodyParser.json());
+
+let todos: { id: number; task: string; completed: boolean }[] = [];
+
+app.get(&#x27;/todos&#x27;, (req, res) =&gt; {
+  res.json(todos);
+});
+
+app.post(&#x27;/todos&#x27;, (req, res) =&gt; {
+  const newTodo = { id: todos.length + 1, task: req.body.task, completed: false };
+  todos.push(newTodo);
+  res.status(201).json(newTodo);
+});
+
+app.put(&#x27;/todos/:id&#x27;, (req, res) =&gt; {
+  const todo = todos.find(t =&gt; t.id === parseInt(req.params.id));
+  if (!todo) return res.status(404).send(&#x27;Todo not found&#x27;);
+  todo.completed = req.body.completed;
+  res.json(todo);
+});
+
+app.listen(port, () =&gt; {
+  console.log(`Server running at http://localhost:${port}`);
+});</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/txl-4ea4773c/" aria-label="Previous language">← TXL</a>
+          <a href="../../l/typst-38c14037/" aria-label="Next language">Typst →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

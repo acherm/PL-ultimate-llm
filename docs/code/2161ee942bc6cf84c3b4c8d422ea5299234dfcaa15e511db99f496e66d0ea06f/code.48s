@@ -1,0 +1,72 @@
+«
+  { 10 10 }
+  → b
+  «
+    DO
+      #1Fh SYSEVAL
+      →STR
+      "BASE CONVERTER"
+      "CURRENT BASES:"
+      "FROM: " b 1 GET →STR +
+      "TO:   " b 2 GET →STR +
+      { } 2 →LIST
+      "PRESS 'ENTER' TO CHANGE BASES"
+      "PRESS 'EVAL' TO ENTER NUMBER"
+      INFORM
+      1 → n
+      «
+        DO
+          {
+            "FROM BASE?"
+            "ENTER A NUMBER FROM 2 TO 16"
+            { } 1 →LIST
+            ""
+            INPUT
+            OBJ→
+            DUP
+            2 <
+            SWAP
+            16 >
+            OR
+            '#30004h SYSEVAL'
+            EVAL
+          }
+        UNTIL
+        b 1 n →TAG
+      »
+      IF
+        1 CHOOSE
+      THEN
+        b
+        → b'
+        «
+          DO
+            #1Fh SYSEVAL
+            →STR
+            "ENTER NUMBER TO CONVERT"
+            "CURRENT BASES:"
+            "FROM: " b 1 GET →STR +
+            "TO:   " b 2 GET →STR +
+            { } 2 →LIST
+            ""
+            INPUT
+            OBJ→
+            → S
+            «
+              b 1 GET → B « S B →H »
+              b 2 GET → B « H→ B »
+              →STR
+              "RESULT:"
+              SWAP
+              { } 1 →LIST
+              MSGBOX
+            »
+          »
+        »
+        EVAL
+      END
+    UNTIL
+      #30004h SYSEVAL
+    END
+  »
+»

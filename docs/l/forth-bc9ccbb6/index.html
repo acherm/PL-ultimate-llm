@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Forth · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=F">Browse</a> · Forth
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Forth</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T09:54:04Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://forth-standard.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: FORTH</div>
+          <div class='muted'>Provenance: commit 5609145213 · authored 2025-10-22T11:54:04+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Conway&#x27;s Game of Life in Forth</h2>
+                      <div class="muted"><a href='https://rosettacode.org/wiki/Conway%27s_Game_of_Life#Forth' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/5ffb7203e5c1cb118c711ffb975cede8c4ccf3b9ee52d367003e734e9b91d246/code.fs' download>Download</a> · <a href='../../code/5ffb7203e5c1cb118c711ffb975cede8c4ccf3b9ee52d367003e734e9b91d246/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.fs · license: Public Domain · added: 2025-10-22T09:54:04Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">variable universe 2000 allot
+variable newverse 2000 allot
+
+: xy&gt;offset ( x y -- offset )
+  50 * + ;
+: offset&gt;xy ( offset -- x y )
+  50 /mod ;
+: alive? ( offset -- flag )
+  universe + c@ ;
+: set-cell ( offset -- )
+  universe + 1 swap c! ;
+: clear-cell ( offset -- )
+  universe + 0 swap c! ;
+
+: count-neighbors ( offset -- neighbors )
+  0 &gt;r
+  offset&gt;xy
+  -1 -1 2over + xy&gt;offset alive? r&gt; + &gt;r
+   0 -1 2over + xy&gt;offset alive? r&gt; + &gt;r
+   1 -1 2over + xy&gt;offset alive? r&gt; + &gt;r
+  -1  0 2over + xy&gt;offset alive? r&gt; + &gt;r
+   1  0 2over + xy&gt;offset alive? r&gt; + &gt;r
+  -1  1 2over + xy&gt;offset alive? r&gt; + &gt;r
+   0  1 2over + xy&gt;offset alive? r&gt; + &gt;r
+   1  1 2over + xy&gt;offset alive? r&gt; + drop
+  2drop ;
+
+: randomize ( -- )
+  2000 0 do
+    i universe + 2 random c!
+  loop ;
+
+: swap-universes ( -- )
+  universe @ newverse @ universe ! newverse ! ;
+
+: generation ( -- )
+  2000 0 do
+    i alive? if
+      i count-neighbors
+      dup 2 &lt; if
+        drop i newverse + 0 swap c!
+      else
+        dup 3 &gt; if
+          drop i newverse + 0 swap c!
+        else
+          drop i newverse + 1 swap c!
+        then
+      then
+    else
+      i count-neighbors 3 = if
+        i newverse + 1 swap c!
+      else
+        i newverse + 0 swap c!
+      then
+    then
+  loop
+  swap-universes ;</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/formac-513bd8c5/" aria-label="Previous language">← FORMAC</a>
+          <a href="../../l/fortran-92df3768/" aria-label="Next language">Fortran →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

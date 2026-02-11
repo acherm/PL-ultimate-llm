@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CUE · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=C">Browse</a> · CUE
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">CUE</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T09:30:40Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://cuelang.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit a445b6e54f · authored 2025-10-23T11:30:40+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Application and Container Definitions in CUE</h2>
+                      <div class="muted"><a href='https://github.com/hofstadter-io/hof/blob/main/examples/first-steps/1-unify/main.cue' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/92f41c34a4e9edf9378286a85dec421cb4e0e438bb6fd8a84fcfc608be8ce077/code.cue' download>Download</a> · <a href='../../code/92f41c34a4e9edf9378286a85dec421cb4e0e438bb6fd8a84fcfc608be8ce077/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.cue · license: Apache-2.0 · added: 2025-10-23T09:30:40Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">package main
+
+import (
+	&quot;list&quot;
+	&quot;strings&quot;
+)
+
+// The design for our application
+#App: {
+	// The application name
+	name: string &amp; strings.MaxRunes(12)
+	// The labels for the application
+	labels: [string]: string
+	// The containers for the application
+	containers: [ID=#ID]: #Container &amp; {
+		// default the container name to the app name and container id
+		name: &quot;\(name)-\(ID)&quot;
+	}
+}
+
+// The container definition
+#Container: {
+	// The container name
+	name: string
+	// The container image
+	image: string
+	// The container command
+	command?: [...string]
+	// The container environment variables
+	env?: [string]: string
+}
+
+// our application instance
+app: #App &amp; {
+	name:   &quot;test&quot;
+	labels: owner: &quot;hof&quot;
+	containers: {
+		// the first container
+		web: {
+			image: &quot;nginx:latest&quot;
+			env: {
+				FOO: &quot;bar&quot;
+				BAR: &quot;baz&quot;
+			}
+		}
+		// the second container
+		db: {
+			image: &quot;postgres:12&quot;
+			env: {
+				POSTGRES_USER:     &quot;postgres&quot;
+				POSTGRES_PASSWORD: &quot;password&quot;
+			}
+		}
+	}
+}
+
+// Some extra containers to add to the app
+more: containers: {
+	// the third container
+	cache: {
+		image: &quot;redis:latest&quot;
+	}
+}
+
+// Unify the app with the extra containers
+// list.Concat will merge the containers from both sources
+// The result is a new, final application design
+final: app &amp; {
+	containers: list.Concat([app.containers, more.containers])
+}
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/cuda-c++-7363bc03/" aria-label="Previous language">← CUDA C++</a>
+          <a href="../../l/cuneiform-9d8f4c09/" aria-label="Next language">Cuneiform →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

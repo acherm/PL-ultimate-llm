@@ -1,0 +1,13 @@
+#Lighthouses in France
+#defaultView:Map
+SELECT ?item ?itemLabel ?coord ?image WHERE {
+  # instance of lighthouse
+  ?item wdt:P31 wd:Q39715.
+  # country France
+  ?item wdt:P17 wd:Q142.
+  # get coordinates
+  ?item wdt:P625 ?coord.
+  # get image
+  OPTIONAL { ?item wdt:P18 ?image }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" }
+}

@@ -1,0 +1,37 @@
+$ include "seed7_05.s7i";
+
+type: tree_type is record
+  left: ptr tree_type;
+  right: ptr tree_type;
+  key: integer;
+  info: string;
+end record;
+
+const func: insert_node (ref var tree: ptr tree_type, in key: integer,
+    in info: string) is func
+  result
+    var tree: ptr tree_type;
+  begin
+    if tree = NULL then
+      tree := new tree_type;
+      tree->key := key;
+      tree->info := info;
+      tree->left := NULL;
+      tree->right := NULL;
+    elsif key < tree->key then
+      insert_node(tree->left, key, info);
+    elsif key > tree->key then
+      insert_node(tree->right, key, info);
+    else
+      tree->info := info;
+    end if;
+  end func;
+
+const proc: print_tree (in tree: ptr tree_type) is func
+  begin
+    if tree <> NULL then
+      print_tree(tree->left);
+      writeln(tree->key <& ": " <& tree->info);
+      print_tree(tree->right);
+    end if;
+  end func;

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TLA+ · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=T">Browse</a> · TLA+
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">TLA+</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T10:11:33Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/TLA%2B" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Temporal Logic of Actions</div>
+          <div class='muted'>Provenance: commit 608e29d3dc · authored 2025-10-23T12:11:33+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Die Hard Jug Problem Specification in TLA+</h2>
+                      <div class="muted"><a href='https://github.com/tlaplus/Examples/blob/master/specifications/DieHard/DieHard.tla' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/e98a621bb0f191abfaf5851149f706dec3468b4ede02e753318165cedccecc2b/code.tla' download>Download</a> · <a href='../../code/e98a621bb0f191abfaf5851149f706dec3468b4ede02e753318165cedccecc2b/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.tla · license: CC-BY-4.0 · added: 2025-10-23T10:11:33Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">----------------------------- MODULE DieHard -----------------------------
+EXTENDS Integers
+
+(*
+--algorithm DieHard
+variables big = 5, small = 0 ;
+begin
+  while big # 4 do
+    either
+      big := 8 ;
+    or
+      small := 0 ;
+    or
+      small := 3 ;
+    or
+      with transfer = min(big, 3 - small) do
+        big := big - transfer ;
+        small := small + transfer ;
+      end with;
+    or
+      with transfer = min(small, 8 - big) do
+        small := small - transfer ;
+        big := big + transfer ;
+      end with;
+    end either;
+  end while;
+  assert big = 4;
+end algorithm;
+*)
+
+\* This is the translation of the PlusCal algorithm.
+\* You can see it by going to the &quot;File&quot; menu and choosing
+\* &quot;Translate PlusCal Algorithm&quot;.  However, you will see that
+\* the translation of the &quot;with&quot; statement is rather complicated.
+\* This is because the translator has to handle the general case.
+\* It is much simpler to write the TLA+ spec directly.  Here is
+\* a simpler version of the spec.
+
+VARIABLES big, small
+
+JugCapacity == 3..8 \* A hack to make TLC run faster.
+
+TypeOK == /\ big \in 0..8
+           /\ small \in 0..3
+
+Init == /\ big = 0
+        /\ small = 0
+
+FillBig == /\ big&#x27; = 8
+           /\ small&#x27; = small
+
+FillSmall == /\ small&#x27; = 3
+             /\ big&#x27; = big
+
+EmptyBig == /\ big&#x27; = 0
+            /\ small&#x27; = small
+
+EmptySmall == /\ small&#x27; = 0
+              /\ big&#x27; = big
+
+SmallToBig == /\ LET transfer == min(small, 8 - big)
+               IN  /\ big&#x27; = big + transfer
+                   /\ small&#x27; = small - transfer
+
+BigToSmall == /\ LET transfer == min(big, 3 - small)
+               IN  /\ big&#x27; = big - transfer
+                   /\ small&#x27; = small + transfer
+
+Next == \/ FillBig
+        \/ FillSmall
+        \/ EmptyBig
+        \/ EmptySmall
+        \/ SmallToBig
+        \/ BigToSmall
+
+Spec == Init /\ [][Next]_&lt;&lt;big, small&gt;&gt;
+
+FourGallonsInBig == big = 4
+
+=============================================================================</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/ti-basic-37c42d6c/" aria-label="Previous language">← TI-BASIC</a>
+          <a href="../../l/toml-280d1ed5/" aria-label="Next language">TOML →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

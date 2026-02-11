@@ -1,0 +1,25 @@
+state File {
+  val filename;
+  
+  state OpenFile {
+    method read() {
+      "reading from file"
+    }
+    method close() {
+      this <- ClosedFile;
+    }
+  }
+  
+  state ClosedFile {
+    method open() {
+      this <- OpenFile;
+    }
+  }
+}
+
+method main() {
+  val f = new File { filename = "test.txt"; } with ClosedFile;
+  f.open();
+  f.read();
+  f.close();
+}

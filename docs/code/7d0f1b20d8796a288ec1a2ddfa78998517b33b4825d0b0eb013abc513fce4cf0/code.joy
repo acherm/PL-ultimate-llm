@@ -1,0 +1,19 @@
+(*  hanoi.joy  *)
+
+DEFINE
+    hanoi  ==
+        [ [ [ "move disk " ] dip i ] dip
+          [ " from " ] dip
+          [ " to " ] dip
+          [ ".\n" ] dip
+          cleave
+        ]
+        [ [ pred ] dip
+          [ [ swap ] dip ] dip
+          hanoi
+          [ popd ] dip
+          [ [ swap ] dip ] dip
+          hanoi
+        ]
+        [ ]
+        ifte ;

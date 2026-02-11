@@ -1,0 +1,21 @@
+DEF PickAndPlace()
+  ; Initialization
+  PTP HOME
+  
+  ; Move to pick position
+  LIN {X 100, Y 200, Z 300, A 0, B 0, C 0}
+  
+  ; Close gripper
+  $OUT[1] = TRUE
+  WAIT SEC 0.5
+  
+  ; Move to place position
+  LIN {X 400, Y 500, Z 600, A 0, B 0, C 0}
+  
+  ; Open gripper
+  $OUT[1] = FALSE
+  WAIT SEC 0.5
+  
+  ; Return to home
+  PTP HOME
+END

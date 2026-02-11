@@ -1,0 +1,53 @@
+module Philosophers;
+
+const
+    NumPhilosophers = 5;
+
+activity Philosopher(id: integer; left, right: Fork);
+begin
+    loop
+        (* thinking *)
+        writeln("Philosopher ", id, " is thinking");
+        delay(random(1000));
+        writeln("Philosopher ", id, " is hungry");
+        (* hungry *)
+        accept get ->
+            left.get;
+            right.get;
+            (* eating *)
+            writeln("Philosopher ", id, " is eating");
+            delay(random(1000));
+            left.put;
+            right.put;
+    end
+end Philosopher;
+
+activity Fork;
+var
+    taken: boolean;
+begin
+    taken := false;
+    loop
+        select
+            when {~taken} accept get ->
+                taken := true
+        []
+            when {taken} accept put ->
+                taken := false
+        end
+    end
+end Fork;
+
+var
+    i: integer;
+    forks: array NumPhilosophers of Fork;
+    philosophers: array NumPhilosophers of Philosopher;
+
+begin
+    for i := 0 to NumPhilosophers-1 do
+        new(forks[i])
+    end;
+    for i := 0 to NumPhilosophers-1 do
+        new(philosophers[i], i, forks[i], forks[(i+1) mod NumPhilosophers])
+    end
+end Philosophers.

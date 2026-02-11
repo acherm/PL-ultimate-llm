@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ClojureScript · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=C">Browse</a> · ClojureScript
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ClojureScript</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T09:54:30Z</span>
+            <span class='pill'>Model: openai/gpt-4o-mini</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://clojurescript.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: ClojureScript, CLJS</div>
+          <div class='muted'>Provenance: commit 121864a944 · authored 2025-10-22T11:54:30+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">TodoMVC in ClojureScript</h2>
+                      <div class="muted"><a href='https://github.com/Day8/re-frame-todomvc' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/44dfeed5fa582451554c653dbcb03d8aa35415819985fa7968a0c9e36bba8083/code.cljs' download>Download</a> · <a href='../../code/44dfeed5fa582451554c653dbcb03d8aa35415819985fa7968a0c9e36bba8083/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.cljs · license: MIT · added: 2025-10-22T09:54:30Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">(ns todomvc.core
+  (:require [re-frame.core :as re-frame]
+            [reagent.core :as reagent]))
+
+(defn todo-item [item]
+  [:li [:input {:type &quot;checkbox&quot; :checked (:completed item)}]
+      (:title item)])
+
+(defn todo-list [todos]
+  [:ul (map todo-item todos)])
+
+(defn main-view []
+  (let [todos (re-frame/subscribe [:todos])]
+    (fn []
+      [:div
+       [:h1 &quot;Todo List&quot;]
+       [todo-list @todos]])))
+
+(re-frame/reg-event-db
+  :initialize
+  (fn [_ _]
+    {:todos [{:title &quot;Learn ClojureScript&quot; :completed false}
+              {:title &quot;Build a Todo App&quot; :completed false}]}))
+
+(re-frame/reg-sub
+  :todos
+  (fn [db _]
+    (:todos db)))
+
+(defn ^:export init []
+  (re-frame/dispatch [:initialize])
+  (reagent/render [main-view] (.getElementById js/document &quot;app&quot;)))</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/clojure-39ccce95/" aria-label="Previous language">← Clojure</a>
+          <a href="../../l/clu-e329d8d6/" aria-label="Next language">CLU →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

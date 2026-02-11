@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kermit · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=K">Browse</a> · Kermit
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Kermit</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-12T09:25:26Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://www.kermitproject.org/kermit.html" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Kermit script language</div>
+          <div class='muted'>Provenance: commit ffda60b729 · authored 2025-11-12T10:25:26+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Interactive FTP Client in Kermit Script</h2>
+                      <div class="muted"><a href='http://www.kermitproject.org/ftp/kermit/scripts/ftp.ksc' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/d2d10dd7d0951d3caff5e57a502f89dccc34965faf6e0a4a0df954f0b8668e95/code.ksc' download>Download</a> · <a href='../../code/d2d10dd7d0951d3caff5e57a502f89dccc34965faf6e0a4a0df954f0b8668e95/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ksc · license: Kermit License (BSD-like) · added: 2025-11-12T09:25:26Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">proc do_ftp { } {
+    local cmd x y z
+    local passive on
+    local verbose on
+    local hash off
+    local binary on
+    local prompt on
+    local status on
+    local debug off
+    local macdef off
+    local proxy off
+    local runique off
+    local sunique off
+    local glob on
+    local mcase off
+    local nmap off
+    local ntrans off
+    local helpstr
+
+    if not defined \%a exit 1 &quot;usage: ftp host&quot;
+    if not defined \v(version) exit 1 &quot;This script requires C-Kermit 7.0&quot;
+    if \v(version) &lt; 700000 exit 1 &quot;This script requires C-Kermit 7.0&quot;
+
+    set network type tcp/ip
+    set host \%a
+    if defined \%b set port \%b
+    if fail exit 1
+
+    echo
+    echo Trying \v(host)...
+    if fail exit 1
+
+    input 10 Connected
+    if fail {
+	echo Sorry, connection refused.
+	exit 1
+    }
+    echo \v(input)
+    input 30 220
+    if fail {
+	echo FTP server not responding.
+	exit 1
+    }
+    echo \v(input)
+
+    while true {
+	if \m(prompt) {
+	    ask cmd ftp&gt;
+	} else {
+	    input 10000000
+	    let cmd \v(input)
+	}
+	if fail break
+	if not defined cmd continue
+	xcmd \m(cmd)
+    }
+    hangup
+    exit 0
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/keli-b2fa0635/" aria-label="Previous language">← Keli</a>
+          <a href="../../l/kit-875d60ed/" aria-label="Next language">Kit →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

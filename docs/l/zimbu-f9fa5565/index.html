@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Zimbu · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=Z">Browse</a> · Zimbu
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Zimbu</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T12:30:45Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://www.moolenaar.net/z/zimbu/spec/zimbu.html" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 2d91624af5 · authored 2026-02-05T20:45:00+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Zimbu Compiler Driver</h2>
+                      <div class="muted"><a href='https://github.com/bsed/zimbuw32/blob/master/zimbu_test.zu' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/84d85c92d68e00f70cbee4566d82c0247118443732bd8f664a2e694fdc3584ac/code.zu' download>Download</a> · <a href='../../code/84d85c92d68e00f70cbee4566d82c0247118443732bd8f664a2e694fdc3584ac/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.zu · license: Apache-2.0 · added: 2026-02-05T12:30:45Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">#
+# Main file of the Zimbu compiler driver.
+#
+# This is intentionally a separate, small program, so that when running the C
+# compiler and executing the binary the memory used by the actual compiler has
+# been released. That matters a lot when doing fork().
+#
+# Usage:
+# zimbu {file}.zu Compile {file}.zu
+#
+# Options:
+# -o {prog} Store executable as {prog}
+# -x [arg ...] Execute the compiled program
+# -cc {compiler} Use {compiler} for the C compiler
+# Options passed on to zimbu2c:
+# -q Quick - do not generate a stack backtrace
+# -d Debug mode
+# -v Verbose
+# -vv Very verbose
+# -z don&#x27;t check for undefined symbols
+# --manage Manage memory
+# --keepunused Do write unused items.
+#
+# And later:
+# zimbu Execute build commands in ZIMBU file
+# zimbu BUILD Execute build commands in BUILD file
+#
+# Copyright 2009 Bram Moolenaar All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+# you may not use this file except in compliance with the License.
+# The License can be found it in the LICENSE file, or you may obtain a copy of
+# the License at http://www.apache.org/licenses/LICENSE-2.0
+
+IMPORT &quot;Config.zu&quot;
+
+ARG.StringList execute = NEW(&quot;x&quot;, &quot;execute&quot;, [],
+ &quot;Execute the program after compiling it &quot;
+ .. &quot;(must come last)&quot;)
+ .setArgName(&quot;arg&quot;)
+ARG.Bool forceCompileFlag = NEW(&quot;f&quot;, &quot;force&quot;, FALSE,
+ &quot;Force compilation even if source is older than executable&quot;)
+
+ARG.String progname = NEW(&quot;o&quot;, &quot;output&quot;, &quot;&quot;, &quot;Name for the produced program&quot;)
+ .setArgName(&quot;progname&quot;)
+ARG.String zimbu = NEW(NIL, &quot;zimbu&quot;, &quot;&quot;, &quot;Name for the zimbu2c program&quot;)
+ .setArgName(&quot;zimbuname&quot;)
+
+ARG.Bool undefinedFlag = NEW(&quot;z&quot;, &quot;zeroundef&quot;, TRUE,
+ &quot;Skip resolving symbols if there are no undefined symbols&quot;)
+ARG.Bool writeZuiFlag = NEW(NIL, &quot;zui&quot;, FALSE, &quot;Write .zui files&quot;)
+ARG.Bool keepunusedFlag = NEW(NIL, &quot;keepunused&quot;, FALSE, &quot;Do write unused items&quot;)
+ARG.String manageFlag = NEW(NIL, &quot;manage&quot;, &quot;default&quot;,
+ &quot;Memory management method; one of: &quot;
+ .. &quot;default, none, linked&quot;)
+ARG.Bool exitclean = NEW(NIL, &quot;exitclean&quot;, FALSE,
+ &quot;Run the garbage collector on exit&quot;)
+
+ARG.Usage usage = NEW(&quot;Usage: %0% [--help] [flags] source.zu [-x arg ...]&quot;)
+
+FUNC Main() int
+ IF ARG.Size() &lt; 1
+ IO.print(&quot;Missing source file argument&quot;)
+ IO.print(usage.get())
+ EXIT 1
+ }
+ IF ARG.Size() &gt; 1
+ LOG.fatal(&quot;Only one .zu file allowed&quot;)
+ }
+
+ # Catch common mistakes in arguments.
+ string inFileName = ARG.get(0)
+ IF inFileName.slice(-3) != &quot;.zu&quot;
+ LOG.fatal(&quot;Input name must end in &#x27;.zu&#x27;: \(inFileName)&quot;)
+ }
+
+ # Run auto-configuration. Fills in values for the Config module.
+ IF Config.run() != OK
+ LOG.fatal(&quot;Config failed, cannot compile a program&quot;)
+ }
+
+ string rootName = inFileName.slice(0, -4) # without &quot;.zu&quot;
+ string rootTail = IO.tail(rootName)
+ string dirName = IO.directory(rootName)
+ string zudirName = IO.concatPath(dirName, Config.zudirName)
+ string outFileName = IO.concatPath(zudirName, rootTail .. &quot;.c&quot;)
+ string ecaFileName = IO.concatPath(zudirName, rootTail .. &quot;.eca&quot;)
+
+ string progName
+ IF progname.present()
+ progName = progname.get()
+ IF Config.exeSuffix != &quot;&quot;
+ &amp;&amp; !progName.toLower().endsWith(Config.exeSuffix.toLower())
+ progName ..= Config.exeSuffix
+ }
+ ELSE
+ progName = rootName .. Config.exeSuffix
+ }
+
+ # Compile the .zu file in one of these cases:
+ # - There is no -x flag
+ # - There is a -f flag
+ # - There is a -x flag and the source is older than the executable
+ bool build
+ IF !execute.present() || forceCompileFlag.present()
+ build = TRUE
+ ELSE
+ IO.FileInfo inFileInfo = IO.fileInfo(inFileName)
+ IO.FileInfo progNameInfo = IO.fileInfo(progName)
+ build = inFileInfo.time &gt; progNameInfo.time
+ }
+
+ int retval = 0
+ IF build
+ # STEP 1: Run zimbu2c to convert {file}.zu to ZUDIR/{file}.c.
+
+ string cmd
+ IF zimbu.present()
+ # Use the command line argument for zimbu2c.
+ cmd = zimbu.get()
+ ELSE
+ # The zimbu2c executable name is the same as this executable.
+ # some/path/zimbu -&gt; some/path/zimbu2c
+ # some/path/zimbu.exe -&gt; some/path/zimbu2c.exe
+ # path/zimbu_test_test -&gt; path/zimbu_test_test2c
+ # path/zimbu_test -&gt; path/zimbu_test2c
+ string zimbu2c = &quot;zimbu2c&quot;
+ IF ARG.exeName.find(&quot;zimbu_test_test&quot;) &gt;= 0
+ zimbu2c = &quot;zimbu_test_test2c&quot;
+ ELSEIF ARG.exeName.find(&quot;zimbu_test&quot;) &gt;= 0
+ zimbu2c = &quot;zimbu_test2c&quot;
+ }
+ cmd = IO.modifyExeName(ARG.exeName, zimbu2c)
+ IF cmd.find(&#x27; &#x27;) &gt;= 0
+ # Command contains a space, put it in quotes.
+ cmd = &quot;&quot;(cmd)&quot;&quot;
+ }
+ }
+
+ # Pass some of the arguments.
+ IF Config.quick.get()
+ cmd ..= &quot; -q&quot;
+ }
+ cmd ..= LOG.getFlags()
+ IF !undefinedFlag.get()
+ cmd ..= &quot; -z&quot;
+ }
+ IF writeZuiFlag.get()
+ cmd ..= &quot; --zui&quot;
+ }
+ IF keepunusedFlag.get()
+ cmd ..= &quot; --keepunused&quot;
+ }
+ IF Config.portableFlag.get()
+ cmd ..= &quot; --portable&quot;
+ }
+ cmd ..= &quot; --manage=&quot; .. manageFlag.get()
+ IF exitclean.get()
+ cmd ..= &quot; --exitclean&quot;
+ }
+
+ retval = SYS.shell(cmd .. &quot; \&quot;&quot; .. inFileName .. &quot;\&quot;&quot;)
+
+ IF retval == 0
+ # Even when the command failed the exit value may be zero, check that the
+ # C file was actually generated.
+ IO.FileInfo fileInfo = IO.fileInfo(outFileName)
+ IF fileInfo.status == FAIL || fileInfo.size == 0
+ IO.print(&quot;ERROR: C program not written&quot;)
+ retval = 1
+ }
+ ELSE
+ # Avoid retval 256, make sees it as zero.
+ retval = 1
+ }
+
+ IF retval == 0
+ #
+ # STEP 2: Compile the produced C code.
+ #
+ # Not all C compilers return a non-zero value for failure.
+ # Delete the binary and check that it was updated and has some size.
+ IO.delete(progName)
+ IO.FileInfo before = IO.fileInfo(progName)
+ string ccCmd = Config.compilerCmd(outFileName, progName)
+
+ # Read the .eca file and append it to the compiler command (omitting
+ # line breaks).
+ # Libraries must come last, the compiler may only pick up methods that
+ # were used in the srcName.
+ ccCmd ..= IO.readFile(ecaFileName).replaceAll(&#x27;\n&#x27;, &#x27; &#x27;)
+
+ # Add the tcmalloc library if zimbuConfig could find it.
+ IF Config.mallocArg != NIL
+ ccCmd ..= &quot; &quot; .. Config.mallocArg
+ }
+
+ LOG.info(&quot;Executing compiler: \(ccCmd)&quot;)
+ retval = SYS.shell(ccCmd)
+ IO.FileInfo after = IO.fileInfo(progName)
+ IF after.size == 0
+ IO.print(&quot;ERROR: Compiled program is zero size&quot;)
+ retval = 1
+ ELSEIF before.size == after.size &amp;&amp; before.time == after.time
+ IO.print(&quot;ERROR: Compiled program was not updated&quot;)
+ retval = 1
+ ELSEIF retval != 0
+ # Avoid retval 256, make sees it as zero.
+ retval = 1
+ }
+ }
+ }
+
+ #
+ # STEP 3: Execute the program if &quot;-x&quot; was given
+ #
+ IF retval == 0 &amp;&amp; execute.present()
+ IF progName[0] != &#x27;/&#x27;
+ progName = Config.exePrefix .. progName
+ }
+ string executeArgs = &quot;&quot;
+ FOR arg IN execute.get()
+ # TODO: better escaping
+ executeArgs ..= &quot; &#x27;&quot; .. arg .. &quot;&#x27;&quot;
+ }
+ LOG.info(&quot;Executing program: \(progName)\(executeArgs)&quot;)
+ retval = SYS.shell(progName .. executeArgs)
+ }
+
+ RETURN retval
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/zil-2d778d3f/" aria-label="Previous language">← ZIL</a>
+          <a href="../../l/zimpl-6eee75d0/" aria-label="Next language">Zimpl →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

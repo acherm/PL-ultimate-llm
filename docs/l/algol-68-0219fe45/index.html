@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ALGOL 68 · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=A">Browse</a> · ALGOL 68
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ALGOL 68</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-05T11:53:17Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/ALGOL_68" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit ed7aac3d50 · authored 2025-11-05T12:53:17+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Sieve of Eratosthenes</h2>
+                      <div class="muted"><a href='https://rosettacode.org/wiki/Sieve_of_Eratosthenes#ALGOL_68' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/634d33172cd4ef746b7f0e5350284f46c215e5327f62a7392d0fcbc5faf73890/code.a68' download>Download</a> · <a href='../../code/634d33172cd4ef746b7f0e5350284f46c215e5327f62a7392d0fcbc5faf73890/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.a68 · license: GNU FDL 1.2 · added: 2025-11-05T11:53:17Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0"># Sieve of Eratosthenes - Algol 68 version #
+# The original Sieve of Eratosthenes algorithm #
+
+PROC sieve = (INT limit, REF[]BOOL primes)VOID:
+BEGIN
+  # Initialise the array to all TRUE #
+  FOR i FROM LWB primes TO UPB primes DO primes[i] := TRUE OD;
+
+  # Set 0 and 1 to not be prime #
+  primes[0] := primes[1] := FALSE;
+
+  # For all numbers from 2 up to the square root of the limit #
+  FOR i FROM 2 TO ENTIER sqrt(limit) DO
+    # If the number is prime #
+    IF primes[i] THEN
+      # Mark all of its multiples as not prime #
+      FOR j FROM i*i BY i TO limit DO
+        primes[j] := FALSE
+      OD
+    FI
+  OD
+END; # sieve #
+
+# Main program #
+BEGIN
+  INT limit = 100;
+  [0:limit]BOOL primes;
+
+  sieve(limit, primes);
+
+  print((&quot;Primes up to &quot;, limit, &quot;:&quot;, newline));
+  FOR i FROM LWB primes TO UPB primes DO
+    IF primes[i] THEN
+      print((whole(i,0), &quot; &quot;))
+    FI
+  OD;
+  print(newline)
+END</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/algol-60-2160ed17/" aria-label="Previous language">← ALGOL 60</a>
+          <a href="../../l/algol-w-8d4a62c0/" aria-label="Next language">Algol W →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

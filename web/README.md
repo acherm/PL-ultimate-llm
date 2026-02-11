@@ -17,6 +17,16 @@ python3 web/build_site.py
 
 Output goes to `web/dist/`.
 
+### With audit report
+
+To also generate `web/dist/data/audit.json` (duplicates/integrity checks/clustering hints):
+
+```bash
+python3 web/build_site.py --with-audit
+```
+
+The audit view is available at `web/dist/audit/index.html` and loads `data/audit.json` on demand.
+
 ## Preview locally
 
 ```bash

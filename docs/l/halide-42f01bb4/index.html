@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Halide · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=H">Browse</a> · Halide
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Halide</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-29T08:36:33Z</span>
+            <span class='pill'>Model: x-ai/grok-4-fast</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Halide_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 6adb210a08 · authored 2025-10-29T09:36:33+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Guided Filter</h2>
+                      <div class="muted"><a href='https://github.com/halide/Halide/blob/master/apps/guided_filter/guided_filter.hl' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/63631065a8ebd0ac87d11b2e16ed5c1ab2c4f07cb3f03f6a69c615f721b714d8/code.hl' download>Download</a> · <a href='../../code/63631065a8ebd0ac87d11b2e16ed5c1ab2c4f07cb3f03f6a69c615f721b714d8/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.hl · license: MIT · added: 2025-10-29T08:36:33Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// Guided filter for images. Joint bilateral filter where the range
+// kernel is defined by a guidance image. See He et al, &quot;Guided Image Filtering&quot;, ECCV 2010.
+
+#include &lt;Halide.h&gt;
+
+using namespace Halide;
+
+class GuidedFilter : public Halide::Generator&lt;GuidedFilter&gt; {
+public:
+    GeneratorInput&lt;Buffer&lt;float&gt;&gt;  input{&quot;input&quot;, 3};
+    GeneratorInput&lt;Buffer&lt;float&gt;&gt;  guidance{&quot;guidance&quot;, 3};
+    GeneratorParam&lt;int32_t&gt;        radius{&quot;radius&quot;, 4};
+    GeneratorParam&lt;float&gt;          eps{&quot;eps&quot;, Float(32).min()};
+    GeneratorOutput&lt;Buffer&lt;float&gt;&gt; output{&quot;output&quot;, 3};
+
+    void generate() {
+        /* THE ALGORITHM */
+        Var x, y, c;
+
+        // Compute local linear statistics I/r * sum p and 1/r * sum p*I
+        RDom r(0, radius, 0, radius);
+        Func mean_p   = Statistics(&quot;mean_p&quot;).define(  Sum().define( input(x, y, c) / r_mean(x, y), {r} ) );
+        Func mean_I   = Statistics(&quot;mean_I&quot;).define(  Sum().define( guidance(x + r.x - radius/2, y + r.y - radius/2, c) / r_mean(x, y), {r} ) );
+        Func mean_Ip  = Statistics(&quot;mean_Ip&quot;).define( Sum().define( guidance(x, y, c) * input(x + r.x - radius/2, y + r.y - radius/2, c) / r_mean(x, y), {r} ) );
+
+        // Compute cross correlation: 1/r * sum (I - mean_I) * (p - mean_p)
+        Func corr_I   = Statistics(&quot;corr_I&quot;).define(   Sum().define( pow2(guidance(x, y, c) - mean_I(x, y, c)), {r} ) / r_mean(x, y) );
+        Func corr_Ip  = Statistics(&quot;corr_Ip&quot;).define(  Sum().define( (guidance(x + r.x - radius/2, y + r.y - radius/2, c) - mean_I(x, y, c)) * (input(x + r.x - radius/2, y + r.y - radius/2, c) - mean_p(x, y, c)), {r} ) / r_mean(x, y) );
+
+        // Solve for the local linear model
+        RDom rc(0, input.channels());
+        Func a(&quot;a&quot;);
+        a(x, y, c) = (corr_Ip(x, y, c) / (corr_I(x, y, c) + eps));
+        Func b(&quot;b&quot;);
+        b(x, y, c) = mean_p(x, y, c) - a(x, y, c) * mean_I(x, y, c);
+
+        // Apply the local linear model
+        output(x, y, c) = clamp(a(x, y, c) * guidance(x, y, c) + b(x, y, c), 0.0f, 1.0f);
+
+        /* THE SCHEDULE */
+        // Nothing to see here. It&#x27;s all box-filtering.
+    }
+
+private:
+    Var xi, yi;
+    Func r_mean(&quot;r_mean&quot;);
+    r_mean(x, y) = (radius+1)*(radius+1);
+
+    // Statistics is a helper that does a box filter
+    template&lt;typename T&gt;
+    class Statistics : public Func {
+    public:
+        Statistics(std::string name) : Func(name) {}
+        template&lt;typename Body&gt;
+        Statistics &amp;define(Body body, const std::vector&lt;Expr&gt; &amp;over) {
+            this(x, y, c) = body;
+            // Box filter
+            this(x, y, c) = boxfilter(this, radius, {x, y});
+            return *this;
+        }
+    };
+
+    Func boxfilter(Func in, Expr r, const std::vector&lt;Var&gt; &amp;over) {
+        Func f(&quot;box&quot;);
+        RDom rx(0, r+1, 0, r+1);
+        f(x, y, c) = sum( in(x + rx.x - r/2, y + rx.y - r/2, c), {rx} ) / ((r+1)*(r+1));
+        return f;
+    }
+};
+
+HALIDE_REGISTER_GENERATOR(GuidedFilter, guided_filter)
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/hack-ccc9303a/" aria-label="Previous language">← Hack</a>
+          <a href="../../l/handel-c-f93f2e8d/" aria-label="Next language">Handel-C →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Raku · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=R">Browse</a> · Raku
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Raku</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T09:41:09Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://raku.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Perl 6, Rakudo</div>
+          <div class='muted'>Provenance: commit fe023e83ce · authored 2025-10-22T11:41:09+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Wordle Solver</h2>
+                      <div class="muted"><a href='https://github.com/Raku/examples/blob/master/categories/games/wordle.raku' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/092c2ae66a36b85d1be15f8c86ada08f5693902c383f801e783fe4e59e47c17a/code.raku' download>Download</a> · <a href='../../code/092c2ae66a36b85d1be15f8c86ada08f5693902c383f801e783fe4e59e47c17a/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.raku · license: Artistic-2.0 · added: 2025-10-22T09:41:09Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">#!/usr/bin/env raku
+unit sub MAIN ($word? is copy);
+my @words = &#x27;share/dict&#x27;.IO.lines.grep(/^&lt;[a..z]&gt;**5$/); 
+my @possible = @words;
+my $try = 1;
+while @possible &gt; 1 {
+    my $guess = $try == 1 ?? &#x27;stare&#x27; !! smart-guess(@possible);
+    my $result;
+    with $word {
+        $result = compare($word, $guess);
+        say &quot;$guess -&gt; $result&quot;;
+    }
+    else {
+        say &quot;Try $try: $guess&quot;;
+        $result = prompt &#x27;Result: &#x27;;
+        last if $result eq &#x27;done&#x27;;
+    }
+    @possible = filter-words(@possible, $guess, $result);
+    $try++;
+}
+say @possible[0] if @possible == 1;
+sub smart-guess(@words) {
+    @words.sort(*.comb.unique.elems).[*-1]
+}
+sub compare($word, $guess) {
+    my @result;
+    my @word = $word.comb;
+    my @guess = $guess.comb;
+    for ^5 -&gt; $i {
+        if @word[$i] eq @guess[$i] {
+            @result[$i] = &#x27;+&#x27;;
+            @word[$i] = @guess[$i] = Nil;
+        }
+    }
+    for ^5 -&gt; $i {
+        next unless @guess[$i];
+        if (my $j = @word.first(@guess[$i], :k)) {
+            @result[$i] = &#x27;?&#x27;;
+            @word[$j] = Nil;
+        }
+        else {
+            @result[$i] = &#x27;-&#x27;;
+        }
+    }
+    @result.join
+}
+sub filter-words(@words, $guess, $result) {
+    my @guess = $guess.comb;
+    my @result = $result.comb;
+    my %must-have;
+    my %must-not-have;
+    my %exact;
+    for ^5 -&gt; $i {
+        given @result[$i] {
+            when &#x27;+&#x27; {
+                %exact{$i} = @guess[$i];
+                %must-have{@guess[$i]}++;
+            }
+            when &#x27;?&#x27; {
+                %must-have{@guess[$i]}++;
+                %must-not-have{$i}{@guess[$i]} = 1;
+            }
+            when &#x27;-&#x27; {
+                %must-not-have&lt;all&gt;{@guess[$i]} = 1;
+            }
+        }
+    }
+    return @words.grep: -&gt; $word {
+        my @word = $word.comb;
+        next False if %exact.first: -&gt; $p {
+            @word[$p.key] ne $p.value;
+        };
+        next False if %must-not-have.first: -&gt; $p {
+            $p.key eq &#x27;all&#x27;
+                ?? $word.contains($p.value.any)
+                !! @word[$p.key] eq $p.value.any;
+        };
+        next False if %must-have.first: -&gt; $p {
+            $word.comb.grep($p.key) != $p.value;
+        };
+        True;
+    };
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/ragel-67d08968/" aria-label="Previous language">← Ragel</a>
+          <a href="../../l/rapid-6eead5c8/" aria-label="Next language">RAPID →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

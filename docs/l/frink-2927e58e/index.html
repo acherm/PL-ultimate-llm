@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Frink · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=F">Browse</a> · Frink
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Frink</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-28T09:11:55Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://frinklang.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 89e3b45124 · authored 2025-10-28T10:11:55+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Projectile with Air Resistance</h2>
+                      <div class="muted"><a href='https://frinklang.org/examples.html#projectile' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/9b51f5d4f01a3c69d24f714422f9004250b5f12322dde5f1a9118bc11885a4d5/code.frink' download>Download</a> · <a href='../../code/9b51f5d4f01a3c69d24f714422f9004250b5f12322dde5f1a9118bc11885a4d5/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.frink · added: 2025-10-28T09:11:55Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// This program calculates the path of a projectile with air resistance.
+g = 9.80665 m/s^2
+rho = 1.225 kg/m^3  // Density of air at sea level
+cd = 0.47           // Drag coefficient of a sphere
+radius = 10 cm
+mass = 1 kg
+area = pi radius^2
+
+v0 = 100 miles/hour
+angle = 45 degrees
+
+vx = v0 cos[angle]
+vy = v0 sin[angle]
+
+x = 0 m
+y = 0 m
+t = 0 s
+dt = .01 s
+
+while y &gt;= 0 m
+{
+   // Calculate the force of air resistance
+   v = (vx^2 + vy^2)^(1/2)
+   Fdrag = 1/2 rho v^2 cd area
+
+   // Calculate the x and y components of the drag force
+   Fdragx = Fdrag * vx/v
+   Fdragy = Fdrag * vy/v
+
+   // Calculate the acceleration in the x and y directions
+   ax = -Fdragx / mass
+   ay = -g - Fdragy / mass
+
+   // Calculate the new velocity
+   vx = vx + ax dt
+   vy = vy + ay dt
+
+   // Calculate the new position
+   x = x + vx dt
+   y = y + vy dt
+
+   t = t + dt
+   println[(t-&gt;s) + &quot;\t&quot; + (x-&gt;ft) + &quot;\t&quot; + (y-&gt;ft)]
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/fril-2ca655c4/" aria-label="Previous language">← Fril</a>
+          <a href="../../l/func-bc534a5c/" aria-label="Next language">FunC →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Austral · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=A">Browse</a> · Austral
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Austral</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-12T08:59:18Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://austral-lang.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 94362bbdaf · authored 2025-11-12T09:59:18+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Number Guessing Game</h2>
+                      <div class="muted"><a href='https://github.com/austral/austral/blob/main/examples/guess/guess.aum' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/81c65abcf1054153540735d430e2d0312c5e57cb3f630523368a90ba3737db99/code.aum' download>Download</a> · <a href='../../code/81c65abcf1054153540735d430e2d0312c5e57cb3f630523368a90ba3737db99/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.aum · license: Universal Permissive License 1.0 · added: 2025-11-12T08:59:18Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">-- A number guessing game.
+module Guess is
+    -- We need to import the `Random` module to generate random numbers, and the
+    -- `IO` module to print to the screen and read from the keyboard.
+    import Standard.Random (RandomState, random_int_in_range);
+    import Standard.IO (print_line, read_line);
+    import Standard.Integer (parse_int);
+    import Standard.Memory (free);
+    import Standard.String (String);
+    import Standard.Error (handle_error);
+
+    -- The entrypoint of the program.
+    generic [R: Region]
+    function main(): ExitCode is
+        -- Create a new random number generator state.
+        let state: RandomState := RandomState();
+        -- Generate a random integer between 1 and 100.
+        let secret: Int64 := random_int_in_range(state, 1, 100);
+        -- Free the random state, we don&#x27;t need it anymore.
+        free(state);
+        print_line(&quot;I&#x27;m thinking of a number between 1 and 100.&quot;);
+        -- Start the game loop.
+        return game_loop(secret);
+    end;
+
+    -- The game loop.
+    generic [R: Region]
+    function game_loop(secret: Int64): ExitCode is
+        loop
+            print_line(&quot;Take a guess: &quot;);
+            -- Read a line from the user.
+            let line: String[R] := read_line();
+            -- Try to parse the line as an integer.
+            let maybe_guess: Either[Int64, String[R]] := parse_int(line);
+            case maybe_guess of
+                when Left(let guess: Int64) do
+                    if guess &lt; secret then
+                        print_line(&quot;Too low.&quot;);
+                    else if guess &gt; secret then
+                        print_line(&quot;Too high.&quot;);
+                    else
+                        print_line(&quot;You win!&quot;);
+                        return ExitSuccess();
+                    end if;
+                end;
+                when Right(let err: String[R]) do
+                    print_line(&quot;Error: not a valid integer.&quot;);
+                    handle_error(err);
+                end;
+            end case;
+        end loop;
+    end;</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/ats-592162ab/" aria-label="Previous language">← ATS</a>
+          <a href="../../l/autohotkey-7b823530/" aria-label="Next language">AutoHotkey →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

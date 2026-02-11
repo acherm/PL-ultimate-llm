@@ -1,0 +1,23 @@
+-- AHDL TDF for a 4-bit counter with synchronous reset
+--
+-- ECE 379, University of British Columbia
+--
+-- This counter has a single clock input, a synchronous reset,
+-- and a 4-bit output.
+
+SUBDESIGN counter
+(
+    clk     : INPUT;
+    reset   : INPUT;
+    q[3..0] : OUTPUT;
+)
+VARIABLE
+    q[3..0] : DFF;
+BEGIN
+    q[].clk = clk;
+    IF reset THEN
+        q[].d = 0;
+    ELSE
+        q[].d = q[].q + 1;
+    END IF;
+END;

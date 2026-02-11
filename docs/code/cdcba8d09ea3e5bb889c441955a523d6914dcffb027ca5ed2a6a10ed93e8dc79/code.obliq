@@ -1,0 +1,18 @@
+class BankAccount (initialBalance)
+  balance = ref initialBalance;
+
+  method Deposit (amount)
+    balance := balance + amount;
+
+  method Withdraw (amount)
+    if amount > balance then error "Insufficient funds"
+    else balance := balance - amount;
+
+  method GetBalance () balance end;
+
+end;
+
+let account = new BankAccount (100.0) in
+  account.Deposit (50.0);
+  account.Withdraw (30.0);
+  account.GetBalance ()

@@ -1,0 +1,8 @@
+let T = range x from 1 to 1440 step 1;
+let ts=I=T
+| extend y=iff(x%200==0, 10*rand(), 2+1.5*sin(x/60.0)+rand()/10.0)
+| extend timestamp=ago(1d-1m*x);
+ts
+| make-series y on timestamp from ago(1d) to now() step 1m
+| extend anomalies=series_decompose_anomalies(y, 1.5, -1, 'linefit')
+| render anomalychart with(anomalycolumns=anomalies)

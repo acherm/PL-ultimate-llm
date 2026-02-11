@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Newsqueak · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=N">Browse</a> · Newsqueak
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Newsqueak</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T20:58:28Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Newsqueak" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 85e79d4c15 · authored 2026-02-05T21:59:08+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Prime Number Sieve</h2>
+                      <div class="muted"><a href='https://swtch.com/~rsc/thread/newsqueak.pdf' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/c9dc79fa83c158323d2f3c4521e3c253cff1254641897dd0555709006057306a/code.nq' download>Download</a> · <a href='../../code/c9dc79fa83c158323d2f3c4521e3c253cff1254641897dd0555709006057306a/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.nq · added: 2026-02-05T20:58:28Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">counter:=prog(c:chan of int)
+{
+	i:int;
+	for(i=2;;i++)
+		c&lt;-=i;
+};
+
+filter:=prog(prime:int, listen, send: chan of int)
+{
+	i:int;
+	for(;;)
+		if((i=&lt;-listen)%prime)
+			send&lt;-=i;
+};
+
+sieve:=prog()
+{
+	c:=mk(chan of int);
+	begin counter(c);
+	prime:int;
+	for(;;){
+		prime=&lt;-c;
+		print(prime, &quot; &quot;);
+		newc:=mk(chan of int);
+		begin filter(prime, c, newc);
+		c=newc;
+	}
+};
+
+sieve();
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/newspeak-d624dc5d/" aria-label="Previous language">← Newspeak</a>
+          <a href="../../l/newtonscript-1e7662f5/" aria-label="Next language">NewtonScript →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

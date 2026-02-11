@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GDScript · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=G">Browse</a> · GDScript
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">GDScript</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T07:09:32Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/GDScript" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Godot Script</div>
+          <div class='muted'>Provenance: commit 81f37cf38f · authored 2025-10-23T09:09:32+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">2D Platformer Player Controller</h2>
+                      <div class="muted"><a href='https://github.com/godotengine/godot-demo-projects/blob/master/2d/platformer/player.gd' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/d3275fe443a590e6aa4c7a09baf3258a8e31c2104354dffe72d45fa672b438fd/code.gd' download>Download</a> · <a href='../../code/d3275fe443a590e6aa4c7a09baf3258a8e31c2104354dffe72d45fa672b438fd/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.gd · license: MIT License · added: 2025-10-23T07:09:32Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">extends KinematicBody2D
+
+const UP = Vector2(0, -1)
+const GRAVITY = 20
+const ACCELERATION = 50
+const MAX_SPEED = 200
+const JUMP_HEIGHT = -500
+
+var motion = Vector2()
+var facing_right = true
+
+func _physics_process(delta):
+	motion.y += GRAVITY
+	var friction = false
+
+	if Input.is_action_pressed(&quot;ui_right&quot;):
+		motion.x = min(motion.x + ACCELERATION, MAX_SPEED)
+		$Sprite.flip_h = false
+		facing_right = true
+	elif Input.is_action_pressed(&quot;ui_left&quot;):
+		motion.x = max(motion.x - ACCELERATION, -MAX_SPEED)
+		$Sprite.flip_h = true
+		facing_right = false
+	else:
+		friction = true
+
+	if is_on_floor():
+		if Input.is_action_just_pressed(&quot;ui_up&quot;):
+			motion.y = JUMP_HEIGHT
+		if friction == true:
+			motion.x = lerp(motion.x, 0, 0.2)
+	else:
+		if friction == true:
+			motion.x = lerp(motion.x, 0, 0.05)
+
+	if abs(motion.x) &lt; 1:
+		$Sprite.play(&quot;idle&quot;)
+	else:
+		$Sprite.play(&quot;run&quot;)
+
+	if not is_on_floor():
+		if motion.y &lt; 0:
+			$Sprite.play(&quot;jump&quot;)
+		else:
+			$Sprite.play(&quot;fall&quot;)
+
+	motion = move_and_slide(motion, UP)
+
+	if Input.is_action_just_pressed(&quot;ui_accept&quot;):
+		var bullet = preload(&quot;res://bullet.tscn&quot;).instance()
+		bullet.set_bullet_direction(facing_right)
+		bullet.position = $Position2D.global_position
+		get_parent().add_child(bullet)
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/gauss-72e6986e/" aria-label="Previous language">← GAUSS</a>
+          <a href="../../l/genie-bc8359eb/" aria-label="Next language">Genie →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

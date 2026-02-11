@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>E · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=E">Browse</a> · E
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">E</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-04T14:56:05Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/E_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit ee4fd42b0c · authored 2025-11-04T15:56:05+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Dining Philosophers</h2>
+                      <div class="muted"><a href='http://www.erights.org/elib/e/examples/dining-philosophers.html' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/d4fdbe23cda9fbd7b657484f624b76bd7649a0956991c053b5e2971302022f15/code.e' download>Download</a> · <a href='../../code/d4fdbe23cda9fbd7b657484f624b76bd7649a0956991c053b5e2971302022f15/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.e · license: MIT License · added: 2025-11-04T14:56:05Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0"># Copyright 2002 Combex, Inc. under the terms of the MIT X license
+# found at http://www.opensource.org/licenses/mit-license.html .
+#
+# This is a straightforward translation of the Oz solution from
+# http://www.mozart-oz.org/documentation/tutorial/node10.html
+#
+# To run this, you&#x27;ll need a file named &quot;e.bat&quot; or &quot;e.sh&quot; on your
+# path. See http://www.erights.org/ for how to get this. Then,
+#
+#   e dining-philosophers.e
+
+? pragma.syntax(&quot;0.8&quot;)
+
+/**
+ * A philosopher is an active object that alternately thinks and
+ * eats.
+ */
+def makePhilosopher(name, left, right) :any {
+    def philosopher {
+        to think() {
+            println(`$name is thinking`)
+            timer.whenPast(timer.now() + 3000,
+                         def _ { eat() })
+        }
+        to eat() {
+            println(`$name is hungry`)
+            when (left &lt;- take(), right &lt;- take()) -&gt; {
+                println(`$name is eating`)
+                timer.whenPast(timer.now() + 3000,
+                             def _ {
+                                 left.put()
+                                 right.put()
+                                 think()
+                             })
+            }
+        }
+    }
+    return philosopher
+}
+
+/**
+ * A fork is a shared passive object. It can be taken by only one
+ * philosopher at a time.
+ */
+def makeFork(name) :any {
+    def holder {
+        to take() {
+            def taken &lt;- E.newCell(null)
+            taken.put(true)
+            return taken
+        }
+    }
+    var current := holder
+    def fork {
+        to take() {
+            def result := current.take()
+            current := def broken {
+                to take() { throw(&quot;already taken&quot;) }
+            }
+            return result
+        }
+        to put() {
+            current := fork
+        }
+    }
+    return fork
+}
+
+def philosophers {
+    [&quot;Plato&quot;, &quot;Kant&quot;, &quot;Turing&quot;, &quot;Russel&quot;, &quot;Socrates&quot;]
+}
+
+# create the forks
+def forks := &lt;elib:tables.makeFlexList&gt;()
+for name in philosophers {
+    forks.push(makeFork(name))
+}
+
+# create the philosophers
+var i := 0
+for name in philosophers {
+    def p := makePhilosopher(name,
+                             forks[i],
+                             forks[(i + 1) % philosophers.size()])
+    p.think()
+    i += 1
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/dyon-fb8cc96f/" aria-label="Previous language">← Dyon</a>
+          <a href="../../l/easytrieve-863e6b70/" aria-label="Next language">Easytrieve →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

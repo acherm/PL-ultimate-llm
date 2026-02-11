@@ -1,0 +1,39 @@
+import PS_STRINGS:StringUtils;
+
+class StyleGuide
+   method StyleGuide();
+   method findUsers(searchString As string) returns array of string;
+
+   property string searchString get set;
+
+private
+   instance string &searchString;
+end-class;
+
+method StyleGuide
+   %This.searchString = "PSADMIN";
+end-method;
+
+/**
+ * Find oprids that match the search string
+ */
+method findUsers
+   /+ &searchString as String +/
+   /+ Returns Array of String +/
+
+   local array of string &users = CreateArrayRept("", 0);
+   local string &oprid;
+
+   /* Use the StringUtils class to check for blank */
+   local PS_STRINGS:StringUtils &stringUtils = create PS_STRINGS:StringUtils();
+   if (&stringUtils.isNotBlank(&searchString)) then
+      /* If search string is not blank, query PSOPRDEFN */
+      Local SQL &userSql = CreateSQL("%SelectAll(:1) WHERE OPRID LIKE :2", Record.PSOPRDEFN, &searchString);
+
+      while &userSql.Fetch(&oprid)
+         &users.Push(&oprid);
+      end-while;
+   end-if;
+
+   return &users;
+end-method;

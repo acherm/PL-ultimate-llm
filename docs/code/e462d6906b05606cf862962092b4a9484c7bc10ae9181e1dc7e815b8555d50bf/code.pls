@@ -1,0 +1,11 @@
+/* Simple PL/S procedure example */
+HELLO: PROC;
+  DCL MESSAGE CHAR(20) INIT('HELLO, WORLD!');
+  DCL I FIXED;
+
+  DO I = 1 TO 3;
+    CALL PRINT(MESSAGE);
+  END;
+
+  RETURN;
+END HELLO;

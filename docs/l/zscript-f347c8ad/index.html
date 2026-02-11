@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ZScript · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=Z">Browse</a> · ZScript
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ZScript</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-12T08:37:19Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://zdoom.org/wiki/ZScript" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit c40ca6ad08 · authored 2025-11-12T09:37:19+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">GZDoom Auto-Save Handler</h2>
+                      <div class="muted"><a href='https://github.com/jp-lebreton/wads/blob/master/doom-utils/zscript/autosave/autosave.zs' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/1b6dc0b75364593c6b20b06f58c04faeae3afe556897bbf6ee66ec48a05ee3e1/code.zs' download>Download</a> · <a href='../../code/1b6dc0b75364593c6b20b06f58c04faeae3afe556897bbf6ee66ec48a05ee3e1/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.zs · added: 2025-11-12T08:37:19Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">/*
+    Auto-save script for GZDoom
+    by JP LeBreton
+
+    To use:
+    - copy this file into your GZDoom directory
+    - add the following to your gzdoom.ini file, in the [Global.Autoload] section:
+        Path=autosave.zs
+    - when you start a game, the script will be active
+    - saves to a slot named &quot;autosave&quot;
+    - by default, saves every 5 minutes
+
+    To configure:
+    - in the GZDoom console (~ key), type e.g.:
+        autosave_interval 10
+    - this will set the save interval to 10 minutes
+    - this setting will be saved to your .ini file
+
+*/
+
+class AutoSaveHandler : StaticEventHandler
+{
+    // save interval in minutes
+    private CVar autoSaveInterval;
+
+    // time of last save, in tics
+    private int lastSaveTime;
+
+    override void OnRegister()
+    {
+        // register our CVar
+        autoSaveInterval = CVar.Get(
+            &quot;autosave_interval&quot;,      // cvar name
+            5,                        // default value
+            CVAR_ARCHIVE              // flags
+            );
+    }
+
+    override void WorldTick()
+    {
+        // don&#x27;t run in menus
+        if (gamestate != GS_LEVEL)
+        {
+            return;
+        }
+
+        // don&#x27;t run if player is dead
+        let p = players[consoleplayer];
+        if (!p || !p.mo || p.health &lt;= 0)
+        {
+            return;
+        }
+
+        // time since last save, in minutes
+        let timeSinceLastSave = (gametic - lastSaveTime) / (35.0 * 60.0);
+
+        if (timeSinceLastSave &gt;= autoSaveInterval.GetFloat())
+        {
+            Console.Printf(&quot;Auto-saving...&quot;);
+            SendNetworkEvent(&quot;AutoSave&quot;);
+            lastSaveTime = gametic;
+        }
+    }
+
+    override void NetworkProcess(ConsoleEvent e)
+    {
+        if (e.Name == &quot;AutoSave&quot;)
+        {
+            Game.Save(&quot;autosave&quot;, &quot;Auto-save&quot;);
+        }
+    }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/zpl-100b5fe6/" aria-label="Previous language">← ZPL</a>
+          <a href="../../l/zsh-2898c0ae/" aria-label="Next language">Zsh →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

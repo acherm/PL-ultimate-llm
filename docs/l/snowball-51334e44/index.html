@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Snowball · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=S">Browse</a> · Snowball
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Snowball</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-06T12:00:00Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: disabled</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Snowball_programming_language" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 41c34b7bc4 · authored 2026-02-06T15:27:17+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Spanish Stemmer</h2>
+                      <div class="muted"><a href='https://snowballstem.org/algorithms/spanish/stemmer.html' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/d674df66910840b939ff2265793dc86775ab80068725f7314b32c0300036cc68/code.sbl' download>Download</a> · <a href='../../code/d674df66910840b939ff2265793dc86775ab80068725f7314b32c0300036cc68/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.sbl · license: BSD · added: 2026-02-06T12:00:00Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">routines (
+   prelude postlude mark_regions
+   RV R1 R2
+   standard_suffix
+)
+
+externals ( stem )
+
+booleans ( is_verb is_noun )
+
+groupings ( v )
+
+stringescapes {}
+
+stringdef a  hex &#x27;E1&#x27;
+stringdef e  hex &#x27;E9&#x27;
+stringdef i  hex &#x27;ED&#x27;
+stringdef o  hex &#x27;F3&#x27;
+stringdef u  hex &#x27;FA&#x27;
+
+define v &#x27;aeiou{a}{e}{i}{o}{u}&#x27;
+
+define mark_regions as (
+
+    $pV = limit
+    $p1 = limit
+    $p2 = limit
+
+    do (
+        gopast v  gopast non-v  setmark pV
+    )
+    do (
+        gopast v  gopast non-v  setmark p1
+        gopast v  gopast non-v  setmark p2
+    )
+)
+
+define prelude as (
+    test repeat (
+        [substring] among(
+            &#x27;qu&#x27; (hop 2)
+            &#x27;&#x27; (next)
+        )
+    )
+)
+
+define postlude as repeat (
+
+    [substring] among(
+        &#x27;{a~}&#x27; (&lt;- &#x27;a&#x27;)
+        &#x27;{e~}&#x27; (&lt;- &#x27;e&#x27;)
+        &#x27;{i~}&#x27; (&lt;- &#x27;i&#x27;)
+        &#x27;{o~}&#x27; (&lt;- &#x27;o&#x27;)
+        &#x27;{u~}&#x27; (&lt;- &#x27;u&#x27;)
+    )
+)
+
+define RV as $pV &lt;= cursor
+define R1 as $p1 &lt;= cursor
+define R2 as $p2 &lt;= cursor
+
+define standard_suffix as (
+    [substring] R1 among(
+        &#x27;ances&#x27; &#x27;ancias&#x27; &#x27;ancias&#x27; &#x27;logias&#x27; &#x27;encias&#x27; &#x27;amente&#x27;
+        &#x27;ismos&#x27; &#x27;ables&#x27; &#x27;ibles&#x27; &#x27;istas&#x27; &#x27;adora&#x27; &#x27;acion&#x27;
+        &#x27;antes&#x27; &#x27;ancia&#x27; &#x27;encia&#x27; &#x27;mente&#x27; &#x27;ancia&#x27; &#x27;eria&#x27;
+            (delete)
+    )
+)
+
+define stem as (
+    do prelude
+    do mark_regions
+    backwards
+        do standard_suffix
+    do postlude
+)
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/snobol-d6b5d8e0/" aria-label="Previous language">← SNOBOL</a>
+          <a href="../../l/solidity-7ead9d06/" aria-label="Next language">Solidity →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

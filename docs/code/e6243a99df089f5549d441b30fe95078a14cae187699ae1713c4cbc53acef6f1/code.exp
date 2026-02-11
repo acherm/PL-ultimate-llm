@@ -1,0 +1,14 @@
+#!/usr/bin/expect
+
+set timeout 30
+
+spawn ftp ftp.example.com
+expect "Name \(.*\):"
+send "anonymous\r"
+expect "Password:"
+send "expect@example.com\r"
+expect "ftp>"
+send "ls\r"
+expect "ftp>"
+send "quit\r"
+expect eof

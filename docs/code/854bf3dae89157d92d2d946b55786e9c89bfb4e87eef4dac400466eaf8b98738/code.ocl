@@ -1,0 +1,16 @@
+context Person
+inv: self.age >= 0 and self.age <= 150
+
+context Person::income : Real
+init: 0.0
+
+context Person::birthday()
+post: self.age = self.age@pre + 1
+
+context Company
+inv: self.employees->forAll(e | e.age >= 18)
+inv: self.employees->size() > 0
+
+context Company::hire(p : Person)
+pre: p.age >= 18
+post: self.employees->includes(p)

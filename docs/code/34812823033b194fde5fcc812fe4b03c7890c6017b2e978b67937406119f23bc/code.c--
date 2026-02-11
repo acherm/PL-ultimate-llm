@@ -1,0 +1,30 @@
+/* Iterative Fibonacci */
+
+import "posix";
+
+export foreign "C" fib;
+
+fib(n) {
+  sp.limit = sp - 4096;
+  if (n < 2) return (n);
+  else {
+    mutable i = 2, last = 1, slast = 0;
+    while (i < n) {
+      mutable temp = last;
+      last = last + slast;
+      slast = temp;
+      i = i + 1;
+    }
+    return (last + slast);
+  }
+}
+
+main(argc, argv) {
+  mutable n;
+  sp.limit = sp - 4096;
+  if (argc > 1) {
+    n = atoi(argv[1]);
+    printf("%d\n", fib(n));
+  }
+  return(0);
+}

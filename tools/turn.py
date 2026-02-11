@@ -682,6 +682,8 @@ def main():
             f"turn: add {prop.language.name} (+1 program)\n\n"
             f"List-Digest: {list_digest()}\n"
             f"Model: {used_model}\n"
+            f"Agent: openrouter\n"
+            f"WebSearch: disabled\n"
             f"Temperature: {used_temp}\n"
         )
         subprocess.run(["git", "add", "-A"], check=True)

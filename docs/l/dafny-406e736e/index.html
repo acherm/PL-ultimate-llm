@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dafny · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=D">Browse</a> · Dafny
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Dafny</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T16:59:04Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://dafny.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit cea627b23c · authored 2025-10-22T18:59:05+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Verified Binary Search</h2>
+                      <div class="muted"><a href='https://github.com/dafny-lang/dafny/blob/master/Test/dafny0/BinSearch.dfy' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/ffac088865b8b071323d1afbc6bd6b317854c8bf3cb1326055c448797122e916/code.dfy' download>Download</a> · <a href='../../code/ffac088865b8b071323d1afbc6bd6b317854c8bf3cb1326055c448797122e916/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.dfy · license: MIT · added: 2025-10-22T16:59:04Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">method BinarySearch(a: array&lt;int&gt;, key: int) returns (index: int)
+  requires a != null &amp;&amp; a.Length &gt; 0
+  requires forall i,j :: 0 &lt;= i &lt; j &lt; a.Length ==&gt; a[i] &lt;= a[j]
+  ensures -1 &lt;= index &lt; a.Length
+  ensures index == -1 ==&gt; forall k :: 0 &lt;= k &lt; a.Length ==&gt; a[k] != key
+  ensures 0 &lt;= index ==&gt; a[index] == key
+{
+  var low := 0;
+  var high := a.Length;
+  index := -1;
+  while low &lt; high &amp;&amp; index == -1
+    invariant 0 &lt;= low &lt;= high &lt;= a.Length
+    invariant index == -1 ==&gt; forall k :: 0 &lt;= k &lt; low || high &lt;= k &lt; a.Length ==&gt; a[k] != key
+    invariant -1 &lt;= index &lt; a.Length
+    invariant index != -1 ==&gt; 0 &lt;= index &lt; a.Length &amp;&amp; a[index] == key
+  {
+    var mid := (low + high) / 2;
+    if a[mid] &lt; key {
+      low := mid + 1;
+    } else if key &lt; a[mid] {
+      high := mid;
+    } else {
+      index := mid;
+    }
+  }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/d-3f39d5c3/" aria-label="Previous language">← D</a>
+          <a href="../../l/dart-5a5c3f75/" aria-label="Next language">Dart →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ChucK · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=C">Browse</a> · ChucK
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">ChucK</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T08:24:04Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/ChucK" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 20813bd968 · authored 2025-10-23T10:24:04+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Pachelbel&#x27;s Canon in D</h2>
+                      <div class="muted"><a href='https://github.com/ccrma/chuck/blob/main/examples/canon.ck' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/a1fd2f6877dcfff145cb973f8bb713185e4bf725dca518420ccbbed1839a1839/code.ck' download>Download</a> · <a href='../../code/a1fd2f6877dcfff145cb973f8bb713185e4bf725dca518420ccbbed1839a1839/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ck · license: GPL-2.0 · added: 2025-10-23T08:24:04Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">/*
+ * canon.ck
+ * 
+ * Pachelbel&#x27;s Canon in D
+ * 
+ * by Perry R. Cook, 2005
+ * 
+ * This is a four-part canon, with the parts entering
+ * at two measure intervals.  The bass line is two measures
+ * long and repeats throughout.  The three violin parts
+ * are identical, but delayed in time.
+ * 
+ */
+
+// Two measures of bass line
+[ 62, 58, 60, 55, 57, 53, 57, 58 ] @=&gt; int bassLine[];
+
+// One measure of violin melody
+[ 69, 73, 74, 73, 71, 69, 71, 68 ] @=&gt; int violin1[];
+[ 69, 66, 68, 64, 66, 62, 66, 68 ] @=&gt; int violin2[];
+
+fun void playViolin( Sitar s, float gain )
+{
+    s.gain(gain);
+    for (0 =&gt; int i; i &lt; 8; i++ ) {
+        for (0 =&gt; int j; j &lt; 8; j++) {
+            Std.mtof(violin1[j]) =&gt; s.freq;
+            120::ms =&gt; now;
+        }
+        for (0 =&gt; int j; j &lt; 8; j++) {
+            Std.mtof(violin2[j]) =&gt; s.freq;
+            120::ms =&gt; now;
+        }
+    }
+}
+
+fun void playBass( Rhodey r, float gain )
+{
+    r.gain(gain);
+    while(1) {
+        for (0 =&gt; int i; i &lt; 8; i++) {
+            Std.mtof(bassLine[i]) =&gt; r.freq;
+            480::ms =&gt; now;
+        }
+    }
+}
+
+Rhodey bass =&gt; dac;
+Sitar violinSection[3];
+
+for (0 =&gt; int i; i &lt; 3; i++) {
+    violinSection[i] =&gt; dac;
+}
+
+spork ~ playBass(bass, 0.4);
+
+for (0 =&gt; int i; i &lt; 3; i++) {
+    spork ~ playViolin(violinSection[i], 0.4 - i*0.08);
+    16 * 120::ms =&gt; now;
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/choicescript-ede1338f/" aria-label="Previous language">← ChoiceScript</a>
+          <a href="../../l/ciao-25c73520/" aria-label="Next language">Ciao →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

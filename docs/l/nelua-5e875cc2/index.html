@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nelua · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=N">Browse</a> · Nelua
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Nelua</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T20:07:55Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://nelua.io/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Native Extensible Lua</div>
+          <div class='muted'>Provenance: commit 8231c42b95 · authored 2026-02-05T21:09:23+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Sokol Nuklear Calculator</h2>
+                      <div class="muted"><a href='https://github.com/edubart/nelua-samples/blob/main/sokol-nuklear-calculator.nelua' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/28f19ba62134e5d1a598a326487cb846eaea59bc04a3e9ed710e1ee5ba22f2d2/code.nelua' download>Download</a> · <a href='../../code/28f19ba62134e5d1a598a326487cb846eaea59bc04a3e9ed710e1ee5ba22f2d2/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.nelua · added: 2026-02-05T20:07:55Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">require &#x27;libs.nuklear&#x27;
+require &#x27;libs.sokol_app&#x27;
+require &#x27;libs.sokol_gfx&#x27;
+require &#x27;libs.sokol_glue&#x27;
+require &#x27;libs.sokol_nuklear&#x27;
+
+require &#x27;string&#x27;
+
+local set: boolean = false
+local prev: integer, op: integer = 0, 0
+local numbers: *[9]cchar = (@*[9]cchar)(&quot;789456123&quot;_cstring)
+local ops: [4]byte = {&#x27;+&#x27;_byte, &#x27;-&#x27;_byte, &#x27;*&#x27;_byte, &#x27;/&#x27;_byte}
+local a: number, b: number = 0.0, 0.0
+local current: *number = &amp;a
+
+local function calculator(ctx: *NK_context)
+  if nk_begin(ctx, &quot;Calculator&quot;, nk_rect(10, 10, 180, 250),
+     NK_WINDOW_BORDER|NK_WINDOW_NO_SCROLLBAR|NK_WINDOW_TITLE|NK_WINDOW_MOVABLE) == nk_true then
+    local solve: boolean = false
+    do
+      nk_layout_row_dynamic(ctx, 35, 1)
+      local sb: stringbuilder &lt;close&gt;
+      sb:prepare(256)
+      local ok: boolean, len: cint = sb:writef(&#x27;%.2f&#x27;, $current)
+      nk_edit_string(ctx, NK_EDIT_SIMPLE, &amp;sb.data[0], &amp;len, #sb, nk_filter_float)
+      sb:resize(len)
+      if len &gt; 0 then
+        $current = tonumber(sb:view())
+      else
+        $current = 0
+      end
+    end
+
+    nk_layout_row_dynamic(ctx, 35, 4)
+    for i=0,&lt;16 do
+      if i &gt;= 12 and i &lt; 15  then
+          if i &gt; 12 then continue end
+          if nk_button_label(ctx, &quot;C&quot;) == nk_true then
+            a, b, op = 0, 0, 0
+            current = &amp;a
+            set = false
+          end
+          if nk_button_label(ctx, &quot;0&quot;) == nk_true then
+            $current = $current * 10.0
+            set = false
+          end
+          if nk_button_label(ctx, &quot;=&quot;) == nk_true then
+            solve = true
+            prev = op
+            op = 0
+          end
+      elseif ((i+1) % 4) ~= 0 then
+        if nk_button_text(ctx, &amp;numbers[(i//4)*3+i%4], 1) == nk_true then
+          $current = $current * 10.0 + numbers[(i//4)*3+i%4] - &#x27;0&#x27;_byte
+          set = false
+        end
+      elseif nk_button_text(ctx, &amp;ops[i//4], 1) == nk_true then
+        if not set then
+          if current ~= &amp;b then
+            current = &amp;b
+          else
+            prev = op
+            solve = true
+          end
+        end
+        op = ops[i//4]
+        set = true
+      end
+    end
+    if solve then
+      if     prev == &#x27;+&#x27;_byte then a = a + b
+      elseif prev == &#x27;-&#x27;_byte then a = a - b
+      elseif prev == &#x27;*&#x27;_byte then a = a * b
+      elseif prev == &#x27;/&#x27;_byte then a = a / b end
+      current = &amp;a
+      if set then current = &amp;b end
+      b, set = 0, false
+    end
+  end
+  nk_end(ctx)
+end
+
+local function init()
+  local sgdesc: sg_desc = {context = sapp_sgcontext()}
+  sg_setup(&amp;sgdesc)
+  local snkdesc: snk_desc_t = {dpi_scale = sapp_dpi_scale()}
+  snk_setup(&amp;snkdesc)
+end
+
+local function frame()
+  local nkctx: *NK_context = snk_new_frame()
+  calculator(nkctx)
+  local pass_action: sg_pass_action
+  pass_action.colors[0] = {action=SG_ACTION_CLEAR, value={0.0, 0.0, 0.0, 1.0}}
+  sg_begin_default_pass(&amp;pass_action, sapp_width(), sapp_height())
+  snk_render(sapp_width(), sapp_height())
+  sg_end_pass()
+  sg_commit()
+end
+
+local function input(event: *sapp_event)
+  snk_handle_event(event)
+end
+
+local function cleanup()
+  snk_shutdown()
+  sg_shutdown()
+end
+
+local app_desc: sapp_desc = {
+  init_cb = init,
+  frame_cb = frame,
+  event_cb = input,
+  cleanup_cb = cleanup,
+  width = 512,
+  height = 512,
+  window_title = &quot;Sokol Nuklear&quot;,
+  enable_clipboard = true,
+  html5_canvas_resize = true,
+}
+sapp_run(&amp;app_desc)
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/neliac-f8388c0e/" aria-label="Previous language">← NELIAC</a>
+          <a href="../../l/nemerle-a1404702/" aria-label="Next language">Nemerle →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

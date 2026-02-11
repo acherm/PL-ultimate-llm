@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BASIC · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=B">Browse</a> · BASIC
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">BASIC</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T11:40:45Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/BASIC" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: QuickBASIC, QBasic, Visual Basic</div>
+          <div class='muted'>Provenance: commit 2910f25773 · authored 2025-10-22T13:40:45+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Snake Game in QBasic</h2>
+                      <div class="muted"><a href='https://github.com/taniarascia/qbasic/blob/master/SNAKE.BAS' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/db7f36fa192d484c167a7861ff34de5913aec4c87ce9eb3fc815ffb2fa709486/code.bas' download>Download</a> · <a href='../../code/db7f36fa192d484c167a7861ff34de5913aec4c87ce9eb3fc815ffb2fa709486/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.bas · license: MIT · added: 2025-10-22T11:40:45Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">CLS
+SCREEN 7
+COLOR 2
+DIM snake(1000)
+snake(1) = 2000
+LENGTH = 1
+DIRECTION = 1
+SPEED = 100
+OLD = 1
+SCORE = 0
+PRINT &quot;SCORE:&quot;
+LOCATE 1, 8
+PRINT SCORE
+FOOD = 2000
+PSET (40, 12)
+WHILE INKEY$ = &quot;&quot;: WEND
+WHILE key$ &lt;&gt; &quot;x&quot;
+key$ = INKEY$
+IF key$ = &quot;w&quot; THEN DIRECTION = 0
+IF key$ = &quot;s&quot; THEN DIRECTION = 1
+IF key$ = &quot;a&quot; THEN DIRECTION = 2
+IF key$ = &quot;d&quot; THEN DIRECTION = 3
+IF DIRECTION = 0 THEN snake(LENGTH + 1) = snake(LENGTH) - 320
+IF DIRECTION = 1 THEN snake(LENGTH + 1) = snake(LENGTH) + 320
+IF DIRECTION = 2 THEN snake(LENGTH + 1) = snake(LENGTH) - 1
+IF DIRECTION = 3 THEN snake(LENGTH + 1) = snake(LENGTH) + 1
+PSET (snake(LENGTH + 1) \ 320, snake(LENGTH + 1) MOD 320)
+LENGTH = LENGTH + 1
+IF snake(LENGTH) = FOOD THEN
+  SCORE = SCORE + 1
+  LOCATE 1, 8
+  PRINT SCORE
+  FOOD = INT(RND * 64000)
+  PSET (FOOD \ 320, FOOD MOD 320), 4
+ELSE
+  PRESET (snake(OLD) \ 320, snake(OLD) MOD 320)
+  OLD = OLD + 1
+END IF
+FOR I = 1 TO SPEED: NEXT I
+WEND</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/bash-d1e9567d/" aria-label="Previous language">← Bash</a>
+          <a href="../../l/basic-256-cf01f2ea/" aria-label="Next language">BASIC-256 →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

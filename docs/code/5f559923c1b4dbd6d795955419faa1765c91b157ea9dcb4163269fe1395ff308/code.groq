@@ -1,0 +1,8 @@
+*[_type == "post" && publishedAt < now()] | order(publishedAt desc) {
+  title,
+  slug,
+  publishedAt,
+  "author": author->name,
+  "categories": categories[]->title,
+  body
+}[0...10]

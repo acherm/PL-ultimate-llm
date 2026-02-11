@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dyon · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=D">Browse</a> · Dyon
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Dyon</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T21:12:45Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: opus</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://github.com/PistonDevelopers/dyon" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 74a4f1f053 · authored 2026-02-05T22:13:32+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Functor Composition</h2>
+                      <div class="muted"><a href='https://github.com/PistonDevelopers/dyon/blob/master/source/functor.dyon' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/17c69fc16ccab061eed64eda427d2fff8a4bb41cba1932395e8dea9e26fb98ca/code.dyon' download>Download</a> · <a href='../../code/17c69fc16ccab061eed64eda427d2fff8a4bb41cba1932395e8dea9e26fb98ca/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.dyon · license: MIT · added: 2026-02-05T21:12:45Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">fn main() {
+    f := \(x) = x + 1
+
+    a := fmap(f, for_each())
+    list := [1, 2, 3]
+    println(\a(list)) // prints `[2, 3, 4]`
+
+    a := fmap(f, maybe())
+    b := some(2)
+    println(\a(b)) // prints `some(3)`
+    println(\a(none())) // prints `none()`
+
+    a := fmap(f, tree())
+    b := {left: 1, right: {left: 2, right: 3}}
+    println(\a(b)) // prints `{right: {right: 4, left: 3}, left: 2}`
+
+    // Combine two functors.
+    a := fmap(f, fjoin(for_each(), maybe()))
+    b := [some(1), some(2), some(3)]
+    // prints `[some(2), some(3), some(4)]`
+    println(\a(b))
+
+    // Combine a list of functors.
+    a := fmap(f, fjoins([for_each(), maybe(), tree()]))
+    b := [some({left: 1, right: 2}), some({left: 2, right: 3}), some({left: 3, right: 4})]
+    // prints `[some([2, 3]), some([3, 4]), some([4, 5])]`
+    println(\a(b))
+
+    println(fjoins([for_each(), maybe(), tree()]))
+}
+
+for_each() = \(f, v) = sift i {\f(v[i])}
+maybe() = \(f, v) = if v == none() { none() } else { some(\f(unwrap(v))) }
+tree() = \(f, v) = {
+    if typeof(v) == &quot;object&quot; {
+        t := tree()
+        {left: \t(f, v.left), right: \t(f, v.right)}
+    } else {
+        \f(v)
+    }
+}
+
+fn fmap(f: \(any) -&gt; any, g: \(\(any) -&gt; any, any) -&gt; any) -&gt; \(any) -&gt; any {
+    return \(x) = {
+        g := grab g
+        \g(grab f, x)
+    }
+}
+
+fn fjoin(
+    a: \(\(any) -&gt; any, any) -&gt; any,
+    b: \(\(any) -&gt; any, any) -&gt; any
+) -&gt; \(\(any) -&gt; any, any) -&gt; any {
+    return \(f, v) = {
+        a := grab a
+        \a(\(v) = {
+            b := grab &#x27;2 b
+            \b(grab f, v)
+        }, v)
+    }
+}
+
+fn fjoins(fs: [\(\(any) -&gt; any, any) -&gt; any])
+-&gt; \(\(any) -&gt; any, any) -&gt; any {
+    a := fs[0]
+    for i [1, len(fs)) {
+        a = fjoin(a, fs[i])
+    }
+    return clone(a)
+}
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/dynamo-9cdb24db/" aria-label="Previous language">← DYNAMO</a>
+          <a href="../../l/e-a9f51566/" aria-label="Next language">E →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

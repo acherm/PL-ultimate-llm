@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jsonnet · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=J">Browse</a> · Jsonnet
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Jsonnet</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T15:29:21Z</span>
+            <span class='pill'>Model: anthropic/claude-4.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://jsonnet.org/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: jsonnet</div>
+          <div class='muted'>Provenance: commit bc7b1c2221 · authored 2025-10-22T17:29:22+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Kubernetes ConfigMap Generator</h2>
+                      <div class="muted"><a href='https://github.com/google/jsonnet/blob/master/examples/kubernetes.jsonnet' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/e1c1fd8aad85b10c0a3e44db9efb88c23f0a304aa02a13be815eba7343903209/code.jsonnet' download>Download</a> · <a href='../../code/e1c1fd8aad85b10c0a3e44db9efb88c23f0a304aa02a13be815eba7343903209/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.jsonnet · license: Apache-2.0 · added: 2025-10-22T15:29:21Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// Copyright 2015 Google Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+local kube = import &#x27;kube.libsonnet&#x27;;
+
+{
+  &#x27;service.json&#x27;: kube.Service(&#x27;nginx&#x27;) {
+    target_pod: $.deployment.spec.template,
+  },
+
+  &#x27;deployment.json&#x27;: kube.Deployment(&#x27;nginx&#x27;) {
+    spec+: {
+      replicas: 3,
+      template+: {
+        spec+: {
+          containers_+: {
+            nginx: kube.Container(&#x27;nginx&#x27;) {
+              image: &#x27;nginx:1.7.9&#x27;,
+              ports_+: {
+                http: { containerPort: 80 },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+
+  &#x27;configmap.json&#x27;: kube.ConfigMap(&#x27;nginx-config&#x27;) {
+    data: {
+      &#x27;nginx.conf&#x27;: ||
+        user nginx;
+        worker_processes auto;
+        error_log /var/log/nginx/error.log;
+        pid /run/nginx.pid;
+
+        events {
+            worker_connections 1024;
+        }
+
+        http {
+            log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;
+                              &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;
+                              &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;
+
+            access_log  /var/log/nginx/access.log  main;
+
+            sendfile            on;
+            tcp_nopush          on;
+            tcp_nodelay         on;
+            keepalive_timeout   65;
+            types_hash_max_size 2048;
+
+            include             /etc/nginx/mime.types;
+            default_type        application/octet-stream;
+
+            server {
+                listen       80 default_server;
+                listen       [::]:80 default_server;
+                server_name  _;
+                root         /usr/share/nginx/html;
+
+                location / {
+                }
+
+                error_page 404 /404.html;
+                    location = /40x.html {
+                }
+
+                error_page 500 502 503 504 /50x.html;
+                    location = /50x.html {
+                }
+            }
+        }
+      ||,
+    },
+  },
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/jsoniq-38e65dd1/" aria-label="Previous language">← JSONiq</a>
+          <a href="../../l/jule-2b597366/" aria-label="Next language">Jule →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

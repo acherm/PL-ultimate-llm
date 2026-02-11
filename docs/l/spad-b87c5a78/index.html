@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SPAD · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=S">Browse</a> · SPAD
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">SPAD</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T16:10:22Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Axiom_(computer_algebra_system)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: AXIOM, OpenAXIOM, FriCAS</div>
+          <div class='muted'>Provenance: commit d288c6dcb1 · authored 2025-10-22T18:10:22+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Polynomial GCD Implementation</h2>
+                      <div class="muted"><a href='https://github.com/fricas/fricas/blob/master/src/algebra/poly.spad' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/447522dd854d45ad85aa2bb07aa1f827700fd54ae83eeb7768b308ab91d42591/code.spad' download>Download</a> · <a href='../../code/447522dd854d45ad85aa2bb07aa1f827700fd54ae83eeb7768b308ab91d42591/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.spad · license: BSD-3-Clause · added: 2025-10-22T16:10:22Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">)abbrev domain UP UnivariatePolynomial
+UnivariatePolynomial(R : Ring, var : Symbol) : Exports == Implementation where
+  Exports ==&gt; PolynomialCategory(R, SingletonAsOrderedSet var, NonNegativeInteger)
+  Implementation ==&gt; add
+    Rep := SparseUnivariatePolynomial R
+    coerce(p : %) : OutputForm ==
+      empty? p =&gt; 0::OutputForm
+      degree p = 0 =&gt; leadingCoefficient(p)::OutputForm
+      sum : OutputForm := 0
+      for i in 0..degree p | not zero? coefficient(p, i) repeat
+        ci := coefficient(p, i)::OutputForm
+        if i = 0 then sum := sum + ci
+        else if ci = 1 then
+          if i = 1 then sum := sum + var::OutputForm
+          else sum := sum + (var::OutputForm ** i::OutputForm)
+        else
+          if i = 1 then sum := sum + (ci * var::OutputForm)
+          else sum := sum + (ci * (var::OutputForm ** i::OutputForm))</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/sourcepawn-7bafe18a/" aria-label="Previous language">← SourcePawn</a>
+          <a href="../../l/spark-5c33a73f/" aria-label="Next language">SPARK →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

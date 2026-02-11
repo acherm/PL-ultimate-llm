@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vyper · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=V">Browse</a> · Vyper
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Vyper</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-23T15:20:30Z</span>
+            <span class='pill'>Model: deepseek/deepseek-chat-v3-0324</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Vyper_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit 0cf9828c53 · authored 2025-10-23T17:20:30+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Simple Auction Contract</h2>
+                      <div class="muted"><a href='https://github.com/vyperlang/vyper/blob/master/examples/auction.vy' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/98ca748b2bd19aac1521f88447b75dfe4262382ed662b07a282d0ebf1ffcf788/code.vy' download>Download</a> · <a href='../../code/98ca748b2bd19aac1521f88447b75dfe4262382ed662b07a282d0ebf1ffcf788/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.vy · license: MIT · added: 2025-10-23T15:20:30Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0"># @version ^0.3.1
+
+# Simple auction contract
+
+# Auction parameters
+beneficiary: public(address)
+auctionStart: public(uint256)
+auctionEnd: public(uint256)
+
+# Current state of auction
+highestBidder: public(address)
+highestBid: public(uint256)
+pendingReturns: public(HashMap[address, uint256])
+
+# Set to true at the end, disallows any change
+ended: public(bool)
+
+# Events that will be fired on changes.
+HighestBidIncreased: event({bidder: indexed(address), amount: uint256})
+AuctionEnded: event({winner: indexed(address), amount: uint256})
+
+
+@external
+def __init__(_beneficiary: address, _bidding_time: uint256):
+    self.beneficiary = _beneficiary
+    self.auctionStart = block.timestamp
+    self.auctionEnd = self.auctionStart + _bidding_time
+
+
+@external
+@payable
+def bid():
+    # Check if bidding period is over.
+    assert block.timestamp &lt; self.auctionEnd, &quot;Auction already ended&quot;
+
+    # Check if bid is high enough
+    assert msg.value &gt; self.highestBid, &quot;There already is a higher bid&quot;
+
+    # Track the previous bidder&#x27;s refund
+    if self.highestBid != 0:
+        self.pendingReturns[self.highestBidder] += self.highestBid
+
+    # Track new highest bid
+    self.highestBidder = msg.sender
+    self.highestBid = msg.value
+
+    log HighestBidIncreased(msg.sender, msg.value)
+
+
+@external
+def withdraw() -&gt; bool:
+    pending_amount: uint256 = self.pendingReturns[msg.sender]
+    if pending_amount &gt; 0:
+        self.pendingReturns[msg.sender] = 0
+        send(msg.sender, pending_amount)
+    return True
+
+
+@external
+def endAuction():
+    # 1. Conditions
+    assert block.timestamp &gt;= self.auctionEnd, &quot;Auction not yet ended&quot;
+    assert not self.ended, &quot;auctionEnd has already been called&quot;
+
+    # 2. Effects
+    self.ended = True
+    log AuctionEnded(self.highestBidder, self.highestBid)
+
+    # 3. Interaction
+    send(self.beneficiary, self.highestBid)</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/vvvv-8b6832f3/" aria-label="Previous language">← vvvv</a>
+          <a href="../../l/watbol-9f612981/" aria-label="Next language">WATBOL →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

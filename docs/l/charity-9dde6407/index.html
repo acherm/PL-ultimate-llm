@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Charity · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=C">Browse</a> · Charity
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Charity</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-05T21:19:54Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: enabled</span>
+            <a class="pill" href="https://pll.cpsc.ucalgary.ca/charity1/www/home.html" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit b73409fedc · authored 2026-02-05T22:21:25+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">List and Natural Number Functions</h2>
+                      <div class="muted"><a href='https://github.com/mietek/charity-lang/blob/master/doc/ch/short.ch' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/105029e88d54fbddc93e8df06a4fbf3d8fc509e61e79a7a08d944d04e867b006/code.ch' download>Download</a> · <a href='../../code/105029e88d54fbddc93e8df06a4fbf3d8fc509e61e79a7a08d944d04e867b006/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.ch · added: 2026-02-05T21:19:54Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">rf &quot;Lnat.ch&quot;.
+rf &quot;Llist.ch&quot;.
+
+
+def min_max: Lnat * Lnat -&gt; Lnat * Lnat
+ = (m, n) =&gt; fn ( n
+ , {| Lzero: () =&gt; (fn: _ =&gt; (m, n))
+ | Lsucc: f =&gt; (fn: Lzero =&gt; (n, m)
+ | Lsucc n&#x27; =&gt; fn (lid n&#x27;, lid f)
+ )
+ |}
+ m
+ ).
+
+def max_min = pn =&gt; {(m, n) =&gt; (n, m)} min_max pn.
+def new_min = pn =&gt; p0 min_max pn.
+def new_max = pn =&gt; p1 min_max pn.
+
+
+def new_zip: Llist(A) * Llist(B) -&gt; Llist(A * B)
+ = (l1, l2) =&gt; fn (l2
+ , {| Lnil : () =&gt; (fn: _ =&gt; Lnil)
+ | Lcons: p =&gt; (fn: Lnil =&gt; Lnil
+ | Lcons (b, (lid: l2&#x27;)) =&gt;
+ { (a, f) =&gt;
+ Lcons ( (a, b)
+ , (lid: fn (l2&#x27;, f))
+ )
+ }
+ (p0 p, lid p1 p)
+ )
+ |}
+ l1
+ ).
+
+
+def take_drop: Lnat * list(A) -&gt; list(A) * list(A)
+ = (n, l) =&gt; fn (l
+ , {| Lzero: () =&gt; (fn: l&#x27; =&gt; ([], l&#x27;))
+ | Lsucc: f =&gt; (fn: nil =&gt; ([], [])
+ | cons (a, l&#x27;) =&gt; { (t, d) =&gt;
+ (cons (a, t), d)
+ }
+ fn (l&#x27;, lid f)
+ )
+ |}
+ n
+ ).
+
+def new_take = p =&gt; p0 take_drop p.
+def new_drop = p =&gt; p1 take_drop p.
+
+
+def new_eq: Lnat * Lnat -&gt; bool
+ = (m, n) =&gt; fn (n, {| Lzero: () =&gt; (fn: Lzero =&gt; true
+ | Lsucc _ =&gt; false
+ )
+ | Lsucc: f =&gt; (fn: Lzero =&gt; false
+ | Lsucc (lid: n&#x27;) =&gt; fn (n&#x27;, lid f)
+ )
+ |}
+ m
+ ).
+
+def new_neq = pn =&gt; not new_eq pn.
+
+
+def bwhile{ initial: A -&gt; C
+ , iterate: C -&gt; C
+ , final : C -&gt; B
+ , cond : C -&gt; bool
+ }:
+ A * Lnat -&gt; SF(B)
+ = (a, n) =&gt; SF{final} fn (initial a
+ , {| Lzero: () =&gt; (fn: _ =&gt; ff)
+ | Lsucc: f =&gt; (fn: c =&gt;
+ { true =&gt; fn ( iterate c
+ , lid f
+ )
+ | false =&gt; ss c
+ }
+ cond c
+ )
+ |}
+ n
+ ).
+
+
+def diff: Lnat * Lnat -&gt; Lnat * Lnat
+ = (m, n) =&gt; max_min (n, Lsub (m, n)).
+
+
+def gcd: Lnat * Lnat -&gt; SF(Lnat)
+ = pn =&gt; bwhile{max_min, diff, p0, new_neq} (pn, new_max pn).
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/chapel-ea6483ea/" aria-label="Previous language">← Chapel</a>
+          <a href="../../l/chef-a9464b40/" aria-label="Next language">Chef →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

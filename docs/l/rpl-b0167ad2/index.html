@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RPL · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=R">Browse</a> · RPL
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">RPL</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-11-07T13:07:04Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/RPL_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Reverse Polish Lisp</div>
+          <div class='muted'>Provenance: commit fe15644c16 · authored 2025-11-07T14:07:04+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Base Converter</h2>
+                      <div class="muted"><a href='https://www.hpcalc.org/details/16' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/2161ee942bc6cf84c3b4c8d422ea5299234dfcaa15e511db99f496e66d0ea06f/code.48s' download>Download</a> · <a href='../../code/2161ee942bc6cf84c3b4c8d422ea5299234dfcaa15e511db99f496e66d0ea06f/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.48s · license: Freeware · added: 2025-11-07T13:07:04Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">«
+  { 10 10 }
+  → b
+  «
+    DO
+      #1Fh SYSEVAL
+      →STR
+      &quot;BASE CONVERTER&quot;
+      &quot;CURRENT BASES:&quot;
+      &quot;FROM: &quot; b 1 GET →STR +
+      &quot;TO:   &quot; b 2 GET →STR +
+      { } 2 →LIST
+      &quot;PRESS &#x27;ENTER&#x27; TO CHANGE BASES&quot;
+      &quot;PRESS &#x27;EVAL&#x27; TO ENTER NUMBER&quot;
+      INFORM
+      1 → n
+      «
+        DO
+          {
+            &quot;FROM BASE?&quot;
+            &quot;ENTER A NUMBER FROM 2 TO 16&quot;
+            { } 1 →LIST
+            &quot;&quot;
+            INPUT
+            OBJ→
+            DUP
+            2 &lt;
+            SWAP
+            16 &gt;
+            OR
+            &#x27;#30004h SYSEVAL&#x27;
+            EVAL
+          }
+        UNTIL
+        b 1 n →TAG
+      »
+      IF
+        1 CHOOSE
+      THEN
+        b
+        → b&#x27;
+        «
+          DO
+            #1Fh SYSEVAL
+            →STR
+            &quot;ENTER NUMBER TO CONVERT&quot;
+            &quot;CURRENT BASES:&quot;
+            &quot;FROM: &quot; b 1 GET →STR +
+            &quot;TO:   &quot; b 2 GET →STR +
+            { } 2 →LIST
+            &quot;&quot;
+            INPUT
+            OBJ→
+            → S
+            «
+              b 1 GET → B « S B →H »
+              b 2 GET → B « H→ B »
+              →STR
+              &quot;RESULT:&quot;
+              SWAP
+              { } 1 →LIST
+              MSGBOX
+            »
+          »
+        »
+        EVAL
+      END
+    UNTIL
+      #30004h SYSEVAL
+    END
+  »
+»</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/rpgle-96b05cf6/" aria-label="Previous language">← RPGLE</a>
+          <a href="../../l/rpython-8d368b09/" aria-label="Next language">RPython →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

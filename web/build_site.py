@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import quote, urlencode, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -157,6 +157,143 @@ def index_turns_by_language(turns: list[TurnInfo]) -> dict[str, TurnInfo]:
     return by_lang
 
 
+def guess_github_owner_repo() -> str | None:
+    """
+    Best-effort parse of `origin` remote into `owner/repo` for github.com.
+    Supports:
+      - https://github.com/owner/repo(.git)?/
+      - git@github.com:owner/repo(.git)?
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "remote", "get-url", "origin"],
+            cwd=str(ROOT),
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+    except Exception:
+        return None
+
+    raw = (proc.stdout or "").strip()
+    if not raw:
+        return None
+
+    # SSH form
+    if raw.startswith("git@github.com:"):
+        path = raw.split(":", 1)[1].strip()
+        path = path.removesuffix(".git").strip("/")
+        if path.count("/") >= 1:
+            owner, repo = path.split("/", 1)[0], path.split("/", 1)[1]
+            if owner and repo:
+                return f"{owner}/{repo}"
+        return None
+
+    # HTTPS form
+    try:
+        u = urlparse(raw)
+    except Exception:
+        return None
+    if u.netloc.lower() != "github.com":
+        return None
+
+    path = (u.path or "").strip("/")
+    path = path.removesuffix(".git").strip("/")
+    parts = [p for p in path.split("/") if p]
+    if len(parts) < 2:
+        return None
+    return f"{parts[0]}/{parts[1]}"
+
+
+def github_new_issue_url(*, owner_repo: str, title: str, body: str, labels: list[str] | None = None) -> str:
+    base = f"https://github.com/{owner_repo}/issues/new"
+    params: dict[str, str] = {"title": title, "body": body}
+    if labels:
+        params["labels"] = ",".join(labels)
+    return base + "?" + urlencode(params, quote_via=quote)
+
+
+def github_issue_search_url(*, owner_repo: str, query: str) -> str:
+    base = f"https://github.com/{owner_repo}/issues"
+    return base + "?" + urlencode({"q": query}, quote_via=quote)
+
+
+def github_commit_url(*, owner_repo: str, commit: str) -> str:
+    return f"https://github.com/{owner_repo}/commit/{commit}"
+
+
+def trigrams(s: str) -> set[str]:
+    s = re.sub(r"\s+", " ", (s or "").strip().lower())
+    if len(s) <= 3:
+        return {s} if s else set()
+    pad = f"  {s}  "
+    return {pad[i : i + 3] for i in range(0, len(pad) - 2)}
+
+
+def jaccard(a: set[str], b: set[str]) -> float:
+    if not a and not b:
+        return 1.0
+    if not a or not b:
+        return 0.0
+    inter = len(a & b)
+    if inter == 0:
+        return 0.0
+    union = len(a) + len(b) - inter
+    return inter / union
+
+
+def compute_related_languages(languages: list[Language], *, k: int = 5) -> dict[str, list[dict[str, Any]]]:
+    names = [l.name for l in languages]
+    trig = {l.name: trigrams(" ".join([l.name] + list(l.aliases or []))) for l in languages}
+
+    related: dict[str, list[dict[str, Any]]] = {n: [] for n in names}
+    for i, a in enumerate(names):
+        ta = trig[a]
+        for j in range(i + 1, len(names)):
+            b = names[j]
+            sim = jaccard(ta, trig[b])
+            if sim <= 0:
+                continue
+            related[a].append({"name": b, "score": sim})
+            related[b].append({"name": a, "score": sim})
+
+    for n in names:
+        related[n].sort(key=lambda x: x["score"], reverse=True)
+        related[n] = [{"name": x["name"], "score": round(x["score"], 4)} for x in related[n][:k]]
+    return related
+
+
+def load_audit_summary(audit_path: Path) -> dict[str, Any] | None:
+    if not audit_path.exists():
+        return None
+    try:
+        data = json.loads(audit_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+    by_severity = Counter()
+    by_language: dict[str, Counter] = defaultdict(Counter)
+    for f in data.get("findings", []):
+        lang = f.get("language")
+        sev = (f.get("severity") or "unknown").lower()
+        if lang:
+            by_language[lang][sev] += 1
+            by_language[lang]["total"] += 1
+        by_severity[sev] += 1
+
+    top_langs = sorted(
+        ((k, v["total"], v.get("error", 0), v.get("warn", 0), v.get("info", 0)) for k, v in by_language.items()),
+        key=lambda x: (x[1], x[2], x[3]),
+        reverse=True,
+    )[:12]
+
+    return {
+        "total": sum(by_severity.values()),
+        "by_severity": dict(by_severity),
+        "by_language": {k: dict(v) for k, v in by_language.items()},
+        "top_languages": top_langs,
+    }
+
 def short_hash(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()[:8]
 
@@ -210,9 +347,25 @@ def rel_prefix(page: Path, dist_root: Path) -> str:
     return "../" * len(rel.parts)
 
 
-def layout(*, title: str, rel: str, body: str, generated_at: str, description: str = "") -> str:
+def layout(
+    *,
+    title: str,
+    rel: str,
+    body: str,
+    generated_at: str,
+    description: str = "",
+    github_owner_repo: str | None = None,
+) -> str:
     safe_title = html.escape(title)
     safe_desc = html.escape(description or "Browse programming languages and their example programs.")
+    gh_repo_js = json.dumps(github_owner_repo) if github_owner_repo else "null"
+    gh_link = f"https://github.com/{github_owner_repo}" if github_owner_repo else ""
+    gh_nav = (
+        f'<a href="{gh_link}" target="_blank" rel="noopener">GitHub</a>' if github_owner_repo else ""
+    )
+    gh_footer = (
+        f' · <a href="{gh_link}" target="_blank" rel="noopener">Source repo</a>' if github_owner_repo else ""
+    )
     return f"""<!doctype html>
 <html lang="en">
   <head>
@@ -224,6 +377,7 @@ def layout(*, title: str, rel: str, body: str, generated_at: str, description: s
     <script>
       window.__SITE_ROOT__ = {json.dumps(rel)};
       window.__DATA_BASE__ = {json.dumps(rel + "data")};
+      window.__GITHUB_OWNER_REPO__ = {gh_repo_js};
     </script>
     <script src="{rel}assets/app.js" defer></script>
   </head>
@@ -233,7 +387,10 @@ def layout(*, title: str, rel: str, body: str, generated_at: str, description: s
         <a class="brand" href="{rel}index.html">PL Catalog</a>
         <nav class="nav">
           <a href="{rel}browse/index.html">Browse</a>
+          <a href="{rel}extensions/index.html">Extensions</a>
           <a href="{rel}stats/index.html">Stats</a>
+          <a href="{rel}audit/index.html">Audit</a>
+          {gh_nav}
           <button id="randomBtn" class="nav-btn" type="button">Random</button>
         </nav>
       </div>
@@ -243,7 +400,7 @@ def layout(*, title: str, rel: str, body: str, generated_at: str, description: s
     </main>
     <footer class="site-footer">
       <div class="container">
-        Generated at <span class="muted">{html.escape(generated_at)}</span> from this repository.
+        Generated at <span class="muted">{html.escape(generated_at)}</span> from this repository{gh_footer}.
       </div>
     </footer>
   </body>
@@ -290,6 +447,7 @@ def render_home_page(
     counts: dict[str, int],
     generated_at: str,
     programs_total: int,
+    github_owner_repo: str | None,
 ) -> None:
     page = dist_root / "index.html"
     rel = rel_prefix(page, dist_root)
@@ -346,12 +504,15 @@ def render_home_page(
             body=body,
             generated_at=generated_at,
             description="Browse programming languages with example programs.",
+            github_owner_repo=github_owner_repo,
         ),
         encoding="utf-8",
     )
 
 
-def render_browse_page(*, dist_root: Path, languages: list[Language], counts: dict[str, int], generated_at: str) -> None:
+def render_browse_page(
+    *, dist_root: Path, languages: list[Language], counts: dict[str, int], generated_at: str, github_owner_repo: str | None
+) -> None:
     page = dist_root / "browse" / "index.html"
     rel = rel_prefix(page, dist_root)
     body = f"""
@@ -370,7 +531,41 @@ def render_browse_page(*, dist_root: Path, languages: list[Language], counts: di
       </noscript>
     </section>
     """
-    page.write_text(layout(title="Browse · PL Catalog", rel=rel, body=body, generated_at=generated_at), encoding="utf-8")
+    page.write_text(
+        layout(title="Browse · PL Catalog", rel=rel, body=body, generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
+
+
+def render_extensions_page(*, dist_root: Path, generated_at: str, github_owner_repo: str | None) -> None:
+    page = dist_root / "extensions" / "index.html"
+    rel = rel_prefix(page, dist_root)
+    body = f"""
+    <section class="panel section">
+      <h1 style="margin:0 0 8px;">Extensions</h1>
+      <p class="muted" style="margin:0 0 14px;">Browse programming languages grouped by code file extension.</p>
+    </section>
+
+    <div class="grid" style="margin-top:18px;">
+      <section class="panel section">
+        <h2>Extensions</h2>
+        <div class="search-box" style="margin-bottom: 14px;">
+          <input id="extSearch" type="search" placeholder="Filter extensions (e.g., py, bas, lisp)" autocomplete="off" />
+        </div>
+        <div id="extList" class="muted">Loading extensions…</div>
+      </section>
+
+      <section class="panel section">
+        <h2>Details</h2>
+        <div id="extDetails" class="muted">Select an extension to view associated languages and examples.</div>
+      </section>
+    </div>
+    """
+    page.parent.mkdir(parents=True, exist_ok=True)
+    page.write_text(
+        layout(title="Extensions · PL Catalog", rel=rel, body=body, generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
 
 
 def render_stats_page(
@@ -395,6 +590,9 @@ def render_stats_page(
     temps_max: float | None,
     temps_avg: float | None,
     temp_buckets: list[tuple[str, int]],
+    github_owner_repo: str | None,
+    audit_summary: dict[str, Any] | None,
+    audit_page_rel: str,
 ) -> None:
     page = dist_root / "stats" / "index.html"
     rel = rel_prefix(page, dist_root)
@@ -465,6 +663,39 @@ def render_stats_page(
         </section>
         """
 
+    audit_available = audit_summary is not None
+    if audit_available:
+        sev = audit_summary.get("by_severity", {})
+        total_findings = int(audit_summary.get("total", 0))
+        audit_section = f"""
+        <section class="panel section" style="margin-top: 18px;">
+          <h2>Data quality audit</h2>
+          <div class="stats">
+            <div class="stat"><div class="num">{total_findings}</div><div class="muted">findings</div></div>
+            <div class="stat"><div class="num">{int(sev.get("error", 0))}</div><div class="muted">errors</div></div>
+            <div class="stat"><div class="num">{int(sev.get("warn", 0))}</div><div class="muted">warnings</div></div>
+          </div>
+          <div style="margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn" href="{rel}data/audit.json">Open audit.json</a>
+            <a class="btn" href="{audit_page_rel}">Open audit view</a>
+          </div>
+        </section>
+        """
+    else:
+        audit_section = f"""
+        <section class="panel section" style="margin-top: 18px;">
+          <h2>Data quality audit</h2>
+          <p class="muted" style="margin:0 0 10px;">
+            Run <code>python3 tools/audit_repo.py --out web/dist/data/audit.json</code> to generate a machine-readable report
+            (duplicates, integrity checks, clustering hints).
+          </p>
+          <div class="muted">audit.json not generated in this build.</div>
+          <div style="margin-top: 12px;">
+            <a class="btn" href="{audit_page_rel}">Open audit view</a>
+          </div>
+        </section>
+        """
+
     body = f"""
     <section class="panel section">
       <h1 style="margin:0 0 8px;">Statistics</h1>
@@ -478,6 +709,7 @@ def render_stats_page(
     </section>
 
     {llm_section}
+    {audit_section}
 
     <section class="panel section">
       <h2>Languages by first letter</h2>
@@ -507,7 +739,10 @@ def render_stats_page(
     </div>
     """
 
-    page.write_text(layout(title="Stats · PL Catalog", rel=rel, body=body, generated_at=generated_at), encoding="utf-8")
+    page.write_text(
+        layout(title="Stats · PL Catalog", rel=rel, body=body, generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
 
 
 def render_language_pages(
@@ -516,7 +751,11 @@ def render_language_pages(
     languages: list[Language],
     generated_at: str,
     slug_to_prev_next: dict[str, tuple[Language | None, Language | None]],
+    github_owner_repo: str | None,
+    related_by_language: dict[str, list[dict[str, Any]]],
+    audit_summary: dict[str, Any] | None,
 ) -> None:
+    lang_by_name = {l.name: l for l in languages}
     for lang in languages:
         page = dist_root / "l" / lang.slug / "index.html"
         rel = rel_prefix(page, dist_root)
@@ -536,10 +775,74 @@ def render_language_pages(
 
         prov_bits: list[str] = []
         if lang.turn_commit:
-            prov_bits.append(f"commit {lang.turn_commit[:10]}")
+            if github_owner_repo:
+                url = github_commit_url(owner_repo=github_owner_repo, commit=lang.turn_commit)
+                prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(lang.turn_commit[:10])}</a>")
+            else:
+                prov_bits.append(f"commit {safe(lang.turn_commit[:10])}")
         if lang.turn_authored_at:
-            prov_bits.append(f"authored {lang.turn_authored_at}")
-        prov_line = f"<div class='muted'>Provenance: {safe(' · '.join(prov_bits))}</div>" if prov_bits else ""
+            prov_bits.append(f"authored {safe(lang.turn_authored_at)}")
+        if lang.agent:
+            prov_bits.append(f"agent {safe(lang.agent)}")
+        if lang.model:
+            prov_bits.append(f"model {safe(lang.model)}")
+        prov_line = f"<div class='muted'>Provenance: {' · '.join(prov_bits)}</div>" if prov_bits else ""
+
+        audit_pill = ""
+        audit_line = ""
+        if audit_summary:
+            per_lang = audit_summary.get("by_language", {}).get(lang.name)
+            if per_lang:
+                total = int(per_lang.get("total", 0))
+                err = int(per_lang.get("error", 0))
+                warn = int(per_lang.get("warn", 0))
+                if total > 0:
+                    audit_pill = f"<span class='pill'>Audit: {total} (err {err}, warn {warn})</span>"
+                    audit_line = "<div class='muted'>Audit findings present for this language. See audit.json for details.</div>"
+
+        related_items = related_by_language.get(lang.name, [])
+        related_html = ""
+        if related_items:
+            related_links = []
+            for item in related_items:
+                other_name = item["name"]
+                other = lang_by_name.get(other_name)
+                if other:
+                    related_links.append(
+                        f"<span class='pill'><a href='{rel}l/{other.slug}/'>{safe(other.name)}</a> <span class='muted'>({item['score']:.2f})</span></span>"
+                    )
+            if related_links:
+                related_html = f"""
+                <section class="panel section" style="margin-top: 18px;">
+                  <h2>Related languages</h2>
+                  <div style="display:flex; flex-wrap:wrap; gap:10px;">{''.join(related_links)}</div>
+                </section>
+                """
+
+        lang_page_path = f"l/{lang.slug}/"
+        report_lang_url = ""
+        issues_lang_url = ""
+        if github_owner_repo:
+            title = f"Data issue: {lang.name}"
+            body_lines = [
+                "Category: data-quality",
+                "",
+                f"Language: {lang.name}",
+                f"Language folder: languages/{lang.folder_rel}",
+                f"Language page: {lang_page_path}",
+                f"Evidence URL: {lang.evidence_url}",
+            ]
+            if lang.turn_commit:
+                body_lines.append(f"Turn commit: {lang.turn_commit}")
+            if lang.turn_authored_at:
+                body_lines.append(f"Turn authored_at: {lang.turn_authored_at}")
+            body_lines += [
+                "",
+                "Describe the issue:",
+                "- …",
+            ]
+            report_lang_url = github_new_issue_url(owner_repo=github_owner_repo, title=title, body="\n".join(body_lines))
+            issues_lang_url = github_issue_search_url(owner_repo=github_owner_repo, query=f'is:issue \"{lang.name}\"')
 
         programs_html = []
         if not lang.programs:
@@ -554,7 +857,48 @@ def render_language_pages(
                 if prog.code_out_name:
                     links.append(f"<a href='{download_link}' download>Download</a>")
                 links.append(f"<a href='{manifest_link}'>manifest.json</a>")
+                if github_owner_repo:
+                    title = f"Program issue: {lang.name} — {prog.title}"
+                    body_lines = [
+                        "Category: data-quality",
+                        "",
+                        f"Language: {lang.name}",
+                        f"Language folder: languages/{lang.folder_rel}",
+                        f"Language page: {lang_page_path}",
+                        f"Evidence URL: {lang.evidence_url}",
+                        "",
+                        f"Program title: {prog.title}",
+                        f"Program sha256: {prog.sha256}",
+                        f"Program folder: languages/{lang.folder_rel}/programs/{prog.sha256}",
+                        f"Origin URL: {prog.origin_url}",
+                    ]
+                    if lang.turn_commit:
+                        body_lines.append(f"Turn commit: {lang.turn_commit}")
+                    if lang.turn_authored_at:
+                        body_lines.append(f"Turn authored_at: {lang.turn_authored_at}")
+                    body_lines += [
+                        "",
+                        "Describe the issue:",
+                        "- …",
+                    ]
+                    report_prog_url = github_new_issue_url(owner_repo=github_owner_repo, title=title, body="\n".join(body_lines))
+                    links.append(f"<a href='{safe(report_prog_url)}' target='_blank' rel='noopener'>Report</a>")
                 links_html = " · ".join(links)
+
+                prog_prov_bits: list[str] = []
+                if lang.turn_commit:
+                    if github_owner_repo:
+                        url = github_commit_url(owner_repo=github_owner_repo, commit=lang.turn_commit)
+                        prog_prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(lang.turn_commit[:10])}</a>")
+                    else:
+                        prog_prov_bits.append(f"commit {safe(lang.turn_commit[:10])}")
+                if lang.turn_authored_at:
+                    prog_prov_bits.append(f"authored {safe(lang.turn_authored_at)}")
+                if lang.agent:
+                    prog_prov_bits.append(f"agent {safe(lang.agent)}")
+                if lang.model:
+                    prog_prov_bits.append(f"model {safe(lang.model)}")
+                prog_prov_line = f"<div class='muted'>Provenance: {' · '.join(prog_prov_bits)}</div>" if prog_prov_bits else ""
 
                 meta_bits = []
                 if prog.license_guess:
@@ -581,6 +925,7 @@ def render_language_pages(
                     <section class="panel section" style="margin-top: 18px;">
                       <h2 style="margin:0 0 8px;">{safe(prog.title)}</h2>
                       <div class="muted">{links_html}</div>
+                      {prog_prov_line}
                       {code_block}
                     </section>
                     """
@@ -609,16 +954,83 @@ def render_language_pages(
             <span class="pill">Added {safe(lang.added_at)}</span>
             {"".join(prov_pills)}
             <a class="pill" href="{safe(lang.evidence_url)}" target="_blank" rel="noopener">Evidence</a>
+            {f'<a class=\"pill\" href=\"{safe(report_lang_url)}\" target=\"_blank\" rel=\"noopener\">Report issue</a>' if report_lang_url else ''}
+            {f'<a class=\"pill\" href=\"{safe(issues_lang_url)}\" target=\"_blank\" rel=\"noopener\">View issues</a>' if issues_lang_url else ''}
+            {audit_pill}
           </div>
           {alias_html}
           {prov_line}
+          {audit_line}
         </section>
+        {related_html}
         {"".join(programs_html)}
         {pager}
         """
 
         page.parent.mkdir(parents=True, exist_ok=True)
-        page.write_text(layout(title=f"{lang.name} · PL Catalog", rel=rel, body=body, generated_at=generated_at), encoding="utf-8")
+        page.write_text(
+            layout(
+                title=f"{lang.name} · PL Catalog",
+                rel=rel,
+                body=body,
+                generated_at=generated_at,
+                github_owner_repo=github_owner_repo,
+            ),
+            encoding="utf-8",
+        )
+
+
+def render_audit_page(*, dist_root: Path, generated_at: str, github_owner_repo: str | None) -> None:
+    page = dist_root / "audit" / "index.html"
+    rel = rel_prefix(page, dist_root)
+    body = f"""
+    <section class="panel section">
+      <h1 style="margin:0 0 8px;">Audit view</h1>
+      <p class="muted" style="margin:0 0 14px;">Explainable, on-demand rendering of <code>data/audit.json</code>.</p>
+      <button id="auditLoad" class="btn" type="button">Load audit</button>
+      <span id="auditStatus" class="muted" style="margin-left:10px;"></span>
+    </section>
+
+    <section class="panel section" id="auditSummary" style="margin-top:18px;">
+      <div class="muted">Audit not loaded yet.</div>
+    </section>
+
+    <section class="panel section" style="margin-top:18px;">
+      <h2>Most-affected languages</h2>
+      <div id="auditTopLangs" class="muted">Audit not loaded yet.</div>
+    </section>
+
+    <section class="panel section" style="margin-top:18px;">
+      <h2>Findings</h2>
+      <div class="audit-controls" style="margin: 10px 0 12px;">
+        <input id="auditFilter" type="search" placeholder="Filter by language, kind, or text…" autocomplete="off" />
+        <select id="auditSeverity">
+          <option value="all">All severities</option>
+          <option value="error">Errors</option>
+          <option value="warn">Warnings</option>
+          <option value="info">Infos</option>
+        </select>
+      </div>
+      <div id="auditFindings" class="muted">Audit not loaded yet.</div>
+    </section>
+
+    <div class="audit-grid" style="margin-top:18px;">
+      <section class="panel section">
+        <h2>Duplicate candidates</h2>
+        <div id="auditDuplicates" class="muted">Audit not loaded yet.</div>
+      </section>
+      <section class="panel section">
+        <h2>Clusters</h2>
+        <div id="auditClusters" class="muted">Audit not loaded yet.</div>
+      </section>
+    </div>
+    """
+
+    page.parent.mkdir(parents=True, exist_ok=True)
+    page.write_text(
+        layout(title="Audit · PL Catalog", rel=rel, body=body, generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
 
 
 def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]:
@@ -740,6 +1152,47 @@ def write_index_json(*, out: Path, languages: list[Language], generated_at: str)
     }
     (out / "data").mkdir(parents=True, exist_ok=True)
     (out / "data" / "index.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def write_ext_index_json(*, out: Path, languages: list[Language], generated_at: str) -> None:
+    ext_map: dict[str, dict[str, Any]] = {}
+    for lang in languages:
+        for prog in lang.programs:
+            if prog.code_out_name:
+                ext = Path(prog.code_out_name).suffix.lower().lstrip(".")
+                if not ext:
+                    ext = "unknown"
+            else:
+                ext = "unknown"
+            item = ext_map.setdefault(ext, {"extension": ext, "program_count": 0, "languages": set(), "examples": []})
+            item["program_count"] += 1
+            item["languages"].add(lang.name)
+            if len(item["examples"]) < 6:
+                item["examples"].append(
+                    {
+                        "language": lang.name,
+                        "title": prog.title,
+                        "sha256": prog.sha256,
+                    }
+                )
+
+    extensions = []
+    for ext, item in ext_map.items():
+        langs = sorted(item["languages"], key=str.lower)
+        extensions.append(
+            {
+                "extension": ext,
+                "program_count": item["program_count"],
+                "language_count": len(langs),
+                "languages": langs,
+                "examples": item["examples"],
+            }
+        )
+
+    extensions.sort(key=lambda x: (-x["program_count"], x["extension"]))
+    payload = {"generated_at": generated_at, "extensions": extensions}
+    (out / "data").mkdir(parents=True, exist_ok=True)
+    (out / "data" / "ext_index.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 def copy_program_files(*, out: Path, languages: list[Language]) -> None:
@@ -871,7 +1324,7 @@ def compute_prev_next(languages: list[Language]) -> dict[str, tuple[Language | N
     return mapping
 
 
-def build_site(*, out: Path) -> None:
+def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) -> None:
     if not LANGUAGES_DIR.exists():
         raise SystemExit(f"Missing {LANGUAGES_DIR}")
 
@@ -892,11 +1345,36 @@ def build_site(*, out: Path) -> None:
         shutil.rmtree(out)
     out.mkdir(parents=True, exist_ok=True)
     (out / "browse").mkdir(parents=True, exist_ok=True)
+    (out / "extensions").mkdir(parents=True, exist_ok=True)
     (out / "stats").mkdir(parents=True, exist_ok=True)
+    (out / "audit").mkdir(parents=True, exist_ok=True)
+    (out / "data").mkdir(parents=True, exist_ok=True)
 
     copy_assets(out=out)
     write_index_json(out=out, languages=languages, generated_at=generated_at)
+    write_ext_index_json(out=out, languages=languages, generated_at=generated_at)
     copy_program_files(out=out, languages=languages)
+
+    audit_available = False
+    if with_audit:
+        audit_out = out / "data" / "audit.json"
+        try:
+            subprocess.run(
+                [sys.executable, str(ROOT / "tools" / "audit_repo.py"), "--out", str(audit_out)],
+                cwd=str(ROOT),
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            audit_available = audit_out.exists()
+        except Exception:
+            audit_available = False
+
+    audit_summary = load_audit_summary(out / "data" / "audit.json")
+    if audit_summary:
+        audit_available = True
+
+    related_by_language = compute_related_languages(languages, k=5)
 
     render_home_page(
         dist_root=out,
@@ -904,8 +1382,12 @@ def build_site(*, out: Path) -> None:
         counts=counts,
         generated_at=generated_at,
         programs_total=programs_total,
+        github_owner_repo=github_owner_repo,
     )
-    render_browse_page(dist_root=out, languages=languages, counts=counts, generated_at=generated_at)
+    render_browse_page(
+        dist_root=out, languages=languages, counts=counts, generated_at=generated_at, github_owner_repo=github_owner_repo
+    )
+    render_extensions_page(dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo)
     render_stats_page(
         dist_root=out,
         languages=languages,
@@ -927,13 +1409,35 @@ def build_site(*, out: Path) -> None:
         temps_max=turn_stats["temps_max"],
         temps_avg=turn_stats["temps_avg"],
         temp_buckets=list(turn_stats["temp_buckets"]),
+        github_owner_repo=github_owner_repo,
+        audit_summary=audit_summary if audit_available else None,
+        audit_page_rel=f"{rel_prefix(out / 'audit' / 'index.html', out)}audit/index.html",
     )
-    render_language_pages(dist_root=out, languages=languages, generated_at=generated_at, slug_to_prev_next=slug_to_prev_next)
+    render_language_pages(
+        dist_root=out,
+        languages=languages,
+        generated_at=generated_at,
+        slug_to_prev_next=slug_to_prev_next,
+        github_owner_repo=github_owner_repo,
+        related_by_language=related_by_language,
+        audit_summary=audit_summary if audit_available else None,
+    )
+    render_audit_page(dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo)
 
 
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description="Build a static website from languages/* data.")
     parser.add_argument("--out", default=str(Path("web") / "dist"), help="Output directory (default: web/dist)")
+    parser.add_argument(
+        "--github",
+        default=None,
+        help="GitHub repo as owner/repo for “Report issue” links (default: auto from git origin). Use '-' to disable.",
+    )
+    parser.add_argument(
+        "--with-audit",
+        action="store_true",
+        help="Also generate data/audit.json (duplicates/integrity/clustering hints).",
+    )
     args = parser.parse_args(argv)
 
     out = Path(args.out)
@@ -945,7 +1449,12 @@ def main(argv: list[str]) -> int:
     if os.path.abspath(out_str) in ("/", str(ROOT)):
         raise SystemExit(f"Refusing to use --out={out}")
 
-    build_site(out=out)
+    if args.github == "-":
+        github_owner_repo = None
+    else:
+        github_owner_repo = (args.github or "").strip() or guess_github_owner_repo()
+
+    build_site(out=out, github_owner_repo=github_owner_repo, with_audit=bool(args.with_audit))
     print(f"[web] built site at {out}")
     return 0
 

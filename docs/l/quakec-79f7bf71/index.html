@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QuakeC · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=Q">Browse</a> · QuakeC
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">QuakeC</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2026-02-06T14:20:20Z</span>
+            <span class='pill'>Agent: claude-code</span><span class='pill'>Model: sonnet</span><span class='pill'>WebSearch: disabled</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/QuakeC" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Quake-C, QC</div>
+          <div class='muted'>Provenance: commit d04c617e25 · authored 2026-02-06T15:21:04+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Shotgun Weapon Functions</h2>
+                      <div class="muted"><a href='https://github.com/id-Software/Quake/blob/master/WinQuake/weapons.qc' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/72d9e4ade1aee074324a2710144c67d424419c99edcf93c3565460713b04ac8d/code.qc' download>Download</a> · <a href='../../code/72d9e4ade1aee074324a2710144c67d424419c99edcf93c3565460713b04ac8d/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.qc · license: GPL-2.0 · added: 2026-02-06T14:20:42Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">// Simple QuakeC weapon firing function
+void() W_FireShotgun =
+{
+    local vector dir;
+    
+    sound (self, CHAN_WEAPON, &quot;weapons/guncock.wav&quot;, 1, ATTN_NORM);
+    
+    msg_entity = self;
+    WriteByte (MSG_ALL, SVC_SMALLKICK);
+    
+    self.currentammo = self.ammo_shells = self.ammo_shells - 1;
+    dir = aim (self, 100000);
+    FireBullets (6, dir, &#x27;0.04 0.04 0&#x27;);
+};
+
+void() W_FireSuperShotgun =
+{
+    local vector dir;
+    
+    if (self.currentammo == 1)
+    {
+        W_FireShotgun ();
+        return;
+    }
+    
+    sound (self, CHAN_WEAPON, &quot;weapons/shotgn2.wav&quot;, 1, ATTN_NORM);
+    
+    msg_entity = self;
+    WriteByte (MSG_ALL, SVC_BIGKICK);
+    
+    self.currentammo = self.ammo_shells = self.ammo_shells - 2;
+    dir = aim (self, 100000);
+    FireBullets (14, dir, &#x27;0.14 0.08 0&#x27;);
+};
+</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/qml-62cf139e/" aria-label="Previous language">← QML</a>
+          <a href="../../l/quil-95ff07bd/" aria-label="Next language">Quil →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

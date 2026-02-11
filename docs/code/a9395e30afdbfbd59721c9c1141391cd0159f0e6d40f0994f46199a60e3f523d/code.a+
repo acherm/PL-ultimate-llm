@@ -1,0 +1,13 @@
+$mode trad
+$include "util.a+"
+
+qs[x] {
+    if[1 >= count x;
+        x;
+        {
+            p: x[0];
+            x: 1 drop x;
+            (qs[x where x < p]), p, qs[x where x >= p]
+        }
+    ]
+}

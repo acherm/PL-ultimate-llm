@@ -1,0 +1,21 @@
+module sort;
+
+public qsort, isort;
+
+dec qsort : list(num) -> list(num);
+--- qsort(nil) <= nil;
+--- qsort(x :: l) <= qsort(filter((<=x), l)) <> (x :: qsort(filter((>x), l)));
+
+dec filter : (num->truval) # list(num) -> list(num);
+--- filter(p, nil) <= nil;
+--- filter(p, x::l) <= if p(x) then x::filter(p,l) else filter(p,l);
+
+dec isort : list(num) -> list(num);
+--- isort(nil) <= nil;
+--- isort(x::l) <= insert(x, isort(l));
+
+dec insert : num # list(num) -> list(num);
+--- insert(x, nil) <= x::nil;
+--- insert(x, y::l) <= if x<=y then x::y::l else y::insert(x,l);
+
+end;

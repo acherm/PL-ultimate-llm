@@ -1,0 +1,35 @@
+#include <iostream>
+
+// A simple class
+class Calculator {
+public:
+    int add(int a, int b) {
+        return a + b;
+    }
+    
+    int multiply(int a, int b) {
+        return a * b;
+    }
+};
+
+// An aspect that logs method calls
+aspect LoggingAspect {
+    advice execution("% Calculator::%(...)")  : before() {
+        std::cout << "Calling method: " << JoinPoint::signature() << std::endl;
+    }
+    
+    advice execution("% Calculator::%(...)")  : after() {
+        std::cout << "Method completed: " << JoinPoint::signature() << std::endl;
+    }
+};
+
+int main() {
+    Calculator calc;
+    int sum = calc.add(5, 3);
+    int product = calc.multiply(4, 7);
+    
+    std::cout << "Sum: " << sum << std::endl;
+    std::cout << "Product: " << product << std::endl;
+    
+    return 0;
+}

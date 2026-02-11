@@ -1,0 +1,38 @@
+maintenance: 
+itle: Warfarin_Dosing;;;
+mlmname: Warfarin_Dosing;;;
+arity: 1;;;
+version: 1.00;;;
+institution: Example;;;
+author: John Smith;;;
+specialist: Pharmacy;;;
+date: 2020-01-01;;;
+validation: testing;;;
+
+library:
+purpose: Compute warfarin dosing adjustment based on INR;;;
+explanation: Implements basic warfarin dosing algorithm;;;
+keywords: warfarin; anticoagulation; INR;;;
+citations: None;;;
+links: None;;;
+
+knowledge:
+type: data_driven;;;
+data:
+Let Target_INR = 2.5;
+Let Current_INR = READ last INR where it occurred within the past 2 days;
+;;;
+
+evoke: daily;;;
+
+logic:
+if Current_INR > 4 then
+  conclude true;
+else
+  conclude false;
+endif;
+;;;
+
+action:
+write "Current INR is too high - hold warfarin dose";
+;;;

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nix · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=N">Browse</a> · Nix
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Nix</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-22T09:45:31Z</span>
+            <span class='pill'>Model: anthropic/claude-3.5-sonnet</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://nixos.org/manual/nix/stable/language/" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: Nix Expression Language, nixlang</div>
+          <div class='muted'>Provenance: commit 165634b6a8 · authored 2025-10-22T11:45:31+02:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Nix Flake for Helix Editor</h2>
+                      <div class="muted"><a href='https://github.com/helix-editor/helix/blob/master/flake.nix' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/c1b29d3308dbc810d8e35b45502554dcb7e3c0e920a2abd0c3bf7435e0a68670/code.nix' download>Download</a> · <a href='../../code/c1b29d3308dbc810d8e35b45502554dcb7e3c0e920a2abd0c3bf7435e0a68670/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.nix · license: MPL-2.0 · added: 2025-10-22T09:45:31Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">{
+  description = &quot;A post-modern text editor&quot;;
+  inputs = {
+    nixpkgs.url = &quot;github:nixos/nixpkgs/nixos-unstable&quot;;
+    rust-overlay.url = &quot;github:oxalica/rust-overlay&quot;;
+    flake-utils.url = &quot;github:numtide/flake-utils&quot;;
+  };
+  outputs = { self, nixpkgs, rust-overlay, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        overlays = [ (import rust-overlay) ];
+        pkgs = import nixpkgs {
+          inherit system overlays;
+        };
+        rust = pkgs.rust-bin.stable.latest.default;
+      in
+      {
+        packages.default = pkgs.rustPlatform.buildRustPackage {
+          pname = &quot;hx&quot;;
+          version = &quot;0.0.0&quot;;
+          src = ./.;
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+          };
+          buildInputs = [
+            pkgs.pkg-config
+          ];
+          nativeBuildInputs = [ rust ];
+        };
+        devShell = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            rust
+            rust-analyzer
+            pkg-config
+          ];
+        };
+      }
+    );
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/nit-2293072c/" aria-label="Previous language">← Nit</a>
+          <a href="../../l/not-quite-c-18d95956/" aria-label="Next language">Not Quite C →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

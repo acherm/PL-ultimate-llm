@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cadence · PL Catalog</title>
+    <meta name="description" content="Browse programming languages and their example programs." />
+    <link rel="stylesheet" href="../../assets/style.css" />
+    <script>
+      window.__SITE_ROOT__ = "../../";
+      window.__DATA_BASE__ = "../../data";
+    </script>
+    <script src="../../assets/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../../index.html">PL Catalog</a>
+        <nav class="nav">
+          <a href="../../browse/index.html">Browse</a>
+          <a href="../../stats/index.html">Stats</a>
+          <button id="randomBtn" class="nav-btn" type="button">Random</button>
+        </nav>
+      </div>
+    </header>
+    <main class="container">
+      
+        <div class="breadcrumbs">
+          <a href="../../index.html">Home</a> · <a href="../../browse/index.html?letter=C">Browse</a> · Cadence
+        </div>
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Cadence</h1>
+          <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+            <span class="pill">1 program</span>
+            <span class="pill">Added 2025-10-28T09:16:53Z</span>
+            <span class='pill'>Model: google/gemini-2.5-pro</span><span class='pill'>Temp: 0.4</span>
+            <a class="pill" href="https://en.wikipedia.org/wiki/Cadence_(programming_language)" target="_blank" rel="noopener">Evidence</a>
+          </div>
+          <div class='muted'>Aliases: —</div>
+          <div class='muted'>Provenance: commit d8dffdbf85 · authored 2025-10-28T10:16:53+01:00</div>
+        </section>
+        
+                    <section class="panel section" style="margin-top: 18px;">
+                      <h2 style="margin:0 0 8px;">Fungible Token Standard Contract</h2>
+                      <div class="muted"><a href='https://github.com/onflow/flow-ft/blob/master/contracts/FungibleToken.cdc' target='_blank' rel='noopener'>Origin</a> · <a href='../../code/7a9ca971c05bac8ff7b463a1c3d1d43df0f247ba6505fe4ee7c5cf93284bcc40/code.cdc' download>Download</a> · <a href='../../code/7a9ca971c05bac8ff7b463a1c3d1d43df0f247ba6505fe4ee7c5cf93284bcc40/manifest.json'>manifest.json</a></div>
+                      
+                    <div class="codeblock" style="margin-top: 10px;">
+                      <div class="codebar">
+                        <div class="meta">code.cdc · license: Apache-2.0 · added: 2025-10-28T09:16:53Z</div>
+                        <button class="btn copy-btn" type="button" data-copy-target="#code-0">Copy</button>
+                      </div>
+                      <pre><code id="code-0">/*
+    Description: The Fungible Token standard&#x27;s smart contract.
+    This contract is a template for a basic fungible token.
+    It is not meant to be deployed as-is, but to be imported by other contracts
+    that wish to conform to the fungible token standard.
+    License: Apache-2.0
+*/
+pub contract FungibleToken {
+
+    // Event that is emitted when the total supply of a token increases
+    pub event TokensInitialized(initialSupply: UFix64)
+
+    // Event that is emitted when tokens are withdrawn from a Vault
+    pub event TokensWithdrawn(amount: UFix64, from: Address?)
+
+    // Event that is emitted when tokens are deposited to a Vault
+    pub event TokensDeposited(amount: UFix64, to: Address?)
+
+    // The total supply of the token in existence
+    pub var totalSupply: UFix64
+
+    // The interface that all Vaults are required to implement
+    //
+    pub resource interface Provider {
+
+        // withdraw removes tokens from the implementing vault
+        // and returns a vault with the removed tokens.
+        //
+        // The function&#x27;s access level is public, but it is still constrained
+        // by the access level of the variable that the resource is stored in.
+        //
+        pub fun withdraw(amount: UFix64): @Vault {
+            post {
+                // `result` is a keyword that refers to the return value of the function
+                result.balance == UFix64(amount):
+                    &quot;Withdrawal amount must be the same as the balance of the withdrawn Vault&quot;
+            }
+        }
+    }
+
+    // The interface that all Vaults are required to implement
+    // in order to receive tokens.
+    //
+    pub resource interface Receiver {
+
+        // deposit takes a Vault and adds its balance to the implementing vault
+        pub fun deposit(from: @Vault) {
+            pre {
+                // `from` is a keyword that refers to the argument of the function
+                from.balance &gt; 0.0:
+                    &quot;Deposit balance must be positive&quot;
+            }
+        }
+
+        // The balance of the account.
+        // The access level for this field is public,
+        // but it is still constrained by the access level of the variable
+        // that the resource is stored in.
+        pub var balance: UFix64
+    }
+
+    // The interface that provides a read-only view of the Vault&#x27;s balance
+    //
+    pub resource interface Balance {
+        pub var balance: UFix64
+    }
+
+    // A Vault is a resource that stores a fungible token.
+    // It is required to implement the Provider, Receiver, and Balance interfaces
+    //
+    pub resource Vault: Provider, Receiver, Balance {
+
+        // The balance of the Vault
+        pub var balance: UFix64
+
+        // initialize the balance at resource creation time
+        init(balance: UFix64) {
+            self.balance = balance
+        }
+
+        // withdraw removes tokens from the vault and returns a new vault
+        // with the removed tokens
+        pub fun withdraw(amount: UFix64): @Vault {
+            self.balance = self.balance - amount
+            emit TokensWithdrawn(amount: amount, from: self.owner?.address)
+            return &lt;-create Vault(balance: amount)
+        }
+
+        // deposit takes a vault and adds its balance to this vault
+        pub fun deposit(from: @Vault) {
+            self.balance = self.balance + from.balance
+            emit TokensDeposited(amount: from.balance, to: self.owner?.address)
+            destroy from
+        }
+
+        destroy() {
+            FungibleToken.totalSupply = FungibleToken.totalSupply - self.balance
+        }
+    }
+
+    // createEmptyVault creates a new Vault with a balance of zero
+    // and returns it to the calling context.
+    pub fun createEmptyVault(): @Vault {
+        return &lt;-create Vault(balance: 0.0)
+    }
+
+    init() {
+        self.totalSupply = 0.0
+        emit TokensInitialized(initialSupply: self.totalSupply)
+    }
+}</code></pre>
+                    </div>
+                    
+                    </section>
+                    
+        
+        <div class="pager">
+          <a href="../../l/cach-objectscript-803aba73/" aria-label="Previous language">← Caché ObjectScript</a>
+          <a href="../../l/cairo-62af713f/" aria-label="Next language">Cairo →</a>
+        </div>
+        
+        
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        Generated at <span class="muted">2026-02-06T15:32:32Z</span> from this repository.
+      </div>
+    </footer>
+  </body>
+</html>

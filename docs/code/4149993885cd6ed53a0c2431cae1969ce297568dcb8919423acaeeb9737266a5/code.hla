@@ -1,0 +1,44 @@
+program guessNumber;
+#include( "stdlib.hhf" );
+
+static
+    Guess:      uns32;
+    TheNumber:  uns32;
+
+begin guessNumber;
+
+    // Pick a random number between 1 and 100.
+
+    rand.makenew;
+    rand.urange( 100 );
+    mov( eax, TheNumber );
+    inc( TheNumber );
+
+    // Play the game with the user.
+
+    stdout.put( "I'm thinking of a number between 1 and 100.", nl,
+                "Guess the number!", nl, nl );
+
+    repeat
+
+        stdout.put( "Enter your guess: " );
+        stdin.getu32();
+        mov( eax, Guess );
+
+        if( Guess < TheNumber ) then
+
+            stdout.put( "Your guess is too low, try again.", nl );
+
+        elseif( Guess > TheNumber ) then
+
+            stdout.put( "Your guess is too high, try again.", nl );
+
+        else
+
+            stdout.put( "You guessed the number!", nl );
+
+        endif;
+
+    until( Guess = TheNumber );
+
+end guessNumber;

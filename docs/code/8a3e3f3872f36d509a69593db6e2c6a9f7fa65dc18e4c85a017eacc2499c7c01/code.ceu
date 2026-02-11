@@ -1,0 +1,33 @@
+input bool BTN;
+output bool LED;
+
+var bool led = false;
+emit LED(led);
+
+par/or do
+    // double click
+    loop do
+        await BTN;
+        await not BTN;
+        par/or do
+            await 250ms;
+        with
+            await BTN;
+            await not BTN;
+            led = not led;
+            emit LED(led);
+            break;
+        end
+    end
+with
+    // hold
+    loop do
+        await BTN;
+        await 1s;
+        loop do
+            led = not led;
+            emit LED(led);
+            await 100ms;
+        end
+    end
+end

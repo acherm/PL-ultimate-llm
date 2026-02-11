@@ -1,0 +1,16 @@
+module counter :
+input tick, reset;
+output count : 10;
+do
+  watching reset
+    emit count <= 0;
+  loop
+    await tick;
+    present count < 9 then
+      emit count <= count + 1
+    else
+      emit count <= 0
+    end
+  end
+end until reset end
+end module

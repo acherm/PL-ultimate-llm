@@ -1,0 +1,10 @@
+FUNCTION myFunction(INTEGER x, INTEGER y) RETURNS INTEGER
+  RETURN x + y
+END FUNCTION
+
+PROGRAM main
+  INTEGER a = 1
+  INTEGER b = 2
+  INTEGER c = myFunction(a, b)
+  PRINT c
+END PROGRAM

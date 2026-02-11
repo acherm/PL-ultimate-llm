@@ -1,0 +1,20 @@
+@searchlog =
+    EXTRACT UserId          int,
+            Start           DateTime,
+            Region          string,
+            Query           string,
+            Duration        int,
+            Urls            string,
+            ClickedUrls     string
+    FROM "/Samples/Data/SearchLog.tsv"
+    USING Extractors.Tsv();
+
+@result =
+    SELECT Region,
+           COUNT(*) AS Count
+    FROM @searchlog
+    GROUP BY Region;
+
+OUTPUT @result
+TO "/Output/SearchLog-Region-Count.csv"
+USING Outputters.Csv();

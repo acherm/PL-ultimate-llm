@@ -1,0 +1,37 @@
+    LIST    P=16F84A
+    INCLUDE <P16F84A.INC>
+    __CONFIG _CP_OFF & _WDT_OFF & _PWRTE_ON & _XT_OSC
+
+    ORG     0x00
+    GOTO    START
+
+    ORG     0x04
+    RETFIE
+
+START
+    BSF     STATUS, RP0
+    CLRF    TRISB
+    BCF     STATUS, RP0
+    CLRF    PORTB
+
+LOOP
+    BSF     PORTB, 0
+    CALL    DELAY
+    BCF     PORTB, 0
+    CALL    DELAY
+    GOTO    LOOP
+
+DELAY
+    MOVLW   0xFF
+    MOVWF   0x20
+DELAY1
+    MOVLW   0xFF
+    MOVWF   0x21
+DELAY2
+    DECFSZ  0x21, F
+    GOTO    DELAY2
+    DECFSZ  0x20, F
+    GOTO    DELAY1
+    RETURN
+
+    END

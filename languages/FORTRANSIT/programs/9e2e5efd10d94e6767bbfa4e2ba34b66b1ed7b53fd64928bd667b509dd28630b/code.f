@@ -1,0 +1,12 @@
+C     FORTRANSIT EXAMPLE PROGRAM
+C     COMPUTE FACTORIAL OF N
+      INTEGER N, FACT, I
+      N = 5
+      FACT = 1
+      DO 10 I = 1, N
+         FACT = FACT * I
+   10 CONTINUE
+      WRITE(6,20) N, FACT
+   20 FORMAT(1X,'FACTORIAL OF',I3,' IS',I10)
+      STOP
+      END

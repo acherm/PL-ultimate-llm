@@ -1,0 +1,27 @@
+archetype token
+
+variable totalSupply : nat = 0
+variable decimals : nat = 8
+
+asset ledger identified by holder {
+  holder : address;
+  tokens : nat = 0;
+}
+
+entry transfer(dest : address, value : nat) {
+  require {
+    r1: ledger[caller].tokens >= value otherwise "NotEnoughTokens";
+  }
+  effect {
+    ledger.update(caller, { tokens -= value });
+    ledger.addupdate(dest, { tokens += value });
+  }
+}
+
+entry mint(dest : address, value : nat) {
+  called by owner
+  effect {
+    totalSupply += value;
+    ledger.addupdate(dest, { tokens += value });
+  }
+}

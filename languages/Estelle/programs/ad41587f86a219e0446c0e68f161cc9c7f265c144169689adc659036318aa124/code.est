@@ -1,0 +1,60 @@
+SPECIFICATION SimpleProtocol;
+
+DEFAULT
+
+CHANNEL DataChannel (Sender, Receiver);
+  BY Sender: DataPDU;
+  BY Receiver: AckPDU;
+END;
+
+IP DataPDU;
+  sequence: INTEGER;
+  data: ARRAY [1..10] OF CHAR;
+END;
+
+IP AckPDU;
+  sequence: INTEGER;
+END;
+
+MODULE Sender ACTIVITY;
+  IP:
+    OUT DataChannel;
+  VAR
+    counter: INTEGER;
+  BODY
+    INIT
+      counter := 0;
+    TRANS
+      FROM Init TO Sending
+        PROVIDED counter < 10
+        BEGIN
+          OUTPUT DataChannel(DataPDU WITH sequence := counter, data := 'Message');
+          counter := counter + 1;
+        END;
+  END;
+
+MODULE Receiver ACTIVITY;
+  IP:
+    IN DataChannel;
+  BODY
+    INIT
+      ;
+    TRANS
+      FROM Init TO Init
+        WHEN DataChannel(DataPDU)
+        BEGIN
+          OUTPUT DataChannel(AckPDU WITH sequence := DataPDU.sequence);
+        END;
+  END;
+
+MODTYPE System;
+  IP:
+    ;
+  BODY
+    sender: Sender;
+    receiver: Receiver;
+    INIT
+      CONNECT sender.DataChannel TO receiver.DataChannel;
+  END;
+
+END.

@@ -1,0 +1,11 @@
+; Hello World program for PDP-10
+; Print "HELLO WORLD" to the terminal
+
+	TITLE HELLO
+	SEARCH UUOSYM
+
+START:	RESET
+	OUTSTR [ASCIZ /HELLO WORLD
+/]
+	EXIT
+	END START

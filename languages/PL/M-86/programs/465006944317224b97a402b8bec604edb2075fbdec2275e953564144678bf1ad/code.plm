@@ -1,0 +1,24 @@
+$TITLE('Simple PL/M-86 Example')
+$PAGEWIDTH(80)
+EXAMPLE: DO;
+  DECLARE STRING LITERALLY 'Hello, World!';
+
+  /* Simple procedure to output a character */
+  OUTPUT$CHAR: PROCEDURE(C);
+    DECLARE C BYTE;
+    /* Output to console port */
+    PORT[0E9H] = C;
+  END OUTPUT$CHAR;
+
+  /* Output string procedure */
+  OUTPUT$STRING: PROCEDURE(S);
+    DECLARE S ADDRESS;
+    DECLARE I BYTE;
+    DO I = 0 TO LENGTH(STRING) - 1;
+      CALL OUTPUT$CHAR(STRING(I));
+    END;
+  END OUTPUT$STRING;
+
+  /* Main program */
+  CALL OUTPUT$STRING(@STRING);
+END EXAMPLE;

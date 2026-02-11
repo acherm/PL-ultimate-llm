@@ -1,0 +1,16 @@
+class Greeter(name: tuple<string, string>, age: number) {
+    getName () -> self.name.join(" ")
+    addAge (text) -> "%s! You are %d years old." % self.age
+    greet (text) -> greeting -> "%s, %s" % (greeting, text)
+}
+
+let SayHi: Greeter = Greeter {
+    Tuple::IO.prompt(
+        [
+            "First", "Last",
+        ].map(@.append(" Name? "))
+    ),
+    Number::IO.prompt("Age? ")
+}
+
+print (SayHi.greet + SayHi.addAge + SayHi.getName)("Hello")

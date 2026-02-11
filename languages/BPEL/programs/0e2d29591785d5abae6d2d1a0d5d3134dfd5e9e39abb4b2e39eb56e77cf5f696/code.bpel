@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="HelloWorld"
+         targetNamespace="http://example.com/hello"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:tns="http://example.com/hello">
+
+    <import importType="http://schemas.xmlsoap.org/wsdl/"
+            location="HelloWorldService.wsdl"
+            namespace="http://example.com/hello" />
+
+    <partnerLinks>
+        <partnerLink name="client"
+                     partnerLinkType="tns:HelloWorldPLT"
+                     myRole="provider" />
+    </partnerLinks>
+
+    <variables>
+        <variable name="input" messageType="tns:HelloWorldRequestMessage"/>
+        <variable name="output" messageType="tns:HelloWorldResponseMessage"/>
+    </variables>
+
+    <sequence>
+        <receive name="receiveInput"
+                 partnerLink="client"
+                 operation="sayHello"
+                 variable="input"
+                 createInstance="yes"/>
+
+        <assign name="assignOutput">
+            <copy>
+                <from>
+                    <literal>Hello, World!</literal>
+                </from>
+                <to variable="output" part="greeting"/>
+            </copy>
+        </assign>
+
+        <reply name="replyOutput"
+               partnerLink="client"
+               operation="sayHello"
+               variable="output"/>
+    </sequence>
+</process>

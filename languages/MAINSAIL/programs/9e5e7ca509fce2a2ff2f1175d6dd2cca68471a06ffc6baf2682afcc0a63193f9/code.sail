@@ -1,0 +1,17 @@
+PROCEDURE FACTORIAL(N: INTEGER): INTEGER;
+BEGIN
+    IF N <= 1 THEN
+        RETURN 1
+    ELSE
+        RETURN N * FACTORIAL(N - 1);
+END;
+
+PROCEDURE MAIN;
+VAR
+    I: INTEGER;
+BEGIN
+    FOR I := 1 TO 10 DO
+    BEGIN
+        PRINT("Factorial of ", I, " is ", FACTORIAL(I));
+    END;
+END;

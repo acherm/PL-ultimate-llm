@@ -1,0 +1,32 @@
+CREATE QUERY pageRank(FLOAT maxChange, INT maxIter, FLOAT damping) FOR GRAPH socialNetwork {
+  TYPEDEF TUPLE<VERTEX Vertex_ID, FLOAT score> vertexScore;
+  HeapAccum<vertexScore>(100, score DESC) @@topScores;
+  MaxAccum<FLOAT> @@maxDiff = 9999;
+  SumAccum<FLOAT> @recvdScore = 0;
+  SumAccum<FLOAT> @score = 1;
+  INT iter = 0;
+
+  Start = {Person.*};
+
+  WHILE @@maxDiff > maxChange LIMIT maxIter DO
+    @@maxDiff = 0;
+
+    V = SELECT s
+        FROM Start:s -(Knows)- :t
+        ACCUM t.@recvdScore += s.@score/(s.outdegree("Knows"));
+
+    V = SELECT s
+        FROM Start:s
+        POST-ACCUM
+          s.@score = (1.0-damping) + damping * s.@recvdScore,
+          s.@recvdScore = 0,
+          @@maxDiff += abs(s.@score - s.@score');
+
+    iter = iter + 1;
+  END;
+
+  Start = SELECT s FROM Start:s
+          POST-ACCUM @@topScores += vertexScore(s, s.@score);
+
+  PRINT @@topScores;
+}

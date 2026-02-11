@@ -1,0 +1,20 @@
+; IPL-II List Reversal Program
+; This program reverses a list using IPL-II list processing operations
+
+START:
+    L0 = (A B C D E)     ; Initialize input list
+    L1 = NIL             ; Initialize output list to empty
+
+LOOP:
+    TEST L0, EMPTY       ; Test if input list is empty
+    JUMP-IF-TRUE DONE    ; If empty, we're done
+
+    H0 = HEAD L0         ; Get first element of input list
+    L0 = TAIL L0         ; Remove first element from input
+    L1 = CONS H0, L1     ; Prepend element to output list
+
+    JUMP LOOP            ; Continue loop
+
+DONE:
+    PRINT L1             ; Print reversed list
+    HALT                 ; End program

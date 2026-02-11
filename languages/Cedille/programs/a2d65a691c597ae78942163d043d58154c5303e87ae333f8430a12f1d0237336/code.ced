@@ -1,0 +1,17 @@
+module nat.
+
+data Nat : ★ =
+  | zero : Nat
+  | succ : Nat ➔ Nat.
+
+add : Nat ➔ Nat ➔ Nat
+  = λ m. λ n. μ addN. m {
+    | zero ➔ n
+    | succ m' ➔ succ (addN m')
+  }.
+
+mult : Nat ➔ Nat ➔ Nat
+  = λ m. λ n. μ multN. m {
+    | zero ➔ zero
+    | succ m' ➔ add n (multN m')
+  }.

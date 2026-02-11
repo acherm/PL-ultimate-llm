@@ -1,0 +1,14 @@
+proc echo() {
+    msg m;
+    for (;;) {
+        recv m;
+        send m;
+    }
+}
+
+proc main() {
+    chan c;
+    spawn echo() @ c;
+    send "Hello, PLAN!" @ c;
+    recv @ c;
+}

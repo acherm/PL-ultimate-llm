@@ -1,0 +1,31 @@
+manager Main {
+  workers {
+    Producer p;
+    Consumer c;
+  }
+
+  connections {
+    p.output -> c.input;
+  }
+}
+
+worker Producer {
+  port output;
+
+  behavior {
+    for (i = 1; i <= 10; i++) {
+      send(output, i);
+    }
+  }
+}
+
+worker Consumer {
+  port input;
+
+  behavior {
+    while (true) {
+      value = receive(input);
+      print(value);
+    }
+  }
+}

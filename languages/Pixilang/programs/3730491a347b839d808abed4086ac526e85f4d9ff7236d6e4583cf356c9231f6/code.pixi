@@ -1,0 +1,25 @@
+// Simple sine wave audio generator
+fn audio_callback($stream, $userdata, $channels, $frames, $output_time_in_system_ticks, $in_channels, $latency_in_frames)
+{
+    $buf = $channels[0]
+    $i = 0
+    while($i < $frames)
+    {
+        $val = sin($userdata * 3.14159 * 2 / 44100) * 32767
+        $buf[$i] = $val
+        $userdata = $userdata + 1
+        $i = $i + 1
+    }
+    ret($userdata)
+}
+
+set_audio_callback(audio_callback, 440, 44100, INT16, 1)
+start_audio(0)
+
+while(1)
+{
+    frame(50)
+    if get_event() { if EVT[EVT_TYPE] == EVT_QUIT { break } }
+}
+
+stop_audio(0)

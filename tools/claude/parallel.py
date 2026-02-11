@@ -9,6 +9,7 @@ Each agent runs in its own worktree, enabling true parallel execution.
 import argparse
 import json
 import os
+import signal
 import subprocess
 import sys
 import time
@@ -125,22 +126,37 @@ def run_agent_in_worktree(
     ]
 
     try:
-        result = subprocess.run(
+        # Use Popen with process group so we can kill the entire tree on timeout
+        proc = subprocess.Popen(
             cmd,
-            capture_output=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
-            timeout=timeout,
             cwd=worktree_path,
+            start_new_session=True,  # creates new process group
         )
-    except subprocess.TimeoutExpired:
-        return AgentResult(
-            worktree=worktree_name,
-            model=model,
-            success=False,
-            language=None,
-            duration_s=round(time.time() - t0, 2),
-            error="Timeout",
-        )
+        try:
+            stdout, stderr = proc.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            # Kill the entire process group (claude + all children)
+            try:
+                os.killpg(proc.pid, signal.SIGTERM)
+                proc.wait(timeout=10)
+            except Exception:
+                try:
+                    os.killpg(proc.pid, signal.SIGKILL)
+                except Exception:
+                    pass
+            return AgentResult(
+                worktree=worktree_name,
+                model=model,
+                success=False,
+                language=None,
+                duration_s=round(time.time() - t0, 2),
+                error="Timeout",
+            )
+        # Build a result-like object for compatibility
+        result = subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr)
     except Exception as e:
         return AgentResult(
             worktree=worktree_name,

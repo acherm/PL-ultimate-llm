@@ -1,0 +1,14 @@
+% N-Queens problem in ZINC
+int: n = 8;
+array[1..n] of var 1..n: q;
+
+constraint
+    forall(i,j in 1..n where i<j)(
+        q[i] != q[j] /\
+        q[i]+i != q[j]+j /\
+        q[i]-i != q[j]-j
+    );
+
+solve satisfy;
+
+output ["Queens: ", show(q), "\n"];

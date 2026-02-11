@@ -1,0 +1,49 @@
+/*******************************************************************************************
+  SIMPL+ Module: Digital Input Monitor
+  File: DigitalInputMonitor.usp
+  
+  Description: Monitors digital input and triggers output when input goes high
+*******************************************************************************************/
+
+#SYMBOL_NAME "Digital Input Monitor"
+#CATEGORY "Control"
+#DEFAULT_VOLATILE
+#ENABLE_STACK_CHECKING
+
+DIGITAL_INPUT Input_Signal;
+DIGITAL_OUTPUT Output_Trigger;
+STRING_OUTPUT Status_Text[80];
+
+INTEGER last_state;
+
+PUSH Input_Signal
+{
+    if (Input_Signal != last_state)
+    {
+        last_state = Input_Signal;
+        
+        if (Input_Signal = 1)
+        {
+            Output_Trigger = 1;
+            MakeString(Status_Text, "Input Active: HIGH");
+        }
+        else
+        {
+            Output_Trigger = 0;
+            MakeString(Status_Text, "Input Inactive: LOW");
+        }
+    }
+}
+
+RELEASE Input_Signal
+{
+    Output_Trigger = 0;
+    MakeString(Status_Text, "Input Released");
+}
+
+Function Main()
+{
+    last_state = 0;
+    Output_Trigger = 0;
+    MakeString(Status_Text, "System Initialized");
+}

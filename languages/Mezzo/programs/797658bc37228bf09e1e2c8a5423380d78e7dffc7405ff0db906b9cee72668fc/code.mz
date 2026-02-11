@@ -1,0 +1,15 @@
+(* A simple reference cell example in Mezzo *)
+val make_counter () : () -> int =
+  let r = newref 0 in
+  fun () : int =
+    let n = !r in
+    r := n + 1;
+    n
+  end
+
+val main () : () =
+  let counter = make_counter () in
+  let x = counter () in
+  let y = counter () in
+  let z = counter () in
+  ()

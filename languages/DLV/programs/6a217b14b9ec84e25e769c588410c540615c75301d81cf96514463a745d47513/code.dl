@@ -1,0 +1,22 @@
+% Graph 3-Coloring Problem
+% Input: edges of a graph
+edge(1,2).
+edge(1,3).
+edge(2,3).
+edge(2,4).
+edge(3,4).
+
+% Define colors
+color(red).
+color(green).
+color(blue).
+
+% Each node gets exactly one color
+node_color(X,C) v -node_color(X,C) :- node(X), color(C).
+
+% Adjacent nodes must have different colors
+:- edge(X,Y), node_color(X,C), node_color(Y,C).
+
+% Define nodes
+node(X) :- edge(X,_).
+node(Y) :- edge(_,Y).

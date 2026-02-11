@@ -1,0 +1,19 @@
+compose
+    producer(Stream) ||
+    consumer(Stream).
+
+producer(Stream) :-
+    produce(Stream, 0, 10).
+
+produce(Stream, N, Max) :-
+    N < Max,
+    Stream = [N | Rest],
+    N1 is N + 1,
+    produce(Rest, N1, Max).
+
+produce([], Max, Max).
+
+consumer([]).
+consumer([H|T]) :-
+    write(H), nl,
+    consumer(T).

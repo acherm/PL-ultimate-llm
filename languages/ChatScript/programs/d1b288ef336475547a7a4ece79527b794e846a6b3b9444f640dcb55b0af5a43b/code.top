@@ -1,0 +1,34 @@
+# Simple ChatScript conversation rules
+# This demonstrates basic pattern matching and responses
+
+topic: ~greetings keep repeat ()
+
+t: HELLO ( << hello hi hey >> )
+    Hello! How can I help you today?
+
+t: GOODBYE ( << bye goodbye "see you" >> )
+    Goodbye! Have a great day!
+
+topic: ~math keep repeat ()
+
+t: ADDITION ( << "add" "plus" "sum" >> _* and _* )
+    ^compute($$_0 + $$_1)
+    The sum of $$_0 and $$_1 is ^eval($$_0 + $$_1).
+
+t: MULTIPLICATION ( << "multiply" "times" >> _* and _* )
+    The product of $$_0 and $$_1 is ^eval($$_0 * $$_1).
+
+topic: ~questions keep repeat ()
+
+t: HOWAMI ( << "how are you" "how do you do" >> )
+    I'm doing well, thank you for asking! I'm a chatbot powered by ChatScript.
+
+t: WHOAREYOU ( << "who are you" "what are you" >> )
+    I am a conversational agent built with ChatScript, a pattern matching language for creating chatbots.
+
+u: ( << _~animals >> )
+    I see you mentioned $$_0. That's interesting! Do you have pets?
+    a: ( yes )
+        That's wonderful! What kind?
+    a: ( no )
+        Maybe you'll consider getting one someday!

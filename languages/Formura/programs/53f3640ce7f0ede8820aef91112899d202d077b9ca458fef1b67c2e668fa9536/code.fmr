@@ -1,0 +1,12 @@
+dimension :: 2
+axes :: x, y
+
+ddx = fun(a) (a[i+1,j] - a[i-1,j]) / 2
+ddy = fun(a) (a[i,j+1] - a[i,j-1]) / 2
+
+∂ :: (tensor double, tensor double) -> tensor double
+∂ = fun(f, x, y) ddx(f) * x + ddy(f) * y
+
+begin function heat(u)
+  du/dt = u[i+1,j] + u[i-1,j] + u[i,j+1] + u[i,j-1] - 4*u[i,j]
+end function

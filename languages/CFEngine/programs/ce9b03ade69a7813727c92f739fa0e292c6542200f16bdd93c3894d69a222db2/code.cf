@@ -1,0 +1,22 @@
+bundle agent main
+{
+  files:
+    "/tmp/hello.txt"
+      create => "true",
+      edit_line => insert_lines("Hello, World!"),
+      comment => "Ensure hello.txt exists with greeting";
+
+  reports:
+    "CFEngine policy applied successfully";
+}
+
+body common control
+{
+  bundlesequence => { "main" };
+}
+
+bundle edit_line insert_lines(text)
+{
+  insert_lines:
+    "$(text)";
+}

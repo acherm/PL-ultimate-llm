@@ -1,0 +1,20 @@
+interface Request {
+  constructor(RequestInfo input, optional RequestInit init = {});
+  readonly attribute ByteString method;
+  readonly attribute USVString url;
+  readonly attribute Headers headers;
+  readonly attribute RequestDestination destination;
+  readonly attribute USVString referrer;
+  readonly attribute ReferrerPolicy referrerPolicy;
+  readonly attribute RequestMode mode;
+  readonly attribute RequestCredentials credentials;
+  readonly attribute RequestCache cache;
+  readonly attribute RequestRedirect redirect;
+  readonly attribute DOMString integrity;
+  readonly attribute boolean keepalive;
+  readonly attribute boolean isReloadNavigation;
+  readonly attribute boolean isHistoryNavigation;
+  readonly attribute AbortSignal signal;
+  readonly attribute RequestDuplex duplex;
+  Request clone();
+};

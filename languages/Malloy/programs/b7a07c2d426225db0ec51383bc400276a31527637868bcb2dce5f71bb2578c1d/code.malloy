@@ -1,0 +1,7 @@
+run: bigquery.table('malloydata-org.faa.flights') -> {
+  where: origin = 'SFO'
+  group_by: carrier
+  aggregate:
+    flight_count is count()
+    average_flight_time is flight_time.avg()
+}

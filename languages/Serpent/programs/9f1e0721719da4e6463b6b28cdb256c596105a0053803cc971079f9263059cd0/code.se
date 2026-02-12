@@ -1,0 +1,17 @@
+# Simple token contract
+data balances[]
+data totalSupply
+
+def init():
+    self.totalSupply = 1000000
+    self.balances[msg.sender] = 1000000
+
+def balance(address):
+    return self.balances[address]
+
+def transfer(to, value):
+    if self.balances[msg.sender] >= value:
+        self.balances[msg.sender] -= value
+        self.balances[to] += value
+        return 1
+    return 0

@@ -1,0 +1,6 @@
+from(bucket: "example-bucket")
+    |> range(start: -1h)
+    |> filter(fn: (r) => r["_measurement"] == "cpu")
+    |> filter(fn: (r) => r["_field"] == "usage_system")
+    |> aggregateWindow(every: 5m, fn: mean)
+    |> yield(name: "mean")

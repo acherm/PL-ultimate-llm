@@ -1,0 +1,30 @@
+package main
+
+// @ requires n >= 0
+// @ ensures result >= 0
+// @ ensures result == n
+func identity(n int) (result int) {
+	return n
+}
+
+// @ requires x >= 0 && y >= 0
+// @ ensures result == x + y
+func add(x int, y int) (result int) {
+	return x + y
+}
+
+// @ requires len(a) > 0
+// @ ensures result >= 0
+// @ ensures result < len(a)
+// @ ensures forall i int :: 0 <= i && i < len(a) ==> result >= a[i]
+func max(a []int) (result int) {
+	result = a[0]
+	// @ invariant 0 <= i && i <= len(a)
+	// @ invariant forall j int :: 0 <= j && j < i ==> result >= a[j]
+	for i := 1; i < len(a); i++ {
+		if a[i] > result {
+			result = a[i]
+		}
+	}
+	return result
+}

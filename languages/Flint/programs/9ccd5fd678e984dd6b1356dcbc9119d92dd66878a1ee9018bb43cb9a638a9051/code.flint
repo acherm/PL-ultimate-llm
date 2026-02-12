@@ -1,0 +1,21 @@
+contract Bank {
+  var balances: [Address: Int] = [:]
+  var owner: Address
+
+  init(owner: Address) {
+    self.owner = owner
+  }
+
+  public mutating func deposit(implicit value: inout Wei) {
+    balances[caller] = balances[caller] + value.transfer(&value)
+  }
+
+  public mutating func withdraw(amount: Int) {
+    balances[caller] = balances[caller] - amount
+    send(caller, amount)
+  }
+
+  public func getBalance() -> Int {
+    return balances[caller]
+  }
+}

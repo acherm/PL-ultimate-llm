@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specificationSet xmlns="http://www.yawlfoundation.org/yawlschema" version="4.0">
+  <specification uri="SimpleApproval">
+    <metaData>
+      <title>Simple Approval Process</title>
+      <creator>YAWL User</creator>
+      <description>A basic approval workflow</description>
+    </metaData>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" />
+    <decomposition id="SimpleApproval" isRootNet="true" xsi:type="NetFactsType" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <inputParam>
+        <name>requestDetails</name>
+        <type>string</type>
+      </inputParam>
+      <outputParam>
+        <name>decision</name>
+        <type>string</type>
+      </outputParam>
+      <processControlElements>
+        <inputCondition id="InputCondition">
+          <flowsInto>
+            <nextElementRef id="SubmitRequest" />
+          </flowsInto>
+        </inputCondition>
+        <task id="SubmitRequest">
+          <name>Submit Request</name>
+          <flowsInto>
+            <nextElementRef id="ReviewRequest" />
+          </flowsInto>
+        </task>
+        <task id="ReviewRequest">
+          <name>Review Request</name>
+          <flowsInto>
+            <nextElementRef id="MakeDecision" />
+          </flowsInto>
+        </task>
+        <task id="MakeDecision">
+          <name>Make Decision</name>
+          <flowsInto>
+            <nextElementRef id="OutputCondition" />
+          </flowsInto>
+        </task>
+        <outputCondition id="OutputCondition" />
+      </processControlElements>
+    </decomposition>
+  </specification>
+</specificationSet>

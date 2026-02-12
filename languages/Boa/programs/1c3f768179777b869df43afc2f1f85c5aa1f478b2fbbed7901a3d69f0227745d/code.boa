@@ -1,0 +1,19 @@
+# Count Java files in projects
+p: Project = input;
+
+count_java_files := 0;
+foreach (i: int; def(p.code_repositories[i])) {
+    snapshot := getsnapshot(p.code_repositories[i]);
+    foreach (j: int; def(snapshot[j])) {
+        visit(snapshot[j]);
+    }
+}
+
+visit := visitor {
+    before node: ChangedFile -> {
+        if (match(`.*\.java$`, node.name))
+            count_java_files++;
+    }
+};
+
+emit count_java_files;

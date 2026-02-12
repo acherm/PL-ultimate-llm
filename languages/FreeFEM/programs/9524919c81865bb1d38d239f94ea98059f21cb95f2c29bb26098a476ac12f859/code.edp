@@ -1,0 +1,13 @@
+// Solve Laplace equation on unit square
+mesh Th = square(10, 10);
+fespace Vh(Th, P1);
+
+Vh u, v;
+
+problem Laplace(u, v) =
+    int2d(Th)(dx(u)*dx(v) + dy(u)*dy(v))
+    - int2d(Th)(1*v)
+    + on(1, 2, 3, 4, u=0);
+
+Laplace;
+plot(u, wait=true);

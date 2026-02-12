@@ -1,0 +1,21 @@
+REM Mandelbrot Set Generator
+MODE 15
+VDU 23,22,320;256;8,8,8,8
+max% = 255
+FOR px% = 0 TO 319
+  FOR py% = 0 TO 255
+    x0 = (px% - 160) / 80
+    y0 = (py% - 128) / 80
+    x = 0
+    y = 0
+    iteration% = 0
+    REPEAT
+      xtemp = x * x - y * y + x0
+      y = 2 * x * y + y0
+      x = xtemp
+      iteration% = iteration% + 1
+    UNTIL (x * x + y * y > 4) OR (iteration% >= max%)
+    GCOL 0, iteration% MOD 64
+    PLOT 69, px% * 2, py% * 2
+  NEXT py%
+NEXT px%

@@ -1,0 +1,7 @@
+// Simple CEL expression for validating a user request
+// Returns true if user is authenticated and has required permission
+
+has(request.auth) &&
+request.auth.claims.email.endsWith('@example.com') &&
+(request.resource.visibility == 'public' ||
+ request.auth.claims.email == resource.owner)

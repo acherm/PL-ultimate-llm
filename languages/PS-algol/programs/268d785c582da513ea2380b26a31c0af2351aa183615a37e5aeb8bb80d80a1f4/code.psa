@@ -1,0 +1,26 @@
+! PS-algol factorial calculator with persistence
+let factorial = proc(int n -> int)
+    if n <= 1 then 1 else n * factorial(n - 1)
+
+let main = proc()
+begin
+    let db = open.database("factorials")
+    let n := read.int()
+
+    ! Check if result is already in database
+    let key = "fact_" ++ n.to.string()
+    let result :=
+        if db.has(key) then
+            db.lookup(key)
+        else
+        begin
+            let value = factorial(n)
+            db.insert(key, value)
+            value
+        end
+
+    write "Factorial of ", n, " is ", result
+    close.database(db)
+end
+
+main()

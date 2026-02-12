@@ -1,0 +1,20 @@
+// Proof of addition commutativity
+Nat.add.comm (a: Nat) (b: Nat) : (Nat.add a b) == (Nat.add b a)
+Nat.add.comm Nat.zero     b = ?comm_zero
+Nat.add.comm (Nat.succ a) b = ?comm_succ
+
+// Natural numbers
+type Nat {
+  zero
+  succ (pred: Nat)
+}
+
+// Addition function
+Nat.add (a: Nat) (b: Nat) : Nat
+Nat.add Nat.zero     b = b
+Nat.add (Nat.succ a) b = Nat.succ (Nat.add a b)
+
+// Main function
+Main : Nat {
+  Nat.add (Nat.succ (Nat.succ Nat.zero)) (Nat.succ (Nat.succ (Nat.succ Nat.zero)))
+}

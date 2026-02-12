@@ -1,0 +1,25 @@
+remarks Simple XPLOR example - energy minimization
+remarks Define molecular topology
+
+topology
+  @toppar/protein.top
+end
+
+parameter
+  @toppar/protein.par
+end
+
+structure @coordinates.psf end
+
+coordinates @coordinates.pdb
+
+flags exclude * include bond angle improper vdw elec end
+
+minimize powell
+  nstep=100
+  drop=10.0
+end
+
+print energy end
+
+stop

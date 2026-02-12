@@ -1,0 +1,36 @@
+(* Traffic Light Control - Sequential Function Chart *)
+(* Initial Step *)
+INITIAL_STEP S0:
+    Green_Light := TRUE;
+    Yellow_Light := FALSE;
+    Red_Light := FALSE;
+END_STEP
+
+(* Transition from S0 to S1 *)
+TRANSITION T0 FROM S0 TO S1:
+    Timer_Green >= 30
+END_TRANSITION
+
+(* Step S1: Yellow Light *)
+STEP S1:
+    Green_Light := FALSE;
+    Yellow_Light := TRUE;
+    Red_Light := FALSE;
+END_STEP
+
+(* Transition from S1 to S2 *)
+TRANSITION T1 FROM S1 TO S2:
+    Timer_Yellow >= 3
+END_TRANSITION
+
+(* Step S2: Red Light *)
+STEP S2:
+    Green_Light := FALSE;
+    Yellow_Light := FALSE;
+    Red_Light := TRUE;
+END_STEP
+
+(* Transition from S2 to S0 *)
+TRANSITION T2 FROM S2 TO S0:
+    Timer_Red >= 25
+END_TRANSITION

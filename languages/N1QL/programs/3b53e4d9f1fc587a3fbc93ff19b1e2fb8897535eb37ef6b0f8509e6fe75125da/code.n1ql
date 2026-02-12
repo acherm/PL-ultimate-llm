@@ -1,0 +1,8 @@
+SELECT airline.name, airline.callsign, route.destinationairport, route.stops
+FROM `travel-sample`.inventory.airline
+JOIN `travel-sample`.inventory.route
+ON route.airlineid = META(airline).id
+WHERE airline.country = "United States"
+  AND route.sourceairport = "SFO"
+ORDER BY route.stops ASC
+LIMIT 10;

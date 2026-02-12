@@ -1,0 +1,27 @@
+SYSTEM SimpleSystem;
+
+BLOCK SimpleBlock;
+
+PROCESS SimpleProcess;
+
+    START;
+        NEXTSTATE Waiting;
+
+    STATE Waiting;
+        INPUT Signal1;
+            TASK 'Process Signal1';
+            OUTPUT Ack TO SENDER;
+            NEXTSTATE Waiting;
+
+        INPUT Signal2;
+            TASK 'Process Signal2';
+            NEXTSTATE Done;
+
+    STATE Done;
+        STOP;
+
+ENDPROCESS SimpleProcess;
+
+ENDBLOCK SimpleBlock;
+
+ENDSYSTEM SimpleSystem;

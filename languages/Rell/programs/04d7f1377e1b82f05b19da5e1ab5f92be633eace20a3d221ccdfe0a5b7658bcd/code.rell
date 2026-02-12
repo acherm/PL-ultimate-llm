@@ -1,0 +1,28 @@
+entity user {
+    key name;
+    mutable points: integer = 0;
+}
+
+entity item {
+    name;
+    key id: integer;
+    owner: user;
+}
+
+operation create_user(name) {
+    create user(name);
+}
+
+operation add_item(user_name: text, item_name: text, item_id: integer) {
+    val u = user @ { .name == user_name };
+    create item(item_name, item_id, u);
+    u.points += 10;
+}
+
+query get_user_items(user_name: text) {
+    return item @* { .owner.name == user_name } ( $.name, $.id );
+}
+
+query get_top_users(limit: integer) {
+    return user @* {} ( @sort_desc .points, .name ) limit limit;
+}

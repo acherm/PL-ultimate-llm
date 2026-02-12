@@ -1,0 +1,21 @@
+module example/LightSwitch
+
+sig Light {
+  var on: set Light
+}
+
+pred flip[l: Light] {
+  l in on => l not in on'
+  l not in on => l in on'
+}
+
+pred init {
+  no on
+}
+
+fact traces {
+  init
+  always some l: Light | flip[l]
+}
+
+run {} for 3 Light, 5 steps

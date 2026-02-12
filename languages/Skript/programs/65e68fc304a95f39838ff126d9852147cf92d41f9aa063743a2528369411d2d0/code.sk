@@ -1,0 +1,18 @@
+on join:
+    if player has permission "vip":
+        broadcast "&a%player% &ejoined the server!"
+        give player diamond named "&bWelcome Gift"
+    else:
+        broadcast "&7%player% joined the server"
+    send "&eWelcome to our server!" to player
+
+command /heal:
+    permission: admin.heal
+    trigger:
+        heal the player
+        send "&aYou have been healed!" to player
+
+every 5 minutes:
+    loop all players:
+        send "&6Auto-save in progress..." to loop-player
+    execute console command "save-all"

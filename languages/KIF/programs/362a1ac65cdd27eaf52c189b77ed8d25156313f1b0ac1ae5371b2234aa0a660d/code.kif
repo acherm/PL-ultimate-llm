@@ -1,0 +1,33 @@
+; Family relations knowledge base in KIF
+
+; Define gender relations
+(male Fred)
+(male John)
+(male Bob)
+(female Martha)
+(female Joan)
+(female Betty)
+(female Alice)
+
+; Define parent relationships
+(parent Fred Martha)
+(parent Fred John)
+(parent Joan Bob)
+(parent Alice Bob)
+
+; Define the father relation
+(defrelation father (?x ?y)
+  (and (male ?x)
+       (parent ?x ?y)))
+
+; Define the mother relation
+(defrelation mother (?x ?y)
+  (and (female ?x)
+       (parent ?x ?y)))
+
+; Define siblings
+(defrelation sibling (?x ?y)
+  (exists (?z)
+    (and (parent ?z ?x)
+         (parent ?z ?y)
+         (not (= ?x ?y)))))

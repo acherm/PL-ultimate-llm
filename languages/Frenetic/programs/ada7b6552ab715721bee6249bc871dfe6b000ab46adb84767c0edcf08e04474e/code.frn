@@ -1,0 +1,6 @@
+(* Simple Frenetic policy that forwards traffic *)
+let simple_switch =
+  filter (ethDst = 0x1) >> fwd(1) |
+  filter (ethDst = 0x2) >> fwd(2) |
+  filter (ethDst = 0x3) >> fwd(3) |
+  drop

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @title %></title>
+</head>
+<body>
+  <h1>Welcome to <%= @site_name %></h1>
+
+  <% if @user %>
+    <p>Hello, <%= @user.name %>!</p>
+  <% else %>
+    <p>Please log in.</p>
+  <% end %>
+
+  <h2>Products</h2>
+  <ul>
+  <% @products.each do |product| %>
+    <li>
+      <strong><%= product.name %></strong>
+      - $<%= product.price %>
+      <% if product.on_sale? %>
+        <span class="sale">ON SALE!</span>
+      <% end %>
+    </li>
+  <% end %>
+  </ul>
+
+  <footer>
+    <p>Generated at <%= Time.now.strftime("%Y-%m-%d %H:%M:%S") %></p>
+  </footer>
+</body>
+</html>

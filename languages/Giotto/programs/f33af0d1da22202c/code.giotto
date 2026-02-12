@@ -1,0 +1,21 @@
+sensor interface input_sensor() : int;
+actuator interface output_actuator(int);
+
+task controller(int sensor_value) output (int control_value)
+{
+    control_value := sensor_value * 2;
+}
+
+driver sensor_driver(sensor_value)
+    output (sensor_value := input_sensor());
+
+driver actuator_driver(control_value)
+    output (output_actuator(control_value));
+
+mode normal(int frequency) period 1000 {
+    taskfreq 1 do controller(sensor_value, control_value);
+    driverfreq 1 do sensor_driver(sensor_value);
+    driverfreq 1 do actuator_driver(control_value);
+}
+
+start normal(1);

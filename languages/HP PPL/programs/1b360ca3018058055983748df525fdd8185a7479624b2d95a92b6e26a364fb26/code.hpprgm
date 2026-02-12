@@ -1,0 +1,28 @@
+EXPORT Quadratic()
+BEGIN
+  LOCAL a, b, c;
+  LOCAL delta, x1, x2;
+
+  INPUT({a, b, c}, "Quadratic Equation",
+    {"a=", "b=", "c="},
+    {"Enter coefficient a", "Enter coefficient b", "Enter coefficient c"});
+
+  delta := b^2 - 4*a*c;
+
+  IF delta < 0 THEN
+    MSGBOX("No real solutions");
+    RETURN 0;
+  END;
+
+  IF delta == 0 THEN
+    x1 := -b / (2*a);
+    MSGBOX("One solution: x = " + x1);
+    RETURN x1;
+  END;
+
+  x1 := (-b + SQRT(delta)) / (2*a);
+  x2 := (-b - SQRT(delta)) / (2*a);
+
+  MSGBOX("Two solutions: x1 = " + x1 + ", x2 = " + x2);
+  RETURN {x1, x2};
+END;

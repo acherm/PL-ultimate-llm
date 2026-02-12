@@ -1,0 +1,33 @@
+;; Natural number addition in Pie
+;; From "The Little Typer" book
+
+(claim step-+
+  (-> Nat
+    Nat))
+
+(define step-+
+  (λ (n)
+    (add1 n)))
+
+(claim +
+  (-> Nat Nat
+    Nat))
+
+(define +
+  (λ (n m)
+    (iter-Nat n
+      m
+      step-+)))
+
+;; Example: 2 + 3 = 5
+(claim two Nat)
+(define two
+  (add1 (add1 zero)))
+
+(claim three Nat)
+(define three
+  (add1 (add1 (add1 zero))))
+
+(claim five Nat)
+(define five
+  (+ two three))

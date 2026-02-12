@@ -1,0 +1,40 @@
+// Producer-Consumer example in JR
+public class ProducerConsumer {
+    static op void put(int item);
+    static op int get();
+
+    static int[] buffer = new int[10];
+    static int head = 0, tail = 0, count = 0;
+
+    process Producer {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println("Producer producing: " + i);
+            send put(i);
+        }
+    }
+
+    process Consumer {
+        for (int i = 1; i <= 5; i++) {
+            int item;
+            receive get() returns item;
+            System.out.println("Consumer consumed: " + item);
+        }
+    }
+
+    process Manager {
+        while (true) {
+            int item;
+            receive put(item) {
+                buffer[tail] = item;
+                tail = (tail + 1) % 10;
+                count++;
+            }
+            [] count > 0; receive get() returns item {
+                item = buffer[head];
+                head = (head + 1) % 10;
+                count--;
+                return item;
+            }
+        }
+    }
+}

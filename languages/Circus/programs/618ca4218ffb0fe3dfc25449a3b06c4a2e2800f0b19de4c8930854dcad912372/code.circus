@@ -1,0 +1,13 @@
+channel input, output : Z
+
+process Counter = begin
+  state CounterState = [count : Z]
+
+  Initial = [CounterState' | count' = 0]
+
+  Increment = [ΔCounterState | count' = count + 1]
+
+  GetCount = [ΞCounterState; out! : Z | out! = count]
+
+  • Initial ; μ X • (input?x → Increment ; X ⊓ output!count → GetCount ; X)
+end

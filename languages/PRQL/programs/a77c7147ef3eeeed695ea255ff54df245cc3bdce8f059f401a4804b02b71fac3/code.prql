@@ -1,0 +1,18 @@
+from employees
+filter country == "USA"
+derive {
+  gross_salary = salary + payroll_tax,
+  gross_cost = gross_salary + benefits_cost
+}
+filter gross_cost > 0
+group {title, country} (
+  aggregate {
+    average gross_salary,
+    sum salary,
+    average salary,
+    count salary,
+    sum_gross_cost = sum gross_cost,
+  }
+)
+sort {sum_gross_cost, -country}
+take 20

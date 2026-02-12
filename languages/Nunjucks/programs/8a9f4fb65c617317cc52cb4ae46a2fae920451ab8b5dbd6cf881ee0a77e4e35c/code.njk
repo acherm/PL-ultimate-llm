@@ -1,0 +1,26 @@
+{% set items = ['apple', 'banana', 'orange'] %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ heading }}</h1>
+
+    {% if items.length > 0 %}
+        <ul>
+        {% for item in items %}
+            <li>{{ loop.index }}: {{ item | capitalize }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No items found.</p>
+    {% endif %}
+
+    {% macro button(text, type="button") %}
+        <button type="{{ type }}">{{ text }}</button>
+    {% endmacro %}
+
+    {{ button("Submit", "submit") }}
+</body>
+</html>

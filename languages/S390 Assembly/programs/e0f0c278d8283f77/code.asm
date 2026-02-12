@@ -1,0 +1,14 @@
+         PRINT NOGEN
+HELLO    CSECT
+         STM   14,12,12(13)
+         BALR  12,0
+         USING *,12
+         ST    13,SAVE+4
+         LA    13,SAVE
+         WTO   'HELLO, WORLD!',ROUTCDE=11
+         L     13,SAVE+4
+         LM    14,12,12(13)
+         SR    15,15
+         BR    14
+SAVE     DS    18F
+         END   HELLO

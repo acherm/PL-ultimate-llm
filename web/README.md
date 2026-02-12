@@ -40,4 +40,5 @@ Then open `http://localhost:8000`.
 - The generator is **dependency-free** (standard library only).
 - It avoids rendering all languages at once: the Browse view requires picking a letter or searching.
 - Slugs include a short hash to avoid collisions (`C`, `C#`, `C--`, …).
+- “Indexed languages” means “folders with a readable `meta.json` somewhere under `languages/`”. Some languages are nested (e.g., `languages/PL/0/meta.json`), and some top-level folders may be group folders or missing metadata.
 - Agent/LLM statistics come from git commit trailers on `turn: add …` commits (e.g., `Model:`, `Agent:`, `Temperature:`, `WebSearch:`). Missing trailers show up as `Unknown`.

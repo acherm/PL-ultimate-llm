@@ -185,7 +185,7 @@
         if (!langs.length) return;
         const pick = langs[Math.floor(Math.random() * langs.length)];
         const root = window.__SITE_ROOT__ || "./";
-        window.location.href = `${root}l/${pick.slug}/`;
+        window.location.href = `${root}l/${pick.slug}/index.html`;
       } catch {
         // noop
       }

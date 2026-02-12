@@ -459,16 +459,17 @@ def render_home_page(
     )[:12]
 
     recent_items = "\n".join(
-        f'<li><a href="{rel}l/{lang.slug}/">{safe(lang.name)}</a><span class="muted">{safe(lang.added_at)}</span></li>'
+        f'<li><a href="{rel}l/{lang.slug}/index.html">{safe(lang.name)}</a><span class="muted">{safe(lang.added_at)}</span></li>'
         for lang in newest
     )
 
     stats_html = f"""
     <div class="stats">
-      <div class="stat"><div class="num">{len(languages)}</div><div class="muted">languages</div></div>
+      <div class="stat"><div class="num">{len(languages)}</div><div class="muted">indexed languages</div></div>
       <div class="stat"><div class="num">{programs_total}</div><div class="muted">programs</div></div>
       <div class="stat"><div class="num">{generated_at.split('T')[0]}</div><div class="muted">last build (UTC)</div></div>
     </div>
+    <p class="muted" style="margin:12px 0 0;">Indexed languages are derived from <code>languages/**/meta.json</code>. See <a href="{rel}stats/index.html">Stats</a> for details.</p>
     """
 
     body = f"""
@@ -515,10 +516,11 @@ def render_browse_page(
 ) -> None:
     page = dist_root / "browse" / "index.html"
     rel = rel_prefix(page, dist_root)
+    lang_total = f"{len(languages):,}"
     body = f"""
     <section class="panel section">
       <h1 style="margin:0 0 8px;">Browse</h1>
-      <p class="muted" style="margin:0 0 14px;">Pick a letter or search. Results are paged (no 800+ item dump).</p>
+      <p class="muted" style="margin:0 0 14px;">Pick a letter or search. Results are paged (no {lang_total}-item dump).</p>
       <div class="search-box" style="margin-bottom: 14px;">
         <input id="browseSearch" type="search" placeholder="Search languages or aliases…" autocomplete="off" />
       </div>
@@ -596,6 +598,69 @@ def render_stats_page(
 ) -> None:
     page = dist_root / "stats" / "index.html"
     rel = rel_prefix(page, dist_root)
+
+    nested_langs = sorted({l.folder_rel for l in languages if "/" in (l.folder_rel or "")}, key=str.lower)
+    nested_count = len(nested_langs)
+    top_level_indexed_count = max(0, len(languages) - nested_count)
+
+    top_level_dirs = sorted([p.name for p in LANGUAGES_DIR.iterdir() if p.is_dir()], key=str.lower)
+    top_level_dir_count = len(top_level_dirs)
+    top_level_dirs_missing_meta = sorted(
+        [d for d in top_level_dirs if not (LANGUAGES_DIR / d / "meta.json").exists()],
+        key=str.lower,
+    )
+
+    orphan_program_manifests: list[tuple[str, int]] = []
+    orphan_program_missing_manifests: list[tuple[str, int]] = []
+    for d in top_level_dirs_missing_meta:
+        programs_dir = LANGUAGES_DIR / d / "programs"
+        if not programs_dir.is_dir():
+            continue
+        with_manifest = 0
+        missing_manifest = 0
+        for prog_dir in [p for p in programs_dir.iterdir() if p.is_dir()]:
+            if (prog_dir / "manifest.json").exists():
+                with_manifest += 1
+            else:
+                missing_manifest += 1
+        if with_manifest:
+            orphan_program_manifests.append((d, with_manifest))
+        if missing_manifest:
+            orphan_program_missing_manifests.append((d, missing_manifest))
+
+    pl_list_path = ROOT / "data" / "pl_list.txt"
+    pl_list_count: int | None = None
+    pl_list_missing_meta: list[str] = []
+    meta_missing_pl_list: list[str] = []
+    if pl_list_path.exists():
+        pl_names = [ln.strip() for ln in pl_list_path.read_text(encoding="utf-8", errors="replace").splitlines() if ln.strip()]
+        pl_list_count = len(pl_names)
+        pl_set = set(pl_names)
+        meta_set = set(l.name for l in languages)
+        pl_list_missing_meta = sorted(pl_set - meta_set, key=str.lower)
+        meta_missing_pl_list = sorted(meta_set - pl_set, key=str.lower)
+
+    catalog_path = ROOT / "data" / "catalog.csv"
+    catalog_rows: int | None = None
+    catalog_unique_languages: int | None = None
+    if catalog_path.exists():
+        try:
+            import csv
+
+            langs_in_catalog = set()
+            rows = 0
+            with catalog_path.open(newline="", encoding="utf-8", errors="replace") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    rows += 1
+                    lang = (row.get("language") or "").strip()
+                    if lang:
+                        langs_in_catalog.add(lang)
+            catalog_rows = rows
+            catalog_unique_languages = len(langs_in_catalog)
+        except Exception:
+            catalog_rows = None
+            catalog_unique_languages = None
 
     max_letter = max(counts.values()) if counts else 1
     letter_rows = "\n".join(
@@ -702,10 +767,66 @@ def render_stats_page(
       <p class="muted" style="margin:0 0 14px;">Quick aggregates computed from `languages/**/meta.json` and program manifests.</p>
 
       <div class="stats">
-        <div class="stat"><div class="num">{len(languages)}</div><div class="muted">languages</div></div>
+        <div class="stat"><div class="num">{len(languages)}</div><div class="muted">indexed languages</div></div>
         <div class="stat"><div class="num">{programs_total}</div><div class="muted">programs</div></div>
         <div class="stat"><div class="num">{(programs_total / max(1, len(languages))):.2f}</div><div class="muted">avg programs / language</div></div>
       </div>
+    </section>
+
+    <section class="panel section" style="margin-top: 18px;">
+      <h2>Counts &amp; sources</h2>
+      <p class="muted" style="margin:0 0 12px;">The website indexes languages by scanning <code>languages/**/meta.json</code>. Other files count different things.</p>
+      <table class="audit-table">
+        <thead>
+          <tr><th>Artifact</th><th>Count</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>languages/**/meta.json</code></td>
+            <td>{len(languages)}</td>
+            <td>Indexed languages (this website’s primary source of truth)</td>
+          </tr>
+          <tr>
+            <td>Top-level <code>languages/</code> dirs</td>
+            <td>{top_level_dir_count}</td>
+            <td>Folder names at depth 1 (may include “group” folders)</td>
+          </tr>
+          <tr>
+            <td>Nested language folders</td>
+            <td>{nested_count}</td>
+            <td>Languages stored below depth 1 (e.g., <code>languages/PL/0</code>)</td>
+          </tr>
+          <tr>
+            <td>Top-level dirs missing <code>meta.json</code></td>
+            <td>{len(top_level_dirs_missing_meta)}</td>
+            <td>Not indexed at depth 1 (may be incomplete metadata, or group folders)</td>
+          </tr>
+          <tr>
+            <td><code>data/pl_list.txt</code></td>
+            <td>{safe(str(pl_list_count) if pl_list_count is not None else "—")}</td>
+            <td>Upstream name list (not necessarily ingested into <code>languages/</code>)</td>
+          </tr>
+          <tr>
+            <td><code>data/catalog.csv</code></td>
+            <td>{safe(str(catalog_rows) if catalog_rows is not None else "—")}</td>
+            <td>Program rows (not a language count)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <details style="margin-top: 12px;">
+        <summary>Show details</summary>
+        <div class="muted" style="margin-top: 10px; display:grid; gap:8px;">
+          <div><strong>Top-level indexed languages:</strong> {top_level_indexed_count}</div>
+          <div><strong>Nested indexed languages:</strong> {nested_count}{f" · {', '.join(f'<code>{safe(x)}</code>' for x in nested_langs)}" if nested_langs else ""}</div>
+          <div><strong>Top-level dirs missing <code>meta.json</code>:</strong> {len(top_level_dirs_missing_meta)}{f" · {', '.join(f'<code>{safe(x)}</code>' for x in top_level_dirs_missing_meta)}" if top_level_dirs_missing_meta else ""}</div>
+          <div><strong>Dirs with program manifests but no <code>meta.json</code>:</strong> {', '.join(f'<code>{safe(n)}</code> ({c})' for n, c in orphan_program_manifests) if orphan_program_manifests else "—"}</div>
+          <div><strong>Dirs with program folders missing <code>manifest.json</code>:</strong> {', '.join(f'<code>{safe(n)}</code> ({c})' for n, c in orphan_program_missing_manifests) if orphan_program_missing_manifests else "—"}</div>
+          <div><strong>Names in <code>pl_list.txt</code> but not indexed:</strong> {len(pl_list_missing_meta) if pl_list_count is not None else "—"}{f" · {', '.join(f'<code>{safe(x)}</code>' for x in pl_list_missing_meta)}" if pl_list_missing_meta else ""}</div>
+          <div><strong>Names indexed but not in <code>pl_list.txt</code>:</strong> {len(meta_missing_pl_list) if pl_list_count is not None else "—"}{f" · {', '.join(f'<code>{safe(x)}</code>' for x in meta_missing_pl_list)}" if meta_missing_pl_list else ""}</div>
+          <div><strong>Unique languages in <code>catalog.csv</code>:</strong> {safe(str(catalog_unique_languages) if catalog_unique_languages is not None else "—")}</div>
+        </div>
+      </details>
     </section>
 
     {llm_section}
@@ -809,7 +930,7 @@ def render_language_pages(
                 other = lang_by_name.get(other_name)
                 if other:
                     related_links.append(
-                        f"<span class='pill'><a href='{rel}l/{other.slug}/'>{safe(other.name)}</a> <span class='muted'>({item['score']:.2f})</span></span>"
+                        f"<span class='pill'><a href='{rel}l/{other.slug}/index.html'>{safe(other.name)}</a> <span class='muted'>({item['score']:.2f})</span></span>"
                     )
             if related_links:
                 related_html = f"""
@@ -819,7 +940,7 @@ def render_language_pages(
                 </section>
                 """
 
-        lang_page_path = f"l/{lang.slug}/"
+        lang_page_path = f"l/{lang.slug}/index.html"
         report_lang_url = ""
         issues_lang_url = ""
         if github_owner_repo:
@@ -932,9 +1053,9 @@ def render_language_pages(
                 )
 
         prev_lang, next_lang = slug_to_prev_next.get(lang.slug, (None, None))
-        prev_href = f"{rel}l/{prev_lang.slug}/" if prev_lang else f"{rel}index.html"
+        prev_href = f"{rel}l/{prev_lang.slug}/index.html" if prev_lang else f"{rel}index.html"
         prev_label = f"← {safe(prev_lang.name)}" if prev_lang else "← Home"
-        next_href = f"{rel}l/{next_lang.slug}/" if next_lang else f"{rel}browse/index.html"
+        next_href = f"{rel}l/{next_lang.slug}/index.html" if next_lang else f"{rel}browse/index.html"
         next_label = f"{safe(next_lang.name)} →" if next_lang else "Browse →"
         pager = f"""
         <div class="pager">

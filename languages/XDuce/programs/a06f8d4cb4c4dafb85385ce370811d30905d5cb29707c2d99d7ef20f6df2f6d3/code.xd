@@ -1,0 +1,38 @@
+(* XDuce program: Address book transformation *)
+
+type Name = <name>[String]</name>
+type Email = <email>[String]</email>
+type Person = <person>[Name, Email]</person>
+type AddressBook = <addressbook>[Person*]</addressbook>
+
+fun transform(p : Person) : Person =
+  match p with
+  | <person>[<name>[n]</name>, <email>[e]</email>]</person> ->
+      <person>
+        <name>[uppercase(n)]</name>
+        <email>[e]</email>
+      </person>
+
+fun uppercase(s : String) : String =
+  (* Uppercase transformation would be implemented here *)
+  s
+
+fun processBook(ab : AddressBook) : AddressBook =
+  match ab with
+  | <addressbook>[ps]</addressbook> ->
+      <addressbook>[map(transform, ps)]</addressbook>
+
+(* Example usage *)
+let input : AddressBook =
+  <addressbook>
+    <person>
+      <name>John Doe</name>
+      <email>john@example.com</email>
+    </person>
+    <person>
+      <name>Jane Smith</name>
+      <email>jane@example.com</email>
+    </person>
+  </addressbook>
+
+let output = processBook(input)

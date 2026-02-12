@@ -1,0 +1,20 @@
+class Packet {
+  rand bit[7:0] data;
+  rand bit[3:0] addr;
+
+  constraint data_range {
+    data >= 8'h10;
+    data <= 8'hF0;
+  }
+}
+
+program test {
+  Packet pkt;
+
+  pkt = new();
+
+  repeat (5) {
+    pkt.randomize();
+    printf("Packet: addr=%h, data=%h\n", pkt.addr, pkt.data);
+  }
+}

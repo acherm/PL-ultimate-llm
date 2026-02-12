@@ -1,0 +1,22 @@
+start_at = forest
+: theme
+   theme = modern
+
+: location forest
+   description = You are in a dark forest. There is a path to the north.
+   exits = north cabin
+
+: location cabin
+   description = You are in a cozy cabin. There is a table here.
+   exits = south forest
+
+: object table
+   location = cabin
+   description = A wooden table.
+   examine = The table is sturdy and well-made.
+
+: on_command
+   : match "look ; examine table"
+      : if (is_present "table") {
+         : print "The table is sturdy and well-made."
+      }

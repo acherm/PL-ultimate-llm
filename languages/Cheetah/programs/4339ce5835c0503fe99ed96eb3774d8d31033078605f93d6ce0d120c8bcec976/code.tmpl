@@ -1,0 +1,38 @@
+##
+## Shopping Cart Template
+## Generates HTML for a shopping cart
+#set $total = 0
+<html>
+<head>
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <h1>Your Shopping Cart</h1>
+    #if $items
+    <table border="1">
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        #for $item in $items
+        <tr>
+            <td>$item.name</td>
+            <td>$$item.price</td>
+            <td>$item.quantity</td>
+            #set $subtotal = $item.price * $item.quantity
+            #set $total = $total + $subtotal
+            <td>$$subtotal</td>
+        </tr>
+        #end for
+        <tr>
+            <td colspan="3"><b>Total:</b></td>
+            <td><b>$$total</b></td>
+        </tr>
+    </table>
+    #else
+    <p>Your cart is empty.</p>
+    #end if
+</body>
+</html>

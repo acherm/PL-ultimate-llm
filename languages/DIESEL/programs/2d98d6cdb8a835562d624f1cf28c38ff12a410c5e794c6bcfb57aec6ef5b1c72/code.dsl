@@ -1,0 +1,5 @@
+$(upper,$(getvar,dwgname))
+Date: $(edtime,$(getvar,date),DD/MM/YYYY)
+Time: $(edtime,$(getvar,date),HH:MM:SS)
+$(if,$(eq,$(getvar,gridmode),1),GRID: ON,GRID: OFF)
+Total objects: $(getvar,entities)

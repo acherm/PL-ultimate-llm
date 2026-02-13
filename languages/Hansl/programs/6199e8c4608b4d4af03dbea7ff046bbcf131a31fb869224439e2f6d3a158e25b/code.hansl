@@ -1,0 +1,15 @@
+# Simple OLS regression example
+# Compute means
+open data4-1
+list xlist = 2 3 4
+ols 1 xlist
+
+# Display results
+pvalue $test 0.05
+if $test < 0.05
+    print "Model is significant at 5% level"
+endif
+
+# Compute residuals
+series resid = $uhat
+print resid --byobs

@@ -1,0 +1,26 @@
+(* Factorial function with dependent types in DML *)
+(* This demonstrates static verification of array bounds *)
+
+datasort nat = ZERO | SUCC of nat
+
+(* Dependent type for natural numbers *)
+dataprop NAT (int) =
+  | NATzero (0)
+  | {n:nat} NATsucc (n+1) of NAT(n)
+
+(* Factorial function with dependent types *)
+fun {n:nat} factorial (x: int n): int =
+  if x = 0 then 1
+  else x * factorial (x - 1)
+
+(* Safe array access with dependent types *)
+datasort 'a array
+
+extern fun {a:type} {n:nat}
+  array_make (n: int n, init: a): 'a array n
+
+extern fun {a:type} {n:nat} {i:nat | i < n}
+  array_get (arr: 'a array n, i: int i): a
+
+(* Example usage *)
+val result = factorial 5

@@ -1,0 +1,35 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    var message = "Welcome to Razor";
+    var items = new List<string> { "Apple", "Banana", "Cherry" };
+}
+
+<h1>@message</h1>
+
+<div class="container">
+    <p>Current time: @DateTime.Now.ToString("HH:mm:ss")</p>
+
+    @if (Model.IsLoggedIn)
+    {
+        <p>Hello, @Model.Username!</p>
+    }
+    else
+    {
+        <p>Please <a href="/login">log in</a>.</p>
+    }
+
+    <h2>Fruit List</h2>
+    <ul>
+        @foreach (var item in items)
+        {
+            <li>@item</li>
+        }
+    </ul>
+
+    @{
+        var total = items.Count;
+    }
+    <p>Total items: @total</p>
+</div>

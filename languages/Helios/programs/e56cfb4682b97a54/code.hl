@@ -1,0 +1,13 @@
+spending vesting
+
+struct Datum {
+    beneficiary: PubKeyHash
+    deadline: Time
+}
+
+func main(datum: Datum, _, ctx: ScriptContext) -> Bool {
+    tx: Tx = ctx.tx;
+
+    tx.time_range.start >= datum.deadline &&
+    tx.is_signed_by(datum.beneficiary)
+}

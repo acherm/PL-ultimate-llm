@@ -1,0 +1,13 @@
+inst obligation+ PrinterPolicy {
+    on print_request;
+    subject /users/alice;
+    target /printers/hp_laser;
+    do allow();
+}
+
+inst obligation- CleanupPolicy {
+    on disk_full;
+    subject /system/admin;
+    target /filesystem/tmp;
+    do cleanup_temp_files();
+}

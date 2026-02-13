@@ -1,0 +1,12 @@
+fun lpf(x, fc) {
+    mem y;
+    val dt = 1.0 / 44100.0;
+    val rc = 1.0 / (2.0 * 3.14159 * fc);
+    val alpha = dt / (rc + dt);
+    y = y + alpha * (x - y);
+    return y;
+}
+
+and process(input) {
+    return lpf(input, 1000.0);
+}

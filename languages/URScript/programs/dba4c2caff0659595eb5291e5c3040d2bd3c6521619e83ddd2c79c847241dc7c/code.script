@@ -1,0 +1,33 @@
+def robot_pick_and_place():
+  # Move to home position
+  movej([0, -1.57, 1.57, -1.57, -1.57, 0], a=1.4, v=1.05)
+
+  # Move to pick position
+  movej([0.5, -1.2, 1.8, -2.0, -1.57, 0], a=1.4, v=1.05)
+
+  # Approach object
+  movel(p[0.3, -0.4, 0.1, 0, 3.14, 0], a=1.2, v=0.25)
+
+  # Close gripper (simulated with wait)
+  set_digital_out(0, True)
+  sleep(0.5)
+
+  # Lift object
+  movel(p[0.3, -0.4, 0.3, 0, 3.14, 0], a=1.2, v=0.25)
+
+  # Move to place position
+  movej([0.5, -1.0, 1.5, -2.0, -1.57, 0], a=1.4, v=1.05)
+
+  # Place object
+  movel(p[0.5, 0.2, 0.1, 0, 3.14, 0], a=1.2, v=0.25)
+
+  # Open gripper
+  set_digital_out(0, False)
+  sleep(0.5)
+
+  # Return to home
+  movej([0, -1.57, 1.57, -1.57, -1.57, 0], a=1.4, v=1.05)
+end
+
+# Execute the program
+robot_pick_and_place()

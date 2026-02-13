@@ -1,0 +1,24 @@
+-- Natural numbers in Yatima
+data Nat : Type where
+  Zero : Nat
+  Succ : Nat -> Nat
+
+-- Addition of natural numbers
+add : Nat -> Nat -> Nat
+add Zero     n = n
+add (Succ m) n = Succ (add m n)
+
+-- Multiplication of natural numbers
+mul : Nat -> Nat -> Nat
+mul Zero     n = Zero
+mul (Succ m) n = add n (mul m n)
+
+-- Example: 2 + 3
+two : Nat
+two = Succ (Succ Zero)
+
+three : Nat
+three = Succ (Succ (Succ Zero))
+
+five : Nat
+five = add two three

@@ -1,0 +1,33 @@
+// Matrix multiplication in Sequoia
+value task matmul(value float[n,k] A, value float[k,m] B) : float[n,m] {
+    allocate task T[n,m];
+    
+    mapreduce(0, n, 1, i) {
+        mapreduce(0, m, 1, j) {
+            float sum = 0.0;
+            map(0, k, 1, p) {
+                sum += A[i,p] * B[p,j];
+            }
+            T[i,j] = sum;
+        }
+    }
+    
+    return T;
+}
+
+// Main execution
+value task main() {
+    value float[4,4] A = {{1.0, 2.0, 3.0, 4.0},
+                           {5.0, 6.0, 7.0, 8.0},
+                           {9.0, 10.0, 11.0, 12.0},
+                           {13.0, 14.0, 15.0, 16.0}};
+    
+    value float[4,4] B = {{1.0, 0.0, 0.0, 0.0},
+                           {0.0, 1.0, 0.0, 0.0},
+                           {0.0, 0.0, 1.0, 0.0},
+                           {0.0, 0.0, 0.0, 1.0}};
+    
+    value float[4,4] C = matmul(A, B);
+    
+    return;
+}

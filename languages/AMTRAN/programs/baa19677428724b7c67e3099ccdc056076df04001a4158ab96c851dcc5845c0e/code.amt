@@ -1,0 +1,13 @@
+C COMPUTE TRAJECTORY PARAMETERS
+      DIMENSION X(100), Y(100), V(100)
+      READ N
+      DO 10 I = 1, N
+         READ T, X0, Y0, VX, VY, G
+         X(I) = X0 + VX * T
+         Y(I) = Y0 + VY * T - 0.5 * G * T ** 2
+         V(I) = SQRT(VX ** 2 + (VY - G * T) ** 2)
+   10 CONTINUE
+      DO 20 I = 1, N
+         PRINT X(I), Y(I), V(I)
+   20 CONTINUE
+      END

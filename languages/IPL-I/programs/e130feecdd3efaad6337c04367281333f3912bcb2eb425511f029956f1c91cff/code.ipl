@@ -1,0 +1,20 @@
+; IPL-I List Reversal Program
+; This program reverses a list
+
+START:
+  H1 = L0         ; Initialize H1 to input list
+  H2 = 0          ; Initialize H2 to empty list (accumulator)
+
+LOOP:
+  Q0 = H1         ; Test if H1 is empty
+  J0 Q0, END      ; If empty, jump to END
+  
+  S1 = H1*        ; Get first element of H1
+  H1 = H1'        ; Set H1 to rest of list
+  
+  H2 = S1:H2      ; Cons S1 onto H2
+  J0 0, LOOP      ; Jump back to LOOP
+
+END:
+  OUT H2          ; Output reversed list
+  HALT

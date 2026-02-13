@@ -1,0 +1,17 @@
+(* Simple list operations in Makam *)
+
+append : list A -> list A -> list A -> prop.
+append [] L L.
+append (HD :: TL) L (HD :: Result) :- append TL L Result.
+
+reverse : list A -> list A -> prop.
+reverse [] [].
+reverse (HD :: TL) Result :-
+  reverse TL TLReversed,
+  append TLReversed [HD] Result.
+
+length : list A -> int -> prop.
+length [] 0.
+length (HD :: TL) N :-
+  length TL N',
+  plus N' 1 N.

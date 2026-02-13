@@ -1,0 +1,38 @@
+// Basic audio passthrough operator
+.MODULE $M.passthrough;
+   .CODESEGMENT PASSTHROUGH_PM;
+   .DATASEGMENT DM;
+
+// Data structure
+.VAR/DM1 input_buffer[256];
+.VAR/DM2 output_buffer[256];
+
+// Process function
+$passthrough.process:
+   push rLink;
+
+   // Get input buffer pointer
+   r0 = M[$passthrough.input_buffer];
+   I0 = r0;
+   L0 = 256;
+
+   // Get output buffer pointer
+   r1 = M[$passthrough.output_buffer];
+   I1 = r1;
+   L1 = 256;
+
+   // Copy samples
+   r10 = 256;
+   do copy_loop;
+      r2 = M[I0,1];
+      M[I1,1] = r2;
+   copy_loop:
+
+   // Clear length registers
+   L0 = 0;
+   L1 = 0;
+
+   pop rLink;
+   rts;
+
+.ENDMODULE;

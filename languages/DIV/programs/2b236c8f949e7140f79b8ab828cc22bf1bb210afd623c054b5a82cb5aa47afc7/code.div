@@ -1,0 +1,40 @@
+PROGRAM BouncingBall;
+
+CONST
+    SCREEN_WIDTH = 320;
+    SCREEN_HEIGHT = 200;
+
+GLOBAL
+    ball_x = 160;
+    ball_y = 100;
+    ball_vx = 2;
+    ball_vy = 2;
+    ball_radius = 5;
+
+BEGIN
+    set_mode(m320x200);
+    set_fps(60, 0);
+
+    LOOP
+        // Clear screen
+        clear_screen();
+
+        // Update ball position
+        ball_x += ball_vx;
+        ball_y += ball_vy;
+
+        // Bounce off walls
+        IF (ball_x <= ball_radius OR ball_x >= SCREEN_WIDTH - ball_radius)
+            ball_vx = -ball_vx;
+        END
+
+        IF (ball_y <= ball_radius OR ball_y >= SCREEN_HEIGHT - ball_radius)
+            ball_vy = -ball_vy;
+        END
+
+        // Draw ball
+        draw_fcircle(ball_x, ball_y, ball_radius, 15);
+
+        FRAME;
+    END
+END

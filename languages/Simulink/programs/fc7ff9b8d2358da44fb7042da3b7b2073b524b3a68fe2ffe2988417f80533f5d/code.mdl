@@ -1,0 +1,46 @@
+Model {
+  Name			  "simple_gain"
+  Version		  7.0
+  System {
+    Name		    "simple_gain"
+    Location		    [480, 85, 980, 386]
+    Open		    on
+    ModelBrowserVisibility  off
+    ModelBrowserWidth	    200
+    ScreenColor		    "white"
+    PaperOrientation	    "landscape"
+    PaperPositionMode	    "auto"
+    PaperType		    "usletter"
+    PaperUnits		    "inches"
+    Block {
+      BlockType		      Constant
+      Name		      "Constant"
+      Position		      [25, 100, 55, 130]
+      Value		      "1"
+    }
+    Block {
+      BlockType		      Gain
+      Name		      "Gain"
+      Position		      [100, 100, 130, 130]
+      Gain		      "2.5"
+    }
+    Block {
+      BlockType		      Scope
+      Name		      "Scope"
+      Ports		      [1]
+      Position		      [185, 99, 215, 131]
+    }
+    Line {
+      SrcBlock		      "Constant"
+      SrcPort		      1
+      DstBlock		      "Gain"
+      DstPort		      1
+    }
+    Line {
+      SrcBlock		      "Gain"
+      SrcPort		      1
+      DstBlock		      "Scope"
+      DstPort		      1
+    }
+  }
+}

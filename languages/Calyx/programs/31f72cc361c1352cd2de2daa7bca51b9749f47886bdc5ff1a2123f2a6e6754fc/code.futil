@@ -1,0 +1,19 @@
+component main() -> () {
+  cells {
+    @external mem = std_mem_d1(32, 1, 32);
+    add = std_add(32);
+  }
+  wires {
+    group write {
+      mem.addr0 = 32'd0;
+      mem.write_data = add.out;
+      mem.write_en = 1'd1;
+      add.left = 32'd1;
+      add.right = 32'd2;
+      write[done] = mem.done;
+    }
+  }
+  control {
+    write;
+  }
+}

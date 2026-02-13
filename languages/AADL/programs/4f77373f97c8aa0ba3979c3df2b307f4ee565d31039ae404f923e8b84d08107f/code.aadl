@@ -1,0 +1,28 @@
+package Simple_Example
+public
+  process Simple_Process
+    features
+      data_in: in data port;
+      data_out: out data port;
+  end Simple_Process;
+
+  process implementation Simple_Process.impl
+    subcomponents
+      worker_thread: thread Simple_Thread.impl;
+    connections
+      conn1: port data_in -> worker_thread.input;
+      conn2: port worker_thread.output -> data_out;
+  end Simple_Process.impl;
+
+  thread Simple_Thread
+    features
+      input: in data port;
+      output: out data port;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 100 ms;
+  end Simple_Thread;
+
+  thread implementation Simple_Thread.impl
+  end Simple_Thread.impl;
+end Simple_Example;

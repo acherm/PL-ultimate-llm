@@ -1,0 +1,20 @@
+// Simple asset ownership transfer in Obsidian
+contract Asset {
+    string name;
+
+    Asset@Owned(string n) {
+        name = n;
+    }
+
+    transaction transfer(Asset@Owned >> Asset@Unowned this) {
+        // Transfer ownership
+        return this;
+    }
+}
+
+contract Main {
+    transaction main() {
+        Asset@Owned asset = new Asset("MyAsset");
+        asset.transfer();
+    }
+}

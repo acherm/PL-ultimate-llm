@@ -1,0 +1,26 @@
+-- @path UML=/UML/UML.ecore
+-- @path Relational=/Relational/Relational.ecore
+module Class2Relational;
+create OUT : Relational from IN : UML;
+
+-- Class to Table transformation
+rule Class2Table {
+    from
+        c : UML!Class
+    to
+        t : Relational!Table (
+            name <- c.name,
+            col <- c.attributes->collect(e | thisModule.Attribute2Column(e))
+        )
+}
+
+-- Attribute to Column transformation
+lazy rule Attribute2Column {
+    from
+        a : UML!Attribute
+    to
+        c : Relational!Column (
+            name <- a.name,
+            type <- a.type.name
+        )
+}

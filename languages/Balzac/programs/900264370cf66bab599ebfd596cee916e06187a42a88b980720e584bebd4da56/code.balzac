@@ -1,0 +1,13 @@
+// Simple Balzac transaction
+transaction T {
+  input = _
+  output = 1 BTC: fun(x) . versig(k; x)
+}
+
+const k = key:cSthBXr8YQAexpKeh22LB9PdextVE1UJeahmyns5LzcmMDSy59L4
+
+// Redeem transaction
+transaction T1 {
+  input = T : sig(k)
+  output = 1 BTC: fun(x) . x == 42
+}

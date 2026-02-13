@@ -1,0 +1,26 @@
+-- Identity types and composition in Rzk
+#lang rzk-1
+
+-- Define identity type
+#define id
+  (A : U)
+  (x : A)
+  : A
+  := x
+
+-- Path composition
+#define comp
+  (A : U)
+  (x y z : A)
+  (p : x = y)
+  (q : y = z)
+  : x = z
+  := refl-htpy
+
+-- Symmetry of paths
+#define sym
+  (A : U)
+  (x y : A)
+  (p : x = y)
+  : y = x
+  := refl-htpy

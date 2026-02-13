@@ -1,0 +1,13 @@
+# Transitive closure using fixed-point iteration
+type edge = {src: nat, dst: nat}
+
+# Given a set of edges, compute the transitive closure
+fun trans_closure (edges: {edge}): {edge} =
+  fix path = edges ∪ (for (e1 in path) (e2 in path)
+                        when e1.dst = e2.src
+                        {src = e1.src, dst = e2.dst})
+  in path
+
+# Example: compute transitive closure of a simple graph
+let test_edges = {{src=1, dst=2}, {src=2, dst=3}, {src=3, dst=4}}
+let result = trans_closure test_edges

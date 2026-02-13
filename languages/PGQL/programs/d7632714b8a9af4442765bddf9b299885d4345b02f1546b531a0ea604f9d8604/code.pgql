@@ -1,0 +1,6 @@
+SELECT v.name, v.age, COUNT(e) AS num_friends
+FROM MATCH (v:Person)-[e:KNOWS]->(f:Person)
+WHERE v.age > 25
+GROUP BY v.name, v.age
+ORDER BY num_friends DESC
+LIMIT 10

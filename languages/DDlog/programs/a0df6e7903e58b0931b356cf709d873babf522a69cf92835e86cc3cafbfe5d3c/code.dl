@@ -1,0 +1,17 @@
+// Type aliases for network addresses
+typedef UUID = bit<128>
+typedef IP4 = bit<32>
+typedef NetMask = bit<32>
+
+// Input relations for hosts and subnets
+input relation Host(id: UUID, name: string, ip: IP4)
+input relation Subnet(id: UUID, prefix: IP4, mask: NetMask)
+
+// Output relation mapping hosts to subnets
+output relation HostInSubnet(host: UUID, subnet: UUID)
+
+// Rule: compute host-to-subnet mappings using bitwise filtering
+HostInSubnet(host_id, subnet_id) :-
+    Host(host_id, _, host_ip),
+    Subnet(subnet_id, subnet_prefix, subnet_mask),
+    ((host_ip & subnet_mask) == subnet_prefix).

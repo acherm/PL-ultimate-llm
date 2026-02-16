@@ -1,0 +1,9 @@
+type route(node, node, int).
+type edge(node, node, int).
+
+route(A, B, W) :- edge(A, B, W).
+route(A, C, W1 + W2) :- edge(A, B, W1), route(B, C, W2), W1 + W2 < 100.
+
+edge(@1, @2, 5).
+edge(@2, @3, 10).
+edge(@1, @3, 20).

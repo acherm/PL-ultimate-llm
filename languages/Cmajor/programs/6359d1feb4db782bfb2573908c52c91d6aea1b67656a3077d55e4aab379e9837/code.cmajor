@@ -1,0 +1,28 @@
+processor SineOscillator
+{
+    input event float frequencyIn;
+    output stream float audioOut;
+
+    event frequencyIn (float newFrequency)
+    {
+        frequency = newFrequency;
+    }
+
+    float frequency = 440.0f;
+    float phase = 0.0f;
+    float phaseIncrement;
+
+    void main()
+    {
+        let sampleRate = processor.frequency;
+
+        loop
+        {
+            phaseIncrement = float (frequency * twoPi / sampleRate);
+
+            audioOut <- sin (phase);
+            phase = addModulo2Pi (phase, phaseIncrement);
+            advance();
+        }
+    }
+}

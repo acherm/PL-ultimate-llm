@@ -1,0 +1,23 @@
+// Simple Moving Average Crossover System in AFL
+// This is a basic trading system that buys when a fast MA crosses above a slow MA
+
+// Define the moving average periods
+FastMA = 10;
+SlowMA = 30;
+
+// Calculate the moving averages
+FastMALine = MA( Close, FastMA );
+SlowMALine = MA( Close, SlowMA );
+
+// Generate buy and sell signals
+Buy = Cross( FastMALine, SlowMALine );
+Sell = Cross( SlowMALine, FastMALine );
+
+// Plot the price and moving averages
+Plot( Close, "Price", colorBlack, styleCandle );
+Plot( FastMALine, "Fast MA(" + FastMA + ")", colorRed, styleLine );
+Plot( SlowMALine, "Slow MA(" + SlowMA + ")", colorBlue, styleLine );
+
+// Plot buy/sell shapes
+PlotShapes( IIf( Buy, shapeUpArrow, shapeNone ), colorGreen );
+PlotShapes( IIf( Sell, shapeDownArrow, shapeNone ), colorRed );

@@ -1,0 +1,40 @@
+-- Simple AML robot program
+-- Pick and place operation
+
+PROGRAM PICKPLACE;
+
+-- Define positions
+VAR homepos, pickpos, placepos: POSITION;
+
+-- Initialize positions
+homepos := POSITION(0.0, 0.0, 100.0, 0.0, 0.0, 0.0);
+pickpos := POSITION(200.0, 100.0, 50.0, 0.0, 0.0, 90.0);
+placepos := POSITION(-200.0, 100.0, 50.0, 0.0, 0.0, -90.0);
+
+-- Main program logic
+BEGIN
+  -- Move to home position
+  MOVE homepos;
+
+  -- Open gripper
+  OPEN GRIPPER;
+
+  -- Move to pick position
+  MOVE pickpos;
+
+  -- Close gripper to grasp object
+  CLOSE GRIPPER;
+
+  -- Lift object
+  MOVE POSITION(pickpos.x, pickpos.y, pickpos.z + 50.0,
+                pickpos.pitch, pickpos.roll, pickpos.yaw);
+
+  -- Move to place position
+  MOVE placepos;
+
+  -- Open gripper to release object
+  OPEN GRIPPER;
+
+  -- Return to home position
+  MOVE homepos;
+END;

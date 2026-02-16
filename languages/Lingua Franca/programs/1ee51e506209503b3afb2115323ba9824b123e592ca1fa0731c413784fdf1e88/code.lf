@@ -1,0 +1,14 @@
+target C
+
+reactor HelloWorld {
+  timer t(0, 1 sec)
+  state count: int = 0
+  
+  reaction(t) {=
+    printf("Hello World %d\n", self->count++);
+  =}
+}
+
+main reactor {
+  h = new HelloWorld()
+}

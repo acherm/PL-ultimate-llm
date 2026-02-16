@@ -1,0 +1,20 @@
+/* Simple LED blinker for 8051 in PL/M-51 */
+BLINK: DO;
+  DECLARE P1 BYTE EXTERNAL;
+
+  FOREVER: DO;
+    P1 = 0FFH;    /* Turn all LEDs on */
+    CALL DELAY;
+    P1 = 00H;     /* Turn all LEDs off */
+    CALL DELAY;
+  END FOREVER;
+
+  DELAY: PROCEDURE;
+    DECLARE (I, J) BYTE;
+    DO I = 0 TO 255;
+      DO J = 0 TO 255;
+      END;
+    END;
+  END DELAY;
+
+END BLINK;

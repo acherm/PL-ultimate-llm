@@ -1,0 +1,12 @@
+PROGRAM QUADRATIC
+# Solve quadratic equation ax^2 + bx + c = 0
+INPUT A, B, C
+DISCRIMINANT = B*B - 4*A*C
+IF DISCRIMINANT < 0 THEN
+    PRINT "NO REAL ROOTS"
+ELSE
+    ROOT1 = (-B + SQRT(DISCRIMINANT)) / (2*A)
+    ROOT2 = (-B - SQRT(DISCRIMINANT)) / (2*A)
+    PRINT "ROOT1 =", ROOT1
+    PRINT "ROOT2 =", ROOT2
+END

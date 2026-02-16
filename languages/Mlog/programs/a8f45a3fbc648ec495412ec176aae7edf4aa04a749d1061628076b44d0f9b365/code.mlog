@@ -1,0 +1,23 @@
+# Turret control program
+# Finds and shoots at enemies
+
+# Bind units to control
+ubind @mono
+
+# Get turret
+sensor x @this @x
+sensor y @this @y
+
+# Find closest enemy
+uradar enemy any any distance @unit 1 target
+
+# Get enemy position
+sensor ex target @x
+sensor ey target @y
+
+# Aim and shoot
+ucontrol targetp ex ey 1
+ucontrol shoot ex ey 1
+
+# Loop
+jump 0 always

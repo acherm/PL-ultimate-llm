@@ -1,0 +1,21 @@
+BeliefUpdates:
+  { true } AddBelief(location(home)) { }
+  { true } AddBelief(battery(100)) { }
+
+Goals:
+  explore
+
+PG-rules:
+  explore <- location(home) and battery(B) and B > 20 |
+  {
+    B(location(home));
+    Adopt(goto(kitchen));
+    Send(robot2, inform, status(exploring))
+  }
+
+PC-rules:
+  goto(X) <- location(Y) and not location(X) |
+  {
+    move(Y, X);
+    B(location(X))
+  }

@@ -1,0 +1,24 @@
+-- PSL properties for a req/ack handshaking protocol
+-- Property Specification Language (IEEE Std 1850-2010)
+-- Verifies correctness of a simple request-acknowledge interface
+
+-- Default clock for all properties
+default clock is (posedge clk);
+
+-- Safety: An acknowledgment only occurs following a request
+assert always (ack -> prev(req));
+
+-- Safety: The request signal remains stable until acknowledged
+assert always (req -> (req until ack));
+
+-- Safety: Acknowledgment lasts only one clock cycle
+assert always (ack -> next(!ack));
+
+-- Liveness: Every request is eventually acknowledged
+assert always (req -> eventually! ack);
+
+-- Safety: Reset clears any pending acknowledgment
+assert always (rst -> next(!ack));
+
+-- Safety: No simultaneous request and reset handling conflict
+assert always not (ack and rst);

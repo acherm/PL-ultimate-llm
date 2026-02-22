@@ -1,0 +1,24 @@
+module Sort
+
+exports all
+
+definitions
+
+functions
+
+  Sort: seq of int -> seq of int
+  Sort(l) ==
+    if l = []
+    then []
+    else let sorted = Sort(tl l)
+         in InsertInOrder(hd l, sorted);
+
+  InsertInOrder: int * seq of int -> seq of int
+  InsertInOrder(x, l) ==
+    if l = []
+    then [x]
+    else if x <= hd l
+         then [x] ^ l
+         else [hd l] ^ InsertInOrder(x, tl l);
+
+end Sort

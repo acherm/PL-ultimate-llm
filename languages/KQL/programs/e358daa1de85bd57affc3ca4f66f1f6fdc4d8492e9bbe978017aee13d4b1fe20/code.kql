@@ -1,0 +1,7 @@
+// Summarize storm events by state and type from the StormEvents sample dataset
+StormEvents
+| where StartTime >= datetime(2007-01-01) and StartTime < datetime(2008-01-01)
+| summarize EventCount = count(), TotalDeaths = sum(DeathsDirect + DeathsIndirect) by State, EventType
+| where EventCount > 10
+| sort by TotalDeaths desc
+| take 20

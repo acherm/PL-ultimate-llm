@@ -12,6 +12,7 @@ import os
 import signal
 import subprocess
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
@@ -125,37 +126,64 @@ def run_agent_in_worktree(
         prompt,
     ]
 
-    try:
-        # Use Popen with process group so we can kill the entire tree on timeout
-        proc = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            cwd=worktree_path,
-            start_new_session=True,  # creates new process group
-        )
+    # Remove CLAUDECODE env var to avoid "nested session" error
+    # Raise output token limit to handle large pl_list.txt reads
+    env = {k: v for k, v in os.environ.items() if k != "CLAUDECODE"}
+    env["CLAUDE_CODE_MAX_OUTPUT_TOKENS"] = "128000"
+
+    # Use file-based output to avoid PIPE buffer deadlocks
+    stdout_file = worktree_path / ".agent-stdout.log"
+    stderr_file = worktree_path / ".agent-stderr.log"
+
+    cancel_watchdog = threading.Event()
+    was_killed = threading.Event()
+
+    def _kill_on_timeout(proc, delay):
+        """Watchdog: kill process group after delay seconds."""
+        if cancel_watchdog.wait(delay):
+            return  # process exited before timeout
+        was_killed.set()
         try:
-            stdout, stderr = proc.communicate(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            # Kill the entire process group (claude + all children)
+            os.killpg(proc.pid, signal.SIGKILL)
+        except OSError:
             try:
-                os.killpg(proc.pid, signal.SIGTERM)
-                proc.wait(timeout=10)
-            except Exception:
-                try:
-                    os.killpg(proc.pid, signal.SIGKILL)
-                except Exception:
-                    pass
-            return AgentResult(
-                worktree=worktree_name,
-                model=model,
-                success=False,
-                language=None,
-                duration_s=round(time.time() - t0, 2),
-                error="Timeout",
+                proc.kill()
+            except OSError:
+                pass
+
+    try:
+        with open(stdout_file, "w") as fout, open(stderr_file, "w") as ferr:
+            proc = subprocess.Popen(
+                cmd,
+                stdout=fout,
+                stderr=ferr,
+                stdin=subprocess.DEVNULL,
+                cwd=worktree_path,
+                env=env,
+                start_new_session=True,  # own process group for reliable kill
             )
-        # Build a result-like object for compatibility
+            # Start watchdog timer (independent of proc.wait)
+            watchdog = threading.Thread(
+                target=_kill_on_timeout, args=(proc, timeout), daemon=True
+            )
+            watchdog.start()
+
+            proc.wait()  # no timeout — watchdog handles killing
+            cancel_watchdog.set()  # cancel watchdog if process exited naturally
+
+            if was_killed.is_set():
+                return AgentResult(
+                    worktree=worktree_name,
+                    model=model,
+                    success=False,
+                    language=None,
+                    duration_s=round(time.time() - t0, 2),
+                    error=f"Timeout ({timeout}s)",
+                )
+
+        # Read output files
+        stdout = stdout_file.read_text(errors="replace") if stdout_file.exists() else ""
+        stderr = stderr_file.read_text(errors="replace") if stderr_file.exists() else ""
         result = subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr)
     except Exception as e:
         return AgentResult(
@@ -179,13 +207,17 @@ def run_agent_in_worktree(
 
     # Check if commit was made
     if head_after == head_before:
+        err_snippet = (result.stderr or "")[:200].strip()
+        error_msg = "No commit created"
+        if err_snippet:
+            error_msg += f" | stderr: {err_snippet}"
         return AgentResult(
             worktree=worktree_name,
             model=model,
             success=False,
             language=None,
             duration_s=round(duration, 2),
-            error="No commit created",
+            error=error_msg,
         )
 
     # Extract language from commit message
@@ -269,13 +301,14 @@ def merge_worktree_to_main(worktree_path: Path, existing_languages: set[str]) ->
         cwd=worktree_path,
     ).stdout.strip()
 
-    # Switch to main in the main repo
-    subprocess.run(
-        ["git", "checkout", "main"],
+    # Stash any dirty tracked files on main before cherry-pick
+    stash_result = subprocess.run(
+        ["git", "stash"],
         capture_output=True,
+        text=True,
         cwd=ROOT,
-        check=True,
     )
+    stashed = "No local changes" not in (stash_result.stdout or "")
 
     # Cherry-pick the commit
     result = subprocess.run(
@@ -292,7 +325,14 @@ def merge_worktree_to_main(worktree_path: Path, existing_languages: set[str]) ->
             capture_output=True,
             cwd=ROOT,
         )
+        # Restore stash
+        if stashed:
+            subprocess.run(["git", "stash", "pop"], capture_output=True, cwd=ROOT)
         return False, language, f"Cherry-pick failed: {result.stderr}"
+
+    # Restore stash
+    if stashed:
+        subprocess.run(["git", "stash", "pop"], capture_output=True, cwd=ROOT)
 
     return True, language, None
 
@@ -447,7 +487,7 @@ def main():
     parser.add_argument(
         "--timeout",
         type=int,
-        default=300,
+        default=900,
         help="Timeout per agent in seconds",
     )
     parser.add_argument(

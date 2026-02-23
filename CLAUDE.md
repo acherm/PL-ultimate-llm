@@ -104,7 +104,8 @@ git commit -m "turn: add <LanguageName> (+1 program)
 List-Digest: <digest>
 Model: <your-model-name>
 Agent: claude-code
-WebSearch: <enabled|disabled>"
+WebSearch: <enabled|disabled>
+Strategy: <strategy>"
 ```
 
 **Important**: Replace placeholders:
@@ -112,6 +113,7 @@ WebSearch: <enabled|disabled>"
 - `<digest>`: 8-character SHA256 prefix of pl_list.txt content (computed BEFORE your changes)
 - `<your-model-name>`: Your model identifier (e.g., "claude-sonnet-4", "claude-opus-4")
 - `<enabled|disabled>`: Whether you used web search to find the language/example
+- `<strategy>`: Short phrase (2-5 words) describing how you chose this language (e.g., "concatenative-languages", "1960s-mainframe", "letter-Q-exploration", "stack-based-vms")
 
 ## Computing SHA256 for Code
 

@@ -6,18 +6,17 @@
 #   ./tools/claude/runner.sh [options]
 #
 # Options:
-#   -m, --minutes  MINUTES   Duration in minutes (default: 30)
-#   -a, --agents   N         Number of parallel agents (default: 3)
-#   -M, --models   MODELS    Comma-separated models (default: sonnet,opus)
+#   -m, --minutes  MINUTES   Duration in minutes (default: 60)
+#   -a, --agents   N         Number of parallel agents (default: 2)
+#   -M, --models   MODELS    Comma-separated models (default: sonnet)
 #   -w, --web-search         Enable web search (default: off)
+#   -t, --timeout  SECONDS   Per-agent timeout (default: 600)
 #
 # Examples:
-#   ./tools/claude/runner.sh                        # 30 min, 3 agents, no web search
-#   ./tools/claude/runner.sh -m 60                  # 1 hour
-#   ./tools/claude/runner.sh -m 240 -a 5            # 4 hours, 5 agents
-#   ./tools/claude/runner.sh -m 30 -M sonnet        # sonnet only
+#   ./tools/claude/runner.sh                        # 60 min, 2 agents, sonnet
+#   ./tools/claude/runner.sh -m 120                 # 2 hours
+#   ./tools/claude/runner.sh -m 60 -a 3 -M opus    # 1 hour, 3 opus agents
 #   ./tools/claude/runner.sh -m 60 -w               # 1 hour with web search
-#   ./tools/claude/runner.sh -m 120 -a 5 -M opus -w # full options
 #
 # Monitor:
 #   screen -r plcampaign          # attach to live session
@@ -30,16 +29,18 @@
 set -euo pipefail
 
 # ── Parse arguments ────────────────────────────────────────
-MINUTES=30
-AGENTS=3
-MODELS=sonnet,opus
+MINUTES=60
+AGENTS=2
+MODELS=sonnet
 WEB_SEARCH=false
+TIMEOUT=600
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -m|--minutes)  MINUTES="$2"; shift 2 ;;
         -a|--agents)   AGENTS="$2";  shift 2 ;;
         -M|--models)   MODELS="$2";  shift 2 ;;
+        -t|--timeout)  TIMEOUT="$2"; shift 2 ;;
         -w|--web-search) WEB_SEARCH=true; shift ;;
         -h|--help)
             sed -n '2,/^$/{ s/^# //; s/^#//; p }' "$0"
@@ -58,6 +59,11 @@ fi
 
 cd "$(dirname "$0")/../.."
 ROOT=$(pwd)
+
+# Prevent "nested session" error when launched from within Claude Code
+unset CLAUDECODE
+# Raise output token limit for --print mode (large pl_list.txt)
+export CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000
 
 # ── Preflight ──────────────────────────────────────────────
 command -v claude >/dev/null || { echo "ERROR: claude CLI not found"; exit 1; }
@@ -79,6 +85,7 @@ echo "  Duration:    ${MINUTES} min"
 echo "  Agents:      ${AGENTS}"
 echo "  Models:      ${MODELS}"
 echo "  Web search:  ${WS_LABEL}"
+echo "  Timeout:     ${TIMEOUT}s"
 echo "  Collection:  ${BEFORE} languages"
 echo ""
 
@@ -110,7 +117,7 @@ while [ \$(date +%s) -lt \$END ]; do
         ${WS_FLAG}                       \
         --max-minutes \$R                \
         --pause 5                        \
-        --timeout 300                    \
+        --timeout ${TIMEOUT}              \
         --single-batch                   \
         >> logs/parallel-\$(date +%Y%m%d).log 2>&1 || true
 

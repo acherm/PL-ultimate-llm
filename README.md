@@ -58,10 +58,49 @@ python3 -m http.server --directory web/dist 8000
 
 Then open `http://localhost:8000`.
 
-The Stats page also summarizes **agents/models used** based on git commit trailers (`Model:`, `Agent:`, `Temperature:`, `WebSearch:`) in `turn: add …` commits.
+The Stats page also summarizes **agents/models used** based on git commit trailers (`Model:`, `Agent:`, `Temperature:`, `WebSearch:`, `Strategy:`) in `turn: add …` commits.
 
 For data-quality checks (duplicates, integrity checks, clustering hints), run:
 
 ```bash
 python3 tools/audit_repo.py --out web/dist/data/audit.json
 ```
+
+## Claude Code agentic campaigns
+
+The `tools/claude/` directory contains an automated campaign system that launches
+parallel [Claude Code](https://docs.anthropic.com/en/docs/claude-code) agents to grow the
+collection. Each agent runs in its own git worktree, finds an obscure
+language not yet in the list, creates the required files, and commits.
+Successful commits are cherry-picked back to `main`.
+
+### Quick start
+
+```bash
+# 1-hour campaign, 2 parallel agents, sonnet model
+tools/claude/runner.sh -m 60 -a 2 -M sonnet -t 600
+```
+
+The script launches in a detached `screen` session (`plcampaign`).
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `-m` | Campaign duration (minutes) | 60 |
+| `-a` | Parallel agents per batch | 2 |
+| `-M` | Model (`sonnet`, `opus`) | `sonnet` |
+| `-t` | Per-agent timeout (seconds) | 600 |
+| `-w` | Enable web search | off |
+
+### Monitor / stop
+
+```bash
+screen -r plcampaign                   # attach to live session
+tail -20 logs/runner-*.log             # high-level batch summaries
+tail -60 logs/parallel-*.log           # per-agent details
+screen -S plcampaign -X quit           # stop the campaign
+```
+
+After a campaign finishes, push results with `git push origin main`.
+
+See [`tools/claude/README.md`](tools/claude/README.md) for full architecture
+details and troubleshooting.

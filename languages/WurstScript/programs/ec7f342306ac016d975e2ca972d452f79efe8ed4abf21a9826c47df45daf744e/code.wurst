@@ -1,0 +1,80 @@
+package LinkedList
+import NoWurst
+import TypeCasting
+import Integer
+import String
+import ClosureForGroups
+import Real
+
+/**
+ * Doubly-linked list implementation that implements all common list, stack and queue operations.
+ * Permits all elements (including null).
+ * Use the Typecasting package if you require lists of warcraft handles.
+ * LinkedLists should be generally used anywhere you need a list, because they are the most versatile
+ * and fast in common operations. If you need faster contains or access operations on big lists,
+ * use HashList. If you want to limit each element's occurance to one, consider HashSet.
+ */
+public class LinkedList<T>
+	private var dummy = new LLEntry<T>(null, null, null)
+	protected var size = 0
+
+	private LLIterator<T> staticItr = null
+	private LLBackIterator<T> staticBackItr = null
+
+	/** Creates a new list by copying all elements from another list into it */
+	construct(thistype base)
+		dummy.next = dummy
+		dummy.prev = dummy
+		for elem in base
+			add(elem)
+
+	/** Creates a new empty list */
+	construct()
+		dummy.next = dummy
+		dummy.prev = dummy
+
+	/** Adds one or more elements to the end of the list (top of stack, beginning of queue) */
+	function add(vararg T elems)
+		for elem in elems
+			let entry = new LLEntry<T>(elem, dummy.prev, dummy)
+			dummy.prev.next = entry
+			dummy.prev = entry
+			size++
+
+	/** Adds all elements from elems to the end of this list */
+	function addAll(LinkedList<T> elems)
+		for elem in elems
+			add(elem)
+
+	/** Adds all elements from the other list to the end of this list and removes them from the provided list.
+
+		It does not add/remove elements internally, only the internal pointers of the list nodes are re-pointed.
+		The other list will be empty, but not destroyed. */
+	function splice(LinkedList<T> other)
+		dummy.prev.next = other.dummy.next
+		dummy.prev.next.prev = dummy.prev
+		dummy.prev = other.dummy.prev
+		dummy.prev.next = dummy
+		size += other.size
+		other.dummy.next = other.dummy
+		other.dummy.prev = other.dummy
+		other.size = 0
+
+	/** Returns the element at the specified index */
+	function get(int index) returns T
+		return getEntry(index).elem
+
+	/** Returns the index of the specified element or -1 is it doesn't exist */
+	function indexOf(T t) returns int
+		var entry = dummy.next
+		var idx = 0
+		while entry != dummy
+			if entry.elem == t
+				return idx
+			entry = entry.next
+			idx++
+		return -1
+
+	/** Sets the element at the specified index */
+	function set(int index, T elem)
+		getEntry(index).elem = elem

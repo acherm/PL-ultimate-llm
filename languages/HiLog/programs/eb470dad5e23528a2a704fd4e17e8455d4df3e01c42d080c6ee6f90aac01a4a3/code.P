@@ -1,0 +1,16 @@
+% HiLog: Higher-Order Logic Programming
+% Examples demonstrating higher-order syntax in logic programming
+
+% Transitive closure operator - parametric over any binary predicate P
+closure(P)(X,Y) <- P(X,Y).
+closure(P)(X,Y) <- P(X,Z), closure(P)(Z,Y).
+
+% LISP-like mapping operator - applies binary predicate F element-wise
+maplist(F)([], []).
+maplist(F)([X|R], [Y|Z]) <- F(X,Y), maplist(F)(R,Z).
+
+% Meta-predicate call expressed naturally in HiLog (without extra-logical features)
+call(X) <- X.
+
+% Binary tree traversal using a variable functor
+traverse(X(L,R)) <- traverse(L), traverse(R).

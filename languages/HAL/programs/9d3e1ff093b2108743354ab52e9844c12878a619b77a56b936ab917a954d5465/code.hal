@@ -1,0 +1,10 @@
+:- module mortgage.
+:- import simplex.
+:- export pred mortgage(cfloat,cfloat,cfloat,cfloat,cfloat).
+:-        mode mortgage(in,in,in,in,out) is semidet.
+:-        mode mortgage(oo,oo,oo,oo,oo) is nondet.
+mortgage(P,0.0,I,R,P).
+mortgage(P,T,I,R,B) :-
+        T >= 1.0,
+        NP = P + P * I - R,
+        mortgage(NP,T-1.0,I,R,B).

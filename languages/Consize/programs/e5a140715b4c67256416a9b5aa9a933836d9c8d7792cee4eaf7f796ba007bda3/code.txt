@@ -1,0 +1,28 @@
+% (c) Dominikus Herzberg, 2012 -- Creative Commons Lizenz CC BY-NC-SA 3.0
+% Generic words demonstrating object-oriented dispatch in Consize
+
+: def-generic+ ( wrd [ effect ] [ dispatch ] -- )
+  [ { :else [ _|_ ] } case ] concat def+ ;
+
+: def-generic ( wrd [ dispatch ] -- ) [ ??? ] swap def-generic+ ;
+
+: def-method ( wrd val quot -- )
+  swap rot
+  [ lookup reverse pop top assoc ] keep
+  [ lookup reverse top swap ] keep
+  [ lookup reverse pop pop swapu swapu reverse ] keep
+  swap def ;
+
+\ ndrop [ dup ] def-generic
+\ ndrop 0 [ drop ] def-method
+\ ndrop :else [ swap drop 1 - ndrop ] def-method
+
+[ x y ] [ x y z 1 ndrop ] unit-test
+[ x   ] [ x y z 2 ndrop ] unit-test
+[     ] [ x y z u v 5 ndrop ] unit-test
+
+\ fact [ dup 0 == ] def-generic
+\ fact true  [ drop 1 ] def-method
+\ fact false [ dup 1 - fact * ] def-method
+
+[ ( 1 1 2 6 24 120 720 ) ] [ [ 0 1 2 3 4 5 6 ] [ fact ] map ] unit-test

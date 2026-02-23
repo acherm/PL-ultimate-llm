@@ -1,0 +1,15 @@
+node mxor(x, y: bool) returns (c: bool)
+let
+    c = (x and not y) or ((not x) and y);
+tel
+
+node fa(x, y, cin: bool) returns (z, cout: bool)
+let
+    z = mxor(mxor(cin, x), y);
+    cout = if cin then (x or y) else (x and y);
+tel
+
+node rippleadd<<n:int>>(a: bool^n; b: bool^n) returns (c: bool^n; over: bool)
+let
+    (c,over) = mapfold<<n>>fa(a, b, false);
+tel

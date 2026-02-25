@@ -1,0 +1,19 @@
+-- Metalua example: compile-time code generation and runtime evaluation
+-- Metalua extends Lua 5.1 with compile-time metaprogramming (splices/quasi-quotes)
+
+-- This splice executes at compile time, not runtime
+-{ print "Metalua: compile stage reached" }
+
+-- Runtime: recursive Fibonacci
+local function fib(n)
+    if n < 2 then return n end
+    return fib(n - 1) + fib(n - 2)
+end
+
+-- Runtime: print first 12 Fibonacci numbers
+print("Fibonacci sequence (first 12 terms):")
+local results = {}
+for i = 0, 11 do
+    results[#results + 1] = fib(i)
+end
+print(table.concat(results, ", "))

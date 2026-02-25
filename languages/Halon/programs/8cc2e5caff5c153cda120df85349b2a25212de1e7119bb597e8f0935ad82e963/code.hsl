@@ -1,0 +1,26 @@
+class Foo
+{
+    $value = 0;
+
+    function serialize() {
+        $data = [];
+        foreach ($this as $k => $v)
+            if (!is_function($v))
+                $data[$k] = $v;
+        return $data;
+    }
+
+    function unserialize($data) {
+        foreach ($data as $k => $v)
+            $this[$k] = $v;
+        return $this;
+    }
+}
+
+$x = Foo();
+$x->value = 123;
+
+$export = json_decode(json_encode($x->serialize()));
+
+$y = Foo()->unserialize($export);
+echo $y->value;

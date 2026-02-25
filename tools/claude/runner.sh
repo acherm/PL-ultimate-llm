@@ -11,12 +11,14 @@
 #   -M, --models   MODELS    Comma-separated models (default: sonnet)
 #   -w, --web-search         Enable web search (default: off)
 #   -t, --timeout  SECONDS   Per-agent timeout (default: 600)
+#   -p, --prompt-mode MODE   Prompt mode: default or batch (default: default)
 #
 # Examples:
 #   ./tools/claude/runner.sh                        # 60 min, 2 agents, sonnet
 #   ./tools/claude/runner.sh -m 120                 # 2 hours
 #   ./tools/claude/runner.sh -m 60 -a 3 -M opus    # 1 hour, 3 opus agents
 #   ./tools/claude/runner.sh -m 60 -w               # 1 hour with web search
+#   ./tools/claude/runner.sh -m 60 -p batch         # batch-recall-100 mode
 #
 # Monitor:
 #   screen -r plcampaign          # attach to live session
@@ -34,6 +36,7 @@ AGENTS=2
 MODELS=sonnet
 WEB_SEARCH=false
 TIMEOUT=600
+PROMPT_MODE=default
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -41,6 +44,7 @@ while [[ $# -gt 0 ]]; do
         -a|--agents)   AGENTS="$2";  shift 2 ;;
         -M|--models)   MODELS="$2";  shift 2 ;;
         -t|--timeout)  TIMEOUT="$2"; shift 2 ;;
+        -p|--prompt-mode) PROMPT_MODE="$2"; shift 2 ;;
         -w|--web-search) WEB_SEARCH=true; shift ;;
         -h|--help)
             sed -n '2,/^$/{ s/^# //; s/^#//; p }' "$0"
@@ -86,6 +90,7 @@ echo "  Agents:      ${AGENTS}"
 echo "  Models:      ${MODELS}"
 echo "  Web search:  ${WS_LABEL}"
 echo "  Timeout:     ${TIMEOUT}s"
+echo "  Prompt mode: ${PROMPT_MODE}"
 echo "  Collection:  ${BEFORE} languages"
 echo ""
 
@@ -115,6 +120,7 @@ while [ \$(date +%s) -lt \$END ]; do
         --agents ${AGENTS}               \
         --models ${MODELS}               \
         ${WS_FLAG}                       \
+        --prompt-mode ${PROMPT_MODE}     \
         --max-minutes \$R                \
         --pause 5                        \
         --timeout ${TIMEOUT}              \

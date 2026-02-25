@@ -168,6 +168,22 @@ No categories are hardcoded in the prompt — agents are free to invent
 their own strategies, which avoids biasing the collection toward any
 particular kind of language.
 
+### Source-directed search (web search mode)
+
+When web search is enabled, agents are directed to **fetch real lists of
+programming languages** from curated sources rather than guessing from
+training data. This dramatically improves hit rates at 2500+ languages.
+
+High-value sources provided in the prompt:
+- **Rosetta Code** — ~900 languages with code examples
+- **Wikipedia lists** — alphabetical and by-type (~700 languages)
+- **Esolangs wiki** — 2000+ esoteric languages
+- **HOPL** — 8000+ historical languages
+- **99 Bottles of Beer** — 1500+ languages with code samples
+
+The agent picks a source, fetches it with `WebFetch`, extracts language
+names, batch-checks them against `pl_list.txt`, and adds the first gap.
+
 ### File-based stdout/stderr
 
 Using `subprocess.PIPE` with large Claude output can cause deadlocks.

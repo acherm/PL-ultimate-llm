@@ -84,6 +84,7 @@ def run_agent_in_worktree(
     model: str,
     web_search: bool,
     timeout: int,
+    prompt_mode: str = "default",
 ) -> AgentResult:
     """
     Run a Claude agent in a specific worktree.
@@ -93,6 +94,7 @@ def run_agent_in_worktree(
         model: Model to use
         web_search: Enable web search
         timeout: Timeout in seconds
+        prompt_mode: "default" or "batch"
 
     Returns:
         AgentResult
@@ -114,6 +116,7 @@ def run_agent_in_worktree(
     prompt = build_prompt(
         web_search=web_search,
         model=model,
+        prompt_mode=prompt_mode,
     )
 
     # Run claude agent in the worktree directory
@@ -343,6 +346,7 @@ def run_parallel_batch(
     web_search: bool,
     timeout: int,
     batch_id: int,
+    prompt_mode: str = "default",
 ) -> tuple[int, int, list[str]]:
     """
     Run agents in parallel across worktrees.
@@ -375,6 +379,7 @@ def run_parallel_batch(
                 model=model,
                 web_search=web_search,
                 timeout=timeout,
+                prompt_mode=prompt_mode,
             )
             futures[future] = wt
             print(f"  [{wt.name}] started ({model})")
@@ -511,6 +516,12 @@ def main():
         action="store_true",
         help="Clean up worktrees and exit",
     )
+    parser.add_argument(
+        "--prompt-mode",
+        default="default",
+        choices=["default", "batch"],
+        help="Prompt mode: 'default' or 'batch' (batch-recall-100)",
+    )
     args = parser.parse_args()
 
     from .worktree import setup_worktrees, cleanup_worktrees
@@ -528,6 +539,7 @@ def main():
     print(f"  Agents: {args.agents} (truly parallel)")
     print(f"  Models: {models}")
     print(f"  Web search: {web_search}")
+    print(f"  Prompt mode: {args.prompt_mode}")
     print(f"  Timeout: {args.timeout}s")
     print(f"  Max turns: {args.max_turns or 'unlimited'}")
 
@@ -579,6 +591,7 @@ def main():
                 web_search=web_search,
                 timeout=args.timeout,
                 batch_id=batch_id,
+                prompt_mode=args.prompt_mode,
             )
 
             total_merged += merged

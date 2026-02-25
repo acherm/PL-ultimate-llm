@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vxml version="2.1" xmlns="http://www.w3.org/2001/vxml">
+  <form id="travel">
+    <field name="destination">
+      <prompt>
+        Welcome to the travel booking service.
+        Please say your destination city.
+      </prompt>
+      <grammar type="application/srgs+xml" src="cities.grxml"/>
+      <noinput>
+        <prompt>I did not hear you. Please say a city name.</prompt>
+        <reprompt/>
+      </noinput>
+      <nomatch>
+        <prompt>I did not recognize that city. Please try again.</prompt>
+        <reprompt/>
+      </nomatch>
+    </field>
+
+    <field name="departure" type="date">
+      <prompt>
+        What is your departure date?
+        Please say month, day, and year.
+      </prompt>
+    </field>
+
+    <field name="confirm" type="boolean">
+      <prompt>
+        You said <value expr="destination"/> on <value expr="departure"/>.
+        Is that correct?
+      </prompt>
+      <filled>
+        <if cond="confirm">
+          <prompt>Your booking request has been submitted. Goodbye.</prompt>
+          <exit/>
+        <else/>
+          <clear namelist="destination departure confirm"/>
+          <prompt>Let us start over.</prompt>
+        </if>
+      </filled>
+    </field>
+  </form>
+</vxml>

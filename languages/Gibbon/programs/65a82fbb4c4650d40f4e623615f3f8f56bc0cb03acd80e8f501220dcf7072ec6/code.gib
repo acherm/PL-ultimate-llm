@@ -1,0 +1,15 @@
+-- Gibbon program: sum a binary tree
+
+data Tree = Leaf Int
+          | Node Tree Tree
+
+sumTree :: Tree -> Int
+sumTree tr =
+  case tr of
+    Leaf n   -> n
+    Node l r -> sumTree l + sumTree r
+
+gibbon_main =
+  let t = Node (Node (Leaf 1) (Leaf 2)) (Node (Leaf 3) (Leaf 4))
+      s = sumTree t
+  in s

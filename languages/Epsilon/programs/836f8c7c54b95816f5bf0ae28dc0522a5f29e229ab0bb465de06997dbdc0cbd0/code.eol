@@ -1,0 +1,40 @@
+// Demonstrates EOL (Epsilon Object Language) built-in operations
+// Collection operations, string manipulation, and custom operations
+
+operation max2(a : Integer, b : Integer) : Integer {
+    if (a > b) return a;
+    return b;
+}
+
+operation isPrime(n : Integer) : Boolean {
+    if (n < 2) return false;
+    var i = 2;
+    while (i * i <= n) {
+        if (n.mod(i) = 0) return false;
+        i = i + 1;
+    }
+    return true;
+}
+
+// Sequence operations
+var nums = Sequence{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+("Sum: " + nums.sum()).println();
+("Max: " + nums.max()).println();
+("Size: " + nums.size()).println();
+
+// Filter primes using select
+var primes = nums.select(n | isPrime(n));
+("Primes in 1..10: " + primes).println();
+
+// String operations
+var message = "Hello from Epsilon!";
+message.println();
+("Upper: " + message.toUpperCase()).println();
+("Length: " + message.size()).println();
+
+// Map collection
+var squares = nums.collect(n | n * n);
+("Squares: " + squares).println();
+
+// max2 example
+("max2(7, 3) = " + max2(7, 3)).println();

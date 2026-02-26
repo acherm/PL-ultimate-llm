@@ -1,0 +1,27 @@
+// Create a custom type
+create type Description like String
+{
+  constraint LengthValid Length(value) <= 50
+  tags { DAE.SimpleMessage = "The Length of the string must be less than 50 characters." }
+} static tags { Storage.Length = "50" };
+
+// Create a lookup table
+create table MovieType
+{
+  ID : String tags { Frontend.Width = "6" },
+  Genre : Description tags { Frontend.Preview.Include = "true" },
+  key { ID }
+};
+
+// Insert data using table and row selectors
+MovieType := table {
+  row { "ACT" ID, "Action" Genre },
+  row { "ADV", "Adventure" },
+  row { "ANM", "Animation" },
+  row { "FAM", "Family" }
+};
+
+// Query examples
+select MovieType;
+select MovieType { Genre };
+select MovieType where ID < "F" and ID > "B";

@@ -1,0 +1,28 @@
+hissp..prelude#:
+
+(define enjoin en#X#(.join "" (map str X)))
+
+(defun tag (tag : :* contents)
+  (enjoin "<"tag">"(enjoin : :* contents)"</"!##0(.split tag)">"))
+
+(defmacro script (: :* forms)
+  `',(tag "script type='text/python'" "\n"
+      (.join "\n" (map hissp.compiler..readerless forms))))
+
+((bottle..route "/")
+ O#(enjoin
+    (let (s (tag "script src='https://cdn.jsdelivr.net/npm/brython@3/brython{}.js'"))
+      (enjoin (.format s ".min") (.format s "_stdlib")))
+    (tag "body onload='brython()'"
+     (script
+       (define getE X#(.getElementById browser..document X))
+       (define getf@v X#(float @##'value (getE X)))
+       (define set@v XY#(setattr (getE Y) 'value X))
+       (attach browser..window
+         : Celsius O#(-> (getf@v 'Celsius) (X#|X*1.8+32|) (set@v 'Fahrenheit))
+         Fahrenheit O#(-> (getf@v 'Fahrenheit) (X#|(X-32)/1.8|) (set@v 'Celsius))))
+     (let (row (enjoin (tag "input id='{0}' onkeyup='{0}()'")
+                       (tag "label for='{0}'" "°{1}")))
+       (enjoin (.format row "Fahrenheit" "F")"<br>"(.format row "Celsius" "C"))))))
+
+(bottle..run : host "localhost"  port 8080  debug True)

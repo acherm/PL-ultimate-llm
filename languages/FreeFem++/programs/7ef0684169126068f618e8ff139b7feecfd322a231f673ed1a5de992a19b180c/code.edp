@@ -1,0 +1,26 @@
+// Poisson equation solver using FreeFem++
+// -Delta(u) = f in Omega, u = 0 on boundary
+
+// Define a square mesh with 20x20 grid
+mesh Th = square(20, 20);
+
+// P1 finite element space (piecewise linear)
+fespace Vh(Th, P1);
+Vh u, v;
+
+// Right-hand side function
+func f = 1.0;
+
+// Variational formulation (weak form)
+problem Poisson(u, v) =
+    int2d(Th)(dx(u)*dx(v) + dy(u)*dy(v))
+    - int2d(Th)(f*v)
+    + on(1, 2, 3, 4, u=0);  // homogeneous Dirichlet BC
+
+// Solve the problem
+Poisson;
+
+// Output solution statistics
+cout << "Solution computed successfully." << endl;
+cout << "u max = " << u[].max << endl;
+cout << "u min = " << u[].min << endl;

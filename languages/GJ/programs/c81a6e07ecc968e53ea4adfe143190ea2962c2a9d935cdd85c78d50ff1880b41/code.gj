@@ -1,0 +1,26 @@
+class Pair<A,B> {
+    A fst;
+    B snd;
+
+    Pair(A fst, B snd) {
+        this.fst = fst;
+        this.snd = snd;
+    }
+
+    public String toString() {
+        return "(" + fst + ", " + snd + ")";
+    }
+}
+
+class Swap {
+    static <A,B> Pair<B,A> swap(Pair<A,B> p) {
+        return new Pair<B,A>(p.snd, p.fst);
+    }
+
+    public static void main(String[] args) {
+        Pair<String,Integer> p = new Pair<String,Integer>("hello", 42);
+        System.out.println("Before: " + p);
+        Pair<Integer,String> q = swap(p);
+        System.out.println("After:  " + q);
+    }
+}

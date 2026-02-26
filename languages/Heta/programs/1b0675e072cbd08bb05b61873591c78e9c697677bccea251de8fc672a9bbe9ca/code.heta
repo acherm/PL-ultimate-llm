@@ -1,0 +1,29 @@
+// Minimal one-compartment pharmacokinetics model
+// Demonstrates core Heta language constructs
+
+comp @Compartment {
+  volume: 1 L;
+};
+
+A @Species {
+  compartment: comp;
+  initial: 0;
+};
+
+d @Reaction {
+  actors: A;
+  equation: dose_rate;
+};
+
+e @Reaction {
+  actors: -A;
+  equation: ke * A;
+};
+
+ke @Const = 0.1 1/h;
+dose_rate @Const = 0 mg/h;
+
+#export {
+  format: JSON;
+  filepath: ./output;
+};

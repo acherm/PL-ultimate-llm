@@ -1,0 +1,19 @@
+# Fibonacci sequence in Wake
+package fibonacci
+
+from wake import Integer, println, str, seq, map
+
+# Recursive Fibonacci function
+global def fib (n: Integer): Integer =
+  if n <= 0 then 0
+  else if n == 1 then 1
+  else fib (n-1) + fib (n-2)
+
+# Print first N Fibonacci numbers
+global def printFibs (n: Integer): Unit =
+  def indices = seq n
+  def _ = map (\i = println "fib({str i}) = {str (fib i)}") indices
+  Unit
+
+global def main Unit =
+  printFibs 10

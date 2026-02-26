@@ -1,0 +1,23 @@
+#!/usr/bin/env osh
+# Fibonacci sequence in Oil Shell (OSH mode)
+# OSH is backward-compatible with POSIX shell and bash
+
+fib() {
+  local -i n=$1
+  if (( n <= 1 )); then
+    echo $n
+    return
+  fi
+  local -i a=0 b=1 tmp
+  for (( i = 2; i <= n; i++ )); do
+    tmp=$(( a + b ))
+    a=$b
+    b=$tmp
+  done
+  echo $b
+}
+
+echo "First 10 Fibonacci numbers:"
+for i in $(seq 0 9); do
+  printf "  fib(%d) = %d\n" "$i" "$(fib "$i")"
+done

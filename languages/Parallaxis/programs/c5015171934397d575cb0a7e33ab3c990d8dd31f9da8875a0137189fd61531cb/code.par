@@ -1,0 +1,14 @@
+MODULE prime;
+CONFIGURATION list [2..200];
+CONNECTION ;
+
+VAR next_prime: INTEGER;
+    removed   : list OF BOOLEAN;
+
+BEGIN
+  REPEAT
+    next_prime:= REDUCE.FIRST(DIM(list,1));
+    WriteInt(next_prime,10); WriteLn;
+    removed := DIM(list,1) MOD next_prime = 0
+  UNTIL removed
+END prime.

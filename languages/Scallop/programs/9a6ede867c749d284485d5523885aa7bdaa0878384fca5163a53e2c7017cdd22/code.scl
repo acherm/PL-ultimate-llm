@@ -1,0 +1,19 @@
+// Graph reachability in Scallop
+// Computes the transitive closure of a directed graph
+
+type edge(usize, usize)
+
+rel edge = {
+  (0, 1), (1, 2), (2, 3),
+  (3, 4), (1, 3), (0, 4)
+}
+
+// Transitive closure: path is reachable via edges
+rel path(a, b) = edge(a, b)
+rel path(a, c) = path(a, b) and edge(b, c)
+
+// Nodes reachable from node 0
+rel from_zero(b) = path(0, b)
+
+query path
+query from_zero

@@ -1,0 +1,18 @@
+LOCAL    Fibonacci.
+
+% Fib(k,n) <-> n is the Fibonacci number F_{k} of rank k.
+
+Fib(0,0).
+Fib(1,1).
+Fib(k,n) <-
+          k > 1 &
+          FibIt(k-2,1,1,n).
+
+
+% FibIt(k,f,g,n) <-> n  =  F_{k} * f  +  F_{k+1} * g.
+
+FibIt(0,_,g,g).
+FibIt(k,f,g,n) <-
+          k > 0 &
+          g < n &
+          FibIt(k-1,g,f+g,n).

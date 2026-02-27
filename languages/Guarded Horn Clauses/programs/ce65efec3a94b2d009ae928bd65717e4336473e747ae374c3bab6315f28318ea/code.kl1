@@ -1,0 +1,24 @@
+:- module quicksort.
+
+sort(X, Y) :- sort(X, Y, []).
+
+sort([], Y, Z) :- Y = Z.
+sort([P|X], Y, Z) :-
+ partition(P, X, X1, X2),
+ sort(X1, Y, [P|Y1]),
+ sort(X2, Y1, Z).
+
+partition(_, [], S, L) :-
+ S = [],
+ L = [].
+partition(P, [W|X], S, L) :- W =< P |
+ S = [W|S1],
+ partition(P, X, S1, L).
+
+:- module main.
+
+main :-
+ X = [9,2,8,3,6,7,4,1,5],
+ builtin:print(X),
+ quicksort:sort(X, Y),
+ builtin:print(Y).

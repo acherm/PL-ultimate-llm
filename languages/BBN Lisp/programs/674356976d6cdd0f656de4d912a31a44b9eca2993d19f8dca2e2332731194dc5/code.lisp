@@ -1,0 +1,15 @@
+(DEFINEQ (FACTORIAL
+  (LAMBDA (N)
+    (COND
+      ((EQ N 0) 1)
+      (T (TIMES N (FACTORIAL (SUB1 N))))))))
+
+(DEFINEQ (PRINT-FACTORIALS
+  (LAMBDA (N MAX)
+    (COND
+      ((GREATERP N MAX) NIL)
+      (T (PROG NIL
+           (PRINT (FACTORIAL N))
+           (PRINT-FACTORIALS (ADD1 N) MAX)))))))
+
+(PRINT-FACTORIALS 1 10)

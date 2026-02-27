@@ -1,0 +1,16 @@
+% Peano arithmetic in Bedwyr
+% Defines natural number addition and multiplication
+
+kind nat type.
+
+type z   : nat.
+type s   : nat -> nat.
+
+type plus  : nat -> nat -> nat -> prop.
+type times : nat -> nat -> nat -> prop.
+
+plus z N N.
+plus (s M) N (s P) := plus M N P.
+
+times z _ z.
+times (s M) N P := times M N Q, plus Q N P.

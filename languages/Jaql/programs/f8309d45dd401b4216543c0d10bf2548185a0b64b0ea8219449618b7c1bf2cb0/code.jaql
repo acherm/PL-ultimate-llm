@@ -1,0 +1,14 @@
+$var = fn($items) (
+  $init =
+  for( $i in $items )
+  if( not isnull($i) )
+  [{ n: 1, s1: $i, s2: $i*$i }],
+  $combined =
+  combine( $a, $b in $init )
+  { n: $a.n + $b.n,
+    s1: $a.s1 + $b.s1,
+    s2: $a.s2 + $b.s2 },
+  $E_X = $combined.s1 / $combined.n,
+  $E_X2 = $combined.s2 / $combined.n,
+  $E_X2 - $E_X * $E_X
+);

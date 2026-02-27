@@ -1,0 +1,39 @@
+/* Poke: Struct types, methods, and functions */
+
+type Point = struct {
+  int<32> x;
+  int<32> y;
+
+  method norm_squared = int<32>:
+  {
+    return x*x + y*y;
+  }
+};
+
+type Packet = struct {
+  uint<16> flags;
+  uint<8>[8] data;
+};
+
+fun func1 = (uint<32> arg0, uint<64> arg1) uint<32>:
+{
+  return arg0 | arg1 .>> 32;
+}
+
+/* Create and use struct instances */
+var point = Point{ x = 10, y = -1 };
+var point_nsq = point.norm_squared;
+
+var packet_1 = Packet {
+  flags = 0xff00,
+  data = [0UB, 1UB, 2UB, 3UB, 4UB, 5UB, 6UB, 7UB],
+};
+
+/* Lambda functions */
+var lam1 = lambda (int x) int: { return x + 2; };
+var lam_arr = [lam1, lambda (int x) int: { return x * 2; }];
+
+/* Print results */
+printf("Point norm squared: %i32d\n", point_nsq);
+printf("Lambda results: %i32d, %i32d\n", lam_arr[0](10), lam_arr[1](10));
+printf("Func1 result: %u32d\n", func1(1, 2L**33));

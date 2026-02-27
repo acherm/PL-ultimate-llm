@@ -1,0 +1,65 @@
+// Expression evaluator in Subtext
+// Demonstrates choices, pattern matching, conditionals, and exports
+
+expr: choice {
+  literal?: 0
+  plus?: record {
+    left: expr
+    right: expr
+  }
+}
+
+eval-expr = do {
+  x: expr
+  try {
+    x.literal?
+  } else {
+    x.plus?.left eval-expr() +(x.plus?.right eval-expr())
+  }
+}
+
+polarity = do {
+  n: 0
+  try {
+    check n <? 0
+    'negative'
+  } else {
+    check n =? 0
+    'zero'
+  } else {
+    'positive'
+  }
+}
+
+integral-divide = do {
+  numerator: 1
+  divisor: 1
+  ratio = numerator /(divisor) floor()
+  export remainder = numerator -(ratio * divisor)
+}
+
+absolute-value = do {
+  n: 0
+  optionally {
+    check n <? 0
+    negate()
+  }
+}
+
+test {
+  1 polarity() =? 'positive'
+}
+
+test {
+  -1 polarity() =? 'negative'
+}
+
+test {
+  0 polarity() =? 'zero'
+}
+
+test {
+  x = 7 integral-divide(3)
+  check x =? 2
+  check x~remainder =? 1
+}

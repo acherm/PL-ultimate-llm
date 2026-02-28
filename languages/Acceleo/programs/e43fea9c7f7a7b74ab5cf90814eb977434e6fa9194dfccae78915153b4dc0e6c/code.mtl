@@ -1,0 +1,31 @@
+[module generateJava('http://www.eclipse.org/emf/2002/Ecore')/]
+
+[template public generateEPackage(p : EPackage)]
+[comment @main /]
+[for (c : EClass | p.eClassifiers->filter(EClass))]
+  [generateEClass(c)/]
+[/for]
+[/template]
+
+[template public generateEClass(c : EClass)]
+[file (c.name.concat('.java'), false, 'UTF-8')]
+package [c.ePackage.name/];
+
+public class [c.name/] {
+[for (f : EStructuralFeature | c.eStructuralFeatures)]
+    private [f.eType.name/] [f.name/];
+[/for]
+
+[for (f : EStructuralFeature | c.eStructuralFeatures)]
+    public [f.eType.name/] get[f.name.toUpperFirst()/]() {
+        return this.[f.name/];
+    }
+
+    public void set[f.name.toUpperFirst()/]([f.eType.name/] value) {
+        this.[f.name/] = value;
+    }
+
+[/for]
+}
+[/file]
+[/template]

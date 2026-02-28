@@ -1,0 +1,28 @@
+version 1.1;            /* All scripts start with "version" */
+
+param $name = "Poe";    /* Script parameters with default values */
+
+var $favorites := {     /* ":=" avoids RTFs */
+    <name hidden="yes"> "Spillane";
+    <name> "Doyle";     /* Creates elements and attributes */
+    <name> "Poe";
+}
+
+match / {               /* A match template */
+    <out> {
+        /* Parameters are passed by name to templates */
+        call test($elt = "author", $name);
+    }
+}
+
+template test ($name, $elt = "default") {
+    for $this ($favorites/name) {
+        if ($name == $this && not($this/@hidden)) {
+            element $elt {
+                copy-of .//author[name/last == $this];
+            }
+        } else if ($name == $this) {
+            message "Hidden: " _ $name;
+        }
+    }
+}

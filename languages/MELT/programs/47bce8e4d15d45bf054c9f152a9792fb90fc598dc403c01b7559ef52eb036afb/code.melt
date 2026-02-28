@@ -1,0 +1,42 @@
+;; -*- lisp -*- 
+(comment "file ex02m-countfun.melt in the public domain")
+;; the global object countaing our counter
+(definstance fun_counter class_container 
+	     :container_value '0)
+
+;; the counting function, as an extra GCC pass
+(defun countfun_pass_exec ()
+  (set_content fun_counter (+ivi !fun_counter 1))
+  (debug "incremented fun_counter=" fun_counter)
+  )
+
+;; the function triggered by our funcounter mode
+(defun funcounter_docmd (cmd moduldata)
+  (debug "funcounter_docmd cmd=" cmd)
+  (let ( (countfunpass (instance class_gcc_gimple_pass
+				 :named_name '"countfun_pass"
+				 :gccpass_exec countfun_pass_exec))
+	 )
+    (install_melt_pass_in_gcc countfunpass :after '"cfg" 0)
+    (debug "countfunpass=" countfunpass)
+    (at_exit_first
+     (lambda ()
+       (let ( (:long nbcount (get_int !fun_counter))
+	      )
+	 (code_chunk 
+	  informusercount
+	  #{ /*$INFORMUSERCOUNT*/ inform(UNKNOWN_LOCATION,
+				    "MELT counted %ld functions / $INFORMUSERCOUNT", 
+				    $NBCOUNT) ; 
+	  }#))))
+    (debug "funcounter mode success cmd=" cmd)
+    (return :true)
+    ))
+
+(definstance funcounter_mode
+  class_melt_mode
+  :named_name '"funcounter"
+  :meltmode_help '"install a pass to count functions"
+  :meltmode_fun funcounter_docmd
+)
+(install_melt_mode funcounter_mode)

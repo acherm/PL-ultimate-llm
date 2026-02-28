@@ -1,0 +1,32 @@
+Prefix(:=<http://example.com/family#>)
+Prefix(owl:=<http://www.w3.org/2002/07/owl#>)
+Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)
+Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)
+
+Ontology(<http://example.com/family>
+
+  Declaration(Class(:Person))
+  Declaration(Class(:Woman))
+  Declaration(Class(:Man))
+  Declaration(Class(:Parent))
+  Declaration(Class(:Mother))
+
+  SubClassOf(:Woman :Person)
+  SubClassOf(:Man :Person)
+  DisjointClasses(:Man :Woman)
+
+  Declaration(ObjectProperty(:hasChild))
+  Declaration(ObjectProperty(:hasParent))
+  InverseObjectProperties(:hasChild :hasParent)
+
+  EquivalentClasses(:Parent
+    ObjectSomeValuesFrom(:hasChild :Person))
+  EquivalentClasses(:Mother
+    ObjectIntersectionOf(:Woman :Parent))
+
+  Declaration(NamedIndividual(:Mary))
+  Declaration(NamedIndividual(:Bob))
+  ClassAssertion(:Woman :Mary)
+  ClassAssertion(:Person :Bob)
+  ObjectPropertyAssertion(:hasChild :Mary :Bob)
+)

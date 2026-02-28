@@ -1,0 +1,26 @@
+<Biml xmlns="http://schemas.varigence.com/biml.xsd">
+    <Connections>
+        <OleDbConnection Name="Source"
+            ConnectionString="Data Source=.;Initial Catalog=AdventureWorks2014;Provider=SQLNCLI11;Integrated Security=SSPI;" />
+        <OleDbConnection Name="Target"
+            ConnectionString="Data Source=.;Initial Catalog=Staging;Provider=SQLNCLI11;Integrated Security=SSPI;" />
+    </Connections>
+    <Packages>
+        <Package Name="LoadSalesData" ConstraintMode="Linear">
+            <Tasks>
+                <Dataflow Name="DFT Load Sales">
+                    <Transformations>
+                        <OleDbSource Name="OLE_SRC SalesOrderHeader" ConnectionName="Source">
+                            <DirectInput>SELECT SalesOrderID, OrderDate, TotalDue
+FROM Sales.SalesOrderHeader
+WHERE OrderDate >= '2014-01-01'</DirectInput>
+                        </OleDbSource>
+                        <OleDbDestination Name="OLE_DST SalesStaging" ConnectionName="Target">
+                            <TableOutput TableName="dbo.SalesStaging" />
+                        </OleDbDestination>
+                    </Transformations>
+                </Dataflow>
+            </Tasks>
+        </Package>
+    </Packages>
+</Biml>

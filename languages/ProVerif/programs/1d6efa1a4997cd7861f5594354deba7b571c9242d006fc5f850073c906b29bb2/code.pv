@@ -1,0 +1,23 @@
+(* ProVerif - Simple Secrecy Example *)
+(* Demonstrates how ProVerif verifies security properties *)
+(* of cryptographic protocols using a symbolic attacker model *)
+
+free c: channel.
+
+type key.
+
+(** Symmetric encryption **)
+fun senc(bitstring, key): bitstring.
+reduc forall m: bitstring, k: key;
+  sdec(senc(m, k), k) = m.
+
+(** The secret message and key are private **)
+free secretMsg: bitstring [private].
+free sharedKey: key [private].
+
+(** Query: can the attacker learn the secret message? **)
+query attacker(secretMsg).
+
+(** Protocol: Alice sends an encrypted message to Bob **)
+process
+  out(c, senc(secretMsg, sharedKey))

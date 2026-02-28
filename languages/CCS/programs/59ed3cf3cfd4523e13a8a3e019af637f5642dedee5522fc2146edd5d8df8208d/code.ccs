@@ -1,0 +1,12 @@
+(* CCS: Calculus of Communicating Systems - vending machine example *)
+
+(* A simple vending machine that accepts a coin then dispenses coffee or tea *)
+VendingMachine = coin . (coffee . VendingMachine
+                        + tea    . VendingMachine)
+
+(* A customer who inserts a coin and then takes either coffee or tea *)
+Customer = coin . (coffee . Customer
+                 + tea    . Customer)
+
+(* The complete system with coin and drink channels hidden *)
+System = (VendingMachine | Customer) \ {coin, coffee, tea}

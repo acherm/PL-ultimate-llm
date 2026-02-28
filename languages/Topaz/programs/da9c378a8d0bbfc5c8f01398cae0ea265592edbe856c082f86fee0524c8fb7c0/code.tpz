@@ -1,0 +1,20 @@
+! GemStone/S Topaz script - Fibonacci sequence
+! To run: topaz -l topaz.ini < fibonacci.tpz
+
+login
+
+run
+| fib result |
+fib := [:n |
+    n <= 1
+        ifTrue: [n]
+        ifFalse: [(fib value: n - 1) + (fib value: n - 2)]
+].
+result := OrderedCollection new.
+0 to: 9 do: [:i | result add: (fib value: i)].
+Transcript showCr: 'Fibonacci sequence (first 10 terms):'.
+result do: [:each | Transcript showCr: each printString].
+%
+
+logout
+commit

@@ -1,0 +1,8 @@
+.SYNTAX EXPR
+
+EXPR = TERM $('+' TERM .OUT('+') / '-' TERM .OUT('-')) ;
+TERM = FACTOR $('*' FACTOR .OUT('*') / '/' FACTOR .OUT('/')) ;
+FACTOR = .ID .OUT('LOAD ' *) / .NUMBER .OUT('LIT ' *) /
+         '(' EXPR ')' ;
+
+.END

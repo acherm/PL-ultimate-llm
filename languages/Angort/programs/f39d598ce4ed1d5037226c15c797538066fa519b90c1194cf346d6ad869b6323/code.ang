@@ -1,0 +1,90 @@
+#!/usr/local/bin/angort
+
+# Helpful file locator/scanner DSL. Currently uses locate to generate
+# an initial list from the string given on the command line, then
+# permits one to filter it in various ways. Use "h" for help.
+
+
+[`time, `regex, `sys, `io] each { i library drop}
+#`future nspace [`slice] import
+
+# 1 sys$debug
+
+require "util.ang" drop
+
+# generate the main list - a file list consists of a list of tuples,
+# tuples are [filename,stathash]. Input is a list of filenames.
+# The stathash is either a io$stat hash, `nodata (initial value)
+# or `none (we checked and the file doesn't exist)
+:genlist |input:|
+    "Generating master list..".
+    [] ?input each {
+        [i,`nodata], # no stat data initially
+    }
+    nl
+;
+
+# sets the stat data in the file tuple passed in, if it has not
+# been set, and returns it. If the file doesn't exist, sets to none.
+# The initial value is `nodata.
+:getstat |t:|
+    ?t snd `nodata = if # only stat if not done
+        ?t fst io$stat # might be none
+        1 ?t set
+    then
+    ?t snd
+;
+
+:runlocate |term,icase:|
+    "Running locate...".
+    "" [
+        ?icase if "-i" , then
+        ?term] "/usr/bin/locate" sys$execpipe "\n"
+    split dup pop drop genlist !MasterList
+    "Found " p ?MasterList len p " files".
+;
+
+# list of filter functions, of the form [descstring,(string -- bool)]
+
+[] !Filters
+
+:mkaddfilter |term:rx|
+    ?term regex$compile !rx
+    (fst ?rx regex$match len);
+
+:mkaddfilteri |term:rx|
+    ?term regex$compileicase !rx
+    (fst ?rx regex$match len);
+
+:mksubfilter |term:rx|
+    ?term regex$compile !rx
+    (fst ?rx regex$match len not);
+
+:mksubfilteri |term:rx|
+    ?term regex$compileicase !rx
+    (fst ?rx regex$match len not);
+
+:mkcontentfilter |term:|
+    (|a:|
+        "" ["-l",?term,?a fst]
+        "/bin/grep"
+        sys$execpipe len
+);
+
+:rmfilter |s:|
+    ?s len if
+        ?s toint !s
+        ?s 0 >= ?s ?Filters len < and if
+            ?s ?Filters remove drop
+        then
+    then
+;
+
+:repchar |char,ct:| "" 0 ?ct range each {?char+};
+
+:runfilters |:oldcur|
+    "Filtering..".
+    ?MasterList ?Filters each {
+        i snd filter
+    } !List
+;

@@ -1,0 +1,28 @@
+type UserId  = user_id(Int);
+type GroupId = group_id(Int);
+
+schema OnlineForum {
+  next_id : Int = 0;
+  user(UserId)
+    username       : String [unique],
+    signup_date    : Date,
+    first_name     : String,
+    last_name      : String,
+    date_of_birth? : Date;
+  chat_group(GroupId)
+    name  : String,
+    admin : UserId;
+  admin(_, id) -> user(id);
+  member(UserId, GroupId)
+    joined_on : Date,
+    karma     : Int;
+  member(u, g) -> user(u), chat_group(g);
+  friends(UserId | UserId)
+    since : Time;
+  friends(u1, u2) -> user(u1), user(u2);
+}
+
+using OnlineForum {
+  String full_name(UserId u) = first_name(u) & " " & last_name(u);
+  [UserId] users_who_signed_up_on(Date d) = [u : u <- signup_date(?, d)];
+}

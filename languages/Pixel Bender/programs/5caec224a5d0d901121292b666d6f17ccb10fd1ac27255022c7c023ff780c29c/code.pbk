@@ -1,0 +1,27 @@
+<languageVersion : 1.0;>
+
+kernel Invert
+<
+    namespace : "Pixel Bender Shaders";
+    vendor : "Adobe Systems";
+    version : 1;
+    description : "Inverts image colors.";
+>
+{
+    input image4 source;
+    output pixel4 dst;
+
+    parameter float strength
+    <
+        minValue: 0.0;
+        maxValue: 1.0;
+        defaultValue: 1.0;
+    >;
+
+    void evaluatePixel()
+    {
+        float4 inputColor = sampleNearest(source, outCoord());
+        float4 inverted = float4(1.0 - inputColor.rgb, inputColor.a);
+        dst = mix(inputColor, inverted, strength);
+    }
+}

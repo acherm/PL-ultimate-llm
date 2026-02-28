@@ -1,0 +1,16 @@
+(* Motor Start/Stop Control                           *)
+(* AWL (Anweisungsliste) - IEC 61131-3 compatible    *)
+
+PROGRAM MotorControl
+VAR
+    Start  AT %I0.0 : BOOL;   (* Start pushbutton, normally open  *)
+    Stop   AT %I0.1 : BOOL;   (* Stop pushbutton, normally closed *)
+    Motor  AT %Q0.0 : BOOL;   (* Motor contactor output           *)
+END_VAR
+BEGIN
+    (* Self-holding motor circuit *)
+    LD    Start      (* Load start signal                         *)
+    OR    Motor      (* OR with current motor state (self-hold)   *)
+    ANDN  Stop       (* AND NOT stop signal                       *)
+    ST    Motor      (* Store result to motor output              *)
+END_PROGRAM

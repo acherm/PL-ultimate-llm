@@ -1,0 +1,4 @@
+let x = 14 ;;
+3 + (if 5 < 6 then 10 else 100) ;;
+let fact = fun f (n : int) : int is if n = 0 then 1 else n * f (n-1) ;;
+fact 10 ;;

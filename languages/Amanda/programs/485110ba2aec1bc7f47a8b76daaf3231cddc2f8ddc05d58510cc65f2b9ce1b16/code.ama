@@ -1,0 +1,18 @@
+|| Fibonacci sequence in Amanda
+|| Amanda is a lazy functional language similar to Miranda
+
+fib :: num -> num
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-1) + fib (n-2)
+
+|| Quicksort implementation
+qsort :: [*] -> [*]
+qsort []     = []
+qsort (x:xs) = qsort [y | y <- xs; y <= x]
+              ++ [x]
+              ++ qsort [y | y <- xs; y > x]
+
+|| Print Fibonacci numbers from 0 to 10
+main = ( [fib i | i <- [0..10]],
+         qsort [5,3,8,1,9,2,7,4,6] )

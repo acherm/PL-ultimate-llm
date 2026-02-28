@@ -1,0 +1,44 @@
+% RPSL Example: Routing policy for a multi-homed autonomous system
+% Based on RFC 2622 - Routing Policy Specification Language
+
+aut-num:    AS64501
+as-name:    EXAMPLE-NET
+descr:      Example Multi-homed Network
+admin-c:    ADMIN-RIPE
+tech-c:     TECH-RIPE
+mnt-by:     MAINT-AS64501
+
+% Import policies: accept full routes from upstream providers
+import: from AS64502
+        action pref=200;
+        accept ANY
+import: from AS64503
+        action pref=100;
+        accept ANY
+import: from AS64504
+        action pref=150;
+        accept {10.0.0.0/8^16-24}
+
+% Export policies: announce own prefixes to upstreams
+export: to AS64502
+        announce AS64501
+export: to AS64503
+        announce AS64501
+export: to AS64504
+        announce AS64501
+
+% Route objects
+route:      192.0.2.0/24
+descr:      Primary prefix
+origin:     AS64501
+mnt-by:     MAINT-AS64501
+
+route:      198.51.100.0/24
+descr:      Secondary prefix
+origin:     AS64501
+mnt-by:     MAINT-AS64501
+
+% Route set: all prefixes announced by this AS
+route-set:  AS64501:RS-PREFIXES
+descr:      All prefixes announced by AS64501
+members:    192.0.2.0/24, 198.51.100.0/24

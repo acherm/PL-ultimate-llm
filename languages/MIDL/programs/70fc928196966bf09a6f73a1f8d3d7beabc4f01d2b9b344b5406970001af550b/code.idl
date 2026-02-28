@@ -1,0 +1,33 @@
+// calculator.idl - Simple COM interface definition using MIDL
+
+import "unknwn.idl";
+
+[
+    object,
+    uuid(B4EBE741-1C40-4B26-B0D1-E84025024765),
+    pointer_default(unique)
+]
+interface ICalculator : IUnknown
+{
+    HRESULT Add([in] long a, [in] long b, [out, retval] long* result);
+    HRESULT Subtract([in] long a, [in] long b, [out, retval] long* result);
+    HRESULT Multiply([in] long a, [in] long b, [out, retval] long* result);
+    HRESULT Divide([in] long a, [in] long b, [out, retval] long* result);
+};
+
+[
+    uuid(2A6E9E24-6A3A-4C19-89AD-0D0FAE7D5B5C),
+    version(1.0)
+]
+library CalculatorLib
+{
+    importlib("stdole2.tlb");
+
+    [
+        uuid(C6C1A9DF-F24A-4AF1-A4DC-8E38F5E96F42)
+    ]
+    coclass Calculator
+    {
+        [default] interface ICalculator;
+    };
+};

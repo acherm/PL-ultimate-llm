@@ -1,0 +1,19 @@
+% Dining Philosophers in LolliMon
+% A concurrent resource-sharing problem modeled in linear logic
+
+fork : o.
+hungry : o.
+eating : o.
+thinking : o.
+
+% A philosopher needs two forks to eat, then puts them back
+eat : hungry -o fork -o fork -o {eating * fork * fork}.
+
+% After eating, the philosopher goes back to thinking
+think : eating -o {thinking}.
+
+% Thinking philosopher becomes hungry
+hunger : thinking -o {hungry}.
+
+% Initial state: one hungry philosopher and two forks available
+#init {hungry * fork * fork}.

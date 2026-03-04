@@ -1,0 +1,22 @@
+//wordcount.mr
+#JobName = "WordCount"
+
+//map function definition
+def wordcount_map(offset, line) <(Int, Text) -> (Text, Int)> : Mapper
+{
+	List<Text> words = split line by " ";
+	Int one = 1;
+	foreach word in words {
+		emit(word, one);
+	}
+}
+
+//reduce function definition
+def wordcount_reduce (word, counts) <(Text , Int) -> (Text, Int)> : Reducer
+{
+	Int total = 0;
+	foreach count in counts {
+		total = total + count;
+	}
+	emit(word, total);
+}

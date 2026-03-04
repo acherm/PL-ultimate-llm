@@ -1,0 +1,38 @@
+module num:
+
+imports:
+  module stack
+  module control
+
+__ max of two values
+max: [] ap20 dup . dup tail | [<= !] . popr nip
+
+__ min of two values
+min: [] ap20 dup . dup tail | [> !] . popr nip
+
+__ is argument odd?
+odd: 1 &b 1 ==
+
+even: 1 &b 0 ==
+
+bound: [dup_under >= !] dip21 dup_under <= !
+
+up_to: 0 swap bound
+
+module list:
+
+imports:
+  module control
+  module stack
+  module logic
+
+__ take rightmost value from quote
+head: popr nip
+top: dup head
+
+__ return the length of a list
+length:
+  [0 swap] pushl
+    [[[1+] [tail] para] .]
+    [popr popr valid]
+    iterate tail head

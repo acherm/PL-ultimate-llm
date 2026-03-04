@@ -1,0 +1,26 @@
+! RDML example: Employee form definition and data retrieval
+! ACMS (Application Control and Management System) application
+! Remote Data Manipulation Language for OpenVMS
+
+DEFINE TASK GET_EMPLOYEE_TASK;
+    DEFINE STEP GET_EMP_STEP;
+        SEND REQUEST TO SERVER EMPLOYEE_SERVER;
+        REQUEST MESSAGE IS EMP_REQUEST_MSG;
+        RESPONSE MESSAGE IS EMP_RESPONSE_MSG;
+    END STEP GET_EMP_STEP;
+END TASK GET_EMPLOYEE_TASK;
+
+DEFINE PROCEDURE DISPLAY_EMPLOYEE;
+    EMP_ID     : INTEGER;
+    EMP_NAME   : CHARACTER(30);
+    EMP_DEPT   : CHARACTER(10);
+    EMP_SALARY : REAL;
+BEGIN
+    CALL GET_EMPLOYEE_TASK
+        USING EMP_ID
+        GIVING EMP_NAME, EMP_DEPT, EMP_SALARY;
+
+    DISPLAY 'Employee: ', EMP_NAME;
+    DISPLAY 'Department: ', EMP_DEPT;
+    DISPLAY 'Salary: ', EMP_SALARY;
+END PROCEDURE DISPLAY_EMPLOYEE;

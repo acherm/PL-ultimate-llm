@@ -1,0 +1,48 @@
+protocol Aliquot
+
+import (
+	"github.com/antha-lang/antha/antha/anthalib/wtype"
+	"github.com/antha-lang/antha/antha/anthalib/wunit"
+	"github.com/antha-lang/antha/antha/AnthaStandardLibrary/Packages/mixer"
+)
+
+Parameters {
+	VolumeForEachWell []wunit.Volume
+}
+
+Data {
+	Status string
+}
+
+Inputs {
+	Solution *wtype.LHComponent
+	OutputPlate *wtype.LHPlate
+}
+
+Outputs {
+	Aliquots []*wtype.LHComponent
+}
+
+Requirements {}
+
+Conditions {}
+
+Steps {
+	Aliquots = make([]*wtype.LHComponent, len(VolumeForEachWell))
+	for i, volume := range VolumeForEachWell {
+		aliquot, err := mixer.Sample(Solution, volume)
+		if err != nil {
+			panic(err)
+		}
+		Aliquots[i] = aliquot
+	}
+	Status = "Aliquoting complete"
+}
+
+Analysis {}
+
+Validation {
+	if len(Aliquots) == 0 {
+		panic("No aliquots were produced")
+	}
+}

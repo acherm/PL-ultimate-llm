@@ -1,0 +1,7 @@
+-- Retrieve recently modified documents in a Documentum repository folder
+SELECT r_object_id, object_name, r_creation_date, r_modifier, r_full_content_size
+FROM dm_document
+WHERE FOLDER('/Temp', DESCEND)
+AND r_object_type = 'dm_document'
+ORDER BY r_modification_date DESC
+ENABLE (RETURN_TOP 10)

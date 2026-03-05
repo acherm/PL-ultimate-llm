@@ -1,0 +1,28 @@
+-- Mutual exclusion example in Fiacre
+-- Two processes sharing a critical section via a semaphore
+
+process proc [enter: none, exit: none, wait: none, signal: none] (id: nat) : nat
+is
+  states idle, waiting, critical
+  var token: nat := 0
+
+  from idle
+    wait;
+    to waiting
+
+  from waiting
+    enter;
+    to critical
+
+  from critical
+    token := token + 1;
+    exit;
+    signal;
+    to idle
+
+component main is
+  port e: none, x: none, w: none, s: none
+  compose
+    proc [e, x, w, s] (0) ||
+    proc [e, x, w, s] (1)
+  by e, x, w, s

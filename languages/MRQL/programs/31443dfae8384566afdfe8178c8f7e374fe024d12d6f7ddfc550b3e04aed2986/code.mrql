@@ -1,0 +1,9 @@
+-- Word count query in MRQL (Map-Reduce Query Language)
+-- Counts word frequencies in a text corpus
+
+store result := select (word: w, count: count(x))
+               from line in load("data.txt","text_file","")
+               , w in tokens(line,r"[\W]+")
+               group by w;
+
+dump(result);

@@ -1,0 +1,13 @@
+# Ghost NQL (Notation Query Language) - Content filtering examples
+
+# Find published tutorials with comments
+status:published+tag:tutorial+count.comments:>0
+
+# Find featured posts (excluding specific tags)
+featured:true+(tag:-spam,tag:-test)+published_at:>2020-01-01
+
+# Find recent posts by multiple authors on specific topics
+(author:alice,author:bob)+tag:programming+published_at:>=2023-01-01+count.likes:>5
+
+# Complex nested query: (published OR scheduled) AND (featured OR popular)
+(status:published,status:scheduled)+(featured:true,count.comments:>=10)+tag:news

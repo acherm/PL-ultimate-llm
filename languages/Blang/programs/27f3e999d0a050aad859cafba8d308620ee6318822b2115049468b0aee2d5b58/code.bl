@@ -1,0 +1,10 @@
+model Coins {
+  param IntVar nFlips ?: 4
+  random IntVar nHeads
+  random RealVar bias
+
+  laws {
+    bias ~ Beta(1.0, 1.0)
+    nHeads | nFlips, bias ~ Binomial(nFlips, bias)
+  }
+}

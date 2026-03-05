@@ -1,0 +1,15 @@
+// PEPA model: Simple Client-Server Queueing System
+// Models a system where clients think, make requests, and servers respond.
+
+r_think   = 1.0;
+r_request = 2.0;
+r_service = 3.0;
+
+// A client thinks, then makes a request, then loops back.
+Client = (think, r_think) . (request, r_request) . Client;
+
+// A server handles incoming requests at rate r_service.
+Server = (request, r_service) . Server;
+
+// The system cooperates on the 'request' action.
+System = Client <request> Server;

@@ -1,0 +1,19 @@
+-- Create a table to store pageview events
+CREATE TABLE pageviews (
+  time       DATETIME,
+  session    STRING,
+  url        STRING,
+  referrer   STRING,
+  user_agent STRING
+) PRIMARY KEY (time, session);
+
+-- Count pageviews per page in the last 24 hours
+SELECT
+  url,
+  count(1) AS views,
+  count(DISTINCT session) AS unique_visitors
+FROM pageviews
+WHERE time > time_at('-24h')
+GROUP BY url
+ORDER BY views DESC
+LIMIT 10;

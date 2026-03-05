@@ -1,0 +1,15 @@
+% Unbounded counter process in uCRL (micro CRL)
+% A classic specification demonstrating data parameterized processes
+
+sort Nat = struct zero | succ(Nat);
+
+act increment;
+    decrement;
+    read: Nat;
+
+proc Counter(n: Nat) =
+  increment . Counter(succ(n))
++ (n != zero) -> decrement . Counter(n)
++ read(n) . Counter(n);
+
+init Counter(zero);

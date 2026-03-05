@@ -1,0 +1,30 @@
+% Merge two sorted lists in Guarded Horn Clauses (GHC)
+% Ueda, K. (1985): Guarded Horn Clauses
+
+merge([], Ys, Zs) :- true | Zs = Ys.
+merge(Xs, [], Zs) :- true | Zs = Xs.
+merge([X|Xs], [Y|Ys], [X|Zs]) :-
+    X =< Y |
+    merge(Xs, [Y|Ys], Zs).
+merge([X|Xs], [Y|Ys], [Y|Zs]) :-
+    X > Y |
+    merge([X|Xs], Ys, Zs).
+
+% Quick sort using GHC concurrent split
+qsort([], Sorted) :- true | Sorted = [].
+qsort([H|T], Sorted) :- true |
+    split(H, T, Less, Greater),
+    qsort(Less, SortedLess),
+    qsort(Greater, SortedGreater),
+    append(SortedLess, [H|SortedGreater], Sorted).
+
+split(_, [], [], []) :- true | true.
+split(Pivot, [H|T], [H|Less], Greater) :-
+    H =< Pivot |
+    split(Pivot, T, Less, Greater).
+split(Pivot, [H|T], Less, [H|Greater]) :-
+    H > Pivot |
+    split(Pivot, T, Less, Greater).
+
+append([], Ys, Zs) :- true | Zs = Ys.
+append([X|Xs], Ys, [X|Zs]) :- true | append(Xs, Ys, Zs).

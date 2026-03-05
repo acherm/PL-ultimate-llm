@@ -1,0 +1,18 @@
+. = parse_syslog!(.message)
+
+# Normalize log level to lowercase
+.level = downcase(string!(.severity))
+
+# Add processing metadata
+.processed_at = now()
+.host = get_hostname!()
+
+# Classify severity
+if .level == "error" || .level == "crit" || .level == "alert" || .level == "emerg" {
+  .is_critical = true
+} else {
+  .is_critical = false
+}
+
+# Remove raw message to save space
+del(.message)

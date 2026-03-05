@@ -1,0 +1,41 @@
+system World
+
+instance variables
+  cpu1 : CPU := new CPU(<FCFS>, 1E6);
+
+instance variables
+  c : Calculator := new Calculator();
+
+operations
+  World() ==
+    cpu1.deploy(c, "Calculator")
+
+end World
+
+class Calculator
+
+instance variables
+  private result : int := 0;
+
+operations
+  public add : int * int ==> int
+  add(x, y) ==
+  (
+    result := x + y;
+    return result
+  );
+
+  public factorial : nat ==> nat
+  factorial(n) ==
+    if n = 0
+    then return 1
+    else return n * factorial(n - 1);
+
+  public run : () ==> ()
+  run() ==
+  (
+    IO`println(add(3, 4));
+    IO`println(factorial(5))
+  )
+
+end Calculator

@@ -1,0 +1,20 @@
+package PingPong
+
+port type Port()
+
+atom type A()
+  export port Port p()
+  place L0, L1
+  initial to L0
+  on p from L0 to L1
+  on p from L1 to L0
+end
+
+connector type Sync(Port p, Port q)
+  define p q
+end
+
+compound type PingPong()
+  component A a1(), a2()
+  connector Sync s(a1.p, a2.p)
+end

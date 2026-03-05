@@ -1,0 +1,20 @@
+module fibonacci
+imports
+  libstratego-lib
+
+strategies
+
+  fib =
+    ?0; !0
+  <+
+    ?1; !1
+  <+
+    ?n;
+    where(<gt>(n, 1));
+    <subt>(n, 1); fib => f1;
+    <subt>(n, 2); fib => f2;
+    <addi>(f1, f2)
+
+  main =
+    !10; fib;
+    debug(|"fib(10) = ")

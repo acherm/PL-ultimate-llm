@@ -1,0 +1,18 @@
+-- ALFL: A Lazy Functional Language (Hudak, Yale 1984)
+-- Example: Higher-order list functions
+
+map f [] = []
+map f (x:xs) = f x : map f xs
+
+filter p [] = []
+filter p (x:xs) = if p x then x : filter p xs
+                         else filter p xs
+
+foldr f z [] = z
+foldr f z (x:xs) = f x (foldr f z xs)
+
+sum xs = foldr (+) 0 xs
+
+squares = map (\x -> x * x) [1..10]
+
+main = sum squares

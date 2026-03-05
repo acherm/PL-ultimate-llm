@@ -1,0 +1,20 @@
+-- WQL: WMI Query Language example
+-- Query running processes consuming more than 100MB of memory
+SELECT Name, ProcessId, WorkingSetSize, VirtualSize, CreationDate
+FROM Win32_Process
+WHERE WorkingSetSize > 104857600
+
+-- Query network adapters with IP enabled
+SELECT Description, MACAddress, IPAddress, DefaultIPGateway, DNSServerSearchOrder
+FROM Win32_NetworkAdapterConfiguration
+WHERE IPEnabled = True
+
+-- Query services that are running and set to auto-start
+SELECT Name, DisplayName, State, StartMode, PathName
+FROM Win32_Service
+WHERE State = 'Running' AND StartMode = 'Auto'
+
+-- Query disk partitions with less than 10% free space
+SELECT Name, Size, FreeSpace, FileSystem, VolumeName
+FROM Win32_LogicalDisk
+WHERE DriveType = 3 AND (FreeSpace * 100 / Size) < 10

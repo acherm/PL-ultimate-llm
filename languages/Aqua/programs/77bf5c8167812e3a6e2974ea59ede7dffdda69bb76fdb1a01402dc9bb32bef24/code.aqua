@@ -1,0 +1,17 @@
+aqua HelloWorld
+
+import "@fluencelabs/aqua-lib/builtin.aqua"
+
+func greet(name: string) -> string:
+    greeting <- Op.concat_strings("Hello, ", name)
+    <- greeting
+
+func timestamp_greet(name: string) -> []string:
+    ts <- Peer.timestamp_ms()
+    ts_str <- Op.to_string(ts)
+    msg1 <- Op.concat_strings("Hello, ", name)
+    msg2 <- Op.concat_strings("Timestamp: ", ts_str)
+    result: *string
+    result <<- msg1
+    result <<- msg2
+    <- result

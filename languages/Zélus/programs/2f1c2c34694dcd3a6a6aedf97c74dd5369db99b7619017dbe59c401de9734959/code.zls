@@ -1,0 +1,12 @@
+(* Zélus: running average over a discrete stream *)
+
+let node running_average (x: float) = avg where
+  rec sum = x -> pre sum +. x
+  and n   = 1 -> pre n + 1
+  and avg = sum /. (float_of_int n)
+
+let node main () = () where
+  rec i   = 1 -> pre i + 1
+  and avg = running_average (float_of_int i)
+  and ()  = Format.printf "n=%d avg=%.2f\n" i avg
+  and ()  = if i >= 10 then raise Exit

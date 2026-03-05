@@ -1,0 +1,6 @@
+/* VQL artifact to list recently modified files */
+SELECT FullPath, Size, Mtime, Atime, Ctime
+FROM glob(globs="C:/Users/**")
+WHERE Mtime > now() - 86400
+ORDER BY Mtime DESC
+LIMIT 50

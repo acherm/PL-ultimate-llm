@@ -1,0 +1,13 @@
+(define (hanoi n from to via)
+  (when (> n 0)
+    (hanoi (- n 1) from via to)
+    (display "Move disk ")
+    (display n)
+    (display " from ")
+    (display from)
+    (display " to ")
+    (display to)
+    (newline)
+    (hanoi (- n 1) via to from)))
+
+(hanoi 3 'A 'C 'B)

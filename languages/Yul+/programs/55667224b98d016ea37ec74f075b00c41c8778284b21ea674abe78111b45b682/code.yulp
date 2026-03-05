@@ -1,0 +1,24 @@
+object "SimpleStore" {
+  code {
+    datacopy(0, dataoffset("Runtime"), datasize("Runtime"))
+    return(0, datasize("Runtime"))
+  }
+  object "Runtime" {
+    code {
+      calldatacopy(0, 0, 36)
+
+      switch sig()
+
+      case sig"store(uint256)" {
+        sstore(0, calldataload(4))
+      }
+
+      case sig"get()" {
+        mstore(0, sload(0))
+        return(0, 32)
+      }
+
+      stop()
+    }
+  }
+}

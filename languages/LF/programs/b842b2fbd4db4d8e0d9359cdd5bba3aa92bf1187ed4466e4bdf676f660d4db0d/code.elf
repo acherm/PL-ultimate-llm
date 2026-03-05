@@ -1,0 +1,18 @@
+%% Natural numbers and addition in LF (Edinburgh Logical Framework)
+
+nat : type.
+z : nat.
+s : nat -> nat.
+
+plus : nat -> nat -> nat -> type.
+plus-z : plus z N N.
+plus-s : plus (s M) N (s P)
+       <- plus M N P.
+
+even : nat -> type.
+even-z : even z.
+even-s : even (s (s N))
+       <- even N.
+
+%query 1 * plus (s (s z)) (s (s (s z))) N.
+%query 1 * even (s (s (s (s z)))).

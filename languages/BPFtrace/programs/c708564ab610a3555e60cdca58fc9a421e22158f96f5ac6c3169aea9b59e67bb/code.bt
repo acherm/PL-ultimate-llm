@@ -1,0 +1,35 @@
+#!/usr/bin/env bpftrace
+// execsnoop.bt - Trace new processes via exec() syscalls.
+
+BEGIN
+{
+	printf("%-16s %-6s %3s %s\n", "PCOMM", "PID", "RET", "ARGS");
+}
+
+tracepoint:syscalls:sys_enter_execve
+{
+	@args[tid] = join(args->argv);
+	@argname[tid] = str(args->filename);
+}
+
+tracepoint:syscalls:sys_exit_execve
+/@args[tid]/
+{
+	printf("%-16s %-6d %3d %s\n", comm, pid, args->ret, @argname[tid]);
+	delete(@args[tid]);
+	delete(@argname[tid]);
+}
+
+tracepoint:syscalls:sys_enter_execveat
+{
+	@args[tid] = join(args->argv);
+	@argname[tid] = str(args->filename);
+}
+
+tracepoint:syscalls:sys_exit_execveat
+/@args[tid]/
+{
+	printf("%-16s %-6d %3d %s\n", comm, pid, args->ret, @argname[tid]);
+	delete(@args[tid]);
+	delete(@argname[tid]);
+}

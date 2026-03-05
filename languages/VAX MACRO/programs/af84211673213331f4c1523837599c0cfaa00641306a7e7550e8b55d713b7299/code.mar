@@ -1,0 +1,12 @@
+        .TITLE  HELLO - Hello World in VAX MACRO-32
+        .PSECT  DATA,NOEXE,WRT
+MSGBUF: .ASCII  "Hello, World!"
+MSGLEN  = .-MSGBUF
+        .PSECT  CODE,EXE,NOWRT
+        .ENTRY  START,^M<>
+        PUSHL   #MSGLEN
+        PUSHAL  MSGBUF
+        PUSHL   #1
+        CALLS   #3,G^LIB$PUT_OUTPUT
+        $EXIT_S
+        .END    START

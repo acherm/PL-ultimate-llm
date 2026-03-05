@@ -1,0 +1,23 @@
+pragma zkay ^0.3.0;
+
+// Simple private token: each balance is encrypted under the owner's key
+contract PrivateToken {
+    mapping(address!x => uint@x) balances;
+
+    constructor() public {
+        balances[me] = 1000000;
+    }
+
+    function transfer(address to, uint@me val) public {
+        balances[me] = balances[me] - val;
+        balances[to] = balances[to] + reveal(val, to);
+    }
+
+    function deposit(uint val) public payable {
+        balances[me] = balances[me] + val;
+    }
+
+    function withdraw(uint@me val) public {
+        balances[me] = balances[me] - val;
+    }
+}

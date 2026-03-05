@@ -1,0 +1,25 @@
+library Basic/HetExample
+
+logic CASL
+
+spec Nat =
+  free type Nat ::= 0 | suc(Nat)
+  ops
+    + : Nat * Nat -> Nat;
+    * : Nat * Nat -> Nat
+  forall m, n : Nat
+  . 0 + n = n                       %( add_0 )%
+  . suc(m) + n = suc(m + n)         %( add_suc )%
+  . 0 * n = 0                       %( mult_0 )%
+  . suc(m) * n = n + m * n          %( mult_suc )%
+end
+
+spec NatList =
+  Nat
+then
+  free type NatList ::= nil | cons(head : Nat; tail : NatList)
+  op length : NatList -> Nat
+  forall x : Nat; l : NatList
+  . length(nil) = 0                            %( length_nil )%
+  . length(cons(x, l)) = suc(length(l))        %( length_cons )%
+end

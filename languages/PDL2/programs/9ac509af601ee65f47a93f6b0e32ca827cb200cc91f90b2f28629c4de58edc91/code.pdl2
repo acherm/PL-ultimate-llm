@@ -1,0 +1,40 @@
+-- PDL2: Pick and place robot program
+PROGRAM pick_and_place
+  VAR
+    i         : INTEGER
+    home_pos  : JOINTPOS
+  BEGIN
+    WRITE ('Starting pick and place routine', NL)
+
+    -- Move to home position
+    MOVE JOINT TO home_pos
+
+    -- Open gripper (digital output 1)
+    $DO[1] := FALSE
+
+    FOR i := 1 TO 3 DO
+      WRITE ('Cycle ', i, ' of 3', NL)
+
+      -- Move to pick position (predefined)
+      MOVE LINEAR TO $MNTOOL : ADVANCE
+      DELAY 200
+
+      -- Close gripper
+      $DO[1] := TRUE
+      DELAY 500
+
+      -- Move to place position
+      MOVE LINEAR TO $MNTOOL : ADVANCE
+      DELAY 200
+
+      -- Open gripper
+      $DO[1] := FALSE
+      DELAY 500
+
+      -- Return to home
+      MOVE JOINT TO home_pos
+    ENDFOR
+
+    WRITE ('Pick and place complete', NL)
+  END
+END PROGRAM

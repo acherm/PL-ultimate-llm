@@ -1,0 +1,18 @@
+;;; Common Music example: random walk melody
+;;; Generates a short melody using a random walk algorithm
+
+(in-package :cm)
+
+(defun random-walk (start len step)
+  (process repeat len
+    with pitch = 60
+    output (new midi
+                :time (now)
+                :keynum pitch
+                :duration 0.4
+                :amplitude 0.7)
+    set pitch = (between (- pitch step) (+ pitch step 1))
+    set pitch = (max 48 (min 84 pitch))
+    wait 0.5))
+
+(events (random-walk 0 16 3) "walk.mid")

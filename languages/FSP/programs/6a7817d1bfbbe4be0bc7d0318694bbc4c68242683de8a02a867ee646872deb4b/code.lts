@@ -1,0 +1,10 @@
+// Semaphore in FSP (Finite State Processes)
+// Modeled using the LTSA (Labelled Transition System Analyser)
+
+SEMAPHORE(N=1) = SEMA[N].
+SEMA[i:0..N] = (when (i>0) p -> SEMA[i-1]
+               |when (i<N) v -> SEMA[i+1]).
+
+USER = (p -> use -> v -> USER).
+
+||BINARY_SEMAPHORE = (USER || SEMAPHORE(1)).

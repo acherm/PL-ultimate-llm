@@ -1,0 +1,14 @@
+% Family relationships in Prova
+% Demonstrating Prova's logic programming capabilities
+
+parent(tom, bob).
+parent(tom, liz).
+parent(bob, ann).
+parent(bob, pat).
+parent(liz, jim).
+
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+:- ancestor(tom, X), println(X), fail.
+:- println(done).

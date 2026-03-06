@@ -1,0 +1,73 @@
+RoomModel PingPong {
+
+    LogicalSystem PingPongSystem {
+        SubSystemRef subsystem: PingPongSubSystem
+    }
+
+    SubSystemClass PingPongSubSystem {
+        ActorRef application: PingPongTop
+    }
+
+    ActorClass PingPongTop {
+        Structure {
+            ActorRef ping: Pinger
+            ActorRef pong: Ponger
+            Binding ping.pp <=> pong.pp
+        }
+        Behavior { }
+    }
+
+    ProtocolClass PingPongProtocol {
+        incoming {
+            Message ping(count: int32)
+        }
+        outgoing {
+            Message pong(count: int32)
+        }
+    }
+
+    ActorClass Pinger {
+        Interface {
+            Port pp: PingPongProtocol
+        }
+        Structure {
+            usercode1 {
+                "int count = 0;"
+            }
+        }
+        Behavior {
+            StateMachine {
+                Transition init: initial -> waitForPong {
+                    action {
+                        "pp.ping(0);"
+                    }
+                }
+                Transition pong2ping: waitForPong -> waitForPong [pp.pong] {
+                    action {
+                        "count = data.count + 1;"
+                        "pp.ping(count);"
+                    }
+                }
+                State waitForPong
+            }
+        }
+    }
+
+    ActorClass Ponger {
+        Interface {
+            conjugated Port pp: PingPongProtocol
+        }
+        Structure { }
+        Behavior {
+            StateMachine {
+                Transition init: initial -> waitForPing { }
+                Transition ping2pong: waitForPing -> waitForPing [pp.ping] {
+                    action {
+                        "pp.pong(data.count);"
+                    }
+                }
+                State waitForPing
+            }
+        }
+    }
+}

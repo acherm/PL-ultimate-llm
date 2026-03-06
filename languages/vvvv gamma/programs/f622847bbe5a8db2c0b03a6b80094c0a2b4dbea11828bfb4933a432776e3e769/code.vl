@@ -1,0 +1,33 @@
+// vvvv gamma (VL) - Fibonacci Sequence
+// Visual Language patch demonstrating recursive operations and stateful processes
+
+// A record type holding memoized Fibonacci results
+record FibState
+  Previous : Integer32 = 0
+  Current  : Integer32 = 1
+  Count    : Integer32 = 0
+
+// Advance to the next Fibonacci number (stateful step)
+operation Step (State : FibState) : (Value : Integer32) (State : FibState)
+  Value = State.Current
+  State = FibState(
+    Previous = State.Current,
+    Current  = State.Previous + State.Current,
+    Count    = State.Count + 1
+  )
+
+// Compute the nth Fibonacci number iteratively via repeated Step
+operation Fibonacci (N : Integer32) : (Result : Integer32)
+  let mutable state = FibState()
+  let mutable result = 0
+  for i = 0 to N - 1 do
+    let (v, s) = Step(state)
+    result <- v
+    state  <- s
+  Result = result
+
+// Entry point: print the first 10 Fibonacci numbers
+operation Main () : Unit
+  for i = 0 to 9 do
+    let fib = Fibonacci(i)
+    Console.WriteLine($"Fibonacci({i}) = {fib}")

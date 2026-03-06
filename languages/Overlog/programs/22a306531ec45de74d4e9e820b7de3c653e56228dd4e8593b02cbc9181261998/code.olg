@@ -1,0 +1,23 @@
+/* Overlog: Shortest Path Routing
+ * Classic declarative networking example from the P2 system.
+ * Based on: B.T. Loo et al., "Declarative Networking", CACM 2009.
+ */
+
+/* Table declarations */
+materialize(link, infinity, infinity, keys(1,2)).
+materialize(path, infinity, infinity, keys(1,2,3)).
+materialize(bestPath, infinity, infinity, keys(1,2)).
+
+/* Base case: a direct link is a path */
+path(@Src, Dst, Cost) :-
+  link(@Src, Dst, Cost).
+
+/* Inductive case: extend a path through an intermediate node */
+path(@Src, Dst, Cost) :-
+  link(@Src, Next, Cost1),
+  path(@Next, Dst, Cost2),
+  Cost := Cost1 + Cost2.
+
+/* Keep only the shortest (minimum cost) path to each destination */
+bestPath(@Src, Dst, min<Cost>) :-
+  path(@Src, Dst, Cost).

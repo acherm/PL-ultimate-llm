@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
+    "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
+<entity name="SimpleAdd" class="ptolemy.actor.TypedCompositeActor">
+    <property name="_createdBy"
+        class="ptolemy.kernel.attributes.VersionAttribute"
+        value="11.0.devel"/>
+    <doc>SDF model: multiply two constants and display the result</doc>
+    <property name="SDF Director"
+        class="ptolemy.domains.sdf.kernel.SDFDirector">
+        <property name="iterations"
+            class="ptolemy.data.expr.Parameter"
+            value="1"/>
+    </property>
+    <entity name="Const1" class="ptolemy.actor.lib.Const">
+        <property name="value"
+            class="ptolemy.data.expr.Parameter"
+            value="6"/>
+    </entity>
+    <entity name="Const2" class="ptolemy.actor.lib.Const">
+        <property name="value"
+            class="ptolemy.data.expr.Parameter"
+            value="7"/>
+    </entity>
+    <entity name="Multiplier" class="ptolemy.actor.lib.MultiplyDivide"/>
+    <entity name="Display" class="ptolemy.actor.lib.gui.Display"/>
+    <relation name="r1" class="ptolemy.actor.TypedIORelation"/>
+    <relation name="r2" class="ptolemy.actor.TypedIORelation"/>
+    <relation name="r3" class="ptolemy.actor.TypedIORelation"/>
+    <link port="Const1.output" relation="r1"/>
+    <link port="Const2.output" relation="r2"/>
+    <link port="Multiplier.multiply" relation="r1"/>
+    <link port="Multiplier.multiply" relation="r2"/>
+    <link port="Multiplier.output" relation="r3"/>
+    <link port="Display.input" relation="r3"/>
+</entity>

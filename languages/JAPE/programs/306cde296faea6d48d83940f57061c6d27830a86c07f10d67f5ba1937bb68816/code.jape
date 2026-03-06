@@ -1,0 +1,22 @@
+Phase: PersonFinder
+Input: Token Lookup
+Options: control = appelt
+
+Rule: PersonByTitle
+Priority: 20
+(
+  {Lookup.majorType == "title"}
+  ({Token.orth == "upperInitial", Token.kind == "word"})+
+):person
+-->
+  :person.Person = {rule = "PersonByTitle",
+                    kind = "title"}
+
+Rule: PersonFirstLast
+Priority: 10
+(
+  {Lookup.majorType == "firstName"}
+  {Token.orth == "upperInitial", Token.kind == "word"}
+):person
+-->
+  :person.Person = {rule = "PersonFirstLast"}

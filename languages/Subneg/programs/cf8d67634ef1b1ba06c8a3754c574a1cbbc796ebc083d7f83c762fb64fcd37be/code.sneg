@@ -1,0 +1,20 @@
+; Subneg (Subtract and Branch if Negative) — OISC sibling of Subleq
+; Instruction: a b c
+;   mem[b] -= mem[a]
+;   if mem[b] < 0: jump to address c
+;   else: advance to next instruction
+;
+; Program: copy the value at address A into address B
+; Symbolic addresses: zero=10, A=11, B=12, tmp=13
+; Initial values: A=7, B=0, zero=0, tmp=0
+
+; Clear zero register (idempotent: 0 -= 0 = 0)
+10 10 1
+; Negate A into tmp  (tmp = 0 - 7 = -7, negative => branch to 2)
+11 13 2
+; Clear B            (B = 0 - 0 = 0, not negative => fall through)
+10 12 3
+; Copy: B -= tmp     (B = 0 - (-7) = 7, not negative => fall through)
+13 12 4
+; halt (address 4 — no instruction, execution stops)
+; data: 10:0  11:7  12:0  13:0

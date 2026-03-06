@@ -1,0 +1,3 @@
+{ resource.service.name = "frontend" && span.http.method = "POST" && duration > 500ms }
+| select(span.http.url, span.http.status_code, duration)
+| avg(duration) by (span.http.status_code)

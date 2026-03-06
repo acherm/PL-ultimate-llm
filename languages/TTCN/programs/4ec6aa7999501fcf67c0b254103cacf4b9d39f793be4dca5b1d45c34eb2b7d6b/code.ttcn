@@ -1,0 +1,51 @@
+module SimpleTest {
+    /* TTCN Test Suite: Simple Echo Test
+     * Tests a basic echo protocol using ASN.1-defined messages
+     */
+
+    type record EchoRequest {
+        integer id,
+        charstring message
+    }
+
+    type record EchoResponse {
+        integer id,
+        charstring message,
+        boolean success
+    }
+
+    type port EchoPort message {
+        out EchoRequest;
+        in EchoResponse
+    }
+
+    type component EchoMTC {
+        port EchoPort P
+    }
+
+    testcase TC_BasicEcho() runs on EchoMTC {
+        var EchoRequest req := { id := 1, message := "Hello" };
+        var EchoResponse resp;
+        timer T := 10.0;
+
+        P.send(req);
+        T.start;
+
+        alt {
+            [] P.receive(EchoResponse : { id := 1, message := "Hello", success := true }) -> value resp {
+                log("Echo success: ", resp.message);
+                setverdict(pass)
+            }
+            [] P.receive {
+                setverdict(fail, "Unexpected response")
+            }
+            [] T.timeout {
+                setverdict(fail, "Timeout waiting for echo response")
+            }
+        }
+    }
+
+    control {
+        execute(TC_BasicEcho())
+    }
+}

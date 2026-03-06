@@ -1,0 +1,32 @@
+# Koord program: Rendezvous - robots converge to centroid of positions
+# Based on the Koord language for distributed cyber-physical systems
+
+using Motion:
+    allread: map[pid, float] x_pos
+    allread: map[pid, float] y_pos
+    allwrite: float my_x
+    allwrite: float my_y
+
+module Rendezvous:
+    sensors:
+        float x
+        float y
+    actuators:
+        float vx
+        float vy
+
+    def centroid_x():
+        return sum(x_pos[i] for i in range(num_robots)) / num_robots
+
+    def centroid_y():
+        return sum(y_pos[i] for i in range(num_robots)) / num_robots
+
+    init:
+        vx = 0.0
+        vy = 0.0
+
+    every 100ms:
+        my_x = x
+        my_y = y
+        vx = centroid_x() - x
+        vy = centroid_y() - y

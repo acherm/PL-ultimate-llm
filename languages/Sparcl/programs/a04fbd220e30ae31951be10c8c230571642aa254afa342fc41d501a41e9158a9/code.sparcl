@@ -1,0 +1,23 @@
+-- Sparcl: A Language for Partially-Invertible Computation
+-- Simple bijective functions example
+-- Based on: Matsuda, K. and Wang, M. (ICFP 2018)
+
+data Nat = Z | S Nat
+
+-- Successor bijection: forward adds S, backward removes S
+succN :: Nat <-> Nat
+succN n = S n
+
+-- Swap pair elements (self-inverse bijection)
+swap :: (a, b) <-> (b, a)
+swap (x, y) = (y, x)
+
+-- Negate integer (self-inverse bijection)
+negateZ :: Int <-> Int
+negateZ n = -n
+
+-- Add a constant to the first component of a pair
+-- forward: (x, y) -> (x+y, y)
+-- backward: (x, y) -> (x-y, y)
+addFst :: (Int, Int) <-> (Int, Int)
+addFst (x, y) = (x + y, y)

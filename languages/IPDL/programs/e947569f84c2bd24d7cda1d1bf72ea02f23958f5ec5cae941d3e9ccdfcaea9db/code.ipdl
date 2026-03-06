@@ -1,0 +1,43 @@
+include protocol PBrowser;
+
+namespace mozilla {
+namespace dom {
+
+/**
+ * PDemo - a demonstration IPDL protocol showing async and sync messaging
+ * between parent and child processes in Firefox's multi-process architecture.
+ */
+async protocol PDemo {
+  manager PBrowser;
+
+parent:
+  /**
+   * Send a string message from child to parent asynchronously.
+   */
+  async SendMessage(nsString aMessage);
+
+  /**
+   * Request a computation result synchronously.
+   */
+  sync ComputeResult(uint32_t aInput) returns (uint32_t aResult);
+
+child:
+  /**
+   * Notify the child of an event from the parent.
+   */
+  async NotifyEvent(uint32_t aEventType, nsString aPayload);
+
+  /**
+   * Tell the child to update its state.
+   */
+  async UpdateState(bool aEnabled);
+
+both:
+  /**
+   * Protocol teardown - called by either side.
+   */
+  async __delete__();
+};
+
+} // namespace dom
+} // namespace mozilla

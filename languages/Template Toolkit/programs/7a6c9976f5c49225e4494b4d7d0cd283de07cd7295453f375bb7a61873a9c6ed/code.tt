@@ -1,0 +1,27 @@
+[%# Fibonacci sequence and control structures in Template Toolkit %]
+
+[% a = 0; b = 1 %]
+[% BLOCK show_fibonacci %]
+  [% FOREACH i IN [1..n] %]
+    [% tmp = a + b; a = b; b = tmp %]
+    [% i %]: [% a %]
+  [% END %]
+[% END %]
+
+[%# Loop example with FOREACH and loop metadata %]
+[% fruits = ['apple', 'banana', 'cherry', 'date'] %]
+[% FOREACH fruit IN fruits %]
+  [% loop.count %]. [% fruit | ucfirst %][% ' (last)' IF loop.last %]
+[% END %]
+
+[%# Conditional example %]
+[% score = 85 %]
+[% IF score >= 90 %]
+  Grade: A
+[% ELSIF score >= 80 %]
+  Grade: B
+[% ELSIF score >= 70 %]
+  Grade: C
+[% ELSE %]
+  Grade: F
+[% END %]

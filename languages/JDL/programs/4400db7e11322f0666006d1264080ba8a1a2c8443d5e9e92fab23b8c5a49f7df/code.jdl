@@ -1,0 +1,25 @@
+entity Department {
+    name String required
+}
+
+entity Employee {
+    firstName String required
+    lastName String required
+    email String required unique
+    salary Long
+}
+
+entity Job {
+    jobTitle String required
+    minSalary Long
+    maxSalary Long
+}
+
+relationship ManyToOne {
+    Employee{department(name)} to Department
+    Employee{job(jobTitle)} to Job
+}
+
+paginate Employee with pagination
+service Employee with serviceClass
+dto Employee with mapstruct

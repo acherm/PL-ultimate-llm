@@ -1,0 +1,32 @@
+(* Enzymatic reaction: E + S <-> ES -> E + P
+   Classic Michaelis-Menten example in SPiM *)
+directive sample 100.0 points 1000
+directive plot "E" , "S" , "ES" , "P"
+
+val kf   = 0.001 in  (* forward binding rate *)
+val kb   = 0.001 in  (* reverse unbinding rate *)
+val kcat = 0.1   in  (* catalytic rate *)
+
+new bind   : chan<>
+new unbind : chan<>
+new release: chan<>
+
+(* Enzyme: waits to bind substrate *)
+let rec E() =
+  do kf bind?();     ES()
+
+(* Enzyme-Substrate complex: either unbinds or releases product *)
+and ES() =
+  choice
+    { do kb unbind!(); E() }
+    { do kcat release!(); E() }
+
+(* Substrate: waits to bind enzyme *)
+let rec S() =
+  do kf bind!(); 0
+
+(* Product: created upon catalysis *)
+let rec P() =
+  do kcat release?(); P()
+
+run ( E() | E() | S() | S() | S() | S() | S() | P() )

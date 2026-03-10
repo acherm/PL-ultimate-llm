@@ -1,0 +1,14 @@
+// Reliable broadcast in Dedalus (temporal Datalog for distributed systems)
+// From: Alvaro et al., "Dedalus: Datalog in Time and Space", 2011
+
+// A node persists facts it knows across time steps
+know(Node, Fact)@next :- know(Node, Fact);
+
+// When a message is received, the node learns it
+know(Node, Msg)@next :- recv(Node, Msg);
+
+// A node sends a known message to each neighbor (async = non-deterministic future)
+send(Neighbor, Msg)@async :- know(Node, Msg), neighbor(Node, Neighbor);
+
+// Deliver the message to the application layer
+deliver(Msg) :- know(Me, Msg), myNode(Me);

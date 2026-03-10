@@ -1,0 +1,25 @@
+class_chart ACCOUNT
+  description: "A simple bank account."
+  query
+    "What is the balance?", Balance: REAL
+    "What is the account holder name?", Holder: STRING
+    "Is the account active?", Active: BOOLEAN
+  command
+    "Deposit the given amount.", Deposit (amount: REAL)
+    "Withdraw the given amount.", Withdraw (amount: REAL)
+    "Close the account.", Close
+  constraint
+    "Balance is non-negative", Balance >= 0.0
+end
+
+class_chart BANK
+  description: "A financial institution managing accounts."
+  query
+    "How many accounts does the bank have?", Account_count: INTEGER
+    "Does the bank hold a given account?", Has_account (id: INTEGER): BOOLEAN
+  command
+    "Open a new account for the given holder.", Open_account (holder: STRING)
+    "Close a specific account.", Close_account (id: INTEGER)
+  constraint
+    "Account count is non-negative", Account_count >= 0
+end

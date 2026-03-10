@@ -1,0 +1,23 @@
+\ KASH (KANT Shell) program: Class number computation
+\ Computes the class group of a quadratic number field Q(sqrt(d))
+
+\ Create the polynomial ring over the integers
+_<x> := PolynomialRing(Integers());
+
+\ Define the minimal polynomial for Q(sqrt(-23))
+f := x^2 + 23;
+
+\ Create the number field
+K := NumberField(f);
+
+\ Compute its ring of integers (maximal order)
+OK := MaximalOrder(K);
+
+\ Compute the class group
+CG := ClassGroup(OK);
+
+\ Print results
+Print("Number field: Q(sqrt(-23))\n");
+Print("Discriminant: ", Discriminant(OK), "\n");
+Print("Class group: ", CG, "\n");
+Print("Class number: ", #CG, "\n");

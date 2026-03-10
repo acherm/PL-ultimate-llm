@@ -1,0 +1,8 @@
+-- Quicksort algorithm in LML (Lazy ML)
+qsort [] = []
+qsort (x:xs) = qsort smaller ++ [x] ++ qsort larger
+  where
+    smaller = [y | y <- xs; y <= x]
+    larger  = [y | y <- xs; y > x]
+
+main = qsort [5, 3, 8, 1, 9, 2, 7, 4, 6]

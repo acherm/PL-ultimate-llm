@@ -1,0 +1,32 @@
+// Familia: Unifying Interfaces, Type Classes, and Family Polymorphism
+// Demonstrates object models (type class instances) in Familia
+// Based on examples from: Zhang & Myers, PLDI 2017
+
+interface Printable {
+    String print();
+}
+
+class Point {
+    int x;
+    int y;
+
+    Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+object model PointPrint of Printable for Point {
+    String print() {
+        return "(" + this.x + ", " + this.y + ")";
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Point origin = new Point(0, 0);
+        Point p = new Point(3, 4);
+        System.out.println(origin[PointPrint].print());
+        System.out.println(p[PointPrint].print());
+    }
+}

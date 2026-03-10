@@ -1,0 +1,24 @@
+? LIMDEP Example: Binary Probit Model for Labor Force Participation
+? Based on Mroz (1987) dataset, 753 married women
+SAMPLE ; 1-753 $
+READ ; NVars=8 ; NObservations=753
+      ; Names=inlf,hours,kidslt6,kidsge6,age,educ,wage,nwifeinc
+      ; File=mroz.dat $
+
+? Summary statistics for selected variables
+DSTAT ; RHS=inlf,kidslt6,kidsge6,age,educ,nwifeinc $
+
+? OLS linear probability model (for comparison)
+REGRESS ; LHS=inlf
+        ; RHS=ONE,kidslt6,kidsge6,age,educ,nwifeinc $
+
+? Probit model: labor force participation decision
+PROBIT ; LHS=inlf
+       ; RHS=ONE,kidslt6,kidsge6,age,educ,nwifeinc $
+
+? Marginal effects evaluated at sample means
+MFAC $
+
+? Predicted probabilities
+CREATE ; phat=N01(b1+b2*kidslt6+b3*kidsge6+b4*age+b5*educ+b6*nwifeinc) $
+DSTAT ; RHS=phat $

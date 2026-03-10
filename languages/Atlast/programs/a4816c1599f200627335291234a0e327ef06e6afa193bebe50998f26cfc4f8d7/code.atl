@@ -1,0 +1,24 @@
+\ ATLAST (Autodesk Threaded Language Application System Toolkit)
+\ Example: Stack-based word definitions
+\ Demonstrates ATLAST/Forth colon definitions and arithmetic
+
+: square   ( n -- n^2 )
+    dup * ;
+
+: cube     ( n -- n^3 )
+    dup square * ;
+
+: sum-of-squares  ( a b -- a^2+b^2 )
+    square swap square + ;
+
+: between  ( n lo hi -- flag )
+    rot dup rot >=      \ n flag1  ( n >= lo )
+    -rot swap <=        \ flag1 flag2  ( n <= hi )
+    and ;
+
+\ Test the words
+5 square .          \ => 25
+3 cube .            \ => 27
+3 4 sum-of-squares . \ => 25
+7 1 10 between .    \ => -1 (true)
+15 1 10 between .   \ => 0 (false)

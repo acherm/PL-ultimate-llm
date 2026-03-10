@@ -1,0 +1,23 @@
+$FILE FIBONACCI;
+
+FIB: $PROC(N : WORD) WORD;
+$CODE
+  $IF N <= 1 THEN
+    RETURN(N)
+  $ELSE
+    RETURN(FIB(N-1) + FIB(N-2))
+  $FI;
+$END FIB;
+
+MAIN: $PROC;
+$DATA
+  I : WORD;
+$CODE
+  I := 0;
+  $DO WHILE I <= 10;
+    WRITE(FIB(I));
+    I := I + 1;
+  $OD;
+$END MAIN;
+
+$END FIBONACCI;

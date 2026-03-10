@@ -1,0 +1,23 @@
+// Family ontology rules in SWRL (Semantic Web Rule Language)
+// Demonstrates inferring new relationships from existing ones
+
+// Grandparent: if x has parent y, and y has parent z, then x has grandparent z
+hasParent(?x, ?y) ^ hasParent(?y, ?z) -> hasGrandparent(?x, ?z)
+
+// Uncle: if x has parent y, and y has a brother z, then x has uncle z
+hasParent(?x, ?y) ^ hasBrother(?y, ?z) -> hasUncle(?x, ?z)
+
+// Aunt: if x has parent y, and y has a sister z, then x has aunt z
+hasParent(?x, ?y) ^ hasSister(?y, ?z) -> hasAunt(?x, ?z)
+
+// Sibling: if x and y share a parent but are different individuals
+hasParent(?x, ?p) ^ hasParent(?y, ?p) ^ differentFrom(?x, ?y) -> hasSibling(?x, ?y)
+
+// Sibling symmetry
+hasSibling(?x, ?y) -> hasSibling(?y, ?x)
+
+// Parent inversion: hasParent implies hasChild in reverse
+hasParent(?x, ?y) -> hasChild(?y, ?x)
+
+// Adult classification by age
+Person(?x) ^ hasAge(?x, ?age) ^ swrlb:greaterThan(?age, 17) -> Adult(?x)

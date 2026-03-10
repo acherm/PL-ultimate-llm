@@ -1,0 +1,22 @@
+; DataEase Query Language (DQL) example: Sales Report by Region
+; Lists all orders placed in 2023 grouped by region with totals
+
+for orders
+    with
+        order-date >= "01-01-2023" and
+        order-date <= "12-31-2023" and
+        status = "Completed"
+    in region order ;
+    define
+        line-total = quantity * unit-price
+    list
+        region ;
+        customer-name ;
+        order-date ;
+        product-name ;
+        quantity ;
+        unit-price ;
+        line-total
+    count
+    sum line-total
+end

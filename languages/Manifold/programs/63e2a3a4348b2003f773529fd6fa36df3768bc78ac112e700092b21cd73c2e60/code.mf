@@ -1,0 +1,27 @@
+/* Manifold: Producer-Consumer pipeline example */
+
+atom producer(!out)
+{
+  integer i;
+  for i := 1 to 5 {
+    out ! i;
+  }
+}
+
+atom consumer(?in)
+{
+  integer n;
+  loop {
+    in ? n;
+    print(n);
+  }
+}
+
+manager main()
+{
+  producer p;
+  consumer c;
+  connect p.out to c.in;
+  activate p;
+  activate c;
+}

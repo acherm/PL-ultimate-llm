@@ -1,0 +1,12 @@
+/* QUEL: Retrieve employees earning above average salary */
+range of e is employee
+range of d is department
+
+retrieve (e.ename, e.job, e.sal, d.dname)
+  where e.deptno = d.deptno
+    and e.sal > 30000
+  sort by d.dname, e.sal
+
+/* Count employees by department */
+retrieve (d.dname, cnt = count(e.ename where e.deptno = d.deptno))
+  where d.deptno = e.deptno

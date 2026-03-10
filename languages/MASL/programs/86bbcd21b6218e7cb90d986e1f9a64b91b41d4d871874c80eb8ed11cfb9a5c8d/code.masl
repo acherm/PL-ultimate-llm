@@ -1,0 +1,24 @@
+// Fibonacci numbers using MASL (Model Action Specification Language)
+// From the xtuml/masl examples
+
+domain Calculator is
+  public service fibonacci(n : in integer) return integer;
+end domain;
+
+service Calculator::fibonacci(n : in integer) return integer is
+  a : integer := 0;
+  b : integer := 1;
+  temp : integer;
+  i : integer := 0;
+begin
+  if n <= 0 then
+    return 0;
+  end if;
+  while i < n - 1 loop
+    temp := b;
+    b := a + b;
+    a := temp;
+    i := i + 1;
+  end loop;
+  return b;
+end service;

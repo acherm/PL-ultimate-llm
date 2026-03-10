@@ -1,0 +1,17 @@
+.decl edge(from:symbol, to:symbol)
+.decl reachable(from:symbol, to:symbol)
+.decl on_cycle(node:symbol)
+
+edge("a", "b").
+edge("b", "c").
+edge("c", "d").
+edge("d", "b").
+edge("e", "f").
+
+reachable(x, y) :- edge(x, y).
+reachable(x, z) :- reachable(x, y), edge(y, z).
+
+on_cycle(x) :- reachable(x, x).
+
+.output reachable
+.output on_cycle

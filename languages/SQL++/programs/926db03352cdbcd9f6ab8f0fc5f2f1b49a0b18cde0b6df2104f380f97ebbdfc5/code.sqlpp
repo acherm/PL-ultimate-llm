@@ -1,0 +1,7 @@
+WITH order_revenue AS
+    (FROM orders AS o, o.items AS i
+     WHERE get_year(date(o.order_date)) = 2020
+     GROUP BY o.orderno
+     SELECT o.orderno, SUM(i.qty * i.price) AS revenue)
+FROM order_revenue
+SELECT AVG(revenue) AS average, MIN(revenue) AS minimum, MAX(revenue) AS maximum

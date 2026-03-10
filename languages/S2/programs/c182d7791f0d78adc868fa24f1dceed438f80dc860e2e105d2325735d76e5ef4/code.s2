@@ -1,0 +1,43 @@
+layerinfo type = "layout";
+layerinfo name = "Simple Layout";
+layerinfo author_name = "LiveJournal Documentation";
+
+function Page::print() {
+    var Page p = get_page();
+    """<!DOCTYPE html>
+<html>
+<head>
+  <title>""";
+    $p->print_title();
+    """</title>
+</head>
+<body>
+""";
+    $p->print_body();
+    """</body>
+</html>
+""";
+}
+
+function Page::print_title() {
+    print safe $*SITENAME + " - " + $this->title();
+}
+
+function Page::print_body() {
+    println("<h1>" + $this->title() + "</h1>");
+    foreach var Entry e ($this.entries) {
+        $e->print();
+    }
+}
+
+function Entry::print() {
+    """<div class="entry">
+  <h2>""";
+    $this->print_subject();
+    """</h2>
+  <div class="content">""";
+    $this->print_text();
+    """</div>
+</div>
+""";
+}

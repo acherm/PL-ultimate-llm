@@ -1,0 +1,6 @@
+((LAMBDA (APPEND)
+   (APPEND APPEND (QUOTE (A B C)) (QUOTE (D E F))))
+ (LAMBDA (SELF X Y)
+   (COND
+     ((ATOM X) Y)
+     ((QUOTE T) (CONS (CAR X) (SELF SELF (CDR X) Y))))))

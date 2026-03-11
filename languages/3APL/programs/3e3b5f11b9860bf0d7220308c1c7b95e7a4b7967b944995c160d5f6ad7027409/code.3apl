@@ -1,0 +1,22 @@
+BELIEFBASE:
+  color(a, red),
+  color(b, blue),
+  ontable(a),
+  ontable(b),
+  clear(a),
+  clear(b)
+
+GOALBASE:
+  on(a, b)
+
+PC-RULES:
+  on(X, Y) / not on(X, Y) |>
+    if clear(X) and clear(Y)
+    then [pickup(X), putdown(X, Y)]
+    else []
+
+CAPABILITIES:
+  pickup(X) / clear(X) and ontable(X) |>
+    { not ontable(X), holding(X), not clear(X) }
+  putdown(X, Y) / holding(X) and clear(Y) |>
+    { not holding(X), on(X, Y), clear(X), not clear(Y) }

@@ -1,0 +1,24 @@
+@DSL MaterialProperty;
+@Material Steel;
+@Law YoungModulus_SRMA;
+
+@Author "Helfer Thomas/Morandini Marc";
+@Date   "2009-11-25";
+@Description{
+  Young modulus of Steel (SRMA law).
+  Temperature dependent elastic property.
+};
+
+@Input T;
+T.setGlossaryName("Temperature");
+
+@Output E;
+E.setGlossaryName("YoungModulus");
+
+@PhysicalBounds T in [0:*[;
+@Bounds T in [293.15:1273.15];
+
+@Function{
+  const real T0 = 273.15;
+  E = (210.e9 - 52.e9 * ((T - T0) / 1.e3) * ((T - T0) / 1.e3));
+}

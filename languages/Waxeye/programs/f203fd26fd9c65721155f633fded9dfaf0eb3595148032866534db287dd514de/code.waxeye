@@ -1,0 +1,7 @@
+(* Waxeye grammar for arithmetic expressions *)
+start  <- _ exp _
+exp    <- term (('+' / '-') term)*
+term   <- factor (('*' / '/') factor)*
+factor <- '(' _ exp _ ')' / int
+int    <- [0-9]+
+_      <- [ \t\n\r]*

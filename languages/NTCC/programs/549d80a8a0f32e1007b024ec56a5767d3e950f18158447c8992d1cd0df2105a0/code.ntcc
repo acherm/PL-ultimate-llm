@@ -1,0 +1,13 @@
+% NTCC Oscillator Example
+% Demonstrates Non-deterministic Timed Concurrent Constraints (NTCC)
+% An oscillator process that alternates between high and low states each time unit
+
+osc_high = tell(state = high) || next osc_low.
+osc_low  = tell(state = low)  || next osc_high.
+
+react =
+    when (state = high) do tell(output = 1) ||
+    unless (state = high) next tell(output = 0) ||
+    next react.
+
+main = osc_high || react.

@@ -1,0 +1,25 @@
+import java.sql.*;
+import sqlj.runtime.*;
+import sqlj.runtime.ref.*;
+
+#sql iterator EmpIterator(String ename, double sal);
+
+public class EmpQuery {
+    public static void main(String[] args) throws Exception {
+        double threshold = 2000.0;
+        EmpIterator iter;
+
+        #sql iter = {
+            SELECT ename, sal
+            FROM emp
+            WHERE sal > :threshold
+            ORDER BY sal DESC
+        };
+
+        System.out.println("Employees earning over $2000:");
+        while (iter.next()) {
+            System.out.printf("  %-10s $%.2f%n", iter.ename(), iter.sal());
+        }
+        iter.close();
+    }
+}

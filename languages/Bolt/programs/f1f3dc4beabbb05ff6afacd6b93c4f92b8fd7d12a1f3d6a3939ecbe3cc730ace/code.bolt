@@ -1,0 +1,21 @@
+class Counter {
+  capability linear Counter;
+  var value : int;
+
+  method increment(cap linear Counter this) : void {
+    this.value := this.value + 1
+  }
+
+  method get(cap read Counter this) : int {
+    this.value
+  }
+}
+
+finish {
+  let c = new Counter { value = 0 };
+  finish {
+    spawn { c.increment() }
+    spawn { c.increment() }
+  };
+  printf("%d\n", c.get())
+}

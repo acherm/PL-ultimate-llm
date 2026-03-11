@@ -1,0 +1,38 @@
+type bounded_buffer = process;
+  const size = 5;
+  var buf: array [1..size] of integer;
+      head, tail, count: integer;
+
+  when count > 0:
+  procedure get(var x: integer);
+  begin
+    x := buf[head];
+    head := (head mod size) + 1;
+    count := count - 1
+  end;
+
+  when count < size:
+  procedure put(x: integer);
+  begin
+    buf[tail] := x;
+    tail := (tail mod size) + 1;
+    count := count + 1
+  end;
+
+  begin
+    head := 1; tail := 1; count := 0
+  end
+end;
+
+var b: bounded_buffer;
+    v: integer;
+
+begin
+  b.put(10);
+  b.put(20);
+  b.put(30);
+  b.get(v);
+  writeln(v);  { prints 10 }
+  b.get(v);
+  writeln(v)   { prints 20 }
+end.

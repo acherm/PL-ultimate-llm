@@ -1,0 +1,37 @@
+wsmlVariant _"http://www.wsmo.org/wsml/wsml-syntax/wsml-flight"
+
+namespace { _"http://www.example.org/ontologies/animals#",
+  dc  _"http://purl.org/dc/elements/1.1#"
+}
+
+ontology _"http://www.example.org/ontologies/animals"
+
+  annotations
+    dc#title hasValue "Simple Animals Ontology"
+    dc#description hasValue "An example WSML ontology describing animal classifications"
+  endAnnotations
+
+  concept Animal
+    attributes
+      hasName ofType _string
+      hasLegs ofType _integer
+
+  concept Mammal subConceptOf Animal
+  concept Reptile subConceptOf Animal
+  concept Bird subConceptOf Animal
+
+  concept Dog subConceptOf Mammal
+  concept Cat subConceptOf Mammal
+
+  instance Fido memberOf Dog
+    hasName hasValue "Fido"
+    hasLegs hasValue 4
+
+  instance Whiskers memberOf Cat
+    hasName hasValue "Whiskers"
+    hasLegs hasValue 4
+
+  axiom MammalHasLegs
+    definedBy
+      ?x memberOf Mammal and ?x[hasLegs hasValue ?n]
+      implies ?n > 0 .

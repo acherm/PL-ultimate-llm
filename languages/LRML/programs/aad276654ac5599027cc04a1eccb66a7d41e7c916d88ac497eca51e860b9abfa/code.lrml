@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lrml:LegalRuleML
+  xmlns:lrml="http://docs.oasis-open.org/legalruleml/ns/v1.0/"
+  xmlns:ruleml="http://ruleml.org/spec"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+  <!-- Prescriptive rule: drivers must obey speed limits -->
+  <lrml:LegalSources>
+    <lrml:LegalSource key="ls1">
+      <lrml:Reference iri="http://example.org/laws/traffic-code#speed-limit"/>
+    </lrml:LegalSource>
+  </lrml:LegalSources>
+
+  <lrml:Statements>
+    <lrml:PrescriptiveStatement key="ps1">
+      <ruleml:Rule>
+        <ruleml:if>
+          <ruleml:And>
+            <ruleml:Atom>
+              <ruleml:Rel>driving</ruleml:Rel>
+              <ruleml:Var>D</ruleml:Var>
+            </ruleml:Atom>
+            <ruleml:Atom>
+              <ruleml:Rel>exceedsSpeedLimit</ruleml:Rel>
+              <ruleml:Var>D</ruleml:Var>
+            </ruleml:Atom>
+          </ruleml:And>
+        </ruleml:if>
+        <ruleml:then>
+          <lrml:Obligation>
+            <ruleml:Atom>
+              <ruleml:Rel>isLiableForFine</ruleml:Rel>
+              <ruleml:Var>D</ruleml:Var>
+            </ruleml:Atom>
+          </lrml:Obligation>
+        </ruleml:then>
+      </ruleml:Rule>
+    </lrml:PrescriptiveStatement>
+  </lrml:Statements>
+</lrml:LegalRuleML>

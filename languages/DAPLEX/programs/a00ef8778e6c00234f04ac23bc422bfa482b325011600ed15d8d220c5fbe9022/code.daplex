@@ -1,0 +1,23 @@
+-- DAPLEX schema declarations and query example
+-- Functional Data Model by D. W. Shipman (1981)
+
+DECLARE EMPLOYEE() -> ENTITY
+DECLARE EMP_NAME(EMPLOYEE) -> STRING
+DECLARE SALARY(EMPLOYEE) -> INTEGER
+DECLARE DEPT(EMPLOYEE) -> DEPARTMENT
+
+DECLARE DEPARTMENT() -> ENTITY
+DECLARE DEPT_NAME(DEPARTMENT) -> STRING
+DECLARE MANAGER(DEPARTMENT) -> EMPLOYEE
+
+-- Query: retrieve name and department of employees with salary > 30000
+FOR EACH E IN EMPLOYEE()
+SUCH THAT SALARY(E) > 30000
+    PRINT(EMP_NAME(E), DEPT_NAME(DEPT(E)))
+
+-- Query: find all managers earning more than their department average
+FOR EACH D IN DEPARTMENT()
+    FOR EACH M IN MANAGER(D)
+    SUCH THAT SALARY(M) > AVG(SALARY(E) FOR EACH E IN EMPLOYEE()
+                               SUCH THAT DEPT(E) = D)
+        PRINT(EMP_NAME(M), DEPT_NAME(D))

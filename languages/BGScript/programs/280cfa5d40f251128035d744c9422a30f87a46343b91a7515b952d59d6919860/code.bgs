@@ -1,0 +1,31 @@
+# BGScript: Peripheral role example
+# Demonstrates event-driven BLE peripheral behavior
+
+dim connected
+dim adv_data(31)
+
+event system_boot(major, minor, patch, build, ll_version, protocol_version, hw)
+    connected = 0
+    # Set advertising parameters (min/max interval in units of 0.625ms, channel map)
+    call gap_set_adv_parameters(160, 160, 7)
+    # Start advertising as general discoverable, undirected connectable
+    call gap_set_mode(gap_general_discoverable, gap_undirected_connectable)
+    call system_endpoint_tx(system_endpoint_uart1, 6, "Ready\n")
+end
+
+event connection_status(connection, flags, address, address_type, conn_interval, timeout, latency, bonding)
+    connected = 1
+    call system_endpoint_tx(system_endpoint_uart1, 10, "Connected\n")
+end
+
+event connection_disconnected(connection, reason)
+    connected = 0
+    # Restart advertising after disconnection
+    call gap_set_mode(gap_general_discoverable, gap_undirected_connectable)
+    call system_endpoint_tx(system_endpoint_uart1, 13, "Disconnected\n")
+end
+
+event attributes_value(connection, reason, handle, offset, value_len, value_data)
+    # Echo received attribute value back via UART
+    call system_endpoint_tx(system_endpoint_uart1, value_len, value_data(0:value_len))
+end

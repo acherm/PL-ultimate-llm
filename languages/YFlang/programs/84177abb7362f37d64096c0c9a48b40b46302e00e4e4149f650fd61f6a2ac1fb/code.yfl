@@ -1,0 +1,24 @@
+//Church number
+function zero=(function f, int s)->{return f(s);};
+function inc_1=(function m, function f, int s)->{return (function f, int s)->{return f(m (f, s));};};
+function add_2=(function m, function n, function f, int s)->{return (function f, int s)->{return m (f (n (f (s))));};};
+function f; int s;
+//1=0'
+function n_1=inc_1(zero, f, s);
+//2=1+1=0'+0'
+function n_2=add_2(n_1, n_1, f, s);
+
+//class, generic, hierarchy
+class A<T1>{
+T1 a;
+T1 f(T1 a){this.a=a; return new T1();}
+}
+
+class B<T1> extends A{
+T1 b;
+<T2> T2 g(){return new T2();}
+}
+
+A<int> b=new B<int>();
+int i=b.f(1);
+bool j=((B<int>)b).<bool>g();

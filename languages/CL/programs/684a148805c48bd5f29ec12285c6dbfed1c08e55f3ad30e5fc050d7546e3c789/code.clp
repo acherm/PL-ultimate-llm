@@ -1,0 +1,25 @@
+/* Fibonacci sequence using CL (IBM i Control Language) */
+PGM
+
+DCL        VAR(&N) TYPE(*DEC) LEN(5 0) VALUE(10)
+DCL        VAR(&A) TYPE(*DEC) LEN(15 0) VALUE(0)
+DCL        VAR(&B) TYPE(*DEC) LEN(15 0) VALUE(1)
+DCL        VAR(&C) TYPE(*DEC) LEN(15 0) VALUE(0)
+DCL        VAR(&I) TYPE(*DEC) LEN(5 0) VALUE(1)
+DCL        VAR(&MSG) TYPE(*CHAR) LEN(50)
+
+SNDPGMMSG  MSG('Fibonacci sequence:')
+SNDPGMMSG  MSG(%CHAR(&A))
+
+LOOP:
+IF         COND(&I *GT &N) THEN(GOTO CMDLBL(DONE))
+CHGVAR     VAR(&C) VALUE(&A + &B)
+CHGVAR     VAR(&MSG) VALUE(%CHAR(&C))
+SNDPGMMSG  MSG(&MSG)
+CHGVAR     VAR(&A) VALUE(&B)
+CHGVAR     VAR(&B) VALUE(&C)
+CHGVAR     VAR(&I) VALUE(&I + 1)
+GOTO       CMDLBL(LOOP)
+
+DONE:
+ENDPGM

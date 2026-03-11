@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE gdml [
+]>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://service-spi.web.cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+
+  <define>
+    <constant name="HALFPI" value="pi/2."/>
+    <constant name="PI"     value="1.*pi"/>
+    <constant name="TWOPI"  value="2.*pi"/>
+    <position name="center" x="0" y="0" z="0"/>
+    <rotation name="identity" x="0" y="0" z="0"/>
+  </define>
+
+  <materials>
+    <element name="Nitrogen" formula="N" Z="7">
+      <atom type="A" unit="g/mol" value="14.01"/>
+    </element>
+    <element name="Oxygen" formula="O" Z="8">
+      <atom type="A" unit="g/mol" value="16.00"/>
+    </element>
+    <material name="Air" formula="Air">
+      <D type="density" unit="g/cm3" value="0.00129"/>
+      <fraction n="0.7" ref="Nitrogen"/>
+      <fraction n="0.3" ref="Oxygen"/>
+    </material>
+  </materials>
+
+  <solids>
+    <box lunit="cm" name="WorldBox" x="200" y="200" z="200"/>
+    <tubs lunit="cm" aunit="deg"
+      name="Cylinder"
+      rmin="0" rmax="5" z="20"
+      startphi="0" deltaphi="360"/>
+    <sphere lunit="cm" aunit="deg"
+      name="Sphere"
+      rmin="0" rmax="3"
+      startphi="0" deltaphi="360"
+      starttheta="0" deltatheta="180"/>
+  </solids>
+
+  <structure>
+    <volume name="CylinderLog">
+      <materialref ref="Air"/>
+      <solidref ref="Cylinder"/>
+    </volume>
+    <volume name="SphereLog">
+      <materialref ref="Air"/>
+      <solidref ref="Sphere"/>
+    </volume>
+    <volume name="World">
+      <materialref ref="Air"/>
+      <solidref ref="WorldBox"/>
+      <physvol>
+        <volumeref ref="CylinderLog"/>
+        <positionref ref="center"/>
+        <rotationref ref="identity"/>
+      </physvol>
+      <physvol>
+        <volumeref ref="SphereLog"/>
+        <position name="sphPos" x="20" y="0" z="0"/>
+      </physvol>
+    </volume>
+  </structure>
+
+  <setup name="Default" version="1.0">
+    <world ref="World"/>
+  </setup>
+</gdml>

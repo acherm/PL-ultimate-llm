@@ -1,0 +1,28 @@
+/**
+ * An example Avro IDL schema definition.
+ * Defines a simple mailing protocol.
+ */
+@namespace("org.apache.avro.test")
+protocol Mail {
+
+  record Message {
+    string to;
+    string from;
+    string body;
+  }
+
+  record Receipt {
+    string id;
+    long timestamp;
+  }
+
+  /**
+   * Send a message and get a receipt.
+   */
+  Receipt send(Message message);
+
+  /**
+   * Replay a message by its ID.
+   */
+  void replay(string messageId);
+}

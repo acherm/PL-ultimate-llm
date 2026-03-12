@@ -1,0 +1,26 @@
+% Simple English grammar in AGFL (Affix Grammar over Finite Lattices)
+% Demonstrates number agreement between subject and verb
+
+gram english;
+
+affixes
+  num = {sg, pl};
+
+rules
+  sentence -> np(num) vp(num).
+  np(num) -> det(num) noun(num).
+  np(sg) -> propernoun.
+  vp(num) -> verb(num).
+  vp(num) -> verb(num) np(_).
+  vp(num) -> verb(num) pp.
+  pp -> prep np(_).
+
+codetable
+  det(sg) = "a" / "the".
+  det(pl) = "the".
+  noun(sg) = "dog" / "cat" / "student" / "teacher".
+  noun(pl) = "dogs" / "cats" / "students" / "teachers".
+  propernoun = "Alice" / "Bob" / "Carol".
+  verb(sg) = "sees" / "chases" / "helps" / "likes".
+  verb(pl) = "see" / "chase" / "help" / "like".
+  prep = "with" / "near" / "beside".

@@ -1,0 +1,26 @@
+"Kevo prototype-based object example"
+"A. Taivalsaari, Nokia Research Center, 1992"
+"Kevo: a prototype-based language"
+
+"Create a counter prototype by copying the root Object"
+counter := Object copy.
+counter addIV: #count withValue: 0.
+counter addMethod: #increment body: [count := count + 1].
+counter addMethod: #decrement body: [count := count - 1].
+counter addMethod: #reset     body: [count := 0].
+counter addMethod: #value     body: [^count].
+
+"Increment the counter a few times"
+counter increment.
+counter increment.
+counter increment.
+counter decrement.
+Transcript showNl: counter value printString.
+
+"Create a derived counter starting at 10"
+bigCounter := counter copy.
+bigCounter reset.
+bigCounter count: 10.
+bigCounter increment.
+bigCounter increment.
+Transcript showNl: bigCounter value printString.

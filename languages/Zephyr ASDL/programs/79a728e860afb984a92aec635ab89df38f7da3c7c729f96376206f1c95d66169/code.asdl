@@ -1,0 +1,44 @@
+-- ASDL's 6 builtin types are:
+-- identifier, int, string, bytes, object, singleton
+
+module Python
+{
+    mod = Module(stmt* body, type_ignore* type_ignores)
+        | Interactive(stmt* body)
+        | Expression(expr body)
+        | FunctionType(expr* argtypes, expr returns)
+
+    stmt = FunctionDef(identifier name, arguments args,
+                       stmt* body, expr* decorator_list, expr? returns,
+                       string? type_comment)
+          | AsyncFunctionDef(identifier name, arguments args,
+                              stmt* body, expr* decorator_list, expr? returns,
+                              string? type_comment)
+          | ClassDef(identifier name,
+             expr* bases,
+             keyword* keywords,
+             stmt* body,
+             expr* decorator_list)
+          | Return(expr? value)
+          | Delete(expr* targets)
+          | Assign(expr* targets, expr value, string? type_comment)
+          | If(expr test, stmt* body, stmt* orelse)
+          | While(expr test, stmt* body, stmt* orelse)
+          | For(expr target, expr iter, stmt* body, stmt* orelse,
+                string? type_comment)
+
+    expr = BoolOp(boolop op, expr* values)
+         | BinOp(expr left, operator op, expr right)
+         | UnaryOp(unaryop op, expr operand)
+         | Name(identifier id, expr_context ctx)
+         | Constant(constant value, string? kind)
+
+    boolop = And | Or
+
+    expr_context = Load | Store | Del
+
+    operator = Add | Sub | Mult | MatMult | Div | Mod | Pow
+             | LShift | RShift | BitOr | BitXor | BitAnd | FloorDiv
+
+    unaryop = Invert | Not | UAdd | USub
+}

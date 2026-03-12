@@ -1,0 +1,39 @@
+class Stack
+    export push, pop, isEmpty, top
+
+    var items : array 1..100 of int
+    var size : int := 0
+
+    procedure push (item : int)
+        size := size + 1
+        items(size) := item
+    end push
+
+    function pop : int
+        const val := items(size)
+        size := size - 1
+        result val
+    end pop
+
+    function top : int
+        result items(size)
+    end top
+
+    function isEmpty : boolean
+        result size = 0
+    end isEmpty
+end Stack
+
+var s : ^Stack
+new Stack, s
+
+s -> push(10)
+s -> push(20)
+s -> push(30)
+
+put "Top: ", s -> top
+put "Pop: ", s -> pop
+put "Pop: ", s -> pop
+put "Empty? ", s -> isEmpty
+put "Pop: ", s -> pop
+put "Empty? ", s -> isEmpty

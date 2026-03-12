@@ -1,0 +1,27 @@
+-- System F (Polymorphic Lambda Calculus) - Church Encodings
+
+-- Polymorphic identity function
+id : ∀α. α → α
+id = Λα. λx:α. x
+
+-- Church Booleans
+Bool = ∀α. α → α → α
+
+tru : Bool
+tru = Λα. λt:α. λf:α. t
+
+fls : Bool
+fls = Λα. λt:α. λf:α. f
+
+-- Conditional
+if_ : Bool → ∀α. α → α → α
+if_ = λb:Bool. Λα. λt:α. λf:α. b [α] t f
+
+-- Church numerals
+Nat = ∀α. (α → α) → α → α
+
+zero : Nat
+zero = Λα. λf:α→α. λx:α. x
+
+succ : Nat → Nat
+succ = λn:Nat. Λα. λf:α→α. λx:α. f (n [α] f x)

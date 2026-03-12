@@ -1,0 +1,36 @@
+metavar termvar, x ::=
+
+grammar
+  t :: 't_' ::=
+    | x           ::   :: var   {{ com variable }}
+    | \ x . t    ::   :: lam   {{ com abstraction }}
+    | t1 t2       ::   :: app   {{ com application }}
+    | ( t )       :: S :: paren {{ coq ([[t]]) }}
+
+subrules
+  v <:: t
+
+grammar
+  v :: 'v_' ::=
+    | \ x . t    ::   :: lam
+
+terminals :: 'terminals_' ::=
+  | \            ::   :: lambda  {{ tex \lambda }}
+  | -->           ::   :: red     {{ tex \longrightarrow }}
+
+defns
+  Jop :: '' ::=
+
+defn
+  t --> t' :: :: step :: 'step_' {{ com small-step evaluation }} by
+
+  --------------------------------------- :: beta
+  (\ x . t12) v2 --> t12 [ x := v2 ]
+
+  t1 --> t1'
+  ---------------------- :: app1
+  t1 t2 --> t1' t2
+
+  t2 --> t2'
+  ---------------------- :: app2
+  v1 t2 --> v1 t2'

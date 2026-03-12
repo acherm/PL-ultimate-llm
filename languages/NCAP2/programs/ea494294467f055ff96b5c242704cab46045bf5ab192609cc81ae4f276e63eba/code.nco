@@ -1,0 +1,25 @@
+// NCAP2 script: derive atmospheric variables from model output
+// Demonstrates variable arithmetic, attribute assignment, and aggregation
+
+// Convert temperature from Kelvin to Celsius
+temp_C=T-273.15;
+temp_C@units="Celsius";
+temp_C@long_name="Temperature";
+
+// Convert surface pressure from Pa to hPa (millibar)
+pres_hPa=PS/100.0;
+pres_hPa@units="hPa";
+pres_hPa@long_name="Surface Pressure";
+
+// Compute wind speed from horizontal components
+wspd=sqrt(U*U+V*V);
+wspd@units="m s-1";
+wspd@long_name="Wind Speed";
+
+// Global mean values
+*t_mean=temp_C.avg();
+*p_mean=pres_hPa.avg();
+*w_mean=wspd.avg();
+print(t_mean);
+print(p_mean);
+print(w_mean);

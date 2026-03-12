@@ -4,6 +4,9 @@ Agent prompt templates for Claude Code agents.
 """
 
 import hashlib
+import random
+import re
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -22,6 +25,66 @@ def _get_lang_count() -> int:
     if not pl_path.exists():
         return 0
     return sum(1 for line in pl_path.read_text().splitlines() if line.strip())
+
+
+def _load_language_list() -> list[str]:
+    """Load all language names from pl_list.txt."""
+    pl_path = ROOT / "data" / "pl_list.txt"
+    if not pl_path.exists():
+        return []
+    return [line.strip() for line in pl_path.read_text().splitlines() if line.strip()]
+
+
+def pick_random_seeds(n: int) -> list[str]:
+    """Pick n distinct random languages from pl_list.txt as seeds."""
+    langs = _load_language_list()
+    if not langs:
+        return []
+    return random.sample(langs, min(n, len(langs)))
+
+
+def generate_prefixes(n: int) -> list[str]:
+    """Generate n distinct prefixes, weighted toward under-represented ones."""
+    langs = _load_language_list()
+    prefix_counts: Counter[str] = Counter()
+    for lang in langs:
+        clean = re.sub(r'[^a-zA-Z]', '', lang)
+        if len(clean) >= 2:
+            prefix_counts[clean[:2].lower()] += 1
+
+    all_prefixes = [
+        chr(a) + chr(b) for a in range(ord('a'), ord('z') + 1)
+        for b in range(ord('a'), ord('z') + 1)
+    ]
+
+    max_count = max(prefix_counts.values()) if prefix_counts else 1
+    weights = []
+    for p in all_prefixes:
+        c = prefix_counts.get(p, 0)
+        weights.append(max_count + 1 - c)
+
+    chosen: list[str] = []
+    available = list(zip(all_prefixes, weights))
+    for _ in range(min(n, len(available))):
+        total = sum(w for _, w in available)
+        r = random.uniform(0, total)
+        cumulative = 0.0
+        pick_idx = 0
+        for i, (_, w) in enumerate(available):
+            cumulative += w
+            if cumulative >= r:
+                pick_idx = i
+                break
+        chosen.append(available[pick_idx][0])
+        available.pop(pick_idx)
+
+    return chosen
+
+
+def _slugify(name: str) -> str:
+    """Convert a language name to a short slug for commit trailers."""
+    slug = re.sub(r'[^a-zA-Z0-9]+', '-', name).strip('-').lower()
+    return slug[:30]
 
 
 # Base prompt — optimized to avoid reading the full list into context
@@ -93,7 +156,7 @@ then pick one from the results that is NOT already listed.
 
 Steps:
 1. Read CLAUDE.md for file format requirements
-2. Write a file /tmp/candidates.txt with ~100 programming language names (one per line).
+2. Write a file /tmp/candidates.txt with ~{batch_size} programming language names (one per line).
    Cast a wide net — include obscure, historical, regional, domain-specific, experimental,
    educational, vendor-specific languages. The more diverse your list, the more gaps you'll find.
    Only include languages you believe are REAL (not invented). Do NOT include well-known mainstream
@@ -107,9 +170,85 @@ Steps:
    - languages/<Name>/programs/<sha256>/code.<ext>
    - languages/<Name>/programs/<sha256>/manifest.json
 6. Update data/pl_list.txt: python3 -c "lines=sorted(set(open('data/pl_list.txt').read().splitlines()+['YourLang']),key=str.lower);open('data/pl_list.txt','w').write('\\n'.join(l for l in lines if l)+'\\n')"
-7. Commit: git add -A && git commit -m "turn: add <Name> (+1 program)\\n\\nList-Digest: {list_digest}\\nModel: {{model}}\\nAgent: claude-code\\nWebSearch: {{ws}}\\nStrategy: batch-recall-100"
+7. Commit: git add -A && git commit -m "turn: add <Name> (+1 program)\\n\\nList-Digest: {list_digest}\\nModel: {{model}}\\nAgent: claude-code\\nWebSearch: {{ws}}\\nStrategy: batch-recall-{batch_size}"
 
-If the checker returns 0 new candidates, generate ANOTHER batch of 100 different names and repeat from step 3.
+If the checker returns 0 new candidates, generate ANOTHER batch of {batch_size} different names and repeat from step 3.
+"""
+
+# Sibling prompt — agent explores languages related to a seed language
+SIBLING_PROMPT = """Your task: Add ONE new programming language to this collection ({lang_count} languages currently).
+
+CRITICAL EFFICIENCY RULES:
+- Do NOT read data/pl_list.txt — it has {lang_count} lines and is too large
+- Do NOT use TodoWrite — just work directly
+- Do NOT read project memory files — read only CLAUDE.md in the current directory
+- The List-Digest is: {list_digest} (use this in your commit, do NOT recompute it)
+
+APPROACH: Sibling exploration from seed language.
+Your seed language is: **{seed_language}**
+
+Think about languages related to {seed_language} — same paradigm, same era, same author, same VM/runtime,
+same domain, same language family, influenced by or influencing it, competing with it, etc.
+
+Steps:
+1. Read CLAUDE.md for file format requirements
+2. Brainstorm ~{n_candidates} real programming languages related to {seed_language}.
+   Write them to /tmp/candidates.txt (one per line).
+   Be creative — think about:
+   - Languages by the same author/team
+   - Languages targeting the same VM or runtime
+   - Languages in the same paradigm family
+   - Languages from the same era/decade
+   - Languages for the same domain (scientific, web, systems, etc.)
+   - Languages that influenced or were influenced by {seed_language}
+   Only include languages you believe are REAL (not invented).
+3. Run the checker: python3 tools/claude/check_candidates.py /tmp/candidates.txt
+   This prints ONLY the language names NOT in pl_list.txt.
+4. If the checker returns 0 new candidates, brainstorm ANOTHER batch of {n_candidates} different
+   related languages and repeat from step 3. Try up to 3 rounds.
+5. Pick ONE language from the checker output. Choose one you are confident is real and that you
+   can write a correct program example for.
+6. Create all required files:
+   - languages/<Name>/meta.json
+   - languages/<Name>/programs/<sha256>/code.<ext>
+   - languages/<Name>/programs/<sha256>/manifest.json
+7. Update data/pl_list.txt: python3 -c "lines=sorted(set(open('data/pl_list.txt').read().splitlines()+['YourLang']),key=str.lower);open('data/pl_list.txt','w').write('\\n'.join(l for l in lines if l)+'\\n')"
+8. Commit: git add -A && git commit -m "turn: add <Name> (+1 program)\\n\\nList-Digest: {list_digest}\\nModel: {{model}}\\nAgent: claude-code\\nWebSearch: {{ws}}\\nStrategy: sibling-of-{seed_slug}"
+"""
+
+# Prefix prompt — agent explores languages starting with a given prefix
+PREFIX_PROMPT = """Your task: Add ONE new programming language to this collection ({lang_count} languages currently).
+
+CRITICAL EFFICIENCY RULES:
+- Do NOT read data/pl_list.txt — it has {lang_count} lines and is too large
+- Do NOT use TodoWrite — just work directly
+- Do NOT read project memory files — read only CLAUDE.md in the current directory
+- The List-Digest is: {list_digest} (use this in your commit, do NOT recompute it)
+
+APPROACH: Prefix exploration.
+Your assigned prefix is: **{prefix}**
+
+Think of real programming languages whose names start with "{prefix}" (case-insensitive).
+
+Steps:
+1. Read CLAUDE.md for file format requirements
+2. Brainstorm ~{n_candidates} real programming languages whose names start with "{prefix}".
+   Write them to /tmp/candidates.txt (one per line).
+   Cast a wide net — include obscure, historical, regional, domain-specific, experimental,
+   educational, vendor-specific, and esoteric languages. The prefix is case-insensitive.
+   Only include languages you believe are REAL (not invented).
+3. Run the checker: python3 tools/claude/check_candidates.py /tmp/candidates.txt
+   This prints ONLY the language names NOT in pl_list.txt.
+4. If the checker returns 0 new candidates, brainstorm ANOTHER batch of {n_candidates} different
+   languages starting with "{prefix}" and repeat from step 3. Try up to 3 rounds.
+5. Pick ONE language from the checker output. Choose one you are confident is real and that you
+   can write a correct program example for.
+6. Create all required files:
+   - languages/<Name>/meta.json
+   - languages/<Name>/programs/<sha256>/code.<ext>
+   - languages/<Name>/programs/<sha256>/manifest.json
+7. Update data/pl_list.txt: python3 -c "lines=sorted(set(open('data/pl_list.txt').read().splitlines()+['YourLang']),key=str.lower);open('data/pl_list.txt','w').write('\\n'.join(l for l in lines if l)+'\\n')"
+8. Commit: git add -A && git commit -m "turn: add <Name> (+1 program)\\n\\nList-Digest: {list_digest}\\nModel: {{model}}\\nAgent: claude-code\\nWebSearch: {{ws}}\\nStrategy: prefix-{prefix}"
 """
 
 # Rejection list template (appended when retrying)
@@ -124,6 +263,10 @@ def build_prompt(
     model: str,
     rejected_languages: list[str] | None = None,
     prompt_mode: str = "default",
+    batch_size: int = 100,
+    seed_language: str | None = None,
+    prefix: str | None = None,
+    n_candidates: int = 10,
 ) -> str:
     """
     Build the agent prompt.
@@ -132,17 +275,47 @@ def build_prompt(
         web_search: Whether web search is enabled
         model: Model name for the commit trailer
         rejected_languages: Languages to exclude (from previous failed attempts)
-        prompt_mode: "default" for standard prompt, "batch" for batch-recall prompt
+        prompt_mode: "default", "batch", "sibling", or "prefix"
+        batch_size: Number of candidates for batch-recall mode
+        seed_language: Seed language for sibling mode
+        prefix: Prefix string for prefix mode
+        n_candidates: Number of candidates for sibling/prefix modes
 
     Returns:
         Complete prompt string
     """
     ws_value = "enabled" if web_search else "disabled"
 
-    if prompt_mode == "batch":
+    if prompt_mode == "sibling":
+        if not seed_language:
+            raise ValueError("sibling mode requires seed_language")
+        base = SIBLING_PROMPT.format(
+            lang_count=_get_lang_count(),
+            list_digest=_get_list_digest(),
+            seed_language=seed_language,
+            seed_slug=_slugify(seed_language),
+            n_candidates=n_candidates,
+        ).replace("{model}", model).replace("{ws}", ws_value).strip()
+
+        parts = [base]
+
+    elif prompt_mode == "prefix":
+        if not prefix:
+            raise ValueError("prefix mode requires prefix")
+        base = PREFIX_PROMPT.format(
+            lang_count=_get_lang_count(),
+            list_digest=_get_list_digest(),
+            prefix=prefix,
+            n_candidates=n_candidates,
+        ).replace("{model}", model).replace("{ws}", ws_value).strip()
+
+        parts = [base]
+
+    elif prompt_mode == "batch":
         base = BATCH_RECALL_PROMPT.format(
             lang_count=_get_lang_count(),
             list_digest=_get_list_digest(),
+            batch_size=batch_size,
         ).replace("{model}", model).replace("{ws}", ws_value).strip()
 
         parts = [base]
@@ -205,3 +378,27 @@ if __name__ == "__main__":
         model="claude-sonnet-4",
         rejected_languages=["Python", "Rust", "Go"]
     ))
+    print()
+    print("=== Sibling Mode ===")
+    seeds = pick_random_seeds(3)
+    print(f"  Random seeds: {seeds}")
+    if seeds:
+        print(build_prompt(
+            web_search=False,
+            model="claude-sonnet-4",
+            prompt_mode="sibling",
+            seed_language=seeds[0],
+            n_candidates=10,
+        ))
+    print()
+    print("=== Prefix Mode ===")
+    prefixes = generate_prefixes(3)
+    print(f"  Random prefixes: {prefixes}")
+    if prefixes:
+        print(build_prompt(
+            web_search=False,
+            model="claude-sonnet-4",
+            prompt_mode="prefix",
+            prefix=prefixes[0],
+            n_candidates=10,
+        ))

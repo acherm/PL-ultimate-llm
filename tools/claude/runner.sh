@@ -11,7 +11,8 @@
 #   -M, --models   MODELS    Comma-separated models (default: sonnet)
 #   -w, --web-search         Enable web search (default: off)
 #   -t, --timeout  SECONDS   Per-agent timeout (default: 600)
-#   -p, --prompt-mode MODE   Prompt mode: default or batch (default: default)
+#   -p, --prompt-mode MODE   Prompt mode: default, batch, sibling, or prefix
+#   -n, --n-candidates N     Candidates per agent for sibling/prefix (default: 10)
 #
 # Examples:
 #   ./tools/claude/runner.sh                        # 60 min, 2 agents, sonnet
@@ -19,6 +20,9 @@
 #   ./tools/claude/runner.sh -m 60 -a 3 -M opus    # 1 hour, 3 opus agents
 #   ./tools/claude/runner.sh -m 60 -w               # 1 hour with web search
 #   ./tools/claude/runner.sh -m 60 -p batch         # batch-recall-100 mode
+#   ./tools/claude/runner.sh -m 60 -p sibling       # sibling exploration
+#   ./tools/claude/runner.sh -m 60 -p prefix        # prefix exploration
+#   ./tools/claude/runner.sh -p prefix -n 15        # prefix with 15 candidates
 #
 # Monitor:
 #   screen -r plcampaign          # attach to live session
@@ -37,6 +41,8 @@ MODELS=sonnet
 WEB_SEARCH=false
 TIMEOUT=600
 PROMPT_MODE=default
+BATCH_SIZE=100
+N_CANDIDATES=10
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -45,6 +51,8 @@ while [[ $# -gt 0 ]]; do
         -M|--models)   MODELS="$2";  shift 2 ;;
         -t|--timeout)  TIMEOUT="$2"; shift 2 ;;
         -p|--prompt-mode) PROMPT_MODE="$2"; shift 2 ;;
+        -b|--batch-size) BATCH_SIZE="$2"; shift 2 ;;
+        -n|--n-candidates) N_CANDIDATES="$2"; shift 2 ;;
         -w|--web-search) WEB_SEARCH=true; shift ;;
         -h|--help)
             sed -n '2,/^$/{ s/^# //; s/^#//; p }' "$0"
@@ -91,6 +99,8 @@ echo "  Models:      ${MODELS}"
 echo "  Web search:  ${WS_LABEL}"
 echo "  Timeout:     ${TIMEOUT}s"
 echo "  Prompt mode: ${PROMPT_MODE}"
+if [ "$PROMPT_MODE" = "batch" ]; then echo "  Batch size:  ${BATCH_SIZE}"; fi
+if [ "$PROMPT_MODE" = "sibling" ] || [ "$PROMPT_MODE" = "prefix" ]; then echo "  Candidates:  ${N_CANDIDATES}"; fi
 echo "  Collection:  ${BEFORE} languages"
 echo ""
 
@@ -116,11 +126,23 @@ while [ \$(date +%s) -lt \$END ]; do
 
     rm -f .orchestrator.lock
 
+    # Support mixed prompt mode: cycle through strategies
+    if [ '${PROMPT_MODE}' = 'mixed' ]; then
+        MODES=(batch sibling prefix)
+        MODE=\${MODES[\$(( (N - 1) % 3 ))]}
+    else
+        MODE='${PROMPT_MODE}'
+    fi
+
+    echo \"  mode=\$MODE\" | tee -a \"\$LOG\"
+
     python3 -u -m tools.claude.parallel  \
         --agents ${AGENTS}               \
         --models ${MODELS}               \
         ${WS_FLAG}                       \
-        --prompt-mode ${PROMPT_MODE}     \
+        --prompt-mode \$MODE             \
+        --batch-size ${BATCH_SIZE}       \
+        --n-candidates ${N_CANDIDATES}   \
         --max-minutes \$R                \
         --pause 5                        \
         --timeout ${TIMEOUT}              \

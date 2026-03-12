@@ -85,6 +85,10 @@ def run_agent_in_worktree(
     web_search: bool,
     timeout: int,
     prompt_mode: str = "default",
+    batch_size: int = 100,
+    seed_language: str | None = None,
+    prefix: str | None = None,
+    n_candidates: int = 10,
 ) -> AgentResult:
     """
     Run a Claude agent in a specific worktree.
@@ -94,7 +98,11 @@ def run_agent_in_worktree(
         model: Model to use
         web_search: Enable web search
         timeout: Timeout in seconds
-        prompt_mode: "default" or "batch"
+        prompt_mode: "default", "batch", "sibling", or "prefix"
+        batch_size: Number of candidates for batch-recall mode
+        seed_language: Seed language for sibling mode
+        prefix: Prefix string for prefix mode
+        n_candidates: Number of candidates for sibling/prefix modes
 
     Returns:
         AgentResult
@@ -117,6 +125,10 @@ def run_agent_in_worktree(
         web_search=web_search,
         model=model,
         prompt_mode=prompt_mode,
+        batch_size=batch_size,
+        seed_language=seed_language,
+        prefix=prefix,
+        n_candidates=n_candidates,
     )
 
     # Run claude agent in the worktree directory
@@ -347,6 +359,8 @@ def run_parallel_batch(
     timeout: int,
     batch_id: int,
     prompt_mode: str = "default",
+    batch_size: int = 100,
+    n_candidates: int = 10,
 ) -> tuple[int, int, list[str]]:
     """
     Run agents in parallel across worktrees.
@@ -362,6 +376,19 @@ def run_parallel_batch(
     print(f"[parallel] Batch {batch_id} - {n_agents} agents in parallel")
     print(f"{'='*60}")
 
+    # Pre-generate seeds or prefixes for sibling/prefix modes
+    seeds: list[str | None] = [None] * n_agents
+    prefixes: list[str | None] = [None] * n_agents
+
+    if prompt_mode == "sibling":
+        from .prompt import pick_random_seeds
+        seeds = pick_random_seeds(n_agents)
+        print(f"  Seeds: {seeds}")
+    elif prompt_mode == "prefix":
+        from .prompt import generate_prefixes
+        prefixes = generate_prefixes(n_agents)
+        print(f"  Prefixes: {prefixes}")
+
     # Sync all worktrees to main
     for wt in worktrees:
         sync_worktree_to_main(wt)
@@ -373,6 +400,11 @@ def run_parallel_batch(
         futures = {}
         for i, wt in enumerate(worktrees):
             model = models[i % len(models)]
+            extra_label = ""
+            if prompt_mode == "sibling" and seeds[i]:
+                extra_label = f", seed={seeds[i]}"
+            elif prompt_mode == "prefix" and prefixes[i]:
+                extra_label = f", prefix={prefixes[i]}"
             future = executor.submit(
                 run_agent_in_worktree,
                 worktree_path=wt.path,
@@ -380,9 +412,13 @@ def run_parallel_batch(
                 web_search=web_search,
                 timeout=timeout,
                 prompt_mode=prompt_mode,
+                batch_size=batch_size,
+                seed_language=seeds[i] if prompt_mode == "sibling" else None,
+                prefix=prefixes[i] if prompt_mode == "prefix" else None,
+                n_candidates=n_candidates,
             )
             futures[future] = wt
-            print(f"  [{wt.name}] started ({model})")
+            print(f"  [{wt.name}] started ({model}{extra_label})")
 
         for future in as_completed(futures):
             wt = futures[future]
@@ -519,8 +555,20 @@ def main():
     parser.add_argument(
         "--prompt-mode",
         default="default",
-        choices=["default", "batch"],
-        help="Prompt mode: 'default' or 'batch' (batch-recall-100)",
+        choices=["default", "batch", "sibling", "prefix"],
+        help="Prompt mode: 'default', 'batch', 'sibling', or 'prefix'",
+    )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=100,
+        help="Number of candidates for batch-recall mode (default: 100)",
+    )
+    parser.add_argument(
+        "--n-candidates",
+        type=int,
+        default=10,
+        help="Number of candidates for sibling/prefix modes (default: 10)",
     )
     args = parser.parse_args()
 
@@ -540,6 +588,10 @@ def main():
     print(f"  Models: {models}")
     print(f"  Web search: {web_search}")
     print(f"  Prompt mode: {args.prompt_mode}")
+    if args.prompt_mode == "batch":
+        print(f"  Batch size: {args.batch_size}")
+    if args.prompt_mode in ("sibling", "prefix"):
+        print(f"  Candidates: {args.n_candidates}")
     print(f"  Timeout: {args.timeout}s")
     print(f"  Max turns: {args.max_turns or 'unlimited'}")
 
@@ -592,6 +644,8 @@ def main():
                 timeout=args.timeout,
                 batch_id=batch_id,
                 prompt_mode=args.prompt_mode,
+                batch_size=args.batch_size,
+                n_candidates=args.n_candidates,
             )
 
             total_merged += merged

@@ -1,0 +1,29 @@
+process = {
+    int time_slice;
+}
+
+states = {
+    RUNNING running : process;
+    READY active : sorted fifo queue;
+    BLOCKED blocked : queue;
+    TERMINATED terminated;
+}
+
+ordering_criteria = { }
+
+On process.new {
+    e.target.time_slice = 30;
+    e.target => active;
+}
+
+On system.clocktick {
+    running.time_slice--;
+    if (running.time_slice <= 0) {
+        running.time_slice = 30;
+        running => active;
+    }
+}
+
+On bossa.schedule {
+    select() => running;
+}

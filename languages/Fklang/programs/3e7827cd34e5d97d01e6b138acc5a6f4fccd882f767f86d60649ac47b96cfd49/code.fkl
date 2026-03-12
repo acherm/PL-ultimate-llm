@@ -1,0 +1,29 @@
+ContextMap TicketBooking {
+    Reservation -> Cinema;
+    Reservation -> Movie;
+    Reservation -> User;
+}
+
+Context Reservation {
+  Aggregate Reservation;
+}
+
+Context Cinema {
+  Aggregate Cinema;
+}
+
+Aggregate Cinema {
+  Entity Cinema, ScreeningRoom, Seat;
+}
+
+impl UserCreated {
+  endpoint {
+    POST "/user/{id}";
+  }
+
+  flow {
+    via UserRepository::getUserById receive user: User
+    via UserRepository::save(user: User) receive user: User;
+    via Kafak send User to "user.create";
+  }
+}

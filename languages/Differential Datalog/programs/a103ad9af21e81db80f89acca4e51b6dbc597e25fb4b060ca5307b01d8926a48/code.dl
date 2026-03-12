@@ -1,0 +1,12 @@
+/* Differential Datalog graph reachability (transitive closure) */
+
+input relation Edge(from: bit<64>, to: bit<64>)
+
+output relation Path(from: bit<64>, to: bit<64>)
+
+/* Base case */
+Path(x, y) :- Edge(x, y).
+
+/* Inductive case */
+Path(x, z) :- Path(x, y),
+              Edge(y, z).

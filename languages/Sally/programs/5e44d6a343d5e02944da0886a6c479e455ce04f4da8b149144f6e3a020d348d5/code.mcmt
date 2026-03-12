@@ -1,0 +1,17 @@
+;; Simple counter: x starts at 0, increments by 1 each step
+;; Property: x is always non-negative
+
+(define-state-type counter_type
+  ((x Int)))
+
+(define-states initial_states counter_type
+  (= x 0))
+
+(define-transition increment counter_type
+  (= next.x (+ x 1)))
+
+(define-transition-system counter counter_type
+  initial_states
+  increment)
+
+(query counter (>= x 0))

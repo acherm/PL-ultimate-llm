@@ -1,0 +1,21 @@
+/*
+ * PacketC: Simple IPv4 packet filter
+ * Forwards IPv4 packets to broadcast, drops all others
+ */
+
+#include <cloudshield.ph>
+#include <cloudshield_globals.ph>
+
+packet main (pkt_t pkt, svc_t svc, bool cldshld) {
+    match (pkt.eth.type) {
+        case 0x0800:  // IPv4
+            svc.sendPacket(PKT_BROADCAST);
+            break;
+        case 0x0806:  // ARP
+            svc.sendPacket(PKT_BROADCAST);
+            break;
+        default:
+            svc.dropPacket();
+            break;
+    }
+}

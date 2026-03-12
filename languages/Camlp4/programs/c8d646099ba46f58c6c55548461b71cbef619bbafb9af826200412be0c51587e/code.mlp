@@ -1,0 +1,15 @@
+(* Camlp4 pa_macro example: conditional compilation and macros *)
+DEFINE DEBUG
+DEFINE MAX_VAL 100
+
+let () =
+  IFDEF DEBUG THEN
+    Printf.printf "Debug mode enabled\n"
+  ELSE
+    Printf.printf "Release mode\n"
+  END;
+  let values = [1; 5; 12; 42; 99; MAX_VAL; 200] in
+  let filtered = List.filter (fun x -> x <= MAX_VAL) values in
+  Printf.printf "Values <= %d: " MAX_VAL;
+  List.iter (fun x -> Printf.printf "%d " x) filtered;
+  print_newline ()

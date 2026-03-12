@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flowModel name="LoanApproval"
+    xmlns="http://www.ibm.com/wsfl/2001/05/wsfl"
+    targetNamespace="http://example.com/loanapproval"
+    xmlns:tns="http://example.com/loanapproval">
+
+    <!-- Activities for loan approval process -->
+    <activity name="ReceiveLoanRequest">
+        <implement>
+            <plugLink portType="tns:LoanService" operation="requestLoan"/>
+        </implement>
+    </activity>
+
+    <activity name="CheckCreditScore">
+        <implement>
+            <plugLink portType="tns:CreditService" operation="checkCredit"/>
+        </implement>
+    </activity>
+
+    <activity name="ApproveLoan">
+        <implement>
+            <plugLink portType="tns:LoanApprover" operation="approve"/>
+        </implement>
+    </activity>
+
+    <activity name="RejectLoan">
+        <implement>
+            <plugLink portType="tns:LoanApprover" operation="reject"/>
+        </implement>
+    </activity>
+
+    <!-- Control links define the flow -->
+    <controlLink source="ReceiveLoanRequest" target="CheckCreditScore"/>
+
+    <controlLink source="CheckCreditScore" target="ApproveLoan">
+        <condition>creditScore >= 700</condition>
+    </controlLink>
+
+    <controlLink source="CheckCreditScore" target="RejectLoan">
+        <condition>creditScore &lt; 700</condition>
+    </controlLink>
+
+</flowModel>

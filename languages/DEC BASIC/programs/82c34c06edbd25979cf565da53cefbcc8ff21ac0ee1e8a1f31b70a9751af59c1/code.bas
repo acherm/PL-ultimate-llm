@@ -1,0 +1,18 @@
+100 REM Bubble Sort in BASIC-PLUS
+110 DIM A%(10)
+120 FOR I% = 1 TO 10
+130   READ A%(I%)
+140 NEXT I%
+150 DATA 64, 34, 25, 12, 22, 11, 90, 45, 67, 8
+160 FOR I% = 1 TO 9
+170   FOR J% = 1 TO 10 - I%
+180     IF A%(J%) <= A%(J%+1) THEN 220
+190     LET T% = A%(J%)
+200     LET A%(J%) = A%(J%+1)
+210     LET A%(J%+1) = T%
+220   NEXT J%
+230 NEXT I%
+240 FOR I% = 1 TO 10
+250   PRINT A%(I%)
+260 NEXT I%
+270 END

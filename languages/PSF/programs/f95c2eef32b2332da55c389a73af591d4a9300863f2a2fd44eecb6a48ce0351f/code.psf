@@ -1,0 +1,24 @@
+% Vending machine specification in PSF
+% Reference: Mauw and Veltink, PSF - A Process Specification Formalism, CWI 1993
+
+sorts
+  Coin, Beverage
+
+functions
+  euro   : -> Coin
+  coffee : -> Beverage
+  tea    : -> Beverage
+
+actions
+  insert : Coin
+  choose : Beverage
+  serve  : Beverage
+
+processes
+  MACHINE = insert(euro) . CHOICE
+
+  CHOICE = choose(coffee) . serve(coffee) . MACHINE
+         + choose(tea)    . serve(tea)    . MACHINE
+
+init
+  MACHINE

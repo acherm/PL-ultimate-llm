@@ -1,0 +1,10 @@
+# Poisson equation variational form in UFL
+cell = triangle
+element = FiniteElement("Lagrange", cell, 1)
+
+v = TestFunction(element)
+u = TrialFunction(element)
+f = Coefficient(element)
+
+a = inner(grad(u), grad(v))*dx
+L = f*v*dx

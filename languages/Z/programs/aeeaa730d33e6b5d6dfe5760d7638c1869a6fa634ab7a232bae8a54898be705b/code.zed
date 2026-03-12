@@ -1,0 +1,39 @@
+% Birthday Book in Z Notation
+% The canonical introductory example by J.M. Spivey
+
+\begin{zed}
+[NAME, DATE]
+\end{zed}
+
+\begin{schema}{BirthdayBook}
+  known : \power NAME \\
+  birthday : NAME \pfun DATE
+\where
+  known = \dom birthday
+\end{schema}
+
+\begin{schema}{AddBirthday}
+  \Delta BirthdayBook \\
+  name? : NAME \\
+  date? : DATE
+\where
+  name? \notin known \\
+  birthday' = birthday \cup \{name? \mapsto date?\}
+\end{schema}
+
+\begin{schema}{FindBirthday}
+  \Xi BirthdayBook \\
+  name? : NAME \\
+  date! : DATE
+\where
+  name? \in known \\
+  date! = birthday~name?
+\end{schema}
+
+\begin{schema}{Remind}
+  \Xi BirthdayBook \\
+  today? : DATE \\
+  cards! : \power NAME
+\where
+  cards! = \{n : known \mid birthday~n = today?\}
+\end{schema}

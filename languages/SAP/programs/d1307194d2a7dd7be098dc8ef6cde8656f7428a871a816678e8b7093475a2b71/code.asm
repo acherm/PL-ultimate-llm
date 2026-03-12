@@ -1,0 +1,23 @@
+*        IBM 704 SAP PROGRAM
+*        COMPUTE FACTORIAL OF N USING ITERATIVE LOOP
+*
+         ORG    100
+FACTRL   CLA    ONE         LOAD 1 INTO ACCUMULATOR
+         STO    RESULT      RESULT = 1
+         CLA    N           LOAD N INTO ACCUMULATOR
+         STO    CNTR        INITIALIZE COUNTER = N
+LOOP     CLA    RESULT      LOAD CURRENT RESULT
+         MPY    CNTR        MULTIPLY BY COUNTER VALUE
+         STO    RESULT      STORE NEW RESULT
+         CLA    CNTR        LOAD COUNTER
+         SUB    ONE         DECREMENT BY 1
+         STO    CNTR        STORE DECREMENTED COUNTER
+         TZE    DONE        IF COUNTER = 0 THEN DONE
+         TRA    LOOP        ELSE CONTINUE LOOP
+DONE     HTR    0           HALT WITH RESULT IN MEMORY
+*
+ONE      DEC    1
+N        DEC    5           COMPUTE 5 FACTORIAL = 120
+CNTR     BSS    1
+RESULT   BSS    1
+         END    FACTRL

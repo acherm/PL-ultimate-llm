@@ -1,0 +1,11 @@
+{ IXML grammar for arithmetic expressions with operator precedence }
+{ Handles +, -, *, / with parentheses }
+expr:   term, (addop, term)* .
+term:   factor, (mulop, factor)* .
+factor: number | '(', expr, ')' .
+-addop: s, ('+' | '-'), s .
+-mulop: s, ('*' | '/'), s .
+number: integer .
+integer: digit+ .
+-digit: ["0"-"9"] .
+-s: ' '* .

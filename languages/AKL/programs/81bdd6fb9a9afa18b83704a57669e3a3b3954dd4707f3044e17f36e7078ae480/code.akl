@@ -1,0 +1,24 @@
+% AKL (Andorra Kernel Language) - Quicksort with concurrent guards
+% AKL uses committed choice with "|" guard separator
+
+append([], Ys, Ys).
+append([X|Xs], Ys, [X|Zs]) :-
+    append(Xs, Ys, Zs).
+
+partition([], _, [], []).
+partition([H|T], Pivot, [H|Less], Greater) :-
+    H =< Pivot |
+    partition(T, Pivot, Less, Greater).
+partition([H|T], Pivot, Less, [H|Greater]) :-
+    H > Pivot |
+    partition(T, Pivot, Less, Greater).
+
+qsort([], []).
+qsort([H|T], Sorted) :-
+    partition(T, H, Less, Greater) |
+    qsort(Less, SortedLess),
+    qsort(Greater, SortedGreater),
+    append(SortedLess, [H|SortedGreater], Sorted).
+
+:- qsort([3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5], Sorted),
+   write(Sorted), nl.

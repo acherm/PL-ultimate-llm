@@ -1,0 +1,19 @@
+module simple
+
+pipeline Forward(): fvec4 {
+
+  def vertex(pos: fvec3) {
+    builtin.position = fvec4(pos, 1.0)
+  }
+
+  def fragment(): fvec4 {
+    return fvec4(1.0, 0.0, 0.0, 1.0)
+  }
+}
+
+renderer Simple() {
+
+  def main(a: atom) {
+    builtin.screen += Forward(pos=a)
+  }
+}

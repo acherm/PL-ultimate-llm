@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>#(title)</title>
+</head>
+<body>
+    <h1>Welcome, #(user.name)!</h1>
+    #if(user.isAdmin):
+        <p class="admin-badge">Administrator</p>
+    #endif
+    <h2>Your Items</h2>
+    #if(items.isEmpty):
+        <p>No items found.</p>
+    #else:
+        <ul>
+        #for(item in items):
+            <li>
+                <strong>#(item.name)</strong>
+                &mdash; $#(item.price)
+                #if(item.inStock):
+                    <span class="available">In Stock</span>
+                #else:
+                    <span class="unavailable">Out of Stock</span>
+                #endif
+            </li>
+        #endfor
+        </ul>
+        <p>Total items: #(items.count)</p>
+    #endif
+</body>
+</html>

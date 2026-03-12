@@ -1,0 +1,37 @@
+package require Itcl
+
+itcl::class Counter {
+    private variable count 0
+
+    constructor {{start 0}} {
+        set count $start
+    }
+
+    method increment {{by 1}} {
+        incr count $by
+    }
+
+    method decrement {{by 1}} {
+        incr count -$by
+    }
+
+    method reset {} {
+        set count 0
+    }
+
+    method value {} {
+        return $count
+    }
+}
+
+set c [Counter #auto]
+puts "Initial value: [$c value]"
+$c increment
+$c increment
+$c increment 5
+puts "After increments: [$c value]"
+$c decrement 2
+puts "After decrement: [$c value]"
+$c reset
+puts "After reset: [$c value]"
+itcl::delete object $c

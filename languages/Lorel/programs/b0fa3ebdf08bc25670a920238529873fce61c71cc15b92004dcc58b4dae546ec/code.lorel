@@ -1,0 +1,24 @@
+/* Lorel Example: Querying a Bibliography Database
+   From: "Lorel: A Query Language for Semistructured Data"
+   Abiteboul, Quass, McHugh, Widom, Wiener (1996) */
+
+/* Query 1: Find all book titles in the database */
+select B.title
+from DB.bibliography.book B
+
+/* Query 2: Find articles authored by "Widom" after 1990 */
+select A.title, A.year
+from DB.bibliography.article A, A.author Author
+where Author = "Widom"
+  and A.year >= "1990"
+
+/* Query 3: Union path — find titles from articles OR books */
+select X.title, X.author
+from DB.bibliography B,
+     (B.article | B.book) X
+where exists X.author
+
+/* Query 4: Nested path with filter on proceedings */
+select C.name, Pa.title
+from DB.conference C, C.proceedings P, P.paper Pa
+where Pa.pages > "10"

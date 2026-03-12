@@ -1,0 +1,15 @@
+% Sieve of Eratosthenes in FGHC (Flat Guarded Horn Clauses)
+% Demonstrates stream-based concurrent logic programming
+
+sieve([P|Xs], [P|Ps]) :- true | filter(P, Xs, Ys), sieve(Ys, Ps).
+
+filter(_, [], []) :- true | true.
+filter(P, [X|Xs], Ys) :- X mod P =:= 0 | filter(P, Xs, Ys).
+filter(P, [X|Xs], [X|Ys]) :- X mod P =\= 0 | filter(P, Xs, Ys).
+
+integers(N, [N|Ns]) :- true | N1 is N + 1, integers(N1, Ns).
+
+take(0, _, []) :- true | true.
+take(N, [X|Xs], [X|Ys]) :- N > 0 | N1 is N - 1, take(N1, Xs, Ys).
+
+main :- true | integers(2, Xs), sieve(Xs, Ps), take(10, Ps, First10), write(First10), nl.

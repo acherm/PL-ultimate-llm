@@ -1,0 +1,40 @@
+module rentals is
+
+  import [ dc xsd owl ]
+
+  @dc:description = "A simple vehicle rental domain model"
+
+  structure Vehicle is
+    @dc:description = "A rentable vehicle"
+    make -> xsd:string
+    model -> xsd:string
+    year -> xsd:integer
+    plateNumber -> xsd:string
+    dailyRate -> xsd:decimal
+  end
+
+  structure Customer is
+    @dc:description = "A person who rents vehicles"
+    fullName -> xsd:string
+    email -> xsd:string
+    licenseNumber -> xsd:string
+  end
+
+  structure Rental is
+    @dc:description = "A rental agreement between a customer and a vehicle"
+    vehicle -> Vehicle
+    customer -> Customer
+    startDate -> xsd:date
+    endDate -> xsd:date
+    totalCost -> {0..1} xsd:decimal
+  end
+
+  enum RentalStatus of
+    @dc:description = "Possible states for a rental"
+    Pending
+    Active
+    Completed
+    Cancelled
+  end
+
+end

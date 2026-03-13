@@ -1,0 +1,17 @@
+-- Factorial in Piccola
+-- A form (higher-order function) computing factorial
+
+factorial = form [n |
+    (n = 0) -> form [| 1] | form [| n * (factorial [n = n - 1])[]]
+]
+
+-- Print factorials of 0 through 7
+i = 0
+(loop [|
+    (i <= 7) -> form [|
+        result <- (factorial [n = i])[]
+        (result) puts,
+        i <- i + 1,
+        again
+    ] | form [| done]
+])[]

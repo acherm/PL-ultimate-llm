@@ -1,0 +1,17 @@
+% Hamiltonian Cycle in DLV2 (ASP-Core-2 syntax)
+node(1..5).
+edge(1,2). edge(2,3). edge(3,4). edge(4,5). edge(5,1). edge(1,3). edge(2,4).
+
+% Guess an in-subgraph
+{in(X,Y)} :- edge(X,Y).
+
+% Each node has exactly one outgoing in-edge
+:- node(X), #count{Y : in(X,Y)} != 1.
+
+% Each node has exactly one incoming in-edge
+:- node(X), #count{Y : in(Y,X)} != 1.
+
+% The in-subgraph is connected (reachability from node 1)
+reached(1).
+reached(Y) :- reached(X), in(X,Y).
+:- node(X), not reached(X).

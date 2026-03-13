@@ -1,0 +1,15 @@
+PREFIX ex: <http://example.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+ex:IssueShape {
+  ex:state [ex:unassigned ex:assigned];
+  ex:reportedBy @ex:UserShape;
+  ex:reportedOn xsd:dateTime;
+  ex:reproducedBy @ex:UserShape*;
+  ex:reproducedOn xsd:dateTime*
+}
+
+ex:UserShape {
+  ex:name xsd:string;
+  ex:sharedWith @ex:UserShape*
+}

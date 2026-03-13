@@ -1,0 +1,26 @@
+// fizzbuzz.qi
+
+using std.io.print;
+using mod, PI from math;
+
+fn fizzbuzz = (n: int) $ str {
+	if n `mod` 15 == 0 {
+		return "FizzBuzz";
+	} else if n `mod` 3 == 0 {
+		return "Fizz";
+	} else if n `mod` 5 == 0 {
+		return "Buzz";
+	} else {
+		return n;
+	}
+}
+
+fn main = () {
+	for (var i = 0; i < 128; i++) {
+		print(fizzbuzz(i));
+	}
+
+	except fizzbuzz(PI) {
+		print("Pi is a constant of type float and will raise an exception.");
+	}
+}

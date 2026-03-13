@@ -1,0 +1,41 @@
+/* Embedded SQL example: Query employee records using cursor */
+EXEC SQL INCLUDE SQLCA;
+
+EXEC SQL BEGIN DECLARE SECTION;
+    char emp_name[50];
+    int  emp_id;
+    double salary;
+    char db_name[30] = "testdb";
+EXEC SQL END DECLARE SECTION;
+
+#include <stdio.h>
+
+int main() {
+    EXEC SQL CONNECT TO :db_name;
+    if (sqlca.sqlcode != 0) {
+        fprintf(stderr, "Connect failed: %ld\n", sqlca.sqlcode);
+        return 1;
+    }
+
+    EXEC SQL DECLARE emp_cursor CURSOR FOR
+        SELECT emp_id, emp_name, salary
+        FROM employees
+        WHERE salary > 50000
+        ORDER BY salary DESC;
+
+    EXEC SQL OPEN emp_cursor;
+
+    printf("%-6s  %-30s  %12s\n", "ID", "Name", "Salary");
+    printf("%-6s  %-30s  %12s\n", "------", "------------------------------", "------------");
+
+    for (;;) {
+        EXEC SQL FETCH emp_cursor INTO :emp_id, :emp_name, :salary;
+        if (sqlca.sqlcode != 0) break;
+        printf("%-6d  %-30s  %12.2f\n", emp_id, emp_name, salary);
+    }
+
+    EXEC SQL CLOSE emp_cursor;
+    EXEC SQL COMMIT;
+    EXEC SQL DISCONNECT;
+    return 0;
+}

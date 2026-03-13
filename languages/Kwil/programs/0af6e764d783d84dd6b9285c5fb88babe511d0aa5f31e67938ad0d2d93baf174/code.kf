@@ -1,0 +1,33 @@
+database social;
+
+table users {
+    id int primary key notnull,
+    username text notnull unique,
+    wallet text notnull unique
+}
+
+table posts {
+    id int primary key notnull,
+    author_id int notnull,
+    content text notnull,
+    created_at int notnull,
+    foreign key (author_id) references users(id)
+}
+
+procedure create_user($id int, $username text, $wallet text) public {
+    INSERT INTO users (id, username, wallet)
+    VALUES ($id, $username, $wallet);
+}
+
+procedure add_post($id int, $author int, $content text, $time int) public {
+    INSERT INTO posts (id, author_id, content, created_at)
+    VALUES ($id, $author, $content, $time);
+}
+
+procedure get_user_posts($uid int) public view
+    returns table(content text, created_at int) {
+    return SELECT content, created_at
+           FROM posts
+           WHERE author_id = $uid
+           ORDER BY created_at DESC;
+}

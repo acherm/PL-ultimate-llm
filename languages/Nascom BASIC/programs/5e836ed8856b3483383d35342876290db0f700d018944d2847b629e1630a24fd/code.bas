@@ -1,0 +1,17 @@
+10 REM Sieve of Eratosthenes - Nascom BASIC
+20 DIM P(100)
+30 FOR I = 2 TO 100
+40   P(I) = 1
+50 NEXT I
+60 FOR I = 2 TO 10
+70   IF P(I) = 0 THEN 100
+80   FOR J = I*I TO 100 STEP I
+90     P(J) = 0
+95   NEXT J
+100 NEXT I
+110 PRINT "Primes up to 100:"
+120 FOR I = 2 TO 100
+130   IF P(I) = 1 THEN PRINT I;
+140 NEXT I
+150 PRINT
+160 END

@@ -1,0 +1,24 @@
+class Object {
+  var nothing;
+  method init() { nothing = null; }
+}
+
+class Account extends Object {
+  var balance;
+  method init(b) { balance = b; }
+  method deposit(amount) { balance = balance + amount; }
+  method withdraw(amount) {
+    if (balance >= amount) {
+      balance = balance - amount;
+      return true;
+    }
+    return false;
+  }
+  method getBalance() { return balance; }
+}
+
+var a;
+a = new Account(100);
+a.deposit(200);
+a.withdraw(150);
+print(a.getBalance());

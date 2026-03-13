@@ -1,0 +1,14 @@
+module 'fib' ['fib'/1]
+  attributes []
+'fib'/1 =
+  fun (_N) ->
+    case _N of
+      <0> when 'true' ->
+        0
+      <1> when 'true' ->
+        1
+      <_N1> when 'true' ->
+        let <_A> = apply 'fib'/1(call 'erlang':'-'(_N1, 1))
+        in let <_B> = apply 'fib'/1(call 'erlang':'-'(_N1, 2))
+        in call 'erlang':'+'(_A, _B)
+    end

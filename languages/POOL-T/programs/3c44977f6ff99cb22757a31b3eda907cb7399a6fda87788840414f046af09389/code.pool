@@ -1,0 +1,22 @@
+CLASS Cell
+INSTANCE VARIABLES
+  value : INTEGER;
+BODY
+  BEGIN
+    value := 0;
+    DO
+      ANSWER get : INTEGER DO value END
+    OR ANSWER put(v : INTEGER) DO value := v; SELF END
+    OD
+  END
+END Cell
+
+CLASS Main
+BODY
+  VAR c : Cell;
+  BEGIN
+    c := NEW(Cell);
+    c ! put(42);
+    OUTPUT(c ! get)
+  END
+END Main

@@ -1,0 +1,34 @@
+(define let
+  (macro (args ...)
+    (define in (map (lambda (inargs) (car inargs)) args))
+    (define out (map (lambda (outargs) (eval (car (cdr outargs)))) args))
+    (define l (eval ['lambda in (cons 'begin ...)]) )
+    (apply l out)))
+
+(define while
+  (macro (test ...)
+    (define el
+      (eval ['lambda [] ['if test (list-join ['begin] ... [['el]])]]))
+    (el)))
+
+(define when
+  (macro (test ...)
+    (eval ['if test (cons 'begin ...)])))
+
+(define unless
+  (macro (test ...)
+    (eval ['if ['not test] (cons 'begin ...)])))
+
+
+(define do-count (lambda (count lam)
+  (for-each lam (range count))))
+
+(define x -5)
+(while (< x 5) (display-lines x) (set! x (+ x 1)))
+
+(when (> x 0) (display "X is " x " (which is greater than 0)\n") (display "Yay!\n"))
+(unless (< x 0) (display "X is " x "(which is greater than 0)\n") (display "Yay!\n"))
+
+(do-count 5 (lambda (x) (display-lines (+ x 1))))
+
+(display-lines (let ((a 12)(b 3)) (+ a b)))

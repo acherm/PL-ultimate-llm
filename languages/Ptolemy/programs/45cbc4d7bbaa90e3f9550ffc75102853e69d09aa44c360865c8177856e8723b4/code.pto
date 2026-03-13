@@ -1,0 +1,28 @@
+module Subject {
+    int count;
+
+    void increment() {
+        count++;
+    }
+
+    int getCount() {
+        return count;
+    }
+}
+
+module Observer {
+    void update(int value) {
+        System.out.println("Observer notified: " + value);
+    }
+}
+
+module Main {
+    public static void main(String[] args) {
+        Subject s = new Subject();
+        Observer o = new Observer();
+        s.increment();
+        s.increment();
+        System.out.println("Count: " + s.getCount());
+        o.update(s.getCount());
+    }
+}

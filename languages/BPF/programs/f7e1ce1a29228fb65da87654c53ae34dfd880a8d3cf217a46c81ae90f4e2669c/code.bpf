@@ -1,0 +1,18 @@
+; BPF classic assembly filter: capture TCP packets to/from port 80 (HTTP)
+; Classic BPF (cBPF) as used by libpcap and tcpdump
+;
+; Instruction format: opcode  operands
+; Registers: A (accumulator), X (index), memory store M[]
+; Packet bytes accessed via [offset] notation
+
+ldh      [12]               ; load EtherType (2 bytes at offset 12)
+jeq      #0x0800, jt 1, jf 6 ; jump if IPv4, else reject
+ldb      [23]               ; load IP protocol (byte at offset 23)
+jeq      #0x06, jt 1, jf 4  ; jump if TCP (0x06), else reject
+ldh      [20]               ; load fragment flags + offset
+jset     #0x1fff, jt 3, jf 1 ; reject if fragment offset != 0
+ldxb     4*([14]&0xf)       ; X = IP header length (IHL field * 4)
+ldh      [x + 14]           ; load TCP destination port (offset 2 in TCP = 14+IHL)
+jeq      #0x0050, jt 1, jf 1 ; jump if port 80 (0x50)
+ret      #262144             ; accept: return max snapshot length
+ret      #0                 ; reject: return 0 (drop packet)

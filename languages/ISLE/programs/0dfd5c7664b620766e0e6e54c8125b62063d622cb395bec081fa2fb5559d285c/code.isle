@@ -1,0 +1,56 @@
+;; ISLE (Instruction Selection Lowering and Encoding) example
+;; Demonstrates type declarations, term declarations, and lowering rules
+
+;; Declare external types used in the instruction selector
+(type Reg extern)
+(type Type extern)
+(type InstOutput extern)
+
+;; Declare pure extractors for instruction inputs
+(decl pure fits_in_64 (Type) Type)
+(decl pure fits_in_32 (Type) Type)
+
+;; Declare arithmetic lowering terms
+(decl x64_add (Type Reg Reg) Reg)
+(extern constructor x64_add x64_add_impl)
+
+(decl x64_sub (Type Reg Reg) Reg)
+(extern constructor x64_sub x64_sub_impl)
+
+(decl x64_imul (Type Reg Reg) Reg)
+(extern constructor x64_imul x64_imul_impl)
+
+(decl x64_and (Type Reg Reg) Reg)
+(extern constructor x64_and x64_and_impl)
+
+(decl x64_or (Type Reg Reg) Reg)
+(extern constructor x64_or x64_or_impl)
+
+(decl x64_xor (Type Reg Reg) Reg)
+(extern constructor x64_xor x64_xor_impl)
+
+;; Lowering rules: map CLIF instructions to target machine instructions
+
+;; Integer addition
+(rule (lower (iadd (fits_in_64 ty) x y))
+  (value_reg (x64_add ty x y)))
+
+;; Integer subtraction
+(rule (lower (isub (fits_in_64 ty) x y))
+  (value_reg (x64_sub ty x y)))
+
+;; Integer multiplication
+(rule (lower (imul (fits_in_64 ty) x y))
+  (value_reg (x64_imul ty x y)))
+
+;; Bitwise AND
+(rule (lower (band (fits_in_64 ty) x y))
+  (value_reg (x64_and ty x y)))
+
+;; Bitwise OR
+(rule (lower (bor (fits_in_64 ty) x y))
+  (value_reg (x64_or ty x y)))
+
+;; Bitwise XOR
+(rule (lower (bxor (fits_in_64 ty) x y))
+  (value_reg (x64_xor ty x y)))

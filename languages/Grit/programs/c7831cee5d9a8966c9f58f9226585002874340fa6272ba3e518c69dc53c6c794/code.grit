@@ -1,0 +1,6 @@
+language js
+
+// Rewrite console logging calls to use a custom logger module
+`console.$method($args)` where {
+  $method <: or { `log`, `warn`, `error`, `debug` }
+} => `logger.$method($args)`

@@ -1,0 +1,14 @@
+#lang bitml
+
+(participant "A" "029c5f6f5ef0095f547799cb7861488b9f4282140d59a6289fbc90c70209c1caf")
+(participant "B" "022c3afb0b654d3c2b0e2ffdcf941eaf9b6c2f6fcf14672f5a1e7174f169c30fe")
+
+(contract
+  (pre (deposit "A" 1 "txid:0:0")
+       (secret "A" a "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"))
+  (choice
+    (reveal (a)
+      (pred (= a "a"))
+      (withdraw "A"))
+    (after 42
+      (withdraw "B"))))

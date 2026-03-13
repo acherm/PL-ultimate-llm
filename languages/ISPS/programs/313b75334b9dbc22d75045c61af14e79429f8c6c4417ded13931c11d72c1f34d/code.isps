@@ -1,0 +1,24 @@
+PDP8 = PROC MAIN =
+  M(0..4095)<11:0>,
+  MA<11:0>,
+  MB<11:0>,
+  PC<11:0>,
+  AC<11:0>,
+  LK<0>,
+  IR<11:0>,
+
+  FETCH =
+    MA := PC,
+    MB := M(MA),
+    PC := PC + 1,
+    IR := MB,
+
+  EXECUTE =
+    DECODE IR<11:9> INTO [
+      0 => AC := AC AND M(IR<8:0>),
+      1 => {AC,LK} := {0,LK} + AC + M(IR<8:0>),
+      2 => M(IR<8:0>) := AC, AC := 0,
+      3 => PC := IR<8:0>
+    ],
+
+  CYCLE = FETCH, EXECUTE

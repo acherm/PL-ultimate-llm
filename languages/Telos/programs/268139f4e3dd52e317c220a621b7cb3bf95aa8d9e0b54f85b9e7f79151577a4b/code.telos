@@ -1,0 +1,93 @@
+%  Telos schema example: University information system
+%  Demonstrates class hierarchy, attributes, and instances in Telos
+%  Based on the ConceptBase knowledge base system
+
+Class Entity in ConceptualClass
+  attribute
+    name: String
+    description: String
+end
+
+Class Person in Entity
+  isA Entity
+  attribute
+    firstName: String
+    lastName: String
+    birthYear: Integer
+end
+
+Class AcademicRole in ConceptualClass
+  structural
+    holder: Person
+  attribute
+    startYear: Integer
+end
+
+Class Student in AcademicRole
+  isA AcademicRole
+  attribute
+    studentId: String
+    program: String
+    degree: String
+end
+
+Class Professor in AcademicRole
+  isA AcademicRole
+  attribute
+    employeeId: String
+    department: String
+    rank: String
+end
+
+Class Course in Entity
+  isA Entity
+  attribute
+    courseCode: String
+    credits: Integer
+  structural
+    taughtBy: Professor
+end
+
+Individual JohnSmith in Person
+  attribute
+    name: "John Smith"
+    firstName: "John"
+    lastName: "Smith"
+    birthYear: 1995
+end
+
+Individual DrJaneRoe in Person
+  attribute
+    name: "Dr. Jane Roe"
+    firstName: "Jane"
+    lastName: "Roe"
+    birthYear: 1970
+end
+
+Individual CS101 in Course
+  attribute
+    name: "Introduction to Computer Science"
+    courseCode: "CS101"
+    credits: 3
+    description: "Fundamentals of programming and computation"
+end
+
+Individual JohnEnrollment in Student
+  structural
+    holder: JohnSmith
+  attribute
+    studentId: "S20230042"
+    program: "Computer Science"
+    degree: "BSc"
+    startYear: 2023
+end
+
+Individual JanePosition in Professor
+  structural
+    holder: DrJaneRoe
+  attribute
+    employeeId: "F10087"
+    department: "Computer Science"
+    rank: "Associate Professor"
+    startYear: 2005
+end

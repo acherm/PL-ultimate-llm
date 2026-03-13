@@ -1,0 +1,20 @@
+#:set KINDS = ['int32', 'int64', 'sp', 'dp']
+#:set TYPES = ['integer', 'integer', 'real', 'real']
+
+module math_utils
+  use iso_fortran_env, only: int32, int64, sp => real32, dp => real64
+  implicit none
+
+  #:for TYPE, KIND in zip(TYPES, KINDS)
+  pure function sum_${TYPE}$_${KIND}$(arr) result(res)
+    ${TYPE}$(${KIND}$), intent(in) :: arr(:)
+    ${TYPE}$(${KIND}$) :: res
+    integer :: i
+    res = 0
+    do i = 1, size(arr)
+      res = res + arr(i)
+    end do
+  end function sum_${TYPE}$_${KIND}$
+  #:endfor
+
+end module math_utils

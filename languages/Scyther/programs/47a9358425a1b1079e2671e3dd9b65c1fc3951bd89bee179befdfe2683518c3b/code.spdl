@@ -1,0 +1,34 @@
+// Needham-Schroeder-Lowe Public Key Protocol
+// Verified using the Scyther tool
+
+protocol nsl(I, R)
+{
+    role I
+    {
+        fresh ni: Nonce;
+        var nr: Nonce;
+
+        send_1(I, R, {ni, I}pk(R));
+        recv_2(I, R, {ni, nr, R}pk(I));
+        send_3(I, R, {nr}pk(R));
+
+        claim(I, Secret, ni);
+        claim(I, Secret, nr);
+        claim(I, Alive);
+        claim(I, Weakagree);
+    }
+
+    role R
+    {
+        var ni: Nonce;
+        fresh nr: Nonce;
+
+        recv_1(I, R, {ni, I}pk(R));
+        send_2(I, R, {ni, nr, R}pk(I));
+        recv_3(I, R, {nr}pk(R));
+
+        claim(R, Secret, nr);
+        claim(R, Alive);
+        claim(R, Weakagree);
+    }
+}

@@ -1,0 +1,26 @@
+;; QA4 Blocks World Example
+;; Based on: "QA4: A Procedural Calculus for Intuitive Reasoning"
+;; Rulifson, Derksen, Waldinger, SRI Technical Note 73 (1973)
+
+; Define the initial state of blocks world
+(ASSERT (ON A TABLE))
+(ASSERT (ON B TABLE))
+(ASSERT (ON C A))
+(ASSERT (CLEAR C))
+(ASSERT (CLEAR B))
+
+; Operator: Put block X on top of block Y
+(CONSEQUENT PUTON (X Y)
+  (PREREQUISITES
+    ((CLEAR X))
+    ((ACHIEVE (CLEAR Y))))
+  (DELETIONS
+    ((ON X (? W)))
+    ((CLEAR Y)))
+  (ADDITIONS
+    ((ON X Y))
+    ((CLEAR (? W)))))
+
+; Goal: Achieve a specific configuration
+(GOAL (ACHIEVE (ON A B)))
+(GOAL (ACHIEVE (ON B C)))

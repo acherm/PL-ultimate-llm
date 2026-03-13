@@ -1,0 +1,71 @@
+/* Acme Architecture Description Language: Pipe-and-Filter System */
+/* Classic example demonstrating Acme's component-connector style */
+
+System PipeAndFilter = {
+    Component Source = {
+        Ports = {out : Port};
+        Properties = {
+            functionality : string = "Generates integer data stream";
+        }
+    }
+
+    Component Transform = {
+        Ports = {
+            in  : Port;
+            out : Port
+        };
+        Properties = {
+            functionality : string = "Squares each input value";
+        }
+    }
+
+    Component Accumulator = {
+        Ports = {
+            in  : Port;
+            out : Port
+        };
+        Properties = {
+            functionality : string = "Accumulates running total";
+        }
+    }
+
+    Component Sink = {
+        Ports = {in : Port};
+        Properties = {
+            functionality : string = "Displays final result";
+        }
+    }
+
+    Connector Pipe1 = {
+        Roles = {src : Role; snk : Role};
+        Properties = {
+            protocol : string = "synchronous-data-flow";
+            capacity : int = 1;
+        }
+    }
+
+    Connector Pipe2 = {
+        Roles = {src : Role; snk : Role};
+        Properties = {
+            protocol : string = "synchronous-data-flow";
+            capacity : int = 1;
+        }
+    }
+
+    Connector Pipe3 = {
+        Roles = {src : Role; snk : Role};
+        Properties = {
+            protocol : string = "synchronous-data-flow";
+            capacity : int = 1;
+        }
+    }
+
+    Attachments = {
+        Source.out     to Pipe1.src;
+        Pipe1.snk      to Transform.in;
+        Transform.out  to Pipe2.src;
+        Pipe2.snk      to Accumulator.in;
+        Accumulator.out to Pipe3.src;
+        Pipe3.snk      to Sink.in;
+    }
+}

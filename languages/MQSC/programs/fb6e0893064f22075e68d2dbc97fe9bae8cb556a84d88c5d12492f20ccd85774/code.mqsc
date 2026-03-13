@@ -1,0 +1,33 @@
+* Define a local queue for application messages
+DEFINE QLOCAL('SAMPLE.QUEUE') +
+       DESCR('Sample local queue') +
+       MAXDEPTH(5000) +
+       MAXMSGL(4194304) +
+       PUT(ENABLED) +
+       GET(ENABLED) +
+       REPLACE
+
+* Define a dead-letter queue
+DEFINE QLOCAL('SYSTEM.DEAD.LETTER.QUEUE') +
+       DESCR('Dead-letter queue for undeliverable messages') +
+       MAXDEPTH(5000) +
+       REPLACE
+
+* Configure the queue manager dead-letter queue
+ALTER QMGR DEADQ('SYSTEM.DEAD.LETTER.QUEUE')
+
+* Define a server-connection channel for client applications
+DEFINE CHANNEL('SYSTEM.DEF.SVRCONN') +
+       CHLTYPE(SVRCONN) +
+       TRPTYPE(TCP) +
+       REPLACE
+
+* Define a TCP listener on the default port
+DEFINE LISTENER('SYSTEM.DEFAULT.LISTENER.TCP') +
+       TRPTYPE(TCP) +
+       PORT(1414) +
+       CONTROL(QMGR) +
+       REPLACE
+
+* Start the listener
+START LISTENER('SYSTEM.DEFAULT.LISTENER.TCP')

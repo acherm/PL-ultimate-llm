@@ -1,0 +1,33 @@
+# Hscript: Set up a simple scene with animated objects
+set -g SCENE_NAME = "animation_test"
+
+# Navigate to object level
+opcf /obj
+
+# Create first sphere object
+opadd geo sphere_low
+opparm sphere_low tx(-3) ty(0) tz(0)
+
+# Create second sphere object
+opadd geo sphere_mid
+opparm sphere_mid tx(0) ty(2) tz(0)
+
+# Create third sphere object
+opadd geo sphere_high
+opparm sphere_high tx(3) ty(4) tz(0)
+
+# Create sphere geometry inside each container
+opcf /obj/sphere_low
+opadd sphere sphere1
+opparm sphere1 rad(0.5, 0.5, 0.5)
+
+opcf /obj/sphere_mid
+opadd sphere sphere1
+opparm sphere1 rad(0.75, 0.75, 0.75)
+
+opcf /obj/sphere_high
+opadd sphere sphere1
+opparm sphere1 rad(1.0, 1.0, 1.0)
+
+opcf /obj
+echo "Scene '$SCENE_NAME' built with 3 spheres"

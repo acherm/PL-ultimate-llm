@@ -1,0 +1,16 @@
+/* NDlog Shortest Path Protocol */
+
+materialize(link, infinity, infinity, keys(1,2)).
+materialize(path, infinity, infinity, keys(1,2,3)).
+materialize(best, infinity, infinity, keys(1,2)).
+
+/* A direct link gives a path of cost C */
+path(@X, Y, C) :- link(@X, Y, C).
+
+/* Concatenate two paths: local link + best path from neighbor */
+path(@X, Y, C) :- link(@X, Z, C1),
+                  best(@Z, Y, C2),
+                  C = C1 + C2.
+
+/* Keep the minimum cost path to each destination */
+best(@X, Y, min<C>) :- path(@X, Y, C).

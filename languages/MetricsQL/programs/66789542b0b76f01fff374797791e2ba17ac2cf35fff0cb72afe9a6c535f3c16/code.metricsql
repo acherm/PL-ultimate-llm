@@ -1,0 +1,25 @@
+-- MetricsQL: HTTP request analysis dashboard queries
+-- Count request rate per service over 5-minute windows
+sum(rate(http_requests_total[5m])) by (service)
+
+-- 99th percentile latency per endpoint
+histogram_quantile(0.99,
+  sum(rate(http_request_duration_seconds_bucket[5m])) by (le, endpoint)
+)
+
+-- Error ratio (5xx responses) per service
+sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+/
+sum(rate(http_requests_total[5m])) by (service)
+
+-- CPU saturation: usage above 80% for more than 5 minutes
+clamp_min(
+  avg by (instance) (rate(node_cpu_seconds_total{mode!="idle"}[5m])) - 0.8,
+  0
+)
+
+-- Bytes received rolling 1-hour total, smoothed
+smooth_exponential(
+  sum(increase(node_network_receive_bytes_total[1h])) by (device),
+  0.1
+)

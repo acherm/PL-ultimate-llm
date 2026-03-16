@@ -1,0 +1,20 @@
+project hello
+    : requirements
+        <include>include
+        <threading>multi
+    : default-build release
+    ;
+
+exe hello
+    : hello.cpp
+    ;
+
+exe tests
+    : tests/test_hello.cpp
+    : <dependency>hello
+    ;
+
+install dist
+    : hello
+    : <location>dist/bin
+    ;

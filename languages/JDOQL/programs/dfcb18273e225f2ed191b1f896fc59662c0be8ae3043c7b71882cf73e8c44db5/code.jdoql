@@ -1,0 +1,14 @@
+SELECT FROM org.datanucleus.samples.jdo.store.Employee
+WHERE salary > 30000
+
+SELECT FROM org.datanucleus.samples.jdo.store.Employee
+WHERE salary > :threshold
+PARAMETERS double threshold
+
+SELECT FROM org.datanucleus.samples.jdo.store.Employee
+WHERE department.name == "Engineering"
+ORDER BY salary DESCENDING
+
+SELECT FROM org.datanucleus.samples.jdo.store.Department
+WHERE employees.contains(e) && e.salary > 50000
+VARIABLES org.datanucleus.samples.jdo.store.Employee e

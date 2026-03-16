@@ -1,0 +1,24 @@
+% Yale Shooting Problem in CCalc (action language C+)
+:- sorts
+   thing.
+
+:- objects
+   turkey :: thing.
+
+:- constants
+   loaded :: inertialFluent;
+   alive :: inertialFluent;
+   load :: exogenousAction;
+   shoot :: exogenousAction.
+
+% Action effects
+load causes loaded.
+shoot causes -alive if loaded.
+shoot causes -loaded.
+
+:- query
+   label :: ysp;
+   0: -loaded, alive;
+   1: load;
+   2: shoot;
+   maxstep :: 3.

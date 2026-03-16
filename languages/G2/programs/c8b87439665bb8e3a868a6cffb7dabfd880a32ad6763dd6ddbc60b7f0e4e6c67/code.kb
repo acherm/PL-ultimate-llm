@@ -1,0 +1,28 @@
+; G2 Factorial and Fibonacci Example
+; Demonstrates G2 recursive procedures by Gensym Corporation
+
+procedure factorial [n: integer] -> integer
+  begin
+    if n <= 1 then return 1
+    return n * factorial[n - 1]
+  end
+
+procedure fibonacci [n: integer] -> integer
+  begin
+    if n <= 0 then return 0
+    if n = 1 then return 1
+    return fibonacci[n - 1] + fibonacci[n - 2]
+  end
+
+procedure run-math-demo []
+  begin
+    local i: integer
+    format t "Factorials:~%"
+    for i from 1 to 10 do
+      format t "  ~a! = ~a~%" i, factorial[i]
+    end
+    format t "~%Fibonacci:~%"
+    for i from 0 to 10 do
+      format t "  fib(~a) = ~a~%" i, fibonacci[i]
+    end
+  end

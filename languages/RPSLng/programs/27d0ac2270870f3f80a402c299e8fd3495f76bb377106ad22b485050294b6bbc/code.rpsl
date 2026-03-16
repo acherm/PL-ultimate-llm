@@ -1,0 +1,22 @@
+aut-num: AS65001
+as-name: EXAMPLE-NETWORK
+
+mp-import: afi ipv4.unicast
+           from AS65002 action pref=100;
+           accept {192.0.2.0/24, 198.51.100.0/24}
+
+mp-import: afi ipv6.unicast
+           from AS65002 action pref=100;
+           accept {2001:db8::/32}
+
+mp-import: afi ipv4.multicast
+           from AS65002 accept ANY
+
+mp-export: afi ipv4.unicast
+           to AS65002 announce AS65001
+
+mp-export: afi ipv6.unicast
+           to AS65002 announce AS65001
+
+mp-export: afi ipv4.multicast
+           to AS65002 announce {232.0.0.0/8}

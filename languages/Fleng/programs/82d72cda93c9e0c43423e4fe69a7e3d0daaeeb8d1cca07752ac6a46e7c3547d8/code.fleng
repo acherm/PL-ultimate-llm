@@ -1,0 +1,23 @@
+:- module(fleng_examples).
+
+% Merge two sorted lists in parallel (Fleng)
+% Fleng clause form: Head :- Guard | Body
+
+merge([], Ys, Ys) :- true | true.
+merge([X|Xs], [], [X|Xs]) :- true | true.
+merge([X|Xs], [Y|Ys], [X|Zs]) :- X =< Y | merge(Xs, [Y|Ys], Zs).
+merge([X|Xs], [Y|Ys], [Y|Zs]) :- X > Y  | merge([X|Xs], Ys, Zs).
+
+% Split a list into two halves
+split([], [], []) :- true | true.
+split([X], [X], []) :- true | true.
+split([X,Y|Zs], [X|Xs], [Y|Ys]) :- true | split(Zs, Xs, Ys).
+
+% Parallel merge sort
+msort([], []) :- true | true.
+msort([X], [X]) :- true | true.
+msort([X,Y|Zs], Sorted) :- true |
+    split([X,Y|Zs], Left, Right),
+    msort(Left, SortedLeft),
+    msort(Right, SortedRight),
+    merge(SortedLeft, SortedRight, Sorted).

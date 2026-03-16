@@ -1,0 +1,10 @@
+#!/usr/local/bin/sgsh
+
+# Parallel word frequency analysis using scatter-gather pipeline
+# Split input stream to multiple processing branches simultaneously
+
+<"$1" tee |{
+	-| tr -cs '[:alpha:]' '\n' | tr '[:upper:]' '[:lower:]' | sort | uniq -c | sort -rn | head -20 |-
+	-| wc -l | sed 's/^/Lines: /' |-
+	-| wc -w | sed 's/^/Words: /' |-
+|}

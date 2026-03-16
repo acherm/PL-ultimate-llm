@@ -1,0 +1,14 @@
+C     FIBONACCI SEQUENCE - ALTAC PROGRAM
+C     FOR UNIVAC 490 ALTAC COMPILER
+      DIMENSION F(20)
+      F(1) = 1
+      F(2) = 1
+      DO 10 I=3,20
+      F(I) = F(I-1) + F(I-2)
+10    CONTINUE
+      DO 20 I=1,20
+      PRINT 30, I, F(I)
+20    CONTINUE
+30    FORMAT(4H N= ,I3,10H  FIB(N) = ,I8)
+      STOP
+      END

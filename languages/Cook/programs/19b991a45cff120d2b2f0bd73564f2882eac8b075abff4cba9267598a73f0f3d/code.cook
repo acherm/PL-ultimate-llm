@@ -1,0 +1,24 @@
+/*
+ * Cook recipe to build a small C project
+ * Demonstrates Cook's meta-language features
+ */
+
+source  = [glob *.c];
+objects = [fromto %.c %.o [source]];
+
+all: program;
+
+program: [objects]
+{
+    cc [objects] -o [target];
+}
+
+%.o: %.c
+{
+    cc -c [need] -o [target];
+}
+
+clean:
+{
+    rm -f [objects] program;
+}

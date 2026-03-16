@@ -1,0 +1,26 @@
+module Expressions
+
+imports
+  Basic
+
+exports
+  sorts Exp Id IntConst
+
+  lexical syntax
+    [0-9]+                    -> IntConst
+    [a-zA-Z][a-zA-Z0-9_]*    -> Id
+
+  context-free syntax
+    IntConst        -> Exp
+    Id              -> Exp
+    Exp "+" Exp     -> Exp  {left, cons("Add")}
+    Exp "-" Exp     -> Exp  {left, cons("Sub")}
+    Exp "*" Exp     -> Exp  {left, cons("Mul")}
+    Exp "/" Exp     -> Exp  {left, cons("Div")}
+    "(" Exp ")"     -> Exp  {bracket}
+
+  context-free priorities
+    {left: Exp "*" Exp -> Exp
+           Exp "/" Exp -> Exp} >
+    {left: Exp "+" Exp -> Exp
+           Exp "-" Exp -> Exp}

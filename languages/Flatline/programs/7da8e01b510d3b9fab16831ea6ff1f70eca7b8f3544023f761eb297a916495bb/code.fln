@@ -1,0 +1,11 @@
+; Flatline example: classify loan applicants
+; based on age and income fields
+(let (age    (f "age")
+      income (f "annual_income")
+      debt   (f "debt_ratio"))
+  (cond
+    (< age 18)               "underage"
+    (> debt 0.5)             "high_debt"
+    (and (>= age 25)
+         (> income 50000))   "qualified"
+    true                     "review"))

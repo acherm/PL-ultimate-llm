@@ -1,0 +1,36 @@
+"Name"    = 'Simple Expression'
+"Author"  = 'Devin Cook'
+"Version" = '1.0'
+"About"   = 'A simple expression grammar for the GOLD Parsing System'
+
+"Start Symbol" = <Expression>
+
+! -------------------------------------------------
+! Character Sets
+
+{ID Head}  = {Letter} + [_]
+{ID Tail}  = {AlphaNumeric} + [_]
+
+! -------------------------------------------------
+! Terminal Declarations
+
+Number = {Digit}+
+ID     = {ID Head} {ID Tail}*
+
+! -------------------------------------------------
+! Rules
+
+<Expression>   ::= <Expression> '+' <Mult Exp>
+               |   <Expression> '-' <Mult Exp>
+               |   <Mult Exp>
+
+<Mult Exp>     ::= <Mult Exp> '*' <Negate Exp>
+               |   <Mult Exp> '/' <Negate Exp>
+               |   <Negate Exp>
+
+<Negate Exp>   ::= '-' <Value>
+               |   <Value>
+
+<Value>        ::= Number
+               |   ID
+               |   '(' <Expression> ')'

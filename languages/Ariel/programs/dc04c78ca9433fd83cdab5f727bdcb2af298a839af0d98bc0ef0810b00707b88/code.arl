@@ -1,0 +1,22 @@
+/* Ariel active database rule definitions */
+
+RULE SalaryAuditRule
+    ON UPDATE(salary) IN Employee
+    IF new.salary <> old.salary
+    THEN
+        INSERT INTO AuditLog(empno, old_salary, new_salary)
+        VALUES (new.empno, old.salary, new.salary);
+
+RULE BudgetCascadeRule
+    ON INSERT INTO Employee
+    THEN
+        UPDATE Department
+        SET total_salary = total_salary + new.salary
+        WHERE deptno = new.deptno;
+
+RULE MaxSalaryConstraintRule
+    ON UPDATE(salary) IN Employee
+    IF new.salary > 200000
+    THEN
+        INSERT INTO OverpaidWarning(empno, salary)
+        VALUES (new.empno, new.salary);

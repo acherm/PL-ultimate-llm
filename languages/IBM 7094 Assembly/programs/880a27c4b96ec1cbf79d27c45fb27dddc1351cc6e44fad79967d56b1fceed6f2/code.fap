@@ -1,0 +1,29 @@
+*
+*    SUM INTEGERS 1 TO 10 ON IBM 7094
+*    FAP (FORTRAN ASSEMBLY PROGRAM) SYNTAX
+*
+         ENTRY  MAIN
+*
+MAIN     CLA    CZERO      AC = 0, INITIALIZE SUM
+         STO    SUM
+         CLA    TEN        INITIALIZE COUNTER = 10
+         STO    CTR
+*
+LOOP     CLA    SUM        LOAD CURRENT SUM
+         ADD    CTR        SUM = SUM + CTR
+         STO    SUM        STORE UPDATED SUM
+         CLA    CTR        LOAD COUNTER
+         SUB    ONE        CTR = CTR - 1
+         STO    CTR        STORE NEW COUNTER
+         TZE    DONE       IF CTR = 0, EXIT LOOP
+         TRA    LOOP       ELSE CONTINUE
+*
+DONE     HTR    0          HALT, RESULT IN SUM
+*
+CZERO    DEC    0          CONSTANT: ZERO
+ONE      DEC    1          CONSTANT: ONE
+TEN      DEC    10         CONSTANT: TEN (N = 10)
+CTR      BSS    1          LOOP COUNTER
+SUM      BSS    1          ACCUMULATED SUM
+*
+         END    MAIN

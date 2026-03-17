@@ -1,0 +1,15 @@
+#! /usr/bin/env shill
+
+;; count-lines: a Shill script demonstrating capability contracts
+;; Counts lines in each file found in a directory.
+(script count-lines (dir :: Dir/r)
+  (let ([files (ls dir)])
+    (for ([f files])
+      (when (file? f)
+        (let ([lines (length (string-split (read-file f) "\n"))])
+          (display (string-append (path->string f) ": "))
+          (display lines)
+          (newline))))))
+
+;; Run with current directory
+(count-lines (make-dir "."))

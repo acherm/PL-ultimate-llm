@@ -1,0 +1,35 @@
+/* xoc - Factorial and Fibonacci demo
+ * xoc is an extension of C for modular systems programming
+ * (C) MIT PDOS research - pdos.csail.mit.edu/xoc
+ */
+
+#include <stdio.h>
+
+int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+int fibonacci(int n) {
+    if (n <= 1) return n;
+    int a = 0, b = 1, c;
+    for (int i = 2; i <= n; i++) {
+        c = a + b;
+        a = b;
+        b = c;
+    }
+    return b;
+}
+
+int main(void) {
+    int i;
+    printf("Factorials:\n");
+    for (i = 1; i <= 10; i++) {
+        printf("%2d! = %d\n", i, factorial(i));
+    }
+    printf("\nFibonacci:\n");
+    for (i = 0; i <= 10; i++) {
+        printf("fib(%2d) = %d\n", i, fibonacci(i));
+    }
+    return 0;
+}

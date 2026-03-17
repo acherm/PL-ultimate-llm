@@ -1,0 +1,15 @@
+; Comfy-65: Find the maximum of two byte values
+; Input:  operand1 at $80, operand2 at $81
+; Output: result   at $82
+
+  org $0300
+
+  lda $80
+  cmp $81         ; compare $80 with $81, carry set if $80 >= $81
+  if (c) {
+    sta $82       ; $80 >= $81, max is in A already
+  } else {
+    lda $81
+    sta $82       ; $80 < $81,  max = $81
+  }
+  rts

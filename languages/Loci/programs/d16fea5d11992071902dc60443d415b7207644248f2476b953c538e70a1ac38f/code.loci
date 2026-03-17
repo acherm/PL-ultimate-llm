@@ -1,0 +1,29 @@
+#include <Loci.h>
+using namespace Loci;
+
+// Declare variable types for compressible flow simulation
+$type pressure    store<double>;  // cell pressure [Pa]
+$type density     store<double>;  // cell density [kg/m^3]
+$type temperature store<double>;  // cell temperature [K]
+$type soundSpeed  store<double>;  // local speed of sound [m/s]
+$type gamma       param<double>;  // ratio of specific heats
+$type gasConstant param<double>;  // specific gas constant [J/kg/K]
+
+// Default physical constants (dry air)
+$rule default(gamma) {
+  $gamma = 1.4;
+}
+
+$rule default(gasConstant) {
+  $gasConstant = 287.058;  // J/kg/K
+}
+
+// Ideal gas law: p = rho * R * T
+$rule pointwise(pressure <- density, temperature, gasConstant) {
+  $pressure = $density * $gasConstant * $temperature;
+}
+
+// Speed of sound: c = sqrt(gamma * p / rho)
+$rule pointwise(soundSpeed <- gamma, pressure, density) {
+  $soundSpeed = sqrt($gamma * $pressure / $density);
+}

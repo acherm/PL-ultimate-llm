@@ -1,0 +1,32 @@
+Package calc;
+
+Helpers
+    digit = ['0'..'9'];
+
+Tokens
+    number = digit+;
+    plus   = '+';
+    minus  = '-';
+    mult   = '*';
+    div    = '/';
+    l_par  = '(';
+    r_par  = ')';
+    blank  = (' ' | '\n' | '\r' | '\t')+;
+
+Ignored Tokens
+    blank;
+
+Productions
+    exp =
+        {add}  exp plus  term |
+        {sub}  exp minus term |
+        {term} term;
+
+    term =
+        {mul}    term mult factor |
+        {div}    term div  factor |
+        {factor} factor;
+
+    factor =
+        {num}   number         |
+        {paren} l_par exp r_par;

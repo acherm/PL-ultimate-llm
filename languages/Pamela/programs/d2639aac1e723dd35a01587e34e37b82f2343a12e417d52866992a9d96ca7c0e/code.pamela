@@ -1,0 +1,24 @@
+;; biased-coin.pamela
+;; PAMELA example: probabilistic plant activity model
+
+(defpclass biased-coin [weight]
+  :meta {:doc "A biased coin with configurable weight"}
+  :fields {worth {:initial 0.0}}
+  :methods [(defpmethod heads
+              {:doc "Heads side of coin"
+               :probability weight}
+              [])
+            (defpmethod tails
+              {:doc "Tails side of coin"
+               :probability (- 1 weight)}
+              [])])
+
+(defpclass coin-toss []
+  :meta {:doc "Toss a biased coin"}
+  :fields {coin {:initial (biased-coin 0.3)}}
+  :methods [(defpmethod toss
+              {:doc "Toss the coin once"}
+              []
+              (choose
+               (choice (tell (coin :heads)))
+               (choice (tell (coin :tails)))))])

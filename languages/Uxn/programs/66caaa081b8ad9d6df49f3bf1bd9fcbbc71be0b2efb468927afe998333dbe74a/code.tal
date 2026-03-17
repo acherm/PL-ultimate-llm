@@ -1,0 +1,14 @@
+( hello.tal -- Hello World for the Uxn virtual machine )
+|0100
+
+    ;hello-text print-str
+    BRK
+
+@print-str ( str* -- )
+    &loop
+        LDAk #18 DEO
+        INC2 LDAk ?&loop
+    POP2
+JMP2r
+
+@hello-text "Hello, 20 "World! 0a 00

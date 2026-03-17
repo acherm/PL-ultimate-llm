@@ -1,0 +1,21 @@
+; DCPU-16 example: memory copy loop and subroutine call
+; From the original DCPU-16 specification by Notch (Markus Persson)
+
+              SET I, 10               ; set loop counter to 10
+              SET A, 0x2000           ; set A to base address
+:loop         SET [0x2000+I], [A]     ; copy memory word at [A] to [0x2000+I]
+              SUB I, 1                ; decrement counter
+              IFN I, 0                ; if I != 0
+                SET PC, loop          ; jump back to loop
+
+; Call a subroutine
+              SET X, 0x4              ; set X to 4
+              JSR testsub             ; call subroutine testsub
+              SET PC, crash           ; jump to crash if subroutine returns normally
+
+; Subroutine: shifts X left by 4
+:testsub      SHL X, 4               ; X = X << 4 (should become 0x40)
+              SET PC, POP             ; return from subroutine
+
+; Hang forever (X should be 0x40 if everything went right)
+:crash        SET PC, crash           ; infinite loop

@@ -1,0 +1,19 @@
+type list(alpha) == nil | alpha :: list(alpha);
+
+dec hd : list(alpha) -> alpha;
+--- hd(alpha :: list(alpha)) <= alpha;
+
+dec tl : list(alpha) -> list(alpha);
+--- tl(alpha :: list(alpha)) <= list(alpha);
+
+dec append : list(alpha) # list(alpha) -> list(alpha);
+--- append(nil, l)       <= l;
+--- append(a :: l1, l2)  <= a :: append(l1, l2);
+
+dec length : list(alpha) -> num;
+--- length(nil)          <= 0;
+--- length(a :: l)       <= 1 + length(l);
+
+dec reverse : list(alpha) -> list(alpha);
+--- reverse(nil)         <= nil;
+--- reverse(a :: l)      <= append(reverse(l), a :: nil);

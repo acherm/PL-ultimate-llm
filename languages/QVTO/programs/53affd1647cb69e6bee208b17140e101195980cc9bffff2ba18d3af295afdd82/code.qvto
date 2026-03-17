@@ -1,0 +1,30 @@
+-- QVT Operational (QVTO) transformation: UML Classes to Relational Tables
+-- Classic UML2RDBMS example from the OMG QVT specification
+
+transformation UML2RDBMS(in uml : UML, out rdb : RDB);
+
+-- Map a persistent UML Class to a relational Table
+mapping UML::Class::class2table() : RDB::Table
+    when { self.isPersistent = true }
+{
+    name    := self.name;
+    columns += self.attribute->map attribute2column();
+    key     := self.attribute->select(a | a.isId)->map attribute2column();
+}
+
+-- Map a UML Attribute to a relational Column
+mapping UML::Attribute::attribute2column() : RDB::Column {
+    name := self.name;
+    type := self.type.name;
+}
+
+-- Map a UML Association to a foreign-key Column
+mapping UML::Association::assoc2foreignKey() : RDB::Column {
+    name := self.source.name.concat("_fk");
+    type := "INTEGER";
+}
+
+-- Main entry point: transform all persistent classes
+main() {
+    uml.objectsOfType(UML::Class)->map class2table();
+}

@@ -1,0 +1,18 @@
+module Main
+
+-- Fibonacci sequence using Blodwen (early Idris 2 prototype)
+total fib : Nat -> Nat
+fib Z = 0
+fib (S Z) = 1
+fib (S (S k)) = fib (S k) + fib k
+
+showFib : Nat -> String
+showFib n = "fib(" ++ show n ++ ") = " ++ show (fib n)
+
+main : IO ()
+main = do
+    putStrLn (showFib 0)
+    putStrLn (showFib 1)
+    putStrLn (showFib 5)
+    putStrLn (showFib 10)
+    putStrLn (showFib 15)

@@ -1,0 +1,16 @@
+program FibonacciDemo;
+
+function Fibonacci(n: Integer): Integer;
+begin
+  if n <= 1 then
+    Result := n
+  else
+    Result := Fibonacci(n - 1) + Fibonacci(n - 2);
+end;
+
+var
+  i: Integer;
+begin
+  for i := 0 to 10 do
+    WriteLn('Fibonacci(' + IntToStr(i) + ') = ' + IntToStr(Fibonacci(i)));
+end.

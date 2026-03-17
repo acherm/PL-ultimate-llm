@@ -1,0 +1,58 @@
+// Custom Rocket Launcher in DECORATE
+// Defines a new weapon with custom projectile behavior
+
+Actor MyRocketLauncher : RocketLauncher replaces RocketLauncher
+{
+    Weapon.SelectionOrder 900
+    Weapon.AmmoType "RocketAmmo"
+    Weapon.AmmoUse 1
+    Weapon.AmmoGive 2
+    Obituary "%o was blasted by %k's rocket."
+    States
+    {
+    Ready:
+        LAUN A 1 A_WeaponReady
+        Loop
+    Deselect:
+        LAUN A 1 A_Lower
+        Loop
+    Select:
+        LAUN A 1 A_Raise
+        Loop
+    Fire:
+        LAUN B 8 A_GunFlash
+        LAUN C 12 A_FireProjectile("MyRocket")
+        LAUN D 0 A_ReFire
+        Goto Ready
+    Flash:
+        LAUN E 3 Bright A_Light1
+        LAUN F 3 Bright A_Light2
+        Goto LightDone
+    Spawn:
+        LAUN A -1
+        Stop
+    }
+}
+
+Actor MyRocket : Rocket
+{
+    Speed 25
+    Damage 120
+    Radius 11
+    Height 8
+    +ROCKETTRAIL
+    +SEEKERMISSILE
+    SeeSound "weapons/rocklf"
+    DeathSound "weapons/rocklx"
+    States
+    {
+    Spawn:
+        MISL A 1 Bright A_Tracer
+        Loop
+    Death:
+        MISL B 8 Bright A_Explode
+        MISL C 6 Bright
+        MISL D 4 Bright
+        Stop
+    }
+}

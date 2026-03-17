@@ -1,0 +1,66 @@
+/*
+ * MI Example cache coherence protocol
+ * Based on gem5's MI_example protocol (simplified for illustration)
+ */
+
+machine(MachineType:L1Cache, "MI Example L1 Cache")
+: Sequencer * sequencer,
+  CacheMemory * cacheMemory,
+  Cycles cache_response_latency = 12,
+  Cycles issue_latency = 2
+{
+
+  // STATES
+  state_declaration(State, desc="Access permission") {
+    I, AccessPermission:Invalid, desc="Invalid";
+    M, AccessPermission:Read_Write, desc="Modified";
+
+    // Transient states
+    MI, AccessPermission:Busy,
+        desc="Modified, moving to Invalid (eviction)";
+  }
+
+  // EVENTS
+  enumeration(Event, desc="Cache events") {
+    Load,        desc="Load request from CPU";
+    Store,       desc="Store request from CPU";
+    Replacement, desc="Block replacement in cache";
+    Inv,         desc="Invalidate request from directory";
+    Ack,         desc="Ack from directory";
+  }
+
+  // CACHE ENTRY STRUCTURE
+  structure(Entry, desc="Cache entry", interface="AbstractCacheEntry") {
+    State CacheState, desc="Cache state";
+    DataBlock DataBlk, desc="Data in the block";
+  }
+
+  // TRANSITIONS
+  transition(I, Load, MI) {
+    allocateBlock;
+    issueGetS;
+    profileMiss;
+  }
+
+  transition(I, Store, MI) {
+    allocateBlock;
+    issueGetM;
+    profileMiss;
+  }
+
+  transition(M, Store) {
+    writeDataToCache;
+    profileHit;
+  }
+
+  transition(MI, Ack, I) {
+    deallocateBlock;
+    popAckQueue;
+  }
+
+  transition(MI, Inv) {
+    sendAck;
+    deallocateBlock;
+    popInvQueue;
+  }
+}

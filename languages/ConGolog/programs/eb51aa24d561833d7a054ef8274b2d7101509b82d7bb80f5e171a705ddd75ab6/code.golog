@@ -1,0 +1,43 @@
+/* ConGolog: Concurrent Delivery Robot
+   Demonstrates concurrent execution of agent procedures.
+   ConGolog extends Golog with concurrent composition (||),
+   prioritized concurrency (>>), and interrupt handling. */
+
+/* Primitive actions */
+prim_action(pickup(X)).
+prim_action(putdown(X)).
+prim_action(move(Loc)).
+prim_action(ring_bell).
+prim_action(open_door).
+
+/* Possibility axioms */
+poss(pickup(X), S) :-
+    on(X, table, S),
+    \+ holding(_, S).
+poss(putdown(X), S) :-
+    holding(X, S).
+poss(move(Loc), S) :-
+    at(robot, _, S),
+    Loc \= noplace.
+poss(ring_bell, _S).
+poss(open_door, S) :-
+    door_locked(S).
+
+/* Initial situation */
+initially(on(block1, table)).
+initially(on(block2, table)).
+initially(at(robot, room1)).
+initially(door_locked).
+
+/* ConGolog procedures */
+proc(carry(X, Dest),
+    pickup(X) : move(Dest) : putdown(X)).
+
+proc(answer_door,
+    ring_bell : move(entrance) : open_door).
+
+/* Main program: concurrent delivery and door handling */
+proc(main,
+    carry(block1, room2) || answer_door).
+
+:- do(main, s0, _SF), write('Tasks completed.'), nl.

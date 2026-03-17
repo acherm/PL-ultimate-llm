@@ -1,0 +1,21 @@
+-- Natural numbers in Alfa, a dependently typed proof assistant
+-- from Chalmers University (precursor to Agda)
+
+data Nat : Set where
+  zero : Nat
+  suc  : Nat -> Nat
+
+plus : Nat -> Nat -> Nat
+plus zero    n = n
+plus (suc m) n = suc (plus m n)
+
+mul : Nat -> Nat -> Nat
+mul zero    n = zero
+mul (suc m) n = plus n (mul m n)
+
+-- Two plus two equals four
+two : Nat
+two = suc (suc zero)
+
+four : Nat
+four = plus two two

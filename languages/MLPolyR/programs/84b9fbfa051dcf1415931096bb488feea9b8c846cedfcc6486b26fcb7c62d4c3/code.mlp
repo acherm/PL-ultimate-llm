@@ -1,0 +1,17 @@
+(* Fibonacci benchmark in MLPolyR *)
+
+fun fib 0 = 0
+  | fib 1 = 1
+  | fib n = fib (n - 1) + fib (n - 2)
+
+fun run_bench n =
+  let
+    fun loop i acc =
+      if i > n then acc
+      else loop (i + 1) (fib i)
+  in
+    loop 0 0
+  end
+
+val result = run_bench 30
+val _ = print ("fib(30) = " ^ Int.toString result ^ "\n")

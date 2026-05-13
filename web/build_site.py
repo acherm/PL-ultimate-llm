@@ -1409,6 +1409,37 @@ def render_source_pages(
     return n_pages
 
 
+# Suffixes that master_inventory appends when canonical-name slugs collide or
+# when a name has the form "Foo (programming language)". Stripped before
+# comparing pl_ids for the attribution-state heuristic, so that `pl/cpp` and
+# `pl/cpp-3` (the same C++ under two upstream-source spellings) don't count
+# as separate claimants of `.cc`.
+_PL_ENTITY_DEDUP_SUFFIXES = [
+    "-programming-language",
+    "-the-programming-language",
+    "-programminglanguage",
+    "-lang",
+    "-language",
+]
+
+
+def _canonical_pl_entity(pl_id: str) -> str:
+    """Normalise a pl_id to its 'conceptual entity' base.
+
+    Examples:
+      pl/cpp                          -> pl/cpp
+      pl/cpp-3                        -> pl/cpp   (numeric collision dedup)
+      pl/python-programming-language  -> pl/python
+      pl/hack                         -> pl/hack  (unchanged)
+    """
+    base = pl_id
+    for s in _PL_ENTITY_DEDUP_SUFFIXES:
+        if base.endswith(s):
+            base = base[: -len(s)]
+            break
+    return re.sub(r"-\d+$", "", base)
+
+
 def _ext_url_slug(ext: str) -> str:
     """Filesystem/URL-safe key for an extension. `.m` -> 'm'; `.++` -> 'pp'."""
     s = ext.lstrip(".")
@@ -1786,8 +1817,21 @@ def render_per_extension_pages(
             1 for c in claims
             if c.get("strength") == "primary" and c.get("source") in AUTHORITATIVE
         )
+        # Two reasons to call an extension well-attributed:
+        # 1. At least one authoritative primary claim (the canonical case).
+        # 2. ALL claims (across all sources, all strengths) point to ONE PL
+        #    entity. E.g. `.cc` is secondary in both Linguist and Pygments but
+        #    every claimant is C++ — practically unambiguous. Without this,
+        #    `.cc` reads as "weakly-attributed" which overstates the doubt.
+        # pl_ids are consolidated through `_canonical_pl_entity` so that
+        # master_inventory duplicates (`pl/cpp` + `pl/cpp-3`) collapse.
+        distinct_entities = {
+            _canonical_pl_entity(c["pl_id"]) for c in claims if c.get("pl_id")
+        }
+        all_claims_agree_on_one_pl = len(distinct_entities) == 1 and bool(claims)
         attribution_state = (
-            "well-attributed" if n_primary_authoritative >= 1
+            "well-attributed"
+            if (n_primary_authoritative >= 1 or all_claims_agree_on_one_pl)
             else ("unattributed" if not claims else "weakly-attributed")
         )
 

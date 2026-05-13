@@ -308,6 +308,36 @@ a `(PL, extension)` edge in the catalog. The schema lives in
 | `proposed` | derived by a heuristic; needs review before being treated as canonical. |
 | `disputed` | conflicting upstream evidence (e.g., one source says yes, another absent). |
 
+### Attribution-state heuristic (UI + review queue)
+
+`strength` is the per-row value above. The site / review queue also computes
+a per-extension **attribution state** by looking across all rows for that
+extension:
+
+| State | Rule | Example |
+|---|---|---|
+| **well-attributed** | (a) ≥ 1 *primary* claim from an authoritative source (Linguist or Pygments), **OR** (b) all claims (across sources and strengths) collapse to a single PL entity after consolidating master_inventory near-duplicates (`pl/cpp` ≡ `pl/cpp-3` ≡ `pl/cpp-programming-language`). | `.py`, `.cpp` (primary by both Linguist and Pygments); `.cc`, `.hpp`, `.cxx` (only secondary claims, but every claimant is C++) |
+| **weakly-attributed** | claims exist but multiple distinct PL entities (after consolidation) appear, and none is an authoritative primary. | `.hh` (C++ + Hack + Obj-C++ — real ambiguity); `.pyi` (mixed Pygments lexers + master_inventory's separate `py` entity) |
+| **unattributed** | no PL claim at all in `ext_claim.csv`. | `.pbf`, `.uasset`, most popular-but-binary extensions |
+
+The (b) clause was added so reviewers aren't asked to label cases where the
+evidence is unanimous but classified as secondary by upstream convention
+(Linguist puts `.cpp` at `extensions[0]` and `.cc` at `[2]`, so `.cc`'s
+claims are all secondary — but practically unambiguous).
+
+`_canonical_pl_entity()` in `web/build_site.py` and
+`tools/build_extension_review_queue.py` strips:
+
+- `-programming-language` / `-the-programming-language` / `-language` / `-lang`
+  suffixes (master_inventory's parenthetical-canonical-name fallback)
+- Trailing `-<digits>` (master_inventory's collision-dedup suffix when two
+  canonical names slugify to the same base — e.g. `pl/cpp` from "C++" and
+  `pl/cpp-3` from "cpp")
+
+It does **not** catch cross-name duplicates (e.g. `pl/py` ≠ `pl/python`) —
+that's a deeper master_inventory issue and the reason `.pyi` is still
+weakly-attributed even though it's practically Python-only.
+
 ### Acceptable provenance for a *new* mapping
 
 A new mapping can be added only if it falls into one of these categories:

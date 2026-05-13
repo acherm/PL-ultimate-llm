@@ -1,0 +1,88 @@
+name: Ingest extension-label issues
+
+# Closes the crowd-source loop: every time someone submits a labelling issue
+# via the on-page form (label `ext-review`), this workflow re-runs the curator
+# script + taxonomy build and commits the updated CSVs back to the branch.
+#
+# Triggers:
+#   - issues.labeled / unlabeled (specifically when `ext-review` is added)
+#   - issues.opened (in case the label gets set at creation)
+#   - workflow_dispatch (manual run; no parameters needed)
+#
+# What it does:
+#   1. Run `tools/process_extension_labels.py` — fetches all `ext-review`
+#      issues via `gh api`, parses each YAML block, writes
+#      `data/derived/extension_labels.csv` (preserves `curator_status`).
+#   2. Run `tools/build_pl_taxonomy.py` — promotes accepted manual labels into
+#      `data/derived/pl_taxonomy/ext_claim.csv`.
+#   3. Commit the changed CSVs back to the branch (no site rebuild here — a
+#      separate "publish site" workflow can pick that up).
+#
+# Notes:
+#   - The default GITHUB_TOKEN has read/write on this repo's contents (when
+#     `permissions: contents: write` is set). It does NOT need any external
+#     secrets.
+#   - We do NOT auto-flip `curator_status` from `new` to `accepted`; that's
+#     the maintainer's call, made by editing the CSV (or by a future
+#     `/accept` slash-command bot).
+
+on:
+  issues:
+    types: [opened, labeled, unlabeled, edited]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  ingest:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.label.name == 'ext-review' ||
+      contains(join(github.event.issue.labels.*.name, ','), 'ext-review')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need write access to push the updated CSVs back.
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml pygments
+
+      - name: Run curator script (parse ext-review issues)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/process_extension_labels.py --limit 1000
+
+      - name: Rebuild taxonomy (promotes accepted labels into ext_claim.csv)
+        run: |
+          python3 tools/build_pl_taxonomy.py
+
+      - name: Commit updated CSVs if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A data/derived/extension_labels.csv data/derived/pl_taxonomy/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore(ext-labels): ingest from GH issues + rebuild taxonomy
+
+            Triggered by ${{ github.event_name }}${{ github.event.issue.number && format(' (issue #{0})', github.event.issue.number) || '' }}."
+            git push
+          fi
+
+      # The site rebuild itself is intentionally a separate workflow so this
+      # ingestion stays fast and focused. After the commit above lands on the
+      # branch, a `pages-deploy.yml` (not yet wired) would pick it up.

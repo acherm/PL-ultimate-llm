@@ -2,6 +2,148 @@
 (() => {
   const PAGE_SIZE = 50;
 
+  /**
+   * Submit handler for the per-extension labelling form.
+   * Builds the structured GitHub-issue body from form fields and opens the
+   * pre-filled issue in a new tab. No backend; pure URL-encoded redirect.
+   * Exposed globally because forms use inline onsubmit="return submitExtLabel(this)".
+   */
+  function _buildExtLabelIssueUrl(form) {
+    const ext = form.dataset.ext;
+    const repo = form.dataset.repo;
+    if (!repo) {
+      return { error: "This site has no GitHub repository configured." };
+    }
+    const labelChoice = (form.label.value || "").trim();
+    if (!labelChoice) return { error: "Pick a label first." };
+    const customPart = (form.label_custom.value || "").trim();
+    let label = labelChoice;
+    if (labelChoice.includes("<")) {
+      if (!customPart) {
+        return { error: "The label has a <…> placeholder; fill the custom field." };
+      }
+      label = labelChoice.replace(/<[^>]+>/, customPart);
+    } else if (customPart) {
+      label = customPart;
+    }
+    const friendly = (form.friendly_name.value || "").trim();
+    const refUrl = (form.reference_url.value || "").trim();
+    const evidence = (form.evidence.value || "").trim();
+    if (!evidence) return { error: "Evidence/notes is required." };
+    const yamlBody = `<!-- ext-review: parsed by tools/process_extension_labels.py -->
+\`\`\`yaml
+ext: "${ext}"
+label: "${label.replace(/"/g, '\\"')}"
+friendly_name: "${friendly.replace(/"/g, '\\"')}"
+reference_url: "${refUrl}"
+evidence: |
+${evidence.split('\n').map(l => '  ' + l).join('\n')}
+\`\`\`
+
+## Submitted from /ext/${ext.replace(/^\./, '')}/
+`;
+    const title = `Label extension: ${ext}`;
+    const url =
+      `https://github.com/${repo}/issues/new` +
+      `?title=${encodeURIComponent(title)}` +
+      `&body=${encodeURIComponent(yamlBody)}` +
+      `&labels=ext-review`;
+    return { url };
+  }
+
+  // Status messages render under the form (id=`label-form-status` on the form's
+  // surrounding section). Visible feedback regardless of popup-blocker behaviour.
+  function _setExtLabelStatus(form, html, kind) {
+    const target = form.querySelector(".ext-label-status");
+    if (!target) return;
+    target.innerHTML = html;
+    target.dataset.kind = kind || "info";
+  }
+
+  // Kept around for the inline onsubmit fallback in case older pages still use it.
+  // The primary path is the addEventListener wiring below.
+  window.submitExtLabel = function(form) {
+    return _handleExtLabelSubmit(form);
+  };
+
+  function _handleExtLabelSubmit(form) {
+    console.log("[ext-label] submit clicked", { ext: form.dataset.ext });
+    const result = _buildExtLabelIssueUrl(form);
+    if (result.error) {
+      console.warn("[ext-label] form error:", result.error);
+      _setExtLabelStatus(form, `<strong>Error:</strong> ${result.error}`, "error");
+      return false;
+    }
+    const url = result.url;
+    console.log("[ext-label] opening GitHub URL:", url);
+    let win = null;
+    try { win = window.open(url, "_blank", "noopener"); } catch (e) {
+      console.warn("[ext-label] window.open threw:", e);
+    }
+    if (win) {
+      _setExtLabelStatus(
+        form,
+        `Opened GitHub in a new tab. If you didn't see it (popup blocker), click the link below the button.`,
+        "ok",
+      );
+    } else {
+      _setExtLabelStatus(
+        form,
+        `Browser blocked the new tab. Click the link below the button to open the pre-filled issue.`,
+        "warn",
+      );
+    }
+    return false;  // prevent default form submit
+  }
+
+  function _wireExtLabelForms() {
+    if (typeof document === "undefined") return;
+    const forms = document.querySelectorAll("form.ext-label-form");
+    console.log(`[ext-label] wiring ${forms.length} form(s)`);
+    forms.forEach((form) => {
+      if (form.dataset._wired === "1") return;
+      form.dataset._wired = "1";
+      // Always-on submit listener (in addition to any inline onsubmit, so we
+      // win even if the inline attribute was stripped by content policy).
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        _handleExtLabelSubmit(form);
+      });
+
+      // Live-updating fallback link: ALWAYS visible after form is rendered.
+      // This is a regular <a> the reviewer can right-click → "Open in new tab"
+      // even if popup-blocking interferes with window.open.
+      const link = form.querySelector(".ext-label-fallback-link");
+      const update = () => {
+        if (!link) return;
+        const r = _buildExtLabelIssueUrl(form);
+        if (r.url) {
+          link.href = r.url;
+          link.style.display = "";
+          link.textContent = "Open the pre-filled GitHub issue ↗";
+        } else {
+          // Show as disabled until the form has enough info to build a URL.
+          link.removeAttribute("href");
+          link.style.display = "";
+          link.textContent = `(fill the form — ${r.error || "incomplete"})`;
+        }
+      };
+      form.addEventListener("input", update);
+      form.addEventListener("change", update);
+      update();
+    });
+  }
+  if (typeof document !== "undefined") {
+    // With `defer` the DOM is already parsed when this runs; wire immediately.
+    // Also bind to DOMContentLoaded as a belt-and-braces if loading order ever
+    // changes; the `_wired` guard makes the second call a no-op.
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _wireExtLabelForms);
+    } else {
+      _wireExtLabelForms();
+    }
+  }
+
   function qs(selector) {
     return document.querySelector(selector);
   }
@@ -55,12 +197,17 @@
       ${slice
         .map((l) => {
           const metaBits = [];
-          if (typeof l.program_count === "number") metaBits.push(`${l.program_count} program${l.program_count === 1 ? "" : "s"}`);
+          if (typeof l.program_count === "number" && l.program_count > 0) metaBits.push(`${l.program_count} program${l.program_count === 1 ? "" : "s"}`);
           if (l.added_at) metaBits.push(`added ${escapeHtml(formatIsoDate(l.added_at))}`);
           const meta = metaBits.length ? `<div class="muted">${metaBits.join(" · ")}</div>` : "";
           const aliases = (l.aliases || []).length ? `<div class="muted">aka ${escapeHtml(l.aliases.slice(0, 3).join(", "))}${l.aliases.length > 3 ? "…" : ""}</div>` : "";
+          const badges = [];
+          if (l.has_swh) badges.push(`<span class="pill" style="background:rgba(80,200,120,0.18); color:#c6f0d4;" title="${l.swh_sample_count} SWH sample(s)">SWH</span>`);
+          if (l.taxonomy_only) badges.push(`<span class="pill src-taxonomy" title="No LLM-curated program">taxonomy</span>`);
+          if (typeof l.source_count === "number" && l.source_count >= 4) badges.push(`<span class="pill" title="${l.source_count} sources mention this">×${l.source_count}</span>`);
+          const badgeBlock = badges.length ? `<div style="display:inline-flex; gap:6px; margin-left:8px;">${badges.join("")}</div>` : "";
           return `<li class="lang-row">
-            <a class="lang-link" href="${escapeHtml(window.__SITE_ROOT__ || "./")}l/${escapeHtml(l.slug)}/index.html">${escapeHtml(l.name)}</a>
+            <a class="lang-link" href="${escapeHtml(window.__SITE_ROOT__ || "./")}l/${escapeHtml(l.slug)}/index.html">${escapeHtml(l.name)}</a>${badgeBlock}
             ${meta}
             ${aliases}
           </li>`;
@@ -114,20 +261,30 @@
     function currentFilters() {
       const q = input.value || "";
       const letter = (getParam("letter") || "").toUpperCase();
-      return { q, letter };
+      const hasSwh = !!qs("#fltHasSwh")?.checked;
+      const hasLlm = !!qs("#fltLlm")?.checked;
+      const taxonomyOnly = !!qs("#fltTaxonomy")?.checked;
+      const minSources = parseInt(qs("#fltMinSources")?.value || "0", 10) || 0;
+      return { q, letter, hasSwh, hasLlm, taxonomyOnly, minSources };
     }
 
     function applyFilters() {
-      const { q, letter } = currentFilters();
+      const { q, letter, hasSwh, hasLlm, taxonomyOnly, minSources } = currentFilters();
       let filtered = langs;
       if (letter) filtered = filtered.filter((l) => (l.first_letter || "").toUpperCase() === letter);
       if (normalize(q)) filtered = filtered.filter((l) => matchesLang(l, q));
+      if (hasSwh) filtered = filtered.filter((l) => l.has_swh === true);
+      if (hasLlm) filtered = filtered.filter((l) => (l.program_count || 0) > 0);
+      if (taxonomyOnly) filtered = filtered.filter((l) => l.taxonomy_only === true);
+      if (minSources > 0) filtered = filtered.filter((l) => (l.source_count || 0) >= minSources);
       return filtered;
     }
 
     function update() {
-      const { q, letter } = currentFilters();
-      const hasAnyFilter = normalize(q).length > 0 || !!letter;
+      const f = currentFilters();
+      const { q, letter } = f;
+      const hasAnyFilter = normalize(q).length > 0 || !!letter ||
+        f.hasSwh || f.hasLlm || f.taxonomyOnly || (f.minSources > 0);
       if (!hasAnyFilter) {
         results.innerHTML = `<div class="hint">Pick a letter above or type a search query.</div>`;
         summary.textContent = "";
@@ -166,6 +323,12 @@
       setParam("q", input.value || "");
       shown = 0;
       update();
+    });
+    ["#fltHasSwh", "#fltLlm", "#fltTaxonomy", "#fltMinSources"].forEach((sel) => {
+      const el = qs(sel);
+      if (!el) return;
+      el.addEventListener("change", () => { shown = 0; update(); });
+      if (el.type === "number") el.addEventListener("input", () => { shown = 0; update(); });
     });
 
     moreBtn.addEventListener("click", () => {

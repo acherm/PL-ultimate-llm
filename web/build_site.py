@@ -923,11 +923,26 @@ def render_home_page(
                 sample_keys.add((e.pl_id, s.sha1_git))
     n_with_swh = len(pl_ids_with_swh)
     n_swh_samples = len(sample_keys)
+    # Progress KPI: how many PLs in the taxonomy have at least one extension
+    # claim. Grows when manual labelling lands new (pl, ext) edges.
+    n_pls_in_taxonomy = 0
+    n_pls_with_ext = 0
+    try:
+        pls_with_ext: set[str] = set()
+        n_pls_in_taxonomy = sum(1 for _ in _read_csv(TAXONOMY_DIR / "pl.csv"))
+        for r in _read_csv(TAXONOMY_DIR / "ext_claim.csv"):
+            if r.get("pl_id"):
+                pls_with_ext.add(r["pl_id"])
+        n_pls_with_ext = len(pls_with_ext)
+    except Exception:
+        pass
+    pct_pls_with_ext = (100.0 * n_pls_with_ext / n_pls_in_taxonomy) if n_pls_in_taxonomy else 0.0
     stats_html = f"""
     <div class="stats">
       <div class="stat"><div class="num">{len(languages):,}</div><div class="muted">PL pages</div></div>
       <div class="stat"><div class="num">{n_in_repo:,}</div><div class="muted">in-repo (LLM-curated)</div></div>
       <div class="stat"><div class="num">{programs_total:,}</div><div class="muted">LLM programs</div></div>
+      <div class="stat" title="Progress KPI — grows as manual labelling lands new (PL, ext) edges in ext_claim.csv"><div class="num">{n_pls_with_ext:,} <span style="font-size:60%; color:var(--muted);">({pct_pls_with_ext:.1f}%)</span></div><div class="muted">PLs with ≥1 ext claim<br/>(of {n_pls_in_taxonomy:,} in taxonomy)</div></div>
       <div class="stat"><div class="num">{n_with_swh:,}</div><div class="muted">PLs with SWH samples</div></div>
       <div class="stat"><div class="num">{n_swh_samples:,}</div><div class="muted">SWH samples</div></div>
       <div class="stat"><div class="num">{generated_at.split('T')[0]}</div><div class="muted">last build (UTC)</div></div>
@@ -1187,11 +1202,60 @@ def render_extension_review_queue_page(
 
     n_pending = sum(1 for r in rows if r.get("review_status") == "pending")
     n_labeled = sum(len(v) for v in existing_labels.values())
+
+    # Compute the attribution-state breakdown across the SWH-popular subset
+    # that the queue builder considered (≥ 10K occurrences, matching the
+    # build_extension_review_queue.py default). Numbers match what the script
+    # prints; see docs/SWH_EXTENSIONS_DECISIONS.md §11 for the rule.
+    MIN_OCC = 10_000  # mirror tools/build_extension_review_queue.py default
+    swh_pop = load_swh_ext_popularity()
+    popular_exts: set[str] = {
+        e for e, d in swh_pop.items() if (d.get("total_occ") or 0) >= MIN_OCC
+    }
+
+    n_well_attributed_in_taxonomy = 0
+    n_well_attributed_popular = 0
+    n_ext_in_taxonomy = 0
+    try:
+        ext_claim_csv = TAXONOMY_DIR / "ext_claim.csv"
+        if ext_claim_csv.exists():
+            AUTH = {"linguist", "pygments"}
+            claims_by_ext: dict[str, list[dict]] = {}
+            for c in _read_csv(ext_claim_csv):
+                claims_by_ext.setdefault(c["ext"], []).append(c)
+            n_ext_in_taxonomy = len(claims_by_ext)
+            for ext, ext_claims in claims_by_ext.items():
+                has_auth_primary = any(
+                    c.get("strength") == "primary" and c.get("source") in AUTH
+                    for c in ext_claims
+                )
+                distinct_entities = {
+                    _canonical_pl_entity(c.get("pl_id", ""))
+                    for c in ext_claims if c.get("pl_id")
+                }
+                if has_auth_primary or len(distinct_entities) == 1:
+                    n_well_attributed_in_taxonomy += 1
+                    if ext in popular_exts:
+                        n_well_attributed_popular += 1
+    except Exception:
+        pass
+
     body = f"""
     <section class="panel section">
       <h1 style="margin:0 0 8px;">Extension review queue</h1>
       <p>Ranked queue of file extensions present in Software Heritage that need a label. Sorted by priority — highest = most files in SWH and least already claimed by a PL in our taxonomy.</p>
-      <p class='muted'>{len(rows):,} rows · {n_pending:,} pending · {n_labeled:,} already labelled (across all annotators). Vocabulary: <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/extension_labels.md' target='_blank' rel='noopener'>docs/extension_labels.md</a>.</p>
+
+      <div style='display:flex; flex-wrap:wrap; gap:10px; margin: 12px 0;'>
+        <div class="stat"><div class="num">{len(rows):,}</div><div class="muted">in queue<br/>(popular ≥ {_fmt_occ(MIN_OCC)} occurrences &amp; not well-attributed)</div></div>
+        <div class="stat"><div class="num">{n_well_attributed_popular:,}</div><div class="muted">popular exts skipped<br/>(≥ {_fmt_occ(MIN_OCC)} occurrences &amp; already well-attributed)</div></div>
+        <div class="stat"><div class="num">{n_well_attributed_in_taxonomy:,}</div><div class="muted">well-attributed exts<br/>(whole taxonomy, any popularity)</div></div>
+        <div class="stat"><div class="num">{n_ext_in_taxonomy:,}</div><div class="muted">total exts<br/>in taxonomy</div></div>
+        <div class="stat"><div class="num">{n_labeled:,}</div><div class="muted">manual labels<br/>submitted so far</div></div>
+      </div>
+
+      <p class='muted'>An extension is "well-attributed" (skipped from this queue) if it has at least one primary claim from Linguist or Pygments, OR all claims agree on a single PL entity after consolidating master_inventory near-duplicates. See <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/SWH_EXTENSIONS_DECISIONS.md#11-provenance-contract-for-ext--pl-mappings' target='_blank' rel='noopener'>SWH_EXTENSIONS_DECISIONS.md §11</a> for the full attribution-state rule.</p>
+
+      <p class='muted'>Vocabulary: <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/extension_labels.md' target='_blank' rel='noopener'>docs/extension_labels.md</a>.</p>
     </section>
     <section class="panel section">
       <p class='muted'>Auto-suggested labels are <em>hints</em> (rule-based on the extension string). Always override based on actual evidence.</p>
@@ -1495,6 +1559,19 @@ def compute_taxonomy_stats(
         polysemy_dist[np] = polysemy_dist.get(np, 0) + 1
     n_with_heuristic_ext = len(heur_exts)
 
+    # How many PLs have at least one extension claim? Key progress indicator:
+    # over time, manual labelling promotes new (pl, ext) edges into
+    # ext_claim.csv, so this number should grow. Counts the *number of pl_ids*
+    # that appear in ext_claim.csv (any source, any strength).
+    pl_rows = _read_csv(TAXONOMY_DIR / "pl.csv")
+    n_pls_in_taxonomy = sum(1 for p in pl_rows if p.get("pl_id"))
+    pls_with_ext: set[str] = set()
+    for r in _read_csv(TAXONOMY_DIR / "ext_claim.csv"):
+        if r.get("pl_id"):
+            pls_with_ext.add(r["pl_id"])
+    n_pls_with_ext = len(pls_with_ext)
+    pct_pls_with_ext = (100.0 * n_pls_with_ext / n_pls_in_taxonomy) if n_pls_in_taxonomy else 0.0
+
     return {
         "n_total_pl_pages": n_total,
         "n_in_repo": n_in_repo,
@@ -1508,6 +1585,9 @@ def compute_taxonomy_stats(
         "polysemy_dist": dict(sorted(polysemy_dist.items())),
         "n_ext_total": n_ext_total,
         "n_exts_with_heuristic": n_with_heuristic_ext,
+        "n_pls_in_taxonomy": n_pls_in_taxonomy,
+        "n_pls_with_ext": n_pls_with_ext,
+        "pct_pls_with_ext": pct_pls_with_ext,
     }
 
 
@@ -2356,6 +2436,7 @@ def render_stats_page(
         <div class="stat"><div class="num">{t['n_in_repo']:,}</div><div class="muted">In-repo (LLM-curated)</div></div>
         <div class="stat"><div class="num">{t['n_taxonomy_only']:,}</div><div class="muted">Taxonomy-only (no LLM)</div></div>
         <div class="stat"><div class="num">{t['n_enriched']:,}</div><div class="muted">With cross-source data</div></div>
+        <div class="stat" title="Progress indicator: grows as manual labelling promotes new (pl, ext) edges into ext_claim.csv"><div class="num">{t['n_pls_with_ext']:,} <span style="font-size:60%; color:var(--muted);">({t['pct_pls_with_ext']:.1f}%)</span></div><div class="muted">PLs with ≥1 ext claim<br/>(of {t['n_pls_in_taxonomy']:,} in taxonomy)</div></div>
         <div class="stat"><div class="num">{t['n_with_swh_evidence']:,}</div><div class="muted">With ≥1 SWH sample</div></div>
         <div class="stat"><div class="num">{t['total_swh_samples']:,}</div><div class="muted">SWH samples total</div></div>
         <div class="stat"><div class="num">{t['n_ext_total']:,}</div><div class="muted">Extensions in taxonomy</div></div>

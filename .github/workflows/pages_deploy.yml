@@ -1,0 +1,79 @@
+name: Deploy site to GitHub Pages
+
+# Builds the static site with `python3 web/build_site.py` and serves it as
+# the repo's GitHub Pages site via the modern Pages-Actions flow (no `docs/`
+# tree committed to git).
+#
+# Prerequisite (one-time, done via GitHub UI):
+#   Settings → Pages → Source: "GitHub Actions"
+#
+# Triggers:
+#   - push to swh-evidence-v1 (the prototype branch)
+#   - manual workflow_dispatch (any branch, from the Actions tab)
+#
+# Build artefact:
+#   - `web/dist/` — the static site (~13,755 PL pages + 8,344 ext pages +
+#     /samples, /source, /review, /stats, /audit ; ~170 MB).
+#
+# Known data gap on the public deploy:
+#   - `data/derived/swh_extensions_popularity.csv` is gitignored (77 MB, the
+#     SWH-MSR-ARV-derived per-ext occurrence aggregate). The build degrades
+#     gracefully: SWH-popularity panels render empty / "—" and the /ext/ index
+#     sorts alphabetically instead of by popularity. To fix: either commit the
+#     file via Git LFS, or add a workflow step that fetches it from cloud
+#     storage before running build_site.py.
+
+on:
+  push:
+    branches:
+      - swh-evidence-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml pygments
+          # duckdb is only required to regenerate swh_extensions_popularity.csv
+          # from the source CSV; the build step doesn't need it.
+
+      - name: Build site
+        run: python3 web/build_site.py
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

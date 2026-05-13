@@ -35,6 +35,25 @@ Design + decision logs (the place to start reading):
 - `docs/extension_labels.md` — controlled vocabulary for manual labels.
 - `docs/PHASE2_OVERNIGHT.md` — concrete status note for the integration.
 
+### Public site deployment
+
+The static site builds automatically on every push to `swh-evidence-v1` via
+`.github/workflows/pages_deploy.yml` and is served at the repo's GitHub
+Pages URL.
+
+**One-time setup** (after merging this branch's `pages_deploy.yml`):
+Settings → Pages → Source: **"GitHub Actions"**. Then push (or trigger
+"Deploy site to GitHub Pages" from the Actions tab); the deploy URL appears
+in the workflow run output.
+
+**Known gap on the public deploy**:
+`data/derived/swh_extensions_popularity.csv` (the SWH-MSR-ARV-derived
+per-extension aggregate) is gitignored. The CI deploy doesn't have it, so
+SWH-popularity panels and the /ext/ sort-by-popularity will be empty in
+the public site. The site otherwise works (taxonomy, samples, labelling
+form, etc.). To close the gap: either commit the 77 MB file via Git LFS
+or fetch it from cloud storage as a workflow pre-step.
+
 The original LLM-curation scope (everything below) is untouched.
 
 ---

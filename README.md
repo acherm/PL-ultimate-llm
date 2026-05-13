@@ -21,7 +21,7 @@ What landed beyond the original LLM-curation scope:
 | Cross-source PL taxonomy | `tools/build_pl_taxonomy.py` + `data/derived/pl_taxonomy/` | Merges PLDB + Linguist + Pygments + Wikipedia + Esolang + Hyperpolyglot + Rosetta Code into `pl`, `pl_alias`, `ext_claim` (with `source`+`strength` per claim), `ext_summary`, `heuristic` tables. |
 | Content-based PL classifier | `tools/pl_classify.py` | Runs Linguist's `heuristics.yml` (377 rules across 148 ambiguous extensions) as a runnable predicate set. |
 | SWH mining + sample fetcher | `tools/swh_extension_mining.py` + `tools/fetch_samples.py` | Mines the SWH popular-content-names parquet for real archived programs per extension; materializes bytes to `samples/<pl_id>/<sha1>/` with citation-grade qualified SWHIDs. |
-| Roberto's SWH-ext popularity | `tools/build_swh_ext_popularity.py` → `data/derived/swh_extensions_popularity.csv` | Per-extension occurrence aggregate (1950–2023) for ~2.96M alphanumeric extensions across the SWH archive. |
+| SWH-MSR-ARV ext popularity | `tools/build_swh_ext_popularity.py` → `data/derived/swh_extensions_popularity.csv` | Per-extension occurrence aggregate (1950–2023) for ~2.96M alphanumeric extensions across the SWH archive. Source dataset: Desmazières / Di Cosmo / Lorentz, *50 Years of Programming Language Evolution through the Software Heritage looking glass*, MSR 2025: 372–383. See [`docs/citations.md`](docs/citations.md). |
 | Extension review queue | `tools/build_extension_review_queue.py` → `data/derived/extension_review_queue.csv` | Ranked list of extensions that need a manual label (popular in SWH, no PL claim). |
 | Crowdsource label loop | `/review/extensions/`, per-ext form on `/ext/<slug>/`, GitHub Actions in `.github/workflows/ingest_ext_labels.yml` | Form on the site → pre-filled GH issue → curator script → updates `extension_labels.csv` → promotes accepted labels into `ext_claim.csv`. |
 | Site enrichment | `web/build_site.py` (extensively) | Adds cross-source pill row, ext-claim table, SWH samples section, per-ext pages (8,344), per-source pages, `/samples/` index, `/review/` views, stats additions. ~13,755 PL pages total. |
@@ -29,7 +29,8 @@ What landed beyond the original LLM-curation scope:
 Design + decision logs (the place to start reading):
 
 - `docs/SOURCES_AND_SWH_EVIDENCE.md` — the big-picture motivation.
-- `docs/SWH_EXTENSIONS_DECISIONS.md` — what's kept from Roberto's CSV, what's cut, why; provenance contract for any ext↔PL mapping; PL ↔ ext asymmetry.
+- `docs/SWH_EXTENSIONS_DECISIONS.md` — what's kept from SWH-MSR-ARV, what's cut, why; provenance contract for any ext↔PL mapping; PL ↔ ext asymmetry.
+- `docs/citations.md` — bibliographic citations for the SWH-MSR-ARV dataset and other upstream sources.
 - `docs/labelling_persistence.md` — how a GH issue becomes a row on the site.
 - `docs/extension_labels.md` — controlled vocabulary for manual labels.
 - `docs/PHASE2_OVERNIGHT.md` — concrete status note for the integration.

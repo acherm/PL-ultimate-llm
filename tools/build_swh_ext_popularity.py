@@ -1,13 +1,24 @@
 #!/usr/bin/env python3
-"""Derive `data/derived/swh_extensions_popularity.csv` from Roberto's CSV.
+"""Derive `data/derived/swh_extensions_popularity.csv` from the SWH-MSR-ARV dataset.
+
+The **SWH-MSR-ARV dataset** is the per-extension SWH occurrence table
+published with:
+
+    Adèle Desmazières, Roberto Di Cosmo, Valentin Lorentz.
+    "50 Years of Programming Language Evolution through the Software Heritage
+     looking glass." MSR 2025: 372-383.
+
+See `docs/citations.md`.
 
 Input:
-  Roberto Di Cosmo's `nb_extensions_alphanum.csv` — a wide table where each
-  row is one file extension and columns are year-by-year occurrence counts in
-  the Software Heritage archive (plus a `-1` column for undated files).
+  `nb_extensions_alphanum.csv` (the SWH-MSR-ARV file) — a wide table where
+  each row is one file extension and columns are year-by-year occurrence
+  counts in the Software Heritage archive (plus a `-1` column for undated
+  files).
 
 Output:
-  A narrow per-extension aggregate:
+  A narrow per-extension aggregate at
+  `data/derived/swh_extensions_popularity.csv`:
 
       extension, total_occ, recent_occ, undated_occ, first_year, last_year
 
@@ -24,8 +35,9 @@ Usage
 -----
     python3 tools/build_swh_ext_popularity.py [--src PATH]
 
-Defaults to `/Users/mathieuacher/SANDBOX/PL-roberto/nb_extensions_alphanum.csv`
-matching the original layout described in `docs/SWH_EXTENSIONS_DECISIONS.md`.
+Defaults to `/Users/mathieuacher/SANDBOX/PL-roberto/nb_extensions_alphanum.csv`,
+which is where the SWH-MSR-ARV file ships in the original development setup.
+Override `--src` if you keep it elsewhere.
 """
 
 from __future__ import annotations
@@ -42,7 +54,7 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--src", default=str(DEFAULT_SRC),
-                        help="Path to Roberto's nb_extensions_alphanum.csv (default: %(default)s)")
+                        help="Path to the SWH-MSR-ARV nb_extensions_alphanum.csv (default: %(default)s)")
     parser.add_argument("--out", default=str(OUT_CSV),
                         help="Output path (default: %(default)s)")
     parser.add_argument("--threads", type=int, default=8)
@@ -54,7 +66,9 @@ def main() -> int:
     if not src.exists():
         raise SystemExit(
             f"ERROR: source CSV not found at {src}.\n"
-            "Roberto's file ships separately; ask him for it or point --src somewhere else."
+            "The SWH-MSR-ARV dataset (Desmazières/Di Cosmo/Lorentz, MSR 2025) "
+            "ships separately. Obtain `nb_extensions_alphanum.csv` from the "
+            "authors and pass --src or place it at the default path."
         )
 
     try:

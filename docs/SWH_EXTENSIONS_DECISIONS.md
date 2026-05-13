@@ -1,28 +1,39 @@
-# Roberto's SWH-extensions CSV — what we kept, what we cut, and why
+# The SWH-MSR-ARV extensions dataset — what we kept, what we cut, and why
 
-Decision log for how the `nb_extensions_alphanum.csv` dataset feeds into the
-catalog. Written so that any future maintainer (or any of us, on a different
-day) can see *exactly* what got dropped, on what threshold, and what to flip if
-the call should be revisited.
+Decision log for how the **SWH-MSR-ARV** dataset (file
+`nb_extensions_alphanum.csv`) feeds into the catalog. Written so that any
+future maintainer (or any of us, on a different day) can see *exactly* what
+got dropped, on what threshold, and what to flip if the call should be
+revisited.
+
+> **SWH-MSR-ARV** = the per-extension SWH occurrence dataset published with
+> Adèle Desmazières, Roberto Di Cosmo, Valentin Lorentz, *"50 Years of
+> Programming Language Evolution through the Software Heritage looking
+> glass"*, MSR 2025: 372–383. See [`docs/citations.md`](citations.md).
 
 ## 1. The input
 
-**File:** `/Users/mathieuacher/SANDBOX/PL-roberto/nb_extensions_alphanum.csv`
+**File:** `nb_extensions_alphanum.csv` (the SWH-MSR-ARV dataset). At the time
+of writing it lives locally at
+`/Users/mathieuacher/SANDBOX/PL-roberto/nb_extensions_alphanum.csv`; the
+default in `tools/build_swh_ext_popularity.py` points there.
 
-- Source: Roberto Di Cosmo, extracted from the Software Heritage archive.
-- Filter applied at source: file extensions are **alphanumeric, 1–6 characters
-  long** (after the leading `.`). Unicode-only extensions are excluded by
-  construction; a few literal Unicode rows do leak in (the file's tail shows
-  `.𝚁`, `.𝚓𝚜𝚘𝚗`, etc.) but they have negligible counts.
+- Source: the SWH-MSR-ARV authors, extracted from the Software Heritage
+  archive (one row per file extension, columns are year-by-year occurrence
+  counts).
+- Filter applied at source: file extensions are **alphanumeric, 1–6
+  characters long** (after the leading `.`). Unicode-only extensions are
+  excluded by construction; a few literal Unicode rows do leak in (the
+  file's tail shows `.𝚁`, `.𝚓𝚜𝚘𝚗`, etc.) but they have negligible counts.
 - Shape: **2,960,281 rows** × **76 columns** (459 MB CSV).
   - Column `extension` — the extension string (e.g. `.py`, `.fzf`, `.0`, `.html`).
   - Column `-1` — occurrences with no date / unknown commit date.
   - Columns `1950` … `2023` — occurrence counts per year.
 - Aggregate file-content occurrences summed across all years: **~18.97 billion**.
 
-> The "40,000 most popular" mentioned in Roberto's email is **not** the file's
-> row count; it appears to be shorthand for the popular subset. Roberto's CSV
-> contains the full distribution down to single occurrences.
+> The "40,000 most popular" phrase that came up early was **not** the file's
+> row count; it was shorthand for the popular subset. The full SWH-MSR-ARV
+> dataset distributes down to single occurrences.
 
 ## 2. The distribution
 
@@ -36,8 +47,8 @@ Once we sum occurrences per extension across all years, the long-tail shape is:
 | ≥ 1 M | 482 | well-used in real projects |
 | ≥ 100 K | 1,730 | confidently widely-used |
 | ≥ 10 K | 6,050 | likely real PL or domain ext |
-| ≥ 1 K | 18,119 | **best fit for Roberto's "40K" intent** |
-| ≥ 100 | 59,513 | "Roberto's 40K" upper bound |
+| ≥ 1 K | 18,119 | **best fit for the original "40K most popular" framing** |
+| ≥ 100 | 59,513 | upper bound of the "40K" interpretation |
 | ≥ 10 | 206,230 | mostly project-specific / typos |
 | ≥ 1 | 2,960,280 | full long tail |
 
@@ -66,8 +77,8 @@ Columns:
 **This file keeps every one of the 2,960,281 rows** — no threshold is applied at
 the derivation step. The rationale is that anyone doing rigorous analysis (e.g.
 "is there an SWH presence for `.fsf`?") needs to query the full distribution,
-not a website-sized subset. The 459 MB original is preserved at Roberto's path;
-our 77 MB derivative is the convenient form for downstream tools.
+not a website-sized subset. The 459 MB SWH-MSR-ARV source is preserved at its
+original path; our 77 MB derivative is the convenient form for downstream tools.
 
 ## 4. The website's threshold
 
@@ -80,7 +91,7 @@ extension. We cap the universe of generated pages to keep the site browsable.
    Linguist / Pygments / master_inventory).
 2. Every extension that has at least one Linguist disambiguation rule.
 3. Every extension that has at least one mined SWH sample.
-4. **The top 8,000 extensions by `total_occ` from Roberto's CSV.**
+4. **The top 8,000 extensions by `total_occ` from the SWH-MSR-ARV dataset.**
 
 Total today: **8,344 pages.**
 
@@ -127,10 +138,10 @@ Even within the 8,344 rendered pages, we apply heuristics:
 
 | Concern | What's true today | When to revisit |
 |---|---|---|
-| 1–6 char alphanumeric filter at source | Roberto's pre-filter; Unicode and special-char extensions are missing | If we find evidence of significant non-alphanumeric PL extensions (e.g., `.f95+`) |
+| 1–6 char alphanumeric filter at source | SWH-MSR-ARV pre-filter; Unicode and special-char extensions are missing | If we find evidence of significant non-alphanumeric PL extensions (e.g., `.f95+`) |
 | "Recent" = 2019 onwards | Arbitrary 5-year window | If we want a different liveness signal |
 | `-1` column lumped into total | Undated occurrences count the same as dated ones | Could weight them differently |
-| Single shard (shard 0) was used for **mining sample programs**; Roberto's CSV covers the whole archive | The 2.96 M-row aggregate IS for the full SWH archive; only our `samples/` mining is shard-0-only | If we run the SWH mining at full archive scale |
+| Single shard (shard 0) was used for **mining sample programs**; SWH-MSR-ARV covers the whole archive | The 2.96 M-row aggregate IS for the full SWH archive; only our `samples/` mining is shard-0-only | If we run the SWH mining at full archive scale |
 | Top-8K page limit | Tunable; see § 4 | If we want to surface the "≥1K" set (~19.5K pages) |
 
 ## 8. How to change the threshold
@@ -172,8 +183,8 @@ balance. They don't, by a wide margin, and the imbalance is informative.
 | PLs with **no** claimed extension | **11,028** (92.2 %) |
 | Extension pages on the site (top-8K cut) | 8,344 |
 | Extensions in our taxonomy (`ext_summary.csv`) | 1,538 |
-| Extensions in Roberto's CSV (alphanumeric 1–6 char) | 2,960,280 |
-| Extensions in **both** taxonomy & Roberto's CSV | 1,491 |
+| Extensions in SWH-MSR-ARV (alphanumeric 1–6 char) | 2,960,280 |
+| Extensions in **both** taxonomy & SWH-MSR-ARV | 1,491 |
 
 ### Per-PL: how many extensions does each PL claim?
 
@@ -213,7 +224,7 @@ union, and Esolang's long tail is intentionally generous about what counts as a
 
 ### Where the unattributed extensions land (by popularity tier)
 
-Among the SWH-popular extensions (Roberto's CSV), how many have **no PL claim**
+Among the SWH-popular extensions (SWH-MSR-ARV), how many have **no PL claim**
 in our taxonomy? Bucketing by total occurrence count:
 
 | Tier | Claimed (in taxonomy) | Unattributed | Of which look like binary/noise | Of which might be PL-ish |
@@ -364,9 +375,9 @@ see exactly who claims it and where to verify each claim.
 
 ### A case study: the `.R` capital-R fix (May 2026)
 
-R's primary extension in Linguist is `.r` (lowercase). Roberto's SWH CSV
-preserves case, so `.R` (21.5M occurrences) and `.r` (1.7M) appear as separate
-rows. Before the fix, our cross-reference matched `.r` only — `.R` looked like
+R's primary extension in Linguist is `.r` (lowercase). The SWH-MSR-ARV
+dataset preserves case, so `.R` (21.5M occurrences) and `.r` (1.7M) appear
+as separate rows. Before the fix, our cross-reference matched `.r` only — `.R` looked like
 an unattributed extension at the top of the popularity tier.
 
 The fix didn't add a new `ext_claim.csv` row. Instead, the SWH popularity
@@ -382,12 +393,12 @@ is:
 
 - `ext_claim.csv` row: `pl/r,.r,linguist,primary,R,<linguist URL>` — unchanged.
 - `web/build_site.py` `load_swh_ext_popularity()`: now lowercases the
-  Roberto-CSV ext key when aggregating, preserves case variants for display.
+  SWH-MSR-ARV ext key when aggregating, preserves case variants for display.
 - Per-ext page: shows the aggregate + the case breakdown.
 
 ## 12. Manual labelling — ranked queue + crowd-source loop
 
-To close the gap between (a) the 2,960,280 extensions in Roberto's CSV and
+To close the gap between (a) the 2,960,280 extensions in SWH-MSR-ARV and
 (b) the 1,538 in our taxonomy, we want human review at scale. The site has a
 review queue at `/review/extensions/` (rendered by `build_site.py`). The loop:
 
@@ -440,7 +451,7 @@ The end-to-end loop is reproducible: anyone can re-run any step from the data
 on disk + the issues on GitHub. The chain is:
 
 ```
-Roberto CSV → swh_extensions_popularity.csv → extension_review_queue.csv
+SWH-MSR-ARV → swh_extensions_popularity.csv → extension_review_queue.csv
        → /review/extensions/ → GitHub issue → process_extension_labels.py
        → extension_labels.csv → ext_claim.csv → site rebuild
 ```
@@ -454,7 +465,9 @@ same `ext`, resolved by maintainers in the issue thread.
 
 If we publish based on this data:
 
-- **Cite Roberto's CSV** (`nb_extensions_alphanum.csv`) as the source.
+- **Cite SWH-MSR-ARV** (Desmazières, Di Cosmo, Lorentz; MSR 2025; file
+  `nb_extensions_alphanum.csv`) as the source. See `docs/citations.md` for
+  the full bibliographic entry.
 - **Cite `data/derived/swh_extensions_popularity.csv`** as the per-ext aggregate
   we computed (full 2.96 M rows, no cutoff).
 - **State explicitly** that the website's `/ext/` view is capped at top 8 K by

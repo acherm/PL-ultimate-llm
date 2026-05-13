@@ -2,7 +2,8 @@
 """Generate a ranked review queue of unattributed file extensions.
 
 Input:
-  - data/derived/swh_extensions_popularity.csv  (Roberto's CSV, aggregated)
+  - data/derived/swh_extensions_popularity.csv  (SWH-MSR-ARV, aggregated;
+                                                  see docs/citations.md)
   - data/derived/pl_taxonomy/ext_summary.csv    (what we currently claim)
 
 Output:

@@ -18,14 +18,14 @@ Each existing source captures a different slice of "all programming languages." 
 | **Wikipedia (PL category)** | ~180 | encyclopedic prose | shallow; no extensions |
 | **PL-ultimate** (this repo, `acherm/PL-ultimate`) | **11,963** | union of the seven above | 88% appear in one source only; near-duplicates remain |
 | **PL-ultimate-llm** (`acherm/PL-ultimate-llm`) | ~4,000 | LLM-proposed + LLM-generated programs | hallucination risk; generated code may not exist anywhere |
-| **Roberto's SWH-extensions CSV** | 40,000 | the most popular alphanumeric (1–6 char) extensions in SWH | extensions, not languages — needs mapping |
+| **SWH-MSR-ARV** (Desmazières, Di Cosmo, Lorentz; MSR 2025) | 2.96 M (alphanumeric 1–6 char) | per-extension occurrence counts year-by-year in SWH | extensions, not languages — needs mapping. See [`docs/citations.md`](citations.md). |
 | **SWH popular-content-names parquet** (`derived_datasets/<date>/contents/*.parquet`) | billions of (content, popular-filename) rows | actual files in the archive | bytes-level; no language column |
 
 **Two observations from this table.**
 
 First, each source is *opinionated about what counts as a programming language*. HOPL favors historical / academic; Esolang collects oddities; Linguist is GitHub-detection-driven. Their union is large but unevenly weighted toward whichever source has the longest catalog (Esolang, PLDB).
 
-Second, all the language-side sources sit *above* code. Roberto's CSV and the SWH parquet sit *below*: they tell you which extensions and files exist, but not which language those files are in. **There is no first-class link from a language entity to real archived programs in that language.** That link is the missing step.
+Second, all the language-side sources sit *above* code. SWH-MSR-ARV and the SWH parquet sit *below*: they tell you which extensions and files exist, but not which language those files are in. **There is no first-class link from a language entity to real archived programs in that language.** That link is the missing step.
 
 ## 2. Why this matters
 
@@ -108,7 +108,7 @@ This is the shape every PL entry should eventually have.
 Roughly in increasing order of effort:
 
 1. **Fix master_inventory's near-duplicate entities.** `Python` / `py` / `Python (programming language)` survive the union as three distinct PLs, polluting `.py`'s primary-claimants set with phantom claimants. A canonical-alias-aware merge pass is a one-day fix and would clean up phase-1 visibly.
-2. **Cross-reference Roberto's 40K-extensions CSV with `ext_claim`.** Every popular SWH extension should either map to a language (via our taxonomy) or be flagged as "popular in SWH but unattributed" — those flags are interesting (e.g., are they binary formats? text data? a language we missed?).
+2. **Cross-reference SWH-MSR-ARV with `ext_claim`.** Every popular SWH extension should either map to a language (via our taxonomy) or be flagged as "popular in SWH but unattributed" — those flags are interesting (e.g., are they binary formats? text data? a language we missed?).
 3. **Run the mining at full scale.** Local sequential scan is ~10 hours on a laptop (~3 GB × 30 shards). Trivially parallelizable per-shard; on an EC2 box near the SWH bucket, this is well under an hour.
 4. **Wire SWHID resolution properly.** For provenance citations we currently use the GitHub side-channel (one origin per file), which has rate limits and depends on a repo still being public. SWH's `first_occurrence_origin` numeric id resolves to a canonical archive-internal origin via the ori-nodes parquet (much smaller than cnt-nodes). That's the real authoritative provenance and should be the fallback when the GitHub side-channel can't pin a commit.
 5. **Generate per-PL "evidence cards."** For each `pl_id`, a small static page or JSON:
@@ -172,5 +172,5 @@ ls samples/pl/perl/c5ecce*/      # actual bytes + metadata.json
 | Per-PL evidence cards / static index | not implemented |
 | Evidence-of-absence categorization | scaffold exists, no formal output yet |
 | HOPL graph integration | not started |
-| Cross-reference with Roberto's 40K-ext CSV | not started |
+| Cross-reference with SWH-MSR-ARV | shipped (per-ext popularity column on every ext page; queue + form for unattributed) |
 | LLM-assisted heuristics for long tail | not started |

@@ -28,6 +28,15 @@ on:
     branches:
       - swh-evidence-v1
   workflow_dispatch:
+  # Auto-chain: when the ingest workflow finishes (after a label submission
+  # has been parsed + committed to swh-evidence-v1), rebuild and redeploy
+  # the public site so the new label appears within minutes. Necessary
+  # because GitHub's anti-loop protection prevents bot-pushed commits from
+  # triggering other workflows directly.
+  workflow_run:
+    workflows: ["Ingest extension-label issues"]
+    types: [completed]
+    branches: [swh-evidence-v1]
 
 permissions:
   contents: read
@@ -40,10 +49,20 @@ concurrency:
 
 jobs:
   build:
+    # When triggered by a workflow_run (chained from the ingest workflow),
+    # only proceed if the upstream ingest actually succeeded. Failed ingests
+    # leave the data in a half-committed state and a rebuild would just
+    # propagate the broken state to the public site.
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Pin to swh-evidence-v1 regardless of how we were triggered.
+          # `workflow_run` events default to the default branch (main) — we
+          # need to deploy the prototype branch's content.
+          ref: swh-evidence-v1
 
       - name: Set up Python
         uses: actions/setup-python@v5

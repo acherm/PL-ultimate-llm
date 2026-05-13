@@ -185,10 +185,15 @@ def main() -> int:
     print(f"  fetched: {len(issues)}")
 
     existing = load_existing()
-    by_issue: dict[str, dict] = {r["issue_url"]: r for r in existing if r.get("issue_url")}
+    # Key by (issue_url, label) so multi-PL submissions (one issue, comma-
+    # separated `label:`) produce one CSV row per label without colliding.
+    by_key: dict[tuple[str, str], dict] = {
+        (r.get("issue_url", ""), r.get("label", "")): r for r in existing
+    }
 
     parsed = 0
     skipped = 0
+    multi_label_rows = 0
     new_rows = list(existing)  # carry-over previously-curated rows
     for it in issues:
         url = it.get("html_url")
@@ -200,35 +205,49 @@ def main() -> int:
             continue
         annotator = (it.get("user") or {}).get("login", "")
         submitted_at = it.get("created_at", "")
-        existing_row = by_issue.get(url)
-        common_fields = {
-            "ext": parsed_data["ext"],
-            "label": parsed_data["label"],
-            "friendly_name": parsed_data.get("friendly_name", ""),
-            "reference_url": parsed_data.get("reference_url", ""),
-            "annotator": annotator,
-            "submitted_at": submitted_at,
-            "evidence": parsed_data.get("evidence", ""),
-            "issue_url": url,
-            "issue_state": it.get("state", ""),
-            "issue_number": it.get("number", ""),
-        }
-        if existing_row:
-            # Preserve curator_status (and any other manually-set fields)
-            # across re-imports.
-            row = existing_row.copy()
-            row.update(common_fields)
-            for i, r in enumerate(new_rows):
-                if r.get("issue_url") == url:
-                    new_rows[i] = row
-                    break
-        else:
-            row = dict(common_fields)
-            row["curator_status"] = "new"
-            new_rows.append(row)
+
+        # Split comma-separated labels — `.h` style multi-PL submissions
+        # expand into N rows (one per pl_id), all sharing the same issue.
+        raw_label = parsed_data["label"] or ""
+        labels = [l.strip() for l in raw_label.split(",") if l.strip()]
+        if not labels:
+            skipped += 1
+            continue
+        if len(labels) > 1:
+            multi_label_rows += 1
+
+        for label_value in labels:
+            common_fields = {
+                "ext": parsed_data["ext"],
+                "label": label_value,
+                "friendly_name": parsed_data.get("friendly_name", ""),
+                "reference_url": parsed_data.get("reference_url", ""),
+                "annotator": annotator,
+                "submitted_at": submitted_at,
+                "evidence": parsed_data.get("evidence", ""),
+                "issue_url": url,
+                "issue_state": it.get("state", ""),
+                "issue_number": it.get("number", ""),
+            }
+            key = (url, label_value)
+            existing_row = by_key.get(key)
+            if existing_row:
+                # Preserve curator_status (and any other manually-set fields)
+                # across re-imports.
+                row = existing_row.copy()
+                row.update(common_fields)
+                for i, r in enumerate(new_rows):
+                    if (r.get("issue_url"), r.get("label")) == key:
+                        new_rows[i] = row
+                        break
+            else:
+                row = dict(common_fields)
+                row["curator_status"] = "new"
+                new_rows.append(row)
         parsed += 1
 
-    print(f"  parsed: {parsed}, skipped (no structured block): {skipped}")
+    print(f"  parsed: {parsed}, skipped (no structured block): {skipped}, "
+          f"multi-label issues: {multi_label_rows}")
     print(f"  total rows in output: {len(new_rows)}")
 
     if args.dry_run:

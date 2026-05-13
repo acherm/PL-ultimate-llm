@@ -317,7 +317,8 @@ extension:
 | State | Rule | Example |
 |---|---|---|
 | **well-attributed** | (a) ≥ 1 *primary* claim from an authoritative source (Linguist or Pygments), **OR** (b) all claims (across sources and strengths) collapse to a single PL entity after consolidating master_inventory near-duplicates (`pl/cpp` ≡ `pl/cpp-3` ≡ `pl/cpp-programming-language`). | `.py`, `.cpp` (primary by both Linguist and Pygments); `.cc`, `.hpp`, `.cxx` (only secondary claims, but every claimant is C++) |
-| **weakly-attributed** | claims exist but multiple distinct PL entities (after consolidation) appear, and none is an authoritative primary. | `.hh` (C++ + Hack + Obj-C++ — real ambiguity); `.pyi` (mixed Pygments lexers + master_inventory's separate `py` entity) |
+| **confirmed-polysemous** | multiple PL entities, **but** every authoritative source (Linguist *and* Pygments) produces the *same* set of entities. Ambiguity is real (needs content-level disambiguation) but the data quality is good. | `.h` (Linguist and Pygments both list it under C, C++, Objective-C). Content classification via Linguist heuristics fires per file. |
+| **weakly-attributed** | claims exist but authoritative sources *disagree* on the set, or multiple PLs claim it via non-authoritative sources only. | `.hh` (Linguist says C++ + Hack; Pygments says C++ + Obj-C++ — different sets) ; `.pyi` (Linguist says Python; Pygments lists several Python-adjacent lexers — disagreement). |
 | **unattributed** | no PL claim at all in `ext_claim.csv`. | `.pbf`, `.uasset`, most popular-but-binary extensions |
 
 The (b) clause was added so reviewers aren't asked to label cases where the

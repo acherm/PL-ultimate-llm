@@ -60,6 +60,32 @@ form.
 Either way, your GitHub login is captured automatically on submit, and the
 issue carries the `ext-review` label so the curator script picks it up.
 
+## Multi-PL submissions
+
+For extensions that legitimately belong to several languages (the
+"confirmed-polysemous" state — e.g. `.h` is C / C++ / Objective-C), the
+form's custom-label field accepts a **comma-separated list**:
+
+```
+pl/c, pl/cpp, pl/objective-c
+```
+
+On submit, this still creates **one** GitHub issue (one annotator, one
+timestamp, one evidence block), but the curator script splits the label
+list and writes **one row per pl_id** to
+`data/derived/extension_labels.csv` — so each (issue, pl_id) edge is
+independently accept/reject-able by the maintainer. The site renders the
+prior-labels table with one entry per row.
+
+When a maintainer accepts a multi-label row (`curator_status=accepted`),
+`build_pl_taxonomy.py` promotes that single (pl_id, ext) edge into
+`ext_claim.csv` with `source="manual_review:<annotator>"`,
+`strength="proposed"`. Each accepted label becomes its own ext_claim row.
+
+For confirmed-polysemous extensions, the form's custom field is pre-filled
+with the currently-confirmed set, so reviewers can simply edit (add or
+remove a pl_id) instead of retyping from scratch.
+
 ## What gets recorded per submission
 
 | Field | Required | Source |

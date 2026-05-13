@@ -1897,23 +1897,47 @@ def render_per_extension_pages(
             1 for c in claims
             if c.get("strength") == "primary" and c.get("source") in AUTHORITATIVE
         )
-        # Two reasons to call an extension well-attributed:
+        # Reasons to call an extension well-attributed:
         # 1. At least one authoritative primary claim (the canonical case).
         # 2. ALL claims (across all sources, all strengths) point to ONE PL
         #    entity. E.g. `.cc` is secondary in both Linguist and Pygments but
-        #    every claimant is C++ — practically unambiguous. Without this,
-        #    `.cc` reads as "weakly-attributed" which overstates the doubt.
+        #    every claimant is C++.
         # pl_ids are consolidated through `_canonical_pl_entity` so that
         # master_inventory duplicates (`pl/cpp` + `pl/cpp-3`) collapse.
         distinct_entities = {
             _canonical_pl_entity(c["pl_id"]) for c in claims if c.get("pl_id")
         }
         all_claims_agree_on_one_pl = len(distinct_entities) == 1 and bool(claims)
-        attribution_state = (
-            "well-attributed"
-            if (n_primary_authoritative >= 1 or all_claims_agree_on_one_pl)
-            else ("unattributed" if not claims else "weakly-attributed")
+
+        # `confirmed-polysemous`: there ARE multiple distinct PL entities, but
+        # every authoritative upstream source (Linguist + Pygments) that
+        # touches this ext produces the SAME set of entities. The ambiguity is
+        # real (content needed to disambiguate) but it's not a data quality
+        # problem — both sources agree on the shape. Classic case: `.h` is
+        # C / C++ / Objective-C in both Linguist and Pygments. The disambig
+        # layer (Linguist heuristics) handles it at content time, so reviewers
+        # don't need to "label" it manually.
+        auth_source_entity_sets: dict[str, frozenset[str]] = {}
+        for c in claims:
+            src = c.get("source", "")
+            pid = c.get("pl_id", "")
+            if src in AUTHORITATIVE and pid:
+                ent = _canonical_pl_entity(pid)
+                cur = auth_source_entity_sets.get(src, frozenset())
+                auth_source_entity_sets[src] = cur | {ent}
+        all_auth_sources_agree = (
+            len(auth_source_entity_sets) >= 2
+            and len(set(auth_source_entity_sets.values())) == 1
         )
+
+        if n_primary_authoritative >= 1 or all_claims_agree_on_one_pl:
+            attribution_state = "well-attributed"
+        elif all_auth_sources_agree and len(distinct_entities) >= 2:
+            attribution_state = "confirmed-polysemous"
+        elif claims:
+            attribution_state = "weakly-attributed"
+        else:
+            attribution_state = "unattributed"
 
         # Suggested label for the pre-filled issue:
         #   - well-attributed: no-change-needed (reviewer must explicitly change to dispute)
@@ -1977,8 +2001,13 @@ def render_per_extension_pages(
             github_owner_repo=github_owner_repo,
         )
 
+        # Compose label_section from three optional sub-panels:
+        #   panel_well       — visible only when fully primary-attributed
+        #   panel_polysemous — visible when confirmed-polysemous (multi-PL set)
+        #   panel_form       — visible when reviewer input is welcome
+        panel_well = panel_polysemous = panel_form = ""
+
         if attribution_state == "well-attributed":
-            # Don't shout. Just offer a low-key way to submit a correction if needed.
             primary_names = "; ".join(
                 pl_canonical.get(c["pl_id"], c["pl_id"])
                 for c in claims if c.get("strength") == "primary"
@@ -1988,26 +2017,78 @@ def render_per_extension_pages(
                 f"Disagree or have a correction? Open a labelling issue.</a>"
                 if label_issue_url else ""
             )
-            label_section = f"""
+            panel_well = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Attribution status</h2>
           <p>This extension is <strong>already attributed</strong> as <code>primary</code> by an authoritative upstream source ({n_primary_authoritative} primary claim{'' if n_primary_authoritative == 1 else 's'} from Linguist / Pygments).
-          Claimed by: <strong>{safe(primary_names)}</strong>.</p>
+          {f"Claimed by: <strong>{safe(primary_names)}</strong>." if primary_names else ""}</p>
           <p class='muted'>{disagree_link}</p>
           {prior_block}
         </section>"""
-        else:
-            # Either no claims, or only secondary/unknown — labelling is welcome.
-            heading = "Help label this extension" if attribution_state == "unattributed" else "Confirm or correct this extension"
-            blurb = (
-                "No PL in our taxonomy claims this extension. If you know what it's used for, fill the form below."
-                if attribution_state == "unattributed" else
-                "Existing claims are only <em>secondary</em> or weakly-attested. A confirmation (or correction) would strengthen the catalog."
+
+        if attribution_state == "confirmed-polysemous":
+            # All authoritative sources agree on the same set of ≥2 PL entities.
+            # Show the set, link to each PL page, mention content-level rules.
+            entities_seen: dict[str, str] = {}
+            for c in claims:
+                if c.get("pl_id"):
+                    ent = _canonical_pl_entity(c["pl_id"])
+                    entities_seen.setdefault(ent, c["pl_id"])
+            shared_links = []
+            for ent_base, original_pl_id in entities_seen.items():
+                slug = pl_id_to_slug.get(ent_base) or pl_id_to_slug.get(original_pl_id)
+                name = pl_canonical.get(ent_base) or pl_canonical.get(original_pl_id) or original_pl_id
+                if slug:
+                    shared_links.append(f"<a href='{rel}l/{safe(slug)}/index.html'>{safe(name)}</a>")
+                else:
+                    shared_links.append(safe(name))
+            shared_html = ", ".join(shared_links)
+            n_heur = len(heur_by_ext.get(ext, []))
+            heur_blurb = (
+                f"Content-level disambiguation is handled by <strong>{n_heur} Linguist heuristic rule{'s' if n_heur != 1 else ''}</strong> — see the table below."
+                if n_heur else
+                "No automatic content-level disambiguation rule is defined yet."
             )
+            panel_polysemous = f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Shared extension</h2>
+          <p>This extension legitimately belongs to <strong>{len(distinct_entities)} languages</strong>: {shared_html}.</p>
+          <p>Every authoritative source (Linguist <em>and</em> Pygments) agrees on this set, so the ambiguity is genuine — not a data-quality issue. {heur_blurb}</p>
+          <p class='muted'>To propose <em>adding</em> a missing PL or <em>disputing</em> one of these, fill the form below. For a multi-PL submission, enter <code>pl/&lt;id&gt;, pl/&lt;id&gt;, …</code> (comma-separated) in the custom field.</p>
+        </section>"""
+
+        if attribution_state in ("unattributed", "weakly-attributed", "confirmed-polysemous"):
+            if attribution_state == "unattributed":
+                heading = "Help label this extension"
+                blurb = "No PL in our taxonomy claims this extension. If you know what it's used for, fill the form below."
+            elif attribution_state == "weakly-attributed":
+                heading = "Confirm or correct this extension"
+                blurb = "Existing claims are only <em>secondary</em> or weakly-attested. A confirmation (or correction) would strengthen the catalog."
+            else:  # confirmed-polysemous
+                heading = "Propose addition or dispute"
+                blurb = "All authoritative sources already agree on the set above. Use this form only if you want to add another claimant or contest one of the existing ones."
             # Inline form. JS in app.js handles the submit — builds the GH issue
             # body from the form fields and opens the pre-filled issue page.
             # No YAML editing required from the reviewer.
             suggested_friendly = ""  # could be populated from a future "known formats" table
+            # For confirmed-polysemous, pre-fill the custom label field with the
+            # confirmed comma-separated list of pl_ids. The reviewer can then
+            # add or remove entries directly.
+            if attribution_state == "confirmed-polysemous":
+                custom_prefill = ", ".join(
+                    sorted({_canonical_pl_entity(c["pl_id"]) for c in claims if c.get("pl_id")})
+                )
+                custom_helper = (
+                    "Pre-filled with the current confirmed set. "
+                    "Edit (comma-separated) to <strong>add</strong> a missing PL or <strong>remove</strong> one you dispute. "
+                    "Multi-PL submissions create one ext_claim row per pl_id."
+                )
+            else:
+                custom_prefill = ""
+                custom_helper = (
+                    "If label has &lt;...&gt;, fill it here (e.g. for <code>pl/&lt;id&gt;</code> type <code>rust</code>). "
+                    "For multi-PL submissions, enter several <code>pl/&lt;id&gt;</code> separated by commas."
+                )
             form_html = f"""
           <form class="ext-label-form"
                 data-ext="{safe(ext)}"
@@ -2021,8 +2102,8 @@ def render_per_extension_pages(
                 </select>
               </label>
               <label style="display:flex; flex-direction:column; gap:4px;">
-                <span class="muted">If label has &lt;...&gt;, fill it here (e.g. for <code>pl/&lt;id&gt;</code> type <code>rust</code>)</span>
-                <input type="text" name="label_custom" placeholder="e.g. rust, fsl-language" />
+                <span class="muted">{custom_helper}</span>
+                <input type="text" name="label_custom" placeholder="e.g. rust  —or—  pl/c, pl/cpp, pl/objective-c" value="{safe(custom_prefill)}" />
               </label>
               <label style="display:flex; flex-direction:column; gap:4px;">
                 <span class="muted">Friendly name (optional)</span>
@@ -2089,13 +2170,19 @@ def render_per_extension_pages(
               maintainer); GitHub Actions could automate it on each new issue.
             </p>
           </details>"""
-            label_section = f"""
+            panel_form = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">{safe(heading)}</h2>
           <p class='muted'>{blurb} Vocabulary reference: <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/extension_labels.md' target='_blank' rel='noopener'>docs/extension_labels.md</a>.</p>
           {form_html if github_owner_repo else "<p class='muted'>GitHub repo not configured; form disabled.</p>"}
           {prior_block}
         </section>"""
+
+        # Final composition: stack panel_well, panel_polysemous, panel_form
+        # in that order. Each may be empty depending on attribution_state.
+        # `prior_block` is included inside whichever of panel_well or panel_form
+        # was rendered (they reference it directly above).
+        label_section = panel_well + panel_polysemous + panel_form
 
         body = f"""
         <div class="breadcrumbs">

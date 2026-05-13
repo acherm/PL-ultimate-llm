@@ -136,11 +136,12 @@ def main() -> int:
     EXT_CLAIM_CSV = ROOT / "data" / "derived" / "pl_taxonomy" / "ext_claim.csv"
     well_attributed_exts: set[str] = set()
     if EXT_CLAIM_CSV.exists():
-        # Two reasons an ext doesn't need manual review:
+        # Three reasons an ext doesn't need manual review:
         # 1. At least one authoritative primary claim (Linguist or Pygments).
-        # 2. All claims (across sources / strengths) collapse to one PL entity
-        #    after deduping master_inventory duplicates (`pl/cpp` ≡ `pl/cpp-3`).
-        #    E.g. `.cc` has only secondary claims but every claimant is C++.
+        # 2. All claims collapse to a single PL entity (e.g. `.cc` for C++).
+        # 3. `confirmed-polysemous`: multiple PLs share it BUT every
+        #    authoritative source agrees on the same set (e.g. `.h` for
+        #    C / C++ / Objective-C in both Linguist and Pygments).
         AUTH = {"linguist", "pygments"}
         claims_by_ext: dict[str, list[dict]] = {}
         for c in csv.DictReader(open(EXT_CLAIM_CSV)):
@@ -154,7 +155,20 @@ def main() -> int:
                 _canonical_pl_entity(c.get("pl_id", ""))
                 for c in ext_claims if c.get("pl_id")
             }
-            if has_auth_primary or len(distinct_entities) == 1:
+            # Per-source entity sets for the confirmed-polysemous check.
+            auth_sets: dict[str, frozenset[str]] = {}
+            for c in ext_claims:
+                src = c.get("source", "")
+                pid = c.get("pl_id", "")
+                if src in AUTH and pid:
+                    ent = _canonical_pl_entity(pid)
+                    auth_sets[src] = (auth_sets.get(src, frozenset())) | {ent}
+            confirmed_polysemous = (
+                len(auth_sets) >= 2
+                and len(set(auth_sets.values())) == 1
+                and len(distinct_entities) >= 2
+            )
+            if has_auth_primary or len(distinct_entities) == 1 or confirmed_polysemous:
                 well_attributed_exts.add(ext)
 
     # Build queue rows. Skip extensions that are already well-attributed by an
@@ -225,7 +239,7 @@ def main() -> int:
             w.writerow(r)
 
     print(f"Wrote {OUT_CSV}: {len(rows):,} extensions (min_occurrences={args.min_occurrences:,}, max_rows={args.max_rows:,}).")
-    print(f"Skipped {skipped_well_attributed} extension(s) already well-attributed (≥1 authoritative primary claim, OR all claims agree on a single PL entity after deduping master_inventory near-duplicates).")
+    print(f"Skipped {skipped_well_attributed} extension(s) already well-attributed: (a) ≥1 authoritative primary claim, OR (b) all claims agree on a single PL entity after deduping master_inventory near-duplicates, OR (c) confirmed-polysemous (every authoritative source agrees on the same ≥2-PL set).")
     # Quick distribution summary
     from collections import Counter
     label_counts = Counter(r["suggested_label"] for r in rows)

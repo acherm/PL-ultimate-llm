@@ -45,6 +45,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Pin to swh-evidence-v1: GitHub fires `issues` events with the
+          # default branch's workflow file (main), but the curator script +
+          # taxonomy builder only exist on swh-evidence-v1. Without this pin,
+          # automatic runs check out main and fail with
+          #   python3: can't open file 'tools/process_extension_labels.py'
+          # When this branch is eventually merged to main, the pin can be
+          # removed (or left as a safe no-op).
+          ref: swh-evidence-v1
           # Need write access to push the updated CSVs back.
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0

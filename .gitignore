@@ -5,11 +5,12 @@ __pycache__/
 worktrees/
 web/dist/
 
-# Large derived data — regeneratable from Roberto's source CSV via
-# `python3 tools/build_swh_ext_popularity.py`. The output is ~77 MB; track
-# the script, not the artefact.
-data/derived/swh_extensions_popularity.csv
-
 # Stale SWH coverage report from the legacy audit_repo.py flow. Regeneratable
 # via `python3 tools/audit_repo.py --out reports/swh_coverage_report.json`.
 reports/swh_coverage_report.json
+
+# Note: `data/derived/swh_extensions_popularity.csv` (~77 MB, SWH-MSR-ARV-
+# derived) IS tracked. It can be regenerated from `nb_extensions_alphanum.csv`
+# via `tools/build_swh_ext_popularity.py` but is committed so the CI Pages
+# deploy has the data without an extra fetch step. Migrate to Git LFS or a
+# GitHub Releases asset if the repo gets too heavy.

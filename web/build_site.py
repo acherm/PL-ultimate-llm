@@ -1256,6 +1256,9 @@ def render_samples_index_page(
         list_rows = []
         for r in rows:
             lang, enr, top = r["lang"], r["enr"], r["top_sample"]
+            # Bare content SWHID — always resolves on SWH browser even when the
+            # qualified form's `;origin=...` fails (origin not in SWH's index).
+            bare_browser_url = f"https://archive.softwareheritage.org/swh:1:cnt:{top.sha1_git}/"
             list_rows.append(
                 f"<tr>"
                 f"<td><a href='{rel}l/{lang.slug}/index.html'>{safe(lang.name)}</a></td>"
@@ -1263,7 +1266,7 @@ def render_samples_index_page(
                 f"<td>{r['sample_count']}</td>"
                 f"<td>{r['total_occurrences']:,}</td>"
                 f"<td>"
-                f"<a href='{safe(top.swh_browser_url)}' target='_blank' rel='noopener'>"
+                f"<a href='{safe(bare_browser_url)}' target='_blank' rel='noopener'>"
                 f"<code>{safe(top.filename)}</code> ({top.length} B)</a>"
                 f"</td>"
                 f"</tr>"
@@ -1690,6 +1693,9 @@ def render_per_extension_pages(
             name = pl_canonical.get(pid, pid)
             slug = pl_id_to_slug.get(pid)
             pl_link = f"<a href='{rel}l/{slug}/index.html'>{safe(name)}</a>" if slug else safe(name)
+            # Bare-SWHID browser URL (always resolves; the qualified one can
+            # 404 if SWH hasn't indexed the attributed origin yet).
+            bare_browser_url = f"https://archive.softwareheritage.org/swh:1:cnt:{s.sha1_git}/"
             sample_items.append(f"""
               <article class="panel" style="margin-bottom:10px; padding:12px;">
                 <header style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:baseline;">
@@ -1698,7 +1704,7 @@ def render_per_extension_pages(
                 </header>
                 <div class='muted' style='font-family:monospace; word-break:break-all; margin-top:4px;'>{safe(s.qualified_swhid)}</div>
                 <div style='margin-top:6px;'>
-                  <a href='{safe(s.swh_browser_url)}' target='_blank' rel='noopener'>Open in SWH</a> ·
+                  <a href='{safe(bare_browser_url)}' target='_blank' rel='noopener'>Open in SWH</a> ·
                   <a href='{safe(s.swh_raw_url)}' target='_blank' rel='noopener'>Raw bytes</a>
                 </div>
               </article>""")
@@ -2741,6 +2747,14 @@ def render_language_pages(
                             f"rule {safe(s.predicted_heuristic_id)}</a>"
                         )
                     gh_link = f"<a href='{safe(s.github_raw_url)}' target='_blank' rel='noopener'>GitHub raw</a>" if s.github_raw_url else ""
+                    # Use the BARE content SWHID for the "Open in SWH" link.
+                    # The qualified form with `;origin=...` 404s when SWH hasn't
+                    # indexed that origin (real case: we attributed an origin
+                    # via the GitHub side-channel that SWH hadn't crawled yet).
+                    # The bare SWHID is content-addressable and resolves
+                    # whenever the file is in the archive. The qualified
+                    # string remains visible above as the citation.
+                    bare_browser_url = f"https://archive.softwareheritage.org/swh:1:cnt:{s.sha1_git}/"
                     items.append(f"""
               <article class="panel" style="margin-bottom:10px; padding:12px;">
                 <header style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:baseline;">
@@ -2749,7 +2763,7 @@ def render_language_pages(
                 </header>
                 <div class='muted' style='font-family:monospace; word-break:break-all; margin-top:4px;'>{safe(s.qualified_swhid)}</div>
                 <div style='margin-top:6px;'>
-                  <a href='{safe(s.swh_browser_url)}' target='_blank' rel='noopener'>Open in SWH</a> ·
+                  <a href='{safe(bare_browser_url)}' target='_blank' rel='noopener'>Open in SWH</a> ·
                   <a href='{safe(s.swh_raw_url)}' target='_blank' rel='noopener'>Raw bytes (SWH)</a>
                   {' · ' + gh_link if gh_link else ''}
                 </div>

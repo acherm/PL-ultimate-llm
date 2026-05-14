@@ -925,6 +925,7 @@ def layout(
           <a href="{rel}samples/index.html">SWH samples</a>
           <a href="{rel}review/extensions/index.html">Review</a>
           <a href="{rel}review/curator/index.html">Curator</a>
+          <a href="{rel}contribute/add-pl/index.html">Add a PL</a>
           <a href="{rel}stats/index.html">Stats</a>
           <a href="{rel}audit/index.html">Audit</a>
           {gh_nav}
@@ -3359,6 +3360,131 @@ def render_language_pages(
         )
 
 
+def render_contribute_add_pl_page(
+    *,
+    dist_root: Path,
+    generated_at: str,
+    github_owner_repo: str | None,
+) -> None:
+    """Write /contribute/add-pl/index.html — a form to propose a new PL.
+
+    Submit → opens a pre-filled GitHub issue with the `pl-add` label.
+    A maintainer-side workflow then creates a PR that materializes the files
+    (languages/<Name>/meta.json, optional program example, pl_list.txt
+    insertion) per docs/add_pl.md.
+
+    Required fields: name + evidence_url. Program example is optional
+    (skeleton proposals are accepted; maintainers add the program later).
+    """
+    page = dist_root / "contribute" / "add-pl" / "index.html"
+    rel = rel_prefix(page, dist_root)
+    page.parent.mkdir(parents=True, exist_ok=True)
+
+    repo_attr = f'data-repo="{safe(github_owner_repo)}"' if github_owner_repo else 'data-repo=""'
+    no_repo_warn = "" if github_owner_repo else (
+        "<p class='muted'><strong>Note:</strong> no GitHub repository is configured "
+        "for this site, so the Submit button is disabled. Set "
+        "<code>GITHUB_OWNER_REPO</code> at build time.</p>"
+    )
+
+    body = f"""
+    <section class="panel section">
+      <h1 style="margin:0 0 8px;">Add a programming language</h1>
+      <p class="muted" style="margin:0 0 14px;">Propose a new PL for the catalog.
+      Required: language name + evidence URL. A program example is encouraged
+      but optional — skeleton proposals are accepted (a maintainer will add the
+      program later). Submit opens a pre-filled GitHub issue tagged
+      <code>pl-add</code>; an auto-PR workflow turns the issue into a pull
+      request that materializes <code>languages/&lt;Name&gt;/meta.json</code>,
+      the program files, and the <code>pl_list.txt</code> insertion.</p>
+      <p class="muted">Existing rules in
+      <a href="https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/CLAUDE.md" target="_blank" rel="noopener">CLAUDE.md</a>
+      and the auto-PR workflow in
+      <a href="https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/add_pl.md" target="_blank" rel="noopener">docs/add_pl.md</a>.</p>
+      {no_repo_warn}
+    </section>
+
+    <section class="panel section">
+      <form class="pl-add-form" {repo_attr}
+            style="display:flex; flex-direction:column; gap:14px;">
+
+        <fieldset style="border:1px solid var(--border, #2a2a2a); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:10px;">
+          <legend style="padding:0 8px; font-weight:600;">Language</legend>
+          <label style="display:flex; flex-direction:column; gap:4px;">
+            <span class="muted" style="font-size:12px;">Canonical name *</span>
+            <input type="text" name="pl_name" required placeholder="e.g. Portable Game Notation" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:4px;">
+            <span class="muted" style="font-size:12px;">Aliases (optional, comma-separated)</span>
+            <input type="text" name="aliases" placeholder="e.g. PGN, ChessPGN" />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:4px;">
+            <span class="muted" style="font-size:12px;">Evidence URL * — Wikipedia or official site</span>
+            <input type="url" name="evidence_url" required placeholder="https://en.wikipedia.org/wiki/..." />
+          </label>
+        </fieldset>
+
+        <fieldset style="border:1px solid var(--border, #2a2a2a); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:10px;">
+          <legend style="padding:0 8px; font-weight:600;">Program example <span class="muted" style="font-weight:normal; font-size:12px;">(optional — skeleton proposals accepted)</span></legend>
+          <label style="display:flex; flex-direction:column; gap:4px;">
+            <span class="muted" style="font-size:12px;">Title — e.g. "Hello World", "Famous game: Adams vs Torre"</span>
+            <input type="text" name="program_title" placeholder="(optional)" />
+          </label>
+          <div style="display:grid; gap:10px; grid-template-columns:1fr 1fr;">
+            <label style="display:flex; flex-direction:column; gap:4px;">
+              <span class="muted" style="font-size:12px;">File extension — e.g. .pgn</span>
+              <input type="text" name="program_ext" placeholder=".ext" />
+            </label>
+            <label style="display:flex; flex-direction:column; gap:4px;">
+              <span class="muted" style="font-size:12px;">License guess (optional)</span>
+              <input type="text" name="program_license" placeholder="MIT, Apache-2.0, Public Domain, …" />
+            </label>
+          </div>
+          <label style="display:flex; flex-direction:column; gap:4px;">
+            <span class="muted" style="font-size:12px;">Origin URL — public URL where this code appears (GitHub, Rosetta Code, official docs)</span>
+            <input type="url" name="program_origin_url" placeholder="https://..." />
+          </label>
+          <label style="display:flex; flex-direction:column; gap:4px;">
+            <span class="muted" style="font-size:12px;">Code — paste the program (a real, non-trivial example, &lt;200 lines)</span>
+            <textarea name="program_code" rows="12" placeholder="(paste code here)" style="font-family:monospace; font-size:13px;"></textarea>
+          </label>
+        </fieldset>
+
+        <fieldset style="border:1px solid var(--border, #2a2a2a); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:10px;">
+          <legend style="padding:0 8px; font-weight:600;">Notes <span class="muted" style="font-weight:normal; font-size:12px;">(optional)</span></legend>
+          <textarea name="notes" rows="3" placeholder="Anything else the maintainer should know (e.g. inclusion-bar rationale for borderline cases)"></textarea>
+        </fieldset>
+
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button class="btn" type="submit">Submit via GitHub (opens new tab)</button>
+          <a class="pl-add-fallback-link btn" href="#" target="_blank" rel="noopener"
+             style="text-decoration:none; font-size:13px;">
+            (or open the pre-filled issue directly)
+          </a>
+        </div>
+        <div class="pl-add-status muted" style="font-size:13px; min-height:1em;"></div>
+      </form>
+    </section>
+
+    <section class="panel section">
+      <h2 style="margin:0 0 8px;">What happens after I submit?</h2>
+      <ol style="color:var(--muted); font-size:13px; line-height:1.55;">
+        <li>A GitHub issue opens in this repo, tagged <code>pl-add</code>, carrying your form fields in a structured YAML block.</li>
+        <li>A scheduled workflow (<code>.github/workflows/pl-add-pr.yml</code>) picks up the issue and runs <code>tools/process_pl_addition.py</code> against it: validates the name isn't already in <code>pl_list.txt</code>, materializes <code>languages/&lt;Name&gt;/meta.json</code> and (if provided) the program files (<code>code.&lt;ext&gt;</code> + <code>manifest.json</code>), and appends the name to <code>pl_list.txt</code>.</li>
+        <li>The workflow opens a draft pull request from a feature branch <code>pl-add/&lt;sanitized-name&gt;</code>, with <code>Resolves #&lt;issue&gt;</code> in the body.</li>
+        <li>A maintainer reviews the PR (sanity-checks the evidence URL, the program source, the license). On merge, the new PL appears in the next site build.</li>
+        <li>For skeleton proposals (no program), the PR creates the meta.json but flags the missing program in the PR description; a separate follow-up commit (manual or via the agentic <code>/loop</code>) adds the example.</li>
+      </ol>
+    </section>"""
+
+    page.write_text(
+        layout(title="Add a PL · PL Catalog", rel=rel, body=body,
+               description="Propose a new programming language for the catalog.",
+               generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
+
+
 def render_audit_page(*, dist_root: Path, generated_at: str, github_owner_repo: str | None) -> None:
     page = dist_root / "audit" / "index.html"
     rel = rel_prefix(page, dist_root)
@@ -3852,6 +3978,9 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
         enrichments=enrichments,
     )
     render_audit_page(dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo)
+    render_contribute_add_pl_page(
+        dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo,
+    )
 
     # Phase 2b: per-extension pages.
     try:

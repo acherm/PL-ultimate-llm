@@ -1,0 +1,157 @@
+name: Auto-PR for pl-add issues
+
+# Materializes a `pl-add` GitHub issue (submitted via the
+# /contribute/add-pl/ form) into language files, then opens a draft pull
+# request from a feature branch. Maintainers review the PR before merge.
+#
+# Triggers:
+#   - issues.labeled / opened (when the `pl-add` label lands)
+#   - workflow_dispatch (manual rerun with the issue number)
+#
+# Pipeline:
+#   1. Check out swh-evidence-v1 (same pin rationale as ingest_ext_labels.yml —
+#      the processor script lives on this branch).
+#   2. Run `tools/process_pl_addition.py --issue <N>`:
+#      writes `languages/<Name>/meta.json`, optional program files, and
+#      appends to `data/pl_list.txt`.
+#   3. Stage the changes on a `pl-add/<sanitized-name>` branch.
+#   4. Push + open a draft PR linked to the issue.
+#
+# Notes:
+#   - The default GITHUB_TOKEN can open PRs against the same repo with
+#     `permissions: pull-requests: write`.
+#   - Workflow does NOT auto-merge. Maintainer reviews the PR (sanity-checks
+#     the evidence URL + program source).
+#   - Skeleton proposals (no program code) still produce a PR — the PR
+#     description flags the missing example so the maintainer can decide to
+#     hold for a follow-up commit or merge as-is.
+
+on:
+  issues:
+    types: [opened, labeled, edited]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to materialize"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  open_pr:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.label.name == 'pl-add' ||
+      contains(join(github.event.issue.labels.*.name, ','), 'pl-add')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: swh-evidence-v1
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve issue number
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "issue=${{ github.event.inputs.issue_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "issue=${{ github.event.issue.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run process_pl_addition.py
+        id: process
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/process_pl_addition.py --issue ${{ steps.resolve.outputs.issue }}
+          # Surface the summary the script wrote so later steps can reference
+          # the sanitized directory name and the has_program flag.
+          summary=".tmp/pl_add_summary_${{ steps.resolve.outputs.issue }}.json"
+          dir=$(python3 -c "import json,sys;d=json.load(open('$summary'));print(d['dir_name'])")
+          name=$(python3 -c "import json,sys;d=json.load(open('$summary'));print(d['name'])")
+          has_program=$(python3 -c "import json,sys;d=json.load(open('$summary'));print(str(d['has_program']).lower())")
+          echo "dir=$dir"            >> "$GITHUB_OUTPUT"
+          echo "name=$name"          >> "$GITHUB_OUTPUT"
+          echo "has_program=$has_program" >> "$GITHUB_OUTPUT"
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create feature branch + commit
+        id: branch
+        run: |
+          branch="pl-add/${{ steps.process.outputs.dir }}-issue-${{ steps.resolve.outputs.issue }}"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          git checkout -b "$branch"
+          # Stage everything the processor wrote: languages/ + pl_list.txt.
+          git add -A languages/ data/pl_list.txt
+          if git diff --cached --quiet; then
+            echo "No changes to commit — nothing to PR."
+            exit 0
+          fi
+          DIGEST=$(python3 -c "import hashlib; print(hashlib.sha256(open('data/pl_list.txt').read().encode()).hexdigest()[:8])")
+          git commit -m "pl-add: add ${{ steps.process.outputs.name }} (from issue #${{ steps.resolve.outputs.issue }})
+
+          Materialized via tools/process_pl_addition.py from the
+          /contribute/add-pl/ form submission.
+
+          Resolves #${{ steps.resolve.outputs.issue }}
+
+          List-Digest: $DIGEST
+          Model: pl-add-workflow
+          Agent: github-actions
+          WebSearch: disabled
+          Strategy: form-submission"
+          git push origin "$branch"
+
+      - name: Open draft pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body_file=$(mktemp)
+          cat > "$body_file" <<'EOF'
+          Materializes the `pl-add` issue ${{ format('#{0}', steps.resolve.outputs.issue) }} into:
+          - `languages/${{ steps.process.outputs.dir }}/meta.json`
+          - `data/pl_list.txt` (sorted, case-insensitive insert)
+          EOF
+          if [ "${{ steps.process.outputs.has_program }}" = "true" ]; then
+            cat >> "$body_file" <<'EOF'
+          - `languages/${{ steps.process.outputs.dir }}/programs/<sha256>/` (code + manifest)
+          EOF
+          else
+            cat >> "$body_file" <<'EOF'
+
+          ⚠️ **Skeleton proposal** — no program example included. Merge as-is or hold for a follow-up commit that adds the example.
+          EOF
+          fi
+          cat >> "$body_file" <<EOF
+
+          ## Review checklist
+          - [ ] Evidence URL resolves and confirms the language exists.
+          - [ ] Canonical name is correct (case, spacing, punctuation).
+          - [ ] Aliases are real, not invented.
+          - [ ] Program (if present) is a verbatim copy from \`origin_url\` and is non-trivial.
+          - [ ] License guess matches the source.
+
+          Resolves #${{ steps.resolve.outputs.issue }}
+          EOF
+          gh pr create \
+            --draft \
+            --base swh-evidence-v1 \
+            --head "${{ steps.branch.outputs.branch }}" \
+            --title "pl-add: ${{ steps.process.outputs.name }} (issue #${{ steps.resolve.outputs.issue }})" \
+            --body-file "$body_file" \
+            --label pl-add

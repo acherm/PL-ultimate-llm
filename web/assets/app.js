@@ -286,6 +286,131 @@ Pick this up by running \`python3 tools/process_sample_requests.py\` against thi
     }
   }
 
+  /**
+   * Add-PL form on /contribute/add-pl/. Opens a pre-filled GitHub issue with
+   * the `pl-add` label and a structured YAML block. The repo-side workflow
+   * (.github/workflows/pl-add-pr.yml) picks it up and opens a PR.
+   */
+  function _yamlEscape(s) {
+    // Minimal escaping for double-quoted YAML scalars.
+    return (s || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  }
+  function _yamlBlockLines(s, indent) {
+    const pad = " ".repeat(indent || 2);
+    const lines = (s || "").split("\n");
+    return lines.map((l) => pad + l).join("\n");
+  }
+
+  function _buildPlAddUrl(form) {
+    const repo = form.dataset.repo;
+    if (!repo) return { error: "This site has no GitHub repository configured." };
+    const name = (form.pl_name.value || "").trim();
+    if (!name) return { error: "Language name is required." };
+    const evidence_url = (form.evidence_url.value || "").trim();
+    if (!evidence_url) return { error: "Evidence URL is required." };
+    const aliases_raw = (form.aliases.value || "").trim();
+    const aliases = aliases_raw
+      ? aliases_raw.split(",").map((a) => a.trim()).filter(Boolean)
+      : [];
+    const aliasesYaml = aliases.length
+      ? "[" + aliases.map((a) => `"${_yamlEscape(a)}"`).join(", ") + "]"
+      : "[]";
+    // Program block — optional. Include only if at least one program field is set.
+    const ptitle = (form.program_title.value || "").trim();
+    const pext = (form.program_ext.value || "").trim();
+    const purl = (form.program_origin_url.value || "").trim();
+    const plicense = (form.program_license.value || "").trim();
+    const pcode = (form.program_code.value || "").trim();
+    const has_program = !!(ptitle || pext || purl || pcode);
+    let programYaml = "";
+    if (has_program) {
+      programYaml = `program:
+  title: "${_yamlEscape(ptitle)}"
+  ext: "${_yamlEscape(pext)}"
+  origin_url: "${_yamlEscape(purl)}"
+  license_guess: "${_yamlEscape(plicense)}"
+  code: |
+${_yamlBlockLines(pcode, 4)}
+`;
+    } else {
+      programYaml = "program: null  # skeleton proposal — maintainer to add program\n";
+    }
+    const notes = (form.notes.value || "").trim();
+    const notesYaml = notes
+      ? `notes: |\n${_yamlBlockLines(notes, 2)}\n`
+      : "notes: null\n";
+    const body = `<!-- pl-add: parsed by tools/process_pl_addition.py -->
+\`\`\`yaml
+name: "${_yamlEscape(name)}"
+aliases: ${aliasesYaml}
+evidence_url: "${_yamlEscape(evidence_url)}"
+${programYaml}${notesYaml}\`\`\`
+
+## Submitted from /contribute/add-pl/
+
+The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` branch with this content materialized into \`languages/${name.replace(/[^A-Za-z0-9._-]/g, "_")}/\` + \`pl_list.txt\`. Review the PR before merge.
+`;
+    const title = `Add PL: ${name}`;
+    const url =
+      `https://github.com/${repo}/issues/new` +
+      `?title=${encodeURIComponent(title)}` +
+      `&body=${encodeURIComponent(body)}` +
+      `&labels=pl-add`;
+    return { url };
+  }
+
+  function _handlePlAddSubmit(form) {
+    const status = form.querySelector(".pl-add-status");
+    const result = _buildPlAddUrl(form);
+    if (result.error) {
+      if (status) status.innerHTML = `<strong>Error:</strong> ${result.error}`;
+      return false;
+    }
+    let win = null;
+    try { win = window.open(result.url, "_blank", "noopener"); } catch (_) { /* noop */ }
+    if (status) {
+      status.innerHTML = win
+        ? `Opened GitHub in a new tab. If you didn't see it, click the fallback link.`
+        : `Browser blocked the new tab. Click the fallback link to open the pre-filled issue.`;
+    }
+    return false;
+  }
+
+  function _wirePlAddForms() {
+    if (typeof document === "undefined") return;
+    const forms = document.querySelectorAll("form.pl-add-form");
+    forms.forEach((form) => {
+      if (form.dataset._wired === "1") return;
+      form.dataset._wired = "1";
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        _handlePlAddSubmit(form);
+      });
+      const link = form.querySelector(".pl-add-fallback-link");
+      const update = () => {
+        if (!link) return;
+        const r = _buildPlAddUrl(form);
+        if (r.url) {
+          link.href = r.url;
+          link.textContent = "Open the pre-filled GitHub issue ↗";
+        } else {
+          link.removeAttribute("href");
+          link.textContent = `(${r.error || "incomplete"})`;
+        }
+      };
+      form.addEventListener("input", update);
+      form.addEventListener("change", update);
+      update();
+    });
+  }
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _wirePlAddForms);
+    } else {
+      _wirePlAddForms();
+    }
+  }
+
   function qs(selector) {
     return document.querySelector(selector);
   }

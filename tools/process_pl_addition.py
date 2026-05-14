@@ -40,7 +40,19 @@ _YAML_BLOCK = re.compile(r"```yaml\s*\n(.*?)\n```", re.DOTALL)
 _NAME_RE = re.compile(r'^name:\s*[\"\']?([^\"\'\n]+)[\"\']?\s*$', re.MULTILINE)
 _EVID_RE = re.compile(r'^evidence_url:\s*[\"\']?([^\"\'\n]*)[\"\']?\s*$', re.MULTILINE)
 _ALIASES_RE = re.compile(r'^aliases:\s*\[(.*?)\]\s*$', re.MULTILINE)
+_EXTENSIONS_RE = re.compile(r'^extensions:\s*\[(.*?)\]\s*$', re.MULTILINE)
 _PROGRAM_KEYS = {"title", "ext", "origin_url", "license_guess"}
+
+
+def _parse_flow_list(raw: str) -> list[str]:
+    """Parse a YAML flow-sequence body (without the brackets)."""
+    raw = raw.strip()
+    if not raw:
+        return []
+    return [
+        item.strip().strip('"').strip("'")
+        for item in re.split(r",\s*", raw) if item.strip()
+    ]
 
 
 def _gh_fetch_issue(owner_repo: str, number: int) -> dict:
@@ -110,16 +122,20 @@ def _parse_issue_body(body: str) -> dict | None:
     aliases: list[str] = []
     am = _ALIASES_RE.search(yaml_body)
     if am:
-        raw = am.group(1).strip()
-        if raw:
-            aliases = [
-                a.strip().strip('"').strip("'")
-                for a in re.split(r",\s*", raw) if a.strip()
-            ]
+        aliases = _parse_flow_list(am.group(1))
+    extensions: list[str] = []
+    em = _EXTENSIONS_RE.search(yaml_body)
+    if em:
+        extensions = [
+            (e if e.startswith(".") else "." + e)
+            for e in _parse_flow_list(em.group(1))
+            if e
+        ]
     return {
         "name": name,
         "aliases": aliases,
         "evidence_url": evidence_url,
+        "extensions": extensions,
         "program": _parse_program_block(yaml_body),
     }
 
@@ -208,6 +224,10 @@ def main() -> int:
         "evidence_url": parsed["evidence_url"],
         "added_at": now,
     }
+    if parsed["extensions"]:
+        # Order matters: first ext is treated as primary by
+        # build_pl_taxonomy.py (Linguist convention).
+        meta["extensions"] = parsed["extensions"]
     (lang_dir / "meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     print(f"WROTE {lang_dir / 'meta.json'}")
 

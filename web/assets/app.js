@@ -315,6 +315,18 @@ Pick this up by running \`python3 tools/process_sample_requests.py\` against thi
     const aliasesYaml = aliases.length
       ? "[" + aliases.map((a) => `"${_yamlEscape(a)}"`).join(", ") + "]"
       : "[]";
+    // Normalize extensions to leading-dot form (".py"); first listed is primary.
+    const exts_raw = (form.extensions ? form.extensions.value : "").trim();
+    const exts = exts_raw
+      ? exts_raw.split(",").map((e) => {
+          const t = e.trim();
+          if (!t) return "";
+          return t.startsWith(".") ? t : "." + t;
+        }).filter(Boolean)
+      : [];
+    const extsYaml = exts.length
+      ? "[" + exts.map((e) => `"${_yamlEscape(e)}"`).join(", ") + "]"
+      : "[]";
     // Program block — optional. Include only if at least one program field is set.
     const ptitle = (form.program_title.value || "").trim();
     const pext = (form.program_ext.value || "").trim();
@@ -344,6 +356,7 @@ ${_yamlBlockLines(pcode, 4)}
 name: "${_yamlEscape(name)}"
 aliases: ${aliasesYaml}
 evidence_url: "${_yamlEscape(evidence_url)}"
+extensions: ${extsYaml}
 ${programYaml}${notesYaml}\`\`\`
 
 ## Submitted from /contribute/add-pl/

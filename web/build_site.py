@@ -3422,6 +3422,10 @@ def render_contribute_add_pl_page(
             <span class="muted" style="font-size:12px;">Evidence URL * — Wikipedia or official site</span>
             <input type="url" name="evidence_url" required placeholder="https://en.wikipedia.org/wiki/..." />
           </label>
+          <label style="display:flex; flex-direction:column; gap:4px;">
+            <span class="muted" style="font-size:12px;">Known file extensions (comma-separated, leading dot optional) — first one is treated as primary. E.g. <code>.pgn</code> or <code>.py, .pyi, .pyx</code></span>
+            <input type="text" name="extensions" placeholder="e.g. .pgn  —or—  .py, .pyi, .pyx" />
+          </label>
         </fieldset>
 
         <fieldset style="border:1px solid var(--border, #2a2a2a); border-radius:8px; padding:12px; display:flex; flex-direction:column; gap:10px;">

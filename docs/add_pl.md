@@ -17,6 +17,7 @@ The catalog grows two ways:
    - **Canonical name** (required) — e.g. `Portable Game Notation`.
    - **Aliases** (optional, comma-separated) — e.g. `PGN, ChessPGN`.
    - **Evidence URL** (required) — Wikipedia page or official site.
+   - **Extensions** (optional, comma-separated) — e.g. `.pgn`. First entry is treated as the PL's primary extension (Linguist convention). Recorded in `meta.json` and promoted to `ext_claim.csv` with `source="repo_meta"`.
    - **Program example** (optional, skeleton proposals accepted):
      - title (e.g. `Famous game: Adams vs Torre`)
      - file extension (e.g. `.pgn`)
@@ -33,6 +34,7 @@ The catalog grows two ways:
 name: "Portable Game Notation"
 aliases: ["PGN"]
 evidence_url: "https://en.wikipedia.org/wiki/Portable_Game_Notation"
+extensions: [".pgn"]
 program:
   title: "Famous game: Adams vs Torre"
   ext: ".pgn"

@@ -332,11 +332,41 @@ def load_repo_meta_aliases() -> dict[str, list[tuple[str, str]]]:
     return out
 
 
+def load_repo_meta_extensions() -> dict[str, list[str]]:
+    """Map directory canonical -> [extensions] from per-lang meta.json.
+
+    Optional `extensions` field in meta.json (added by the /contribute/add-pl/
+    web form). First entry is treated as primary, the rest as secondary —
+    matching Linguist's `extensions[0] == primary` convention.
+    """
+    out: dict[str, list[str]] = defaultdict(list)
+    if not LANGUAGES_DIR.exists():
+        return out
+    for d in LANGUAGES_DIR.iterdir():
+        if not d.is_dir():
+            continue
+        meta = d / "meta.json"
+        if not meta.exists():
+            continue
+        try:
+            data = json.loads(meta.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        canonical = (data.get("name") or d.name).strip()
+        for e in data.get("extensions") or []:
+            e = str(e).strip()
+            if e:
+                out[canonical].append(e)
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
 
-def build(*, master: list[dict], linguist: dict, pygments_lex: dict, repo_aliases: dict[str, list[tuple[str, str]]]):
+def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
+          repo_aliases: dict[str, list[tuple[str, str]]],
+          repo_meta_extensions: dict[str, list[str]] | None = None):
     pl_rows = []
     alias_rows = []
     ext_claim_rows = []
@@ -469,6 +499,26 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict, repo_aliase
                 "evidence": "data/derived/languages_master_augmented.csv",
             })
 
+        # 4. In-repo meta.json (e.g. from /contribute/add-pl/ submissions).
+        # `extensions[0]` → primary (Linguist convention), rest → secondary.
+        if repo_meta_extensions:
+            repo_exts = repo_meta_extensions.get(canonical, [])
+            seen_in_repo: set[str] = set()
+            for raw in repo_exts:
+                ext = _norm_ext(str(raw))
+                if not ext or ext in seen_in_repo:
+                    continue
+                seen_in_repo.add(ext)
+                strength = "primary" if len(seen_in_repo) == 1 else "secondary"
+                ext_claim_rows.append({
+                    "pl_id": pl_id,
+                    "ext": ext,
+                    "source": "repo_meta",
+                    "strength": strength,
+                    "source_key": canonical,
+                    "evidence": f"languages/{canonical}/meta.json",
+                })
+
     return pl_rows, alias_rows, ext_claim_rows
 
 
@@ -539,6 +589,7 @@ def main() -> int:
     linguist = load_linguist()
     pygments_lex = load_pygments()
     repo_aliases = load_repo_meta_aliases()
+    repo_meta_extensions = load_repo_meta_extensions()
     heuristics = load_linguist_heuristics()
     manual_labels = load_accepted_manual_labels()
     print(f"  manual review (accepted): {len(manual_labels)} ext-label submissions to promote")
@@ -557,6 +608,7 @@ def main() -> int:
         linguist=linguist,
         pygments_lex=pygments_lex,
         repo_aliases=repo_aliases,
+        repo_meta_extensions=repo_meta_extensions,
     )
 
     # Promote accepted manual labels into ext_claim. Each row gets

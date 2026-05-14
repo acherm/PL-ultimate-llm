@@ -1732,6 +1732,63 @@ def _build_label_issue_url(
     ) + "&labels=ext-review"
 
 
+def _build_sample_request_block(
+    ext: str,
+    *,
+    github_owner_repo: str | None,
+    sample_count: int,
+) -> str:
+    """Render the "Request SWH samples for this extension" panel.
+
+    Opens a pre-filled GitHub issue with the `sample-request` label that
+    `tools/process_sample_requests.py` later picks up to drive an explicit
+    SWH mining run targeted at this extension.
+
+    Returns an empty string when no GitHub repo is configured.
+    """
+    if not github_owner_repo:
+        return ""
+    headline = (
+        "Need an archived example for this extension?"
+        if sample_count == 0 else
+        "Request more SWH-mined examples"
+    )
+    blurb = (
+        f"No verbatim file with extension <code>{safe(ext)}</code> in our local "
+        f"SWH mirror yet. Submit a sample-mining request and a maintainer will run "
+        f"<code>swh_extension_mining.py</code> against the live archive for this "
+        f"extension; samples land here once the run completes."
+        if sample_count == 0 else
+        f"If the examples above don't disambiguate what <code>{safe(ext)}</code> is, "
+        f"request a fresh mining run."
+    )
+    return f"""
+          <form class="sample-request-form"
+                data-ext="{safe(ext)}"
+                data-repo="{safe(github_owner_repo)}"
+                style="margin-top:14px; padding:12px; border:1px dashed var(--border, #2a2a2a); border-radius:8px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div>
+                <strong>{headline}</strong>
+                <div class="muted" style="font-size:13px; margin-top:4px;">{blurb}</div>
+              </div>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Optional notes — what are you trying to figure out? (e.g., "disambiguate from .java", "looking for examples that show macro expansion")</span>
+                <textarea name="notes" rows="2" placeholder="(optional)"
+                          style="font-family:inherit; font-size:13px;"></textarea>
+              </label>
+              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <button class="btn" type="submit">Request SWH samples (opens GitHub)</button>
+                <a class="sample-request-fallback-link btn" href="#" target="_blank" rel="noopener"
+                   style="text-decoration:none; font-size:13px;">
+                  (or open the pre-filled issue directly)
+                </a>
+              </div>
+              <div class="sample-request-status muted" style="font-size:12px; min-height:1em;"></div>
+            </div>
+          </form>"""
+
+
 # Vocabulary used by the per-extension labelling form. Mirrors `docs/extension_labels.md`.
 LABEL_VOCAB_GROUPS = [
     ("Programming language", [
@@ -1978,16 +2035,33 @@ def render_per_extension_pages(
             <tbody>{''.join(heur_rows_html)}</tbody>
           </table>
         </section>"""
-        swh_section = ""
+        sample_request_block = _build_sample_request_block(
+            ext, github_owner_repo=github_owner_repo, sample_count=len(sample_items),
+        )
         if sample_items:
             swh_section = f"""
         <section id="samples" class="panel section">
           <h2 style="margin:0 0 8px;">SWH-mined examples ({len(sample_items)})</h2>
           <div class='muted' style='margin-bottom:10px;'>Real archived programs with this extension, byte-verified against the SWH archive. Useful for deciding what this extension actually is when the attribution is uncertain.</div>
           {''.join(sample_items)}
+          {sample_request_block}
         </section>"""
-        if not (claim_rows_html or heur_rows_html or sample_items):
-            swh_section = "<p class='muted'>No claimants, heuristics, or SWH samples indexed for this extension yet.</p>"
+        elif claim_rows_html or heur_rows_html:
+            # Has claims/heuristics but no archived bytes yet — surface the
+            # request form so reviewers can ask for samples to disambiguate.
+            swh_section = f"""
+        <section id="samples" class="panel section">
+          <h2 style="margin:0 0 8px;">SWH-mined examples (0)</h2>
+          <p class='muted'>No archived examples for <code>{safe(ext)}</code> in our local mirror yet.</p>
+          {sample_request_block}
+        </section>"""
+        else:
+            swh_section = f"""
+        <section id="samples" class="panel section">
+          <h2 style="margin:0 0 8px;">SWH-mined examples (0)</h2>
+          <p class='muted'>No claimants, heuristics, or SWH samples indexed for <code>{safe(ext)}</code> yet.</p>
+          {sample_request_block}
+        </section>"""
 
         # ----- Label-this section: adapt to attribution status -----
         # Classify the extension's attribution state:

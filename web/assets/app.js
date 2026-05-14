@@ -197,6 +197,95 @@ ${evidence.split('\n').map(l => '  ' + l).join('\n')}
     }
   }
 
+  /**
+   * Sample-request form: opens a pre-filled GitHub issue with the
+   * `sample-request` label. The maintainer-side script
+   * `tools/process_sample_requests.py` later picks these up to drive a
+   * targeted SWH mining run.
+   */
+  function _buildSampleRequestUrl(form) {
+    const ext = form.dataset.ext;
+    const repo = form.dataset.repo;
+    if (!repo) return { error: "This site has no GitHub repository configured." };
+    if (!ext) return { error: "Form is missing the extension." };
+    const notes = (form.notes ? form.notes.value : "").trim();
+    const notesYaml = notes
+      ? notes.split("\n").map((l) => "  " + l).join("\n")
+      : "  (no notes)";
+    const body = `<!-- sample-request: parsed by tools/process_sample_requests.py -->
+\`\`\`yaml
+ext: "${ext}"
+notes: |
+${notesYaml}
+\`\`\`
+
+## Submitted from /ext/${ext.replace(/^\./, "")}/
+
+Pick this up by running \`python3 tools/process_sample_requests.py\` against this repo.
+`;
+    const title = `Sample request: ${ext}`;
+    const url =
+      `https://github.com/${repo}/issues/new` +
+      `?title=${encodeURIComponent(title)}` +
+      `&body=${encodeURIComponent(body)}` +
+      `&labels=sample-request`;
+    return { url };
+  }
+
+  function _handleSampleRequestSubmit(form) {
+    const result = _buildSampleRequestUrl(form);
+    const status = form.querySelector(".sample-request-status");
+    if (result.error) {
+      if (status) status.innerHTML = `<strong>Error:</strong> ${result.error}`;
+      return false;
+    }
+    let win = null;
+    try { win = window.open(result.url, "_blank", "noopener"); } catch (_) { /* noop */ }
+    if (status) {
+      status.innerHTML = win
+        ? `Opened GitHub in a new tab. If you didn't see it, click the link to the right of the button.`
+        : `Browser blocked the new tab. Click the link to the right of the button.`;
+    }
+    return false;
+  }
+
+  function _wireSampleRequestForms() {
+    if (typeof document === "undefined") return;
+    const forms = document.querySelectorAll("form.sample-request-form");
+    forms.forEach((form) => {
+      if (form.dataset._wired === "1") return;
+      form.dataset._wired = "1";
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        _handleSampleRequestSubmit(form);
+      });
+      // Live-updating fallback link so the reviewer can right-click → open
+      // even if popups are blocked.
+      const link = form.querySelector(".sample-request-fallback-link");
+      const update = () => {
+        if (!link) return;
+        const r = _buildSampleRequestUrl(form);
+        if (r.url) {
+          link.href = r.url;
+          link.textContent = "Open the pre-filled GitHub issue ↗";
+        } else {
+          link.removeAttribute("href");
+          link.textContent = `(${r.error || "incomplete"})`;
+        }
+      };
+      form.addEventListener("input", update);
+      form.addEventListener("change", update);
+      update();
+    });
+  }
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _wireSampleRequestForms);
+    } else {
+      _wireSampleRequestForms();
+    }
+  }
+
   function qs(selector) {
     return document.querySelector(selector);
   }

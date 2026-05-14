@@ -2194,11 +2194,99 @@ def render_per_extension_pages(
                     "If label has &lt;...&gt;, fill it here (e.g. for <code>pl/&lt;id&gt;</code> type <code>rust</code>). "
                     "For multi-PL submissions, enter several <code>pl/&lt;id&gt;</code> separated by commas."
                 )
+
+            # Proposed PLs to display as one-click chips above the dropdown.
+            # Pulls from two sources: existing claimants (typically secondary
+            # for `weakly-attributed`) and Linguist heuristic predictions.
+            # Each chip carries the BARE pl_id (no `pl/` prefix); ticking it
+            # auto-fills `label_custom` and selects the `pl/<id>` option in
+            # the dropdown, sparing the reviewer from typing the id.
+            def _bare_id(pid: str) -> str:
+                # pl_ids in ext_claim.csv look like `pl/bazel`, `pl/cpp`, ...
+                # Strip the redundant `pl/` prefix so chip values are bare ids
+                # consistent with the existing single-PL convention (customPart
+                # = "rust" combined with dropdown "pl/<id>" → label "pl/rust").
+                return pid[3:] if pid.startswith("pl/") else pid
+            proposed_pls: list[dict] = []
+            seen_entities: set[str] = set()
+            preset_entities = {
+                _bare_id(_canonical_pl_entity(p.strip()))
+                for p in custom_prefill.split(",") if p.strip()
+            }
+            for c in claims:
+                pid = c.get("pl_id", "")
+                if not pid:
+                    continue
+                ent = _canonical_pl_entity(pid)
+                bare = _bare_id(ent)
+                if bare in seen_entities:
+                    continue
+                seen_entities.add(bare)
+                proposed_pls.append({
+                    "bare_id": bare,
+                    "name": pl_canonical.get(ent) or pl_canonical.get(pid) or pid,
+                    "slug": pl_id_to_slug.get(ent) or pl_id_to_slug.get(pid),
+                    "via": f"{c.get('source','?')} · {c.get('strength','?')}",
+                    "checked": bare in preset_entities,
+                })
+            for h in heur_by_ext.get(ext, []):
+                pid = h.get("predicts_pl_id", "")
+                if not pid:
+                    continue
+                ent = _canonical_pl_entity(pid)
+                bare = _bare_id(ent)
+                if bare in seen_entities:
+                    continue
+                seen_entities.add(bare)
+                proposed_pls.append({
+                    "bare_id": bare,
+                    "name": pl_canonical.get(ent) or h.get("predicts_language", "") or pid,
+                    "slug": pl_id_to_slug.get(ent) or pl_id_to_slug.get(pid),
+                    "via": f"heuristic · {h.get('heuristic_id','')}",
+                    "checked": bare in preset_entities,
+                })
+
+            quick_pick_html = ""
+            if proposed_pls:
+                chip_html = []
+                for p in proposed_pls:
+                    name_html = (
+                        f"<a href='{rel}l/{safe(p['slug'])}/index.html' target='_blank' rel='noopener' "
+                        f"style='color:inherit;'>{safe(p['name'])}</a>"
+                        if p["slug"] else safe(p["name"])
+                    )
+                    chip_html.append(
+                        f"<label class='proposed-pl-chip' "
+                        f"style='display:inline-flex; align-items:center; gap:6px; padding:6px 10px; "
+                        f"border:1px solid var(--border, #2a2a2a); border-radius:14px; "
+                        f"background:rgba(255,255,255,0.02); cursor:pointer; font-size:13px;'>"
+                        f"<input type='checkbox' class='proposed-pl' value='{safe(p['bare_id'])}' "
+                        f"data-name='{safe(p['name'])}'{' checked' if p['checked'] else ''} "
+                        f"style='margin:0;' />"
+                        f"<strong>{name_html}</strong> "
+                        f"<code style='font-size:11px; color:var(--muted);'>pl/{safe(p['bare_id'])}</code> "
+                        f"<span class='muted' style='font-size:11px;'>via {safe(p['via'])}</span>"
+                        f"</label>"
+                    )
+                quick_pick_html = f"""
+              <div style="grid-column:1 / -1; display:flex; flex-direction:column; gap:6px;">
+                <div class="muted" style="font-size:13px;">
+                  <strong>Quick pick — proposed PLs.</strong>
+                  Tick one or more to auto-fill the label as <code>pl/&lt;id&gt;</code>.
+                  Each chip is a PL that upstream sources or Linguist heuristics already
+                  suggest for <code>{safe(ext)}</code>. Multi-tick for a polysemous extension.
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                  {''.join(chip_html)}
+                </div>
+              </div>"""
+
             form_html = f"""
           <form class="ext-label-form"
                 data-ext="{safe(ext)}"
                 data-repo="{safe(github_owner_repo) if github_owner_repo else ''}">
             <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr; margin-top:10px;">
+              {quick_pick_html}
               <label style="grid-column:1 / -1; display:flex; flex-direction:column; gap:4px;">
                 <span class="muted">Label *</span>
                 <select name="label" required>

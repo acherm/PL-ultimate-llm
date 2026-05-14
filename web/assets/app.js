@@ -18,7 +18,13 @@
     if (!labelChoice) return { error: "Pick a label first." };
     const customPart = (form.label_custom.value || "").trim();
     let label = labelChoice;
-    if (labelChoice.includes("<")) {
+    // Multi-PL submissions: customPart holds a comma-list of full tokens like
+    // "pl/c, pl/cpp". Pass it through verbatim — applying the template
+    // /<[^>]+>/.replace only substitutes the first match, which would corrupt
+    // all subsequent tokens.
+    if (customPart.includes(",")) {
+      label = customPart;
+    } else if (labelChoice.includes("<")) {
       if (!customPart) {
         return { error: "The label has a <…> placeholder; fill the custom field." };
       }
@@ -96,6 +102,43 @@ ${evidence.split('\n').map(l => '  ' + l).join('\n')}
     return false;  // prevent default form submit
   }
 
+  // Quick-pick chips: ticking a proposed-PL chip auto-fills the dropdown +
+  // custom field so the reviewer doesn't have to type `pl/<id>` manually.
+  function _syncProposedPlChips(form) {
+    const chips = form.querySelectorAll("input.proposed-pl");
+    if (!chips.length) return;
+    const checked = Array.from(chips).filter((c) => c.checked);
+    const ids = checked.map((c) => c.value);  // bare ids, e.g., "bazel"
+    const custom = form.label_custom;
+    const labelSelect = form.label;
+    if (ids.length === 1) {
+      // Single tick: dropdown `pl/<id>` template + bare id in custom → `pl/<id>`.
+      if (labelSelect && labelSelect.value !== "pl/<id>") labelSelect.value = "pl/<id>";
+      if (custom) custom.value = ids[0];
+      // Pre-fill friendly_name (only if reviewer hasn't typed one yet).
+      if (form.friendly_name && !form.friendly_name.value.trim()) {
+        const name = checked[0].getAttribute("data-name") || "";
+        if (name) form.friendly_name.value = name;
+      }
+    } else if (ids.length >= 2) {
+      // Multi tick: write full `pl/<id>, pl/<id>` so each comma-token is
+      // self-contained. The dropdown template stops being meaningful for
+      // multi but we still set it so the form validates.
+      if (labelSelect && labelSelect.value !== "pl/<id>") labelSelect.value = "pl/<id>";
+      if (custom) custom.value = ids.map((id) => `pl/${id}`).join(", ");
+    } else {
+      // All chips untoggled → blank the custom field only if it currently
+      // matches what the chips would have produced (i.e., we filled it).
+      // User-typed values are preserved.
+      if (custom) {
+        const all = Array.from(chips).map((c) => c.value);
+        const tokens = custom.value.split(",").map((p) => p.trim().replace(/^pl\//, ""));
+        const allFromChips = tokens.length > 0 && tokens.every((t) => all.includes(t));
+        if (allFromChips) custom.value = "";
+      }
+    }
+  }
+
   function _wireExtLabelForms() {
     if (typeof document === "undefined") return;
     const forms = document.querySelectorAll("form.ext-label-form");
@@ -128,6 +171,16 @@ ${evidence.split('\n').map(l => '  ' + l).join('\n')}
           link.textContent = `(fill the form — ${r.error || "incomplete"})`;
         }
       };
+      // Wire chip checkboxes: change → sync custom field + dropdown.
+      form.querySelectorAll("input.proposed-pl").forEach((chip) => {
+        chip.addEventListener("change", () => {
+          _syncProposedPlChips(form);
+          update();
+        });
+      });
+      // Initial sync — for confirmed-polysemous, chips render pre-checked.
+      _syncProposedPlChips(form);
+
       form.addEventListener("input", update);
       form.addEventListener("change", update);
       update();

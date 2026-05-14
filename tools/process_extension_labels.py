@@ -195,6 +195,13 @@ def main() -> int:
     skipped = 0
     multi_label_rows = 0
     new_rows = list(existing)  # carry-over previously-curated rows
+    # Track the set of labels each successfully-parsed issue currently asserts.
+    # After the loop we use this to RECONCILE: drop any pre-existing row whose
+    # issue we just reprocessed but whose label is no longer in the body
+    # (e.g. an annotator edited their submission from `pl/pl/c, pl/cpp,
+    # pl/objective-c` to `pl/c, pl/cpp, pl/objective-c` — the stale `pl/pl/c`
+    # row shouldn't survive). Maintainer-confirmed statuses are preserved.
+    current_labels_by_url: dict[str, set[str]] = {}
     for it in issues:
         url = it.get("html_url")
         if not url:
@@ -215,6 +222,7 @@ def main() -> int:
             continue
         if len(labels) > 1:
             multi_label_rows += 1
+        current_labels_by_url[url] = set(labels)
 
         for label_value in labels:
             common_fields = {
@@ -246,9 +254,33 @@ def main() -> int:
                 new_rows.append(row)
         parsed += 1
 
+    # Reconcile per-issue: drop rows whose issue we just reprocessed but whose
+    # label is no longer in the current body. Maintainer-confirmed rows
+    # (curator_status in {accepted, needs-info}) are preserved as a safety
+    # net — the maintainer's call sticks even if the annotator later edits
+    # away the label.
+    PRESERVED = {"accepted", "needs-info"}
+    before = len(new_rows)
+    dropped_rows: list[dict] = []
+    kept_rows: list[dict] = []
+    for r in new_rows:
+        url = r.get("issue_url", "")
+        label = r.get("label", "")
+        status = r.get("curator_status", "")
+        if url in current_labels_by_url and label not in current_labels_by_url[url] and status not in PRESERVED:
+            dropped_rows.append(r)
+        else:
+            kept_rows.append(r)
+    new_rows = kept_rows
     print(f"  parsed: {parsed}, skipped (no structured block): {skipped}, "
           f"multi-label issues: {multi_label_rows}")
-    print(f"  total rows in output: {len(new_rows)}")
+    if dropped_rows:
+        print(f"  reconciled: dropped {len(dropped_rows)} stale row(s) "
+              f"whose label is no longer in the issue body")
+        for r in dropped_rows:
+            print(f"    drop: {r.get('ext','')}  label={r.get('label','')}  "
+                  f"issue={r.get('issue_url','')}  status={r.get('curator_status','')}")
+    print(f"  total rows in output: {len(new_rows)} (was {before})")
 
     if args.dry_run:
         print("(dry-run; CSV NOT updated)")

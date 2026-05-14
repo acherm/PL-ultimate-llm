@@ -660,6 +660,14 @@ def parse_args() -> argparse.Namespace:
                         "directory). Default: <s3-prefix>/<dataset-date>/nodes.")
     p.add_argument("--only", default="",
                    help="Comma-separated language canonical names to restrict to.")
+    p.add_argument("--mine-extensions", default=None,
+                   help="Bypass the PL-driven inventory and mine an explicit list of "
+                        "extensions. Argument is a path to a text file with one ext per "
+                        "line (with or without leading dot). Use to mine samples for "
+                        "unattributed/weakly-attributed extensions (e.g. the review "
+                        "queue's top-N). Mined samples land under samples/unclassified/ "
+                        "or under their classifier-predicted pl_id; per-ext pages render "
+                        "them on /ext/<x>/ regardless of pl_id attribution.")
     p.add_argument("--execute", action="store_true",
                    help="Actually run the query via duckdb. Default is dry-run (print SQL).")
     p.add_argument("--out-csv", default=str(OUT_CSV),
@@ -674,7 +682,35 @@ def main() -> int:
 
     repo_canon = load_repo_languages()
     aliases = load_lang_aliases()
-    inventory = load_extensions_inventory(repo_canon, aliases)
+
+    if args.mine_extensions:
+        # Bypass the PL-driven inventory entirely. Build a single synthetic
+        # entry whose "extensions" set is exactly the list from the file. The
+        # ext_to_langs map will tag every extension with the synthetic
+        # claimant "_review_queue" — that's fine because the actual per-row
+        # `predicted_pl_id` is set by the classifier at fetch time, and the
+        # site renders these samples on /ext/<x>/ pages by extension, not
+        # by claimed language.
+        src = Path(args.mine_extensions)
+        if not src.exists():
+            sys.exit(f"ERROR: --mine-extensions file not found: {src}")
+        exts: set[str] = set()
+        for line in src.read_text(encoding="utf-8").splitlines():
+            tok = line.strip()
+            if not tok or tok.startswith("#"):
+                continue
+            ext = tok if tok.startswith(".") else "." + tok
+            ext = ext.lower()
+            if EXT_RE.match(ext) and ext not in EXT_BLOCKLIST:
+                exts.add(ext)
+        if not exts:
+            sys.exit(f"ERROR: --mine-extensions {src} contained no valid extensions.")
+        print(f"--mine-extensions: {len(exts)} explicit extensions from {src}")
+        inventory = {"_review_queue": LangEntry(
+            canonical="_review_queue", in_repo=False, extensions=exts,
+        )}
+    else:
+        inventory = load_extensions_inventory(repo_canon, aliases)
 
     if args.only:
         wanted = {n.strip() for n in args.only.split(",") if n.strip()}

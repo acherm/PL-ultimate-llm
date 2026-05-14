@@ -379,12 +379,102 @@ def load_swh_samples() -> dict[str, list[SwhSample]]:
             ext = m.get("ext") or ""
             claimants = ext_to_primary_pl_ids.get(ext, [])
             if not claimants:
-                # No primary claimant for this ext — sample stays orphan.
+                # No primary claimant for this ext — sample stays orphan in the
+                # by-pl_id index. It is still surfaced on the per-ext page via
+                # `load_swh_samples_by_ext` below.
                 continue
             for pl_id in claimants:
                 s = _build_sample(sha_dir, pl_id)
                 if s is not None:
                     out.setdefault(pl_id, []).append(s)
+    return out
+
+
+def load_swh_samples_by_ext() -> dict[str, list[SwhSample]]:
+    """Walk `samples/` and index EVERY sample by its file extension.
+
+    Unlike `load_swh_samples` (which groups by pl_id and drops orphan unclassified
+    samples whose ext has no primary claimant), this index includes:
+
+    - Classified samples at `samples/pl/<slug>/<sha>/`
+    - Unclassified samples at `samples/unclassified/<sha>/` — regardless of
+      whether any PL claims their ext
+
+    Used by per-extension pages so reviewers can see real archived bytes for
+    unattributed extensions like `.pbf` or `.fsti` while deciding what they
+    actually are.
+    """
+    out: dict[str, list[SwhSample]] = {}
+    if not SAMPLES_DIR.exists():
+        return out
+
+    def _read_meta(sha_dir: Path) -> dict | None:
+        mp = sha_dir / "metadata.json"
+        if not mp.exists():
+            return None
+        try:
+            return json.loads(mp.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+
+    def _build_for_ext(sha_dir: Path, m: dict) -> SwhSample | None:
+        ext = (m.get("ext") or "").lower()
+        filename = m.get("filename") or ""
+        code_path = sha_dir / filename
+        code_text: str | None = None
+        if code_path.exists():
+            try:
+                code_text = code_path.read_text(encoding="utf-8", errors="replace")
+                if len(code_text) > 16_000:
+                    code_text = code_text[:16_000] + "\n…(truncated)…"
+            except Exception:
+                pass
+        return SwhSample(
+            pl_id=(m.get("predicted_pl_id") or "").strip() or "unclassified",
+            sha1_git=m.get("sha1_git") or sha_dir.name,
+            filename=filename,
+            length=int(m.get("length_bytes") or 0),
+            qualified_swhid=m.get("qualified_swhid") or "",
+            swh_browser_url=m.get("swh_browser_url") or "",
+            swh_raw_url=m.get("swh_raw_url") or "",
+            github_raw_url=m.get("github_raw_url"),
+            code_text=code_text,
+            ext=ext,
+            occurrences_in_swh=int(m.get("occurrences_in_swh") or 0),
+            predicted_via=m.get("predicted_via") or "",
+            predicted_heuristic_id=m.get("predicted_heuristic_id"),
+        )
+
+    # Path A: classified samples at samples/pl/<slug>/<sha>/.
+    for sha_dir in SAMPLES_DIR.glob("*/*/*"):
+        if not sha_dir.is_dir():
+            continue
+        m = _read_meta(sha_dir)
+        if m is None:
+            continue
+        ext = (m.get("ext") or "").lower()
+        if not ext:
+            continue
+        s = _build_for_ext(sha_dir, m)
+        if s is not None:
+            out.setdefault(ext, []).append(s)
+
+    # Path B: unclassified (and ext-mined review-targeted) samples at
+    # samples/unclassified/<sha>/.
+    unclassified_dir = SAMPLES_DIR / "unclassified"
+    if unclassified_dir.exists():
+        for sha_dir in unclassified_dir.iterdir():
+            if not sha_dir.is_dir():
+                continue
+            m = _read_meta(sha_dir)
+            if m is None:
+                continue
+            ext = (m.get("ext") or "").lower()
+            if not ext:
+                continue
+            s = _build_for_ext(sha_dir, m)
+            if s is not None:
+                out.setdefault(ext, []).append(s)
     return out
 
 
@@ -1154,6 +1244,11 @@ def render_extension_review_queue_page(
     rel = rel_prefix(page, dist_root)
     page.parent.mkdir(parents=True, exist_ok=True)
 
+    # Per-ext sample counts so each row can show "N samples available" — lets
+    # reviewers see at a glance whether there's actual SWH evidence to look at
+    # before deciding.
+    samples_by_ext_for_queue = load_swh_samples_by_ext()
+
     listing = []
     for r in rows:
         ext = r["ext_canonical"]
@@ -1186,6 +1281,13 @@ def render_extension_review_queue_page(
             f"<a class='btn' href='{safe(issue_url)}' target='_blank' rel='noopener'>Label this</a>"
             if issue_url else "<span class='muted'>(GitHub repo not configured)</span>"
         )
+        n_samples = len(samples_by_ext_for_queue.get(ext, []))
+        samples_pill = (
+            f"<a class='pill' style='background:rgba(80,200,120,0.18); color:#c6f0d4;' "
+            f"href='{rel}ext/{url_slug}/index.html#samples' title='SWH samples available to inspect'>"
+            f"👁 {n_samples}</a>"
+            if n_samples else ""
+        )
 
         listing.append(
             f"<tr>"
@@ -1196,6 +1298,7 @@ def render_extension_review_queue_page(
             f"<td>{n_claim}</td>"
             f"<td>{safe(current) if current else '—'}</td>"
             f"<td><span class='pill src-taxonomy'>{safe(suggested)}</span></td>"
+            f"<td>{samples_pill}</td>"
             f"<td>{label_btn}</td>"
             f"</tr>"
         )
@@ -1260,7 +1363,7 @@ def render_extension_review_queue_page(
     <section class="panel section">
       <p class='muted'>Auto-suggested labels are <em>hints</em> (rule-based on the extension string). Always override based on actual evidence.</p>
       <table class='kv-table'>
-        <thead><tr><th>Extension</th><th>SWH</th><th>Last</th><th>#Claim</th><th>Current claimants</th><th>Auto-suggested</th><th>Action</th></tr></thead>
+        <thead><tr><th>Extension</th><th>SWH</th><th>Last</th><th>#Claim</th><th>Current claimants</th><th>Auto-suggested</th><th>Samples</th><th>Action</th></tr></thead>
         <tbody>{''.join(listing)}</tbody>
       </table>
     </section>
@@ -1714,11 +1817,13 @@ def render_per_extension_pages(
         heur_by_ext.setdefault(h["applies_to_ext"], []).append(h)
 
     swh_by_pl = load_swh_samples()
-    swh_by_ext: dict[str, list[SwhSample]] = {}
-    for samples in swh_by_pl.values():
-        for s in samples:
-            if s.ext:
-                swh_by_ext.setdefault(s.ext, []).append(s)
+    # `swh_by_ext` is built independently via `load_swh_samples_by_ext` so that
+    # orphan unclassified samples (those whose ext has no primary claimant in
+    # the taxonomy) ALSO appear on the per-ext page. Critical for the review
+    # workflow: a reviewer landing on /ext/.pbf/ needs to see actual `.pbf`
+    # bytes to decide it's Protocol Buffers binary, not a programming
+    # language.
+    swh_by_ext: dict[str, list[SwhSample]] = load_swh_samples_by_ext()
 
     strength_rank = {"primary": 0, "secondary": 1, "unknown": 2}
 
@@ -1876,9 +1981,9 @@ def render_per_extension_pages(
         swh_section = ""
         if sample_items:
             swh_section = f"""
-        <section class="panel section">
+        <section id="samples" class="panel section">
           <h2 style="margin:0 0 8px;">SWH-mined examples ({len(sample_items)})</h2>
-          <div class='muted' style='margin-bottom:10px;'>Real archived programs with this extension, byte-verified against the SWH archive.</div>
+          <div class='muted' style='margin-bottom:10px;'>Real archived programs with this extension, byte-verified against the SWH archive. Useful for deciding what this extension actually is when the attribution is uncertain.</div>
           {''.join(sample_items)}
         </section>"""
         if not (claim_rows_html or heur_rows_html or sample_items):

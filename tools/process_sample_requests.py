@@ -41,6 +41,14 @@ _YAML_BLOCK = re.compile(r"```yaml\s*\n(.*?)\n```", re.DOTALL)
 _EXT_RE = re.compile(r'^ext:\s*[\"\']?([^\"\'\n]+)[\"\']?\s*$', re.MULTILINE)
 _NOTES_RE = re.compile(r'^notes:\s*\|\s*\n((?:^[ \t]+.*\n?)+)', re.MULTILINE)
 
+# Require at least one alpha char in the extension. Otherwise we end up
+# scanning the archive for `.0`, `.1`, … which mostly match PyPI version
+# suffixes (`aiographite-0.2.0`) and similar packaging detritus rather than
+# anything that could plausibly be a PL. Power-users who really want to mine
+# a numeric extension can still bypass this by calling
+# `swh_extension_mining.py --mine-extensions` directly.
+_EXT_VALID = re.compile(r"^\.[A-Za-z][A-Za-z0-9_+\-]{0,7}$")
+
 
 def gh_owner_repo() -> str | None:
     try:
@@ -173,6 +181,7 @@ def main() -> int:
 
     # Parse + dedupe by extension.
     parsed: list[tuple[dict, dict]] = []  # (issue, request)
+    rejected: list[tuple[dict, str]] = []  # (issue, ext) — invalid extension
     exts: dict[str, list[dict]] = {}  # ext -> list of issues asking for it
     for it in issues:
         if it.get("pull_request"):
@@ -181,8 +190,30 @@ def main() -> int:
         if not req:
             print(f"  skip #{it['number']}: unparseable body")
             continue
+        if not _EXT_VALID.match(req["ext"]):
+            print(f"  reject #{it['number']}: ext {req['ext']!r} fails validation")
+            rejected.append((it, req["ext"]))
+            continue
         parsed.append((it, req))
         exts.setdefault(req["ext"], []).append(it)
+
+    if rejected and not args.dry_run:
+        for it, ext in rejected:
+            body = (
+                f"Cannot mine `{ext}` — extension must contain at least one "
+                f"letter (matches `^\\.[A-Za-z][A-Za-z0-9_+\\-]{{0,7}}$`). "
+                f"Pure-numeric extensions like `.0`/`.1` overwhelmingly match "
+                f"packaging version suffixes (`foo-1.2.0`) rather than program "
+                f"files, so the scan would burn S3 traffic for noise.\n\n"
+                f"If you genuinely need this, ask a maintainer to run "
+                f"`tools/swh_extension_mining.py --mine-extensions` directly."
+            )
+            comment_and_close(
+                owner_repo=repo,
+                issue_number=it["number"],
+                body=body,
+                close=not args.no_close,
+            )
 
     if not parsed:
         print("Nothing to do (no parseable requests).")

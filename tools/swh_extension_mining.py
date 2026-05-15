@@ -211,15 +211,29 @@ def build_query(
     top_k: int,
     min_length: int = 32,
     max_length: int = 200_000,
+    min_occurrences: int = 5,
     sample_percent: float | None = None,
 ) -> tuple[str, dict[str, list[str]]]:
     """Return (SQL string, ext->list[lang] map for client-side bucketing).
 
+    Ranking semantics
+    -----------------
+    `filename_occurrences` on the popular-content-names parquet is the number
+    of directory entries (across the whole SWH archive) pointing at this
+    content blob under its most-popular filename. In other words: "how many
+    times this exact program was copied into a `<dir>/<name>` slot somewhere".
+    For 99.9% of blobs there is one canonical name, so the column doubles as
+    "how reused/widespread this program is". We sort DESC on it so top-K
+    returns the *most-copied* programs for the requested extension.
+
     The query:
-    1. Builds an inline (extension VARCHAR) values table.
-    2. Cross-joins to all contents whose normalized filename ends with that
-       extension (case-insensitive), within reasonable size bounds.
-    3. Picks top-K by filename_occurrences per extension.
+    1. Decodes the parquet `filename` blob into UTF-8, extracts the extension
+       via a single regex (capture group restricted to ASCII).
+    2. Filters against an IN-set of requested extensions and a length window.
+    3. Drops rows below `min_occurrences` — one-off blobs are noise for
+       "find me a representative program" workflows and inflate the qualify
+       pass's GitHub round-trips.
+    4. Picks top-K by occurrences DESC per extension.
     """
     ext_to_langs: dict[str, list[str]] = defaultdict(list)
     for lang, entry in lang_to_exts.items():
@@ -275,6 +289,7 @@ matched AS (
     FROM cnts
     WHERE ext_no_dot <> ''
       AND ext_no_dot IN ({in_list})
+      AND occurrences >= {min_occurrences}
 ),
 ranked AS (
     SELECT *,
@@ -634,10 +649,20 @@ def parse_args() -> argparse.Namespace:
                    help="DuckDB memory limit (default: %(default)s).")
     p.add_argument("--threads", type=int, default=8,
                    help="DuckDB thread count (default: %(default)d).")
-    p.add_argument("--skip-resolve", action="store_true",
-                   help="Skip the SWHID resolver pass (numeric IDs only). "
-                        "The resolver hits the multi-GB nodes/ parquets on S3 "
-                        "and is slow over flaky links.")
+    p.add_argument("--min-occurrences", type=int, default=5,
+                   help="Drop blobs whose most-popular-name occurs fewer than "
+                        "this many times in the archive (default: %(default)d). "
+                        "filename_occurrences is roughly 'how many times this "
+                        "program was copied'; a floor of 5 cuts one-off noise "
+                        "without losing rare-but-real PL examples.")
+    p.add_argument("--skip-resolve", action=argparse.BooleanOptionalAction,
+                   default=True,
+                   help="Skip the numeric-ID -> SWHID resolver pass (default: "
+                        "on). The resolver scans multi-GB nodes/ parquets on "
+                        "S3 to materialize content/origin/revrel SWHIDs, but "
+                        "the GitHub qualify pass already produces a real "
+                        "content SWHID, so this is usually wasted work. Pass "
+                        "--no-skip-resolve to opt back in.")
     p.add_argument("--no-qualify", action="store_true",
                    help="Skip the GitHub-side-channel pass that builds qualified "
                         "SWHIDs (origin + anchor commit + path) per row. By "
@@ -645,10 +670,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--qualify-max-candidates", type=int, default=5,
                    help="Per row, max GitHub search candidates to try before "
                         "giving up (default: %(default)d).")
-    p.add_argument("--qualify-skip-swh-verify", action="store_true",
-                   help="Skip the optional one-shot SWH archive HTTP check "
-                        "for each computed content SWHID. SWH's anonymous "
-                        "rate limit is 120 req/h.")
+    p.add_argument("--qualify-skip-swh-verify", action=argparse.BooleanOptionalAction,
+                   default=True,
+                   help="Skip the one-shot SWH archive HTTP check for each "
+                        "computed content SWHID (default: on). SWH's anonymous "
+                        "rate limit is 120 req/h, so verification stalls any "
+                        "batch larger than ~120 rows and adds nothing the "
+                        "local sha1_git recomputation doesn't already prove. "
+                        "Pass --no-qualify-skip-swh-verify to opt back in.")
     p.add_argument("--no-classify", action="store_true",
                    help="Skip the content-based PL classifier "
                         "(`pl_classify.Classifier`). By default, when bytes "
@@ -738,6 +767,7 @@ def main() -> int:
         inventory,
         contents_path=contents_path,
         top_k=args.top_k,
+        min_occurrences=args.min_occurrences,
         sample_percent=args.sample_percent,
     )
 

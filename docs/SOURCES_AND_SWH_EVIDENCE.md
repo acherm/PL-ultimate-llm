@@ -157,7 +157,93 @@ python3 tools/fetch_samples.py
 ls samples/pl/perl/c5ecce*/      # actual bytes + metadata.json
 ```
 
-## 8. Status of this prototype
+## 8. Known limitation: SWH-content match is heuristic, not strict
+
+*Surfaced 2026-05-15 while debugging the `.pgn` sample-request flow.*
+
+**Claim each sample makes:** "the bytes on disk are a real, archived
+program from Software Heritage; the qualified SWHID is a permanent
+citation; the `occurrences_in_swh` field tells you how widespread this
+exact program is across the archive."
+
+**What's actually guaranteed:**
+
+1. The bytes on disk are real (we fetched them from a public origin).
+2. We computed `sha1_git` of those bytes and built `swh:1:cnt:<sha1>`.
+3. For older runs (before the 2026-05-15 patch that flipped the
+   default), `qualify_verified_in_swh=yes` means SWH has a content
+   with that `sha1_git` *somewhere*.
+
+**What's NOT guaranteed:** that the bytes on disk are the same blob
+the parquet row indexed (and therefore that `occurrences_in_swh` refers
+to *this* file rather than some other file with the same filename).
+
+### Why the gap exists
+
+The popular-content-names parquet identifies a content by:
+
+- `id` — SWH's internal numeric node ID (an integer).
+- `filename` + `length` — the most popular filename for that content,
+  and its byte length.
+
+It does NOT carry the `sha1_git` directly; to go from `id` → `sha1_git`
+you have to join against `nodes/node_type=cnt/*.parquet` (~840 GB on
+S3). The current qualify pass (`tools/swh_extension_mining.py:556-561`)
+skips this and instead:
+
+1. Searches GitHub by `filename:<name>`.
+2. Picks the first candidate whose byte-length matches the parquet row.
+3. Computes `sha1_git` from those GitHub bytes.
+4. Calls that the qualified content SWHID.
+
+So the SWHID we emit is the SHA of **the GitHub candidate**, not of
+**the SWH content the parquet row was ranking**. For unique filenames
+they're overwhelmingly the same blob; for common filenames
+(`Makefile`, `__init__.py`, `index.js`) they can diverge silently.
+
+The `qualify_verified_in_swh=yes` HEAD check is too weak to catch this
+divergence: it just confirms "SWH has some content with this sha1_git",
+which is almost always true for popular GitHub files. It doesn't
+verify "this sha1_git equals the sha1_git of the parquet row's
+content_id".
+
+### Impact on the existing 255 samples (as of 2026-05-15)
+
+- All 255 have `fetched_from: "github"`.
+- Bytes are real and (for the recent CSV's 24 ok-qualify rows, all 24)
+  verified to exist as some content in SWH.
+- For each sample we cannot today claim that **the popularity score
+  attached** (`occurrences_in_swh`) describes **the specific bytes on
+  disk**. It describes the parquet row's content; we picked a
+  same-length GitHub file with the same filename and called it a day.
+
+### Resolutions, in order of effort
+
+1. **Re-verify in place** (cheap, partial fix). For each existing
+   sample, do a one-shot SWH `sha1_git:` lookup throttled under the
+   120 req/h anonymous cap. Confirms the bytes are in SWH; still
+   does not confirm bytes match the parquet row's content_id.
+2. **Strict match via nodes parquet** (right fix, expensive on S3).
+   Batch-resolve the `content_id`s we kept to their canonical
+   `sha1_git` from `nodes/node_type=cnt`, and only accept samples
+   where `sha1_git(github_bytes) == sha1_git(content_id)`. Today
+   blocked on the cost of scanning the cnt-nodes parquet over public
+   S3; would become trivial against a local mirror or via Athena.
+3. **SWH-native fetch** (cleanest). Once the bytes are SWH-native
+   (e.g. via `archive.softwareheritage.org/api/1/content/sha1_git:<>/raw/`
+   keyed on the *parquet's* sha1_git, not ours), the question
+   evaporates — there's no GitHub round-trip to misalign.
+
+### Plan for the existing 255
+
+We will either re-verify (option 1) once Athena or a local nodes
+mirror exists, or **delete and regenerate** them through whichever
+SWH-native pipeline lands first. Until then, treat sample
+`occurrences_in_swh` numbers as "the parquet says a content with this
+filename+length has N copies across SWH; the bytes you see are a
+plausible representative, not a provable one".
+
+## 9. Status of this prototype
 
 | Piece | State |
 |---|---|
@@ -167,7 +253,10 @@ ls samples/pl/perl/c5ecce*/      # actual bytes + metadata.json
 | SWH parquet mining (DuckDB query, IN-set shape, sample mode) | ✅ done |
 | Qualified SWHID per row via GitHub side-channel | ✅ done |
 | Sample bytes on disk with metadata.json | ✅ done |
-| Full-scale mining (all 30 shards) | not yet run; ~10 h on laptop, ~1 h on EC2 |
+| `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15) |
+| Strict match: parquet content_id → sha1_git === fetched sha1_git | ⚠️  not enforced (see §8) |
+| Re-verify or regenerate the 255 existing samples | 🔜 deferred to SWH-native pipeline |
+| Full-scale mining (all shards) | tried 2026-05-15 over public S3 anon; killed after 6.8h at unknown % (no progress bar in that run); progress bar now in place for next attempt |
 | ori-nodes resolution for SWH-canonical origin | not implemented |
 | Per-PL evidence cards / static index | not implemented |
 | Evidence-of-absence categorization | scaffold exists, no formal output yet |

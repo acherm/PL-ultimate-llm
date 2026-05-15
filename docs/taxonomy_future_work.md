@@ -71,6 +71,61 @@ building.
 **Related entries to revisit when this lands.** `.pgn` (issue #15),
 `.h` (multi-PL, issue #12), `.toml`, `.yaml`, `.dot`, `.svg`, `.tex`.
 
+## In-repo-only PLs aren't visited by build_pl_taxonomy.py
+
+**Trigger.** Issue #16 added "Portable Game Notation" via the Add-PL form.
+It landed in `pl_list.txt` and `languages/Portable_Game_Notation/meta.json`
+— and PGN appears in `/browse/`. But `build_pl_taxonomy.py` iterates
+`master_inventory` rows (the union of 7 upstream sources), and PGN isn't
+in any of them. So:
+
+- No `pl/portable-game-notation` row is minted in `pl.csv`.
+- The new `repo_meta` ext_claim block (added in `62e7cf90`) can't fire
+  for PGN, even though `meta.json` lists `extensions: [".pgn"]`.
+- The accepted ext-review row (`.pgn → pl/portable-game-notation`) can't
+  promote because the target `pl_id` doesn't exist in `pl.csv`.
+
+PGN is in the catalog (browse + per-PL page), but its extension
+attribution is half-wired.
+
+**Why it matters.** Every PL added through the web form hits this: the
+data lives in `languages/<Name>/`, never reaches the taxonomy tables,
+treated as a "name only" entry. Search works; per-ext pages don't.
+
+**Sketch of the fix.** After the outer `for row in master:` loop in
+`build_pl_taxonomy.build()`, walk `LANGUAGES_DIR` for any `meta.json`
+whose canonical name isn't already a `pl_rows` entry. For each, mint a
+row with `pl_id = slugify(name)` (same `used_ids` collision handling),
+`canonical_name = name`, `in_repo = True`, all other source flags
+False, and aliases/extensions read from `meta.json`. Then re-run the
+`# 4. In-repo meta.json` ext_claim block for these. ~30 lines.
+
+## Add-PL ↔ ext-review reconciliation
+
+**Trigger.** PGN was simultaneously proposed via:
+- Issue #15 (ext-review, `pl/new:pgn`) — would mint `pl/pgn`
+- Issue #16 (Add-PL form) — minted `pl/portable-game-notation`
+
+Two different `pl_id`s for the same conceptual language. Resolved by
+hand: edited #15's body to point at `pl/portable-game-notation`, the
+reconciliation pass dropped the orphan row.
+
+**Why it matters.** A submitter who fills both forms (or two
+submitters racing on the same PL) creates duplicate identity. The
+catalog ends up with conflicting `pl_id`s that don't auto-merge.
+
+**Sketch of the fix.** When `tools/process_pl_addition.py` runs, it
+should (after writing `meta.json`) scan open `ext-review` issues for
+any `pl/new:<x>` labels where `<x>` matches the new PL's name
+(case-insensitive) or any alias. For each match, edit the issue's
+body via `gh issue edit` to swap `pl/new:<x>` → `pl/<canonical_pl_id>`.
+The curator's reconciliation pass absorbs them on the next ingest. Add
+a note to the new Add-PL PR's body listing the re-pointed issues so
+the maintainer can audit the link.
+
+**Decision deferred until.** Multiple PLs come in via the web form per
+month. Right now this is a manual one-shot fix.
+
 ## Other deferred topics
 
 (Empty — append future-work notes here as they come up.)

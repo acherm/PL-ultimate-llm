@@ -53,9 +53,24 @@ import argparse
 import csv
 import json
 import re
+import subprocess
 import sys
 from collections import defaultdict
 from pathlib import Path
+
+
+def _gh_owner_repo() -> str | None:
+    """Best-effort: resolve owner/name via `gh repo view`. Used to build
+    issue URLs as evidence on manual_add ext claims."""
+    try:
+        r = subprocess.run(
+            ["gh", "repo", "view", "--json", "owner,name"],
+            check=True, text=True, capture_output=True, timeout=5,
+        )
+        data = json.loads(r.stdout)
+        return f"{data['owner']['login']}/{data['name']}"
+    except Exception:
+        return None
 
 ROOT = Path(__file__).resolve().parents[1]
 # Pick the most-augmented master CSV available (the master_inventory pipeline
@@ -397,10 +412,34 @@ def load_repo_meta_full() -> dict[str, dict]:
 # Build
 # ---------------------------------------------------------------------------
 
+def _repo_meta_source_and_evidence(canonical: str,
+                                   meta: dict | None,
+                                   owner_repo: str | None) -> tuple[str, str]:
+    """Return (source, evidence) for a repo_meta ext_claim row.
+
+    When `meta.json` carries `created_via_issue: <N>` AND we know the
+    owner/repo, source becomes `manual_add:#<N>` and evidence is the GitHub
+    issue URL — both threaded through to the per-PL Extensions table so a
+    reviewer can click straight to the originating submission.
+
+    Falls back to plain `repo_meta` (with the meta.json path) for PLs
+    added by the agentic /loop or any other path that doesn't record an
+    issue number.
+    """
+    issue = (meta or {}).get("created_via_issue")
+    if issue and owner_repo:
+        return (
+            f"manual_add:#{issue}",
+            f"https://github.com/{owner_repo}/issues/{issue}",
+        )
+    return ("repo_meta", f"languages/{canonical}/meta.json")
+
+
 def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
           repo_aliases: dict[str, list[tuple[str, str]]],
           repo_meta_extensions: dict[str, list[str]] | None = None,
-          repo_meta_full: dict[str, dict] | None = None):
+          repo_meta_full: dict[str, dict] | None = None,
+          owner_repo: str | None = None):
     pl_rows = []
     alias_rows = []
     ext_claim_rows = []
@@ -540,6 +579,10 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
         if repo_meta_extensions:
             repo_exts = repo_meta_extensions.get(canonical, [])
             seen_in_repo: set[str] = set()
+            meta = (repo_meta_full or {}).get(canonical)
+            src_str, evidence_str = _repo_meta_source_and_evidence(
+                canonical, meta, owner_repo,
+            )
             for raw in repo_exts:
                 ext = _norm_ext(str(raw))
                 if not ext or ext in seen_in_repo:
@@ -549,10 +592,10 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
                 ext_claim_rows.append({
                     "pl_id": pl_id,
                     "ext": ext,
-                    "source": "repo_meta",
+                    "source": src_str,
                     "strength": strength,
                     "source_key": canonical,
-                    "evidence": f"languages/{canonical}/meta.json",
+                    "evidence": evidence_str,
                 })
 
     # 5. In-repo-only PLs: any meta.json whose canonical name didn't match
@@ -616,6 +659,9 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
 
         # Extensions → repo_meta ext_claim rows. `extensions[0]` → primary.
         seen_in_repo: set[str] = set()
+        src_str, evidence_str = _repo_meta_source_and_evidence(
+            canonical, meta, owner_repo,
+        )
         for raw in (repo_meta_extensions.get(canonical) or []):
             ext = _norm_ext(str(raw))
             if not ext or ext in seen_in_repo:
@@ -625,10 +671,10 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             ext_claim_rows.append({
                 "pl_id": pl_id,
                 "ext": ext,
-                "source": "repo_meta",
+                "source": src_str,
                 "strength": strength,
                 "source_key": canonical,
-                "evidence": f"languages/{canonical}/meta.json",
+                "evidence": evidence_str,
             })
 
     return pl_rows, alias_rows, ext_claim_rows
@@ -723,6 +769,7 @@ def main() -> int:
         repo_aliases=repo_aliases,
         repo_meta_extensions=repo_meta_extensions,
         repo_meta_full=repo_meta_full,
+        owner_repo=_gh_owner_repo(),
     )
 
     # Promote accepted/new manual labels into ext_claim. Each row gets
@@ -737,9 +784,13 @@ def main() -> int:
     # same PL, or different PL claiming the same ext).
     if manual_labels:
         valid_pl_ids = {p["pl_id"] for p in pl_rows}
+        # In-repo origin can be either `repo_meta` (legacy / agentic /loop) or
+        # `manual_add:#<N>` (issue-provenance-enriched via the Add-PL form).
+        # Both signal "the PL's own meta.json already claims this extension."
         repo_meta_edges = {
             (c["pl_id"], c["ext"]) for c in ext_claim_rows
             if c.get("source") == "repo_meta"
+            or c.get("source", "").startswith("manual_add:")
         }
         promoted = skipped = dedup_skipped = 0
         for ml in manual_labels:

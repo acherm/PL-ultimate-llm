@@ -3209,9 +3209,22 @@ def render_language_pages(
                         f"<td title='Total file occurrences with this ext in the SWH archive'><span class='muted'>{_fmt_occ(pop['total_occ'])} files</span></td>"
                         if pop else "<td class='muted'>—</td>"
                     )
+                    # If evidence is a URL, hyperlink the source label so a
+                    # reader can click straight to it — useful for sources
+                    # like `manual_add:#16` (→ GitHub issue) and `linguist`
+                    # (→ languages.yml).
+                    if evidence.startswith("http://") or evidence.startswith("https://"):
+                        src_cell = (
+                            f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
+                            f"title='{safe(evidence)}'>{safe(src)}</a>"
+                        )
+                    else:
+                        src_cell = (
+                            f"<span title='{safe(evidence)}'>{safe(src)}</span>"
+                        )
                     rows_html.append(
                         f"<tr><td><a href='{ext_link}'><code>{safe(ext)}</code></a></td>"
-                        f"<td>{safe(src)}</td>"
+                        f"<td>{src_cell}</td>"
                         f"<td><span class='pill {badge_cls}'>{safe(strength)}</span></td>"
                         f"{pop_cell}</tr>"
                     )

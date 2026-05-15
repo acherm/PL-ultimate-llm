@@ -106,6 +106,13 @@ class TaxonomyEnrichment:
     # Provenance: GitHub issue number for PLs added via /contribute/add-pl/.
     # Empty string for PLs derived from upstream sources or LLM /loop turns.
     created_via_issue: str = ""
+    # Wikidata / Wikipedia overlay (added by tools/build_pl_taxonomy.py
+    # Phase B). Empty string when no matching Wikidata item was found.
+    # The per-PL wikipedia_url unblocks the "Wikipedia" source pill on
+    # /l/<slug>/ pages, which historically pointed at the
+    # List_of_programming_languages roster for every PL.
+    wikidata_qid: str = ""
+    wikipedia_url: str = ""
 
 
 def _read_csv(path: Path) -> list[dict]:
@@ -230,6 +237,55 @@ def _normalize_name_with_roman(s: str) -> str:
     tokens = re.split(r"[^a-z0-9]+", s)
     tokens = [_NORM_ROMAN.get(t, t) for t in tokens]
     return "".join(tokens)
+
+
+_LEGACY_WIKIPEDIA_TITLES_CACHE: dict[str, str] | None = None
+
+
+def load_legacy_wikipedia_titles() -> dict[str, str]:
+    """Return {normalized canonical name -> Wikipedia article title}.
+
+    Source: data/raw/wikipedia_lang_titles.json, the 177-entry list
+    scraped from `List_of_programming_languages` by master_inventory.py.
+    Used as a fallback wikipedia_url for PLs that are flagged
+    in_wikipedia=yes but whose Wikidata overlay (Phase B) didn't surface
+    an enwiki sitelink — typically because Wikidata's entry for that PL
+    lacks P1195 (file extension) and so was outside the Phase B match
+    scope. With this fallback, the Wikipedia source pill on /l/<slug>/
+    points at the per-PL article for every PL in the legacy list, not
+    just the Wikidata-overlap subset.
+    """
+    global _LEGACY_WIKIPEDIA_TITLES_CACHE
+    if _LEGACY_WIKIPEDIA_TITLES_CACHE is not None:
+        return _LEGACY_WIKIPEDIA_TITLES_CACHE
+    path = ROOT / "data" / "raw" / "wikipedia_lang_titles.json"
+    out: dict[str, str] = {}
+    if path.exists():
+        try:
+            titles = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            titles = []
+        for title in titles:
+            if not isinstance(title, str):
+                continue
+            for key in (_normalize_name(title), _normalize_name_with_roman(title)):
+                if key:
+                    out.setdefault(key, title)
+    _LEGACY_WIKIPEDIA_TITLES_CACHE = out
+    return out
+
+
+def _legacy_wikipedia_url_for(canonical_name: str) -> str:
+    """Return the per-PL Wikipedia URL via the legacy title list, or empty."""
+    if not canonical_name:
+        return ""
+    titles = load_legacy_wikipedia_titles()
+    for key in (_normalize_name(canonical_name),
+                _normalize_name_with_roman(canonical_name)):
+        if key and key in titles:
+            title = titles[key]
+            return "https://en.wikipedia.org/wiki/" + title.replace(" ", "_")
+    return ""
 
 
 def load_pl_taxonomy() -> tuple[dict[str, dict], dict[str, str]]:
@@ -555,6 +611,8 @@ def synthesize_taxonomy_only_languages(
             heuristics_for_my_exts=applicable_heur,
             swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -s.occurrences_in_swh),
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
+            wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
+            wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
         )
     return new_langs, new_enrichments
 
@@ -599,6 +657,8 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             heuristics_for_my_exts=applicable_heur,
             swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -s.occurrences_in_swh),
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
+            wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
+            wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
         )
     return out
 
@@ -3156,7 +3216,33 @@ def render_language_pages(
             )
         taxonomy_pill_count = 0
         if enr is not None:
+            # For "wikipedia" specifically: prefer the per-PL Wikipedia URL
+            # from pl.csv:wikipedia_url (populated by build_pl_taxonomy.py's
+            # Wikidata sitelink overlay) over the roster page. Fall back to
+            # the legacy wikipedia_lang_titles.json title list for PLs that
+            # don't have a Wikidata match but ARE in the 177-entry roster.
+            # Final fallback is the roster page when we have nothing better.
+            wikipedia_url = enr.wikipedia_url or ""
+            if not wikipedia_url and enr.in_sources.get("wikipedia"):
+                wikipedia_url = _legacy_wikipedia_url_for(enr.canonical_name)
+            wikipedia_present = enr.in_sources.get("wikipedia") or bool(wikipedia_url)
             for src in _TAXONOMY_SOURCES:
+                if src == "wikipedia":
+                    if not wikipedia_present:
+                        continue
+                    if wikipedia_url:
+                        pills.append(
+                            f"<a class='pill src-wikipedia' href='{safe(wikipedia_url)}' "
+                            f"target='_blank' rel='noopener' title='Wikipedia article'>"
+                            f"Wikipedia</a>"
+                        )
+                    else:
+                        pills.append(
+                            f"<a class='pill src-wikipedia' href='{rel}source/wikipedia/index.html'>"
+                            f"Wikipedia</a>"
+                        )
+                    taxonomy_pill_count += 1
+                    continue
                 if enr.in_sources.get(src):
                     pills.append(
                         f"<a class='pill src-{src}' href='{rel}source/{src}/index.html'>"

@@ -239,6 +239,48 @@ def _normalize_name_with_roman(s: str) -> str:
     return "".join(tokens)
 
 
+_EXTERNAL_EXTENSION_INDEX_CACHE: dict[str, list[dict]] | None = None
+
+
+def load_external_extension_index() -> dict[str, list[dict]]:
+    """Return {ext: [row, row, ...]} from data/derived/external_extension_index.csv.
+
+    The CSV is produced by tools/build_external_extension_index.py from the
+    pinned Wikidata + Wikipedia infobox snapshots, excluding items already
+    in the PL taxonomy. Each row is one (extension, Wikidata item) pair —
+    polysemy is preserved (e.g. .xml has ~118 rows). The site uses this to
+    show "what is this extension, per Wikidata?" on /ext/<slug>/ pages,
+    feeding the labelling form's reviewer with friendly_name +
+    reference_url + suggested controlled-vocab label hints.
+
+    Sorted: rows with a Wikipedia URL first (more authoritative), then by
+    label alphabetical. The downstream renderer caps display to keep
+    polysemous extensions tractable.
+    """
+    global _EXTERNAL_EXTENSION_INDEX_CACHE
+    if _EXTERNAL_EXTENSION_INDEX_CACHE is not None:
+        return _EXTERNAL_EXTENSION_INDEX_CACHE
+    out: dict[str, list[dict]] = {}
+    path = ROOT / "data" / "derived" / "external_extension_index.csv"
+    if path.exists():
+        for r in _read_csv(path):
+            ext_raw = (r.get("ext") or "").strip().lower()
+            if not ext_raw:
+                continue
+            # CSV stores ext without leading dot; the rest of the site keys
+            # extensions with the dot, so normalise here.
+            ext_key = "." + ext_raw
+            out.setdefault(ext_key, []).append(r)
+    # Sort each ext's rows: those with a Wikipedia URL first, then alpha label.
+    for rows in out.values():
+        rows.sort(key=lambda x: (
+            0 if x.get("wikipedia_url") else 1,
+            (x.get("label") or "").lower(),
+        ))
+    _EXTERNAL_EXTENSION_INDEX_CACHE = out
+    return out
+
+
 _LEGACY_WIKIPEDIA_TITLES_CACHE: dict[str, str] | None = None
 
 
@@ -1957,13 +1999,21 @@ def render_per_extension_pages(
     # Existing manual labels (from extension_labels.csv).
     existing_labels = _load_extension_labels()
 
+    # External (non-PL) extension index — Wikidata + Wikipedia infobox.
+    external_ext = load_external_extension_index()
+    EXTERNAL_DISPLAY_LIMIT = 20
+
     # Union of every extension we know about (taxonomy summary + heuristics + samples
-    # + top-N most-popular from SWH that aren't otherwise covered).
+    # + external Wikidata index + top-N most-popular from SWH that aren't
+    # otherwise covered). Adding the external index keys ensures that
+    # Wikipedia-only extensions like .mpga (which Wikidata doesn't model
+    # but the Wikipedia MP3 infobox does carry) get their own /ext/ page.
     all_exts: set[str] = set()
     for r in ext_summary_rows:
         all_exts.add(r["ext"])
     all_exts.update(heur_by_ext.keys())
     all_exts.update(swh_by_ext.keys())
+    all_exts.update(external_ext.keys())
     # Include top SWH-popular extensions even if our taxonomy doesn't claim them.
     # Cap at 8000 so per-extension pages stay manageable (2.96M total in SWH-MSR-ARV's
     # CSV; most have <100 occurrences total or are non-PL artifacts).
@@ -2089,6 +2139,102 @@ def render_per_extension_pages(
           <table class='kv-table'>
             <thead><tr><th>Language</th><th>Source</th><th>Strength</th></tr></thead>
             <tbody>{''.join(claim_rows_html)}</tbody>
+          </table>
+        </section>"""
+
+        # ----- Non-PL Wikidata/Wikipedia claimants (Phase C external index) -----
+        # File formats, image formats, audio codecs, etc. that claim this
+        # extension per Wikidata's P1195 — anything that's not a programming
+        # language. Designed to help labelling-form reviewers identify e.g.
+        # `.mp3` as "MP3 audio" without leaving the page.
+        external_rows = external_ext.get(ext, [])
+        external_section = ""
+        if external_rows:
+            shown = external_rows[:EXTERNAL_DISPLAY_LIMIT]
+            n_more = len(external_rows) - len(shown)
+            ext_html_rows = []
+            for r in shown:
+                qid = r.get("qid") or ""
+                label = r.get("label") or qid
+                desc = r.get("description") or ""
+                wd_url = r.get("wikidata_url") or ""
+                wp_url = r.get("wikipedia_url") or ""
+                wp_note = r.get("wikipedia_note") or ""
+                source_tag = r.get("source") or ""
+                rank = r.get("wikidata_rank") or ""
+                mime = r.get("mime_types") or ""
+                instance_of = r.get("instance_of_labels") or ""
+                suggested = r.get("suggested_label") or ""
+                # Show only the first two instance_of labels — enough for
+                # the reviewer to recognise the class, full list is in the CSV.
+                instance_of_short = "; ".join(
+                    [t.strip() for t in instance_of.split(";") if t.strip()][:2]
+                )
+                # Label cell: link to Wikipedia if we have it, else Wikidata.
+                primary_link = wp_url or wd_url
+                if primary_link:
+                    label_html = (
+                        f"<a href='{safe(primary_link)}' target='_blank' "
+                        f"rel='noopener'>{safe(label)}</a>"
+                    )
+                else:
+                    label_html = safe(label)
+                # Secondary link to Wikidata (always present).
+                if wd_url:
+                    label_html += (
+                        f" <a class='muted' href='{safe(wd_url)}' "
+                        f"target='_blank' rel='noopener' "
+                        f"title='Wikidata item'>{safe(qid)}</a>"
+                    )
+                # Notes: combine wikipedia_note + rank=deprecated marker + source tag
+                note_bits = []
+                if wp_note:
+                    note_bits.append(f"<em>{safe(wp_note)}</em>")
+                if rank == "deprecated":
+                    note_bits.append("<span class='pill strength-deprecated'>deprecated</span>")
+                if source_tag == "wikipedia":
+                    note_bits.append(
+                        "<span class='muted' title='From Wikipedia infobox, "
+                        "not Wikidata structured data'>wp-only</span>"
+                    )
+                notes_html = " ".join(note_bits) or "&mdash;"
+                suggested_cell = (
+                    f"<span class='pill'>{safe(suggested)}</span>" if suggested else "&mdash;"
+                )
+                ext_html_rows.append(
+                    f"<tr>"
+                    f"<td>{label_html}"
+                    + (f"<div class='muted' style='font-size:12px;'>{safe(desc)}</div>" if desc else "")
+                    + f"</td>"
+                    f"<td><span class='muted'>{safe(instance_of_short)}</span></td>"
+                    f"<td>{suggested_cell}</td>"
+                    f"<td><code class='muted'>{safe(mime) or '&mdash;'}</code></td>"
+                    f"<td>{notes_html}</td>"
+                    f"</tr>"
+                )
+            more_row = ""
+            if n_more > 0:
+                more_row = (
+                    f"<tr><td colspan='5' class='muted' style='text-align:center;'>"
+                    f"… and {n_more} more in "
+                    f"<code>data/derived/external_extension_index.csv</code>"
+                    f"</td></tr>"
+                )
+            external_section = f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Wikidata says… ({len(external_rows)})</h2>
+          <div class='muted' style='margin-bottom:8px;'>
+            File formats, image formats, audio codecs and other non-PL
+            entities that claim <code>{safe(ext)}</code> on Wikidata
+            (property <code>P1195</code>) or in the Wikipedia infobox.
+            Independent from the language taxonomy above &mdash;
+            useful when labelling the extension as
+            <code>binary:*</code> / <code>data:*</code> rather than a PL.
+            Source: <code>data/derived/external_extension_index.csv</code>.
+          </div>
+          <table class='kv-table'>
+            <thead><tr><th>Format</th><th>Class (Wikidata <code>P31</code>)</th><th>Suggested label</th><th>MIME</th><th>Notes</th></tr></thead>
+            <tbody>{''.join(ext_html_rows)}{more_row}</tbody>
           </table>
         </section>"""
         heur_section = ""
@@ -2533,6 +2679,7 @@ def render_per_extension_pages(
         </section>
         {swh_pop_html}
         {claimants_section}
+        {external_section}
         {heur_section}
         {swh_section}
         {label_section}
@@ -3249,6 +3396,21 @@ def render_language_pages(
                         f"{safe(src.capitalize())}</a>"
                     )
                     taxonomy_pill_count += 1
+            # Wikidata pill: stable cross-system identifier for the PL,
+            # populated by Phase B of the taxonomy overlay. Render alongside
+            # the per-PL Wikipedia article link; the two complement each
+            # other (Wikipedia = prose, Wikidata = structured data + QID).
+            # Not part of _TAXONOMY_SOURCES (no /source/wikidata/ roster
+            # page — this is a pure external link).
+            if enr.wikidata_qid:
+                wikidata_url = f"https://www.wikidata.org/wiki/{enr.wikidata_qid}"
+                pills.append(
+                    f"<a class='pill src-wikidata' href='{safe(wikidata_url)}' "
+                    f"target='_blank' rel='noopener' "
+                    f"title='Wikidata item — structured cross-system identifier'>"
+                    f"Wikidata · {safe(enr.wikidata_qid)}</a>"
+                )
+                taxonomy_pill_count += 1
         n_present = taxonomy_pill_count + (1 if lang.programs else 0)
         pl_id_line = (
             f"<div class='muted' style='margin-bottom:8px;'>{n_present} source{'s' if n_present != 1 else ''} · pl_id: <code>{safe(enr.pl_id)}</code></div>"

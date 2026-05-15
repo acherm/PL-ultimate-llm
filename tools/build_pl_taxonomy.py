@@ -279,25 +279,33 @@ def build_heuristic_rows(heur: dict, linguist_to_pl_id: dict[str, str]) -> list[
 
 
 def load_accepted_manual_labels() -> list[dict]:
-    """Load accepted manual extension labels from `data/derived/extension_labels.csv`.
+    """Load promotable manual extension labels from `data/derived/extension_labels.csv`.
 
-    Returns only rows where `label` starts with `pl/<id>` AND
-    `curator_status` is `accepted`. These get promoted to `ext_claim.csv`
-    with `source="manual_review:<annotator>"` and `strength="proposed"`.
+    Returns rows where `label` starts with `pl/<id>` (existing PL only — not
+    `pl/new:`, `pl/dialect:`, or `pl/family:`) and `curator_status` is one of:
 
-    Rows with `curator_status` other than `accepted` (still `new`, `needs-info`,
-    `rejected`) are NOT promoted — they only show up on the curator triage
-    view at `/review/curator/`.
+    - `accepted` → promoted with `strength="proposed"` (maintainer-confirmed).
+    - `new`      → also promoted with `strength="proposed"`. A submitted-but-
+      -not-yet-reviewed label is still an attribution signal — it flips the
+      ext from `unattributed` to `weakly-attributed` on the per-ext page.
+      The strength stays `proposed` (vs accepted's `primary`-on-promote) so
+      maintainers can tell them apart. Once accepted, the row is replaced
+      (same key) with the upgraded strength.
+
+    Rows with `curator_status` in {`rejected`, `needs-info`} are NOT
+    promoted — they only show up on the curator triage view at
+    `/review/curator/`.
     """
     path = ROOT / "data" / "derived" / "extension_labels.csv"
     if not path.exists():
         return []
     out: list[dict] = []
+    PROMOTABLE = {"accepted", "new"}
     with path.open(encoding="utf-8") as f:
         for r in csv.DictReader(f):
             label = (r.get("label") or "").strip()
             status = (r.get("curator_status") or "").strip()
-            if status != "accepted":
+            if status not in PROMOTABLE:
                 continue
             if not (label.startswith("pl/") and not label.startswith("pl/new:")
                     and not label.startswith("pl/dialect:")
@@ -360,13 +368,39 @@ def load_repo_meta_extensions() -> dict[str, list[str]]:
     return out
 
 
+def load_repo_meta_full() -> dict[str, dict]:
+    """Return the full meta.json contents keyed by canonical name.
+
+    Used to mint pl_rows for in-repo-only PLs (those added via
+    /contribute/add-pl/ that aren't yet in any upstream source). Carries
+    aliases, evidence_url, extensions, and created_via_issue.
+    """
+    out: dict[str, dict] = {}
+    if not LANGUAGES_DIR.exists():
+        return out
+    for d in LANGUAGES_DIR.iterdir():
+        if not d.is_dir():
+            continue
+        meta = d / "meta.json"
+        if not meta.exists():
+            continue
+        try:
+            data = json.loads(meta.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        canonical = (data.get("name") or d.name).strip()
+        out[canonical] = data
+    return out
+
+
 # ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
 
 def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
           repo_aliases: dict[str, list[tuple[str, str]]],
-          repo_meta_extensions: dict[str, list[str]] | None = None):
+          repo_meta_extensions: dict[str, list[str]] | None = None,
+          repo_meta_full: dict[str, dict] | None = None):
     pl_rows = []
     alias_rows = []
     ext_claim_rows = []
@@ -405,6 +439,8 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "designed_by": row.get("designed_by", ""),
             "types": row.get("types", ""),
             **{k: ("yes" if v else "no") for k, v in flags.items()},
+            "in_manual_add": "no",
+            "created_via_issue": "",
         })
 
         # Aliases (from Pygments + Hyperpolyglot + Rosetta Code + repo meta)
@@ -519,6 +555,82 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
                     "evidence": f"languages/{canonical}/meta.json",
                 })
 
+    # 5. In-repo-only PLs: any meta.json whose canonical name didn't match
+    # an upstream-derived row. These are typically Add-PL form submissions
+    # for PLs not yet in PLDB/Linguist/Pygments/etc. We mint a pl_row with
+    # `in_manual_add: yes` and emit repo_meta ext_claim rows from the
+    # extensions list. This is what makes the new PL visible in
+    # `/source/manual_add/`, gives the extensions a real claim target, and
+    # lets the manual-review promotion step resolve `pl/<id>` against an
+    # existing pl_id.
+    existing_canonicals = {p["canonical_name"].lower() for p in pl_rows}
+    repo_meta_full = repo_meta_full or {}
+    repo_meta_extensions = repo_meta_extensions or {}
+    in_repo_only_canonicals = sorted(
+        c for c in repo_meta_full.keys()
+        if c.lower() not in existing_canonicals
+    )
+    for canonical in in_repo_only_canonicals:
+        meta = repo_meta_full[canonical]
+        pl_id = make_pl_id(canonical, used_ids)
+        evidence_url = (meta.get("evidence_url") or "").strip()
+        created_via = meta.get("created_via_issue")
+        created_via_str = str(created_via) if created_via not in (None, "") else ""
+        pl_rows.append({
+            "pl_id": pl_id,
+            "canonical_name": canonical,
+            "lang_id_master": "",
+            "linguist_key": "",
+            "pygments_name": "",
+            "hyperpolyglot_name": "",
+            "rosettacode_name": "",
+            "source_flags": "manual_add",
+            "source_count": "1",
+            "first_appeared": "",
+            "homepage": "",
+            "evidence_urls": evidence_url,
+            "paradigms": "",
+            "typing": "",
+            "designed_by": "",
+            "types": "",
+            "in_pldb": "no",
+            "in_linguist": "no",
+            "in_pygments": "no",
+            "in_wikipedia": "no",
+            "in_esolang": "no",
+            "in_hyperpolyglot": "no",
+            "in_rosettacode": "no",
+            "in_manual_add": "yes",
+            "created_via_issue": created_via_str,
+        })
+        # Aliases from meta.json + any extra `repo_aliases` entry under the
+        # same canonical (the alias loader covers the latter).
+        for raw_alias in (meta.get("aliases") or []):
+            a = str(raw_alias).strip()
+            if a and a.lower() != canonical.lower():
+                alias_rows.append({
+                    "pl_id": pl_id, "alias": a, "source": "repo",
+                })
+        for a, src in (repo_aliases.get(canonical) or []):
+            alias_rows.append({"pl_id": pl_id, "alias": a, "source": src})
+
+        # Extensions → repo_meta ext_claim rows. `extensions[0]` → primary.
+        seen_in_repo: set[str] = set()
+        for raw in (repo_meta_extensions.get(canonical) or []):
+            ext = _norm_ext(str(raw))
+            if not ext or ext in seen_in_repo:
+                continue
+            seen_in_repo.add(ext)
+            strength = "primary" if len(seen_in_repo) == 1 else "secondary"
+            ext_claim_rows.append({
+                "pl_id": pl_id,
+                "ext": ext,
+                "source": "repo_meta",
+                "strength": strength,
+                "source_key": canonical,
+                "evidence": f"languages/{canonical}/meta.json",
+            })
+
     return pl_rows, alias_rows, ext_claim_rows
 
 
@@ -590,6 +702,7 @@ def main() -> int:
     pygments_lex = load_pygments()
     repo_aliases = load_repo_meta_aliases()
     repo_meta_extensions = load_repo_meta_extensions()
+    repo_meta_full = load_repo_meta_full()
     heuristics = load_linguist_heuristics()
     manual_labels = load_accepted_manual_labels()
     print(f"  manual review (accepted): {len(manual_labels)} ext-label submissions to promote")
@@ -609,6 +722,7 @@ def main() -> int:
         pygments_lex=pygments_lex,
         repo_aliases=repo_aliases,
         repo_meta_extensions=repo_meta_extensions,
+        repo_meta_full=repo_meta_full,
     )
 
     # Promote accepted manual labels into ext_claim. Each row gets
@@ -662,6 +776,7 @@ def main() -> int:
         "paradigms", "typing", "designed_by", "types",
         "in_pldb", "in_linguist", "in_pygments", "in_wikipedia",
         "in_esolang", "in_hyperpolyglot", "in_rosettacode",
+        "in_manual_add", "created_via_issue",
     ])
     write_csv(out_dir / "pl_alias.csv", alias_rows, ["pl_id", "alias", "source"])
     write_csv(out_dir / "ext_claim.csv", ext_claim_rows, [

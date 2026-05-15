@@ -74,7 +74,8 @@ TAXONOMY_DIR = ROOT / "data" / "derived" / "pl_taxonomy"
 SAMPLES_DIR = ROOT / "samples"
 SWH_EXT_POPULARITY_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv"
 _TAXONOMY_SOURCES = ("pldb", "linguist", "pygments", "wikipedia",
-                     "esolang", "hyperpolyglot", "rosettacode")
+                     "esolang", "hyperpolyglot", "rosettacode",
+                     "manual_add")
 
 
 @dataclass(frozen=True)
@@ -102,6 +103,9 @@ class TaxonomyEnrichment:
     extension_claims: list[tuple[str, str, str, str]]  # (ext, source, strength, evidence)
     heuristics_for_my_exts: list[dict]  # heuristic rows touching one of my exts
     swh_samples: list[SwhSample]
+    # Provenance: GitHub issue number for PLs added via /contribute/add-pl/.
+    # Empty string for PLs derived from upstream sources or LLM /loop turns.
+    created_via_issue: str = ""
 
 
 def _read_csv(path: Path) -> list[dict]:
@@ -550,6 +554,7 @@ def synthesize_taxonomy_only_languages(
             extension_claims=my_claims,
             heuristics_for_my_exts=applicable_heur,
             swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -s.occurrences_in_swh),
+            created_via_issue=str(row.get("created_via_issue") or "").strip(),
         )
     return new_langs, new_enrichments
 
@@ -593,6 +598,7 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             extension_claims=my_claims,
             heuristics_for_my_exts=applicable_heur,
             swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -s.occurrences_in_swh),
+            created_via_issue=str(row.get("created_via_issue") or "").strip(),
         )
     return out
 
@@ -3164,11 +3170,26 @@ def render_language_pages(
             f"<div class='muted' style='margin-bottom:8px;'>{n_present} source{'s' if n_present != 1 else ''} · "
             f"not in taxonomy (canonical name didn't match any upstream)</div>"
         )
+        # Provenance for PLs added via the /contribute/add-pl/ web form:
+        # show "Submitted via #N" with a link to the originating GitHub issue.
+        # This is what makes /l/<pl>/ pages traceable back to crowdsource
+        # submissions, separately from the LLM /loop turn provenance.
+        provenance_line = ""
+        if enr is not None and enr.created_via_issue and github_owner_repo:
+            issue_url = f"https://github.com/{github_owner_repo}/issues/{enr.created_via_issue}"
+            provenance_line = (
+                f"<div class='muted' style='margin-bottom:8px;'>"
+                f"Submitted via <a href='{safe(issue_url)}' target='_blank' rel='noopener'>"
+                f"#{safe(enr.created_via_issue)}</a> "
+                f"on the <a href='{rel}contribute/add-pl/index.html'>Add-a-PL form</a>."
+                f"</div>"
+            )
         if pills:
             cross_source_html = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Sources mentioning this language</h2>
           {pl_id_line}
+          {provenance_line}
           <div style='display:flex; flex-wrap:wrap; gap:8px;'>{''.join(pills)}</div>
         </section>
         """

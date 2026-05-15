@@ -223,6 +223,7 @@ def main() -> int:
         "aliases": parsed["aliases"],
         "evidence_url": parsed["evidence_url"],
         "added_at": now,
+        "created_via_issue": args.issue,
     }
     if parsed["extensions"]:
         # Order matters: first ext is treated as primary by

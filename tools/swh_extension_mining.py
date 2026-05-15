@@ -806,7 +806,6 @@ def main() -> int:
             # `enable_progress_bar` prints the bar to stderr during long scans.
             # `progress_bar_time=0` shows it immediately (default is 2000ms).
             con.execute("SET enable_progress_bar=true;")
-            con.execute("SET enable_print_progress_bar=true;")
             con.execute("SET progress_bar_time=0;")
 
     # Shard sampling: list every shard under the contents glob and pick N.

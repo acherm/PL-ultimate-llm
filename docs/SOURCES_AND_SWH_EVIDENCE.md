@@ -217,22 +217,31 @@ content_id".
   disk**. It describes the parquet row's content; we picked a
   same-length GitHub file with the same filename and called it a day.
 
-### Resolutions, in order of effort
+### Resolutions, in order of effort and strength of guarantee
 
-1. **Re-verify in place** (cheap, partial fix). For each existing
-   sample, do a one-shot SWH `sha1_git:` lookup throttled under the
-   120 req/h anonymous cap. Confirms the bytes are in SWH; still
-   does not confirm bytes match the parquet row's content_id.
-2. **Strict match via nodes parquet** (right fix, expensive on S3).
-   Batch-resolve the `content_id`s we kept to their canonical
-   `sha1_git` from `nodes/node_type=cnt`, and only accept samples
-   where `sha1_git(github_bytes) == sha1_git(content_id)`. Today
-   blocked on the cost of scanning the cnt-nodes parquet over public
-   S3; would become trivial against a local mirror or via Athena.
-3. **SWH-native fetch** (cleanest). Once the bytes are SWH-native
-   (e.g. via `archive.softwareheritage.org/api/1/content/sha1_git:<>/raw/`
-   keyed on the *parquet's* sha1_git, not ours), the question
-   evaporates — there's no GitHub round-trip to misalign.
+| Approach | Time for 255 samples | Strength of guarantee |
+|---|---:|---|
+| Anon sequential HEAD `/api/1/content/sha1_git:<>` | ~3 h (120 req/h cap) | weak: "bytes exist in SWH" |
+| Authenticated sequential HEAD | ~15 min (cap raised) | same weak |
+| **Bulk POST `/api/1/known/`** (batches of 100 SWHIDs) | **~10 seconds** (3 requests total) | same weak |
+| Nodes-parquet join, content_id → sha1_git, via Athena | minutes | **strict** — proves parquet's content_id has this sha1_git |
+| Nodes-parquet join over public S3 anon | hours+, may fail | strict but infrastructure-bound |
+| SWH-native fetch keyed on parquet sha1_git | — | strongest; the question evaporates |
+
+The bulk endpoint accepts a JSON array of SWHIDs (one POST verifies up
+to ~1000), returns `{swhid: {known: bool}}`, and counts as a single
+call against the 120 req/h cap. That makes the weak "bytes exist in
+SWH" check effectively free, even anonymously. It does **not**
+substitute for the strict match, which still requires resolving
+`content_id → sha1_git` against the nodes parquet.
+
+`tools/verify_swh_samples.py` implements the bulk check; results land
+in `data/derived/swh_sample_verification.csv`.
+
+**First-run result (2026-05-15, 255 samples): 255/255 known to SWH,
+0 unknown.** Three POST batches, ~10s wall time, anonymous. So the
+weak guarantee holds across every existing sample. The strict
+guarantee remains unproven (still needs the nodes parquet).
 
 ### Plan for the existing 255
 
@@ -255,7 +264,8 @@ plausible representative, not a provable one".
 | Sample bytes on disk with metadata.json | ✅ done |
 | `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15) |
 | Strict match: parquet content_id → sha1_git === fetched sha1_git | ⚠️  not enforced (see §8) |
-| Re-verify or regenerate the 255 existing samples | 🔜 deferred to SWH-native pipeline |
+| Weak existence check on the 255 existing samples | ✅ done (2026-05-15): 255/255 known to SWH (`data/derived/swh_sample_verification.csv`) |
+| Re-verify under strict match or regenerate the 255 | 🔜 deferred to SWH-native pipeline / Athena |
 | Full-scale mining (all shards) | tried 2026-05-15 over public S3 anon; killed after 6.8h at unknown % (no progress bar in that run); progress bar now in place for next attempt |
 | ori-nodes resolution for SWH-canonical origin | not implemented |
 | Per-PL evidence cards / static index | not implemented |

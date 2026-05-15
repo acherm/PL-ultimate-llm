@@ -725,13 +725,23 @@ def main() -> int:
         repo_meta_full=repo_meta_full,
     )
 
-    # Promote accepted manual labels into ext_claim. Each row gets
+    # Promote accepted/new manual labels into ext_claim. Each row gets
     # source="manual_review:<annotator>" and strength="proposed".
     # A maintainer can later edit the row's strength to "primary" / "secondary"
     # once a content classifier confirms.
+    #
+    # Dedup: if the (pl_id, ext) edge ALREADY exists from `repo_meta` (i.e.
+    # the PL's own meta.json lists the extension), the manual_review row
+    # would be a duplicate signal from the same in-repo origin — skip it.
+    # We still promote when the edge is genuinely new (different ext on the
+    # same PL, or different PL claiming the same ext).
     if manual_labels:
         valid_pl_ids = {p["pl_id"] for p in pl_rows}
-        promoted = skipped = 0
+        repo_meta_edges = {
+            (c["pl_id"], c["ext"]) for c in ext_claim_rows
+            if c.get("source") == "repo_meta"
+        }
+        promoted = skipped = dedup_skipped = 0
         for ml in manual_labels:
             ext = (ml.get("ext") or "").strip()
             label = (ml.get("label") or "").strip()  # "pl/<id>"
@@ -741,6 +751,12 @@ def main() -> int:
             pl_id = label  # already in "pl/<id>" form
             if pl_id not in valid_pl_ids:
                 skipped += 1
+                continue
+            if (pl_id, ext.lower()) in repo_meta_edges:
+                # The PL's own meta.json already claims this extension.
+                # The manual_review submission is a duplicate signal —
+                # skip the promotion (the repo_meta row already covers it).
+                dedup_skipped += 1
                 continue
             annotator = ml.get("annotator") or "unknown"
             ext_claim_rows.append({
@@ -752,8 +768,9 @@ def main() -> int:
                 "evidence": ml.get("issue_url") or "data/derived/extension_labels.csv",
             })
             promoted += 1
-        print(f"  promoted {promoted} accepted manual labels into ext_claim "
-              f"(skipped {skipped} that didn't map to a known pl_id).")
+        print(f"  promoted {promoted} manual labels into ext_claim "
+              f"(skipped {skipped} unknown-pl_id, "
+              f"deduped {dedup_skipped} already-in-meta.json).")
 
     ext_summary = build_ext_summary(ext_claim_rows, pl_rows)
 

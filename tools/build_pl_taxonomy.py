@@ -409,6 +409,114 @@ def load_repo_meta_full() -> dict[str, dict]:
 
 
 # ---------------------------------------------------------------------------
+# Wikidata + Wikipedia (file-extension layer)
+# ---------------------------------------------------------------------------
+#
+# Two snapshots live in data/raw/, refreshed by:
+#   tools/fetch_wikidata_extensions.py   → wikidata_p1195.<date>.jsonl
+#   tools/fetch_wikipedia_infoboxes.py   → wikipedia_infobox.<date>.jsonl
+#
+# Wikidata items carrying P1195 (file extension) span the whole "anything
+# with a filename extension" space — file formats, image formats, etc.
+# Here we keep only items whose instance_of (P31) intersects a curated set
+# of "programming-language-shaped" QIDs. Everything else flows into the
+# external_extension_index.csv side table built separately.
+
+# PL-shaped instance_of (P31) QIDs come from the pinned snapshot
+# `data/raw/wikidata_pl_types.<date>.json`, which holds the transitive
+# subclass closure of a small set of PL-shaped roots (programming language,
+# markup language, query language, logic programming language, esoteric
+# programming language). Loaded lazily on first use.
+_WIKIDATA_PL_INSTANCE_CACHE: frozenset[str] | None = None
+
+
+def _wikidata_pl_instance_qids() -> frozenset[str]:
+    global _WIKIDATA_PL_INSTANCE_CACHE
+    if _WIKIDATA_PL_INSTANCE_CACHE is not None:
+        return _WIKIDATA_PL_INSTANCE_CACHE
+    path = _latest_snapshot("wikidata_pl_types.*.json")
+    if path is None:
+        # Fall back to a tiny safety net so the build doesn't crash if the
+        # closure snapshot is missing — but flag so the operator knows.
+        print("  [warn] no wikidata_pl_types.*.json snapshot under data/raw/; "
+              "Wikidata PL overlay will catch only directly-typed PLs",
+              flush=True)
+        _WIKIDATA_PL_INSTANCE_CACHE = frozenset({
+            "Q9143", "Q37045", "Q12772052", "Q3839507",
+        })
+        return _WIKIDATA_PL_INSTANCE_CACHE
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    _WIKIDATA_PL_INSTANCE_CACHE = frozenset(payload.get("pl_type_qids") or [])
+    return _WIKIDATA_PL_INSTANCE_CACHE
+
+
+def _latest_snapshot(pattern: str) -> Path | None:
+    """Return the lexicographically-latest matching file under data/raw/."""
+    raw_dir = ROOT / "data" / "raw"
+    matches = sorted(raw_dir.glob(pattern))
+    return matches[-1] if matches else None
+
+
+def _is_wikidata_pl(record: dict) -> bool:
+    pl_qids = _wikidata_pl_instance_qids()
+    types = record.get("instance_of") or []
+    return any(t.get("qid") in pl_qids for t in types)
+
+
+def load_wikidata_pl_records() -> list[dict]:
+    """Read the pinned Wikidata snapshot, filter to PL-shaped items."""
+    path = _latest_snapshot("wikidata_p1195.*.jsonl")
+    if path is None:
+        return []
+    out: list[dict] = []
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            if _is_wikidata_pl(rec):
+                out.append(rec)
+    return out
+
+
+def load_wikipedia_infobox_records() -> dict[str, dict]:
+    """Read the pinned Wikipedia infobox snapshot, keyed by Wikidata QID."""
+    path = _latest_snapshot("wikipedia_infobox.*.jsonl")
+    if path is None:
+        return {}
+    out: dict[str, dict] = {}
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            qid = rec.get("qid")
+            if qid:
+                out[qid] = rec
+    return out
+
+
+def _norm_name(s: str | None) -> str:
+    """Canonical lookup key for matching Wikidata items to existing PLs."""
+    if not s:
+        return ""
+    s = s.strip().lower()
+    # Strip the common Wikipedia disambiguation suffix so "Python (programming
+    # language)" matches "Python".
+    s = re.sub(r"\s*\(programming\s+language\)\s*$", "", s)
+    return s
+
+
+def _wikidata_rank_to_strength(rank: str) -> str:
+    """Map Wikidata statement rank to ext_claim strength.
+
+    Normal/Preferred → 'primary'; Deprecated → 'deprecated' (NEW value
+    downstream may need to handle — falls back to 'unknown' bucket in
+    ext_summary's STRENGTH_ORDER until upgraded).
+    """
+    r = (rank or "").lower()
+    if "deprecated" in r:
+        return "deprecated"
+    return "primary"
+
+
+# ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
 
@@ -439,11 +547,20 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
           repo_aliases: dict[str, list[tuple[str, str]]],
           repo_meta_extensions: dict[str, list[str]] | None = None,
           repo_meta_full: dict[str, dict] | None = None,
+          wikidata_pl_records: list[dict] | None = None,
+          wikipedia_infobox_records: dict[str, dict] | None = None,
           owner_repo: str | None = None):
     pl_rows = []
     alias_rows = []
     ext_claim_rows = []
     used_ids: set[str] = set()
+    wikidata_pl_records = wikidata_pl_records or []
+    wikipedia_infobox_records = wikipedia_infobox_records or {}
+
+    # Per-pl_id Wikidata/Wikipedia overlay, written into pl_rows after the
+    # main loop so the (now optional) new columns stay nullable.
+    pl_wikidata_qid: dict[str, str] = {}
+    pl_wikipedia_url: dict[str, str] = {}
 
     # Index pygments by lexer "name" for joining via master_inventory's
     # `pygments_name` column.
@@ -480,6 +597,9 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             **{k: ("yes" if v else "no") for k, v in flags.items()},
             "in_manual_add": "no",
             "created_via_issue": "",
+            # Filled in after the main loop by the Wikidata/Wikipedia overlay.
+            "wikidata_qid": "",
+            "wikipedia_url": "",
         })
 
         # Aliases (from Pygments + Hyperpolyglot + Rosetta Code + repo meta)
@@ -645,6 +765,8 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "in_rosettacode": "no",
             "in_manual_add": "yes",
             "created_via_issue": created_via_str,
+            "wikidata_qid": "",
+            "wikipedia_url": "",
         })
         # Aliases from meta.json + any extra `repo_aliases` entry under the
         # same canonical (the alias loader covers the latter).
@@ -677,6 +799,184 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
                 "evidence": evidence_str,
             })
 
+    # ----- 5. Wikidata + Wikipedia overlay (PL-shaped items only) -----
+    # We build a name→[pl_ids] multimap from the existing rows (canonical
+    # names + known aliases), then walk every PL-shaped Wikidata record and
+    # attach to every matching pl_id. The taxonomy currently carries a few
+    # near-duplicate entities for the same conceptual PL (e.g. `pl/python`
+    # AND `pl/python-programming-language`, both with canonical normalizing
+    # to "python"); attaching the same QID + Wikipedia URL to both keeps the
+    # per-PL link working regardless of which pl_id the consumer lands on.
+    # That mirrors the docs/SOURCES_AND_SWH_EVIDENCE.md #1 note on the
+    # canonical-merge being deferred — Wikidata can co-exist with it.
+    # No new pl_rows are minted: if a Wikidata PL has no match in our
+    # taxonomy, we skip it (counted in "unmatched"). The schema change
+    # stays strictly additive — pl_ids are unchanged.
+    name_to_pl_ids: dict[str, list[str]] = defaultdict(list)
+    for p in pl_rows:
+        name_to_pl_ids[_norm_name(p["canonical_name"])].append(p["pl_id"])
+    seen_alias_keys: set[tuple[str, str]] = {
+        (_norm_name(p["canonical_name"]), p["pl_id"]) for p in pl_rows
+    }
+    for a in alias_rows:
+        key = (_norm_name(a["alias"]), a["pl_id"])
+        if key in seen_alias_keys:
+            continue
+        seen_alias_keys.add(key)
+        # Aliases extend the multimap but never displace canonical entries
+        # (canonical hits sort first because we appended them first).
+        name_to_pl_ids[key[0]].append(a["pl_id"])
+
+    matched_qids: list[str] = []
+    unmatched_qids: list[str] = []
+    n_wd_claims = 0
+    n_wp_claims = 0
+    n_wd_aliases = 0
+
+    for rec in wikidata_pl_records:
+        label = rec.get("label") or ""
+        aliases = rec.get("aliases") or []
+        candidates = [_norm_name(label)] + [_norm_name(a) for a in aliases]
+        enwiki = rec.get("enwiki_title") or ""
+        if enwiki:
+            candidates.append(_norm_name(enwiki))
+        # Match: union of pl_ids hit by ANY candidate key. First hit wins
+        # the "is this entity matched at all" question; all hits receive
+        # the overlay.
+        match_pl_ids: list[str] = []
+        seen = set()
+        for key in candidates:
+            if not key:
+                continue
+            for pid in name_to_pl_ids.get(key) or []:
+                if pid not in seen:
+                    seen.add(pid)
+                    match_pl_ids.append(pid)
+        if not match_pl_ids:
+            unmatched_qids.append(rec.get("qid", ""))
+            continue
+        matched_qids.append(rec.get("qid", ""))
+
+        qid = rec.get("qid") or ""
+        wp_url = (
+            "https://en.wikipedia.org/wiki/" + enwiki.replace(" ", "_")
+            if enwiki else ""
+        )
+        for pid in match_pl_ids:
+            pl_wikidata_qid.setdefault(pid, qid)
+            if wp_url:
+                pl_wikipedia_url.setdefault(pid, wp_url)
+
+        # The remaining work (aliases + ext_claims) we attach to the
+        # PRIMARY pl_id only — emitting alias and ext_claim rows for every
+        # duplicate would explode the table and re-pollute ext_summary's
+        # primary-claimants list. The QID + URL overlay on pl.csv gives
+        # downstream code enough to dedupe at render time.
+        pl_id = match_pl_ids[0]
+        canonical_lower = next(
+            (p["canonical_name"].lower() for p in pl_rows if p["pl_id"] == pl_id),
+            "",
+        )
+        for a in aliases:
+            a_str = (a or "").strip()
+            if not a_str or a_str.lower() == canonical_lower:
+                continue
+            alias_rows.append({
+                "pl_id": pl_id, "alias": a_str, "source": "wikidata",
+            })
+            n_wd_aliases += 1
+
+        # Wikidata extensions → ext_claim rows (source=wikidata).
+        wd_evidence = f"https://www.wikidata.org/wiki/{qid}" if qid else ""
+        wd_exts_seen: set[str] = set()
+        for e in rec.get("extensions") or []:
+            ext = _norm_ext("." + (e.get("value") or "").lstrip("."))
+            if not ext or ext in wd_exts_seen:
+                continue
+            wd_exts_seen.add(ext)
+            ext_claim_rows.append({
+                "pl_id": pl_id,
+                "ext": ext,
+                "source": "wikidata",
+                "strength": _wikidata_rank_to_strength(e.get("rank") or ""),
+                "source_key": qid,
+                "evidence": wd_evidence,
+            })
+            n_wd_claims += 1
+
+        # Wikipedia infobox → ext_claim rows (source=wikipedia) for extensions
+        # the Wikipedia article surfaces that Wikidata does NOT carry. These
+        # are unverified-by-Wikidata, so strength="proposed". The infobox
+        # note text (e.g. "rarely", "before 1995") rides in source_key so the
+        # site can render it inline without a schema change to ext_claim.
+        wp_rec = wikipedia_infobox_records.get(qid)
+        if not wp_rec:
+            continue
+        wp_evidence = pl_wikipedia_url.get(pl_id, "")
+        wp_seen: set[str] = set()
+        for hit in wp_rec.get("infobox_hits") or []:
+            for parsed in hit.get("parsed") or []:
+                ext = _norm_ext("." + (parsed.get("value") or "").lstrip("."))
+                if not ext or ext in wp_seen:
+                    continue
+                wp_seen.add(ext)
+                if ext in wd_exts_seen:
+                    # Already attested by Wikidata at higher strength —
+                    # skip to keep the table lean. The site can still show
+                    # the note by joining on wikipedia_infobox if desired.
+                    continue
+                note = (parsed.get("note") or "").strip()
+                source_key = f"{qid}|note:{note}" if note else qid
+                ext_claim_rows.append({
+                    "pl_id": pl_id,
+                    "ext": ext,
+                    "source": "wikipedia",
+                    "strength": "proposed",
+                    "source_key": source_key,
+                    "evidence": wp_evidence,
+                })
+                n_wp_claims += 1
+
+    # Splice the per-pl_id overlay into pl_rows.
+    for p in pl_rows:
+        pid = p["pl_id"]
+        if pid in pl_wikidata_qid:
+            p["wikidata_qid"] = pl_wikidata_qid[pid]
+        if pid in pl_wikipedia_url:
+            p["wikipedia_url"] = pl_wikipedia_url[pid]
+
+    if wikidata_pl_records:
+        print(f"  wikidata PL overlay:    matched={len(matched_qids):>4}  "
+              f"unmatched={len(unmatched_qids):>4}  "
+              f"+claims wd={n_wd_claims} wp={n_wp_claims}  "
+              f"+aliases={n_wd_aliases}")
+        # Persist the unmatched-candidates list as a debug/future-work feed.
+        # These are PL-shaped Wikidata items (carrying P1195) that did NOT
+        # resolve to any pl_id in our taxonomy — candidates for a future
+        # promote-to-PL review queue.
+        out_path = ROOT / "data" / "derived" / "wikidata_unmatched_pl_candidates.csv"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with out_path.open("w", encoding="utf-8", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(["qid", "label", "enwiki_title",
+                        "instance_of_labels", "extensions",
+                        "wikidata_url", "wikipedia_url"])
+            unmatched_set = set(unmatched_qids)
+            for rec in wikidata_pl_records:
+                qid = rec.get("qid") or ""
+                if qid not in unmatched_set:
+                    continue
+                enwiki = rec.get("enwiki_title") or ""
+                w.writerow([
+                    qid,
+                    rec.get("label") or "",
+                    enwiki,
+                    "; ".join(t.get("label") or "" for t in rec.get("instance_of") or []),
+                    "; ".join(e.get("value") or "" for e in rec.get("extensions") or []),
+                    f"https://www.wikidata.org/wiki/{qid}" if qid else "",
+                    f"https://en.wikipedia.org/wiki/{enwiki.replace(' ', '_')}" if enwiki else "",
+                ])
+
     return pl_rows, alias_rows, ext_claim_rows
 
 
@@ -693,7 +993,7 @@ def build_ext_summary(ext_claim_rows: list[dict], pl_rows: list[dict]) -> list[d
         # Order: primary > secondary > unknown > proposed > disputed.
         # Unknown strength strings default to 0 (treated as least authoritative).
         STRENGTH_ORDER = {"primary": 5, "secondary": 4, "unknown": 3,
-                          "proposed": 2, "disputed": 1}
+                          "proposed": 2, "deprecated": 1.5, "disputed": 1}
         strongest: dict[str, str] = {}
         for c in claims:
             cur = strongest.get(c["pl_id"])
@@ -751,6 +1051,8 @@ def main() -> int:
     repo_meta_full = load_repo_meta_full()
     heuristics = load_linguist_heuristics()
     manual_labels = load_accepted_manual_labels()
+    wikidata_pl_records = load_wikidata_pl_records()
+    wikipedia_infobox_records = load_wikipedia_infobox_records()
     print(f"  manual review (accepted): {len(manual_labels)} ext-label submissions to promote")
 
     print(f"  master_inventory: {len(master)} rows")
@@ -760,6 +1062,9 @@ def main() -> int:
           f"{len((heuristics or {}).get('disambiguations') or [])} disambig blocks, "
           f"{len((heuristics or {}).get('named_patterns') or {})} named patterns")
     print(f"  repo aliases:     {sum(len(v) for v in repo_aliases.values())} alias entries")
+    print(f"  wikidata PLs:     {len(wikidata_pl_records)} records (P1195-bearing, "
+          f"PL-shaped instance_of)")
+    print(f"  wikipedia infoboxes: {len(wikipedia_infobox_records)} pages indexed")
 
     print("\nBuilding tables...")
     pl_rows, alias_rows, ext_claim_rows = build(
@@ -769,6 +1074,8 @@ def main() -> int:
         repo_aliases=repo_aliases,
         repo_meta_extensions=repo_meta_extensions,
         repo_meta_full=repo_meta_full,
+        wikidata_pl_records=wikidata_pl_records,
+        wikipedia_infobox_records=wikipedia_infobox_records,
         owner_repo=_gh_owner_repo(),
     )
 
@@ -845,6 +1152,9 @@ def main() -> int:
         "in_pldb", "in_linguist", "in_pygments", "in_wikipedia",
         "in_esolang", "in_hyperpolyglot", "in_rosettacode",
         "in_manual_add", "created_via_issue",
+        # Wikidata/Wikipedia overlay — nullable, added by Phase B of the
+        # wikidata extension-index integration.
+        "wikidata_qid", "wikipedia_url",
     ])
     write_csv(out_dir / "pl_alias.csv", alias_rows, ["pl_id", "alias", "source"])
     write_csv(out_dir / "ext_claim.csv", ext_claim_rows, [

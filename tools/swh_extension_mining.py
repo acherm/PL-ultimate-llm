@@ -252,10 +252,20 @@ def build_query(
         else ""
     )
 
+    # Path may be a single glob string or an explicit list of shard URLs
+    # (for `--shard-sample`). DuckDB's `read_parquet` accepts both as
+    # `'<glob>'` or `['<url1>', '<url2>', ...]`.
+    if isinstance(contents_path, (list, tuple)):
+        contents_arg = "[" + ", ".join(f"'{p}'" for p in contents_path) + "]"
+        contents_path_str = f"{len(contents_path)} explicit shards"
+    else:
+        contents_arg = f"'{contents_path}'"
+        contents_path_str = contents_path
+
     sql = f"""\
 -- SWH popular-content-names mining for {len(ext_no_dot)} extensions
 -- spanning {len(lang_to_exts)} in-repo languages.
--- Contents source: {contents_path}
+-- Contents source: {contents_path_str}
 --
 -- Strategy: extract the extension ONCE per row via a single regex (capture
 -- group is restricted to ASCII so `lower()` is safe), then filter against an
@@ -276,7 +286,7 @@ WITH cnts AS (
             '\\.([A-Za-z0-9_+\\-]{{1,8}})$',
             1
         )) AS ext_no_dot
-    FROM read_parquet('{contents_path}') AS c
+    FROM read_parquet({contents_arg}) AS c
     WHERE c.length BETWEEN {min_length} AND {max_length}
       AND octet_length(c.filename) BETWEEN 4 AND 256
     {sample_clause}
@@ -639,6 +649,19 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--shard", default=None,
                    help="Override the contents path with a single parquet (local or s3 URL). "
                         "Useful for low-cost smoke tests.")
+    p.add_argument("--shard-sample", type=int, default=0,
+                   help="If > 0, list all shards under the contents glob and "
+                        "scan only this many random ones (default: 0 = scan "
+                        "every shard). Reduces wall-time roughly linearly. "
+                        "Top-K from sampled shards approximates global top-K "
+                        "well for popular extensions; for rare extensions the "
+                        "global top-K is small anyway so the loss is bounded.")
+    p.add_argument("--shard-sample-seed", type=int, default=0,
+                   help="RNG seed for --shard-sample (default: %(default)d).")
+    p.add_argument("--no-progress-bar", action="store_true",
+                   help="Suppress DuckDB's query progress bar. By default the "
+                        "progress bar is enabled so you can see scan %% "
+                        "completion instead of staring at a silent terminal.")
     p.add_argument("--top-k", type=int, default=DEFAULT_TOP_K,
                    help="Examples per extension (default: %(default)d).")
     p.add_argument("--sample-percent", type=float, default=None,
@@ -757,11 +780,55 @@ def main() -> int:
     if langs_no_ext[:5]:
         print(f"Examples without extensions (skipped): {langs_no_ext[:5]}")
 
-    contents_path = args.shard or (
+    contents_path: str | list[str] = args.shard or (
         f"{args.s3_prefix}/{args.dataset_date}/contents/*.parquet"
     )
     nodes_base = args.nodes_base or f"{args.s3_prefix}/{args.dataset_date}/nodes"
     nodes_path_template = f"{nodes_base}/node_type={{node_type}}/*.parquet"
+
+    # If we're going to execute, open DuckDB up front. This lets us:
+    #   (a) use `glob()` to enumerate shards for `--shard-sample`
+    #   (b) emit the progress bar before the long-running scan starts
+    con = None
+    if args.execute:
+        try:
+            import duckdb  # type: ignore
+        except ImportError:
+            sys.exit("ERROR: duckdb not installed. `pip install duckdb` then re-run with --execute.")
+        con = duckdb.connect()
+        con.execute("INSTALL httpfs; LOAD httpfs;")
+        con.execute("SET s3_region='us-east-1';")
+        con.execute("SET http_timeout=600000;")
+        con.execute("SET http_retries=5;")
+        con.execute(f"SET memory_limit='{args.memory_limit}';")
+        con.execute(f"SET threads={args.threads};")
+        if not args.no_progress_bar:
+            # `enable_progress_bar` prints the bar to stderr during long scans.
+            # `progress_bar_time=0` shows it immediately (default is 2000ms).
+            con.execute("SET enable_progress_bar=true;")
+            con.execute("SET enable_print_progress_bar=true;")
+            con.execute("SET progress_bar_time=0;")
+
+    # Shard sampling: list every shard under the contents glob and pick N.
+    # We do this AFTER opening the connection because DuckDB's `glob()` over
+    # S3 needs httpfs loaded.
+    if args.shard_sample and args.execute and not args.shard:
+        import random
+        shard_glob = (
+            args.shard if args.shard
+            else f"{args.s3_prefix}/{args.dataset_date}/contents/*.parquet"
+        )
+        print(f"Listing shards under {shard_glob} ...")
+        all_shards = sorted(r[0] for r in con.execute(
+            f"SELECT file FROM glob('{shard_glob}')"
+        ).fetchall())
+        if not all_shards:
+            sys.exit(f"ERROR: glob returned 0 shards for {shard_glob}")
+        rng = random.Random(args.shard_sample_seed)
+        n = min(args.shard_sample, len(all_shards))
+        sampled = sorted(rng.sample(all_shards, n))
+        print(f"Shard-sample: {n}/{len(all_shards)} shards (seed={args.shard_sample_seed})")
+        contents_path = sampled
 
     sql, ext_to_langs = build_query(
         inventory,
@@ -788,24 +855,14 @@ def main() -> int:
         print(f"  --shard '{args.s3_prefix}/{args.dataset_date}/contents/0.parquet' --execute")
         return 0
 
-    # --execute path: lazy-import duckdb and run.
-    try:
-        import duckdb  # type: ignore
-    except ImportError:
-        sys.exit("ERROR: duckdb not installed. `pip install duckdb` then re-run with --execute.")
-
-    print(f"\nExecuting against: {contents_path}")
-    con = duckdb.connect()
-    con.execute("INSTALL httpfs; LOAD httpfs;")
-    # Public anonymous S3 read. HTTP defaults are too tight for multi-GB shards.
-    con.execute("SET s3_region='us-east-1';")
-    con.execute("SET http_timeout=600000;")  # 10 min per request
-    con.execute("SET http_retries=5;")
-    con.execute(f"SET memory_limit='{args.memory_limit}';")
-    con.execute(f"SET threads={args.threads};")
+    contents_desc = (
+        f"{len(contents_path)} sampled shards"
+        if isinstance(contents_path, list) else contents_path
+    )
+    print(f"\nExecuting against: {contents_desc}")
     rows = con.execute(sql).fetchall()
     columns = [d[0] for d in con.description]
-    print(f"Got {len(rows)} sample rows from {contents_path}.")
+    print(f"Got {len(rows)} sample rows.")
 
     # Resolve IDs -> SWHIDs.
     content_ids = [r[columns.index("content_id")] for r in rows]

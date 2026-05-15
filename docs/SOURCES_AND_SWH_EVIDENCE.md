@@ -238,10 +238,31 @@ substitute for the strict match, which still requires resolving
 `tools/verify_swh_samples.py` implements the bulk check; results land
 in `data/derived/swh_sample_verification.csv`.
 
-**First-run result (2026-05-15, 255 samples): 255/255 known to SWH,
-0 unknown.** Three POST batches, ~10s wall time, anonymous. So the
-weak guarantee holds across every existing sample. The strict
-guarantee remains unproven (still needs the nodes parquet).
+**First-run result (2026-05-15, 255 samples)** — three independent
+SWHIDs per sample, all checked against SWH where the bulk endpoint
+allows it:
+
+| Claim | Method | Result |
+|---|---|---|
+| `swh:1:cnt:<sha1>` (bytes) | bulk `POST /known/` | **255/255 yes** |
+| `swh:1:rev:<commit>` (anchor) | bulk `POST /known/` | **245/255 yes, 10 no** |
+| `swh:1:ori:<sha1(url)>` (origin) | per-URL `GET /origin/<url>/get/` (opt-in: `--check-origins`) | not yet run for 255 |
+
+`/known/` rejects `ori` SWHIDs server-side ("'ori' is not a valid
+ObjectType"), so origin existence falls back to a 1-request-per-origin
+endpoint. With 224 unique origins across the 255 samples, that's ~2h
+anonymously or ~2 min with `SWH_TOKEN`.
+
+**What the 10 rev=no findings mean:** for those samples the bytes are
+in SWH, but the specific commit cited as `anchor` is not. The chain
+(GitHub repo's latest commit on that path) didn't land in SWH's
+crawl, so the qualified SWHID's anchor qualifier is aspirational
+rather than verified. The bytes themselves still cite cleanly.
+
+So:
+- weak existence holds for every sample (cnt);
+- anchor commit verified for 96% of samples;
+- origin verification deferred to authenticated run.
 
 ### Plan for the existing 255
 
@@ -264,7 +285,7 @@ plausible representative, not a provable one".
 | Sample bytes on disk with metadata.json | ✅ done |
 | `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15) |
 | Strict match: parquet content_id → sha1_git === fetched sha1_git | ⚠️  not enforced (see §8) |
-| Weak existence check on the 255 existing samples | ✅ done (2026-05-15): 255/255 known to SWH (`data/derived/swh_sample_verification.csv`) |
+| Weak existence check on the 255 existing samples | ✅ done (2026-05-15): cnt 255/255, rev 245/255, ori deferred (see §8) |
 | Re-verify under strict match or regenerate the 255 | 🔜 deferred to SWH-native pipeline / Athena |
 | Full-scale mining (all shards) | tried 2026-05-15 over public S3 anon; killed after 6.8h at unknown % (no progress bar in that run); progress bar now in place for next attempt |
 | ori-nodes resolution for SWH-canonical origin | not implemented |

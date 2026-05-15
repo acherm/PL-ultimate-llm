@@ -273,6 +273,35 @@ SWH-native pipeline lands first. Until then, treat sample
 filename+length has N copies across SWH; the bytes you see are a
 plausible representative, not a provable one".
 
+### Caveat: `--shard-sample N` is a sample of contents, not occurrences
+
+The `swh_extension_mining.py --shard-sample N` flag added 2026-05-15
+selects N random shards out of the ~96 published shards under
+`contents/*.parquet`. The popular-content-names dataset shards by
+`content_id`, so each blob lives in exactly one shard. Implication:
+
+- The output is **exact top-K of the sampled subset**, not an
+  approximation of global top-K.
+- A heavily-copied blob (one content, many directory entries) that
+  happens to live in an unsampled shard is **invisible**, regardless
+  of how globally popular it is.
+- A generic filename (many similar-but-distinct `test.pgn`,
+  `__init__.py`) gets *over*-represented because its blobs are
+  scattered across shards and several land in the sample.
+
+Empirical, 2026-05-15 on `.pgn`:
+
+| Setup | Top hit | Occurrences |
+|---|---|---:|
+| Single shard (shard 0) smoke | `wch08ak.pgn` | 1766 |
+| `--shard-sample 10`, seed 0 | `chess.pgn` | 185 |
+
+The 10-shard random sample completely missed `wch08ak.pgn`. The
+flag is useful for "give me *some* representative samples cheap",
+NOT for "give me the most-copied program". For the latter you still
+need the full archive scan — or, better, a per-extension index
+published by SWH on the next derived dataset (asking).
+
 ## 9. Status of this prototype
 
 | Piece | State |
@@ -283,7 +312,7 @@ plausible representative, not a provable one".
 | SWH parquet mining (DuckDB query, IN-set shape, sample mode) | ✅ done |
 | Qualified SWHID per row via GitHub side-channel | ✅ done |
 | Sample bytes on disk with metadata.json | ✅ done |
-| `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15) |
+| `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15); semantics caveat below |
 | Strict match: parquet content_id → sha1_git === fetched sha1_git | ⚠️  not enforced (see §8) |
 | Weak existence check on the 255 existing samples | ✅ done (2026-05-15): cnt 255/255, rev 245/255, ori deferred (see §8) |
 | Re-verify under strict match or regenerate the 255 | 🔜 deferred to SWH-native pipeline / Athena |

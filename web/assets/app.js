@@ -178,6 +178,28 @@ ${evidence.split('\n').map(l => '  ' + l).join('\n')}
           update();
         });
       });
+      // Wire "use auto-suggestion" button: pre-fills the dropdown with the
+      // heuristic-suggested label (binary:image, data:json-like, …).
+      form.querySelectorAll("button.ext-label-autosuggest").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const suggested = btn.getAttribute("data-suggested") || "";
+          if (!suggested) return;
+          const labelSelect = form.label;
+          if (labelSelect) {
+            const opts = Array.from(labelSelect.options).map((o) => o.value);
+            if (opts.includes(suggested)) {
+              labelSelect.value = suggested;
+            }
+          }
+          // The auto-suggestion isn't a pl/<id>; clear the chip-derived custom
+          // field and uncheck any ticked PL chips so the two paths don't fight.
+          if (form.label_custom) form.label_custom.value = "";
+          form.querySelectorAll("input.proposed-pl:checked").forEach((c) => {
+            c.checked = false;
+          });
+          update();
+        });
+      });
       // Initial sync — for confirmed-polysemous, chips render pre-checked.
       _syncProposedPlChips(form);
 

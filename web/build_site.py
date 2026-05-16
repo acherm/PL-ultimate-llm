@@ -1999,6 +1999,20 @@ def render_per_extension_pages(
     # Existing manual labels (from extension_labels.csv).
     existing_labels = _load_extension_labels()
 
+    # Review-queue auto-suggested labels (from extension_review_queue.csv).
+    # Heuristic categorisation (binary:image, build-artifact, …) per ext.
+    # We surface it as a one-click "Use auto-suggestion" button on the form,
+    # but only when the suggestion is concrete (skip `unknown` / blank — the
+    # heuristic gave up, no point pre-filling a "I don't know" answer).
+    review_queue_suggested: dict[str, str] = {}
+    _rq_csv = ROOT / "data" / "derived" / "extension_review_queue.csv"
+    if _rq_csv.exists():
+        for r in _read_csv(_rq_csv):
+            ext_key = (r.get("ext_canonical") or "").strip().lower()
+            suggested = (r.get("suggested_label") or "").strip()
+            if ext_key and suggested and suggested != "unknown":
+                review_queue_suggested[ext_key] = suggested
+
     # External (non-PL) extension index — Wikidata + Wikipedia infobox.
     external_ext = load_external_extension_index()
     EXTERNAL_DISPLAY_LIMIT = 20
@@ -2568,11 +2582,38 @@ def render_per_extension_pages(
                 </div>
               </div>"""
 
+            # Auto-suggestion button: when the review-queue heuristic mapped
+            # this extension to a concrete vocab entry (e.g., `.png` →
+            # binary:image), surface a one-click button that pre-fills the
+            # label dropdown so the reviewer doesn't have to scroll the
+            # vocabulary themselves. Only renders when a non-unknown
+            # suggestion exists.
+            suggested_for_ext = review_queue_suggested.get(ext.lower(), "")
+            auto_suggest_html = ""
+            if suggested_for_ext:
+                auto_suggest_html = f"""
+              <div style="grid-column:1 / -1; display:flex; flex-direction:column; gap:6px;">
+                <div class="muted" style="font-size:13px;">
+                  <strong>Auto-suggested label.</strong>
+                  Built from <code>tools/build_extension_review_queue.py</code>'s
+                  heuristic categorisation (file-format families, numeric / SHA
+                  filenames, etc.). One click to pre-fill the form below —
+                  edit if it's off.
+                </div>
+                <div>
+                  <button class="btn ext-label-autosuggest" type="button"
+                          data-suggested="{safe(suggested_for_ext)}"
+                          style="font-size:13px;">
+                    Use auto-suggestion: <code>{safe(suggested_for_ext)}</code>
+                  </button>
+                </div>
+              </div>"""
             form_html = f"""
           <form class="ext-label-form"
                 data-ext="{safe(ext)}"
                 data-repo="{safe(github_owner_repo) if github_owner_repo else ''}">
             <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr; margin-top:10px;">
+              {auto_suggest_html}
               {quick_pick_html}
               <label style="grid-column:1 / -1; display:flex; flex-direction:column; gap:4px;">
                 <span class="muted">Label *</span>

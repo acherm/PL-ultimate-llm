@@ -446,6 +446,83 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
     }
   }
 
+  /**
+   * Wikidata-rows filter on /ext/<x>/. Bound to the inline `.wikidata-filter`
+   * search input. Hides rows whose `data-search` string doesn't contain the
+   * (lower-cased) query.
+   */
+  function _wireWikidataFilters() {
+    document.querySelectorAll("input.wikidata-filter").forEach((input) => {
+      const table = input.closest("section")?.querySelector("table");
+      if (!table) return;
+      const rows = Array.from(table.querySelectorAll("tr.wikidata-row"));
+      const apply = () => {
+        const q = (input.value || "").toLowerCase().trim();
+        let visible = 0;
+        for (const r of rows) {
+          const haystack = r.getAttribute("data-search") || "";
+          const match = !q || haystack.includes(q);
+          r.style.display = match ? "" : "none";
+          if (match) visible += 1;
+        }
+        // Toggle a small status next to the input.
+        let status = input.parentElement.querySelector(".wikidata-filter-status");
+        if (!status) {
+          status = document.createElement("span");
+          status.className = "wikidata-filter-status muted";
+          status.style.fontSize = "12px";
+          input.parentElement.appendChild(status);
+        }
+        status.textContent = q ? `${visible}/${rows.length} match` : "";
+      };
+      input.addEventListener("input", apply);
+    });
+  }
+
+  /**
+   * /contribute/add-pl/ URL-param pre-fill. When the page is opened with
+   * query params (?name=...&evidence_url=...&extensions=...&aliases=...),
+   * populate the corresponding form fields. Wired before _wirePlAddForms
+   * runs so the fallback-link recomputation sees the pre-filled values.
+   */
+  function _prefillAddPlFromUrl() {
+    const form = document.querySelector("form.pl-add-form");
+    if (!form) return;
+    const params = new URLSearchParams(window.location.search);
+    const map = {
+      "name": "pl_name",
+      "evidence_url": "evidence_url",
+      "extensions": "extensions",
+      "aliases": "aliases",
+      "notes": "notes",
+    };
+    let any = false;
+    for (const [k, fieldName] of Object.entries(map)) {
+      const v = params.get(k);
+      if (v && form[fieldName] && !form[fieldName].value) {
+        form[fieldName].value = v;
+        any = true;
+      }
+    }
+    if (any) {
+      // Hint banner so the user knows the form was pre-filled.
+      const banner = document.createElement("div");
+      banner.className = "muted";
+      banner.style.cssText = "margin-bottom:10px; padding:8px 10px; border:1px dashed var(--border, #2a2a2a); border-radius:6px; font-size:13px;";
+      banner.innerHTML = "Form pre-filled from a Wikidata entry. Review the fields, then submit.";
+      form.parentElement.insertBefore(banner, form);
+    }
+  }
+
+  if (typeof document !== "undefined") {
+    const _run = () => { _prefillAddPlFromUrl(); _wireWikidataFilters(); };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _run);
+    } else {
+      _run();
+    }
+  }
+
   function qs(selector) {
     return document.querySelector(selector);
   }

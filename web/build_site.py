@@ -2173,9 +2173,14 @@ def render_per_extension_pages(
         external_rows = external_ext.get(ext, [])
         external_section = ""
         if external_rows:
-            shown = external_rows[:EXTERNAL_DISPLAY_LIMIT]
-            n_more = len(external_rows) - len(shown)
+            # Show ALL rows — the previous 20-cap hid useful entries on
+            # polysemous extensions (e.g. PDF/X among 57 variants). Reviewers
+            # filter via the search box; rows are still pre-sorted with
+            # Wikipedia-URL'd entries first.
+            shown = external_rows
+            n_more = 0
             ext_html_rows = []
+            add_pl_root = f"{rel}contribute/add-pl/index.html"
             for r in shown:
                 qid = r.get("qid") or ""
                 label = r.get("label") or qid
@@ -2188,6 +2193,7 @@ def render_per_extension_pages(
                 mime = r.get("mime_types") or ""
                 instance_of = r.get("instance_of_labels") or ""
                 suggested = r.get("suggested_label") or ""
+                aliases_raw = r.get("aliases") or ""
                 # Show only the first two instance_of labels — enough for
                 # the reviewer to recognise the class, full list is in the CSV.
                 instance_of_short = "; ".join(
@@ -2224,8 +2230,31 @@ def render_per_extension_pages(
                 suggested_cell = (
                     f"<span class='pill'>{safe(suggested)}</span>" if suggested else "&mdash;"
                 )
+                # "Use as new PL" button: opens the Add-PL form pre-filled
+                # via URL params (name, evidence_url, extensions, aliases).
+                # Submission goes through the standard pl-add pipeline which
+                # creates languages/<Name>/meta.json with extensions=[.ext]
+                # and emits a repo_meta primary claim. Skipped when the row
+                # has no label (degenerate Wikidata entry).
+                action_cell = "&mdash;"
+                if label:
+                    pref_url = wp_url or wd_url
+                    aliases_for_url = ", ".join(
+                        a.strip() for a in re.split(r"[;,]", aliases_raw) if a.strip()
+                    )
+                    qs = urlencode({
+                        "name": label,
+                        "evidence_url": pref_url,
+                        "extensions": ext,
+                        "aliases": aliases_for_url,
+                    }, quote_via=quote)
+                    action_cell = (
+                        f"<a class='btn use-as-new-pl' href='{add_pl_root}?{qs}' "
+                        f"title='Open the Add-PL form pre-filled with this entry' "
+                        f"style='font-size:12px; padding:3px 8px;'>Use as new PL ↗</a>"
+                    )
                 ext_html_rows.append(
-                    f"<tr>"
+                    f"<tr class='wikidata-row' data-search='{safe((label + ' ' + desc + ' ' + qid + ' ' + instance_of + ' ' + aliases_raw).lower())}'>"
                     f"<td>{label_html}"
                     + (f"<div class='muted' style='font-size:12px;'>{safe(desc)}</div>" if desc else "")
                     + f"</td>"
@@ -2233,16 +2262,14 @@ def render_per_extension_pages(
                     f"<td>{suggested_cell}</td>"
                     f"<td><code class='muted'>{safe(mime) or '&mdash;'}</code></td>"
                     f"<td>{notes_html}</td>"
+                    f"<td>{action_cell}</td>"
                     f"</tr>"
                 )
-            more_row = ""
-            if n_more > 0:
-                more_row = (
-                    f"<tr><td colspan='5' class='muted' style='text-align:center;'>"
-                    f"… and {n_more} more in "
-                    f"<code>data/derived/external_extension_index.csv</code>"
-                    f"</td></tr>"
-                )
+            # "Right entry isn't listed?" escape hatch — opens the Add-PL
+            # form pre-filled with just the extension, so the reviewer can
+            # type the canonical name + evidence URL themselves.
+            blank_add_pl_qs = urlencode({"extensions": ext}, quote_via=quote)
+            blank_add_pl_url = f"{add_pl_root}?{blank_add_pl_qs}"
             external_section = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Wikidata says… ({len(external_rows)})</h2>
@@ -2250,14 +2277,20 @@ def render_per_extension_pages(
             File formats, image formats, audio codecs and other non-PL
             entities that claim <code>{safe(ext)}</code> on Wikidata
             (property <code>P1195</code>) or in the Wikipedia infobox.
-            Independent from the language taxonomy above &mdash;
-            useful when labelling the extension as
-            <code>binary:*</code> / <code>data:*</code> rather than a PL.
             Source: <code>data/derived/external_extension_index.csv</code>.
+            Click <strong>Use as new PL</strong> on any row to open the
+            Add-PL form pre-filled with that entry's name, Wikipedia/Wikidata
+            URL, and this extension — one submission creates the PL + claim.
+          </div>
+          <div style='display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px;'>
+            <input type='search' class='wikidata-filter' placeholder='Filter rows by name, alias, description, QID, class…'
+                   style='flex:1; min-width:200px; padding:6px 10px; font-size:13px;' />
+            <a class='btn' href='{blank_add_pl_url}' style='font-size:12px; padding:3px 8px;'
+               title='Open the Add-PL form pre-filled with just this extension'>Right entry isn't listed? Add manually ↗</a>
           </div>
           <table class='kv-table'>
-            <thead><tr><th>Format</th><th>Class (Wikidata <code>P31</code>)</th><th>Suggested label</th><th>MIME</th><th>Notes</th></tr></thead>
-            <tbody>{''.join(ext_html_rows)}{more_row}</tbody>
+            <thead><tr><th>Format</th><th>Class (Wikidata <code>P31</code>)</th><th>Suggested label</th><th>MIME</th><th>Notes</th><th>Action</th></tr></thead>
+            <tbody>{''.join(ext_html_rows)}</tbody>
           </table>
         </section>"""
         heur_section = ""

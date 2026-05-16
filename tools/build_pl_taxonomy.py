@@ -463,6 +463,73 @@ def _is_wikidata_pl(record: dict) -> bool:
     return any(t.get("qid") in pl_qids for t in types)
 
 
+# Heuristic keyword filter used by Gap B (heuristic:wikidata_keyword_pl_shape):
+# Wikidata items whose instance_of QIDs are not in the 175-QID PL-types
+# closure but whose instance_of *labels* (or description) contain a
+# language-shaped phrase. These are emitted as `strength="proposed"` so a
+# maintainer can promote/reject. Closure-typed items go through the
+# Gap A path (_is_wikidata_pl) and stay at `strength="primary"`.
+# See docs/heuristics/wikidata_keyword_pl_shape.md for the rule + failure modes.
+_WIKIDATA_PL_KEYWORDS = re.compile(
+    r"\b("
+    r"programming language|"
+    r"markup language|"
+    r"query language|"
+    r"scripting language|"
+    r"domain[- ]specific language|"
+    r"data[- ]serialization (?:language|format)|"
+    r"configuration language|"
+    r"shader(?:ing)? language|"
+    r"shading language|"
+    r"description language|"
+    r"transformation language|"
+    r"stylesheet language|"
+    r"modeling language|"
+    r"specification language|"
+    r"hardware description language|"
+    r"functional language|"
+    r"object-oriented language|"
+    r"declarative language|"
+    r"intermediate language|"
+    r"assembly language|"
+    r"esoteric programming language|"
+    r"interpreted language|"
+    r"compiled language|"
+    r"template language|"
+    r"playlist markup language|"
+    r"interface definition language"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def _wikidata_record_keyword_haystack(rec: dict) -> str:
+    """Build the text we search for PL-keyword phrases.
+
+    Includes the entity LABEL because Wikidata frequently mis-types real
+    markup languages with `instance_of = "file format"` only (e.g. VRML,
+    AIML, TTML, AML, GPML, MSL — entity labels like "Virtual Reality
+    Modeling Language" are the only PL signal). Also includes alias
+    strings, description, and instance_of labels.
+    """
+    parts: list[str] = []
+    parts.append(rec.get("label") or "")
+    parts.extend((a or "") for a in (rec.get("aliases") or []))
+    parts.append(rec.get("description") or "")
+    types = rec.get("instance_of") or []
+    parts.extend((t.get("label") or "") for t in types)
+    return " | ".join(p for p in parts if p)
+
+
+def _is_wikidata_pl_by_keyword(record: dict) -> bool:
+    """True iff the record is NOT in the PL-types closure but its
+    instance_of labels / description match a PL-shaped keyword phrase.
+    Returns False for records already accepted by _is_wikidata_pl()."""
+    if _is_wikidata_pl(record):
+        return False
+    return bool(_WIKIDATA_PL_KEYWORDS.search(_wikidata_record_keyword_haystack(record)))
+
+
 def load_wikidata_pl_records() -> list[dict]:
     """Read the pinned Wikidata snapshot, filter to PL-shaped items."""
     path = _latest_snapshot("wikidata_p1195.*.jsonl")
@@ -473,6 +540,23 @@ def load_wikidata_pl_records() -> list[dict]:
         for line in f:
             rec = json.loads(line)
             if _is_wikidata_pl(rec):
+                out.append(rec)
+    return out
+
+
+def load_wikidata_keyword_pl_records() -> list[dict]:
+    """Read the pinned Wikidata snapshot, return items OUTSIDE the
+    PL-types closure whose instance_of labels match a PL-keyword phrase.
+    Powers the `heuristic:wikidata_keyword_pl_shape` provenance source
+    (see docs/heuristics/wikidata_keyword_pl_shape.md)."""
+    path = _latest_snapshot("wikidata_p1195.*.jsonl")
+    if path is None:
+        return []
+    out: list[dict] = []
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            if _is_wikidata_pl_by_keyword(rec):
                 out.append(rec)
     return out
 
@@ -548,6 +632,7 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
           repo_meta_extensions: dict[str, list[str]] | None = None,
           repo_meta_full: dict[str, dict] | None = None,
           wikidata_pl_records: list[dict] | None = None,
+          wikidata_keyword_pl_records: list[dict] | None = None,
           wikipedia_infobox_records: dict[str, dict] | None = None,
           owner_repo: str | None = None):
     pl_rows = []
@@ -555,6 +640,7 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
     ext_claim_rows = []
     used_ids: set[str] = set()
     wikidata_pl_records = wikidata_pl_records or []
+    wikidata_keyword_pl_records = wikidata_keyword_pl_records or []
     wikipedia_infobox_records = wikipedia_infobox_records or {}
 
     # Per-pl_id Wikidata/Wikipedia overlay, written into pl_rows after the
@@ -944,7 +1030,209 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
                 })
                 n_wp_claims += 1
 
-    # Splice the per-pl_id overlay into pl_rows.
+    # The per-pl_id Wikidata/Wikipedia overlay (pl_wikidata_qid /
+    # pl_wikipedia_url) is spliced into pl_rows AFTER the Gap A + Gap B
+    # passes — both passes can attach a QID to a pre-existing pl_id when
+    # the keyword-shape path matches by name, and we want those overlays
+    # in the final pl.csv.
+
+    # ----- 5b. Gap A: auto-promote unmatched closure-PL Wikidata records ----
+    # Records in `unmatched_qids` are PL-shaped per the 175-QID closure but
+    # didn't name-match any existing pl_id. We mint a NEW pl_id per record
+    # (still additive — no existing pl_id is touched). Extensions already
+    # carried by another PL (e.g., hOCR claiming `.html`) are skipped so the
+    # umbrella-claimant list of polysemous extensions stays clean; only the
+    # entity's distinctive extensions become ext_claim rows. The entity is
+    # always minted, even if all its extensions are umbrella — its pl.csv
+    # row carries `wikidata_qid`/`wikipedia_url` so downstream code can still
+    # surface it via the Wikidata link even without an ext-resolution path.
+    def _mint_wikidata_pl_row(rec: dict, src_flag: str) -> tuple[str, str]:
+        """Create a pl_row + alias_rows from a Wikidata record. Returns
+        (pl_id, canonical). The ext_claim rows are emitted by the caller
+        so it can decide source/strength/umbrella policy per pass."""
+        canonical = (rec.get("label") or "").strip()
+        qid = rec.get("qid") or ""
+        enwiki = rec.get("enwiki_title") or ""
+        wp_url = (f"https://en.wikipedia.org/wiki/{enwiki.replace(' ', '_')}"
+                  if enwiki else "")
+        wd_url = f"https://www.wikidata.org/wiki/{qid}" if qid else ""
+        pl_id = make_pl_id(canonical, used_ids)
+        pl_rows.append({
+            "pl_id": pl_id,
+            "canonical_name": canonical,
+            "lang_id_master": "",
+            "linguist_key": "",
+            "pygments_name": "",
+            "hyperpolyglot_name": "",
+            "rosettacode_name": "",
+            "source_flags": src_flag,
+            "source_count": "1",
+            "first_appeared": "",
+            "homepage": "",
+            "evidence_urls": wd_url,
+            "paradigms": "",
+            "typing": "",
+            "designed_by": "",
+            "types": "",
+            "in_pldb": "no",
+            "in_linguist": "no",
+            "in_pygments": "no",
+            "in_wikipedia": "yes" if enwiki else "no",
+            "in_esolang": "no",
+            "in_hyperpolyglot": "no",
+            "in_rosettacode": "no",
+            "in_manual_add": "no",
+            "created_via_issue": "",
+            "wikidata_qid": qid,
+            "wikipedia_url": wp_url,
+        })
+        # Aliases from Wikidata aliases + enwiki title (when different).
+        for a in rec.get("aliases") or []:
+            a_str = (a or "").strip()
+            if a_str and a_str.lower() != canonical.lower():
+                alias_rows.append({
+                    "pl_id": pl_id, "alias": a_str, "source": "wikidata",
+                })
+        if enwiki and enwiki.lower() != canonical.lower():
+            alias_rows.append({
+                "pl_id": pl_id, "alias": enwiki, "source": "wikidata",
+            })
+        return pl_id, canonical
+
+    # Snapshot which extensions are already claimed by some other PL — this
+    # is the umbrella set for Gap A + Gap B. Captured BEFORE any auto-promote
+    # ext_claim row is appended so the two new passes don't shield each other.
+    pre_promote_claimed_exts: set[str] = {c["ext"] for c in ext_claim_rows}
+
+    unmatched_set = set(unmatched_qids)
+    auto_promoted_qids: list[str] = []
+    n_promoted_pls = 0
+    n_promoted_claims = 0
+    n_skipped_umbrella = 0
+    n_promoted_no_claims = 0  # entity minted but every ext was umbrella
+    for rec in wikidata_pl_records:
+        qid = rec.get("qid") or ""
+        if qid not in unmatched_set:
+            continue
+        if not (rec.get("label") or "").strip():
+            continue  # can't mint a pl_id without a label
+        pl_id, _canon = _mint_wikidata_pl_row(rec, src_flag="wikidata")
+        wd_evidence = f"https://www.wikidata.org/wiki/{qid}" if qid else ""
+        wd_exts_seen: set[str] = set()
+        emitted = 0
+        for e in rec.get("extensions") or []:
+            ext = _norm_ext("." + (e.get("value") or "").lstrip("."))
+            if not ext or ext in wd_exts_seen:
+                continue
+            wd_exts_seen.add(ext)
+            if ext in pre_promote_claimed_exts:
+                n_skipped_umbrella += 1
+                continue
+            ext_claim_rows.append({
+                "pl_id": pl_id,
+                "ext": ext,
+                "source": "wikidata",
+                "strength": _wikidata_rank_to_strength(e.get("rank") or ""),
+                "source_key": qid,
+                "evidence": wd_evidence,
+            })
+            emitted += 1
+            n_promoted_claims += 1
+        auto_promoted_qids.append(qid)
+        n_promoted_pls += 1
+        if emitted == 0:
+            n_promoted_no_claims += 1
+
+    # Records that were auto-promoted are no longer "unmatched". Keep the
+    # original list as a diagnostic, but rewrite unmatched_qids to only
+    # contain ones that were skipped (empty label, etc.).
+    promoted_set = set(auto_promoted_qids)
+    still_unmatched_qids = [q for q in unmatched_qids if q not in promoted_set]
+
+    # ----- 5c. Gap B: heuristic:wikidata_keyword_pl_shape ------------------
+    # Records OUTSIDE the closure whose instance_of labels match a curated
+    # PL-keyword phrase. Each record is FIRST matched by name against
+    # existing pl_ids (same matching strategy as the main closure path);
+    # if a match exists we attach the heuristic ext_claims to it instead
+    # of minting a duplicate. Unmatched records mint a new pl_id.
+    # All ext_claim rows from this path carry source="heuristic:..."
+    # and strength="proposed" so reviewers can promote/reject. See
+    # docs/heuristics/wikidata_keyword_pl_shape.md.
+    HEURISTIC_ID = "heuristic:wikidata_keyword_pl_shape"
+    HEURISTIC_DOC = "docs/heuristics/wikidata_keyword_pl_shape.md"
+    n_heur_matched_pls = 0     # matched existing pl_id
+    n_heur_minted_pls = 0      # minted new pl_id
+    n_heur_claims = 0
+    n_heur_skipped_umbrella = 0
+    n_heur_no_claims = 0
+    for rec in wikidata_keyword_pl_records:
+        label = (rec.get("label") or "").strip()
+        if not label:
+            continue
+        qid = rec.get("qid") or ""
+        enwiki = rec.get("enwiki_title") or ""
+        candidates = [_norm_name(label)] + [
+            _norm_name(a) for a in (rec.get("aliases") or [])
+        ]
+        if enwiki:
+            candidates.append(_norm_name(enwiki))
+        match_pl_ids: list[str] = []
+        seen_match: set[str] = set()
+        for key in candidates:
+            if not key:
+                continue
+            for pid in name_to_pl_ids.get(key) or []:
+                if pid not in seen_match:
+                    seen_match.add(pid)
+                    match_pl_ids.append(pid)
+
+        if match_pl_ids:
+            # Attach to the primary existing pl_id. No new pl_row. The
+            # ext_claims carry the heuristic source so reviewers see WHY
+            # the extension was added.
+            pl_id = match_pl_ids[0]
+            # Overlay QID + Wikipedia URL onto the existing pl_id only if
+            # it has none yet (same setdefault pattern as the main loop).
+            if qid:
+                pl_wikidata_qid.setdefault(pl_id, qid)
+            if enwiki:
+                wp_url = f"https://en.wikipedia.org/wiki/{enwiki.replace(' ', '_')}"
+                pl_wikipedia_url.setdefault(pl_id, wp_url)
+            n_heur_matched_pls += 1
+        else:
+            pl_id, _canon = _mint_wikidata_pl_row(rec, src_flag=HEURISTIC_ID)
+            n_heur_minted_pls += 1
+
+        wd_exts_seen: set[str] = set()
+        emitted = 0
+        for e in rec.get("extensions") or []:
+            ext = _norm_ext("." + (e.get("value") or "").lstrip("."))
+            if not ext or ext in wd_exts_seen:
+                continue
+            wd_exts_seen.add(ext)
+            if ext in pre_promote_claimed_exts:
+                n_heur_skipped_umbrella += 1
+                continue
+            ext_claim_rows.append({
+                "pl_id": pl_id,
+                "ext": ext,
+                "source": HEURISTIC_ID,
+                "strength": "proposed",
+                "source_key": qid,
+                "evidence": HEURISTIC_DOC,
+            })
+            emitted += 1
+            n_heur_claims += 1
+        if emitted == 0:
+            n_heur_no_claims += 1
+
+    # Now use the rewritten still_unmatched_qids for the unmatched CSV
+    # (preserves the file's documented contract: "records the pipeline
+    # could not turn into pl_ids").
+    unmatched_qids = still_unmatched_qids
+
+    # Splice the per-pl_id overlay into pl_rows (now includes Gap B
+    # keyword-matched QID/URL overlays in addition to the main path's).
     for p in pl_rows:
         pid = p["pl_id"]
         if pid in pl_wikidata_qid:
@@ -954,9 +1242,22 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
 
     if wikidata_pl_records:
         print(f"  wikidata PL overlay:    matched={len(matched_qids):>4}  "
-              f"unmatched={len(unmatched_qids):>4}  "
-              f"+claims wd={n_wd_claims} wp={n_wp_claims}  "
+              f"auto_promoted={n_promoted_pls:>4}  "
+              f"still_unmatched={len(unmatched_qids):>4}  "
+              f"+claims wd={n_wd_claims} wp={n_wp_claims} "
+              f"+promoted_claims={n_promoted_claims} (umbrella_skipped={n_skipped_umbrella}) "
               f"+aliases={n_wd_aliases}")
+        if n_promoted_no_claims:
+            print(f"                          {n_promoted_no_claims} promoted PL(s) had "
+                  f"all extensions umbrella'd — pl_row kept (wikidata_qid only).")
+    if wikidata_keyword_pl_records:
+        print(f"  wikidata keyword PL:    matched={n_heur_matched_pls:>4}  "
+              f"minted={n_heur_minted_pls:>4}  "
+              f"+claims={n_heur_claims} (umbrella_skipped={n_heur_skipped_umbrella}, "
+              f"no_claims={n_heur_no_claims}) "
+              f"[source={HEURISTIC_ID}, strength=proposed]")
+
+    if wikidata_pl_records:
         # Persist the unmatched-candidates list as a debug/future-work feed.
         # These are PL-shaped Wikidata items (carrying P1195) that did NOT
         # resolve to any pl_id in our taxonomy — candidates for a future
@@ -1059,6 +1360,7 @@ def main() -> int:
     heuristics = load_linguist_heuristics()
     manual_labels = load_accepted_manual_labels()
     wikidata_pl_records = load_wikidata_pl_records()
+    wikidata_keyword_pl_records = load_wikidata_keyword_pl_records()
     wikipedia_infobox_records = load_wikipedia_infobox_records()
     print(f"  manual review (accepted): {len(manual_labels)} ext-label submissions to promote")
 
@@ -1071,6 +1373,9 @@ def main() -> int:
     print(f"  repo aliases:     {sum(len(v) for v in repo_aliases.values())} alias entries")
     print(f"  wikidata PLs:     {len(wikidata_pl_records)} records (P1195-bearing, "
           f"PL-shaped instance_of)")
+    print(f"  wikidata keyword PLs: {len(wikidata_keyword_pl_records)} records "
+          f"(P1195-bearing, NOT in PL-types closure but instance_of label "
+          f"matches PL-shaped keyword phrase)")
     print(f"  wikipedia infoboxes: {len(wikipedia_infobox_records)} pages indexed")
 
     print("\nBuilding tables...")
@@ -1082,6 +1387,7 @@ def main() -> int:
         repo_meta_extensions=repo_meta_extensions,
         repo_meta_full=repo_meta_full,
         wikidata_pl_records=wikidata_pl_records,
+        wikidata_keyword_pl_records=wikidata_keyword_pl_records,
         wikipedia_infobox_records=wikipedia_infobox_records,
         owner_repo=_gh_owner_repo(),
     )

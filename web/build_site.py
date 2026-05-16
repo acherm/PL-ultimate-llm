@@ -1085,6 +1085,7 @@ def layout(
           <a href="{rel}review/extensions/index.html">Review</a>
           <a href="{rel}review/curator/index.html">Curator</a>
           <a href="{rel}contribute/add-pl/index.html">Add a PL</a>
+          <a href="{rel}candidates/index.html">Candidates</a>
           <a href="{rel}stats/index.html">Stats</a>
           <a href="{rel}audit/index.html">Audit</a>
           {gh_nav}
@@ -3907,6 +3908,142 @@ def render_contribute_add_pl_page(
     )
 
 
+def render_candidates_page(
+    *,
+    dist_root: Path,
+    generated_at: str,
+    github_owner_repo: str | None,
+) -> int:
+    """Write /candidates/index.html — a curated bulk view of Wikidata items
+    that look like PLs (markup / query / serialization / DSL / spec /
+    stylesheet language + Wikipedia article) but aren't `instance_of
+    Q9143` and aren't in pl_list.txt yet. Each row has a one-click
+    "Use as new PL ↗" button linking to /contribute/add-pl/ pre-filled.
+
+    The CSV is produced by `tools/build_pl_candidates.py`; refresh it
+    whenever you bump the wikidata_p1195 snapshot.
+    """
+    csv_path = ROOT / "data" / "derived" / "pl_candidates.csv"
+    page = dist_root / "candidates" / "index.html"
+    rel = rel_prefix(page, dist_root)
+    page.parent.mkdir(parents=True, exist_ok=True)
+
+    rows = _read_csv(csv_path)
+    if not rows:
+        body = f"""
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">PL candidates</h1>
+          <p class='muted'>
+            No candidates indexed yet. Run <code>python3 tools/build_pl_candidates.py</code>
+            to regenerate <code>data/derived/pl_candidates.csv</code>.
+          </p>
+        </section>"""
+        page.write_text(
+            layout(title="PL candidates · PL Catalog", rel=rel, body=body,
+                   generated_at=generated_at, github_owner_repo=github_owner_repo),
+            encoding="utf-8",
+        )
+        return 0
+
+    add_pl_root = f"{rel}contribute/add-pl/index.html"
+    by_kind: dict[str, int] = {}
+    table_rows = []
+    for r in rows:
+        qid = r.get("qid") or ""
+        label = r.get("label") or qid
+        desc = r.get("description") or ""
+        aliases = r.get("aliases") or ""
+        wp_url = r.get("wikipedia_url") or ""
+        wd_url = r.get("wikidata_url") or ""
+        exts = r.get("extensions") or ""
+        kind = r.get("matched_pl_kind") or "?"
+        for k in kind.split(";"):
+            k = k.strip()
+            if k:
+                by_kind[k] = by_kind.get(k, 0) + 1
+
+        # Per-row "Use as new PL" link: pre-fills the Add-PL form with the
+        # Wikidata label, aliases, Wikipedia URL, and ALL its P1195
+        # extensions (so a single submission claims them as primary +
+        # secondary in the order Wikidata listed them).
+        ext_param = ", ".join(e.strip() for e in exts.split(";") if e.strip())
+        aliases_param = ", ".join(a.strip() for a in aliases.split(";") if a.strip())
+        qs = urlencode({
+            "name": label,
+            "evidence_url": wp_url or wd_url,
+            "extensions": ext_param,
+            "aliases": aliases_param,
+        }, quote_via=quote)
+        action_btn = (
+            f"<a class='btn' href='{add_pl_root}?{qs}' "
+            f"title='Open the Add-PL form pre-filled with this entry' "
+            f"style='font-size:12px; padding:3px 8px;'>Use as new PL ↗</a>"
+        )
+        label_html = (
+            f"<a href='{safe(wp_url)}' target='_blank' rel='noopener'>{safe(label)}</a>"
+            if wp_url else safe(label)
+        )
+        wd_link = (
+            f" <a class='muted' href='{safe(wd_url)}' target='_blank' rel='noopener' "
+            f"title='Wikidata item'>{safe(qid)}</a>"
+            if wd_url else ""
+        )
+        ext_codes = " ".join(
+            f"<code>{safe(e.strip())}</code>"
+            for e in exts.split(";") if e.strip()
+        ) or "<span class='muted'>&mdash;</span>"
+        table_rows.append(
+            f"<tr class='wikidata-row' "
+            f"data-search='{safe((label + ' ' + desc + ' ' + qid + ' ' + kind + ' ' + aliases + ' ' + exts).lower())}'>"
+            f"<td>{label_html}{wd_link}"
+            + (f"<div class='muted' style='font-size:12px;'>{safe(desc)}</div>" if desc else "")
+            + f"</td>"
+            f"<td><span class='muted'>{safe(kind)}</span></td>"
+            f"<td>{ext_codes}</td>"
+            f"<td>{action_btn}</td>"
+            f"</tr>"
+        )
+
+    kind_pills = " · ".join(
+        f"<strong>{safe(k)}</strong>: {n}" for k, n in sorted(by_kind.items())
+    )
+    body = f"""
+    <section class="panel section">
+      <h1 style="margin:0 0 8px;">PL candidates ({len(rows)})</h1>
+      <p class='muted' style='margin:0 0 12px;'>
+        Wikidata items that look like programming languages — markup,
+        query, serialization, DSL, specification, or stylesheet languages
+        with a Wikipedia article — that aren't in <code>pl_list.txt</code>
+        yet. The strict filter is documented in
+        <code>tools/build_pl_candidates.py</code>; the broader 500-item
+        and 13k-item tiers are deliberately excluded to keep precision
+        high.
+      </p>
+      <p class='muted' style='margin:0 0 12px;'>{kind_pills}</p>
+      <p class='muted' style='margin:0 0 8px;'>
+        Click <strong>Use as new PL ↗</strong> on any row to open the
+        Add-PL form pre-filled with the entry's name, Wikipedia URL,
+        and all its P1195 extensions. One submission → standard pl-add
+        pipeline → draft PR → review + merge.
+      </p>
+      <div style='display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px;'>
+        <input type='search' class='wikidata-filter' placeholder='Filter by name, kind, extension, description, QID…'
+               style='flex:1; min-width:200px; padding:6px 10px; font-size:13px;' />
+      </div>
+      <table class='kv-table'>
+        <thead><tr><th>Candidate</th><th>Kind (Wikidata <code>P31</code>)</th><th>P1195 extensions</th><th>Action</th></tr></thead>
+        <tbody>{''.join(table_rows)}</tbody>
+      </table>
+    </section>"""
+    page.write_text(
+        layout(title="PL candidates · PL Catalog", rel=rel, body=body,
+               description="Wikidata items that look like PLs but aren't in the catalog yet.",
+               generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
+    return len(rows)
+
+
 def render_audit_page(*, dist_root: Path, generated_at: str, github_owner_repo: str | None) -> None:
     page = dist_root / "audit" / "index.html"
     rel = rel_prefix(page, dist_root)
@@ -4403,6 +4540,10 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
     render_contribute_add_pl_page(
         dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo,
     )
+    n_candidates = render_candidates_page(
+        dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo,
+    )
+    print(f"Wrote /candidates/ ({n_candidates} PL candidates).")
 
     # Phase 2b: per-extension pages.
     try:

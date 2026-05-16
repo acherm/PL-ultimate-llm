@@ -106,6 +106,13 @@ class TaxonomyEnrichment:
     # Provenance: GitHub issue number for PLs added via /contribute/add-pl/.
     # Empty string for PLs derived from upstream sources or LLM /loop turns.
     created_via_issue: str = ""
+    # Direct cross-source URLs surfaced by tools/enrich_pl_meta.py (lookup at
+    # issue-processing time) or by the Phase-B Wikidata overlay (for the
+    # bulk taxonomy). Per-PL page renders these as "View on Wikipedia / Wikidata"
+    # pills with direct links, alongside the generic source pills.
+    wikipedia_url: str = ""
+    wikidata_qid: str = ""
+    wikidata_url: str = ""
     # Wikidata / Wikipedia overlay (added by tools/build_pl_taxonomy.py
     # Phase B). Empty string when no matching Wikidata item was found.
     # The per-PL wikipedia_url unblocks the "Wikipedia" source pill on
@@ -655,6 +662,7 @@ def synthesize_taxonomy_only_languages(
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
+            wikidata_url=str(row.get("wikidata_url") or "").strip(),
         )
     return new_langs, new_enrichments
 
@@ -701,6 +709,7 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
+            wikidata_url=str(row.get("wikidata_url") or "").strip(),
         )
     return out
 

@@ -682,10 +682,12 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "types": row.get("types", ""),
             **{k: ("yes" if v else "no") for k, v in flags.items()},
             "in_manual_add": "no",
+            "in_wikidata": "no",
             "created_via_issue": "",
             # Filled in after the main loop by the Wikidata/Wikipedia overlay.
             "wikidata_qid": "",
             "wikipedia_url": "",
+            "wikidata_url": "",
         })
 
         # Aliases (from Pygments + Hyperpolyglot + Rosetta Code + repo meta)
@@ -832,6 +834,18 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
         evidence_url = (meta.get("evidence_url") or "").strip()
         created_via = meta.get("created_via_issue")
         created_via_str = str(created_via) if created_via not in (None, "") else ""
+        # Enrichment hits from tools/enrich_pl_meta.py (Wikipedia + Wikidata
+        # search at issue-processing time). When set, count them as proper
+        # source attestations: in_wikipedia / in_wikidata flag the PL as
+        # being mentioned by those sources.
+        wp_url = (meta.get("wikipedia_url") or "").strip()
+        wd_qid = (meta.get("wikidata_qid") or "").strip()
+        wd_url = (meta.get("wikidata_url") or "").strip()
+        sources_set = ["manual_add"]
+        if wp_url:
+            sources_set.append("wikipedia")
+        if wd_qid:
+            sources_set.append("wikidata")
         pl_rows.append({
             "pl_id": pl_id,
             "canonical_name": canonical,
@@ -840,8 +854,8 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "pygments_name": "",
             "hyperpolyglot_name": "",
             "rosettacode_name": "",
-            "source_flags": "manual_add",
-            "source_count": "1",
+            "source_flags": ";".join(sources_set),
+            "source_count": str(len(sources_set)),
             "first_appeared": "",
             "homepage": "",
             "evidence_urls": evidence_url,
@@ -852,14 +866,16 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "in_pldb": "no",
             "in_linguist": "no",
             "in_pygments": "no",
-            "in_wikipedia": "no",
+            "in_wikipedia": "yes" if wp_url else "no",
             "in_esolang": "no",
             "in_hyperpolyglot": "no",
             "in_rosettacode": "no",
             "in_manual_add": "yes",
+            "in_wikidata": "yes" if wd_qid else "no",
             "created_via_issue": created_via_str,
-            "wikidata_qid": "",
-            "wikipedia_url": "",
+            "wikidata_qid": wd_qid,
+            "wikipedia_url": wp_url,
+            "wikidata_url": wd_url,
         })
         # Aliases from meta.json + any extra `repo_aliases` entry under the
         # same canonical (the alias loader covers the latter).
@@ -1082,9 +1098,11 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "in_hyperpolyglot": "no",
             "in_rosettacode": "no",
             "in_manual_add": "no",
+            "in_wikidata": "yes" if qid else "no",
             "created_via_issue": "",
             "wikidata_qid": qid,
             "wikipedia_url": wp_url,
+            "wikidata_url": f"https://www.wikidata.org/wiki/{qid}" if qid else "",
         })
         # Aliases from Wikidata aliases + enwiki title (when different).
         for a in rec.get("aliases") or []:
@@ -1464,10 +1482,11 @@ def main() -> int:
         "paradigms", "typing", "designed_by", "types",
         "in_pldb", "in_linguist", "in_pygments", "in_wikipedia",
         "in_esolang", "in_hyperpolyglot", "in_rosettacode",
-        "in_manual_add", "created_via_issue",
-        # Wikidata/Wikipedia overlay — nullable, added by Phase B of the
-        # wikidata extension-index integration.
-        "wikidata_qid", "wikipedia_url",
+        "in_manual_add", "in_wikidata", "created_via_issue",
+        # Wikidata/Wikipedia overlay — nullable. Filled either by Phase B of
+        # the wikidata extension-index integration (for upstream PLs) or by
+        # tools/enrich_pl_meta.py (for in-repo PLs added via the web form).
+        "wikidata_qid", "wikipedia_url", "wikidata_url",
     ])
     write_csv(out_dir / "pl_alias.csv", alias_rows, ["pl_id", "alias", "source"])
     write_csv(out_dir / "ext_claim.csv", ext_claim_rows, [

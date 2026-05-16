@@ -5,6 +5,59 @@ This is a minimal scaffold for an infinite loop where, at each turn, a randomly 
 2) a real program (code + origin URL) in that language,
 3) and the language must be new to the current list.
 
+## Project status (May 2026, branch `swh-evidence-v1`)
+
+> Originally scoped to **LLM-curated PLs + example programs**. This branch
+> prototypes a broader role: **cross-source PL taxonomy + Software Heritage
+> evidence + crowdsourced extension labelling**, all rendered into the same
+> per-PL pages on the static site. Prototype-quality; not aimed at production
+> yet, but the prototype is documented in detail so the design can be
+> reviewed / criticised / refined.
+
+What landed beyond the original LLM-curation scope:
+
+| Piece | Where | What it does |
+|---|---|---|
+| Cross-source PL taxonomy | `tools/build_pl_taxonomy.py` + `data/derived/pl_taxonomy/` | Merges PLDB + Linguist + Pygments + Wikipedia + Esolang + Hyperpolyglot + Rosetta Code into `pl`, `pl_alias`, `ext_claim` (with `source`+`strength` per claim), `ext_summary`, `heuristic` tables. |
+| Content-based PL classifier | `tools/pl_classify.py` | Runs Linguist's `heuristics.yml` (377 rules across 148 ambiguous extensions) as a runnable predicate set. |
+| SWH mining + sample fetcher | `tools/swh_extension_mining.py` + `tools/fetch_samples.py` | Mines the SWH popular-content-names parquet for real archived programs per extension; materializes bytes to `samples/<pl_id>/<sha1>/` with citation-grade qualified SWHIDs. |
+| SWH-MSR-ARV ext popularity | `tools/build_swh_ext_popularity.py` → `data/derived/swh_extensions_popularity.csv` | Per-extension occurrence aggregate (1950–2023) for ~2.96M alphanumeric extensions across the SWH archive. Source dataset: Desmazières / Di Cosmo / Lorentz, *50 Years of Programming Language Evolution through the Software Heritage looking glass*, MSR 2025: 372–383. See [`docs/citations.md`](docs/citations.md). |
+| Extension review queue | `tools/build_extension_review_queue.py` → `data/derived/extension_review_queue.csv` | Ranked list of extensions that need a manual label (popular in SWH, no PL claim). |
+| Crowdsource label loop | `/review/extensions/`, per-ext form on `/ext/<slug>/`, GitHub Actions in `.github/workflows/ingest_ext_labels.yml` | Form on the site → pre-filled GH issue → curator script → updates `extension_labels.csv` → promotes accepted labels into `ext_claim.csv`. |
+| Site enrichment | `web/build_site.py` (extensively) | Adds cross-source pill row, ext-claim table, SWH samples section, per-ext pages (8,344), per-source pages, `/samples/` index, `/review/` views, stats additions. ~13,755 PL pages total. |
+
+Design + decision logs (the place to start reading):
+
+- `docs/SOURCES_AND_SWH_EVIDENCE.md` — the big-picture motivation.
+- `docs/SWH_EXTENSIONS_DECISIONS.md` — what's kept from SWH-MSR-ARV, what's cut, why; provenance contract for any ext↔PL mapping; PL ↔ ext asymmetry.
+- `docs/citations.md` — bibliographic citations for the SWH-MSR-ARV dataset and other upstream sources.
+- `docs/labelling_persistence.md` — how a GH issue becomes a row on the site.
+- `docs/extension_labels.md` — controlled vocabulary for manual labels.
+- `docs/PHASE2_OVERNIGHT.md` — concrete status note for the integration.
+
+### Public site deployment
+
+The static site builds automatically on every push to `swh-evidence-v1` via
+`.github/workflows/pages_deploy.yml` and is served at the repo's GitHub
+Pages URL.
+
+**One-time setup** (after merging this branch's `pages_deploy.yml`):
+Settings → Pages → Source: **"GitHub Actions"**. Then push (or trigger
+"Deploy site to GitHub Pages" from the Actions tab); the deploy URL appears
+in the workflow run output.
+
+**Known gap on the public deploy**:
+`data/derived/swh_extensions_popularity.csv` (the SWH-MSR-ARV-derived
+per-extension aggregate) is gitignored. The CI deploy doesn't have it, so
+SWH-popularity panels and the /ext/ sort-by-popularity will be empty in
+the public site. The site otherwise works (taxonomy, samples, labelling
+form, etc.). To close the gap: either commit the 77 MB file via Git LFS
+or fetch it from cloud storage as a workflow pre-step.
+
+The original LLM-curation scope (everything below) is untouched.
+
+---
+
 Rules enforced locally by Python:
 - The proposed language name must not already be in the list (`data/pl_list.txt`).
 - The proposal must include at least one evidence URL for the language (e.g., Wikipedia or official site).
@@ -104,3 +157,54 @@ After a campaign finishes, push results with `git push origin main`.
 
 See [`tools/claude/README.md`](tools/claude/README.md) for full architecture
 details and troubleshooting.
+
+## Master inventory reproduction
+
+To reproduce the upstream `PL-ultimate` idea inside this repo and compare it
+against the local `pl_list`, use [`tools/master_inventory.py`](tools/master_inventory.py).
+
+It builds a master inventory from:
+- PLDB
+- GitHub Linguist
+- Wikipedia
+- optional Esolang
+
+Then it augments that inventory with:
+- Hyperpolyglot coverage
+- local Pygments lexer support
+- Rosetta Code language support
+
+### Build
+
+```bash
+git clone --depth 1 https://github.com/breck7/pldb /tmp/pldb
+python3 tools/master_inventory.py build --pldb-dir /tmp/pldb --include-esolang
+```
+
+Outputs are written under `data/derived/`, including:
+- `languages_master.csv`
+- `languages_master_augmented.csv`
+- `languages_master_augmented_pygments.csv`
+- `languages_master_augmented_rosettacode.csv`
+- `extensions_inventory.csv`
+
+Raw fetched sources are cached under `data/raw/`.
+
+### Compare with pl_list
+
+```bash
+python3 tools/master_inventory.py compare
+```
+
+Comparison artifacts are written under `reports/master_inventory/`, including:
+- `summary.md`
+- `summary.json`
+- `pl_list_matches_master.csv`
+- `pl_list_missing_from_master.csv`
+- `master_missing_from_pl_list.csv`
+
+To run both steps in one shot:
+
+```bash
+python3 tools/master_inventory.py all --pldb-dir /tmp/pldb --include-esolang
+```

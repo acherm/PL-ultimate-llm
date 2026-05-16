@@ -1,0 +1,45 @@
+{{! corresponding files: commerce_orders.php & commerce_orders.json }}
+
+{{#all_order_details}}
+	<h4>{{copy_export_orders}}</h4>
+	<a href="{{www_path}}/commerce/orders/export/unfulfilled" class="button noajax">{{copy_export_recent}}</a>
+	<a href="{{www_path}}/commerce/orders/export/" class="button noajax">{{copy_export_all}}</a>
+
+	<h4>{{copy_all_completed}}</h4>
+	<table style="width:100%;" class="responsive">
+		<colgroup style="width:10%;" />
+		<colgroup style="width:13%;" />
+		<colgroup style="width:32%;" />
+		<colgroup />
+		<colgroup style="width:8%;" />
+		<colgroup style="width:8%;" />
+		<thead>
+			<tr>
+				<th scope="col">{{copy_order_num}}</th>
+				<th scope="col">{{copy_date}}</th>
+				<th scope="col">{{copy_customer}}</th>
+				<th scope="col">{{copy_items}}</th>
+				<th scope="col" style="text-align:right;">{{copy_gross}}</th>
+				<th scope="col" style="text-align:right;">{{copy_net}}</th>
+			</tr>
+		</thead>
+		<tbody>
+	
+	    {{#all_order_details}}
+		<tr>
+			<td>{{id}}</td>
+			<td>{{{date}}}</td>
+			<td>{{{customer}}}</td>
+			<td>{{items}}</td>
+			<td style="text-align:right;">{{gross}}</td>
+			<td style="text-align:right;">{{net}}</td>
+		</tr>
+		{{/all_order_details}}
+
+		</tbody>
+	</table>
+{{/all_order_details}}
+{{^all_order_details}}
+	<h4>{{copy_no_orders}}</h4>
+	<p>{{copy_no_orders_2}}</p>
+{{/all_order_details}}

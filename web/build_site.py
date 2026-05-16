@@ -278,10 +278,52 @@ def load_external_extension_index() -> dict[str, list[dict]]:
             # extensions with the dot, so normalise here.
             ext_key = "." + ext_raw
             out.setdefault(ext_key, []).append(r)
-    # Sort each ext's rows: those with a Wikipedia URL first, then alpha label.
-    for rows in out.values():
+    # Sort each ext's rows so the "canonical" entry surfaces first. Without
+    # this, alphabetical order buries the main entity (e.g. Q42332 / PDF for
+    # .pdf) below sub-variants (Acrobat TouchUp, GraphiCode Programmable,
+    # GeoPDF, …) that just happen to alphabetise earlier.
+    #
+    # Ranking signal (lower = better):
+    #   1. Wikipedia article whose URL ends with the ext-as-uppercase
+    #      (e.g. /PDF for .pdf) → strongest "this is the canonical entry"
+    #   2. Label matches the ext (case-insensitive) or one of its aliases
+    #      mentions "<ext> format" / "<EXT> format" / canonical-pattern
+    #   3. Has Wikipedia URL (more authoritative than Wikidata-only rows)
+    #   4. Wikidata rank == "normal" (deprecated rows last)
+    #   5. Alphabetical by label (final tiebreaker)
+    for ext_key, rows in out.items():
+        bare_ext = ext_key.lstrip(".").lower()
+        wp_canonical_suffix = "/" + bare_ext.upper()
+        for r in rows:
+            label = (r.get("label") or "").strip().lower()
+            wp_url = (r.get("wikipedia_url") or "").strip()
+            aliases = (r.get("aliases") or "").lower()
+            rank = (r.get("wikidata_rank") or "").lower()
+            score = 0
+            # Strongest: Wikipedia article whose path is exactly the
+            # uppercase ext (e.g. en.wikipedia.org/wiki/PDF).
+            if wp_url.upper().endswith(wp_canonical_suffix):
+                score -= 100
+            # Label matches the ext.
+            if label == bare_ext:
+                score -= 50
+            # "Portable Document Format" / "Scalable Vector Graphics" style
+            # canonical-name patterns: full-form aliases that contain
+            # the abbreviation + "Format" / "Graphics" / "Language".
+            if any(
+                kw in aliases for kw in (
+                    f"{bare_ext} format", f"{bare_ext.upper()} format",
+                    "format", "language", "graphics",
+                )
+            ) and label in aliases:
+                score -= 5
+            if wp_url:
+                score -= 10
+            if rank == "deprecated":
+                score += 100
+            r["_canonical_score"] = score
         rows.sort(key=lambda x: (
-            0 if x.get("wikipedia_url") else 1,
+            x.get("_canonical_score", 0),
             (x.get("label") or "").lower(),
         ))
     _EXTERNAL_EXTENSION_INDEX_CACHE = out
@@ -2253,9 +2295,20 @@ def render_per_extension_pages(
                         f"title='Open the Add-PL form pre-filled with this entry' "
                         f"style='font-size:12px; padding:3px 8px;'>Use as new PL ↗</a>"
                     )
+                # "Top match" pill: highest-scoring canonical row (Wikipedia
+                # URL ending in /<EXT_UPPER>). Visually distinguishes the
+                # row a reviewer should look at first.
+                is_top_match = r.get("_canonical_score", 0) <= -100
+                top_match_pill = (
+                    f"<span class='pill strength-primary' "
+                    f"style='margin-left:6px; font-size:11px;' "
+                    f"title='Wikipedia article path matches the extension — likely the canonical entry'>"
+                    f"top match</span>"
+                    if is_top_match else ""
+                )
                 ext_html_rows.append(
                     f"<tr class='wikidata-row' data-search='{safe((label + ' ' + desc + ' ' + qid + ' ' + instance_of + ' ' + aliases_raw).lower())}'>"
-                    f"<td>{label_html}"
+                    f"<td>{label_html}{top_match_pill}"
                     + (f"<div class='muted' style='font-size:12px;'>{safe(desc)}</div>" if desc else "")
                     + f"</td>"
                     f"<td><span class='muted'>{safe(instance_of_short)}</span></td>"

@@ -144,10 +144,15 @@ def post_known(swhids: list[str], *, token: str | None = None) -> dict[str, bool
     return {s: bool(v.get("known", False)) for s, v in data.items()}
 
 
-def check_origin(url: str, *, token: str | None = None) -> tuple[bool | None, int]:
-    """GET /api/1/origin/<url>/get/. Returns (known, remaining_quota).
+def check_origin(url: str, *, token: str | None = None) -> tuple[bool | None, int, int]:
+    """GET /api/1/origin/<url>/get/. Returns (known, remaining_quota, reset_at).
 
-    `known=None` if the check failed for a reason other than 404.
+    - known=True  → 200
+    - known=False → 404
+    - known=None  → other (incl. 429); inspect reset_at to decide when to retry.
+
+    `reset_at` is the unix timestamp when the rate-limit window resets;
+    -1 if not provided.
     """
     encoded = urllib.parse.quote(url, safe=":/")
     endpoint = ORIGIN_ENDPOINT.format(url=encoded)
@@ -155,12 +160,14 @@ def check_origin(url: str, *, token: str | None = None) -> tuple[bool | None, in
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
             remaining = int(r.headers.get("X-Ratelimit-Remaining", "-1"))
-            return (r.status == 200, remaining)
+            reset = int(r.headers.get("X-Ratelimit-Reset", "-1"))
+            return (r.status == 200, remaining, reset)
     except urllib.error.HTTPError as e:
         remaining = int(e.headers.get("X-Ratelimit-Remaining", "-1"))
+        reset = int(e.headers.get("X-Ratelimit-Reset", "-1"))
         if e.code == 404:
-            return (False, remaining)
-        return (None, remaining)
+            return (False, remaining, reset)
+        return (None, remaining, reset)
 
 
 def main() -> int:
@@ -181,8 +188,15 @@ def main() -> int:
                         "the cnt+rev sweep at ~3 calls / ~10 seconds.")
     p.add_argument("--origin-throttle", type=float, default=0.5,
                    help="Seconds between origin GETs when --check-origins "
-                        "is set (default: %(default).1f). Adaptive sleep "
-                        "kicks in if quota drops below 5.")
+                        "is set (default: %(default).1f). On quota=0 the "
+                        "script sleeps until the X-Ratelimit-Reset window "
+                        "automatically; this knob only governs the normal "
+                        "per-call gap.")
+    p.add_argument("--retry-origin-errors", action="store_true",
+                   help="Read the existing --out-csv and only re-check "
+                        "origins whose `ori_known` column is `error` "
+                        "(typically rate-limit casualties from a prior run). "
+                        "Idempotent: yes/no answers are preserved as-is.")
     p.add_argument("--dry-run", action="store_true",
                    help="List samples that would be checked; make no requests.")
     args = p.parse_args()
@@ -238,28 +252,57 @@ def main() -> int:
             continue
         known_map.update(result)
 
-    # Origin verification: per-URL GET, optional.
+    # Origin verification: per-URL GET, optional. Idempotent re-runs:
+    # if --retry-origin-errors is set, we read the prior CSV and only
+    # re-check origins whose status was "error" (rate-limit casualties).
     origin_known: dict[str, bool | None] = {}
     if args.check_origins and origin_urls:
-        urls_sorted = sorted(origin_urls)
-        print(f"\nChecking {len(urls_sorted)} unique origin URL(s) via "
-              f"/api/1/origin/.../get/ (throttle={args.origin_throttle}s) ...")
-        for i, url in enumerate(urls_sorted, start=1):
+        urls_to_check = sorted(origin_urls)
+        prior_map: dict[str, str] = {}
+        if args.retry_origin_errors:
             try:
-                known, remaining = check_origin(url, token=token)
-            except urllib.error.URLError as e:
-                print(f"  [{i}/{len(urls_sorted)}] {url[:60]} URLError: {e}")
-                origin_known[url] = None
-                continue
-            origin_known[url] = known
-            tag = "yes" if known is True else "no" if known is False else "error"
-            print(f"  [{i}/{len(urls_sorted)}] {tag:5s}  remain={remaining}  {url[:80]}")
-            # Adaptive sleep: if quota gets tight, slow down.
-            sleep = args.origin_throttle
-            if 0 <= remaining < 5:
-                sleep = max(sleep, 30.0)
-                print(f"    quota tight ({remaining}); sleeping {sleep}s")
-            time.sleep(sleep)
+                with open(args.out_csv, encoding="utf-8") as f:
+                    for r in csv.DictReader(f):
+                        m = _ORIGIN_RE.search(r["qualified_swhid"])
+                        if m:
+                            prior_map[m.group(1)] = r["ori_known"]
+            except FileNotFoundError:
+                pass
+            urls_to_check = sorted(
+                u for u in origin_urls
+                if prior_map.get(u) in ("error", "", None)
+            )
+            print(f"\nRetry mode: {len(urls_to_check)} origin(s) had errors; "
+                  f"skipping {len(origin_urls) - len(urls_to_check)} with yes/no.")
+            for u, status in prior_map.items():
+                if status in ("yes", "no"):
+                    origin_known[u] = (status == "yes")
+        if not urls_to_check:
+            print("No origins left to check.")
+        else:
+            print(f"Checking {len(urls_to_check)} unique origin URL(s) via "
+                  f"/api/1/origin/.../get/ (throttle={args.origin_throttle}s) ...")
+            for i, url in enumerate(urls_to_check, start=1):
+                # If we're already at zero quota from the previous call,
+                # sleep until reset BEFORE issuing the next call. Sleeping
+                # AFTER (as the previous version did) means the next call
+                # still 429s during the reset window.
+                try:
+                    known, remaining, reset_at = check_origin(url, token=token)
+                except urllib.error.URLError as e:
+                    print(f"  [{i}/{len(urls_to_check)}] {url[:60]} URLError: {e}")
+                    origin_known[url] = None
+                    continue
+                origin_known[url] = known
+                tag = "yes" if known is True else "no" if known is False else "error"
+                print(f"  [{i}/{len(urls_to_check)}] {tag:5s}  remain={remaining}  {url[:80]}")
+                # If quota is now zero, sleep until reset before next call.
+                if 0 <= remaining < 1 and reset_at > 0:
+                    sleep_s = max(0, reset_at - int(time.time())) + 2
+                    print(f"    quota exhausted; sleeping until reset: {sleep_s}s")
+                    time.sleep(sleep_s)
+                else:
+                    time.sleep(args.origin_throttle)
     elif origin_urls and not args.check_origins:
         print(f"\nOrigin verification skipped (--check-origins not set). "
               f"{len(origin_urls)} unique origin URL(s) would be checked.")

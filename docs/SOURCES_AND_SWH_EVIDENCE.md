@@ -246,23 +246,31 @@ allows it:
 |---|---|---|
 | `swh:1:cnt:<sha1>` (bytes) | bulk `POST /known/` | **255/255 yes** |
 | `swh:1:rev:<commit>` (anchor) | bulk `POST /known/` | **245/255 yes, 10 no** |
-| `swh:1:ori:<sha1(url)>` (origin) | per-URL `GET /origin/<url>/get/` (opt-in: `--check-origins`) | not yet run for 255 |
+| `swh:1:ori:<sha1(url)>` (origin) | per-URL `GET /origin/<url>/get/` | **227/255 yes, 28 no** |
+| **All three** | | **227/255 (89%)** |
 
 `/known/` rejects `ori` SWHIDs server-side ("'ori' is not a valid
 ObjectType"), so origin existence falls back to a 1-request-per-origin
 endpoint. With 224 unique origins across the 255 samples, that's ~2h
-anonymously or ~2 min with `SWH_TOKEN`.
+anonymously (one ratelimit reset window) or ~2 min with `SWH_TOKEN`.
+`--retry-origin-errors` reads the existing CSV and only re-runs the
+origins whose prior status was `error` (rate-limit casualties), so
+re-runs are idempotent and incremental.
 
-**What the 10 rev=no findings mean:** for those samples the bytes are
-in SWH, but the specific commit cited as `anchor` is not. The chain
-(GitHub repo's latest commit on that path) didn't land in SWH's
-crawl, so the qualified SWHID's anchor qualifier is aspirational
-rather than verified. The bytes themselves still cite cleanly.
+**What the rev=no / ori=no findings mean:** for the 10 rev=no samples
+the bytes are in SWH, but the specific commit cited as `anchor` is
+not — SWH crawled their origin but not at that commit. For the 28
+ori=no samples, SWH never visited that GitHub URL at all (likely
+recent forks, archived repos that moved, or origins SWH's loader
+hasn't reached). The bytes still cite cleanly via `swh:1:cnt:` in
+both cases, but the qualified SWHID's `;anchor=` or `;origin=`
+qualifier is aspirational rather than verified.
 
 So:
 - weak existence holds for every sample (cnt);
-- anchor commit verified for 96% of samples;
-- origin verification deferred to authenticated run.
+- anchor commit verified for 96% (245/255);
+- origin verified for 89% (227/255);
+- all three qualifiers cleanly verified for 89% (227/255).
 
 ### Plan for the existing 255
 
@@ -314,7 +322,7 @@ published by SWH on the next derived dataset (asking).
 | Sample bytes on disk with metadata.json | ✅ done |
 | `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15); semantics caveat below |
 | Strict match: parquet content_id → sha1_git === fetched sha1_git | ⚠️  not enforced (see §8) |
-| Weak existence check on the 255 existing samples | ✅ done (2026-05-15): cnt 255/255, rev 245/255, ori deferred (see §8) |
+| Weak existence check on the 255 existing samples | ✅ done (2026-05-16): cnt 255/255, rev 245/255, ori 227/255 — see §8 |
 | Re-verify under strict match or regenerate the 255 | 🔜 deferred to SWH-native pipeline / Athena |
 | Full-scale mining (all shards) | tried 2026-05-15 over public S3 anon; killed after 6.8h at unknown % (no progress bar in that run); progress bar now in place for next attempt |
 | ori-nodes resolution for SWH-canonical origin | not implemented |

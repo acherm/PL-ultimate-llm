@@ -718,20 +718,27 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
                     "evidence": evidence_str,
                 })
 
-    # 5. In-repo-only PLs: any meta.json whose canonical name didn't match
-    # an upstream-derived row. These are typically Add-PL form submissions
-    # for PLs not yet in PLDB/Linguist/Pygments/etc. We mint a pl_row with
-    # `in_manual_add: yes` and emit repo_meta ext_claim rows from the
-    # extensions list. This is what makes the new PL visible in
-    # `/source/manual_add/`, gives the extensions a real claim target, and
-    # lets the manual-review promotion step resolve `pl/<id>` against an
-    # existing pl_id.
+    # 5. In-repo-only PLs from the /contribute/add-pl/ web form. We mint a
+    # pl_row with `in_manual_add: yes` and emit ext_claim rows from the
+    # extensions list. This gives the PL a real pl_id (so its extensions
+    # can promote and the manual-review reconciliation can resolve
+    # `pl/<id>`), and surfaces it in `/source/manual_add/`.
+    #
+    # Crucially: we ONLY mint a row here when meta.json has
+    # `created_via_issue` set. That's the signal that the PL came through
+    # the web form (with a traceable GitHub issue). LLM-`/loop`-curated PLs
+    # already in `languages/<Name>/` but absent from master_inventory are
+    # left alone — they keep their pre-existing behavior (no pl_row,
+    # accessed via the Language object on the catalog side). Otherwise we'd
+    # sweep ~2k /loop entries into `in_manual_add`, which is wrong: those
+    # are agentic additions, not crowdsourced web-form submissions.
     existing_canonicals = {p["canonical_name"].lower() for p in pl_rows}
     repo_meta_full = repo_meta_full or {}
     repo_meta_extensions = repo_meta_extensions or {}
     in_repo_only_canonicals = sorted(
         c for c in repo_meta_full.keys()
         if c.lower() not in existing_canonicals
+        and repo_meta_full[c].get("created_via_issue") not in (None, "")
     )
     for canonical in in_repo_only_canonicals:
         meta = repo_meta_full[canonical]

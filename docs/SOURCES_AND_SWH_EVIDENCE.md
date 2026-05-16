@@ -242,12 +242,15 @@ in `data/derived/swh_sample_verification.csv`.
 SWHIDs per sample, all checked against SWH where the bulk endpoint
 allows it:
 
-| Claim | Method | Result |
+| Claim | Method | Result (as of 2026-05-16 after .pgn batch) |
 |---|---|---|
-| `swh:1:cnt:<sha1>` (bytes) | bulk `POST /known/` | **255/255 yes** |
-| `swh:1:rev:<commit>` (anchor) | bulk `POST /known/` | **245/255 yes, 10 no** |
-| `swh:1:ori:<sha1(url)>` (origin) | per-URL `GET /origin/<url>/get/` | **227/255 yes, 28 no** |
-| **All three** | | **227/255 (89%)** |
+| `swh:1:cnt:<sha1>` (bytes) | bulk `POST /known/` | **261/261 yes** |
+| `swh:1:rev:<commit>` (anchor) | bulk `POST /known/` | **251/261 yes, 10 no** |
+| `swh:1:ori:<sha1(url)>` (origin) | per-URL `GET /origin/<url>/get/` | **233/261 yes, 28 no** |
+| **All three** | | **233/261 (89%)** |
+
+The 28 samples with aspirational provenance (`ori=no` and/or `rev=no`)
+are enumerated in [`samples_aspirational_provenance.md`](samples_aspirational_provenance.md).
 
 `/known/` rejects `ori` SWHIDs server-side ("'ori' is not a valid
 ObjectType"), so origin existence falls back to a 1-request-per-origin
@@ -322,7 +325,7 @@ published by SWH on the next derived dataset (asking).
 | Sample bytes on disk with metadata.json | ✅ done |
 | `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15); semantics caveat below |
 | Strict match: parquet content_id → sha1_git === fetched sha1_git | ⚠️  not enforced (see §8) |
-| Weak existence check on the 255 existing samples | ✅ done (2026-05-16): cnt 255/255, rev 245/255, ori 227/255 — see §8 |
+| Weak existence check on all samples | ✅ done (2026-05-16): cnt 261/261, rev 251/261, ori 233/261 — see §8, list of 28 in [`samples_aspirational_provenance.md`](samples_aspirational_provenance.md) |
 | Re-verify under strict match or regenerate the 255 | 🔜 deferred to SWH-native pipeline / Athena |
 | Full-scale mining (all shards) | tried 2026-05-15 over public S3 anon; killed after 6.8h at unknown % (no progress bar in that run); progress bar now in place for next attempt |
 | ori-nodes resolution for SWH-canonical origin | not implemented |

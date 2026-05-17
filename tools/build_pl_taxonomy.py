@@ -1623,6 +1623,22 @@ def main() -> int:
 
     print(f"\nWrote {out_dir}/{{pl,pl_alias,ext_claim,ext_summary,heuristic}}.csv")
 
+    # Refresh the review queue automatically. The review-queue logic reads
+    # ext_summary + ext_claim to decide which extensions still need a label;
+    # if we leave the queue stale, exts that became well-attributed in this
+    # taxonomy build (e.g. .pdf gaining its Wikidata claim from Phase C)
+    # remain visible on /review/extensions/ until someone reruns the queue
+    # by hand. Chain it here so the two are always in sync.
+    try:
+        import subprocess as _sp
+        import sys as _sys
+        _sp.run(
+            [_sys.executable, str(ROOT / "tools" / "build_extension_review_queue.py")],
+            check=False, timeout=120,
+        )
+    except Exception as e:
+        print(f"  [warn] failed to refresh extension review queue: {e}")
+
     # Quick sanity check on famous polysemy cases.
     print("\n--- Sanity check (selected extensions) ---")
     by_ext = {r["ext"]: r for r in ext_summary}

@@ -548,8 +548,31 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
     }
   }
 
+  // /review/extensions/ orphan filter: when the checkbox is ticked, hide
+  // every row except those flagged data-orphan="1" (no claim, no Wikidata,
+  // no heuristic, no manual label, no SWH sample). Lets a reviewer zoom in
+  // on the most-mysterious extensions.
+  function _wireReviewOrphanFilter() {
+    const cb = document.getElementById("reviewOrphansOnly");
+    if (!cb) return;
+    const rows = Array.from(document.querySelectorAll("tr.review-row"));
+    const apply = () => {
+      const only = cb.checked;
+      for (const r of rows) {
+        const is_orphan = r.getAttribute("data-orphan") === "1";
+        r.style.display = (!only || is_orphan) ? "" : "none";
+      }
+    };
+    cb.addEventListener("change", apply);
+    apply();
+  }
+
   if (typeof document !== "undefined") {
-    const _run = () => { _prefillAddPlFromUrl(); _wireWikidataFilters(); };
+    const _run = () => {
+      _prefillAddPlFromUrl();
+      _wireWikidataFilters();
+      _wireReviewOrphanFilter();
+    };
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", _run);
     } else {

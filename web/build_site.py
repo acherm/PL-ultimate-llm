@@ -1410,7 +1410,32 @@ def render_extension_review_queue_page(
     # before deciding.
     samples_by_ext_for_queue = load_swh_samples_by_ext()
 
+    # "Orphan" detection — extensions with zero evidence anywhere: no PL
+    # claim, no Wikidata "external" entry, no Linguist heuristic, no
+    # manual label submission, no SWH sample. These are the highest-
+    # ambiguity reviews and worth surfacing separately.
+    external_ext_for_queue = load_external_extension_index()
+    heur_rows_for_queue: dict[str, list[dict]] = {}
+    heur_csv = TAXONOMY_DIR / "heuristic.csv"
+    if heur_csv.exists():
+        for h in _read_csv(heur_csv):
+            heur_rows_for_queue.setdefault(h.get("applies_to_ext", ""), []).append(h)
+
+    def _is_orphan(ext_key: str, n_claim: int) -> bool:
+        if n_claim > 0:
+            return False
+        if external_ext_for_queue.get(ext_key):
+            return False
+        if heur_rows_for_queue.get(ext_key):
+            return False
+        if existing_labels.get(ext_key):
+            return False
+        if samples_by_ext_for_queue.get(ext_key):
+            return False
+        return True
+
     listing = []
+    n_orphan = 0
     for r in rows:
         ext = r["ext_canonical"]
         url_slug = _ext_url_slug(ext)
@@ -1450,8 +1475,19 @@ def render_extension_review_queue_page(
             if n_samples else ""
         )
 
+        is_orphan = _is_orphan(ext, n_claim)
+        if is_orphan:
+            n_orphan += 1
+        orphan_pill = (
+            f"<span class='pill' style='background:rgba(200,120,40,0.20); color:#f0c89a;' "
+            f"title='No PL claim, no Wikidata entry, no Linguist heuristic, no manual label, no SWH sample — total mystery extension'>"
+            f"🪶 orphan</span>"
+            if is_orphan else ""
+        )
+        row_data_attr = " data-orphan='1'" if is_orphan else " data-orphan='0'"
+
         listing.append(
-            f"<tr>"
+            f"<tr class='review-row'{row_data_attr}>"
             f"<td><a href='{rel}ext/{url_slug}/index.html'><code>{safe(r['ext_raw'])}</code></a>"
             f"{prior_html}</td>"
             f"<td>{_fmt_occ(total)}</td>"
@@ -1460,6 +1496,7 @@ def render_extension_review_queue_page(
             f"<td>{safe(current) if current else '—'}</td>"
             f"<td><span class='pill src-taxonomy'>{safe(suggested)}</span></td>"
             f"<td>{samples_pill}</td>"
+            f"<td>{orphan_pill}</td>"
             f"<td>{label_btn}</td>"
             f"</tr>"
         )
@@ -1511,6 +1548,7 @@ def render_extension_review_queue_page(
 
       <div style='display:flex; flex-wrap:wrap; gap:10px; margin: 12px 0;'>
         <div class="stat"><div class="num">{len(rows):,}</div><div class="muted">in queue<br/>(popular ≥ {_fmt_occ(MIN_OCC)} occurrences &amp; not well-attributed)</div></div>
+        <div class="stat" title="Extensions with no PL claim, no Wikidata entry, no Linguist heuristic, no manual label, no SWH sample — total-mystery cases worth prioritizing"><div class="num">{n_orphan:,}</div><div class="muted">🪶 orphans<br/>(zero evidence anywhere)</div></div>
         <div class="stat"><div class="num">{n_well_attributed_popular:,}</div><div class="muted">popular exts skipped<br/>(≥ {_fmt_occ(MIN_OCC)} occurrences &amp; already well-attributed)</div></div>
         <div class="stat"><div class="num">{n_well_attributed_in_taxonomy:,}</div><div class="muted">well-attributed exts<br/>(whole taxonomy, any popularity)</div></div>
         <div class="stat"><div class="num">{n_ext_in_taxonomy:,}</div><div class="muted">total exts<br/>in taxonomy</div></div>
@@ -1519,12 +1557,20 @@ def render_extension_review_queue_page(
 
       <p class='muted'>An extension is "well-attributed" (skipped from this queue) if it has at least one primary claim from Linguist or Pygments, OR all claims agree on a single PL entity after consolidating master_inventory near-duplicates. See <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/SWH_EXTENSIONS_DECISIONS.md#11-provenance-contract-for-ext--pl-mappings' target='_blank' rel='noopener'>SWH_EXTENSIONS_DECISIONS.md §11</a> for the full attribution-state rule.</p>
 
+      <p class='muted'>An extension is "🪶 orphan" if it has <strong>no PL claim, no Wikidata entry, no Linguist heuristic, no manual label, and no SWH sample</strong>. Total-mystery cases — most worth a human eye. Tick the filter to focus on them.</p>
+
       <p class='muted'>Vocabulary: <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/extension_labels.md' target='_blank' rel='noopener'>docs/extension_labels.md</a>.</p>
     </section>
     <section class="panel section">
-      <p class='muted'>Auto-suggested labels are <em>hints</em> (rule-based on the extension string). Always override based on actual evidence.</p>
+      <div style='display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:10px;'>
+        <label style='display:flex; align-items:center; gap:6px; font-size:13px;'>
+          <input type='checkbox' id='reviewOrphansOnly' />
+          <span>Show only 🪶 orphans ({n_orphan:,})</span>
+        </label>
+        <span class='muted' style='font-size:12px;'>Auto-suggested labels are <em>hints</em> (rule-based on the extension string). Always override based on actual evidence.</span>
+      </div>
       <table class='kv-table'>
-        <thead><tr><th>Extension</th><th>SWH</th><th>Last</th><th>#Claim</th><th>Current claimants</th><th>Auto-suggested</th><th>Samples</th><th>Action</th></tr></thead>
+        <thead><tr><th>Extension</th><th>SWH</th><th>Last</th><th>#Claim</th><th>Current claimants</th><th>Auto-suggested</th><th>Samples</th><th>Orphan?</th><th>Action</th></tr></thead>
         <tbody>{''.join(listing)}</tbody>
       </table>
     </section>
@@ -2684,8 +2730,29 @@ def render_per_extension_pages(
           <p class='muted'>To propose <em>adding</em> a missing PL or <em>disputing</em> one of these, fill the form below. For a multi-PL submission, enter <code>pl/&lt;id&gt;, pl/&lt;id&gt;, …</code> (comma-separated) in the custom field.</p>
         </section>"""
 
+        # "Orphan" detection mirrors the review-queue logic: zero evidence
+        # of any kind across every signal we ingest. The badge promotes
+        # these to top priority for reviewer attention.
+        ext_external_rows = external_rows  # already loaded above
+        is_orphan_ext = (
+            not claims
+            and not ext_external_rows
+            and not heur_by_ext.get(ext, [])
+            and not existing_labels.get(ext, [])
+            and not swh_by_ext.get(ext, [])
+        )
         if attribution_state in ("unattributed", "weakly-attributed", "confirmed-polysemous"):
-            if attribution_state == "unattributed":
+            if attribution_state == "unattributed" and is_orphan_ext:
+                heading = "🪶 Orphan extension — no evidence anywhere"
+                blurb = (
+                    f"<strong>Total mystery.</strong> <code>{safe(ext)}</code> has no PL claim, "
+                    f"no Wikidata or Wikipedia entry, no Linguist heuristic, no manual label, "
+                    f"and no archived SWH sample. The auto-suggested label (<code>{safe(suggested_for_label)}</code>) "
+                    f"is the rule-based guess; treat it as a starting point, not an answer. "
+                    f"If you know what this extension is — even \"it's a one-off from project X\" — "
+                    f"please submit a label below. Orphans are the highest-priority cases."
+                )
+            elif attribution_state == "unattributed":
                 heading = "Help label this extension"
                 blurb = "No PL in our taxonomy claims this extension. If you know what it's used for, fill the form below."
             elif attribution_state == "weakly-attributed":

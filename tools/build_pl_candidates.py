@@ -3,18 +3,23 @@
 PLs but aren't `instance_of programming-language (Q9143)` and aren't yet
 in `data/pl_list.txt`.
 
-Strict filter (rationale: keep precision high so the maintainer's
-one-click "Use as new PL" choice on the /candidates/ page is almost
-always a yes):
+Moderate filter (rationale: keep precision via the Wikipedia-article
+requirement, broaden recall to file-format families so canonical
+entries like PDF, SVG, JSON, RSS land in the candidates list):
 
 - `instance_of` contains one of:
-    Q37045   markup language
-    Q1144882 query language
-    Q3071980 data interchange format
-    Q174923  serialization format
-    Q199897  domain-specific language
-    Q1135808 specification language
-    Q1330336 stylesheet language
+    Q37045    markup language
+    Q1144882  query language
+    Q3071980  data interchange format
+    Q174923   serialization format
+    Q199897   domain-specific language
+    Q1135808  specification language
+    Q1330336  stylesheet language
+    Q235557   file format
+    Q26085352 file format family
+    Q24566596 text-based file format
+    Q24451526 data format
+    Q694975   electronic document
 - has an enwiki sitelink (means there's a Wikipedia article)
 - canonical name (case-insensitive) is NOT already in pl_list.txt
 
@@ -40,13 +45,23 @@ RAW_DIR = ROOT / "data" / "raw"
 OUT_CSV = ROOT / "data" / "derived" / "pl_candidates.csv"
 
 STRICT_INSTANCE_QIDS = {
-    "Q37045":   "markup language",
-    "Q1144882": "query language",
-    "Q3071980": "data interchange format",
-    "Q174923":  "serialization format",
-    "Q199897":  "domain-specific language",
-    "Q1135808": "specification language",
-    "Q1330336": "stylesheet language",
+    # Pure-PL-shaped categories (high precision).
+    "Q37045":    "markup language",
+    "Q1144882":  "query language",
+    "Q3071980":  "data interchange format",
+    "Q174923":   "serialization format",
+    "Q199897":   "domain-specific language",
+    "Q1135808":  "specification language",
+    "Q1330336":  "stylesheet language",
+    # Broader file-format categories — needed so canonical entries like
+    # PDF (Q42332), SVG (Q2078), JSON (Q2063), RSS (Q45432) land in the
+    # candidates list. The enwiki-sitelink + alias dedup filter keeps the
+    # noise (codecs, vendor-proprietary binaries) manageable.
+    "Q235557":   "file format",
+    "Q26085352": "file format family",
+    "Q24566596": "text-based file format",
+    "Q24451526": "data format",
+    "Q694975":   "electronic document",
 }
 
 
@@ -83,9 +98,14 @@ def main() -> int:
             continue
         if label.lower() in existing:
             continue
-        # Aliases that ARE in pl_list also disqualify (avoid duplicates).
+        # Aliases that ARE in pl_list also disqualify (avoid duplicates) —
+        # but only when the alias is at least 4 characters. Short Wikidata
+        # aliases are often noise (e.g. "jj" for RSS, "ai" for Adobe
+        # Illustrator) and case-insensitively collide with unrelated 2-3
+        # char PLs in pl_list.txt. The maintainer would notice a real
+        # duplicate at PR-review time anyway.
         aliases = [(a or "").strip() for a in (rec.get("aliases") or [])]
-        if any(a.lower() in existing for a in aliases if a):
+        if any(a.lower() in existing for a in aliases if a and len(a) >= 4):
             continue
 
         extensions = []

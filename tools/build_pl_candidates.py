@@ -41,6 +41,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PL_LIST = ROOT / "data" / "pl_list.txt"
+PL_CSV = ROOT / "data" / "derived" / "pl_taxonomy" / "pl.csv"
+PL_ALIAS_CSV = ROOT / "data" / "derived" / "pl_taxonomy" / "pl_alias.csv"
 RAW_DIR = ROOT / "data" / "raw"
 OUT_CSV = ROOT / "data" / "derived" / "pl_candidates.csv"
 
@@ -75,6 +77,26 @@ def main() -> int:
     if not p_list_path.exists():
         raise SystemExit(f"ERROR: {p_list_path} not found.")
     existing = {ln.strip().lower() for ln in p_list_path.read_text(encoding="utf-8").splitlines() if ln.strip()}
+    # Also exclude PLs known to pl.csv (the much larger taxonomy derived from
+    # upstream sources). Without this, /candidates/ leaks Q's like Q2115
+    # (XML) — present in master_inventory via Linguist/PLDB but not in the
+    # LLM-curated pl_list.txt. Two dedup signals:
+    #   - canonical names + aliases from pl.csv / pl_alias.csv
+    #   - wikidata_qid already attached to a pl_row (Phase B + Phase C)
+    attached_qids: set[str] = set()
+    if PL_CSV.exists():
+        for r in csv.DictReader(PL_CSV.open(encoding="utf-8")):
+            cn = (r.get("canonical_name") or "").strip().lower()
+            if cn:
+                existing.add(cn)
+            q = (r.get("wikidata_qid") or "").strip()
+            if q:
+                attached_qids.add(q)
+    if PL_ALIAS_CSV.exists():
+        for r in csv.DictReader(PL_ALIAS_CSV.open(encoding="utf-8")):
+            a = (r.get("alias") or "").strip().lower()
+            if a:
+                existing.add(a)
 
     snap = _latest_snapshot("wikidata_p1195.*.jsonl")
     if not snap:
@@ -92,6 +114,9 @@ def main() -> int:
         if not (instance_qids & set(STRICT_INSTANCE_QIDS.keys())):
             continue
         if not rec.get("enwiki_title"):
+            continue
+        # Drop Q's already attached to an existing pl_row (Phase B or C).
+        if rec.get("qid", "") in attached_qids:
             continue
         label = (rec.get("label") or "").strip()
         if not label:

@@ -544,6 +544,26 @@ def load_wikidata_pl_records() -> list[dict]:
     return out
 
 
+def load_all_wikidata_p1195_records() -> list[dict]:
+    """Read the pinned Wikidata snapshot — every record, no PL-shape filter.
+
+    Powers the "name match against existing pl_rows" attachment pass
+    (Phase C). Includes file-format / markup / data-format entries that
+    aren't strictly programming languages on Wikidata but whose label
+    or aliases match an existing PL in the catalog (e.g. Q2063 JSON,
+    Q42332 PDF — Wikidata calls them file formats; we already have
+    matching pl_rows from PLDB/Linguist/Pygments).
+    """
+    path = _latest_snapshot("wikidata_p1195.*.jsonl")
+    if path is None:
+        return []
+    out: list[dict] = []
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            out.append(json.loads(line))
+    return out
+
+
 def load_wikidata_keyword_pl_records() -> list[dict]:
     """Read the pinned Wikidata snapshot, return items OUTSIDE the
     PL-types closure whose instance_of labels match a PL-keyword phrase.
@@ -600,6 +620,30 @@ def _wikidata_rank_to_strength(rank: str) -> str:
     return "primary"
 
 
+def _wikidata_rank_to_strength_strict(rank: str) -> str:
+    """Strict Wikidata-rank → ext_claim-strength mapping for Phase C.
+
+    Used when attaching P1195 extensions to existing pl_rows by name match
+    (where Wikidata's own rank is the only quality signal — vs Linguist /
+    Pygments, which already carry primary/secondary). Mapping:
+
+        preferred   → primary
+        normal      → secondary
+        deprecated  → skip (caller checks)
+
+    Differs from the looser `_wikidata_rank_to_strength` (which maps both
+    normal AND preferred to primary; preserved unchanged for Phase B and
+    Phase B-keyword for backwards compatibility — flipping their default
+    would shift hundreds of existing claims).
+    """
+    r = (rank or "").lower()
+    if "preferred" in r:
+        return "primary"
+    if "deprecated" in r:
+        return "skip"
+    return "secondary"
+
+
 # ---------------------------------------------------------------------------
 # Build
 # ---------------------------------------------------------------------------
@@ -634,6 +678,7 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
           wikidata_pl_records: list[dict] | None = None,
           wikidata_keyword_pl_records: list[dict] | None = None,
           wikipedia_infobox_records: dict[str, dict] | None = None,
+          wikidata_all_records: list[dict] | None = None,
           owner_repo: str | None = None):
     pl_rows = []
     alias_rows = []
@@ -1249,6 +1294,78 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
     # could not turn into pl_ids").
     unmatched_qids = still_unmatched_qids
 
+    # ----- Phase C: Wikidata→existing-PL attach by label/alias match -----
+    # Phase B only considered Wikidata records whose `instance_of` matches
+    # the PL-types closure (or PL-keyword shape via Phase B-keyword).
+    # Items like Q42332 PDF, Q2063 JSON, Q45432 RSS — file formats /
+    # markup languages on Wikidata — never reach those filters, even
+    # though our pl_rows already include them (via PLDB/Linguist/Pygments).
+    # Phase C walks the FULL P1195 snapshot, name-matches against
+    # `name_to_pl_ids`, and attaches QID + Wikipedia URL + P1195
+    # ext_claims for the matches Phase B missed. Strict rank→strength
+    # mapping (preferred→primary, normal→secondary, deprecated→skip).
+    n_c_attached = 0
+    n_c_ext_claims = 0
+    if wikidata_all_records:
+        already_pl = set(pl_wikidata_qid.keys())
+        already_q = set(pl_wikidata_qid.values())
+        for rec in wikidata_all_records:
+            qid = rec.get("qid") or ""
+            if not qid or qid in already_q:
+                continue
+            label = rec.get("label") or ""
+            aliases = rec.get("aliases") or []
+            enwiki = rec.get("enwiki_title") or ""
+            candidates = [_norm_name(label)] + [_norm_name(a) for a in aliases]
+            if enwiki:
+                candidates.append(_norm_name(enwiki))
+            # First pl_id that's not already attached to a different Q wins.
+            matched_pid = None
+            for key in candidates:
+                if not key:
+                    continue
+                for pid in name_to_pl_ids.get(key) or []:
+                    if pid not in already_pl:
+                        matched_pid = pid
+                        break
+                if matched_pid:
+                    break
+            if not matched_pid:
+                continue
+            pl_wikidata_qid[matched_pid] = qid
+            if enwiki:
+                pl_wikipedia_url[matched_pid] = (
+                    "https://en.wikipedia.org/wiki/" + enwiki.replace(" ", "_")
+                )
+            already_pl.add(matched_pid)
+            already_q.add(qid)
+            n_c_attached += 1
+            # P1195 → ext_claim rows. Strict rank mapping.
+            wd_evidence = f"https://www.wikidata.org/wiki/{qid}"
+            seen_ext: set[str] = set()
+            for e in rec.get("extensions") or []:
+                v = (e.get("value") if isinstance(e, dict) else str(e)) or ""
+                ext = _norm_ext("." + v.lstrip("."))
+                if not ext or ext in seen_ext:
+                    continue
+                seen_ext.add(ext)
+                rank = (e.get("rank") if isinstance(e, dict) else "") or ""
+                strength = _wikidata_rank_to_strength_strict(rank)
+                if strength == "skip":
+                    continue
+                ext_claim_rows.append({
+                    "pl_id": matched_pid,
+                    "ext": ext,
+                    "source": "wikidata",
+                    "strength": strength,
+                    "source_key": qid,
+                    "evidence": wd_evidence,
+                })
+                n_c_ext_claims += 1
+        if n_c_attached:
+            print(f"  wikidata→existing PL (Phase C): attached={n_c_attached}  "
+                  f"+ext_claim={n_c_ext_claims}")
+
     # Splice the per-pl_id overlay into pl_rows (now includes Gap B
     # keyword-matched QID/URL overlays in addition to the main path's).
     for p in pl_rows:
@@ -1379,6 +1496,7 @@ def main() -> int:
     manual_labels = load_accepted_manual_labels()
     wikidata_pl_records = load_wikidata_pl_records()
     wikidata_keyword_pl_records = load_wikidata_keyword_pl_records()
+    wikidata_all_records = load_all_wikidata_p1195_records()
     wikipedia_infobox_records = load_wikipedia_infobox_records()
     print(f"  manual review (accepted): {len(manual_labels)} ext-label submissions to promote")
 
@@ -1407,6 +1525,7 @@ def main() -> int:
         wikidata_pl_records=wikidata_pl_records,
         wikidata_keyword_pl_records=wikidata_keyword_pl_records,
         wikipedia_infobox_records=wikipedia_infobox_records,
+        wikidata_all_records=wikidata_all_records,
         owner_repo=_gh_owner_repo(),
     )
 

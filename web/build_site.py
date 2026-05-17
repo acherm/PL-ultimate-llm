@@ -2551,35 +2551,74 @@ def render_per_extension_pages(
                 f"Disagree or have a correction? Open a labelling issue.</a>"
                 if label_issue_url else ""
             )
-            # Build the source list — be specific about WHICH sources attest
-            # to this extension. E.g. "Wikidata (Q42332)" links to the entity
-            # directly so the reader can verify the claim in seconds.
+            # Build a per-source status row for ALL authoritative sources.
+            # Silent sources (e.g. Linguist doesn't carry .pdf) are
+            # informative too — they hint that the extension lives outside
+            # the strict "what Linguist treats as code" line. So we show:
+            #   ✓ <Source> · <evidence>     when source attests primary
+            #   ✗ <Source> · no claim       when source has no primary claim
+            # Sources with a non-primary (secondary/proposed) claim are
+            # marked with a "secondary" badge.
+            SOURCE_DISPLAY = {
+                "linguist": "Linguist",
+                "pygments": "Pygments",
+                "wikidata": "Wikidata",
+                "wikipedia": "Wikipedia",
+            }
+            # Lookup the non-primary claims per source too, so silent vs
+            # weak attestation are visually distinct.
+            secondary_by_source: dict[str, list[dict]] = {}
+            for c in claims:
+                if c.get("source") in AUTHORITATIVE and c.get("strength") != "primary":
+                    secondary_by_source.setdefault(c["source"], []).append(c)
             source_chips: list[str] = []
-            for src, src_claims in auth_primary_sources.items():
-                if src in ("wikidata", "wikipedia"):
-                    # Each claim's source_key is a Q-id (wikidata) or
-                    # canonical name (wikipedia). Surface the first one with
-                    # a clickable evidence link.
-                    c = src_claims[0]
-                    qid = c.get("source_key", "")
+            for src in ("linguist", "pygments", "wikidata", "wikipedia"):
+                display = SOURCE_DISPLAY[src]
+                primary_claims = auth_primary_sources.get(src) or []
+                if primary_claims:
+                    c = primary_claims[0]
                     evidence = c.get("evidence", "")
-                    if src == "wikidata" and qid and evidence.startswith("http"):
+                    if src == "wikidata":
+                        qid = c.get("source_key", "")
+                        suffix = f" · {safe(qid)}" if qid else ""
+                        if evidence.startswith("http"):
+                            source_chips.append(
+                                f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
+                                f"class='pill src-wikidata' title='Primary claim from {display}'>"
+                                f"✓ {display}{suffix}</a>"
+                            )
+                            continue
+                    if src == "wikipedia" and evidence.startswith("http"):
                         source_chips.append(
                             f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
-                            f"class='pill src-wikidata'>Wikidata · {safe(qid)}</a>"
+                            f"class='pill src-wikipedia' title='Primary claim from {display}'>"
+                            f"✓ {display}</a>"
                         )
-                    elif src == "wikipedia" and evidence.startswith("http"):
+                        continue
+                    if src in ("linguist", "pygments") and evidence.startswith("http"):
                         source_chips.append(
                             f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
-                            f"class='pill src-wikipedia'>Wikipedia</a>"
+                            f"class='pill src-{src}' title='Primary claim from {display}'>"
+                            f"✓ {display}</a>"
                         )
-                    else:
-                        source_chips.append(
-                            f"<span class='pill src-{safe(src)}'>{safe(src.capitalize())}</span>"
-                        )
-                else:
+                        continue
                     source_chips.append(
-                        f"<span class='pill src-{safe(src)}'>{safe(src.capitalize())}</span>"
+                        f"<span class='pill src-{src}' title='Primary claim from {display}'>"
+                        f"✓ {display}</span>"
+                    )
+                elif src in secondary_by_source:
+                    # Has a claim but it's not primary — secondary attestation.
+                    source_chips.append(
+                        f"<span class='pill' style='background:rgba(160,160,160,0.18);' "
+                        f"title='Only secondary claim from {display}'>"
+                        f"△ {display} · secondary</span>"
+                    )
+                else:
+                    # Silent: no claim of any strength from this source.
+                    source_chips.append(
+                        f"<span class='pill muted' style='background:rgba(120,120,120,0.12); "
+                        f"color:var(--muted);' title='No claim from {display}'>"
+                        f"✗ {display} · no claim</span>"
                     )
             # When no authoritative-primary exists but the single-entity rule
             # fired (every claim, including weaker ones, points to one PL),
@@ -2601,7 +2640,7 @@ def render_per_extension_pages(
                 )
             sources_line = (
                 f"<div style='margin-top:6px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;'>"
-                f"<span class='muted' style='font-size:12px;'>Attesting authoritative sources:</span> "
+                f"<span class='muted' style='font-size:12px;'>Authoritative sources:</span> "
                 f"{' '.join(source_chips)}</div>"
                 if source_chips else ""
             )

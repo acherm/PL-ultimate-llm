@@ -2307,8 +2307,18 @@ def render_per_extension_pages(
                     f"top match</span>"
                     if is_top_match else ""
                 )
+                # Hide rows past the first 3 by default. A reveal toggle
+                # below the table flips display on the `.wd-collapsed` rows.
+                # Top-match row never collapses (it's index 0 and the
+                # canonical entry); other rows past the cap inherit
+                # `wd-collapsed` so JS can toggle them.
+                hidden_cls = " wd-collapsed" if len(ext_html_rows) >= 3 else ""
+                style_attr = (
+                    " style='display:none;'" if hidden_cls else ""
+                )
                 ext_html_rows.append(
-                    f"<tr class='wikidata-row' data-search='{safe((label + ' ' + desc + ' ' + qid + ' ' + instance_of + ' ' + aliases_raw).lower())}'>"
+                    f"<tr class='wikidata-row{hidden_cls}'{style_attr} "
+                    f"data-search='{safe((label + ' ' + desc + ' ' + qid + ' ' + instance_of + ' ' + aliases_raw).lower())}'>"
                     f"<td>{label_html}{top_match_pill}"
                     + (f"<div class='muted' style='font-size:12px;'>{safe(desc)}</div>" if desc else "")
                     + f"</td>"
@@ -2324,6 +2334,14 @@ def render_per_extension_pages(
             # type the canonical name + evidence URL themselves.
             blank_add_pl_qs = urlencode({"extensions": ext}, quote_via=quote)
             blank_add_pl_url = f"{add_pl_root}?{blank_add_pl_qs}"
+            n_collapsed = max(0, len(external_rows) - 3)
+            reveal_btn = (
+                f"<button type='button' class='btn wd-reveal-toggle' "
+                f"style='margin-top:8px; font-size:12px; padding:3px 10px;' "
+                f"data-show='{n_collapsed}' data-hidden='{n_collapsed}'>"
+                f"Show {n_collapsed} more ↓</button>"
+                if n_collapsed > 0 else ""
+            )
             external_section = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Wikidata says… ({len(external_rows)})</h2>
@@ -2346,6 +2364,7 @@ def render_per_extension_pages(
             <thead><tr><th>Format</th><th>Class (Wikidata <code>P31</code>)</th><th>Suggested label</th><th>MIME</th><th>Notes</th><th>Action</th></tr></thead>
             <tbody>{''.join(ext_html_rows)}</tbody>
           </table>
+          {reveal_btn}
         </section>"""
         heur_section = ""
         if heur_rows_html:
@@ -2394,11 +2413,24 @@ def render_per_extension_pages(
         #   weakly-attributed: only secondary / unknown / proposed claims.
         #     Reviewers may want to confirm or correct.
         #   unattributed: no claims at all. Prime review target.
-        AUTHORITATIVE = {"linguist", "pygments"}
+        # Sources we trust as authoritative for primary/secondary attribution.
+        # Linguist + Pygments are curated language databases. Wikidata is a
+        # structured P1195 claim ("file extension" property) — comparable in
+        # authority and now powering ~700 ext_claim rows via Phase B + C.
+        # Wikipedia infobox is included for symmetry (sourced from the same
+        # snapshot pipeline). The user-visible attribution panel lists
+        # exactly which of these contributed for each ext.
+        AUTHORITATIVE = {"linguist", "pygments", "wikidata", "wikipedia"}
         n_primary_authoritative = sum(
             1 for c in claims
             if c.get("strength") == "primary" and c.get("source") in AUTHORITATIVE
         )
+        # Group authoritative sources that contribute a primary claim for
+        # the user-visible panel wording. Keys preserve display order.
+        auth_primary_sources: dict[str, list[dict]] = {}
+        for c in claims:
+            if c.get("strength") == "primary" and c.get("source") in AUTHORITATIVE:
+                auth_primary_sources.setdefault(c["source"], []).append(c)
         # Reasons to call an extension well-attributed:
         # 1. At least one authoritative primary claim (the canonical case).
         # 2. ALL claims (across all sources, all strengths) point to ONE PL
@@ -2519,12 +2551,66 @@ def render_per_extension_pages(
                 f"Disagree or have a correction? Open a labelling issue.</a>"
                 if label_issue_url else ""
             )
+            # Build the source list — be specific about WHICH sources attest
+            # to this extension. E.g. "Wikidata (Q42332)" links to the entity
+            # directly so the reader can verify the claim in seconds.
+            source_chips: list[str] = []
+            for src, src_claims in auth_primary_sources.items():
+                if src in ("wikidata", "wikipedia"):
+                    # Each claim's source_key is a Q-id (wikidata) or
+                    # canonical name (wikipedia). Surface the first one with
+                    # a clickable evidence link.
+                    c = src_claims[0]
+                    qid = c.get("source_key", "")
+                    evidence = c.get("evidence", "")
+                    if src == "wikidata" and qid and evidence.startswith("http"):
+                        source_chips.append(
+                            f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
+                            f"class='pill src-wikidata'>Wikidata · {safe(qid)}</a>"
+                        )
+                    elif src == "wikipedia" and evidence.startswith("http"):
+                        source_chips.append(
+                            f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
+                            f"class='pill src-wikipedia'>Wikipedia</a>"
+                        )
+                    else:
+                        source_chips.append(
+                            f"<span class='pill src-{safe(src)}'>{safe(src.capitalize())}</span>"
+                        )
+                else:
+                    source_chips.append(
+                        f"<span class='pill src-{safe(src)}'>{safe(src.capitalize())}</span>"
+                    )
+            # When no authoritative-primary exists but the single-entity rule
+            # fired (every claim, including weaker ones, points to one PL),
+            # explain that path explicitly.
+            if n_primary_authoritative >= 1:
+                lead = (
+                    f"This extension is <strong>attributed</strong> to "
+                    f"<strong>{safe(primary_names) if primary_names else '?'}</strong> "
+                    f"as <code>primary</code> by "
+                    f"{n_primary_authoritative} authoritative claim"
+                    f"{'' if n_primary_authoritative == 1 else 's'}."
+                )
+            else:
+                lead = (
+                    f"This extension is <strong>attributed</strong> to "
+                    f"<strong>{safe(primary_names) if primary_names else (sorted(distinct_entities)[0] if distinct_entities else '?')}</strong> "
+                    f"&mdash; every claim across all sources (including secondary ones) "
+                    f"points to a single language."
+                )
+            sources_line = (
+                f"<div style='margin-top:6px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;'>"
+                f"<span class='muted' style='font-size:12px;'>Attesting authoritative sources:</span> "
+                f"{' '.join(source_chips)}</div>"
+                if source_chips else ""
+            )
             panel_well = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Attribution status</h2>
-          <p>This extension is <strong>already attributed</strong> as <code>primary</code> by an authoritative upstream source ({n_primary_authoritative} primary claim{'' if n_primary_authoritative == 1 else 's'} from Linguist / Pygments).
-          {f"Claimed by: <strong>{safe(primary_names)}</strong>." if primary_names else ""}</p>
-          <p class='muted'>{disagree_link}</p>
+          <p>{lead}</p>
+          {sources_line}
+          <p class='muted' style='margin-top:10px;'>{disagree_link}</p>
           {prior_block}
         </section>"""
 
@@ -2815,11 +2901,11 @@ def render_per_extension_pages(
           </div>
         </section>
         {swh_pop_html}
+        {label_section}
         {claimants_section}
         {external_section}
         {heur_section}
         {swh_section}
-        {label_section}
         """
         page.parent.mkdir(parents=True, exist_ok=True)
         page.write_text(

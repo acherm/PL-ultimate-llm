@@ -1340,9 +1340,17 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             already_pl.add(matched_pid)
             already_q.add(qid)
             n_c_attached += 1
-            # P1195 → ext_claim rows. Strict rank mapping.
+            # P1195 → ext_claim rows. Mirror Linguist's convention: first
+            # extension in the list is primary, the rest secondary. Wikidata
+            # rank `preferred` forces primary regardless of position;
+            # `deprecated` is skipped. Plain `normal` rank for a single-ext
+            # entity should obviously be primary — Phase C's prior strict
+            # mapping called these secondary, which surfaced as
+            # "secondary-only" on /ext/<x>/ pages for entries like .pdf
+            # where Wikidata is the canonical source.
             wd_evidence = f"https://www.wikidata.org/wiki/{qid}"
             seen_ext: set[str] = set()
+            primary_assigned = False
             for e in rec.get("extensions") or []:
                 v = (e.get("value") if isinstance(e, dict) else str(e)) or ""
                 ext = _norm_ext("." + v.lstrip("."))
@@ -1350,9 +1358,16 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
                     continue
                 seen_ext.add(ext)
                 rank = (e.get("rank") if isinstance(e, dict) else "") or ""
-                strength = _wikidata_rank_to_strength_strict(rank)
-                if strength == "skip":
+                if "deprecated" in rank.lower():
                     continue
+                if "preferred" in rank.lower():
+                    strength = "primary"
+                    primary_assigned = True
+                elif not primary_assigned:
+                    strength = "primary"
+                    primary_assigned = True
+                else:
+                    strength = "secondary"
                 ext_claim_rows.append({
                     "pl_id": matched_pid,
                     "ext": ext,

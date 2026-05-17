@@ -453,7 +453,8 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
    */
   function _wireWikidataFilters() {
     document.querySelectorAll("input.wikidata-filter").forEach((input) => {
-      const table = input.closest("section")?.querySelector("table");
+      const section = input.closest("section");
+      const table = section?.querySelector("table");
       if (!table) return;
       const rows = Array.from(table.querySelectorAll("tr.wikidata-row"));
       const apply = () => {
@@ -462,10 +463,18 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
         for (const r of rows) {
           const haystack = r.getAttribute("data-search") || "";
           const match = !q || haystack.includes(q);
-          r.style.display = match ? "" : "none";
+          // When a filter query is active, override the "collapsed" hide
+          // so the user sees ALL matching rows. When the query clears, the
+          // collapsed rows snap back to hidden (unless the reveal button
+          // was clicked).
+          if (q) {
+            r.style.display = match ? "" : "none";
+          } else {
+            const collapsed = r.classList.contains("wd-collapsed") && !r.dataset.revealed;
+            r.style.display = match ? (collapsed ? "none" : "") : "none";
+          }
           if (match) visible += 1;
         }
-        // Toggle a small status next to the input.
         let status = input.parentElement.querySelector(".wikidata-filter-status");
         if (!status) {
           status = document.createElement("span");
@@ -476,6 +485,31 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
         status.textContent = q ? `${visible}/${rows.length} match` : "";
       };
       input.addEventListener("input", apply);
+    });
+    // "Show N more / Show less" reveal button for collapsed Wikidata rows.
+    document.querySelectorAll("button.wd-reveal-toggle").forEach((btn) => {
+      const section = btn.closest("section");
+      if (!section) return;
+      const collapsed = Array.from(section.querySelectorAll("tr.wd-collapsed"));
+      const hiddenCount = collapsed.length;
+      btn.addEventListener("click", () => {
+        const expanded = btn.dataset.expanded === "1";
+        if (expanded) {
+          for (const r of collapsed) {
+            r.style.display = "none";
+            delete r.dataset.revealed;
+          }
+          btn.dataset.expanded = "0";
+          btn.textContent = `Show ${hiddenCount} more ↓`;
+        } else {
+          for (const r of collapsed) {
+            r.style.display = "";
+            r.dataset.revealed = "1";
+          }
+          btn.dataset.expanded = "1";
+          btn.textContent = "Show less ↑";
+        }
+      });
     });
   }
 

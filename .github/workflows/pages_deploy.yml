@@ -63,6 +63,15 @@ jobs:
           # `workflow_run` events default to the default branch (main) — we
           # need to deploy the prototype branch's content.
           ref: swh-evidence-v1
+          # Full history is required by build_site.py:
+          #   - read_turns_from_git() — populates lang.turn_commit /
+          #     agent / model / WebSearch pills from `turn: add` commits.
+          #   - index_program_provenance_from_git() — per-program
+          #     attribution by walking `git log --all --diff-filter=A`.
+          # Default `actions/checkout@v4` is depth=1 (tip only), which
+          # silently empties both maps — pages then render without any
+          # LLM provenance even though the source files carry it.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5

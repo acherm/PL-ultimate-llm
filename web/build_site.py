@@ -1996,6 +1996,156 @@ def _build_sample_request_block(
           </form>"""
 
 
+def _build_pl_ext_add_form(
+    *,
+    lang_name: str,
+    pl_id: str,
+    lang_folder: str,
+    github_owner_repo: str | None,
+) -> str:
+    """Render the "Propose a file extension for this language" panel.
+
+    Submitting opens a pre-filled GitHub issue with the `ext-review` label
+    and a structured YAML block. The existing
+    `tools/process_extension_labels.py` curator script ingests it as a
+    `pl/<id>` label proposal; on `curator_status=accepted`,
+    `build_pl_taxonomy.py` promotes it into `ext_claim.csv` with
+    `source="manual_review:<annotator>"`, `strength="proposed"`. The next
+    site rebuild surfaces the extension on this PL's page and on
+    `/ext/<ext>/`.
+
+    Returns an empty string when no GitHub repo is configured.
+    """
+    if not github_owner_repo:
+        return ""
+    # If the PL isn't in the taxonomy yet (no pl_id), derive a placeholder
+    # from the canonical name. The maintainer can correct it at review time
+    # — submitting a label CSV row is still informative even without an
+    # existing pl_id.
+    effective_pl_id = pl_id or ("pl/" + re.sub(r"[^a-z0-9]+", "_", lang_name.lower()).strip("_"))
+    return f"""
+          <form class="pl-ext-add-form"
+                data-pl-id="{safe(effective_pl_id)}"
+                data-pl-name="{safe(lang_name)}"
+                data-lang-folder="{safe(lang_folder)}"
+                data-repo="{safe(github_owner_repo)}"
+                style="margin-top:14px; padding:12px; border:1px dashed var(--border, #2a2a2a); border-radius:8px;">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div>
+                <strong>Propose a file extension for {safe(lang_name)}</strong>
+                <div class="muted" style="font-size:13px; margin-top:4px;">
+                  Submits an <code>ext-review</code> issue tagging this extension
+                  with <code>{safe(effective_pl_id)}</code>. A maintainer reviews
+                  the issue; once accepted, the taxonomy promotes it into
+                  <code>ext_claim.csv</code> and rebuilds the site.
+                </div>
+              </div>
+              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                <label style="display:flex; flex-direction:column; gap:4px;">
+                  <span class="muted" style="font-size:12px;">Extension * — e.g. <code>.oak</code></span>
+                  <input type="text" name="ext" required placeholder=".ext" />
+                </label>
+                <label style="display:flex; flex-direction:column; gap:4px;">
+                  <span class="muted" style="font-size:12px;">Friendly name (optional)</span>
+                  <input type="text" name="friendly_name" placeholder="e.g. Oaklisp source file" />
+                </label>
+              </div>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Reference URL (optional, but recommended — spec / repo / Wikipedia / vendor)</span>
+                <input type="url" name="reference_url" placeholder="https://github.com/..." />
+              </label>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Evidence / notes * — 1–3 sentences. Cite URLs if you have them.</span>
+                <textarea name="evidence" rows="3" required placeholder="Where did you see this extension used for {safe(lang_name)}? Link to a representative file or specification."></textarea>
+              </label>
+              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <button class="btn" type="submit">Submit via GitHub (opens new tab)</button>
+                <a class="pl-ext-add-fallback-link btn" href="#" target="_blank" rel="noopener"
+                   style="text-decoration:none; font-size:13px;">
+                  (or open the pre-filled issue directly)
+                </a>
+              </div>
+              <div class="pl-ext-add-status muted" style="font-size:13px; min-height:1em;"></div>
+            </div>
+          </form>"""
+
+
+def _build_pl_program_add_form(
+    *,
+    lang_name: str,
+    lang_folder: str,
+    github_owner_repo: str | None,
+) -> str:
+    """Render the "Submit a program for this language" panel.
+
+    Submitting opens a pre-filled GitHub issue with the `pl-program-add`
+    label and a structured YAML block. The
+    `.github/workflows/pl_program_add_pr.yml` workflow runs
+    `tools/process_pl_program_addition.py` against the issue, which
+    materializes
+    `languages/<folder>/programs/<sha256>/{code.<ext>,manifest.json}` and
+    opens a draft PR. Maintainer reviews + merges.
+
+    Returns an empty string when no GitHub repo is configured.
+    """
+    if not github_owner_repo:
+        return ""
+    return f"""
+          <form class="pl-program-add-form"
+                data-pl-name="{safe(lang_name)}"
+                data-pl-folder="{safe(lang_folder)}"
+                data-repo="{safe(github_owner_repo)}"
+                style="margin-top:14px; padding:12px; border:1px dashed var(--border, #2a2a2a); border-radius:8px;">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div>
+                <strong>Submit a program for {safe(lang_name)}</strong>
+                <div class="muted" style="font-size:13px; margin-top:4px;">
+                  Found a real, non-trivial program in this language on
+                  GitHub / GitLab / a tutorial / Rosetta Code? Paste the
+                  code verbatim, give the origin URL, and submit. A
+                  workflow opens a draft PR adding the program under
+                  <code>languages/{safe(lang_folder)}/programs/&lt;sha&gt;/</code>;
+                  a maintainer reviews before merge. Keep code under ~200 lines.
+                </div>
+              </div>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Title * — e.g. "Factorial", "Quicksort", "Hello world"</span>
+                <input type="text" name="title" required placeholder="(short human-readable title)" />
+              </label>
+              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                <label style="display:flex; flex-direction:column; gap:4px;">
+                  <span class="muted" style="font-size:12px;">File extension * — e.g. <code>.oak</code></span>
+                  <input type="text" name="ext" required placeholder=".ext" />
+                </label>
+                <label style="display:flex; flex-direction:column; gap:4px;">
+                  <span class="muted" style="font-size:12px;">License guess (optional) — MIT, Apache-2.0, GPL-2.0, Public Domain, …</span>
+                  <input type="text" name="license_guess" placeholder="(optional)" />
+                </label>
+              </div>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Origin URL * — public URL where this code appears (GitHub, GitLab, Rosetta Code, official docs)</span>
+                <input type="url" name="origin_url" required placeholder="https://github.com/..." />
+              </label>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Code * — paste verbatim bytes from the URL above (a real, non-trivial example)</span>
+                <textarea name="code" rows="14" required placeholder="(paste code here)" style="font-family:monospace; font-size:13px;"></textarea>
+              </label>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Notes (optional) — anything else the maintainer should know</span>
+                <textarea name="notes" rows="2" placeholder="(optional)"></textarea>
+              </label>
+              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <button class="btn" type="submit">Submit via GitHub (opens new tab)</button>
+                <a class="pl-program-add-fallback-link btn" href="#" target="_blank" rel="noopener"
+                   style="text-decoration:none; font-size:13px;">
+                  (or open the pre-filled issue directly)
+                </a>
+              </div>
+              <div class="pl-program-add-status muted" style="font-size:13px; min-height:1em;"></div>
+            </div>
+          </form>"""
+
+
 # Vocabulary used by the per-extension labelling form. Mirrors `docs/extension_labels.md`.
 LABEL_VOCAB_GROUPS = [
     ("Programming language", [
@@ -3898,6 +4048,45 @@ def render_language_pages(
         </section>
         """
 
+        # Contribute panels — let visitors propose a file extension or a
+        # real program for this PL. Both emit GitHub issues for an audit
+        # trail; (b) reuses the ext-review pipeline, (c) opens a draft PR
+        # via the pl-program-add workflow. See _build_pl_ext_add_form and
+        # _build_pl_program_add_form for the full pipeline notes. Skip on
+        # taxonomy-only PLs (no in-repo folder → no place for the program
+        # files to land; the user should /contribute/add-pl/ first).
+        contribute_html = ""
+        if github_owner_repo and lang.folder_rel:
+            pl_id_for_form = enr.pl_id if enr is not None else ""
+            ext_form_html = _build_pl_ext_add_form(
+                lang_name=lang.name,
+                pl_id=pl_id_for_form,
+                lang_folder=lang.folder_rel,
+                github_owner_repo=github_owner_repo,
+            )
+            prog_form_html = _build_pl_program_add_form(
+                lang_name=lang.name,
+                lang_folder=lang.folder_rel,
+                github_owner_repo=github_owner_repo,
+            )
+            contribute_html = f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Contribute</h2>
+          <div class='muted' style='margin-bottom:10px; font-size:13px;'>
+            Two ways to enrich this page. Both leave a trace as a GitHub
+            issue and are reviewed before they land.
+          </div>
+          <details style="margin-bottom:10px;">
+            <summary style="cursor:pointer;"><strong>Add a file extension</strong> <span class="muted" style="font-size:12px;">— e.g. "Oaklisp uses <code>.oak</code>"</span></summary>
+            {ext_form_html}
+          </details>
+          <details>
+            <summary style="cursor:pointer;"><strong>Submit a program from a public URL</strong> <span class="muted" style="font-size:12px;">— paste verbatim code + origin URL (GitHub, GitLab, Rosetta Code, …)</span></summary>
+            {prog_form_html}
+          </details>
+        </section>
+        """
+
         prev_lang, next_lang = slug_to_prev_next.get(lang.slug, (None, None))
         prev_href = f"{rel}l/{prev_lang.slug}/index.html" if prev_lang else f"{rel}index.html"
         prev_label = f"← {safe(prev_lang.name)}" if prev_lang else "← Home"
@@ -3955,6 +4144,7 @@ def render_language_pages(
         </section>
         {swh_samples_html}
         {heuristics_html}
+        {contribute_html}
         {pager}
         """
 

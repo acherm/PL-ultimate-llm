@@ -447,6 +447,216 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
   }
 
   /**
+   * Per-PL "Add an extension" form on /l/<slug>/. Submits an `ext-review`
+   * issue with `label: pl/<id>` pre-filled, reusing the existing
+   * tools/process_extension_labels.py pipeline. Once accepted by a
+   * maintainer, build_pl_taxonomy.py promotes the label into ext_claim.csv.
+   */
+  function _buildPlExtAddUrl(form) {
+    const repo = form.dataset.repo;
+    const plId = form.dataset.plId;
+    const plName = form.dataset.plName;
+    if (!repo) return { error: "This site has no GitHub repository configured." };
+    if (!plId) return { error: "This page is missing pl_id metadata." };
+    let ext = (form.ext.value || "").trim();
+    if (!ext) return { error: "Extension is required." };
+    if (!ext.startsWith(".")) ext = "." + ext;
+    const refUrl = (form.reference_url.value || "").trim();
+    const friendly = (form.friendly_name.value || "").trim();
+    const evidence = (form.evidence.value || "").trim();
+    if (!evidence) return { error: "Evidence/notes is required." };
+    const yamlBody = `<!-- ext-review: parsed by tools/process_extension_labels.py -->
+\`\`\`yaml
+ext: "${ext.replace(/"/g, '\\"')}"
+label: "${plId.replace(/"/g, '\\"')}"
+friendly_name: "${friendly.replace(/"/g, '\\"')}"
+reference_url: "${refUrl}"
+evidence: |
+${evidence.split('\n').map((l) => '  ' + l).join('\n')}
+\`\`\`
+
+## Submitted from /l/ (Add-extension form on ${plName}'s page)
+
+Reuses the \`ext-review\` pipeline: a maintainer reviews the issue;
+on \`curator_status=accepted\`, \`build_pl_taxonomy.py\` promotes this
+into \`ext_claim.csv\` with \`source=manual_review:<annotator>\`.
+`;
+    const title = `Label extension: ${ext} → ${plId} (for ${plName})`;
+    const url =
+      `https://github.com/${repo}/issues/new` +
+      `?title=${encodeURIComponent(title)}` +
+      `&body=${encodeURIComponent(yamlBody)}` +
+      `&labels=ext-review`;
+    return { url };
+  }
+
+  function _handlePlExtAddSubmit(form) {
+    const status = form.querySelector(".pl-ext-add-status");
+    const result = _buildPlExtAddUrl(form);
+    if (result.error) {
+      if (status) status.innerHTML = `<strong>Error:</strong> ${result.error}`;
+      return false;
+    }
+    let win = null;
+    try { win = window.open(result.url, "_blank", "noopener"); } catch (_) { /* noop */ }
+    if (status) {
+      status.innerHTML = win
+        ? `Opened GitHub in a new tab. If you didn't see it, click the fallback link.`
+        : `Browser blocked the new tab. Click the fallback link to open the pre-filled issue.`;
+    }
+    return false;
+  }
+
+  function _wirePlExtAddForms() {
+    if (typeof document === "undefined") return;
+    const forms = document.querySelectorAll("form.pl-ext-add-form");
+    forms.forEach((form) => {
+      if (form.dataset._wired === "1") return;
+      form.dataset._wired = "1";
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        _handlePlExtAddSubmit(form);
+      });
+      const link = form.querySelector(".pl-ext-add-fallback-link");
+      const update = () => {
+        if (!link) return;
+        const r = _buildPlExtAddUrl(form);
+        if (r.url) {
+          link.href = r.url;
+          link.textContent = "Open the pre-filled GitHub issue ↗";
+        } else {
+          link.removeAttribute("href");
+          link.textContent = `(${r.error || "incomplete"})`;
+        }
+      };
+      form.addEventListener("input", update);
+      form.addEventListener("change", update);
+      update();
+    });
+  }
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _wirePlExtAddForms);
+    } else {
+      _wirePlExtAddForms();
+    }
+  }
+
+  /**
+   * Per-PL "Submit a program" form on /l/<slug>/. Submits a
+   * `pl-program-add` issue carrying the program YAML block. The
+   * .github/workflows/pl_program_add_pr.yml workflow runs
+   * tools/process_pl_program_addition.py, which writes
+   * languages/<folder>/programs/<sha256>/{code.<ext>,manifest.json} and
+   * opens a draft PR.
+   */
+  function _buildPlProgramAddUrl(form) {
+    const repo = form.dataset.repo;
+    const plName = form.dataset.plName;
+    const plFolder = form.dataset.plFolder;
+    if (!repo) return { error: "This site has no GitHub repository configured." };
+    if (!plName || !plFolder) return { error: "This page is missing PL metadata." };
+    const title = (form.title.value || "").trim();
+    if (!title) return { error: "Program title is required." };
+    let ext = (form.ext.value || "").trim();
+    if (!ext) return { error: "File extension is required." };
+    if (!ext.startsWith(".")) ext = "." + ext;
+    const originUrl = (form.origin_url.value || "").trim();
+    if (!originUrl) return { error: "Origin URL is required." };
+    const license = (form.license_guess.value || "").trim();
+    const code = (form.code.value || "").trim();
+    if (!code) return { error: "Code body is required (paste verbatim from the origin URL)." };
+    const notes = (form.notes.value || "").trim();
+    const yamlEscape = (s) => (s || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const yamlBlockLines = (s, indent) => {
+      const pad = " ".repeat(indent || 2);
+      return (s || "").split("\n").map((l) => pad + l).join("\n");
+    };
+    const notesYaml = notes
+      ? `notes: |\n${yamlBlockLines(notes, 2)}\n`
+      : "notes: null\n";
+    const body = `<!-- pl-program-add: parsed by tools/process_pl_program_addition.py -->
+\`\`\`yaml
+pl_name: "${yamlEscape(plName)}"
+pl_folder: "${yamlEscape(plFolder)}"
+program:
+  title: "${yamlEscape(title)}"
+  ext: "${yamlEscape(ext)}"
+  origin_url: "${yamlEscape(originUrl)}"
+  license_guess: "${yamlEscape(license)}"
+  code: |
+${yamlBlockLines(code, 4)}
+${notesYaml}\`\`\`
+
+## Submitted from /l/${plFolder.toLowerCase()}/ (Submit-program form)
+
+The \`pl_program_add_pr\` workflow opens a draft PR from a
+\`pl-program-add/${plFolder}-issue-<N>\` branch that adds the program
+under \`languages/${plFolder}/programs/<sha256>/\`. Review the PR before
+merge.
+`;
+    const issueTitle = `Add program: ${plName} — ${title}`;
+    const url =
+      `https://github.com/${repo}/issues/new` +
+      `?title=${encodeURIComponent(issueTitle)}` +
+      `&body=${encodeURIComponent(body)}` +
+      `&labels=pl-program-add`;
+    return { url };
+  }
+
+  function _handlePlProgramAddSubmit(form) {
+    const status = form.querySelector(".pl-program-add-status");
+    const result = _buildPlProgramAddUrl(form);
+    if (result.error) {
+      if (status) status.innerHTML = `<strong>Error:</strong> ${result.error}`;
+      return false;
+    }
+    let win = null;
+    try { win = window.open(result.url, "_blank", "noopener"); } catch (_) { /* noop */ }
+    if (status) {
+      status.innerHTML = win
+        ? `Opened GitHub in a new tab. If you didn't see it, click the fallback link.`
+        : `Browser blocked the new tab. Click the fallback link to open the pre-filled issue.`;
+    }
+    return false;
+  }
+
+  function _wirePlProgramAddForms() {
+    if (typeof document === "undefined") return;
+    const forms = document.querySelectorAll("form.pl-program-add-form");
+    forms.forEach((form) => {
+      if (form.dataset._wired === "1") return;
+      form.dataset._wired = "1";
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        _handlePlProgramAddSubmit(form);
+      });
+      const link = form.querySelector(".pl-program-add-fallback-link");
+      const update = () => {
+        if (!link) return;
+        const r = _buildPlProgramAddUrl(form);
+        if (r.url) {
+          link.href = r.url;
+          link.textContent = "Open the pre-filled GitHub issue ↗";
+        } else {
+          link.removeAttribute("href");
+          link.textContent = `(${r.error || "incomplete"})`;
+        }
+      };
+      form.addEventListener("input", update);
+      form.addEventListener("change", update);
+      update();
+    });
+  }
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _wirePlProgramAddForms);
+    } else {
+      _wirePlProgramAddForms();
+    }
+  }
+
+  /**
    * Wikidata-rows filter on /ext/<x>/. Bound to the inline `.wikidata-filter`
    * search input. Hides rows whose `data-search` string doesn't contain the
    * (lower-cased) query.

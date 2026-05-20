@@ -1,0 +1,51 @@
+;;; This file is part of Oaklisp.
+;;;
+;;; This program is free software; you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation; either version 2 of the License, or
+;;; (at your option) any later version.
+;;;
+;;; This program is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; The GNU GPL is available at http://www.gnu.org/licenses/gpl.html
+;;; or from the Free Software Foundation, 59 Temple Place - Suite 330,
+;;; Boston, MA 02111-1307, USA
+
+
+;;; Copyright (C) 1987 Barak A. Pearlmutter & Kevin J. Lang
+
+
+(define prime-list
+  (labels (((prime? n)
+	    (iterate aux ((l prime-list))
+	      (let* ((i (car l))
+		     (n/i (quotient n i)))
+		(cond ((< n/i i) #t)
+		      ((= (* i n/i) n) #f)
+		      (else (aux (cdr l)))))))
+
+	   ((primes-list n)
+	    (if (prime? n)
+		(lcons n (primes-list (+ 1 n)))
+		(primes-list (+ 1 n)))))
+
+    (lcons 2 (primes-list 3))))
+
+
+(define (factor n)
+  (iterate step ((left n) (factors '()) (tries prime-list))
+    (let* ((try (car tries))
+	   (try-square (* try try)))
+      (cond ((= 1 left) factors)
+	    ((zero? (modulo left try))
+	     (step (quotient left try) (cons try factors) tries))
+	    ((> try-square left)
+	     (cons left factors))
+	    (else
+	     (step left factors (cdr tries)))))))
+
+
+;;; eof

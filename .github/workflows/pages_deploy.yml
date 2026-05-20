@@ -85,6 +85,16 @@ jobs:
           # duckdb is only required to regenerate swh_extensions_popularity.csv
           # from the source CSV; the build step doesn't need it.
 
+      - name: Rebuild PL taxonomy (promote accepted ext labels into ext_claim.csv)
+        # extension_labels.csv is updated by ingest_ext_labels.yml (for
+        # ext-review issues) and by pl_contribute_pr.yml's PR (for
+        # pl-contribute issues). Neither chains back to rebuild the
+        # taxonomy artefacts that build_site.py reads. Running this here
+        # makes the deploy self-contained: every checked-in label row
+        # gets promoted into ext_claim.csv / ext_summary.csv before the
+        # site is rendered. Stdlib-only, ~5s on this repo.
+        run: python3 tools/build_pl_taxonomy.py
+
       - name: Build site
         run: python3 web/build_site.py
 

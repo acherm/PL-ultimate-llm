@@ -849,6 +849,72 @@ def index_turns_by_language(turns: list[TurnInfo]) -> dict[str, TurnInfo]:
     return by_lang
 
 
+_PROGRAM_FILE_RE = re.compile(
+    r'^languages/(?P<folder>.+)/programs/(?P<sha>[0-9a-f]{64})/'
+    r'(?:manifest\.json|code\.[^/]+)$'
+)
+
+
+def index_program_provenance_from_git(
+    turns: list[TurnInfo],
+) -> dict[tuple[str, str], TurnInfo]:
+    """Map (lang_folder_rel, program_sha256) → the turn that ADDED that
+    program's files.
+
+    Walks `git log --all --diff-filter=A --name-only` once and matches
+    every added `languages/<folder>/programs/<sha>/manifest.json` or
+    `code.<ext>` path against the set of known turn commits. Earliest
+    add wins per (folder, sha) — relevant if a file ever gets re-added.
+
+    Why this exists: the legacy renderer fell back to `lang.turn_commit`,
+    which is the turn that added the *language* — for the 5 PLs with
+    programs added across multiple turns, that line was misattributing
+    every program to the first turn. With this map, each program gets
+    its own commit/agent/model line.
+
+    Falls back to {} on any git error so the build stays unbroken on
+    machines without history.
+    """
+    if not turns:
+        return {}
+    git_dir = ROOT / ".git"
+    if not git_dir.exists():
+        return {}
+    turn_by_commit = {t.commit: t for t in turns}
+    try:
+        proc = subprocess.run(
+            ["git", "--no-pager", "log", "--all", "--reverse",
+             "--diff-filter=A", "--name-only",
+             "--pretty=format:%x1e%H"],
+            cwd=str(ROOT),
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+    except Exception:
+        return {}
+    out: dict[tuple[str, str], TurnInfo] = {}
+    for record in proc.stdout.split("\x1e"):
+        record = record.strip()
+        if not record:
+            continue
+        lines = record.splitlines()
+        commit = lines[0].strip()
+        turn = turn_by_commit.get(commit)
+        if not turn:
+            continue
+        for fp in lines[1:]:
+            m = _PROGRAM_FILE_RE.match(fp.strip())
+            if not m:
+                continue
+            key = (m.group("folder"), m.group("sha"))
+            # First add wins (we already used --reverse, so this is the
+            # original add — a later re-add shouldn't overwrite).
+            if key not in out:
+                out[key] = turn
+    return out
+
+
 def guess_github_owner_repo() -> str | None:
     """
     Best-effort parse of `origin` remote into `owner/repo` for github.com.
@@ -3596,8 +3662,10 @@ def render_language_pages(
     related_by_language: dict[str, list[dict[str, Any]]],
     audit_summary: dict[str, Any] | None,
     enrichments: dict[str, TaxonomyEnrichment] | None = None,
+    program_provenance: dict[tuple[str, str], TurnInfo] | None = None,
 ) -> None:
     enrichments = enrichments or {}
+    program_provenance = program_provenance or {}
     lang_by_name = {l.name: l for l in languages}
     for lang in languages:
         page = dist_root / "l" / lang.slug / "index.html"
@@ -3728,19 +3796,40 @@ def render_language_pages(
                     links.append(f"<a href='{safe(report_prog_url)}' target='_blank' rel='noopener'>Report</a>")
                 links_html = " · ".join(links)
 
+                # Per-program provenance — prefer the turn that actually
+                # added THIS program's files (via git history); fall back to
+                # the language-level turn for cases where the git lookup
+                # misses (no `.git`, file renamed, etc.).
+                prog_turn = program_provenance.get((lang.folder_rel, prog.sha256))
+                prov_commit = prog_turn.commit if prog_turn else lang.turn_commit
+                prov_authored_at = prog_turn.authored_at if prog_turn else lang.turn_authored_at
+                prov_agent = (prog_turn.trailers.get("Agent") if prog_turn else lang.agent) or None
+                prov_model = (prog_turn.trailers.get("Model") if prog_turn else lang.model) or None
+                prov_ws = (
+                    normalize_web_search(prog_turn.trailers.get("WebSearch"))
+                    if prog_turn else lang.web_search
+                )
+                prov_temp = (
+                    parse_temperature(prog_turn.trailers.get("Temperature"))
+                    if prog_turn else lang.temperature
+                )
                 prog_prov_bits: list[str] = []
-                if lang.turn_commit:
+                if prov_commit:
                     if github_owner_repo:
-                        url = github_commit_url(owner_repo=github_owner_repo, commit=lang.turn_commit)
-                        prog_prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(lang.turn_commit[:10])}</a>")
+                        url = github_commit_url(owner_repo=github_owner_repo, commit=prov_commit)
+                        prog_prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(prov_commit[:10])}</a>")
                     else:
-                        prog_prov_bits.append(f"commit {safe(lang.turn_commit[:10])}")
-                if lang.turn_authored_at:
-                    prog_prov_bits.append(f"authored {safe(lang.turn_authored_at)}")
-                if lang.agent:
-                    prog_prov_bits.append(f"agent {safe(lang.agent)}")
-                if lang.model:
-                    prog_prov_bits.append(f"model {safe(lang.model)}")
+                        prog_prov_bits.append(f"commit {safe(prov_commit[:10])}")
+                if prov_authored_at:
+                    prog_prov_bits.append(f"authored {safe(prov_authored_at)}")
+                if prov_agent:
+                    prog_prov_bits.append(f"agent {safe(prov_agent)}")
+                if prov_model:
+                    prog_prov_bits.append(f"model {safe(prov_model)}")
+                if prov_ws:
+                    prog_prov_bits.append(f"WebSearch {safe(prov_ws)}")
+                if prov_temp is not None:
+                    prog_prov_bits.append(f"Temp {prov_temp:g}")
                 prog_prov_line = f"<div class='muted'>Provenance: {' · '.join(prog_prov_bits)}</div>" if prog_prov_bits else ""
 
                 meta_bits = []
@@ -4727,6 +4816,7 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
 
     turns = read_turns_from_git()
     turns_by_language = index_turns_by_language(turns)
+    program_provenance = index_program_provenance_from_git(turns)
     turn_stats = compute_turn_stats(turns)
 
     languages = build_languages(turns_by_language=turns_by_language)
@@ -4851,6 +4941,7 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
         related_by_language=related_by_language,
         audit_summary=audit_summary if audit_available else None,
         enrichments=enrichments,
+        program_provenance=program_provenance,
     )
     render_audit_page(dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo)
     render_contribute_add_pl_page(

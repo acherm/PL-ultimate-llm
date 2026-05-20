@@ -1,0 +1,152 @@
+name: Auto-PR for pl-contribute issues
+
+# Materializes a `pl-contribute` GitHub issue (submitted via the
+# "Propose a file extension" form on /l/<slug>/ pages) into:
+#   - a row in data/derived/extension_labels.csv claiming
+#     `ext → pl/<id>` with curator_status=accepted, and
+#   - optionally, program files under
+#     languages/<folder>/programs/<sha>/{code.<ext>,manifest.json}
+#     when the submitter pasted code.
+# Then opens a draft pull request from a feature branch. The PR merge
+# IS the maintainer's approval — on merge, the next build_pl_taxonomy.py
+# run promotes the accepted label into ext_claim.csv.
+#
+# Triggers:
+#   - issues.opened / labeled (when `pl-contribute` lands)
+#   - workflow_dispatch (manual rerun with the issue number)
+#
+# Notes:
+#   - The default GITHUB_TOKEN can open PRs with `permissions:
+#     pull-requests: write`.
+#   - Workflow does NOT auto-merge. The maintainer reviews the PR (sanity-
+#     checks the reference URL, the extension belongs to the PL, and — if
+#     a program is attached — that the code is a verbatim copy from the URL).
+
+on:
+  issues:
+    types: [opened, labeled, edited]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to materialize"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  open_pr:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.label.name == 'pl-contribute' ||
+      contains(join(github.event.issue.labels.*.name, ','), 'pl-contribute')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: swh-evidence-v1
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve issue number
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "issue=${{ github.event.inputs.issue_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "issue=${{ github.event.issue.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run process_pl_contribute.py
+        id: process
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/process_pl_contribute.py --issue ${{ steps.resolve.outputs.issue }}
+          summary=".tmp/pl_contribute_summary_${{ steps.resolve.outputs.issue }}.json"
+          pl_name=$(python3 -c "import json;d=json.load(open('$summary'));print(d['pl_name'])")
+          pl_folder=$(python3 -c "import json;d=json.load(open('$summary'));print(d['pl_folder'])")
+          pl_id=$(python3 -c "import json;d=json.load(open('$summary'));print(d['pl_id'])")
+          ext=$(python3 -c "import json;d=json.load(open('$summary'));print(d['ext'])")
+          ref=$(python3 -c "import json;d=json.load(open('$summary'));print(d['reference_url'])")
+          has_program=$(python3 -c "import json;d=json.load(open('$summary'));print(str(d['has_program']).lower())")
+          sha=$(python3 -c "import json;d=json.load(open('$summary'));print(d['program_sha256'])")
+          echo "pl_name=$pl_name"       >> "$GITHUB_OUTPUT"
+          echo "pl_folder=$pl_folder"   >> "$GITHUB_OUTPUT"
+          echo "pl_id=$pl_id"           >> "$GITHUB_OUTPUT"
+          echo "ext=$ext"               >> "$GITHUB_OUTPUT"
+          echo "reference_url=$ref"     >> "$GITHUB_OUTPUT"
+          echo "has_program=$has_program" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha"               >> "$GITHUB_OUTPUT"
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create feature branch + commit
+        id: branch
+        run: |
+          branch="pl-contribute/${{ steps.process.outputs.pl_folder }}-issue-${{ steps.resolve.outputs.issue }}"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+          git checkout -b "$branch"
+          git add -A languages/ data/derived/extension_labels.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit — nothing to PR."
+            exit 0
+          fi
+          git commit -m "pl-contribute: ${{ steps.process.outputs.pl_name }} claims ${{ steps.process.outputs.ext }} (from issue #${{ steps.resolve.outputs.issue }})
+
+          Materialized via tools/process_pl_contribute.py from the
+          /l/<slug>/ \"Propose a file extension\" form submission.
+
+          Resolves #${{ steps.resolve.outputs.issue }}"
+          git push origin "$branch"
+
+      - name: Open draft pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          body_file=$(mktemp)
+          cat > "$body_file" <<EOF
+          Materializes the \`pl-contribute\` issue #${{ steps.resolve.outputs.issue }}:
+
+          - **Extension claim** \`${{ steps.process.outputs.ext }} → ${{ steps.process.outputs.pl_id }}\` is appended to \`data/derived/extension_labels.csv\` with \`curator_status=accepted\`. Merging this PR IS the approval; the next \`build_pl_taxonomy.py\` run will promote it into \`ext_claim.csv\`.
+          - Reference URL: ${{ steps.process.outputs.reference_url }}
+          EOF
+          if [ "${{ steps.process.outputs.has_program }}" = "true" ]; then
+            cat >> "$body_file" <<EOF
+          - **Program** added at \`languages/${{ steps.process.outputs.pl_folder }}/programs/${{ steps.process.outputs.sha }}/\` (code.${{ steps.process.outputs.ext }} + manifest.json).
+          EOF
+          else
+            cat >> "$body_file" <<EOF
+          - **No program** submitted (extension-only claim).
+          EOF
+          fi
+          cat >> "$body_file" <<EOF
+
+          ## Review checklist
+          - [ ] Reference URL resolves and the extension genuinely belongs to ${{ steps.process.outputs.pl_name }}.
+          - [ ] If a program is attached: code is a verbatim copy from the reference URL, non-trivial, under ~200 lines.
+          - [ ] License guess (if present) matches the source.
+          - [ ] No conflict with existing claimants — check \`/ext/${{ steps.process.outputs.ext }}/\` for context.
+
+          To reject the extension claim while keeping a program (or vice versa), edit the file diff before merging.
+
+          Resolves #${{ steps.resolve.outputs.issue }}
+          EOF
+          gh pr create \
+            --draft \
+            --base swh-evidence-v1 \
+            --head "${{ steps.branch.outputs.branch }}" \
+            --title "pl-contribute: ${{ steps.process.outputs.pl_name }} claims ${{ steps.process.outputs.ext }} (issue #${{ steps.resolve.outputs.issue }})" \
+            --body-file "$body_file" \
+            --label pl-contribute

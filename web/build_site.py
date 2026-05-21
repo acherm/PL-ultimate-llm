@@ -1391,13 +1391,26 @@ def render_curator_review_page(
     dist_root: Path,
     generated_at: str,
     github_owner_repo: str | None,
+    languages: list[Language] | None = None,
 ) -> int:
-    """Render /review/curator/ — maintainer-facing triage of submitted labels.
+    """Render /review/curator/ — maintainer-facing triage of community
+    submissions.
 
-    Reads `data/derived/extension_labels.csv`, groups by curator_status,
-    surfaces evidence, link to GH issue, and an "Accept / Reject" action
-    (which simply commenting on the issue does in practice).
+    Three sources surfaced:
+      1. `data/derived/extension_labels.csv` — ext-review submissions
+         (extension → PL labels), grouped by curator_status.
+      2. `languages/<L>/meta.json` carrying `created_via_issue` —
+         languages added through /contribute/add-pl/ or promoted from
+         taxonomy-only via the pl-contribute form.
+      3. `languages/<L>/programs/<sha>/manifest.json` carrying
+         `created_via_issue` — programs attached via the pl-contribute
+         form.
+
+    For (2) and (3), the merge is the approval signal (a draft PR landed
+    via the workflow). This page is descriptive, not action-driving, for
+    those rows.
     """
+    languages = languages or []
     labels_csv = ROOT / "data" / "derived" / "extension_labels.csv"
     rows = _read_csv(labels_csv)
 
@@ -1405,16 +1418,25 @@ def render_curator_review_page(
     rel = rel_prefix(page, dist_root)
     page.parent.mkdir(parents=True, exist_ok=True)
 
+    community_langs_html = _render_community_languages_section(
+        languages=languages, rel=rel, github_owner_repo=github_owner_repo,
+    )
+    community_progs_html = _render_community_programs_section(
+        languages=languages, rel=rel, github_owner_repo=github_owner_repo,
+    )
+
     if not rows:
-        body = """
+        body = f"""
         <section class="panel section">
           <h1 style="margin:0 0 8px;">Curator triage</h1>
-          <p>No manual labels submitted yet. Once reviewers start labelling extensions
+          <p>No extension-label submissions yet. Once reviewers start labelling extensions
           via the <a href="../extensions/index.html">review queue</a>, this page will
           show their submissions for maintainer review.</p>
           <p class='muted'>To ingest submitted labels:
             <code>python3 tools/process_extension_labels.py</code></p>
-        </section>"""
+        </section>
+        {community_langs_html}
+        {community_progs_html}"""
     else:
         by_status: dict[str, list[dict]] = {}
         for r in rows:
@@ -1475,10 +1497,21 @@ def render_curator_review_page(
         body = f"""
         <section class="panel section">
           <h1 style="margin:0 0 8px;">Curator triage</h1>
-          <p>Submitted extension labels grouped by status. Maintainer action lives on the GitHub issues themselves: comment to discuss, edit <code>data/derived/extension_labels.csv</code> to set <code>curator_status=accepted</code> / <code>rejected</code> / <code>needs-info</code>, then re-run <code>python3 tools/process_extension_labels.py</code>.</p>
-          <p class='muted'>Total submissions: {len(rows)} · See <a href="../extensions/index.html">review queue</a> for the source list.</p>
+          <p>Community submissions grouped by source. Three independent channels feed in:</p>
+          <ul style='margin-top:0;'>
+            <li><strong>Extension labels</strong> (CSV-driven, below) — submitted from <code>/ext/&lt;x&gt;/</code> via the labelling form. Maintainer action: comment on the issue, edit <code>data/derived/extension_labels.csv</code> to set <code>curator_status=accepted</code>/<code>rejected</code>/<code>needs-info</code>, re-run <code>tools/process_extension_labels.py</code>.</li>
+            <li><strong>Community-added languages</strong> (PR-driven, lower section) — submitted from <code>/contribute/add-pl/</code> (new PL) or auto-promoted from taxonomy-only via the per-PL contribute form. Approval happens at PR-merge time.</li>
+            <li><strong>Community-contributed programs</strong> (PR-driven, lower section) — submitted from the per-PL contribute form with code. Approval happens at PR-merge time.</li>
+          </ul>
         </section>
-        {''.join(sections)}"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Extension labels ({len(rows)} total)</h2>
+          <p class='muted'>See <a href="../extensions/index.html">review queue</a> for the source list.</p>
+        </section>
+        {''.join(sections)}
+        {community_langs_html}
+        {community_progs_html}
+        """
 
     page.write_text(
         layout(title="Curator review · PL Catalog", rel=rel, body=body,
@@ -1486,6 +1519,105 @@ def render_curator_review_page(
         encoding="utf-8",
     )
     return len(rows)
+
+
+def _render_community_languages_section(
+    *,
+    languages: list[Language],
+    rel: str,
+    github_owner_repo: str | None,
+) -> str:
+    """Languages whose meta.json carries `created_via_issue` — those that
+    came in via /contribute/add-pl/ OR a pl-contribute promotion."""
+    added: list[Language] = [
+        l for l in languages
+        if l.created_via_issue is not None and l.folder_rel
+    ]
+    if not added:
+        return ""
+    # Newest issue number first — proxy for "recently submitted".
+    added.sort(key=lambda l: l.created_via_issue or 0, reverse=True)
+    rows = []
+    for l in added:
+        issue_link = (
+            f"<a href='https://github.com/{safe(github_owner_repo)}/issues/{l.created_via_issue}' target='_blank' rel='noopener'>#{l.created_via_issue}</a>"
+            if github_owner_repo else f"#{l.created_via_issue}"
+        )
+        evidence_cell = (
+            f"<a href='{safe(l.evidence_url)}' target='_blank' rel='noopener'>↗ ref</a>"
+            if l.evidence_url else "<span class='muted'>—</span>"
+        )
+        n_progs = len(l.programs)
+        prog_pill = (
+            f"<span class='pill'>{n_progs} program{'' if n_progs == 1 else 's'}</span>"
+            if n_progs else "<span class='pill muted'>0 programs</span>"
+        )
+        rows.append(
+            f"<tr>"
+            f"<td><a href='{rel}l/{l.slug}/index.html'><strong>{safe(l.name)}</strong></a></td>"
+            f"<td>{issue_link}</td>"
+            f"<td>{safe(l.added_at[:10])}</td>"
+            f"<td>{evidence_cell}</td>"
+            f"<td>{prog_pill}</td>"
+            f"</tr>"
+        )
+    return f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Community-added languages ({len(added)})</h2>
+          <p class='muted'>PLs whose <code>meta.json</code> carries <code>created_via_issue</code> — added through <a href='{rel}contribute/add-pl/index.html'>/contribute/add-pl/</a> or promoted from taxonomy-only via a per-PL <em>Propose-extension</em> submission. Already merged.</p>
+          <table class='kv-table'>
+            <thead><tr><th>Language</th><th>Issue</th><th>Added</th><th>Evidence</th><th>Programs</th></tr></thead>
+            <tbody>{''.join(rows)}</tbody>
+          </table>
+        </section>"""
+
+
+def _render_community_programs_section(
+    *,
+    languages: list[Language],
+    rel: str,
+    github_owner_repo: str | None,
+) -> str:
+    """Programs whose manifest.json carries `created_via_issue` — those
+    attached to a PL via the per-PL contribute form."""
+    items: list[tuple[Language, Program]] = []
+    for l in languages:
+        for p in l.programs:
+            if p.created_via_issue is not None:
+                items.append((l, p))
+    if not items:
+        return ""
+    items.sort(key=lambda t: t[1].created_via_issue or 0, reverse=True)
+    rows = []
+    for l, p in items:
+        issue_link = (
+            f"<a href='https://github.com/{safe(github_owner_repo)}/issues/{p.created_via_issue}' target='_blank' rel='noopener'>#{p.created_via_issue}</a>"
+            if github_owner_repo else f"#{p.created_via_issue}"
+        )
+        origin_cell = (
+            f"<a href='{safe(p.origin_url)}' target='_blank' rel='noopener'>↗ origin</a>"
+            if p.origin_url else "<span class='muted'>—</span>"
+        )
+        license_cell = safe(p.license_guess) if p.license_guess else "<span class='muted'>—</span>"
+        rows.append(
+            f"<tr>"
+            f"<td><a href='{rel}l/{l.slug}/index.html'><strong>{safe(l.name)}</strong></a></td>"
+            f"<td>{safe(p.title)}</td>"
+            f"<td>{issue_link}</td>"
+            f"<td>{safe(p.added_at[:10])}</td>"
+            f"<td>{origin_cell}</td>"
+            f"<td>{license_cell}</td>"
+            f"</tr>"
+        )
+    return f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Community-contributed programs ({len(items)})</h2>
+          <p class='muted'>Programs whose <code>manifest.json</code> carries <code>created_via_issue</code> — attached via the per-PL <em>Propose-extension</em> form (code-paste path). Already merged.</p>
+          <table class='kv-table'>
+            <thead><tr><th>Language</th><th>Program</th><th>Issue</th><th>Added</th><th>Origin</th><th>License</th></tr></thead>
+            <tbody>{''.join(rows)}</tbody>
+          </table>
+        </section>"""
 
 
 def render_extension_review_queue_page(
@@ -5200,6 +5332,7 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
             dist_root=out,
             generated_at=generated_at,
             github_owner_repo=github_owner_repo,
+            languages=languages,
         )
         print(f"Wrote /review/curator/ ({n_curator} submitted labels).")
     except Exception as e:

@@ -92,6 +92,7 @@ MASTER_FIELDS = [
     "in_linguist",
     "in_wikipedia",
     "in_esolang",
+    "esolang_url",
     "has_extensions",
     "has_paradigm",
     "has_typing",
@@ -637,6 +638,38 @@ def initialize_augmented_fields(row: dict[str, Any]) -> None:
             row[field] = False if field in BOOLEAN_FIELDS else 0 if field in INT_FIELDS else ""
 
 
+def _pick_esolang_url(ordered_rows: list[dict[str, Any]], chosen_canonical: str) -> str:
+    """Among rows carrying an esolang_url, pick the one whose name best
+    matches the chosen canonical_name. Used during merge because many esolang
+    titles collapse into the same lang_id (e.g. "Brainfuck", "BRaInFUCK",
+    "!brainfuck", "+brainfuck" all → lang_id "brainfuck")."""
+    candidates = [r for r in ordered_rows if r.get("esolang_url")]
+    if not candidates:
+        return ""
+    target_cf = (chosen_canonical or "").casefold()
+
+    def score(row: dict[str, Any]) -> tuple:
+        name = str(row.get("canonical_name", ""))
+        name_cf = name.casefold()
+        # 0 = exact case match, 1 = case-insensitive match, 2 = otherwise.
+        if name == chosen_canonical:
+            primary = 0
+        elif name_cf == target_cf:
+            primary = 1
+        else:
+            primary = 2
+        # Among case-insensitive matches, prefer "normal" casing: title-case
+        # ("Brainfuck") or all-lower ("brainfuck") over mixed nonsense
+        # ("BRaInFUCK"). Approximated by counting uppercase letters after the
+        # first character — lowest wins.
+        rest_upper = sum(1 for c in name[1:] if c.isupper())
+        # Then prefer shorter titles (main page over numbered forks/variants).
+        return (primary, rest_upper, len(name), name)
+
+    candidates.sort(key=score)
+    return candidates[0]["esolang_url"]
+
+
 def merge_base_rows(
     rows: list[dict[str, Any]], alias_records: list[dict[str, str]]
 ) -> tuple[list[dict[str, Any]], list[dict[str, str]], dict[str, list[str]]]:
@@ -655,9 +688,10 @@ def merge_base_rows(
 
     for lang_id, group in grouped.items():
         ordered = sorted(group, key=row_sort_key)
+        chosen_canonical = first_non_empty(ordered, "canonical_name")
         merged = {
             "lang_id": lang_id,
-            "canonical_name": first_non_empty(ordered, "canonical_name"),
+            "canonical_name": chosen_canonical,
             "source_flags": union_flags(ordered, "source_flags"),
             "types": first_non_empty(ordered, "types"),
             "extensions": union_extensions(ordered),
@@ -671,6 +705,13 @@ def merge_base_rows(
             "linguist_key": first_non_empty(ordered, "linguist_key"),
             "evidence_urls": union_flags(ordered, "evidence_urls"),
             "notes": first_non_empty(ordered, "notes"),
+            # esolang_url: dozens of titles can normalize to the same lang_id
+            # (e.g. "Brainfuck", "!brainfuck", "+brainfuck" all → "brainfuck").
+            # Prefer the row whose original name case-insensitively equals the
+            # chosen canonical_name (so `brainfuck` → esolangs.org/wiki/Brainfuck
+            # rather than whichever variant sorts first). Fall back to the
+            # shortest title (typically the "main" page), then first_non_empty.
+            "esolang_url": _pick_esolang_url(ordered, chosen_canonical),
         }
 
         flags = set(split_semicolon(merged["source_flags"]))
@@ -1359,14 +1400,21 @@ def build_inventory(args: argparse.Namespace) -> None:
     if esolang_path is not None:
         esolang_titles = json.loads(esolang_path.read_text(encoding="utf-8"))
         for title in esolang_titles:
-            rows.append(
-                base_row(
-                    name=title,
-                    source_flags="esolang",
-                    evidence_url="https://esolangs.org/wiki/Category:Languages",
-                    row_type="esolang",
-                )
+            row = base_row(
+                name=title,
+                source_flags="esolang",
+                evidence_url="https://esolangs.org/wiki/Category:Languages",
+                row_type="esolang",
             )
+            # Per-title page URL on esolangs.org. The MediaWiki convention is
+            # spaces → underscores, then percent-encode. Carried through to
+            # pl.csv so the site can link directly to the source page (and
+            # this URL survives merges with other-source rows because
+            # merge_base_rows picks first_non_empty across the group).
+            row["esolang_url"] = (
+                f"https://esolangs.org/wiki/{quote(title.replace(' ', '_'), safe='')}"
+            )
+            rows.append(row)
 
     for record in scan_local_pldb(pldb_dir):
         rows.append(

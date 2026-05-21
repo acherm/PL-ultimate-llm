@@ -3760,9 +3760,20 @@ def render_language_pages(
             report_lang_url = github_new_issue_url(owner_repo=github_owner_repo, title=title, body="\n".join(body_lines))
             issues_lang_url = github_issue_search_url(owner_repo=github_owner_repo, query=f'is:issue \"{lang.name}\"')
 
-        programs_html = []
+        # Split programs by how they got here so the rendered headings
+        # honestly label each contributor type. The /l/<slug>/ contribute
+        # form writes manifest.json with `created_via_issue`; LLM-loop
+        # turns don't.
+        llm_programs_html: list[str] = []
+        community_programs_html: list[str] = []
+        no_programs_html = ""
         if not lang.programs:
-            programs_html.append("<p class='muted'>No programs recorded for this language yet.</p>")
+            no_programs_html = (
+                '<section class="panel section">'
+                '<h2 style="margin:0 0 10px;">Programs</h2>'
+                '<p class="muted">No programs recorded for this language yet.</p>'
+                '</section>'
+            )
         else:
             for idx, prog in enumerate(lang.programs):
                 code_id = f"code-{idx}"
@@ -3884,8 +3895,7 @@ def render_language_pages(
                 else:
                     code_block = "<p class='muted'>Code file missing.</p>"
 
-                programs_html.append(
-                    f"""
+                program_block = f"""
                     <section class="panel section" style="margin-top: 18px;">
                       <h2 style="margin:0 0 8px;">{safe(prog.title)}</h2>
                       <div class="muted">{links_html}</div>
@@ -3893,7 +3903,10 @@ def render_language_pages(
                       {code_block}
                     </section>
                     """
-                )
+                if prog.created_via_issue is not None:
+                    community_programs_html.append(program_block)
+                else:
+                    llm_programs_html.append(program_block)
 
         # ----- Phase 1: cross-source presence / ext claims / SWH samples / heuristics -----
         enr = enrichments.get(lang.name)
@@ -4193,10 +4206,23 @@ def render_language_pages(
         {cross_source_html}
         {ext_claims_html}
         {related_html}
-        <section class="panel section">
-          <h2 style="margin:0 0 10px;">LLM-contributed programs</h2>
-          {"".join(programs_html)}
-        </section>
+        {no_programs_html}
+        {(
+            '<section class="panel section">'
+            '<h2 style="margin:0 0 10px;">LLM-contributed programs</h2>'
+            + "".join(llm_programs_html) +
+            '</section>'
+        ) if llm_programs_html else ''}
+        {(
+            '<section class="panel section">'
+            '<h2 style="margin:0 0 10px;">Community-contributed programs</h2>'
+            '<div class="muted" style="margin-bottom:8px; font-size:13px;">'
+            'Submitted by visitors through the '
+            '<a href="#contribute">Propose-extension form</a>; each one was '
+            'reviewed in a draft PR before landing.</div>'
+            + "".join(community_programs_html) +
+            '</section>'
+        ) if community_programs_html else ''}
         {swh_samples_html}
         {heuristics_html}
         {contribute_html}

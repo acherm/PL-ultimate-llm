@@ -133,6 +133,13 @@ class TaxonomyEnrichment:
     # List_of_programming_languages roster for every PL.
     wikidata_qid: str = ""
     wikipedia_url: str = ""
+    # Per-source page URLs propagated from raw inventory through
+    # master_inventory → build_pl_taxonomy → pl.csv. When set, the
+    # matching source pill on /l/<slug>/ deep-links to the source page
+    # (esolangs.org wiki entry, rosettacode.org category) instead of
+    # the generic /source/<src>/ roster.
+    esolang_url: str = ""
+    rosettacode_url: str = ""
 
 
 def _read_csv(path: Path) -> list[dict]:
@@ -719,6 +726,8 @@ def synthesize_taxonomy_only_languages(
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
             wikidata_url=str(row.get("wikidata_url") or "").strip(),
+            esolang_url=str(row.get("esolang_url") or "").strip(),
+            rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
         )
     return new_langs, new_enrichments
 
@@ -766,6 +775,8 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
             wikidata_url=str(row.get("wikidata_url") or "").strip(),
+            esolang_url=str(row.get("esolang_url") or "").strip(),
+            rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
         )
     return out
 
@@ -1928,18 +1939,28 @@ def render_source_pages(
             pl_id_to_slug.setdefault(enr.pl_id, lang.slug)
             pl_id_to_name.setdefault(enr.pl_id, lang.name)
 
-    # Group enriched langs by source.
-    by_source: dict[str, list[tuple[str, str, str]]] = {s: [] for s in _TAXONOMY_SOURCES}
+    # Group enriched langs by source. Per-PL external URLs (esolang_url,
+    # rosettacode_url) are carried alongside so source roster pages can
+    # render a direct deep-link column for those two sources.
+    by_source: dict[str, list[tuple[str, str, str, str]]] = {
+        s: [] for s in _TAXONOMY_SOURCES
+    }
     by_source["llm"] = []  # LLM-curated in-repo
     for lang in languages:
         enr = enrichments.get(lang.name)
         if not enr:
             continue
         for src in _TAXONOMY_SOURCES:
-            if enr.in_sources.get(src):
-                by_source[src].append((lang.name, lang.slug, enr.pl_id))
+            if not enr.in_sources.get(src):
+                continue
+            ext_url = ""
+            if src == "esolang":
+                ext_url = enr.esolang_url
+            elif src == "rosettacode":
+                ext_url = enr.rosettacode_url
+            by_source[src].append((lang.name, lang.slug, enr.pl_id, ext_url))
         if lang.programs:
-            by_source["llm"].append((lang.name, lang.slug, enr.pl_id))
+            by_source["llm"].append((lang.name, lang.slug, enr.pl_id, ""))
 
     SOURCE_BLURBS = {
         "pldb": "Programming Language DataBase — a curated community DB.",
@@ -2405,17 +2426,28 @@ def render_per_extension_pages(
     taxonomy claim, heuristic, or mined SWH sample. Returns page count."""
     # Build pl_id -> in-site language slug index (for linking).
     pl_id_to_slug: dict[str, str] = {}
+    # Build pl_id -> in-repo canonical name (overrides the taxonomy row's
+    # canonical_name, which is sometimes lowercase or otherwise stale —
+    # e.g., pl/oaklisp had canonical_name="oaklisp" from the Esolang
+    # import, while languages/Oaklisp/meta.json says "Oaklisp"). The
+    # in-repo name is authoritative because a human / the LLM curator
+    # explicitly set it.
+    pl_name_override: dict[str, str] = {}
     for lang in languages:
         enr = enrichments.get(lang.name)
         if enr:
             pl_id_to_slug.setdefault(enr.pl_id, lang.slug)
+            if lang.folder_rel and lang.name:
+                pl_name_override.setdefault(enr.pl_id, lang.name)
 
     ext_summary_rows = _read_csv(TAXONOMY_DIR / "ext_summary.csv")
     ext_claim_rows = _read_csv(TAXONOMY_DIR / "ext_claim.csv")
     heuristic_rows = _read_csv(TAXONOMY_DIR / "heuristic.csv")
     pl_rows = _read_csv(TAXONOMY_DIR / "pl.csv")
-    pl_canonical = {r["pl_id"]: (r.get("canonical_name") or r["pl_id"])
-                    for r in pl_rows if r.get("pl_id")}
+    pl_canonical = {
+        r["pl_id"]: (pl_name_override.get(r["pl_id"]) or r.get("canonical_name") or r["pl_id"])
+        for r in pl_rows if r.get("pl_id")
+    }
 
     claims_by_ext: dict[str, list[dict]] = {}
     for c in ext_claim_rows:
@@ -2932,6 +2964,21 @@ def render_per_extension_pages(
         panel_well = panel_polysemous = panel_form = ""
 
         if attribution_state == "well-attributed":
+            # Helper: render a pl_id as <a href='/l/<slug>/'>Name</a> when
+            # we have the slug, falling back to plain canonical name (or
+            # the pl_id itself if nothing else is known).
+            def _pl_link(pl_id: str) -> str:
+                name = pl_canonical.get(pl_id, pl_id)
+                slug = pl_id_to_slug.get(pl_id)
+                if slug:
+                    return f"<a href='{rel}l/{safe(slug)}/index.html'>{safe(name)}</a>"
+                return safe(name)
+            primary_pl_ids = [
+                c["pl_id"] for c in claims if c.get("strength") == "primary" and c.get("pl_id")
+            ]
+            primary_names_html = "; ".join(_pl_link(pid) for pid in primary_pl_ids)
+            # Plain-text fallback for the "no primary" branch — uses the
+            # first sorted entity name when there's no primary claim.
             primary_names = "; ".join(
                 pl_canonical.get(c["pl_id"], c["pl_id"])
                 for c in claims if c.get("strength") == "primary"
@@ -3016,15 +3063,29 @@ def render_per_extension_pages(
             if n_primary_authoritative >= 1:
                 lead = (
                     f"This extension is <strong>attributed</strong> to "
-                    f"<strong>{safe(primary_names) if primary_names else '?'}</strong> "
+                    f"<strong>{primary_names_html if primary_names_html else '?'}</strong> "
                     f"as <code>primary</code> by "
                     f"{n_primary_authoritative} authoritative claim"
                     f"{'' if n_primary_authoritative == 1 else 's'}."
                 )
             else:
+                # No primary claim — fall back to the single distinct
+                # entity (this branch only fires when len(distinct_entities)
+                # == 1). Render it as a link too when we have the slug.
+                fallback_entity_html = "?"
+                if primary_names_html:
+                    fallback_entity_html = primary_names_html
+                elif distinct_entities:
+                    fallback_entity = sorted(distinct_entities)[0]
+                    # distinct_entities holds pl entity-base strings (like
+                    # 'oaklisp'); try both the bare base and a 'pl/<base>'
+                    # form when looking up the slug.
+                    fallback_entity_html = _pl_link("pl/" + fallback_entity) \
+                        if pl_id_to_slug.get("pl/" + fallback_entity) \
+                        else (_pl_link(fallback_entity) if pl_id_to_slug.get(fallback_entity) else safe(fallback_entity))
                 lead = (
                     f"This extension is <strong>attributed</strong> to "
-                    f"<strong>{safe(primary_names) if primary_names else (sorted(distinct_entities)[0] if distinct_entities else '?')}</strong> "
+                    f"<strong>{fallback_entity_html}</strong> "
                     f"&mdash; every claim across all sources (including secondary ones) "
                     f"points to a single language."
                 )
@@ -4109,6 +4170,13 @@ def render_language_pages(
             if not wikipedia_url and enr.in_sources.get("wikipedia"):
                 wikipedia_url = _legacy_wikipedia_url_for(enr.canonical_name)
             wikipedia_present = enr.in_sources.get("wikipedia") or bool(wikipedia_url)
+            # Per-source URLs propagated through pl.csv. When set, the pill
+            # deep-links to the source's own page for this PL; otherwise it
+            # falls back to the generic /source/<src>/ roster.
+            _per_pl_source_urls = {
+                "esolang": (enr.esolang_url, "esolangs.org wiki entry"),
+                "rosettacode": (enr.rosettacode_url, "Rosetta Code category"),
+            }
             for src in _TAXONOMY_SOURCES:
                 if src == "wikipedia":
                     if not wikipedia_present:
@@ -4126,12 +4194,21 @@ def render_language_pages(
                         )
                     taxonomy_pill_count += 1
                     continue
-                if enr.in_sources.get(src):
+                if not enr.in_sources.get(src):
+                    continue
+                direct_url, direct_title = _per_pl_source_urls.get(src, ("", ""))
+                if direct_url:
+                    pills.append(
+                        f"<a class='pill src-{src}' href='{safe(direct_url)}' "
+                        f"target='_blank' rel='noopener' title='{safe(direct_title)}'>"
+                        f"{safe(src.capitalize())}</a>"
+                    )
+                else:
                     pills.append(
                         f"<a class='pill src-{src}' href='{rel}source/{src}/index.html'>"
                         f"{safe(src.capitalize())}</a>"
                     )
-                    taxonomy_pill_count += 1
+                taxonomy_pill_count += 1
             # Wikidata pill: stable cross-system identifier for the PL,
             # populated by Phase B of the taxonomy overlay. Render alongside
             # the per-PL Wikipedia article link; the two complement each

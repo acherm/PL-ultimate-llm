@@ -36,6 +36,11 @@ class Program:
     code_bytes: bytes | None
     code_text: str | None
     code_out_name: str | None
+    # Optional GitHub issue number when the program was submitted via the
+    # /l/<slug>/ "Propose a file extension" form (manifest.json carries
+    # `created_via_issue`). Used to render "Submitted via #N" instead of
+    # falling back to the language-level LLM /loop turn provenance.
+    created_via_issue: int | None
 
 
 @dataclass(frozen=True)
@@ -3796,41 +3801,68 @@ def render_language_pages(
                     links.append(f"<a href='{safe(report_prog_url)}' target='_blank' rel='noopener'>Report</a>")
                 links_html = " · ".join(links)
 
-                # Per-program provenance — prefer the turn that actually
-                # added THIS program's files (via git history); fall back to
-                # the language-level turn for cases where the git lookup
-                # misses (no `.git`, file renamed, etc.).
-                prog_turn = program_provenance.get((lang.folder_rel, prog.sha256))
-                prov_commit = prog_turn.commit if prog_turn else lang.turn_commit
-                prov_authored_at = prog_turn.authored_at if prog_turn else lang.turn_authored_at
-                prov_agent = (prog_turn.trailers.get("Agent") if prog_turn else lang.agent) or None
-                prov_model = (prog_turn.trailers.get("Model") if prog_turn else lang.model) or None
-                prov_ws = (
-                    normalize_web_search(prog_turn.trailers.get("WebSearch"))
-                    if prog_turn else lang.web_search
-                )
-                prov_temp = (
-                    parse_temperature(prog_turn.trailers.get("Temperature"))
-                    if prog_turn else lang.temperature
-                )
-                prog_prov_bits: list[str] = []
-                if prov_commit:
+                # Per-program provenance — three cases, in priority order:
+                #   1. Program's manifest carries created_via_issue → it was
+                #      submitted via the /l/<slug>/ contribute form.
+                #      Render "Submitted via #N" (human contributor, NOT
+                #      an LLM); never fall through to lang.agent/model.
+                #   2. Git history has a `turn:` commit that added this
+                #      program's files → use that turn's trailers
+                #      (commit, agent, model, …). Correct for both single-
+                #      and multi-program LLM-loop PLs.
+                #   3. Neither — fall back to the language-level turn
+                #      (the original /loop turn that added the language +
+                #      its first program). Only stops being accurate when
+                #      a non-turn commit added a program AND the manifest
+                #      lacks created_via_issue; that case is rare.
+                prog_prov_line = ""
+                if prog.created_via_issue is not None:
                     if github_owner_repo:
-                        url = github_commit_url(owner_repo=github_owner_repo, commit=prov_commit)
-                        prog_prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(prov_commit[:10])}</a>")
+                        issue_url = f"https://github.com/{github_owner_repo}/issues/{prog.created_via_issue}"
+                        prog_prov_line = (
+                            f"<div class='muted'>Provenance: submitted via "
+                            f"<a href='{safe(issue_url)}' target='_blank' rel='noopener'>"
+                            f"#{prog.created_via_issue}</a> on the "
+                            f"<a href='{rel}l/{lang.slug}/index.html#contribute'>"
+                            f"Propose-extension form</a></div>"
+                        )
                     else:
-                        prog_prov_bits.append(f"commit {safe(prov_commit[:10])}")
-                if prov_authored_at:
-                    prog_prov_bits.append(f"authored {safe(prov_authored_at)}")
-                if prov_agent:
-                    prog_prov_bits.append(f"agent {safe(prov_agent)}")
-                if prov_model:
-                    prog_prov_bits.append(f"model {safe(prov_model)}")
-                if prov_ws:
-                    prog_prov_bits.append(f"WebSearch {safe(prov_ws)}")
-                if prov_temp is not None:
-                    prog_prov_bits.append(f"Temp {prov_temp:g}")
-                prog_prov_line = f"<div class='muted'>Provenance: {' · '.join(prog_prov_bits)}</div>" if prog_prov_bits else ""
+                        prog_prov_line = (
+                            f"<div class='muted'>Provenance: submitted via "
+                            f"issue #{prog.created_via_issue}</div>"
+                        )
+                else:
+                    prog_turn = program_provenance.get((lang.folder_rel, prog.sha256))
+                    prov_commit = prog_turn.commit if prog_turn else lang.turn_commit
+                    prov_authored_at = prog_turn.authored_at if prog_turn else lang.turn_authored_at
+                    prov_agent = (prog_turn.trailers.get("Agent") if prog_turn else lang.agent) or None
+                    prov_model = (prog_turn.trailers.get("Model") if prog_turn else lang.model) or None
+                    prov_ws = (
+                        normalize_web_search(prog_turn.trailers.get("WebSearch"))
+                        if prog_turn else lang.web_search
+                    )
+                    prov_temp = (
+                        parse_temperature(prog_turn.trailers.get("Temperature"))
+                        if prog_turn else lang.temperature
+                    )
+                    prog_prov_bits: list[str] = []
+                    if prov_commit:
+                        if github_owner_repo:
+                            url = github_commit_url(owner_repo=github_owner_repo, commit=prov_commit)
+                            prog_prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(prov_commit[:10])}</a>")
+                        else:
+                            prog_prov_bits.append(f"commit {safe(prov_commit[:10])}")
+                    if prov_authored_at:
+                        prog_prov_bits.append(f"authored {safe(prov_authored_at)}")
+                    if prov_agent:
+                        prog_prov_bits.append(f"agent {safe(prov_agent)}")
+                    if prov_model:
+                        prog_prov_bits.append(f"model {safe(prov_model)}")
+                    if prov_ws:
+                        prog_prov_bits.append(f"WebSearch {safe(prov_ws)}")
+                    if prov_temp is not None:
+                        prog_prov_bits.append(f"Temp {prov_temp:g}")
+                    prog_prov_line = f"<div class='muted'>Provenance: {' · '.join(prog_prov_bits)}</div>" if prog_prov_bits else ""
 
                 meta_bits = []
                 if prog.license_guess:
@@ -4552,6 +4584,13 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
                     code_text = code_bytes.decode("utf-8", errors="replace")
                     code_out_name = derive_code_out_name(code_path.name)
 
+                created_via_issue_raw = manifest.get("created_via_issue")
+                created_via_issue: int | None
+                try:
+                    created_via_issue = int(created_via_issue_raw) if created_via_issue_raw is not None else None
+                except (TypeError, ValueError):
+                    created_via_issue = None
+
                 programs.append(
                     Program(
                         sha256=sha256,
@@ -4563,6 +4602,7 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
                         code_bytes=code_bytes,
                         code_text=code_text,
                         code_out_name=code_out_name,
+                        created_via_issue=created_via_issue,
                     )
                 )
 

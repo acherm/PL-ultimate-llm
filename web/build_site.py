@@ -1959,7 +1959,11 @@ def render_source_pages(
             elif src == "rosettacode":
                 ext_url = enr.rosettacode_url
             by_source[src].append((lang.name, lang.slug, enr.pl_id, ext_url))
-        if lang.programs:
+        # Count LLM source only when the PL has at least one program that
+        # came from the agentic /loop (manifest has no created_via_issue),
+        # NOT every PL with any program — community-contributed programs
+        # shouldn't inflate the LLM source roster.
+        if any(p.created_via_issue is None for p in lang.programs):
             by_source["llm"].append((lang.name, lang.slug, enr.pl_id, ""))
 
     SOURCE_BLURBS = {
@@ -1981,12 +1985,27 @@ def render_source_pages(
         if not entries:
             continue
         entries.sort(key=lambda t: t[0].lower())
+        # The third column ("Source page") is only meaningful for sources
+        # that propagate a per-PL URL through pl.csv — currently esolang
+        # and rosettacode. For other sources we keep the two-column layout
+        # so the table doesn't grow an empty column.
+        show_ext_col = any(ext for _, _, _, ext in entries)
         rows = []
-        for name, slug, pl_id in entries:
+        for name, slug, pl_id, ext_url in entries:
+            ext_cell = ""
+            if show_ext_col:
+                if ext_url:
+                    ext_cell = (
+                        f"<td><a href='{safe(ext_url)}' target='_blank' "
+                        f"rel='noopener'>↗ source page</a></td>"
+                    )
+                else:
+                    ext_cell = "<td class='muted'>—</td>"
             rows.append(
                 f"<tr><td><a href='../../l/{slug}/index.html'>{safe(name)}</a></td>"
-                f"<td><code>{safe(pl_id)}</code></td></tr>"
+                f"<td><code>{safe(pl_id)}</code></td>{ext_cell}</tr>"
             )
+        ext_header = "<th>Source page</th>" if show_ext_col else ""
         page = out_dir / src / "index.html"
         rel = rel_prefix(page, dist_root)
         body = f"""
@@ -2002,7 +2021,7 @@ def render_source_pages(
         </section>
         <section class="panel section">
           <table class='kv-table'>
-            <thead><tr><th>Language</th><th>pl_id</th></tr></thead>
+            <thead><tr><th>Language</th><th>pl_id</th>{ext_header}</tr></thead>
             <tbody>{''.join(rows)}</tbody>
           </table>
         </section>
@@ -4153,10 +4172,22 @@ def render_language_pages(
         # section when the PL has *any* attestation (LLM + taxonomy sources),
         # even if name-matching to the taxonomy failed.
         pills = []
-        if lang.programs:
+        # Count LLM-curated programs only (exclude community-contributed
+        # ones — manifest.json carries `created_via_issue` for those).
+        llm_program_count = sum(
+            1 for p in lang.programs if p.created_via_issue is None
+        )
+        community_program_count = len(lang.programs) - llm_program_count
+        if llm_program_count:
             pills.append(
                 f"<a class='pill src-llm' href='{rel}source/llm/index.html' "
-                f"title='Curated by an LLM in this repo'>LLM (this repo) · {len(lang.programs)}</a>"
+                f"title='Curated by an LLM in this repo'>LLM (this repo) · {llm_program_count}</a>"
+            )
+        if community_program_count:
+            pills.append(
+                f"<a class='pill' href='{rel}review/curator/index.html' "
+                f"title='Submitted by visitors through the per-PL contribute form'>"
+                f"Community · {community_program_count}</a>"
             )
         taxonomy_pill_count = 0
         if enr is not None:
@@ -4224,7 +4255,11 @@ def render_language_pages(
                     f"Wikidata · {safe(enr.wikidata_qid)}</a>"
                 )
                 taxonomy_pill_count += 1
-        n_present = taxonomy_pill_count + (1 if lang.programs else 0)
+        n_present = (
+            taxonomy_pill_count
+            + (1 if llm_program_count else 0)
+            + (1 if community_program_count else 0)
+        )
         pl_id_line = (
             f"<div class='muted' style='margin-bottom:8px;'>{n_present} source{'s' if n_present != 1 else ''} · pl_id: <code>{safe(enr.pl_id)}</code></div>"
             if enr is not None else
@@ -5389,7 +5424,9 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
         )
         print(f"Wrote {n_src_pages} per-source pages + index at /source/.")
     except Exception as e:
+        import traceback
         print(f"WARNING: per-source page rendering failed ({type(e).__name__}: {e}).")
+        print(traceback.format_exc())
 
     # Crowd-source: extension review queue.
     try:

@@ -462,8 +462,7 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
     if (!repo) return { error: "This site has no GitHub repository configured." };
     if (!plId || !plName || !plFolder) return { error: "This page is missing PL metadata." };
     let ext = (form.ext.value || "").trim();
-    if (!ext) return { error: "File extension is required." };
-    if (!ext.startsWith(".")) ext = "." + ext;
+    if (ext && !ext.startsWith(".")) ext = "." + ext;
     const refUrl = (form.reference_url.value || "").trim();
     if (!refUrl) return { error: "Reference URL is required." };
     const friendly = (form.friendly_name.value || "").trim();
@@ -473,6 +472,11 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
     const title = (form.title ? form.title.value : "").trim();
     const license = (form.license_guess ? form.license_guess.value : "").trim();
     const code = (form.code ? form.code.value : "").trim();
+    // At least one of {extension, program code} must be set — empty
+    // submissions would produce zero file diff and aren't useful.
+    if (!ext && !code) {
+      return { error: "Provide either a file extension or a program (paste code under \"Optional: attach a program\")." };
+    }
     const yamlEscape = (s) => (s || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
     const yamlBlockLines = (s, indent) => {
       const pad = " ".repeat(indent || 2);
@@ -507,9 +511,18 @@ The \`pl_contribute_pr\` workflow opens a draft PR that appends an
 \`${ext} → ${plId}\`${code ? ", and writes the pasted program under `languages/" + plFolder + "/programs/<sha>/`" : " (extension-only — no program attached)"}.
 Merging the PR is the maintainer's approval.
 `;
-    const issueTitle = code
-      ? `Propose ${ext} for ${plName} (+ program: ${title || "untitled"})`
-      : `Propose ${ext} for ${plName}`;
+    let issueTitle;
+    if (ext && code) {
+      issueTitle = `Propose ${ext} for ${plName} (+ program: ${title || "untitled"})`;
+    } else if (ext) {
+      issueTitle = `Propose ${ext} for ${plName}`;
+    } else if (code) {
+      issueTitle = `Submit program for ${plName}${title ? `: ${title}` : ""}`;
+    } else {
+      // Guard re-traversed — shouldn't reach (the at-least-one check
+      // above already returns an error), but keep a sensible default.
+      issueTitle = `Contribute to ${plName}`;
+    }
     const url =
       `https://github.com/${repo}/issues/new` +
       `?title=${encodeURIComponent(issueTitle)}` +

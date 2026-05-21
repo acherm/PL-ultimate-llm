@@ -2105,17 +2105,17 @@ def _build_pl_contribute_form(
                 style="margin-top:6px; padding:12px; border:1px dashed var(--border, #2a2a2a); border-radius:8px;">
             <div style="display:flex; flex-direction:column; gap:10px;">
               <div class="muted" style="font-size:13px;">
-                Tell us a file extension {safe(lang_name)} uses
-                (mapped to <code>{safe(effective_pl_id)}</code>) and where
-                you saw it. If you also have a real program at that URL,
-                paste it below — it'll be attached to this language. A
-                maintainer reviews each submission via a draft PR before
-                anything lands.
+                Tell us where to find evidence about {safe(lang_name)}
+                (mapped to <code>{safe(effective_pl_id)}</code>). A
+                <strong>reference URL</strong> is required; at least one
+                of <strong>extension</strong> or <strong>program code</strong> must be
+                provided too. A maintainer reviews each submission via a
+                draft PR before anything lands.
               </div>
               <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
                 <label style="display:flex; flex-direction:column; gap:4px;">
-                  <span class="muted" style="font-size:12px;">File extension * — e.g. <code>.oak</code></span>
-                  <input type="text" name="ext" required placeholder=".ext" />
+                  <span class="muted" style="font-size:12px;">File extension (optional) — e.g. <code>.oak</code>. Some PLs (e.g. esolangs) have no convention; leave empty if so.</span>
+                  <input type="text" name="ext" placeholder=".ext (optional)" />
                 </label>
                 <label style="display:flex; flex-direction:column; gap:4px;">
                   <span class="muted" style="font-size:12px;">Friendly name (optional)</span>
@@ -4133,24 +4133,43 @@ def render_language_pages(
         """
 
         # Contribute panel — unified "Propose a file extension" form.
-        # Required: extension + reference URL. Optional: a program at that
-        # URL (title / code / license). Submission opens a pl-contribute
-        # issue; pl_contribute_pr.yml runs the curator script and opens a
-        # draft PR. See _build_pl_contribute_form for full pipeline notes.
-        # Skip on taxonomy-only PLs (no folder_rel → no place for program
-        # files to land; users should /contribute/add-pl/ first).
+        # Required: reference URL. At least one of {extension, program code}
+        # must be provided too. Submission opens a pl-contribute issue;
+        # pl_contribute_pr.yml runs the curator script and opens a draft PR.
+        # See _build_pl_contribute_form for full pipeline notes.
+        #
+        # Two render paths:
+        #   - PL has an in-repo folder (lang.folder_rel non-empty): pass it
+        #     through; the curator script writes program files there.
+        #   - Taxonomy-only PL (folder_rel empty but enr.pl_id exists,
+        #     e.g. /l/when-2a66b99d/ from the Esolang import): synthesize
+        #     a folder hint; the curator script auto-promotes by writing
+        #     languages/<folder>/meta.json from pl_taxonomy/pl.csv + the
+        #     submitter's reference URL, then proceeds normally.
         contribute_html = ""
-        if github_owner_repo and lang.folder_rel:
+        eligible_for_contribute = bool(
+            github_owner_repo and (
+                lang.folder_rel or (enr is not None and enr.pl_id)
+            )
+        )
+        if eligible_for_contribute:
             pl_id_for_form = enr.pl_id if enr is not None else ""
+            # For taxonomy-only PLs, the curator script will create
+            # languages/<this folder>/ on the fly. Mirror the directory-
+            # safe-name rule from tools/process_pl_contribute.py so the
+            # hint already matches what the script would produce.
+            lang_folder_for_form = lang.folder_rel or (
+                re.sub(r"[^A-Za-z0-9._-]", "_", lang.name).strip("_") or "Unnamed"
+            )
             form_html = _build_pl_contribute_form(
                 lang_name=lang.name,
                 pl_id=pl_id_for_form,
-                lang_folder=lang.folder_rel,
+                lang_folder=lang_folder_for_form,
                 github_owner_repo=github_owner_repo,
             )
             contribute_html = f"""
         <section class="panel section">
-          <h2 style="margin:0 0 8px;">Contribute — propose a file extension</h2>
+          <h2 style="margin:0 0 8px;" id="contribute">Contribute — propose a file extension</h2>
           {form_html}
         </section>
         """

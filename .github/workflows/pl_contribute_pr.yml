@@ -79,6 +79,7 @@ jobs:
           ref=$(python3 -c "import json;d=json.load(open('$summary'));print(d['reference_url'])")
           has_program=$(python3 -c "import json;d=json.load(open('$summary'));print(str(d['has_program']).lower())")
           sha=$(python3 -c "import json;d=json.load(open('$summary'));print(d['program_sha256'])")
+          promoted=$(python3 -c "import json;d=json.load(open('$summary'));print(str(d.get('promoted_taxonomy_only', False)).lower())")
           echo "pl_name=$pl_name"       >> "$GITHUB_OUTPUT"
           echo "pl_folder=$pl_folder"   >> "$GITHUB_OUTPUT"
           echo "pl_id=$pl_id"           >> "$GITHUB_OUTPUT"
@@ -86,6 +87,7 @@ jobs:
           echo "reference_url=$ref"     >> "$GITHUB_OUTPUT"
           echo "has_program=$has_program" >> "$GITHUB_OUTPUT"
           echo "sha=$sha"               >> "$GITHUB_OUTPUT"
+          echo "promoted=$promoted"     >> "$GITHUB_OUTPUT"
 
       - name: Configure git
         run: |
@@ -98,12 +100,20 @@ jobs:
           branch="pl-contribute/${{ steps.process.outputs.pl_folder }}-issue-${{ steps.resolve.outputs.issue }}"
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
           git checkout -b "$branch"
-          git add -A languages/ data/derived/extension_labels.csv
+          # Include data/pl_list.txt because a taxonomy-only-PL promotion
+          # appends to it.
+          git add -A languages/ data/derived/extension_labels.csv data/pl_list.txt
           if git diff --cached --quiet; then
             echo "No changes to commit — nothing to PR."
             exit 0
           fi
-          git commit -m "pl-contribute: ${{ steps.process.outputs.pl_name }} claims ${{ steps.process.outputs.ext }} (from issue #${{ steps.resolve.outputs.issue }})
+          subject_ext="${{ steps.process.outputs.ext }}"
+          if [ -n "$subject_ext" ]; then
+            subject="pl-contribute: ${{ steps.process.outputs.pl_name }} claims $subject_ext (from issue #${{ steps.resolve.outputs.issue }})"
+          else
+            subject="pl-contribute: ${{ steps.process.outputs.pl_name }} (from issue #${{ steps.resolve.outputs.issue }})"
+          fi
+          git commit -m "$subject
 
           Materialized via tools/process_pl_contribute.py from the
           /l/<slug>/ \"Propose a file extension\" form submission.
@@ -119,34 +129,53 @@ jobs:
           cat > "$body_file" <<EOF
           Materializes the \`pl-contribute\` issue #${{ steps.resolve.outputs.issue }}:
 
-          - **Extension claim** \`${{ steps.process.outputs.ext }} → ${{ steps.process.outputs.pl_id }}\` is appended to \`data/derived/extension_labels.csv\` with \`curator_status=accepted\`. Merging this PR IS the approval; the next \`build_pl_taxonomy.py\` run will promote it into \`ext_claim.csv\`.
           - Reference URL: ${{ steps.process.outputs.reference_url }}
           EOF
-          if [ "${{ steps.process.outputs.has_program }}" = "true" ]; then
+          if [ "${{ steps.process.outputs.promoted }}" = "true" ]; then
             cat >> "$body_file" <<EOF
-          - **Program** added at \`languages/${{ steps.process.outputs.pl_folder }}/programs/${{ steps.process.outputs.sha }}/\` (code.${{ steps.process.outputs.ext }} + manifest.json).
+          - **Promoted from taxonomy** — \`${{ steps.process.outputs.pl_name }}\` had no in-repo folder before this PR. \`languages/${{ steps.process.outputs.pl_folder }}/meta.json\` is synthesized from \`pl_taxonomy/pl.csv\` + the submitter's reference URL, and the canonical name is inserted into \`data/pl_list.txt\`.
+          EOF
+          fi
+          if [ -n "${{ steps.process.outputs.ext }}" ]; then
+            cat >> "$body_file" <<EOF
+          - **Extension claim** \`${{ steps.process.outputs.ext }} → ${{ steps.process.outputs.pl_id }}\` is appended to \`data/derived/extension_labels.csv\` with \`curator_status=accepted\`. Merging this PR IS the approval; the next \`build_pl_taxonomy.py\` run will promote it into \`ext_claim.csv\`.
           EOF
           else
             cat >> "$body_file" <<EOF
-          - **No program** submitted (extension-only claim).
+          - **No extension** submitted — some PLs (notably esolangs) don't have a file-extension convention. No row added to \`extension_labels.csv\`.
+          EOF
+          fi
+          if [ "${{ steps.process.outputs.has_program }}" = "true" ]; then
+            cat >> "$body_file" <<EOF
+          - **Program** added at \`languages/${{ steps.process.outputs.pl_folder }}/programs/${{ steps.process.outputs.sha }}/\`.
+          EOF
+          else
+            cat >> "$body_file" <<EOF
+          - **No program** submitted.
           EOF
           fi
           cat >> "$body_file" <<EOF
 
           ## Review checklist
-          - [ ] Reference URL resolves and the extension genuinely belongs to ${{ steps.process.outputs.pl_name }}.
+          - [ ] Reference URL resolves and supports the submission.
           - [ ] If a program is attached: code is a verbatim copy from the reference URL, non-trivial, under ~200 lines.
           - [ ] License guess (if present) matches the source.
-          - [ ] No conflict with existing claimants — check \`/ext/${{ steps.process.outputs.ext }}/\` for context.
+          - [ ] If an extension is claimed: no conflict with existing claimants — check the per-extension page.
+          - [ ] If promoted: the canonical name and pl_id in meta.json match the taxonomy.
 
-          To reject the extension claim while keeping a program (or vice versa), edit the file diff before merging.
+          To reject any one part while keeping others, edit the file diff before merging.
 
           Resolves #${{ steps.resolve.outputs.issue }}
           EOF
+          title="pl-contribute: ${{ steps.process.outputs.pl_name }}"
+          if [ -n "${{ steps.process.outputs.ext }}" ]; then
+            title="$title claims ${{ steps.process.outputs.ext }}"
+          fi
+          title="$title (issue #${{ steps.resolve.outputs.issue }})"
           gh pr create \
             --draft \
             --base swh-evidence-v1 \
             --head "${{ steps.branch.outputs.branch }}" \
-            --title "pl-contribute: ${{ steps.process.outputs.pl_name }} claims ${{ steps.process.outputs.ext }} (issue #${{ steps.resolve.outputs.issue }})" \
+            --title "$title" \
             --body-file "$body_file" \
             --label pl-contribute

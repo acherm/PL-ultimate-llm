@@ -1230,6 +1230,7 @@ def layout(
           <a href="{rel}source/index.html">Sources</a>
           <a href="{rel}samples/index.html">SWH samples</a>
           <a href="{rel}review/extensions/index.html">Review</a>
+          <a href="{rel}review/recent/index.html">Recent</a>
           <a href="{rel}review/curator/index.html">Curator</a>
           <a href="{rel}contribute/add-pl/index.html">Add a PL</a>
           <a href="{rel}candidates/index.html">Candidates</a>
@@ -1421,6 +1422,129 @@ def render_browse_page(
     )
 
 
+def render_recent_submissions_page(
+    *,
+    dist_root: Path,
+    generated_at: str,
+    github_owner_repo: str | None,
+    languages: list[Language],
+) -> None:
+    """Render /review/recent/ — a unified timeline of community submissions.
+
+    Pairs with auto-merge: maintainer scans this page after the fact
+    instead of reviewing per-PR. Three channels surfaced in one
+    chronological table:
+
+      - Languages added via /contribute/add-pl/ or pl-contribute
+        promotion (meta.json carries created_via_issue).
+      - Programs attached via the per-PL Propose-extension form
+        (manifest.json carries created_via_issue).
+      - Extension labels accepted from ext-review issues (CSV row
+        with curator_status='accepted'). The submission date is the
+        issue's submitted_at.
+
+    Sorted newest first. No truncation — the volume is low.
+    """
+    rows: list[dict] = []
+    for l in languages:
+        if l.created_via_issue is not None and l.folder_rel:
+            rows.append({
+                "kind": "PL",
+                "kind_pill": "<span class='pill src-llm' style='background:rgba(40,150,90,0.25);'>language</span>",
+                "when": (l.added_at or "")[:10],
+                "what": f"<a href='../../l/{safe(l.slug)}/index.html'><strong>{safe(l.name)}</strong></a>",
+                "issue": l.created_via_issue,
+                "extra": (
+                    f"<a href='{safe(l.evidence_url)}' target='_blank' rel='noopener'>↗ evidence</a>"
+                    if l.evidence_url else ""
+                ),
+            })
+        for p in l.programs:
+            if p.created_via_issue is not None:
+                rows.append({
+                    "kind": "Program",
+                    "kind_pill": "<span class='pill' style='background:rgba(80,120,200,0.25);'>program</span>",
+                    "when": (p.added_at or "")[:10],
+                    "what": (
+                        f"<a href='../../l/{safe(l.slug)}/index.html'>{safe(l.name)}</a> "
+                        f"&mdash; <em>{safe(p.title)}</em>"
+                    ),
+                    "issue": p.created_via_issue,
+                    "extra": (
+                        f"<a href='{safe(p.origin_url)}' target='_blank' rel='noopener'>↗ origin</a>"
+                        if p.origin_url else ""
+                    ),
+                })
+    # Extension labels from extension_labels.csv. Only accepted rows —
+    # everything else is in-flight maintainer state.
+    labels_csv = ROOT / "data" / "derived" / "extension_labels.csv"
+    for r in _read_csv(labels_csv):
+        if (r.get("curator_status") or "").strip() != "accepted":
+            continue
+        try:
+            issue_n: int | None = int(r["issue_number"]) if r.get("issue_number") else None
+        except (TypeError, ValueError):
+            issue_n = None
+        ext = r.get("ext", "")
+        rows.append({
+            "kind": "Extension",
+            "kind_pill": "<span class='pill' style='background:rgba(200,140,60,0.25);'>extension</span>",
+            "when": (r.get("submitted_at") or "")[:10],
+            "what": (
+                f"<a href='../../ext/{_ext_url_slug(ext)}/index.html'><code>{safe(ext)}</code></a> "
+                f"&rarr; <code>{safe(r.get('label', ''))}</code>"
+            ),
+            "issue": issue_n,
+            "extra": (
+                f"by <a href='https://github.com/{safe(r.get('annotator', ''))}' target='_blank' rel='noopener'>"
+                f"@{safe(r.get('annotator', '?'))}</a>"
+            ),
+        })
+
+    # Newest-first by submission date (issue number as tiebreaker).
+    rows.sort(key=lambda r: (r.get("when") or "", r.get("issue") or 0), reverse=True)
+
+    body_rows = []
+    for r in rows:
+        issue_cell = (
+            f"<a href='https://github.com/{safe(github_owner_repo)}/issues/{r['issue']}' target='_blank' rel='noopener'>#{r['issue']}</a>"
+            if r["issue"] and github_owner_repo else (f"#{r['issue']}" if r["issue"] else "")
+        )
+        body_rows.append(
+            f"<tr><td>{r['when']}</td><td>{r['kind_pill']}</td>"
+            f"<td>{r['what']}</td><td>{issue_cell}</td><td>{r['extra']}</td></tr>"
+        )
+
+    page = dist_root / "review" / "recent" / "index.html"
+    rel = rel_prefix(page, dist_root)
+    page.parent.mkdir(parents=True, exist_ok=True)
+    if rows:
+        table_html = f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">All community submissions ({len(rows)})</h2>
+          <table class='kv-table'>
+            <thead><tr><th>Date</th><th>Kind</th><th>What</th><th>Issue</th><th>Notes</th></tr></thead>
+            <tbody>{''.join(body_rows)}</tbody>
+          </table>
+        </section>"""
+    else:
+        table_html = "<p class='muted'>No community submissions recorded yet.</p>"
+
+    body = f"""
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Recent community submissions</h1>
+          <p class='muted'>One row per submission across all three channels — languages, programs, and extension labels. Auto-merged on arrival; this page is the after-the-fact audit view. Revert any row by reverting the corresponding commit / issue.</p>
+          <p class='muted'>Curator deep-dives: <a href="{rel}review/curator/index.html">/review/curator/</a> for the full ext-review CSV state; <a href="{rel}review/extensions/index.html">/review/extensions/</a> for the unlabelled-extension queue.</p>
+        </section>
+        {table_html}"""
+
+    page.write_text(
+        layout(title="Recent submissions · PL Catalog", rel=rel, body=body,
+               generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
+
+
 def render_curator_review_page(
     *,
     dist_root: Path,
@@ -1532,11 +1656,12 @@ def render_curator_review_page(
         body = f"""
         <section class="panel section">
           <h1 style="margin:0 0 8px;">Curator triage</h1>
-          <p>Community submissions grouped by source. Three independent channels feed in:</p>
+          <p>Community submissions <strong>are accepted by default</strong>. Ext-label submissions land with <code>curator_status=accepted</code>; pl-add and pl-contribute PRs are auto-merged on arrival. The maintainer's job is post-hoc scanning + reverting if needed, not gatekeeping. See <a href="../recent/index.html">Recent submissions</a> for the unified timeline.</p>
+          <p class='muted'>Three submission channels:</p>
           <ul style='margin-top:0;'>
-            <li><strong>Extension labels</strong> (CSV-driven, below) — submitted from <code>/ext/&lt;x&gt;/</code> via the labelling form. Maintainer action: comment on the issue, edit <code>data/derived/extension_labels.csv</code> to set <code>curator_status=accepted</code>/<code>rejected</code>/<code>needs-info</code>, re-run <code>tools/process_extension_labels.py</code>.</li>
-            <li><strong>Community-added languages</strong> (PR-driven, lower section) — submitted from <code>/contribute/add-pl/</code> (new PL) or auto-promoted from taxonomy-only via the per-PL contribute form. Approval happens at PR-merge time.</li>
-            <li><strong>Community-contributed programs</strong> (PR-driven, lower section) — submitted from the per-PL contribute form with code. Approval happens at PR-merge time.</li>
+            <li><strong>Extension labels</strong> (CSV-driven, below) — submitted from <code>/ext/&lt;x&gt;/</code>. To override a row: edit <code>data/derived/extension_labels.csv</code> and set <code>curator_status=rejected</code> / <code>needs-info</code>; re-run <code>tools/process_extension_labels.py</code>.</li>
+            <li><strong>Community-added languages</strong> — submitted from <code>/contribute/add-pl/</code> or auto-promoted via the per-PL contribute form. To revert: <code>git revert &lt;merge-sha&gt;</code> on the pl-add/pl-contribute commit.</li>
+            <li><strong>Community-contributed programs</strong> — submitted from the per-PL contribute form with code. Same revert mechanism.</li>
           </ul>
         </section>
         <section class="panel section">
@@ -5476,6 +5601,22 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
         print(f"Wrote /review/curator/ ({n_curator} submitted labels).")
     except Exception as e:
         print(f"WARNING: curator review rendering failed ({type(e).__name__}: {e}).")
+
+    # Recent-submissions audit view — unified timeline across all three
+    # contribution channels. Pairs with auto-merge: maintainer scans
+    # this page weekly instead of reviewing per-PR.
+    try:
+        render_recent_submissions_page(
+            dist_root=out,
+            generated_at=generated_at,
+            github_owner_repo=github_owner_repo,
+            languages=languages,
+        )
+        print("Wrote /review/recent/.")
+    except Exception as e:
+        import traceback
+        print(f"WARNING: recent-submissions rendering failed ({type(e).__name__}: {e}).")
+        print(traceback.format_exc())
 
     # Phase 2 polish: /samples/ index — every PL that has real SWH evidence.
     try:

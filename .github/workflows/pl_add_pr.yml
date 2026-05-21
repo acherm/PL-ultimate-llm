@@ -148,10 +148,16 @@ jobs:
 
           Resolves #${{ steps.resolve.outputs.issue }}
           EOF
-          gh pr create \
-            --draft \
+          # Open ready (not draft) so we can auto-merge in the next step.
+          pr_url=$(gh pr create \
             --base swh-evidence-v1 \
             --head "${{ steps.branch.outputs.branch }}" \
             --title "pl-add: ${{ steps.process.outputs.name }} (issue #${{ steps.resolve.outputs.issue }})" \
             --body-file "$body_file" \
-            --label pl-add
+            --label pl-add)
+          echo "Opened PR: $pr_url"
+          # Auto-merge: contributions are accepted by default at this scale.
+          # The PR record + merge commit form the audit trail; reverts are a
+          # standard `git revert <merge-sha>`. See /review/recent/ for the
+          # maintainer's after-the-fact scan view.
+          gh pr merge "$pr_url" --merge --delete-branch

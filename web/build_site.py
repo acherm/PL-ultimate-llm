@@ -140,6 +140,11 @@ class TaxonomyEnrichment:
     # the generic /source/<src>/ roster.
     esolang_url: str = ""
     rosettacode_url: str = ""
+    # PLDB deep-link: best-effort URL to the per-PL concept file in
+    # github.com/breck7/pldb. Derived from `lang_id_master` (the
+    # slug-normalized canonical name) when `in_pldb=yes`. Set to "" when
+    # there's no in_pldb signal or no lang_id_master.
+    pldb_url: str = ""
 
 
 def _read_csv(path: Path) -> list[dict]:
@@ -728,8 +733,26 @@ def synthesize_taxonomy_only_languages(
             wikidata_url=str(row.get("wikidata_url") or "").strip(),
             esolang_url=str(row.get("esolang_url") or "").strip(),
             rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
+            pldb_url=_pldb_url_for(row),
         )
     return new_langs, new_enrichments
+
+
+def _pldb_url_for(row: dict) -> str:
+    """Best-effort PLDB deep-link for a pl.csv row.
+
+    PLDB stores per-PL concept files at
+    github.com/breck7/pldb/blob/main/concepts/<lang_id_master>.scroll.
+    `lang_id_master` is master_inventory's slug-normalized canonical
+    name; for the common case it matches PLDB's own concept naming.
+    Returns "" when in_pldb is not set or lang_id_master is missing.
+    """
+    if (row.get("in_pldb") or "").strip().lower() != "yes":
+        return ""
+    lid = (row.get("lang_id_master") or "").strip()
+    if not lid:
+        return ""
+    return f"https://github.com/breck7/pldb/blob/main/concepts/{lid}.scroll"
 
 
 def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, TaxonomyEnrichment]:
@@ -777,6 +800,7 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             wikidata_url=str(row.get("wikidata_url") or "").strip(),
             esolang_url=str(row.get("esolang_url") or "").strip(),
             rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
+            pldb_url=_pldb_url_for(row),
         )
     return out
 
@@ -4207,6 +4231,7 @@ def render_language_pages(
             _per_pl_source_urls = {
                 "esolang": (enr.esolang_url, "esolangs.org wiki entry"),
                 "rosettacode": (enr.rosettacode_url, "Rosetta Code category"),
+                "pldb": (enr.pldb_url, "PLDB concept source (breck7/pldb)"),
             }
             for src in _TAXONOMY_SOURCES:
                 if src == "wikipedia":

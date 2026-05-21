@@ -59,6 +59,14 @@ class Language:
     model: str | None
     temperature: float | None
     web_search: str | None
+    # GitHub issue number when the PL was created/promoted via a web-form
+    # submission (meta.json carries `created_via_issue`). Distinct from
+    # enr.created_via_issue because the taxonomy build doesn't propagate
+    # the field to pre-existing taxonomy rows that get promoted (e.g.,
+    # taxonomy-only PLs that get in-repo folders via the pl-contribute
+    # flow). Used to emit a redirect from the former taxonomy-only slug
+    # so external links don't 404 post-promotion.
+    created_via_issue: int | None
 
 
 @dataclass(frozen=True)
@@ -688,6 +696,7 @@ def synthesize_taxonomy_only_languages(
             programs=[],
             turn_commit=None, turn_authored_at=None,
             agent=None, model=None, temperature=None, web_search=None,
+            created_via_issue=None,
         )
         new_langs.append(new_lang)
 
@@ -4260,6 +4269,54 @@ def render_language_pages(
             encoding="utf-8",
         )
 
+        # When this PL was promoted from taxonomy-only via the
+        # pl-contribute flow (meta.json carries created_via_issue AND we
+        # have a taxonomy enrichment), the URL changes: the taxonomy-only
+        # page lived at "<slug>-<sha1(pl_id)[:8]>" but the in-repo page
+        # now lives at "<slug>-<sha256(name)[:8]>". Write a meta-refresh
+        # stub at the old slug so external links don't 404. This is
+        # scoped narrowly — only PLs whose meta.json carries
+        # created_via_issue (the "this came through a web form" marker)
+        # get a redirect; LLM-loop PLs that ALSO happen to match the
+        # taxonomy don't, because they were never published at the
+        # taxonomy-style slug.
+        #
+        # We read created_via_issue from the Language (meta.json) rather
+        # than the TaxonomyEnrichment because build_pl_taxonomy.py only
+        # propagates the field into pl.csv when the canonical is NEW —
+        # for promoted taxonomy-only PLs (When), the canonical was
+        # already in the taxonomy from the Esolang import, so the
+        # taxonomy row's created_via_issue stays empty.
+        if (
+            enr is not None
+            and enr.pl_id
+            and lang.created_via_issue is not None
+            and lang.folder_rel
+        ):
+            old_base = slugify(lang.name)[:80].rstrip("-") or "lang"
+            old_suffix = hashlib.sha1(enr.pl_id.encode()).hexdigest()[:8]
+            old_slug = f"{old_base}-{old_suffix}"
+            if old_slug != lang.slug:
+                old_page = dist_root / "l" / old_slug / "index.html"
+                old_page.parent.mkdir(parents=True, exist_ok=True)
+                new_url = f"../{lang.slug}/index.html"
+                old_page.write_text(
+                    f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url={new_url}">
+<link rel="canonical" href="{new_url}">
+<title>{safe(lang.name)} (moved) · PL Catalog</title>
+</head>
+<body>
+<p>This page moved. Redirecting to <a href="{new_url}">{safe(lang.name)}</a>…</p>
+</body>
+</html>
+""",
+                    encoding="utf-8",
+                )
+
 
 def render_contribute_add_pl_page(
     *,
@@ -4594,6 +4651,16 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
         aliases = list(meta.get("aliases") or [])
         evidence_url = str(meta.get("evidence_url") or "").strip()
         added_at = str(meta.get("added_at") or "").strip()
+        lang_created_via_issue_raw = meta.get("created_via_issue")
+        lang_created_via_issue: int | None
+        try:
+            lang_created_via_issue = (
+                int(lang_created_via_issue_raw)
+                if lang_created_via_issue_raw is not None
+                else None
+            )
+        except (TypeError, ValueError):
+            lang_created_via_issue = None
 
         folder = meta_path.parent
         folder_rel = folder.relative_to(LANGUAGES_DIR).as_posix()
@@ -4666,6 +4733,7 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
                 model=model,
                 temperature=temperature,
                 web_search=web_search,
+                created_via_issue=lang_created_via_issue,
             )
         )
 

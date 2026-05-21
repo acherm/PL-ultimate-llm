@@ -1070,8 +1070,40 @@ def short_hash(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()[:8]
 
 
-def make_lang_slug(name: str) -> str:
-    base = slugify(name) or "lang"
+def make_lang_slug(name: str, pl_id: str | None = None) -> str:
+    """Filesystem/URL slug for a per-PL page.
+
+    When pl_id is provided (PL matches the taxonomy), the 8-char hash
+    suffix is sha1(pl_id) — same formula synthesize_taxonomy_only_languages
+    uses for taxonomy-only pages. This unifies the slug across the
+    "taxonomy-only → in-repo" lifecycle so URLs stay stable across
+    promotion (no more /l/when-2a66b99d/ → /l/when-cf9c7aa2/ churn).
+
+    When pl_id is None (LLM-loop PL with no taxonomy match), fall back
+    to sha256(name) for the suffix. The two suffixes can't collide
+    because they use different hash algorithms.
+
+    Base slug is capped at 80 chars to stay under filesystem filename
+    limits — some esolang names are pathological (e.g., 'bf' + 250×'+').
+    """
+    base = (slugify(name) or "lang")[:80].rstrip("-") or "lang"
+    if pl_id:
+        suffix = hashlib.sha1(pl_id.encode("utf-8")).hexdigest()[:8]
+    else:
+        suffix = short_hash(name)
+    return f"{base}-{suffix}"
+
+
+def make_legacy_lang_slug(name: str) -> str:
+    """The pre-unification slug formula — always sha256(name), capped at
+    80 chars on the base.
+
+    Kept around so render_language_pages can compute the OLD slug for
+    PLs whose current slug is now pl_id-based, and emit a meta-refresh
+    redirect at the legacy location. ~2,300 redirects per build for the
+    in-repo PLs with taxonomy matches; negligible weight (~250 B each).
+    """
+    base = (slugify(name) or "lang")[:80].rstrip("-") or "lang"
     return f"{base}-{short_hash(name)}"
 
 
@@ -4269,39 +4301,23 @@ def render_language_pages(
             encoding="utf-8",
         )
 
-        # When this PL was promoted from taxonomy-only via the
-        # pl-contribute flow (meta.json carries created_via_issue AND we
-        # have a taxonomy enrichment), the URL changes: the taxonomy-only
-        # page lived at "<slug>-<sha1(pl_id)[:8]>" but the in-repo page
-        # now lives at "<slug>-<sha256(name)[:8]>". Write a meta-refresh
-        # stub at the old slug so external links don't 404. This is
-        # scoped narrowly — only PLs whose meta.json carries
-        # created_via_issue (the "this came through a web form" marker)
-        # get a redirect; LLM-loop PLs that ALSO happen to match the
-        # taxonomy don't, because they were never published at the
-        # taxonomy-style slug.
+        # Slug unification: in-repo PLs that match the taxonomy now use
+        # the pl_id-based slug (sha1) instead of the legacy name-based
+        # slug (sha256). For every such PL, write a meta-refresh redirect
+        # at the LEGACY slug so any existing external link or cached URL
+        # keeps resolving. ~2,300 stubs per build for the in-repo PLs
+        # with taxonomy matches; ~250 bytes each → ~575 KB site weight.
         #
-        # We read created_via_issue from the Language (meta.json) rather
-        # than the TaxonomyEnrichment because build_pl_taxonomy.py only
-        # propagates the field into pl.csv when the canonical is NEW —
-        # for promoted taxonomy-only PLs (When), the canonical was
-        # already in the taxonomy from the Esolang import, so the
-        # taxonomy row's created_via_issue stays empty.
-        if (
-            enr is not None
-            and enr.pl_id
-            and lang.created_via_issue is not None
-            and lang.folder_rel
-        ):
-            old_base = slugify(lang.name)[:80].rstrip("-") or "lang"
-            old_suffix = hashlib.sha1(enr.pl_id.encode()).hexdigest()[:8]
-            old_slug = f"{old_base}-{old_suffix}"
-            if old_slug != lang.slug:
-                old_page = dist_root / "l" / old_slug / "index.html"
-                old_page.parent.mkdir(parents=True, exist_ok=True)
-                new_url = f"../{lang.slug}/index.html"
-                old_page.write_text(
-                    f"""<!doctype html>
+        # Only emit for in-repo PLs (folder_rel non-empty). Taxonomy-only
+        # PLs were always rendered at the sha1(pl_id) slug, so there's
+        # no legacy URL to redirect from.
+        legacy_slug = make_legacy_lang_slug(lang.name) if lang.folder_rel else None
+        if legacy_slug and legacy_slug != lang.slug:
+            old_page = dist_root / "l" / legacy_slug / "index.html"
+            old_page.parent.mkdir(parents=True, exist_ok=True)
+            new_url = f"../{lang.slug}/index.html"
+            old_page.write_text(
+                f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -4314,8 +4330,8 @@ def render_language_pages(
 </body>
 </html>
 """,
-                    encoding="utf-8",
-                )
+                encoding="utf-8",
+            )
 
 
 def render_contribute_add_pl_page(
@@ -4636,7 +4652,33 @@ def render_audit_page(*, dist_root: Path, generated_at: str, github_owner_repo: 
     )
 
 
-def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]:
+def load_canonical_to_pl_id() -> dict[str, str]:
+    """Map lower(canonical_name) → pl_id from pl_taxonomy/pl.csv.
+
+    Used to stabilize per-PL slugs across the taxonomy-only ↔ in-repo
+    lifecycle: when an in-repo PL matches a taxonomy entry, its page
+    gets the pl_id-based slug (same one synthesize_taxonomy_only_languages
+    would produce), not the name-based one. See make_lang_slug.
+    """
+    import csv as _csv
+    path = TAXONOMY_DIR / "pl.csv"
+    if not path.exists():
+        return {}
+    out: dict[str, str] = {}
+    with path.open() as f:
+        for row in _csv.DictReader(f):
+            canonical = (row.get("canonical_name") or "").strip().lower()
+            pl_id = (row.get("pl_id") or "").strip()
+            if canonical and pl_id and canonical not in out:
+                out[canonical] = pl_id
+    return out
+
+
+def build_languages(
+    *,
+    turns_by_language: dict[str, TurnInfo],
+    canonical_to_pl_id: dict[str, str] | None = None,
+) -> list[Language]:
     meta_paths = sorted(LANGUAGES_DIR.rglob("meta.json"))
     languages: list[Language] = []
     for meta_path in meta_paths:
@@ -4664,7 +4706,12 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
 
         folder = meta_path.parent
         folder_rel = folder.relative_to(LANGUAGES_DIR).as_posix()
-        slug = make_lang_slug(name)
+        # If this PL is in the taxonomy, use its pl_id for the slug
+        # suffix; otherwise fall back to the legacy sha256(name) hash.
+        # Unified with synthesize_taxonomy_only_languages so the URL
+        # doesn't change when a taxonomy-only PL gets promoted.
+        pl_id_for_slug = (canonical_to_pl_id or {}).get(canonical_name(name).lower())
+        slug = make_lang_slug(name, pl_id=pl_id_for_slug)
 
         turn = turns_by_language.get(canonical_name(name).lower())
         agent = turn.trailers.get("Agent") if turn else None
@@ -4972,7 +5019,11 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
     program_provenance = index_program_provenance_from_git(turns)
     turn_stats = compute_turn_stats(turns)
 
-    languages = build_languages(turns_by_language=turns_by_language)
+    canonical_to_pl_id = load_canonical_to_pl_id()
+    languages = build_languages(
+        turns_by_language=turns_by_language,
+        canonical_to_pl_id=canonical_to_pl_id,
+    )
     counts = letter_counts(languages)
     programs_total = sum(len(l.programs) for l in languages)
     top_domains, top_licenses, top_exts = compute_top_domains_licenses_exts(languages)

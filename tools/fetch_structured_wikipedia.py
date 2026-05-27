@@ -173,54 +173,130 @@ def _node_name(node: dict) -> str:
     return str(n or "")
 
 
-def walk_infoboxes(roots, hits: list[dict]) -> None:
-    """Recursively descend a list of infobox root nodes; append entries to
-    `hits` for any `field`/`list` node whose normalised `name` matches the
-    extension-field whitelist.
+# Phase 2: PL-fact infobox fields we lift in addition to filename
+# extensions. The Wikipedia "Infobox programming language" template uses
+# stable label conventions; the patterns below match against the
+# normalised (lower, dash/underscore→underscore) field name.
+PL_FACT_PATTERNS: dict[str, re.Pattern] = {
+    "paradigms": re.compile(
+        r"^(paradigms?)$"),
+    "typing": re.compile(
+        r"^(typing_discipline|typing|type_system)$"),
+    "designed_by": re.compile(
+        r"^(designed_by|designers?|authors?|developers?|developed_by|created_by)$"),
+    "first_appeared": re.compile(
+        r"^(first_appeared|appeared_in|initial_release|first_release|released)$"),
+    "influenced_by": re.compile(
+        r"^(influenced_by)$"),
+    "license": re.compile(
+        r"^(licen[cs]e)$"),
+    "implementation_languages": re.compile(
+        r"^(implementation_languages?|implemented_in|implementation)$"),
+    "homepage": re.compile(
+        r"^(website|homepage|web_site|official_website|url)$"),
+}
 
-    Two `type=list` shapes appear in the wild:
-      A. `{type: list, values: [str, …]}`               — flat array
-      B. `{type: list, has_parts: [{type: list_item,
-                                    value: str}, …]}`  — items with values
-    We handle both. When we capture a list-shaped extension field, we do
-    NOT recurse into its `has_parts` (would double-count the items).
+
+def classify_field_name(name: str) -> str | None:
+    """Return the canonical fact key (e.g. 'paradigms', 'extensions') if
+    this infobox field name matches a known pattern, else None.
+
+    `extensions` is a special key handled by EXT_FIELD_PAT so the Phase-1
+    extension path remains untouched.
     """
-    stack = list(roots)
+    if not name:
+        return None
+    norm = normalize_field_name(name)
+    if EXT_FIELD_PAT.match(norm):
+        return "extensions"
+    for key, pat in PL_FACT_PATTERNS.items():
+        if pat.match(norm):
+            return key
+    return None
+
+
+def walk_infoboxes(roots, by_field: dict[str, list[dict]]) -> None:
+    """Recursively descend a list of infobox root nodes. For every
+    `field`/`list` node whose `name` classifies into a known fact key,
+    append a hit under that key in `by_field`.
+
+    The Wikipedia "Programming language" template surfaces three shapes:
+      1. `{type: field, name: "Paradigm", value: "…"}`
+         — directly named field. Match by `classify_field_name(name)`.
+      2. `{type: list, name: "Filename extensions", values: […]}`
+         or with `has_parts: [{type: list_item, value: "…"}]`
+         — named list. Both forms handled.
+      3. `{type: section, name: "Influenced by", has_parts:
+            [{type: field, value: "ABC, Ada, …"}]}`
+         — section-wrapped, with an *unnamed* inner field. The section
+         name carries the semantics. We propagate the section's name as
+         a default field-key into its descendants.
+    """
+    # Each stack entry is (node, inherited_field_key). The inherited key
+    # is the closest enclosing section's classification — only consumed
+    # by an inner field/list that has no name of its own.
+    stack: list[tuple] = [(n, None) for n in roots]
     while stack:
-        node = stack.pop()
+        node, inherited_key = stack.pop()
         if isinstance(node, list):
-            stack.extend(node)
+            stack.extend((c, inherited_key) for c in node)
             continue
         if not isinstance(node, dict):
             continue
 
         ntype = node.get("type")
         nname = _node_name(node)
-        is_ext_field = bool(nname) and bool(EXT_FIELD_PAT.match(normalize_field_name(nname)))
+        own_key = classify_field_name(nname) if nname else None
+
+        if ntype == "section":
+            # Sections never carry values themselves — they delegate to
+            # children. Propagate this section's classification (or the
+            # already-inherited one, if this section is unclassified)
+            # down to has_parts.
+            child_inherited = own_key or inherited_key
+            for c in node.get("has_parts") or []:
+                stack.append((c, child_inherited))
+            continue
+
+        # For field/list: an own-named hit wins; otherwise inherit from
+        # the enclosing section.
+        field_key = own_key or inherited_key
         consumed_as_list = False
 
-        if is_ext_field:
+        if field_key:
             if ntype == "field":
                 v = node.get("value")
                 if v is not None:
-                    hits.append({"name": nname, "kind": "field", "values": [str(v)]})
+                    hit = {"name": nname, "kind": "field", "values": [str(v)]}
+                    # Capture links too — needed for `homepage` (the
+                    # visible value is often the domain text while the
+                    # actual URL lives in `links[0].url`), and useful
+                    # context for `influenced_by` / `designed_by`.
+                    links = node.get("links") or []
+                    if links:
+                        hit["links"] = [
+                            {"url": l.get("url"), "text": l.get("text")}
+                            for l in links if isinstance(l, dict) and l.get("url")
+                        ]
+                    by_field.setdefault(field_key, []).append(hit)
             elif ntype == "list":
                 values = [str(v) for v in (node.get("values") or []) if v is not None]
                 if not values:
-                    # Form B: list_item children carry the scalar in `value`.
+                    # Form: list_item children carry the scalar in `value`.
                     for part in node.get("has_parts") or []:
                         if isinstance(part, dict):
                             pv = part.get("value")
                             if pv is not None:
                                 values.append(str(pv))
                 if values:
-                    hits.append({"name": nname, "kind": "list", "values": values})
+                    by_field.setdefault(field_key, []).append(
+                        {"name": nname, "kind": "list", "values": values})
                 consumed_as_list = True
 
         if not consumed_as_list:
             parts = node.get("has_parts")
             if isinstance(parts, list):
-                stack.extend(parts)
+                stack.extend((c, inherited_key) for c in parts)
 
 
 # Upstream Wikimedia flattens multi-section infobox values like
@@ -258,10 +334,136 @@ def parse_hit(hit: dict) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Phase 2: PL-fact normalisation
+# ---------------------------------------------------------------------------
+#
+# These are intentionally LIGHT — we lowercase, strip a few noise affixes,
+# canonicalise dash/space variants, and extract a year for `first_appeared`.
+# No controlled vocabulary mapping (that's a separate, curated step).
+
+_UNICODE_DASH_RE = re.compile(r"[‐-―]")
+_YEAR_RE = re.compile(r"\b(1[89]\d{2}|20\d{2}|21\d{2})\b")
+# Splits an infobox prose value into discrete enumerated items. We try to
+# preserve multi-word values like "object-oriented programming" while
+# splitting on the separators Wikipedia editors actually use between
+# distinct items.
+_FACT_LIST_SPLIT_RE = re.compile(r"\s*(?:[\n;,]|\s+(?:and|&)\s+)\s*", re.IGNORECASE)
+
+
+def normalize_paradigm(v: str) -> str:
+    """Drop ' programming' suffix, lowercase, normalise outer dash/space.
+
+    We only canonicalise the OUTER form — inner parenthetical qualifiers
+    keep their spaces so the result reads as 'object-oriented (prototype-
+    based)' rather than the run-together 'object-oriented-(prototype-
+    based)'."""
+    v = v.strip().lower()
+    v = re.sub(r"\bprogramming\b", "", v).strip()
+    v = _UNICODE_DASH_RE.sub("-", v)
+    # Collapse runs of spaces, but DO NOT replace space with dash.
+    v = re.sub(r"\s+", " ", v)
+    v = re.sub(r"-+", "-", v)
+    return v.strip(" -")
+
+
+def normalize_typing(v: str) -> str:
+    v = v.strip().lower()
+    v = _UNICODE_DASH_RE.sub("-", v)
+    return re.sub(r"\s+", " ", v)
+
+
+def extract_year(v: str) -> str:
+    m = _YEAR_RE.search(v)
+    return m.group(1) if m else v.strip()
+
+
+def _strip_inline_refs(v: str) -> str:
+    """Drop bracketed reference markers like `[1]`, `[note 2]` that the
+    upstream parser sometimes leaves in scalar values."""
+    return re.sub(r"\[[^\]]{1,30}\]", "", v).strip()
+
+
+def _split_fact_list(v: str) -> list[str]:
+    """Split a fact scalar into discrete values on commas / semicolons /
+    newlines / ' and '. Returns trimmed, non-empty pieces."""
+    pieces = _FACT_LIST_SPLIT_RE.split(_strip_inline_refs(v))
+    return [p.strip(" .") for p in pieces if p.strip(" .")]
+
+
+def normalize_fact_values(key: str, hits: list[dict]) -> list[str]:
+    """Turn a list of hits (each carrying `values: [...]` from the tree
+    walk) into a deduplicated, normalised list of fact strings."""
+    raw_values: list[str] = []
+    for h in hits:
+        for v in h.get("values") or []:
+            raw_values.append(str(v))
+
+    # `type=field` scalars are commonly comma- or semicolon-separated
+    # enumerations ("object-oriented, functional, imperative"). For
+    # `type=list` we trust the upstream split already. We split scalars
+    # for paradigm/influenced_by/implementation_languages where lists are
+    # the norm; we keep typing as a single phrase.
+    needs_split = key in {"paradigms", "influenced_by",
+                          "implementation_languages", "designed_by"}
+
+    pieces: list[str] = []
+    for v in raw_values:
+        v = _strip_inline_refs(v)
+        if not v:
+            continue
+        if needs_split:
+            pieces.extend(_split_fact_list(v))
+        else:
+            pieces.append(v.strip(" ."))
+
+    out: list[str] = []
+    seen: set[str] = set()
+    for p in pieces:
+        if not p:
+            continue
+        if key == "paradigms":
+            norm = normalize_paradigm(p)
+        elif key == "typing":
+            norm = normalize_typing(p)
+        elif key == "first_appeared":
+            norm = extract_year(p)
+        else:
+            norm = p.strip(" .")
+        if not norm:
+            continue
+        k = norm.lower()
+        if k in seen:
+            continue
+        seen.add(k)
+        out.append(norm)
+    return out
+
+
+def extract_homepage(hits: list[dict]) -> str | None:
+    """Pick the best URL for a `homepage`-classified field. Prefer a link
+    URL (the visible value is often just the domain text), then any
+    https/http scalar."""
+    for h in hits:
+        for l in h.get("links") or []:
+            url = (l.get("url") or "").strip()
+            if url and url.startswith(("http://", "https://")) \
+                    and "wikipedia.org" not in url:
+                return url
+    # Fall back to any URL-looking scalar.
+    for h in hits:
+        for v in h.get("values") or []:
+            s = str(v).strip()
+            if s.startswith(("http://", "https://")):
+                return s
+    return None
+
+
+# ---------------------------------------------------------------------------
 # Per-shard processing
 # ---------------------------------------------------------------------------
 
-def process_shard(shard_path: Path, targets: dict[str, dict], found: dict[str, dict],
+def process_shard(shard_path: Path, targets: dict[str, dict],
+                  found: dict[str, dict], facts_found: dict[str, dict],
                   batch_size: int = 1024) -> None:
     pf = pq.ParquetFile(shard_path)
     available = [c for c in PARQUET_COLUMNS if c in pf.schema_arrow.names]
@@ -274,11 +476,12 @@ def process_shard(shard_path: Path, targets: dict[str, dict], found: dict[str, d
                 continue
 
             roots = _decode_infoboxes(row.get("infoboxes"))
-            hits_raw: list[dict] = []
-            walk_infoboxes(roots, hits_raw)
+            by_field: dict[str, list[dict]] = {}
+            walk_infoboxes(roots, by_field)
 
+            # ---- Extensions (Phase 1, schema unchanged) ----
             hits_out: list[dict] = []
-            for h in hits_raw:
+            for h in by_field.get("extensions", []):
                 parsed = parse_hit(h)
                 if not parsed:
                     continue
@@ -312,6 +515,38 @@ def process_shard(shard_path: Path, targets: dict[str, dict], found: dict[str, d
                 "wikipedia_missing": sorted(wd_exts - wp_exts),
                 "parser": "structured",
             }
+
+            # ---- Phase 2: PL facts (paradigms, typing, designer, …) ----
+            facts: dict[str, list[str] | str] = {}
+            for key in PL_FACT_PATTERNS:
+                hits = by_field.get(key) or []
+                if not hits:
+                    continue
+                if key == "homepage":
+                    url = extract_homepage(hits)
+                    if url:
+                        facts["homepage"] = url
+                    continue
+                vals = normalize_fact_values(key, hits)
+                if not vals:
+                    continue
+                # `typing`, `first_appeared`, `license` are conventionally
+                # single-valued; the others are lists.
+                if key in {"typing", "first_appeared", "license"}:
+                    facts[key] = vals[0]
+                else:
+                    facts[key] = vals
+
+            if facts:
+                facts_found[qid] = {
+                    "qid": qid,
+                    "label": tgt["label"],
+                    "enwiki_title": tgt["enwiki_title"],
+                    "wikipedia_url": row.get("url"),
+                    "revision_id": version_id,
+                    "facts": facts,
+                    "parser": "structured",
+                }
 
 
 # ---------------------------------------------------------------------------
@@ -371,6 +606,7 @@ def main():
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     found: dict[str, dict] = {}
+    facts_found: dict[str, dict] = {}
     for i, shard_name in enumerate(shards, 1):
         print(f"[shard {i}/{len(shards)}] {shard_name}", flush=True)
         try:
@@ -382,7 +618,7 @@ def main():
             print(f"       download failed: {exc!r}", flush=True)
             continue
         try:
-            process_shard(local, targets, found)
+            process_shard(local, targets, found, facts_found)
         finally:
             if not args.keep_shards:
                 # `hf_hub_download` returns a symlink into the blobs/ store.
@@ -396,7 +632,8 @@ def main():
                         real.unlink()
                 except OSError:
                     pass
-        print(f"       matched so far: {len(found)} / {len(targets)}", flush=True)
+        print(f"       matched so far: {len(found)} / {len(targets)}  "
+              f"(facts: {len(facts_found)})", flush=True)
         # Early exit if we've already matched everything.
         if len(found) == len(targets):
             print("       all targets matched — stopping early", flush=True)
@@ -468,6 +705,37 @@ def main():
     print(f"       with infobox hits:     {n_with_box}", flush=True)
     print(f"       Wikipedia adds extras: {n_extra}", flush=True)
     print(f"       manifest: {manifest_path.name}", flush=True)
+
+    # ----- Phase 2: write the PL-facts sidecar ----------------------------
+    facts_out_path = DATA_DIR / f"wikipedia_pl_facts.{today}.jsonl"
+    fact_field_counts: dict[str, int] = {k: 0 for k in PL_FACT_PATTERNS}
+    with facts_out_path.open("w") as f:
+        for qid in sorted(facts_found):
+            rec = facts_found[qid]
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            for k in rec["facts"]:
+                fact_field_counts[k] = fact_field_counts.get(k, 0) + 1
+
+    facts_manifest_path = facts_out_path.with_suffix(".manifest.json")
+    facts_manifest_path.write_text(json.dumps({
+        "snapshot_date": today,
+        "source": {
+            "repo": REPO_ID,
+            "config": CONFIG,
+            "revision": revision,
+            "shards_processed": len(shards),
+        },
+        "input_p1195": p1195_path.name,
+        "items_with_facts": len(facts_found),
+        "fields": fact_field_counts,
+        "parser": "structured-wikipedia/enterprise-snapshot",
+    }, indent=2) + "\n")
+
+    print(f"[done] wrote {facts_out_path}", flush=True)
+    print(f"       items with ≥1 fact:    {len(facts_found)}", flush=True)
+    for k, v in sorted(fact_field_counts.items(), key=lambda x: -x[1]):
+        print(f"       {k:<28} {v}", flush=True)
+    print(f"       manifest: {facts_manifest_path.name}", flush=True)
 
 
 if __name__ == "__main__":

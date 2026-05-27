@@ -596,6 +596,119 @@ def load_wikipedia_infobox_records() -> dict[str, dict]:
     return out
 
 
+# Phase-2 fact fields. Order is the order they appear in pl.csv (and the
+# order we evaluate). `homepage` is special: pl_rows already has that column
+# from earlier sources (PLDB, meta.json), so we only fill it when empty.
+_PL_FACT_WIDE_FIELDS = (
+    "paradigms", "typing", "designed_by", "first_appeared",
+    "influenced_by", "license", "implementation_languages", "homepage",
+)
+
+
+def _stringify_fact(v) -> str:
+    """Normalise a facts-value (list or scalar) into the pipe-separated
+    wide-cell string convention used elsewhere in pl.csv."""
+    if v is None:
+        return ""
+    if isinstance(v, list):
+        parts = [str(x).strip() for x in v if str(x).strip()]
+        return " | ".join(parts)
+    s = str(v).strip()
+    return s
+
+
+def fill_wikipedia_pl_facts(pl_rows: list[dict], pl_aliases: list[dict],
+                            wikipedia_pl_facts: dict[str, dict]
+                            ) -> list[dict]:
+    """For every pl_row that has a Wikidata QID and a matching facts
+    record, fill the wide-cell columns when they are currently empty
+    (per the user's PLDB-primary rule) AND emit one long-table row per
+    (pl_id, field, value) into the returned `pl_fact_rows`.
+
+    The long table parallels `ext_claim.csv`: it carries provenance even
+    when the wide cell was filled by an earlier source (e.g. PLDB).
+    """
+    pl_fact_rows: list[dict] = []
+    if not wikipedia_pl_facts:
+        return pl_fact_rows
+
+    n_filled_cells = 0
+    n_emitted = 0
+    for row in pl_rows:
+        qid = (row.get("wikidata_qid") or "").strip()
+        if not qid:
+            continue
+        rec = wikipedia_pl_facts.get(qid)
+        if not rec:
+            continue
+        facts = rec.get("facts") or {}
+        if not facts:
+            continue
+        evidence = (rec.get("wikipedia_url")
+                    or row.get("wikipedia_url")
+                    or "")
+        pl_id = row["pl_id"]
+
+        for field in _PL_FACT_WIDE_FIELDS:
+            v = facts.get(field)
+            if v is None:
+                continue
+            joined = _stringify_fact(v)
+            if not joined:
+                continue
+
+            # Wide cell: fill only if empty (PLDB-primary rule).
+            current = (row.get(field) or "").strip()
+            if not current:
+                row[field] = joined
+                n_filled_cells += 1
+
+            # Long table: one row per discrete value, regardless of who
+            # filled the wide cell.
+            if isinstance(v, list):
+                for item in v:
+                    item_s = str(item).strip()
+                    if not item_s:
+                        continue
+                    pl_fact_rows.append({
+                        "pl_id": pl_id, "field": field, "value": item_s,
+                        "source": "wikipedia", "evidence": evidence,
+                    })
+                    n_emitted += 1
+            else:
+                pl_fact_rows.append({
+                    "pl_id": pl_id, "field": field, "value": joined,
+                    "source": "wikipedia", "evidence": evidence,
+                })
+                n_emitted += 1
+
+    print(f"  pl_fact (wikipedia): filled {n_filled_cells} empty cells, "
+          f"emitted {n_emitted} long-table rows.", flush=True)
+    return pl_fact_rows
+
+
+def load_wikipedia_pl_facts() -> dict[str, dict]:
+    """Phase-2 sidecar produced by tools/fetch_structured_wikipedia.py.
+    One record per QID where the structured-wikipedia infobox carried at
+    least one of {paradigms, typing, designed_by, first_appeared,
+    influenced_by, license, implementation_languages, homepage}.
+
+    Returns {qid: {facts: {field: str | [str, ...]}, ...}}. Missing file
+    returns {} so the build degrades gracefully (no fact columns get
+    filled, the long table is empty)."""
+    path = _latest_snapshot("wikipedia_pl_facts.*.jsonl")
+    if path is None:
+        return {}
+    out: dict[str, dict] = {}
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            rec = json.loads(line)
+            qid = rec.get("qid")
+            if qid:
+                out[qid] = rec
+    return out
+
+
 def _norm_name(s: str | None) -> str:
     """Canonical lookup key for matching Wikidata items to existing PLs."""
     if not s:
@@ -726,6 +839,12 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "paradigms": row.get("paradigms", ""),
             "typing": row.get("typing", ""),
             "designed_by": row.get("designed_by", ""),
+            # Phase-2 columns. Default empty; filled by fill_wikipedia_pl_facts
+            # after the main build loop, sourced from the structured-wikipedia
+            # infobox sidecar at data/raw/wikipedia_pl_facts.<date>.jsonl.
+            "influenced_by": row.get("influenced_by", ""),
+            "license": row.get("license", ""),
+            "implementation_languages": row.get("implementation_languages", ""),
             "types": row.get("types", ""),
             **{k: ("yes" if v else "no") for k, v in flags.items()},
             "in_manual_add": "no",
@@ -911,6 +1030,9 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "paradigms": "",
             "typing": "",
             "designed_by": "",
+            "influenced_by": "",
+            "license": "",
+            "implementation_languages": "",
             "types": "",
             "in_pldb": "no",
             "in_linguist": "no",
@@ -1140,6 +1262,9 @@ def build(*, master: list[dict], linguist: dict, pygments_lex: dict,
             "paradigms": "",
             "typing": "",
             "designed_by": "",
+            "influenced_by": "",
+            "license": "",
+            "implementation_languages": "",
             "types": "",
             "in_pldb": "no",
             "in_linguist": "no",
@@ -1519,6 +1644,7 @@ def main() -> int:
     wikidata_keyword_pl_records = load_wikidata_keyword_pl_records()
     wikidata_all_records = load_all_wikidata_p1195_records()
     wikipedia_infobox_records = load_wikipedia_infobox_records()
+    wikipedia_pl_facts = load_wikipedia_pl_facts()
     print(f"  manual review (accepted): {len(manual_labels)} ext-label submissions to promote")
 
     print(f"  master_inventory: {len(master)} rows")
@@ -1534,6 +1660,7 @@ def main() -> int:
           f"(P1195-bearing, NOT in PL-types closure but instance_of label "
           f"matches PL-shaped keyword phrase)")
     print(f"  wikipedia infoboxes: {len(wikipedia_infobox_records)} pages indexed")
+    print(f"  wikipedia pl_facts:  {len(wikipedia_pl_facts)} pages with infobox facts")
 
     print("\nBuilding tables...")
     pl_rows, alias_rows, ext_claim_rows = build(
@@ -1601,6 +1728,13 @@ def main() -> int:
               f"(skipped {skipped} unknown-pl_id, "
               f"deduped {dedup_skipped} already-in-meta.json).")
 
+    # Phase 2: fill paradigms/typing/designer/year/influenced_by/license/
+    # implementation_languages/homepage from the structured-wikipedia
+    # facts sidecar. PLDB-primary rule: wide cells only get filled when
+    # currently empty. The long table (pl_fact_rows) captures every
+    # (pl_id, field, value) edge with provenance.
+    pl_fact_rows = fill_wikipedia_pl_facts(pl_rows, alias_rows, wikipedia_pl_facts)
+
     ext_summary = build_ext_summary(ext_claim_rows, pl_rows)
 
     # Map Linguist language name -> pl_id (via linguist_key on pl rows).
@@ -1620,7 +1754,13 @@ def main() -> int:
         "rosettacode_url", "esolang_url",
         "source_flags", "source_count",
         "first_appeared", "homepage", "evidence_urls",
-        "paradigms", "typing", "designed_by", "types",
+        "paradigms", "typing", "designed_by",
+        # Phase-2 columns: filled from the structured-wikipedia facts
+        # sidecar when PLDB does not already provide a value. Multi-value
+        # cells (paradigms / influenced_by / implementation_languages) use
+        # the same " | "-separated convention used elsewhere in pl.csv.
+        "influenced_by", "license", "implementation_languages",
+        "types",
         "in_pldb", "in_linguist", "in_pygments", "in_wikipedia",
         "in_esolang", "in_hyperpolyglot", "in_rosettacode",
         "in_manual_add", "in_wikidata", "created_via_issue",
@@ -1632,6 +1772,12 @@ def main() -> int:
     write_csv(out_dir / "pl_alias.csv", alias_rows, ["pl_id", "alias", "source"])
     write_csv(out_dir / "ext_claim.csv", ext_claim_rows, [
         "pl_id", "ext", "source", "strength", "source_key", "evidence",
+    ])
+    # Phase-2 long table of PL facts (parallels ext_claim.csv). One row
+    # per (pl_id, field, value, source) edge so consumers can see every
+    # piece of evidence — not just the one that won the wide-cell slot.
+    write_csv(out_dir / "pl_fact.csv", pl_fact_rows, [
+        "pl_id", "field", "value", "source", "evidence",
     ])
     write_csv(out_dir / "ext_summary.csv", ext_summary, [
         "ext", "n_claimants", "n_primary", "n_secondary", "n_unknown",

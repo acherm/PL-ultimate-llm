@@ -250,7 +250,13 @@ def main() -> int:
                         break
             else:
                 row = dict(common_fields)
-                row["curator_status"] = "new"
+                # Accepted by default: this project is small enough that
+                # blocking on a manual curator-flip created more friction
+                # than it removed. The maintainer can still flip to
+                # `rejected` / `needs-info` later by editing the CSV;
+                # preservation logic above keeps any maintainer-set
+                # status across re-imports.
+                row["curator_status"] = "accepted"
                 new_rows.append(row)
         parsed += 1
 

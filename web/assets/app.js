@@ -178,6 +178,28 @@ ${evidence.split('\n').map(l => '  ' + l).join('\n')}
           update();
         });
       });
+      // Wire "use auto-suggestion" button: pre-fills the dropdown with the
+      // heuristic-suggested label (binary:image, data:json-like, …).
+      form.querySelectorAll("button.ext-label-autosuggest").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const suggested = btn.getAttribute("data-suggested") || "";
+          if (!suggested) return;
+          const labelSelect = form.label;
+          if (labelSelect) {
+            const opts = Array.from(labelSelect.options).map((o) => o.value);
+            if (opts.includes(suggested)) {
+              labelSelect.value = suggested;
+            }
+          }
+          // The auto-suggestion isn't a pl/<id>; clear the chip-derived custom
+          // field and uncheck any ticked PL chips so the two paths don't fight.
+          if (form.label_custom) form.label_custom.value = "";
+          form.querySelectorAll("input.proposed-pl:checked").forEach((c) => {
+            c.checked = false;
+          });
+          update();
+        });
+      });
       // Initial sync — for confirmed-polysemous, chips render pre-checked.
       _syncProposedPlChips(form);
 
@@ -421,6 +443,277 @@ The \`pl-add-pr\` workflow opens a draft PR from a \`pl-add/<sanitized-name>\` b
       document.addEventListener("DOMContentLoaded", _wirePlAddForms);
     } else {
       _wirePlAddForms();
+    }
+  }
+
+  /**
+   * Unified per-PL "Propose a file extension" form on /l/<slug>/.
+   * Required: ext + reference_url. Optional: title / code / license /
+   * friendly_name / notes. Submits a `pl-contribute` issue; the
+   * pl_contribute_pr.yml workflow runs tools/process_pl_contribute.py
+   * which writes both the extension_labels.csv row and (if code given)
+   * the program files, then opens a draft PR.
+   */
+  function _buildPlContributeUrl(form) {
+    const repo = form.dataset.repo;
+    const plId = form.dataset.plId;
+    const plName = form.dataset.plName;
+    const plFolder = form.dataset.plFolder;
+    if (!repo) return { error: "This site has no GitHub repository configured." };
+    if (!plId || !plName || !plFolder) return { error: "This page is missing PL metadata." };
+    let ext = (form.ext.value || "").trim();
+    if (ext && !ext.startsWith(".")) ext = "." + ext;
+    const refUrl = (form.reference_url.value || "").trim();
+    if (!refUrl) return { error: "Reference URL is required." };
+    const friendly = (form.friendly_name.value || "").trim();
+    const notes = (form.notes.value || "").trim();
+    // Program block — optional. Only emit if code was pasted; title +
+    // license alone aren't enough to produce a program record.
+    const title = (form.title ? form.title.value : "").trim();
+    const license = (form.license_guess ? form.license_guess.value : "").trim();
+    const code = (form.code ? form.code.value : "").trim();
+    // At least one of {extension, program code} must be set — empty
+    // submissions would produce zero file diff and aren't useful.
+    if (!ext && !code) {
+      return { error: "Provide either a file extension or a program (paste code under \"Optional: attach a program\")." };
+    }
+    const yamlEscape = (s) => (s || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const yamlBlockLines = (s, indent) => {
+      const pad = " ".repeat(indent || 2);
+      return (s || "").split("\n").map((l) => pad + l).join("\n");
+    };
+    let programYaml = "program: null\n";
+    if (code) {
+      programYaml = `program:
+  title: "${yamlEscape(title)}"
+  license_guess: "${yamlEscape(license)}"
+  code: |
+${yamlBlockLines(code, 4)}
+`;
+    }
+    const notesYaml = notes
+      ? `notes: |\n${yamlBlockLines(notes, 2)}\n`
+      : "notes: null\n";
+    const body = `<!-- pl-contribute: parsed by tools/process_pl_contribute.py -->
+\`\`\`yaml
+pl_name: "${yamlEscape(plName)}"
+pl_folder: "${yamlEscape(plFolder)}"
+pl_id: "${yamlEscape(plId)}"
+ext: "${yamlEscape(ext)}"
+reference_url: "${yamlEscape(refUrl)}"
+friendly_name: "${yamlEscape(friendly)}"
+${notesYaml}${programYaml}\`\`\`
+
+## Submitted from /l/${plFolder.toLowerCase()}/ (Propose-extension form on ${plName})
+
+The \`pl_contribute_pr\` workflow opens a draft PR that appends an
+\`accepted\` row to \`data/derived/extension_labels.csv\` claiming
+\`${ext} → ${plId}\`${code ? ", and writes the pasted program under `languages/" + plFolder + "/programs/<sha>/`" : " (extension-only — no program attached)"}.
+Merging the PR is the maintainer's approval.
+`;
+    let issueTitle;
+    if (ext && code) {
+      issueTitle = `Propose ${ext} for ${plName} (+ program: ${title || "untitled"})`;
+    } else if (ext) {
+      issueTitle = `Propose ${ext} for ${plName}`;
+    } else if (code) {
+      issueTitle = `Submit program for ${plName}${title ? `: ${title}` : ""}`;
+    } else {
+      // Guard re-traversed — shouldn't reach (the at-least-one check
+      // above already returns an error), but keep a sensible default.
+      issueTitle = `Contribute to ${plName}`;
+    }
+    const url =
+      `https://github.com/${repo}/issues/new` +
+      `?title=${encodeURIComponent(issueTitle)}` +
+      `&body=${encodeURIComponent(body)}` +
+      `&labels=pl-contribute`;
+    return { url };
+  }
+
+  function _handlePlContributeSubmit(form) {
+    const status = form.querySelector(".pl-contribute-status");
+    const result = _buildPlContributeUrl(form);
+    if (result.error) {
+      if (status) status.innerHTML = `<strong>Error:</strong> ${result.error}`;
+      return false;
+    }
+    let win = null;
+    try { win = window.open(result.url, "_blank", "noopener"); } catch (_) { /* noop */ }
+    if (status) {
+      status.innerHTML = win
+        ? `Opened GitHub in a new tab. If you didn't see it, click the fallback link.`
+        : `Browser blocked the new tab. Click the fallback link to open the pre-filled issue.`;
+    }
+    return false;
+  }
+
+  function _wirePlContributeForms() {
+    if (typeof document === "undefined") return;
+    const forms = document.querySelectorAll("form.pl-contribute-form");
+    forms.forEach((form) => {
+      if (form.dataset._wired === "1") return;
+      form.dataset._wired = "1";
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        _handlePlContributeSubmit(form);
+      });
+      const link = form.querySelector(".pl-contribute-fallback-link");
+      const update = () => {
+        if (!link) return;
+        const r = _buildPlContributeUrl(form);
+        if (r.url) {
+          link.href = r.url;
+          link.textContent = "Open the pre-filled GitHub issue ↗";
+        } else {
+          link.removeAttribute("href");
+          link.textContent = `(${r.error || "incomplete"})`;
+        }
+      };
+      form.addEventListener("input", update);
+      form.addEventListener("change", update);
+      update();
+    });
+  }
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _wirePlContributeForms);
+    } else {
+      _wirePlContributeForms();
+    }
+  }
+
+  /**
+   * Wikidata-rows filter on /ext/<x>/. Bound to the inline `.wikidata-filter`
+   * search input. Hides rows whose `data-search` string doesn't contain the
+   * (lower-cased) query.
+   */
+  function _wireWikidataFilters() {
+    document.querySelectorAll("input.wikidata-filter").forEach((input) => {
+      const section = input.closest("section");
+      const table = section?.querySelector("table");
+      if (!table) return;
+      const rows = Array.from(table.querySelectorAll("tr.wikidata-row"));
+      const apply = () => {
+        const q = (input.value || "").toLowerCase().trim();
+        let visible = 0;
+        for (const r of rows) {
+          const haystack = r.getAttribute("data-search") || "";
+          const match = !q || haystack.includes(q);
+          // When a filter query is active, override the "collapsed" hide
+          // so the user sees ALL matching rows. When the query clears, the
+          // collapsed rows snap back to hidden (unless the reveal button
+          // was clicked).
+          if (q) {
+            r.style.display = match ? "" : "none";
+          } else {
+            const collapsed = r.classList.contains("wd-collapsed") && !r.dataset.revealed;
+            r.style.display = match ? (collapsed ? "none" : "") : "none";
+          }
+          if (match) visible += 1;
+        }
+        let status = input.parentElement.querySelector(".wikidata-filter-status");
+        if (!status) {
+          status = document.createElement("span");
+          status.className = "wikidata-filter-status muted";
+          status.style.fontSize = "12px";
+          input.parentElement.appendChild(status);
+        }
+        status.textContent = q ? `${visible}/${rows.length} match` : "";
+      };
+      input.addEventListener("input", apply);
+    });
+    // "Show N more / Show less" reveal button for collapsed Wikidata rows.
+    document.querySelectorAll("button.wd-reveal-toggle").forEach((btn) => {
+      const section = btn.closest("section");
+      if (!section) return;
+      const collapsed = Array.from(section.querySelectorAll("tr.wd-collapsed"));
+      const hiddenCount = collapsed.length;
+      btn.addEventListener("click", () => {
+        const expanded = btn.dataset.expanded === "1";
+        if (expanded) {
+          for (const r of collapsed) {
+            r.style.display = "none";
+            delete r.dataset.revealed;
+          }
+          btn.dataset.expanded = "0";
+          btn.textContent = `Show ${hiddenCount} more ↓`;
+        } else {
+          for (const r of collapsed) {
+            r.style.display = "";
+            r.dataset.revealed = "1";
+          }
+          btn.dataset.expanded = "1";
+          btn.textContent = "Show less ↑";
+        }
+      });
+    });
+  }
+
+  /**
+   * /contribute/add-pl/ URL-param pre-fill. When the page is opened with
+   * query params (?name=...&evidence_url=...&extensions=...&aliases=...),
+   * populate the corresponding form fields. Wired before _wirePlAddForms
+   * runs so the fallback-link recomputation sees the pre-filled values.
+   */
+  function _prefillAddPlFromUrl() {
+    const form = document.querySelector("form.pl-add-form");
+    if (!form) return;
+    const params = new URLSearchParams(window.location.search);
+    const map = {
+      "name": "pl_name",
+      "evidence_url": "evidence_url",
+      "extensions": "extensions",
+      "aliases": "aliases",
+      "notes": "notes",
+    };
+    let any = false;
+    for (const [k, fieldName] of Object.entries(map)) {
+      const v = params.get(k);
+      if (v && form[fieldName] && !form[fieldName].value) {
+        form[fieldName].value = v;
+        any = true;
+      }
+    }
+    if (any) {
+      // Hint banner so the user knows the form was pre-filled.
+      const banner = document.createElement("div");
+      banner.className = "muted";
+      banner.style.cssText = "margin-bottom:10px; padding:8px 10px; border:1px dashed var(--border, #2a2a2a); border-radius:6px; font-size:13px;";
+      banner.innerHTML = "Form pre-filled from a Wikidata entry. Review the fields, then submit.";
+      form.parentElement.insertBefore(banner, form);
+    }
+  }
+
+  // /review/extensions/ orphan filter: when the checkbox is ticked, hide
+  // every row except those flagged data-orphan="1" (no claim, no Wikidata,
+  // no heuristic, no manual label, no SWH sample). Lets a reviewer zoom in
+  // on the most-mysterious extensions.
+  function _wireReviewOrphanFilter() {
+    const cb = document.getElementById("reviewOrphansOnly");
+    if (!cb) return;
+    const rows = Array.from(document.querySelectorAll("tr.review-row"));
+    const apply = () => {
+      const only = cb.checked;
+      for (const r of rows) {
+        const is_orphan = r.getAttribute("data-orphan") === "1";
+        r.style.display = (!only || is_orphan) ? "" : "none";
+      }
+    };
+    cb.addEventListener("change", apply);
+    apply();
+  }
+
+  if (typeof document !== "undefined") {
+    const _run = () => {
+      _prefillAddPlFromUrl();
+      _wireWikidataFilters();
+      _wireReviewOrphanFilter();
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", _run);
+    } else {
+      _run();
     }
   }
 

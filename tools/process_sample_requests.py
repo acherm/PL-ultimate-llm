@@ -163,6 +163,15 @@ def main() -> int:
                    help="owner/repo override; defaults to `gh repo view`.")
     p.add_argument("--qualify-max-candidates", type=int, default=5,
                    help="Passed through to swh_extension_mining.py.")
+    p.add_argument("--shard", default=None,
+                   help="Passed through to swh_extension_mining.py: scan a "
+                        "single parquet (e.g. shard 0) instead of the full "
+                        "archive. Recommended for ad-hoc batch processing; "
+                        "the full scan can run for hours without finishing.")
+    p.add_argument("--shard-sample", type=int, default=0,
+                   help="Passed through to swh_extension_mining.py: scan N "
+                        "random shards. Mutually exclusive with --shard; "
+                        "see that tool's help for the semantics caveat.")
     args = p.parse_args()
 
     repo = args.repo or gh_owner_repo()
@@ -246,14 +255,25 @@ def main() -> int:
         "--qualify-max-candidates", str(args.qualify_max_candidates),
         "--execute",
     ]
+    if args.shard:
+        mining_cmd.extend(["--shard", args.shard])
+    if args.shard_sample:
+        mining_cmd.extend(["--shard-sample", str(args.shard_sample)])
     print(" ".join(mining_cmd))
     r = subprocess.run(mining_cmd)
     if r.returncode != 0:
         print(f"WARNING: mining exited with code {r.returncode}")
 
-    # Materialize bytes.
+    # Materialize bytes. CRITICAL: point fetch_samples at the CSV the
+    # mining step just wrote (MINING_OUT_CSV), not its default. Without
+    # --csv, fetch_samples reads `swh_extension_samples.csv` — the older
+    # per-PL CSV — and the freshly-mined request rows never get
+    # materialized.
     print("\n=== Running fetch_samples.py ===")
-    fetch_cmd = [sys.executable, str(ROOT / "tools" / "fetch_samples.py")]
+    fetch_cmd = [
+        sys.executable, str(ROOT / "tools" / "fetch_samples.py"),
+        "--csv", str(MINING_OUT_CSV),
+    ]
     r = subprocess.run(fetch_cmd)
     if r.returncode != 0:
         print(f"WARNING: fetch_samples exited with code {r.returncode}")

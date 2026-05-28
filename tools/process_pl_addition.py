@@ -257,6 +257,21 @@ def main() -> int:
     _insert_sorted(name)
     print(f"WROTE {PL_LIST} (appended '{name}', kept sorted).")
 
+    # Trigger the Wikipedia/Wikidata enrichment for the new PL. Best-effort:
+    # network failures or no-match results don't break the workflow — the
+    # script just writes whatever it found (including empty candidate
+    # lists). Maintainer can re-run later if needed.
+    print("\n=== Enriching with Wikipedia/Wikidata ===")
+    try:
+        subprocess.run(
+            [sys.executable, str(ROOT / "tools" / "enrich_pl_meta.py"),
+             "--dir", dir_name],
+            check=False,
+            timeout=120,
+        )
+    except Exception as e:
+        print(f"  [warn] enrichment failed: {e}")
+
     # Emit a small machine-readable summary so the workflow can pipe it into
     # the PR body without re-parsing files.
     summary_path = ROOT / ".tmp" / f"pl_add_summary_{args.issue}.json"

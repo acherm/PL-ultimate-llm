@@ -652,10 +652,15 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--shard-sample", type=int, default=0,
                    help="If > 0, list all shards under the contents glob and "
                         "scan only this many random ones (default: 0 = scan "
-                        "every shard). Reduces wall-time roughly linearly. "
-                        "Top-K from sampled shards approximates global top-K "
-                        "well for popular extensions; for rare extensions the "
-                        "global top-K is small anyway so the loss is bounded.")
+                        "every shard). Reduces wall-time roughly linearly.\n"
+                        "SEMANTICS: each content blob lives in exactly one "
+                        "shard, so the output is exact top-K of the sampled "
+                        "subset, NOT an approximation of global top-K. A "
+                        "heavily-copied blob in an unsampled shard is "
+                        "invisible. Generic filenames (many similar-but-"
+                        "distinct blobs) get over-represented. Use for "
+                        "'give me some representative samples cheap', not "
+                        "for 'find the most-copied program'.")
     p.add_argument("--shard-sample-seed", type=int, default=0,
                    help="RNG seed for --shard-sample (default: %(default)d).")
     p.add_argument("--no-progress-bar", action="store_true",

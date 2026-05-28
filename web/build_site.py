@@ -36,6 +36,11 @@ class Program:
     code_bytes: bytes | None
     code_text: str | None
     code_out_name: str | None
+    # Optional GitHub issue number when the program was submitted via the
+    # /l/<slug>/ "Propose a file extension" form (manifest.json carries
+    # `created_via_issue`). Used to render "Submitted via #N" instead of
+    # falling back to the language-level LLM /loop turn provenance.
+    created_via_issue: int | None
 
 
 @dataclass(frozen=True)
@@ -54,6 +59,14 @@ class Language:
     model: str | None
     temperature: float | None
     web_search: str | None
+    # GitHub issue number when the PL was created/promoted via a web-form
+    # submission (meta.json carries `created_via_issue`). Distinct from
+    # enr.created_via_issue because the taxonomy build doesn't propagate
+    # the field to pre-existing taxonomy rows that get promoted (e.g.,
+    # taxonomy-only PLs that get in-repo folders via the pl-contribute
+    # flow). Used to emit a redirect from the former taxonomy-only slug
+    # so external links don't 404 post-promotion.
+    created_via_issue: int | None
 
 
 @dataclass(frozen=True)
@@ -106,6 +119,13 @@ class TaxonomyEnrichment:
     # Provenance: GitHub issue number for PLs added via /contribute/add-pl/.
     # Empty string for PLs derived from upstream sources or LLM /loop turns.
     created_via_issue: str = ""
+    # Direct cross-source URLs surfaced by tools/enrich_pl_meta.py (lookup at
+    # issue-processing time) or by the Phase-B Wikidata overlay (for the
+    # bulk taxonomy). Per-PL page renders these as "View on Wikipedia / Wikidata"
+    # pills with direct links, alongside the generic source pills.
+    wikipedia_url: str = ""
+    wikidata_qid: str = ""
+    wikidata_url: str = ""
     # Wikidata / Wikipedia overlay (added by tools/build_pl_taxonomy.py
     # Phase B). Empty string when no matching Wikidata item was found.
     # The per-PL wikipedia_url unblocks the "Wikipedia" source pill on
@@ -113,6 +133,31 @@ class TaxonomyEnrichment:
     # List_of_programming_languages roster for every PL.
     wikidata_qid: str = ""
     wikipedia_url: str = ""
+    # Per-source page URLs propagated from raw inventory through
+    # master_inventory → build_pl_taxonomy → pl.csv. When set, the
+    # matching source pill on /l/<slug>/ deep-links to the source page
+    # (esolangs.org wiki entry, rosettacode.org category) instead of
+    # the generic /source/<src>/ roster.
+    esolang_url: str = ""
+    rosettacode_url: str = ""
+    # PLDB deep-link: best-effort URL to the per-PL concept file in
+    # github.com/breck7/pldb. Derived from `lang_id_master` (the
+    # slug-normalized canonical name) when `in_pldb=yes`. Set to "" when
+    # there's no in_pldb signal or no lang_id_master.
+    pldb_url: str = ""
+    # Wikipedia infobox facts (Phase 2 of the structured-wikipedia
+    # integration). Sourced from data/raw/wikipedia_pl_facts.<date>.jsonl
+    # via build_pl_taxonomy.py; per-cell rule is "PLDB primary, Wikipedia
+    # fills empties". Multi-value cells use the same " | "-separated
+    # convention as elsewhere in pl.csv.
+    paradigms: str = ""
+    typing: str = ""
+    designed_by: str = ""
+    first_appeared: str = ""
+    influenced_by: str = ""
+    license: str = ""
+    implementation_languages: str = ""
+    homepage: str = ""
 
 
 def _read_csv(path: Path) -> list[dict]:
@@ -271,10 +316,52 @@ def load_external_extension_index() -> dict[str, list[dict]]:
             # extensions with the dot, so normalise here.
             ext_key = "." + ext_raw
             out.setdefault(ext_key, []).append(r)
-    # Sort each ext's rows: those with a Wikipedia URL first, then alpha label.
-    for rows in out.values():
+    # Sort each ext's rows so the "canonical" entry surfaces first. Without
+    # this, alphabetical order buries the main entity (e.g. Q42332 / PDF for
+    # .pdf) below sub-variants (Acrobat TouchUp, GraphiCode Programmable,
+    # GeoPDF, …) that just happen to alphabetise earlier.
+    #
+    # Ranking signal (lower = better):
+    #   1. Wikipedia article whose URL ends with the ext-as-uppercase
+    #      (e.g. /PDF for .pdf) → strongest "this is the canonical entry"
+    #   2. Label matches the ext (case-insensitive) or one of its aliases
+    #      mentions "<ext> format" / "<EXT> format" / canonical-pattern
+    #   3. Has Wikipedia URL (more authoritative than Wikidata-only rows)
+    #   4. Wikidata rank == "normal" (deprecated rows last)
+    #   5. Alphabetical by label (final tiebreaker)
+    for ext_key, rows in out.items():
+        bare_ext = ext_key.lstrip(".").lower()
+        wp_canonical_suffix = "/" + bare_ext.upper()
+        for r in rows:
+            label = (r.get("label") or "").strip().lower()
+            wp_url = (r.get("wikipedia_url") or "").strip()
+            aliases = (r.get("aliases") or "").lower()
+            rank = (r.get("wikidata_rank") or "").lower()
+            score = 0
+            # Strongest: Wikipedia article whose path is exactly the
+            # uppercase ext (e.g. en.wikipedia.org/wiki/PDF).
+            if wp_url.upper().endswith(wp_canonical_suffix):
+                score -= 100
+            # Label matches the ext.
+            if label == bare_ext:
+                score -= 50
+            # "Portable Document Format" / "Scalable Vector Graphics" style
+            # canonical-name patterns: full-form aliases that contain
+            # the abbreviation + "Format" / "Graphics" / "Language".
+            if any(
+                kw in aliases for kw in (
+                    f"{bare_ext} format", f"{bare_ext.upper()} format",
+                    "format", "language", "graphics",
+                )
+            ) and label in aliases:
+                score -= 5
+            if wp_url:
+                score -= 10
+            if rank == "deprecated":
+                score += 100
+            r["_canonical_score"] = score
         rows.sort(key=lambda x: (
-            0 if x.get("wikipedia_url") else 1,
+            x.get("_canonical_score", 0),
             (x.get("label") or "").lower(),
         ))
     _EXTERNAL_EXTENSION_INDEX_CACHE = out
@@ -634,6 +721,7 @@ def synthesize_taxonomy_only_languages(
             programs=[],
             turn_commit=None, turn_authored_at=None,
             agent=None, model=None, temperature=None, web_search=None,
+            created_via_issue=None,
         )
         new_langs.append(new_lang)
 
@@ -655,8 +743,37 @@ def synthesize_taxonomy_only_languages(
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
+            wikidata_url=str(row.get("wikidata_url") or "").strip(),
+            esolang_url=str(row.get("esolang_url") or "").strip(),
+            rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
+            pldb_url=_pldb_url_for(row),
+            paradigms=str(row.get("paradigms") or "").strip(),
+            typing=str(row.get("typing") or "").strip(),
+            designed_by=str(row.get("designed_by") or "").strip(),
+            first_appeared=str(row.get("first_appeared") or "").strip(),
+            influenced_by=str(row.get("influenced_by") or "").strip(),
+            license=str(row.get("license") or "").strip(),
+            implementation_languages=str(row.get("implementation_languages") or "").strip(),
+            homepage=str(row.get("homepage") or "").strip(),
         )
     return new_langs, new_enrichments
+
+
+def _pldb_url_for(row: dict) -> str:
+    """Best-effort PLDB deep-link for a pl.csv row.
+
+    PLDB stores per-PL concept files at
+    github.com/breck7/pldb/blob/main/concepts/<lang_id_master>.scroll.
+    `lang_id_master` is master_inventory's slug-normalized canonical
+    name; for the common case it matches PLDB's own concept naming.
+    Returns "" when in_pldb is not set or lang_id_master is missing.
+    """
+    if (row.get("in_pldb") or "").strip().lower() != "yes":
+        return ""
+    lid = (row.get("lang_id_master") or "").strip()
+    if not lid:
+        return ""
+    return f"https://github.com/breck7/pldb/blob/main/concepts/{lid}.scroll"
 
 
 def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, TaxonomyEnrichment]:
@@ -701,6 +818,18 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
+            wikidata_url=str(row.get("wikidata_url") or "").strip(),
+            esolang_url=str(row.get("esolang_url") or "").strip(),
+            rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
+            pldb_url=_pldb_url_for(row),
+            paradigms=str(row.get("paradigms") or "").strip(),
+            typing=str(row.get("typing") or "").strip(),
+            designed_by=str(row.get("designed_by") or "").strip(),
+            first_appeared=str(row.get("first_appeared") or "").strip(),
+            influenced_by=str(row.get("influenced_by") or "").strip(),
+            license=str(row.get("license") or "").strip(),
+            implementation_languages=str(row.get("implementation_languages") or "").strip(),
+            homepage=str(row.get("homepage") or "").strip(),
         )
     return out
 
@@ -796,6 +925,72 @@ def index_turns_by_language(turns: list[TurnInfo]) -> dict[str, TurnInfo]:
         if key not in by_lang:
             by_lang[key] = turn
     return by_lang
+
+
+_PROGRAM_FILE_RE = re.compile(
+    r'^languages/(?P<folder>.+)/programs/(?P<sha>[0-9a-f]{64})/'
+    r'(?:manifest\.json|code\.[^/]+)$'
+)
+
+
+def index_program_provenance_from_git(
+    turns: list[TurnInfo],
+) -> dict[tuple[str, str], TurnInfo]:
+    """Map (lang_folder_rel, program_sha256) → the turn that ADDED that
+    program's files.
+
+    Walks `git log --all --diff-filter=A --name-only` once and matches
+    every added `languages/<folder>/programs/<sha>/manifest.json` or
+    `code.<ext>` path against the set of known turn commits. Earliest
+    add wins per (folder, sha) — relevant if a file ever gets re-added.
+
+    Why this exists: the legacy renderer fell back to `lang.turn_commit`,
+    which is the turn that added the *language* — for the 5 PLs with
+    programs added across multiple turns, that line was misattributing
+    every program to the first turn. With this map, each program gets
+    its own commit/agent/model line.
+
+    Falls back to {} on any git error so the build stays unbroken on
+    machines without history.
+    """
+    if not turns:
+        return {}
+    git_dir = ROOT / ".git"
+    if not git_dir.exists():
+        return {}
+    turn_by_commit = {t.commit: t for t in turns}
+    try:
+        proc = subprocess.run(
+            ["git", "--no-pager", "log", "--all", "--reverse",
+             "--diff-filter=A", "--name-only",
+             "--pretty=format:%x1e%H"],
+            cwd=str(ROOT),
+            check=True,
+            text=True,
+            capture_output=True,
+        )
+    except Exception:
+        return {}
+    out: dict[tuple[str, str], TurnInfo] = {}
+    for record in proc.stdout.split("\x1e"):
+        record = record.strip()
+        if not record:
+            continue
+        lines = record.splitlines()
+        commit = lines[0].strip()
+        turn = turn_by_commit.get(commit)
+        if not turn:
+            continue
+        for fp in lines[1:]:
+            m = _PROGRAM_FILE_RE.match(fp.strip())
+            if not m:
+                continue
+            key = (m.group("folder"), m.group("sha"))
+            # First add wins (we already used --reverse, so this is the
+            # original add — a later re-add shouldn't overwrite).
+            if key not in out:
+                out[key] = turn
+    return out
 
 
 def guess_github_owner_repo() -> str | None:
@@ -904,43 +1099,44 @@ def compute_related_languages(languages: list[Language], *, k: int = 5) -> dict[
     return related
 
 
-def load_audit_summary(audit_path: Path) -> dict[str, Any] | None:
-    if not audit_path.exists():
-        return None
-    try:
-        data = json.loads(audit_path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-
-    by_severity = Counter()
-    by_language: dict[str, Counter] = defaultdict(Counter)
-    for f in data.get("findings", []):
-        lang = f.get("language")
-        sev = (f.get("severity") or "unknown").lower()
-        if lang:
-            by_language[lang][sev] += 1
-            by_language[lang]["total"] += 1
-        by_severity[sev] += 1
-
-    top_langs = sorted(
-        ((k, v["total"], v.get("error", 0), v.get("warn", 0), v.get("info", 0)) for k, v in by_language.items()),
-        key=lambda x: (x[1], x[2], x[3]),
-        reverse=True,
-    )[:12]
-
-    return {
-        "total": sum(by_severity.values()),
-        "by_severity": dict(by_severity),
-        "by_language": {k: dict(v) for k, v in by_language.items()},
-        "top_languages": top_langs,
-    }
-
 def short_hash(s: str) -> str:
     return hashlib.sha256(s.encode("utf-8")).hexdigest()[:8]
 
 
-def make_lang_slug(name: str) -> str:
-    base = slugify(name) or "lang"
+def make_lang_slug(name: str, pl_id: str | None = None) -> str:
+    """Filesystem/URL slug for a per-PL page.
+
+    When pl_id is provided (PL matches the taxonomy), the 8-char hash
+    suffix is sha1(pl_id) — same formula synthesize_taxonomy_only_languages
+    uses for taxonomy-only pages. This unifies the slug across the
+    "taxonomy-only → in-repo" lifecycle so URLs stay stable across
+    promotion (no more /l/when-2a66b99d/ → /l/when-cf9c7aa2/ churn).
+
+    When pl_id is None (LLM-loop PL with no taxonomy match), fall back
+    to sha256(name) for the suffix. The two suffixes can't collide
+    because they use different hash algorithms.
+
+    Base slug is capped at 80 chars to stay under filesystem filename
+    limits — some esolang names are pathological (e.g., 'bf' + 250×'+').
+    """
+    base = (slugify(name) or "lang")[:80].rstrip("-") or "lang"
+    if pl_id:
+        suffix = hashlib.sha1(pl_id.encode("utf-8")).hexdigest()[:8]
+    else:
+        suffix = short_hash(name)
+    return f"{base}-{suffix}"
+
+
+def make_legacy_lang_slug(name: str) -> str:
+    """The pre-unification slug formula — always sha256(name), capped at
+    80 chars on the base.
+
+    Kept around so render_language_pages can compute the OLD slug for
+    PLs whose current slug is now pl_id-based, and emit a meta-refresh
+    redirect at the legacy location. ~2,300 redirects per build for the
+    in-repo PLs with taxonomy matches; negligible weight (~250 B each).
+    """
+    base = (slugify(name) or "lang")[:80].rstrip("-") or "lang"
     return f"{base}-{short_hash(name)}"
 
 
@@ -1032,10 +1228,11 @@ def layout(
           <a href="{rel}source/index.html">Sources</a>
           <a href="{rel}samples/index.html">SWH samples</a>
           <a href="{rel}review/extensions/index.html">Review</a>
+          <a href="{rel}review/recent/index.html">Recent</a>
           <a href="{rel}review/curator/index.html">Curator</a>
           <a href="{rel}contribute/add-pl/index.html">Add a PL</a>
+          <a href="{rel}candidates/index.html">Candidates</a>
           <a href="{rel}stats/index.html">Stats</a>
-          <a href="{rel}audit/index.html">Audit</a>
           {gh_nav}
           <button id="randomBtn" class="nav-btn" type="button">Random</button>
         </nav>
@@ -1222,18 +1419,154 @@ def render_browse_page(
     )
 
 
+def render_recent_submissions_page(
+    *,
+    dist_root: Path,
+    generated_at: str,
+    github_owner_repo: str | None,
+    languages: list[Language],
+) -> None:
+    """Render /review/recent/ — a unified timeline of community submissions.
+
+    Pairs with auto-merge: maintainer scans this page after the fact
+    instead of reviewing per-PR. Three channels surfaced in one
+    chronological table:
+
+      - Languages added via /contribute/add-pl/ or pl-contribute
+        promotion (meta.json carries created_via_issue).
+      - Programs attached via the per-PL Propose-extension form
+        (manifest.json carries created_via_issue).
+      - Extension labels accepted from ext-review issues (CSV row
+        with curator_status='accepted'). The submission date is the
+        issue's submitted_at.
+
+    Sorted newest first. No truncation — the volume is low.
+    """
+    rows: list[dict] = []
+    for l in languages:
+        if l.created_via_issue is not None and l.folder_rel:
+            rows.append({
+                "kind": "PL",
+                "kind_pill": "<span class='pill src-llm' style='background:rgba(40,150,90,0.25);'>language</span>",
+                "when": (l.added_at or "")[:10],
+                "what": f"<a href='../../l/{safe(l.slug)}/index.html'><strong>{safe(l.name)}</strong></a>",
+                "issue": l.created_via_issue,
+                "extra": (
+                    f"<a href='{safe(l.evidence_url)}' target='_blank' rel='noopener'>↗ evidence</a>"
+                    if l.evidence_url else ""
+                ),
+            })
+        for p in l.programs:
+            if p.created_via_issue is not None:
+                rows.append({
+                    "kind": "Program",
+                    "kind_pill": "<span class='pill' style='background:rgba(80,120,200,0.25);'>program</span>",
+                    "when": (p.added_at or "")[:10],
+                    "what": (
+                        f"<a href='../../l/{safe(l.slug)}/index.html'>{safe(l.name)}</a> "
+                        f"&mdash; <em>{safe(p.title)}</em>"
+                    ),
+                    "issue": p.created_via_issue,
+                    "extra": (
+                        f"<a href='{safe(p.origin_url)}' target='_blank' rel='noopener'>↗ origin</a>"
+                        if p.origin_url else ""
+                    ),
+                })
+    # Extension labels from extension_labels.csv. Only accepted rows —
+    # everything else is in-flight maintainer state.
+    labels_csv = ROOT / "data" / "derived" / "extension_labels.csv"
+    for r in _read_csv(labels_csv):
+        if (r.get("curator_status") or "").strip() != "accepted":
+            continue
+        try:
+            issue_n: int | None = int(r["issue_number"]) if r.get("issue_number") else None
+        except (TypeError, ValueError):
+            issue_n = None
+        ext = r.get("ext", "")
+        rows.append({
+            "kind": "Extension",
+            "kind_pill": "<span class='pill' style='background:rgba(200,140,60,0.25);'>extension</span>",
+            "when": (r.get("submitted_at") or "")[:10],
+            "what": (
+                f"<a href='../../ext/{_ext_url_slug(ext)}/index.html'><code>{safe(ext)}</code></a> "
+                f"&rarr; <code>{safe(r.get('label', ''))}</code>"
+            ),
+            "issue": issue_n,
+            "extra": (
+                f"by <a href='https://github.com/{safe(r.get('annotator', ''))}' target='_blank' rel='noopener'>"
+                f"@{safe(r.get('annotator', '?'))}</a>"
+            ),
+        })
+
+    # Newest-first by submission date (issue number as tiebreaker).
+    rows.sort(key=lambda r: (r.get("when") or "", r.get("issue") or 0), reverse=True)
+
+    body_rows = []
+    for r in rows:
+        issue_cell = (
+            f"<a href='https://github.com/{safe(github_owner_repo)}/issues/{r['issue']}' target='_blank' rel='noopener'>#{r['issue']}</a>"
+            if r["issue"] and github_owner_repo else (f"#{r['issue']}" if r["issue"] else "")
+        )
+        body_rows.append(
+            f"<tr><td>{r['when']}</td><td>{r['kind_pill']}</td>"
+            f"<td>{r['what']}</td><td>{issue_cell}</td><td>{r['extra']}</td></tr>"
+        )
+
+    page = dist_root / "review" / "recent" / "index.html"
+    rel = rel_prefix(page, dist_root)
+    page.parent.mkdir(parents=True, exist_ok=True)
+    if rows:
+        table_html = f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">All community submissions ({len(rows)})</h2>
+          <table class='kv-table'>
+            <thead><tr><th>Date</th><th>Kind</th><th>What</th><th>Issue</th><th>Notes</th></tr></thead>
+            <tbody>{''.join(body_rows)}</tbody>
+          </table>
+        </section>"""
+    else:
+        table_html = "<p class='muted'>No community submissions recorded yet.</p>"
+
+    body = f"""
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">Recent community submissions</h1>
+          <p class='muted'>One row per submission across all three channels — languages, programs, and extension labels. Auto-merged on arrival; this page is the after-the-fact audit view. Revert any row by reverting the corresponding commit / issue.</p>
+          <p class='muted'>Curator deep-dives: <a href="{rel}review/curator/index.html">/review/curator/</a> for the full ext-review CSV state; <a href="{rel}review/extensions/index.html">/review/extensions/</a> for the unlabelled-extension queue.</p>
+        </section>
+        {table_html}"""
+
+    page.write_text(
+        layout(title="Recent submissions · PL Catalog", rel=rel, body=body,
+               generated_at=generated_at, github_owner_repo=github_owner_repo),
+        encoding="utf-8",
+    )
+
+
 def render_curator_review_page(
     *,
     dist_root: Path,
     generated_at: str,
     github_owner_repo: str | None,
+    languages: list[Language] | None = None,
 ) -> int:
-    """Render /review/curator/ — maintainer-facing triage of submitted labels.
+    """Render /review/curator/ — maintainer-facing triage of community
+    submissions.
 
-    Reads `data/derived/extension_labels.csv`, groups by curator_status,
-    surfaces evidence, link to GH issue, and an "Accept / Reject" action
-    (which simply commenting on the issue does in practice).
+    Three sources surfaced:
+      1. `data/derived/extension_labels.csv` — ext-review submissions
+         (extension → PL labels), grouped by curator_status.
+      2. `languages/<L>/meta.json` carrying `created_via_issue` —
+         languages added through /contribute/add-pl/ or promoted from
+         taxonomy-only via the pl-contribute form.
+      3. `languages/<L>/programs/<sha>/manifest.json` carrying
+         `created_via_issue` — programs attached via the pl-contribute
+         form.
+
+    For (2) and (3), the merge is the approval signal (a draft PR landed
+    via the workflow). This page is descriptive, not action-driving, for
+    those rows.
     """
+    languages = languages or []
     labels_csv = ROOT / "data" / "derived" / "extension_labels.csv"
     rows = _read_csv(labels_csv)
 
@@ -1241,16 +1574,25 @@ def render_curator_review_page(
     rel = rel_prefix(page, dist_root)
     page.parent.mkdir(parents=True, exist_ok=True)
 
+    community_langs_html = _render_community_languages_section(
+        languages=languages, rel=rel, github_owner_repo=github_owner_repo,
+    )
+    community_progs_html = _render_community_programs_section(
+        languages=languages, rel=rel, github_owner_repo=github_owner_repo,
+    )
+
     if not rows:
-        body = """
+        body = f"""
         <section class="panel section">
           <h1 style="margin:0 0 8px;">Curator triage</h1>
-          <p>No manual labels submitted yet. Once reviewers start labelling extensions
+          <p>No extension-label submissions yet. Once reviewers start labelling extensions
           via the <a href="../extensions/index.html">review queue</a>, this page will
           show their submissions for maintainer review.</p>
           <p class='muted'>To ingest submitted labels:
             <code>python3 tools/process_extension_labels.py</code></p>
-        </section>"""
+        </section>
+        {community_langs_html}
+        {community_progs_html}"""
     else:
         by_status: dict[str, list[dict]] = {}
         for r in rows:
@@ -1311,10 +1653,22 @@ def render_curator_review_page(
         body = f"""
         <section class="panel section">
           <h1 style="margin:0 0 8px;">Curator triage</h1>
-          <p>Submitted extension labels grouped by status. Maintainer action lives on the GitHub issues themselves: comment to discuss, edit <code>data/derived/extension_labels.csv</code> to set <code>curator_status=accepted</code> / <code>rejected</code> / <code>needs-info</code>, then re-run <code>python3 tools/process_extension_labels.py</code>.</p>
-          <p class='muted'>Total submissions: {len(rows)} · See <a href="../extensions/index.html">review queue</a> for the source list.</p>
+          <p>Community submissions <strong>are accepted by default</strong>. Ext-label submissions land with <code>curator_status=accepted</code>; pl-add and pl-contribute PRs are auto-merged on arrival. The maintainer's job is post-hoc scanning + reverting if needed, not gatekeeping. See <a href="../recent/index.html">Recent submissions</a> for the unified timeline.</p>
+          <p class='muted'>Three submission channels:</p>
+          <ul style='margin-top:0;'>
+            <li><strong>Extension labels</strong> (CSV-driven, below) — submitted from <code>/ext/&lt;x&gt;/</code>. To override a row: edit <code>data/derived/extension_labels.csv</code> and set <code>curator_status=rejected</code> / <code>needs-info</code>; re-run <code>tools/process_extension_labels.py</code>.</li>
+            <li><strong>Community-added languages</strong> — submitted from <code>/contribute/add-pl/</code> or auto-promoted via the per-PL contribute form. To revert: <code>git revert &lt;merge-sha&gt;</code> on the pl-add/pl-contribute commit.</li>
+            <li><strong>Community-contributed programs</strong> — submitted from the per-PL contribute form with code. Same revert mechanism.</li>
+          </ul>
         </section>
-        {''.join(sections)}"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Extension labels ({len(rows)} total)</h2>
+          <p class='muted'>See <a href="../extensions/index.html">review queue</a> for the source list.</p>
+        </section>
+        {''.join(sections)}
+        {community_langs_html}
+        {community_progs_html}
+        """
 
     page.write_text(
         layout(title="Curator review · PL Catalog", rel=rel, body=body,
@@ -1322,6 +1676,105 @@ def render_curator_review_page(
         encoding="utf-8",
     )
     return len(rows)
+
+
+def _render_community_languages_section(
+    *,
+    languages: list[Language],
+    rel: str,
+    github_owner_repo: str | None,
+) -> str:
+    """Languages whose meta.json carries `created_via_issue` — those that
+    came in via /contribute/add-pl/ OR a pl-contribute promotion."""
+    added: list[Language] = [
+        l for l in languages
+        if l.created_via_issue is not None and l.folder_rel
+    ]
+    if not added:
+        return ""
+    # Newest issue number first — proxy for "recently submitted".
+    added.sort(key=lambda l: l.created_via_issue or 0, reverse=True)
+    rows = []
+    for l in added:
+        issue_link = (
+            f"<a href='https://github.com/{safe(github_owner_repo)}/issues/{l.created_via_issue}' target='_blank' rel='noopener'>#{l.created_via_issue}</a>"
+            if github_owner_repo else f"#{l.created_via_issue}"
+        )
+        evidence_cell = (
+            f"<a href='{safe(l.evidence_url)}' target='_blank' rel='noopener'>↗ ref</a>"
+            if l.evidence_url else "<span class='muted'>—</span>"
+        )
+        n_progs = len(l.programs)
+        prog_pill = (
+            f"<span class='pill'>{n_progs} program{'' if n_progs == 1 else 's'}</span>"
+            if n_progs else "<span class='pill muted'>0 programs</span>"
+        )
+        rows.append(
+            f"<tr>"
+            f"<td><a href='{rel}l/{l.slug}/index.html'><strong>{safe(l.name)}</strong></a></td>"
+            f"<td>{issue_link}</td>"
+            f"<td>{safe(l.added_at[:10])}</td>"
+            f"<td>{evidence_cell}</td>"
+            f"<td>{prog_pill}</td>"
+            f"</tr>"
+        )
+    return f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Community-added languages ({len(added)})</h2>
+          <p class='muted'>PLs whose <code>meta.json</code> carries <code>created_via_issue</code> — added through <a href='{rel}contribute/add-pl/index.html'>/contribute/add-pl/</a> or promoted from taxonomy-only via a per-PL <em>Propose-extension</em> submission. Already merged.</p>
+          <table class='kv-table'>
+            <thead><tr><th>Language</th><th>Issue</th><th>Added</th><th>Evidence</th><th>Programs</th></tr></thead>
+            <tbody>{''.join(rows)}</tbody>
+          </table>
+        </section>"""
+
+
+def _render_community_programs_section(
+    *,
+    languages: list[Language],
+    rel: str,
+    github_owner_repo: str | None,
+) -> str:
+    """Programs whose manifest.json carries `created_via_issue` — those
+    attached to a PL via the per-PL contribute form."""
+    items: list[tuple[Language, Program]] = []
+    for l in languages:
+        for p in l.programs:
+            if p.created_via_issue is not None:
+                items.append((l, p))
+    if not items:
+        return ""
+    items.sort(key=lambda t: t[1].created_via_issue or 0, reverse=True)
+    rows = []
+    for l, p in items:
+        issue_link = (
+            f"<a href='https://github.com/{safe(github_owner_repo)}/issues/{p.created_via_issue}' target='_blank' rel='noopener'>#{p.created_via_issue}</a>"
+            if github_owner_repo else f"#{p.created_via_issue}"
+        )
+        origin_cell = (
+            f"<a href='{safe(p.origin_url)}' target='_blank' rel='noopener'>↗ origin</a>"
+            if p.origin_url else "<span class='muted'>—</span>"
+        )
+        license_cell = safe(p.license_guess) if p.license_guess else "<span class='muted'>—</span>"
+        rows.append(
+            f"<tr>"
+            f"<td><a href='{rel}l/{l.slug}/index.html'><strong>{safe(l.name)}</strong></a></td>"
+            f"<td>{safe(p.title)}</td>"
+            f"<td>{issue_link}</td>"
+            f"<td>{safe(p.added_at[:10])}</td>"
+            f"<td>{origin_cell}</td>"
+            f"<td>{license_cell}</td>"
+            f"</tr>"
+        )
+    return f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Community-contributed programs ({len(items)})</h2>
+          <p class='muted'>Programs whose <code>manifest.json</code> carries <code>created_via_issue</code> — attached via the per-PL <em>Propose-extension</em> form (code-paste path). Already merged.</p>
+          <table class='kv-table'>
+            <thead><tr><th>Language</th><th>Program</th><th>Issue</th><th>Added</th><th>Origin</th><th>License</th></tr></thead>
+            <tbody>{''.join(rows)}</tbody>
+          </table>
+        </section>"""
 
 
 def render_extension_review_queue_page(
@@ -1358,7 +1811,32 @@ def render_extension_review_queue_page(
     # before deciding.
     samples_by_ext_for_queue = load_swh_samples_by_ext()
 
+    # "Orphan" detection — extensions with zero evidence anywhere: no PL
+    # claim, no Wikidata "external" entry, no Linguist heuristic, no
+    # manual label submission, no SWH sample. These are the highest-
+    # ambiguity reviews and worth surfacing separately.
+    external_ext_for_queue = load_external_extension_index()
+    heur_rows_for_queue: dict[str, list[dict]] = {}
+    heur_csv = TAXONOMY_DIR / "heuristic.csv"
+    if heur_csv.exists():
+        for h in _read_csv(heur_csv):
+            heur_rows_for_queue.setdefault(h.get("applies_to_ext", ""), []).append(h)
+
+    def _is_orphan(ext_key: str, n_claim: int) -> bool:
+        if n_claim > 0:
+            return False
+        if external_ext_for_queue.get(ext_key):
+            return False
+        if heur_rows_for_queue.get(ext_key):
+            return False
+        if existing_labels.get(ext_key):
+            return False
+        if samples_by_ext_for_queue.get(ext_key):
+            return False
+        return True
+
     listing = []
+    n_orphan = 0
     for r in rows:
         ext = r["ext_canonical"]
         url_slug = _ext_url_slug(ext)
@@ -1398,8 +1876,19 @@ def render_extension_review_queue_page(
             if n_samples else ""
         )
 
+        is_orphan = _is_orphan(ext, n_claim)
+        if is_orphan:
+            n_orphan += 1
+        orphan_pill = (
+            f"<span class='pill' style='background:rgba(200,120,40,0.20); color:#f0c89a;' "
+            f"title='No PL claim, no Wikidata entry, no Linguist heuristic, no manual label, no SWH sample — total mystery extension'>"
+            f"🪶 orphan</span>"
+            if is_orphan else ""
+        )
+        row_data_attr = " data-orphan='1'" if is_orphan else " data-orphan='0'"
+
         listing.append(
-            f"<tr>"
+            f"<tr class='review-row'{row_data_attr}>"
             f"<td><a href='{rel}ext/{url_slug}/index.html'><code>{safe(r['ext_raw'])}</code></a>"
             f"{prior_html}</td>"
             f"<td>{_fmt_occ(total)}</td>"
@@ -1408,6 +1897,7 @@ def render_extension_review_queue_page(
             f"<td>{safe(current) if current else '—'}</td>"
             f"<td><span class='pill src-taxonomy'>{safe(suggested)}</span></td>"
             f"<td>{samples_pill}</td>"
+            f"<td>{orphan_pill}</td>"
             f"<td>{label_btn}</td>"
             f"</tr>"
         )
@@ -1459,6 +1949,7 @@ def render_extension_review_queue_page(
 
       <div style='display:flex; flex-wrap:wrap; gap:10px; margin: 12px 0;'>
         <div class="stat"><div class="num">{len(rows):,}</div><div class="muted">in queue<br/>(popular ≥ {_fmt_occ(MIN_OCC)} occurrences &amp; not well-attributed)</div></div>
+        <div class="stat" title="Extensions with no PL claim, no Wikidata entry, no Linguist heuristic, no manual label, no SWH sample — total-mystery cases worth prioritizing"><div class="num">{n_orphan:,}</div><div class="muted">🪶 orphans<br/>(zero evidence anywhere)</div></div>
         <div class="stat"><div class="num">{n_well_attributed_popular:,}</div><div class="muted">popular exts skipped<br/>(≥ {_fmt_occ(MIN_OCC)} occurrences &amp; already well-attributed)</div></div>
         <div class="stat"><div class="num">{n_well_attributed_in_taxonomy:,}</div><div class="muted">well-attributed exts<br/>(whole taxonomy, any popularity)</div></div>
         <div class="stat"><div class="num">{n_ext_in_taxonomy:,}</div><div class="muted">total exts<br/>in taxonomy</div></div>
@@ -1467,12 +1958,20 @@ def render_extension_review_queue_page(
 
       <p class='muted'>An extension is "well-attributed" (skipped from this queue) if it has at least one primary claim from Linguist or Pygments, OR all claims agree on a single PL entity after consolidating master_inventory near-duplicates. See <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/SWH_EXTENSIONS_DECISIONS.md#11-provenance-contract-for-ext--pl-mappings' target='_blank' rel='noopener'>SWH_EXTENSIONS_DECISIONS.md §11</a> for the full attribution-state rule.</p>
 
+      <p class='muted'>An extension is "🪶 orphan" if it has <strong>no PL claim, no Wikidata entry, no Linguist heuristic, no manual label, and no SWH sample</strong>. Total-mystery cases — most worth a human eye. Tick the filter to focus on them.</p>
+
       <p class='muted'>Vocabulary: <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/extension_labels.md' target='_blank' rel='noopener'>docs/extension_labels.md</a>.</p>
     </section>
     <section class="panel section">
-      <p class='muted'>Auto-suggested labels are <em>hints</em> (rule-based on the extension string). Always override based on actual evidence.</p>
+      <div style='display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:10px;'>
+        <label style='display:flex; align-items:center; gap:6px; font-size:13px;'>
+          <input type='checkbox' id='reviewOrphansOnly' />
+          <span>Show only 🪶 orphans ({n_orphan:,})</span>
+        </label>
+        <span class='muted' style='font-size:12px;'>Auto-suggested labels are <em>hints</em> (rule-based on the extension string). Always override based on actual evidence.</span>
+      </div>
       <table class='kv-table'>
-        <thead><tr><th>Extension</th><th>SWH</th><th>Last</th><th>#Claim</th><th>Current claimants</th><th>Auto-suggested</th><th>Samples</th><th>Action</th></tr></thead>
+        <thead><tr><th>Extension</th><th>SWH</th><th>Last</th><th>#Claim</th><th>Current claimants</th><th>Auto-suggested</th><th>Samples</th><th>Orphan?</th><th>Action</th></tr></thead>
         <tbody>{''.join(listing)}</tbody>
       </table>
     </section>
@@ -1586,18 +2085,32 @@ def render_source_pages(
             pl_id_to_slug.setdefault(enr.pl_id, lang.slug)
             pl_id_to_name.setdefault(enr.pl_id, lang.name)
 
-    # Group enriched langs by source.
-    by_source: dict[str, list[tuple[str, str, str]]] = {s: [] for s in _TAXONOMY_SOURCES}
+    # Group enriched langs by source. Per-PL external URLs (esolang_url,
+    # rosettacode_url) are carried alongside so source roster pages can
+    # render a direct deep-link column for those two sources.
+    by_source: dict[str, list[tuple[str, str, str, str]]] = {
+        s: [] for s in _TAXONOMY_SOURCES
+    }
     by_source["llm"] = []  # LLM-curated in-repo
     for lang in languages:
         enr = enrichments.get(lang.name)
         if not enr:
             continue
         for src in _TAXONOMY_SOURCES:
-            if enr.in_sources.get(src):
-                by_source[src].append((lang.name, lang.slug, enr.pl_id))
-        if lang.programs:
-            by_source["llm"].append((lang.name, lang.slug, enr.pl_id))
+            if not enr.in_sources.get(src):
+                continue
+            ext_url = ""
+            if src == "esolang":
+                ext_url = enr.esolang_url
+            elif src == "rosettacode":
+                ext_url = enr.rosettacode_url
+            by_source[src].append((lang.name, lang.slug, enr.pl_id, ext_url))
+        # Count LLM source only when the PL has at least one program that
+        # came from the agentic /loop (manifest has no created_via_issue),
+        # NOT every PL with any program — community-contributed programs
+        # shouldn't inflate the LLM source roster.
+        if any(p.created_via_issue is None for p in lang.programs):
+            by_source["llm"].append((lang.name, lang.slug, enr.pl_id, ""))
 
     SOURCE_BLURBS = {
         "pldb": "Programming Language DataBase — a curated community DB.",
@@ -1618,12 +2131,27 @@ def render_source_pages(
         if not entries:
             continue
         entries.sort(key=lambda t: t[0].lower())
+        # The third column ("Source page") is only meaningful for sources
+        # that propagate a per-PL URL through pl.csv — currently esolang
+        # and rosettacode. For other sources we keep the two-column layout
+        # so the table doesn't grow an empty column.
+        show_ext_col = any(ext for _, _, _, ext in entries)
         rows = []
-        for name, slug, pl_id in entries:
+        for name, slug, pl_id, ext_url in entries:
+            ext_cell = ""
+            if show_ext_col:
+                if ext_url:
+                    ext_cell = (
+                        f"<td><a href='{safe(ext_url)}' target='_blank' "
+                        f"rel='noopener'>↗ source page</a></td>"
+                    )
+                else:
+                    ext_cell = "<td class='muted'>—</td>"
             rows.append(
                 f"<tr><td><a href='../../l/{slug}/index.html'>{safe(name)}</a></td>"
-                f"<td><code>{safe(pl_id)}</code></td></tr>"
+                f"<td><code>{safe(pl_id)}</code></td>{ext_cell}</tr>"
             )
+        ext_header = "<th>Source page</th>" if show_ext_col else ""
         page = out_dir / src / "index.html"
         rel = rel_prefix(page, dist_root)
         body = f"""
@@ -1639,7 +2167,7 @@ def render_source_pages(
         </section>
         <section class="panel section">
           <table class='kv-table'>
-            <thead><tr><th>Language</th><th>pl_id</th></tr></thead>
+            <thead><tr><th>Language</th><th>pl_id</th>{ext_header}</tr></thead>
             <tbody>{''.join(rows)}</tbody>
           </table>
         </section>
@@ -1898,6 +2426,106 @@ def _build_sample_request_block(
           </form>"""
 
 
+def _build_pl_contribute_form(
+    *,
+    lang_name: str,
+    pl_id: str,
+    lang_folder: str,
+    github_owner_repo: str | None,
+) -> str:
+    """Render the unified "Propose a file extension" panel.
+
+    Required fields: extension + reference URL. Everything else (program
+    title, code, license, notes, friendly name) is optional — when code
+    is pasted, it becomes a program attached to the PL; without code,
+    the submission is an extension-only claim.
+
+    Submitting opens a `pl-contribute` GitHub issue; the
+    `pl_contribute_pr` workflow runs `tools/process_pl_contribute.py`,
+    which appends an `accepted` row to `extension_labels.csv` (the PR
+    merge IS the maintainer's approval) and optionally writes program
+    files under `languages/<folder>/programs/<sha256>/`.
+
+    Returns an empty string when no GitHub repo is configured.
+    """
+    if not github_owner_repo:
+        return ""
+    # If the PL isn't in the taxonomy yet (no pl_id), derive a placeholder
+    # from the canonical name. The maintainer can correct it at review
+    # time — submitting a label CSV row is still informative even without
+    # an existing pl_id.
+    effective_pl_id = pl_id or ("pl/" + re.sub(r"[^a-z0-9]+", "_", lang_name.lower()).strip("_"))
+    return f"""
+          <form class="pl-contribute-form"
+                data-pl-id="{safe(effective_pl_id)}"
+                data-pl-name="{safe(lang_name)}"
+                data-pl-folder="{safe(lang_folder)}"
+                data-repo="{safe(github_owner_repo)}"
+                style="margin-top:6px; padding:12px; border:1px dashed var(--border, #2a2a2a); border-radius:8px;">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div class="muted" style="font-size:13px;">
+                Tell us where to find evidence about {safe(lang_name)}
+                (mapped to <code>{safe(effective_pl_id)}</code>). A
+                <strong>reference URL</strong> is required; at least one
+                of <strong>extension</strong> or <strong>program code</strong> must be
+                provided too. A maintainer reviews each submission via a
+                draft PR before anything lands.
+              </div>
+              <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                <label style="display:flex; flex-direction:column; gap:4px;">
+                  <span class="muted" style="font-size:12px;">File extension (optional) — e.g. <code>.oak</code>. Some PLs (e.g. esolangs) have no convention; leave empty if so.</span>
+                  <input type="text" name="ext" placeholder=".ext (optional)" />
+                </label>
+                <label style="display:flex; flex-direction:column; gap:4px;">
+                  <span class="muted" style="font-size:12px;">Friendly name (optional)</span>
+                  <input type="text" name="friendly_name" placeholder="e.g. Oaklisp source file" />
+                </label>
+              </div>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Reference URL * — public URL where the extension is used (GitHub file, GitLab, spec page, …)</span>
+                <input type="url" name="reference_url" required placeholder="https://github.com/..." />
+              </label>
+              <label style="display:flex; flex-direction:column; gap:4px;">
+                <span class="muted" style="font-size:12px;">Notes (optional) — 1–3 sentences if context helps the maintainer</span>
+                <textarea name="notes" rows="2" placeholder="(optional)"></textarea>
+              </label>
+              <details style="margin-top:4px;">
+                <summary style="cursor:pointer; font-size:13px;"><span class="muted">Optional: attach a program from that URL</span></summary>
+                <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+                  <div class="muted" style="font-size:12px;">
+                    If the reference URL points at a single source file you'd like to
+                    add as an example program, paste it below. The workflow will write
+                    it under <code>languages/{safe(lang_folder)}/programs/&lt;sha&gt;/</code>.
+                    Keep under ~200 lines.
+                  </div>
+                  <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr;">
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                      <span class="muted" style="font-size:12px;">Title (optional) — e.g. "Factorial", "Quicksort"</span>
+                      <input type="text" name="title" placeholder="(optional)" />
+                    </label>
+                    <label style="display:flex; flex-direction:column; gap:4px;">
+                      <span class="muted" style="font-size:12px;">License guess (optional) — MIT, GPL-2.0, …</span>
+                      <input type="text" name="license_guess" placeholder="(optional)" />
+                    </label>
+                  </div>
+                  <label style="display:flex; flex-direction:column; gap:4px;">
+                    <span class="muted" style="font-size:12px;">Code (optional) — paste verbatim bytes from the reference URL</span>
+                    <textarea name="code" rows="12" placeholder="(leave empty for an extension-only submission)" style="font-family:monospace; font-size:13px;"></textarea>
+                  </label>
+                </div>
+              </details>
+              <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <button class="btn" type="submit">Submit via GitHub (opens new tab)</button>
+                <a class="pl-contribute-fallback-link btn" href="#" target="_blank" rel="noopener"
+                   style="text-decoration:none; font-size:13px;">
+                  (or open the pre-filled issue directly)
+                </a>
+              </div>
+              <div class="pl-contribute-status muted" style="font-size:13px; min-height:1em;"></div>
+            </div>
+          </form>"""
+
+
 # Vocabulary used by the per-extension labelling form. Mirrors `docs/extension_labels.md`.
 LABEL_VOCAB_GROUPS = [
     ("Programming language", [
@@ -1963,17 +2591,28 @@ def render_per_extension_pages(
     taxonomy claim, heuristic, or mined SWH sample. Returns page count."""
     # Build pl_id -> in-site language slug index (for linking).
     pl_id_to_slug: dict[str, str] = {}
+    # Build pl_id -> in-repo canonical name (overrides the taxonomy row's
+    # canonical_name, which is sometimes lowercase or otherwise stale —
+    # e.g., pl/oaklisp had canonical_name="oaklisp" from the Esolang
+    # import, while languages/Oaklisp/meta.json says "Oaklisp"). The
+    # in-repo name is authoritative because a human / the LLM curator
+    # explicitly set it.
+    pl_name_override: dict[str, str] = {}
     for lang in languages:
         enr = enrichments.get(lang.name)
         if enr:
             pl_id_to_slug.setdefault(enr.pl_id, lang.slug)
+            if lang.folder_rel and lang.name:
+                pl_name_override.setdefault(enr.pl_id, lang.name)
 
     ext_summary_rows = _read_csv(TAXONOMY_DIR / "ext_summary.csv")
     ext_claim_rows = _read_csv(TAXONOMY_DIR / "ext_claim.csv")
     heuristic_rows = _read_csv(TAXONOMY_DIR / "heuristic.csv")
     pl_rows = _read_csv(TAXONOMY_DIR / "pl.csv")
-    pl_canonical = {r["pl_id"]: (r.get("canonical_name") or r["pl_id"])
-                    for r in pl_rows if r.get("pl_id")}
+    pl_canonical = {
+        r["pl_id"]: (pl_name_override.get(r["pl_id"]) or r.get("canonical_name") or r["pl_id"])
+        for r in pl_rows if r.get("pl_id")
+    }
 
     claims_by_ext: dict[str, list[dict]] = {}
     for c in ext_claim_rows:
@@ -1998,6 +2637,20 @@ def render_per_extension_pages(
 
     # Existing manual labels (from extension_labels.csv).
     existing_labels = _load_extension_labels()
+
+    # Review-queue auto-suggested labels (from extension_review_queue.csv).
+    # Heuristic categorisation (binary:image, build-artifact, …) per ext.
+    # We surface it as a one-click "Use auto-suggestion" button on the form,
+    # but only when the suggestion is concrete (skip `unknown` / blank — the
+    # heuristic gave up, no point pre-filling a "I don't know" answer).
+    review_queue_suggested: dict[str, str] = {}
+    _rq_csv = ROOT / "data" / "derived" / "extension_review_queue.csv"
+    if _rq_csv.exists():
+        for r in _read_csv(_rq_csv):
+            ext_key = (r.get("ext_canonical") or "").strip().lower()
+            suggested = (r.get("suggested_label") or "").strip()
+            if ext_key and suggested and suggested != "unknown":
+                review_queue_suggested[ext_key] = suggested
 
     # External (non-PL) extension index — Wikidata + Wikipedia infobox.
     external_ext = load_external_extension_index()
@@ -2150,9 +2803,14 @@ def render_per_extension_pages(
         external_rows = external_ext.get(ext, [])
         external_section = ""
         if external_rows:
-            shown = external_rows[:EXTERNAL_DISPLAY_LIMIT]
-            n_more = len(external_rows) - len(shown)
+            # Show ALL rows — the previous 20-cap hid useful entries on
+            # polysemous extensions (e.g. PDF/X among 57 variants). Reviewers
+            # filter via the search box; rows are still pre-sorted with
+            # Wikipedia-URL'd entries first.
+            shown = external_rows
+            n_more = 0
             ext_html_rows = []
+            add_pl_root = f"{rel}contribute/add-pl/index.html"
             for r in shown:
                 qid = r.get("qid") or ""
                 label = r.get("label") or qid
@@ -2165,6 +2823,7 @@ def render_per_extension_pages(
                 mime = r.get("mime_types") or ""
                 instance_of = r.get("instance_of_labels") or ""
                 suggested = r.get("suggested_label") or ""
+                aliases_raw = r.get("aliases") or ""
                 # Show only the first two instance_of labels — enough for
                 # the reviewer to recognise the class, full list is in the CSV.
                 instance_of_short = "; ".join(
@@ -2201,25 +2860,75 @@ def render_per_extension_pages(
                 suggested_cell = (
                     f"<span class='pill'>{safe(suggested)}</span>" if suggested else "&mdash;"
                 )
+                # "Use as new PL" button: opens the Add-PL form pre-filled
+                # via URL params (name, evidence_url, extensions, aliases).
+                # Submission goes through the standard pl-add pipeline which
+                # creates languages/<Name>/meta.json with extensions=[.ext]
+                # and emits a repo_meta primary claim. Skipped when the row
+                # has no label (degenerate Wikidata entry).
+                action_cell = "&mdash;"
+                if label:
+                    pref_url = wp_url or wd_url
+                    aliases_for_url = ", ".join(
+                        a.strip() for a in re.split(r"[;,]", aliases_raw) if a.strip()
+                    )
+                    qs = urlencode({
+                        "name": label,
+                        "evidence_url": pref_url,
+                        "extensions": ext,
+                        "aliases": aliases_for_url,
+                    }, quote_via=quote)
+                    action_cell = (
+                        f"<a class='btn use-as-new-pl' href='{add_pl_root}?{qs}' "
+                        f"title='Open the Add-PL form pre-filled with this entry' "
+                        f"style='font-size:12px; padding:3px 8px;'>Use as new PL ↗</a>"
+                    )
+                # "Top match" pill: highest-scoring canonical row (Wikipedia
+                # URL ending in /<EXT_UPPER>). Visually distinguishes the
+                # row a reviewer should look at first.
+                is_top_match = r.get("_canonical_score", 0) <= -100
+                top_match_pill = (
+                    f"<span class='pill strength-primary' "
+                    f"style='margin-left:6px; font-size:11px;' "
+                    f"title='Wikipedia article path matches the extension — likely the canonical entry'>"
+                    f"top match</span>"
+                    if is_top_match else ""
+                )
+                # Hide rows past the first 3 by default. A reveal toggle
+                # below the table flips display on the `.wd-collapsed` rows.
+                # Top-match row never collapses (it's index 0 and the
+                # canonical entry); other rows past the cap inherit
+                # `wd-collapsed` so JS can toggle them.
+                hidden_cls = " wd-collapsed" if len(ext_html_rows) >= 3 else ""
+                style_attr = (
+                    " style='display:none;'" if hidden_cls else ""
+                )
                 ext_html_rows.append(
-                    f"<tr>"
-                    f"<td>{label_html}"
+                    f"<tr class='wikidata-row{hidden_cls}'{style_attr} "
+                    f"data-search='{safe((label + ' ' + desc + ' ' + qid + ' ' + instance_of + ' ' + aliases_raw).lower())}'>"
+                    f"<td>{label_html}{top_match_pill}"
                     + (f"<div class='muted' style='font-size:12px;'>{safe(desc)}</div>" if desc else "")
                     + f"</td>"
                     f"<td><span class='muted'>{safe(instance_of_short)}</span></td>"
                     f"<td>{suggested_cell}</td>"
                     f"<td><code class='muted'>{safe(mime) or '&mdash;'}</code></td>"
                     f"<td>{notes_html}</td>"
+                    f"<td>{action_cell}</td>"
                     f"</tr>"
                 )
-            more_row = ""
-            if n_more > 0:
-                more_row = (
-                    f"<tr><td colspan='5' class='muted' style='text-align:center;'>"
-                    f"… and {n_more} more in "
-                    f"<code>data/derived/external_extension_index.csv</code>"
-                    f"</td></tr>"
-                )
+            # "Right entry isn't listed?" escape hatch — opens the Add-PL
+            # form pre-filled with just the extension, so the reviewer can
+            # type the canonical name + evidence URL themselves.
+            blank_add_pl_qs = urlencode({"extensions": ext}, quote_via=quote)
+            blank_add_pl_url = f"{add_pl_root}?{blank_add_pl_qs}"
+            n_collapsed = max(0, len(external_rows) - 3)
+            reveal_btn = (
+                f"<button type='button' class='btn wd-reveal-toggle' "
+                f"style='margin-top:8px; font-size:12px; padding:3px 10px;' "
+                f"data-show='{n_collapsed}' data-hidden='{n_collapsed}'>"
+                f"Show {n_collapsed} more ↓</button>"
+                if n_collapsed > 0 else ""
+            )
             external_section = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Wikidata says… ({len(external_rows)})</h2>
@@ -2227,15 +2936,22 @@ def render_per_extension_pages(
             File formats, image formats, audio codecs and other non-PL
             entities that claim <code>{safe(ext)}</code> on Wikidata
             (property <code>P1195</code>) or in the Wikipedia infobox.
-            Independent from the language taxonomy above &mdash;
-            useful when labelling the extension as
-            <code>binary:*</code> / <code>data:*</code> rather than a PL.
             Source: <code>data/derived/external_extension_index.csv</code>.
+            Click <strong>Use as new PL</strong> on any row to open the
+            Add-PL form pre-filled with that entry's name, Wikipedia/Wikidata
+            URL, and this extension — one submission creates the PL + claim.
+          </div>
+          <div style='display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px;'>
+            <input type='search' class='wikidata-filter' placeholder='Filter rows by name, alias, description, QID, class…'
+                   style='flex:1; min-width:200px; padding:6px 10px; font-size:13px;' />
+            <a class='btn' href='{blank_add_pl_url}' style='font-size:12px; padding:3px 8px;'
+               title='Open the Add-PL form pre-filled with just this extension'>Right entry isn't listed? Add manually ↗</a>
           </div>
           <table class='kv-table'>
-            <thead><tr><th>Format</th><th>Class (Wikidata <code>P31</code>)</th><th>Suggested label</th><th>MIME</th><th>Notes</th></tr></thead>
-            <tbody>{''.join(ext_html_rows)}{more_row}</tbody>
+            <thead><tr><th>Format</th><th>Class (Wikidata <code>P31</code>)</th><th>Suggested label</th><th>MIME</th><th>Notes</th><th>Action</th></tr></thead>
+            <tbody>{''.join(ext_html_rows)}</tbody>
           </table>
+          {reveal_btn}
         </section>"""
         heur_section = ""
         if heur_rows_html:
@@ -2284,11 +3000,24 @@ def render_per_extension_pages(
         #   weakly-attributed: only secondary / unknown / proposed claims.
         #     Reviewers may want to confirm or correct.
         #   unattributed: no claims at all. Prime review target.
-        AUTHORITATIVE = {"linguist", "pygments"}
+        # Sources we trust as authoritative for primary/secondary attribution.
+        # Linguist + Pygments are curated language databases. Wikidata is a
+        # structured P1195 claim ("file extension" property) — comparable in
+        # authority and now powering ~700 ext_claim rows via Phase B + C.
+        # Wikipedia infobox is included for symmetry (sourced from the same
+        # snapshot pipeline). The user-visible attribution panel lists
+        # exactly which of these contributed for each ext.
+        AUTHORITATIVE = {"linguist", "pygments", "wikidata", "wikipedia"}
         n_primary_authoritative = sum(
             1 for c in claims
             if c.get("strength") == "primary" and c.get("source") in AUTHORITATIVE
         )
+        # Group authoritative sources that contribute a primary claim for
+        # the user-visible panel wording. Keys preserve display order.
+        auth_primary_sources: dict[str, list[dict]] = {}
+        for c in claims:
+            if c.get("strength") == "primary" and c.get("source") in AUTHORITATIVE:
+                auth_primary_sources.setdefault(c["source"], []).append(c)
         # Reasons to call an extension well-attributed:
         # 1. At least one authoritative primary claim (the canonical case).
         # 2. ALL claims (across all sources, all strengths) point to ONE PL
@@ -2400,6 +3129,21 @@ def render_per_extension_pages(
         panel_well = panel_polysemous = panel_form = ""
 
         if attribution_state == "well-attributed":
+            # Helper: render a pl_id as <a href='/l/<slug>/'>Name</a> when
+            # we have the slug, falling back to plain canonical name (or
+            # the pl_id itself if nothing else is known).
+            def _pl_link(pl_id: str) -> str:
+                name = pl_canonical.get(pl_id, pl_id)
+                slug = pl_id_to_slug.get(pl_id)
+                if slug:
+                    return f"<a href='{rel}l/{safe(slug)}/index.html'>{safe(name)}</a>"
+                return safe(name)
+            primary_pl_ids = [
+                c["pl_id"] for c in claims if c.get("strength") == "primary" and c.get("pl_id")
+            ]
+            primary_names_html = "; ".join(_pl_link(pid) for pid in primary_pl_ids)
+            # Plain-text fallback for the "no primary" branch — uses the
+            # first sorted entity name when there's no primary claim.
             primary_names = "; ".join(
                 pl_canonical.get(c["pl_id"], c["pl_id"])
                 for c in claims if c.get("strength") == "primary"
@@ -2409,12 +3153,119 @@ def render_per_extension_pages(
                 f"Disagree or have a correction? Open a labelling issue.</a>"
                 if label_issue_url else ""
             )
+            # Build a per-source status row for ALL authoritative sources.
+            # Silent sources (e.g. Linguist doesn't carry .pdf) are
+            # informative too — they hint that the extension lives outside
+            # the strict "what Linguist treats as code" line. So we show:
+            #   ✓ <Source> · <evidence>     when source attests primary
+            #   ✗ <Source> · no claim       when source has no primary claim
+            # Sources with a non-primary (secondary/proposed) claim are
+            # marked with a "secondary" badge.
+            SOURCE_DISPLAY = {
+                "linguist": "Linguist",
+                "pygments": "Pygments",
+                "wikidata": "Wikidata",
+                "wikipedia": "Wikipedia",
+            }
+            # Lookup the non-primary claims per source too, so silent vs
+            # weak attestation are visually distinct.
+            secondary_by_source: dict[str, list[dict]] = {}
+            for c in claims:
+                if c.get("source") in AUTHORITATIVE and c.get("strength") != "primary":
+                    secondary_by_source.setdefault(c["source"], []).append(c)
+            source_chips: list[str] = []
+            for src in ("linguist", "pygments", "wikidata", "wikipedia"):
+                display = SOURCE_DISPLAY[src]
+                primary_claims = auth_primary_sources.get(src) or []
+                if primary_claims:
+                    c = primary_claims[0]
+                    evidence = c.get("evidence", "")
+                    if src == "wikidata":
+                        qid = c.get("source_key", "")
+                        suffix = f" · {safe(qid)}" if qid else ""
+                        if evidence.startswith("http"):
+                            source_chips.append(
+                                f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
+                                f"class='pill src-wikidata' title='Primary claim from {display}'>"
+                                f"✓ {display}{suffix}</a>"
+                            )
+                            continue
+                    if src == "wikipedia" and evidence.startswith("http"):
+                        source_chips.append(
+                            f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
+                            f"class='pill src-wikipedia' title='Primary claim from {display}'>"
+                            f"✓ {display}</a>"
+                        )
+                        continue
+                    if src in ("linguist", "pygments") and evidence.startswith("http"):
+                        source_chips.append(
+                            f"<a href='{safe(evidence)}' target='_blank' rel='noopener' "
+                            f"class='pill src-{src}' title='Primary claim from {display}'>"
+                            f"✓ {display}</a>"
+                        )
+                        continue
+                    source_chips.append(
+                        f"<span class='pill src-{src}' title='Primary claim from {display}'>"
+                        f"✓ {display}</span>"
+                    )
+                elif src in secondary_by_source:
+                    # Has a claim but it's not primary — secondary attestation.
+                    source_chips.append(
+                        f"<span class='pill' style='background:rgba(160,160,160,0.18);' "
+                        f"title='Only secondary claim from {display}'>"
+                        f"△ {display} · secondary</span>"
+                    )
+                else:
+                    # Silent: no claim of any strength from this source.
+                    source_chips.append(
+                        f"<span class='pill muted' style='background:rgba(120,120,120,0.12); "
+                        f"color:var(--muted);' title='No claim from {display}'>"
+                        f"✗ {display} · no claim</span>"
+                    )
+            # When no authoritative-primary exists but the single-entity rule
+            # fired (every claim, including weaker ones, points to one PL),
+            # explain that path explicitly.
+            if n_primary_authoritative >= 1:
+                lead = (
+                    f"This extension is <strong>attributed</strong> to "
+                    f"<strong>{primary_names_html if primary_names_html else '?'}</strong> "
+                    f"as <code>primary</code> by "
+                    f"{n_primary_authoritative} authoritative claim"
+                    f"{'' if n_primary_authoritative == 1 else 's'}."
+                )
+            else:
+                # No primary claim — fall back to the single distinct
+                # entity (this branch only fires when len(distinct_entities)
+                # == 1). Render it as a link too when we have the slug.
+                fallback_entity_html = "?"
+                if primary_names_html:
+                    fallback_entity_html = primary_names_html
+                elif distinct_entities:
+                    fallback_entity = sorted(distinct_entities)[0]
+                    # distinct_entities holds pl entity-base strings (like
+                    # 'oaklisp'); try both the bare base and a 'pl/<base>'
+                    # form when looking up the slug.
+                    fallback_entity_html = _pl_link("pl/" + fallback_entity) \
+                        if pl_id_to_slug.get("pl/" + fallback_entity) \
+                        else (_pl_link(fallback_entity) if pl_id_to_slug.get(fallback_entity) else safe(fallback_entity))
+                lead = (
+                    f"This extension is <strong>attributed</strong> to "
+                    f"<strong>{fallback_entity_html}</strong> "
+                    f"&mdash; every claim across all sources (including secondary ones) "
+                    f"points to a single language."
+                )
+            sources_line = (
+                f"<div style='margin-top:6px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;'>"
+                f"<span class='muted' style='font-size:12px;'>Authoritative sources:</span> "
+                f"{' '.join(source_chips)}</div>"
+                if source_chips else ""
+            )
             panel_well = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Attribution status</h2>
-          <p>This extension is <strong>already attributed</strong> as <code>primary</code> by an authoritative upstream source ({n_primary_authoritative} primary claim{'' if n_primary_authoritative == 1 else 's'} from Linguist / Pygments).
-          {f"Claimed by: <strong>{safe(primary_names)}</strong>." if primary_names else ""}</p>
-          <p class='muted'>{disagree_link}</p>
+          <p>{lead}</p>
+          {sources_line}
+          <p class='muted' style='margin-top:10px;'>{disagree_link}</p>
           {prior_block}
         </section>"""
 
@@ -2449,8 +3300,29 @@ def render_per_extension_pages(
           <p class='muted'>To propose <em>adding</em> a missing PL or <em>disputing</em> one of these, fill the form below. For a multi-PL submission, enter <code>pl/&lt;id&gt;, pl/&lt;id&gt;, …</code> (comma-separated) in the custom field.</p>
         </section>"""
 
+        # "Orphan" detection mirrors the review-queue logic: zero evidence
+        # of any kind across every signal we ingest. The badge promotes
+        # these to top priority for reviewer attention.
+        ext_external_rows = external_rows  # already loaded above
+        is_orphan_ext = (
+            not claims
+            and not ext_external_rows
+            and not heur_by_ext.get(ext, [])
+            and not existing_labels.get(ext, [])
+            and not swh_by_ext.get(ext, [])
+        )
         if attribution_state in ("unattributed", "weakly-attributed", "confirmed-polysemous"):
-            if attribution_state == "unattributed":
+            if attribution_state == "unattributed" and is_orphan_ext:
+                heading = "🪶 Orphan extension — no evidence anywhere"
+                blurb = (
+                    f"<strong>Total mystery.</strong> <code>{safe(ext)}</code> has no PL claim, "
+                    f"no Wikidata or Wikipedia entry, no Linguist heuristic, no manual label, "
+                    f"and no archived SWH sample. The auto-suggested label (<code>{safe(suggested_for_label)}</code>) "
+                    f"is the rule-based guess; treat it as a starting point, not an answer. "
+                    f"If you know what this extension is — even \"it's a one-off from project X\" — "
+                    f"please submit a label below. Orphans are the highest-priority cases."
+                )
+            elif attribution_state == "unattributed":
                 heading = "Help label this extension"
                 blurb = "No PL in our taxonomy claims this extension. If you know what it's used for, fill the form below."
             elif attribution_state == "weakly-attributed":
@@ -2568,11 +3440,38 @@ def render_per_extension_pages(
                 </div>
               </div>"""
 
+            # Auto-suggestion button: when the review-queue heuristic mapped
+            # this extension to a concrete vocab entry (e.g., `.png` →
+            # binary:image), surface a one-click button that pre-fills the
+            # label dropdown so the reviewer doesn't have to scroll the
+            # vocabulary themselves. Only renders when a non-unknown
+            # suggestion exists.
+            suggested_for_ext = review_queue_suggested.get(ext.lower(), "")
+            auto_suggest_html = ""
+            if suggested_for_ext:
+                auto_suggest_html = f"""
+              <div style="grid-column:1 / -1; display:flex; flex-direction:column; gap:6px;">
+                <div class="muted" style="font-size:13px;">
+                  <strong>Auto-suggested label.</strong>
+                  Built from <code>tools/build_extension_review_queue.py</code>'s
+                  heuristic categorisation (file-format families, numeric / SHA
+                  filenames, etc.). One click to pre-fill the form below —
+                  edit if it's off.
+                </div>
+                <div>
+                  <button class="btn ext-label-autosuggest" type="button"
+                          data-suggested="{safe(suggested_for_ext)}"
+                          style="font-size:13px;">
+                    Use auto-suggestion: <code>{safe(suggested_for_ext)}</code>
+                  </button>
+                </div>
+              </div>"""
             form_html = f"""
           <form class="ext-label-form"
                 data-ext="{safe(ext)}"
                 data-repo="{safe(github_owner_repo) if github_owner_repo else ''}">
             <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr; margin-top:10px;">
+              {auto_suggest_html}
               {quick_pick_html}
               <label style="grid-column:1 / -1; display:flex; flex-direction:column; gap:4px;">
                 <span class="muted">Label *</span>
@@ -2678,11 +3577,11 @@ def render_per_extension_pages(
           </div>
         </section>
         {swh_pop_html}
+        {label_section}
         {claimants_section}
         {external_section}
         {heur_section}
         {swh_section}
-        {label_section}
         """
         page.parent.mkdir(parents=True, exist_ok=True)
         page.write_text(
@@ -2801,8 +3700,6 @@ def render_stats_page(
     temps_avg: float | None,
     temp_buckets: list[tuple[str, int]],
     github_owner_repo: str | None,
-    audit_summary: dict[str, Any] | None,
-    audit_page_rel: str,
     taxonomy_stats: dict[str, Any] | None = None,
 ) -> None:
     page = dist_root / "stats" / "index.html"
@@ -2934,39 +3831,6 @@ def render_stats_page(
         <section class="panel section" style="margin-top: 18px;">
           <h2>Agents &amp; LLMs</h2>
           <p class="muted" style="margin:0;">Git history not available; cannot compute agent/model statistics.</p>
-        </section>
-        """
-
-    audit_available = audit_summary is not None
-    if audit_available:
-        sev = audit_summary.get("by_severity", {})
-        total_findings = int(audit_summary.get("total", 0))
-        audit_section = f"""
-        <section class="panel section" style="margin-top: 18px;">
-          <h2>Data quality audit</h2>
-          <div class="stats">
-            <div class="stat"><div class="num">{total_findings}</div><div class="muted">findings</div></div>
-            <div class="stat"><div class="num">{int(sev.get("error", 0))}</div><div class="muted">errors</div></div>
-            <div class="stat"><div class="num">{int(sev.get("warn", 0))}</div><div class="muted">warnings</div></div>
-          </div>
-          <div style="margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn" href="{rel}data/audit.json">Open audit.json</a>
-            <a class="btn" href="{audit_page_rel}">Open audit view</a>
-          </div>
-        </section>
-        """
-    else:
-        audit_section = f"""
-        <section class="panel section" style="margin-top: 18px;">
-          <h2>Data quality audit</h2>
-          <p class="muted" style="margin:0 0 10px;">
-            Run <code>python3 tools/audit_repo.py --out web/dist/data/audit.json</code> to generate a machine-readable report
-            (duplicates, integrity checks, clustering hints).
-          </p>
-          <div class="muted">audit.json not generated in this build.</div>
-          <div style="margin-top: 12px;">
-            <a class="btn" href="{audit_page_rel}">Open audit view</a>
-          </div>
         </section>
         """
 
@@ -3120,7 +3984,6 @@ def render_stats_page(
     </section>
 
     {llm_section}
-    {audit_section}
 
     <section class="panel section">
       <h2>Languages by first letter</h2>
@@ -3157,6 +4020,100 @@ def render_stats_page(
     )
 
 
+_INFOBOX_FIELDS = (
+    # (enrichment-attr, display-label, cross-link?)
+    ("paradigms",                "Paradigms",       False),
+    ("typing",                   "Typing",          False),
+    ("designed_by",              "Designed by",     False),
+    ("first_appeared",           "First appeared",  False),
+    ("influenced_by",            "Influenced by",   True),
+    ("license",                  "License",         False),
+    ("implementation_languages", "Implemented in",  True),
+)
+
+
+def _render_wikipedia_infobox_panel(
+    enr: TaxonomyEnrichment | None,
+    rel: str,
+    name_to_slug: dict[str, str],
+) -> str:
+    """Render the Wikipedia-derived infobox panel for a per-PL page.
+
+    Returns "" when the PL has no Phase-2 facts at all (most PLs that
+    aren't in the structured-wikipedia P1195 enwiki set). Otherwise emits
+    a key-value table over the eight fact fields, cross-linking
+    influenced_by and implementation_languages items to their own PL
+    pages where the name resolves to a known slug.
+    """
+    if enr is None:
+        return ""
+    # Cheap "any data?" gate: skip the whole panel when every field is
+    # empty (typical for PLs without a Wikipedia infobox).
+    has_any = any(getattr(enr, attr, "") for attr, _, _ in _INFOBOX_FIELDS) \
+              or bool(enr.homepage)
+    if not has_any:
+        return ""
+
+    def cross_link(item: str) -> str:
+        # Strict (case-insensitive) lookup; fall through to plain text
+        # when the influenced_by name doesn't resolve to a tracked PL.
+        slug = name_to_slug.get(item.lower())
+        if slug:
+            return f"<a href='{rel}l/{slug}/index.html'>{safe(item)}</a>"
+        return safe(item)
+
+    rows_html: list[str] = []
+    for attr, label, do_link in _INFOBOX_FIELDS:
+        raw = (getattr(enr, attr, "") or "").strip()
+        if not raw:
+            continue
+        items = [s.strip() for s in raw.split(" | ") if s.strip()]
+        if not items:
+            continue
+        if do_link:
+            cells = " · ".join(cross_link(it) for it in items)
+        else:
+            cells = " · ".join(safe(it) for it in items)
+        rows_html.append(f"<tr><th>{label}</th><td>{cells}</td></tr>")
+
+    hp = (enr.homepage or "").strip()
+    if hp:
+        # Only render http(s) URLs as a link; leave anything else (rare,
+        # e.g. a bare domain) as text to avoid building a broken anchor.
+        if hp.startswith(("http://", "https://")):
+            hp_cell = f"<a href='{safe(hp)}' target='_blank' rel='noopener'>{safe(hp)}</a>"
+        else:
+            hp_cell = safe(hp)
+        rows_html.append(f"<tr><th>Homepage</th><td>{hp_cell}</td></tr>")
+
+    if not rows_html:
+        return ""
+
+    # Header gets a discreet Wikipedia link when we have one — same QID
+    # join used by build_pl_taxonomy.py, so the user can verify the
+    # source of any cell with one click.
+    wp = (enr.wikipedia_url or "").strip()
+    title_html = (
+        f"<a href='{safe(wp)}' target='_blank' rel='noopener'>Wikipedia infobox</a> ↗"
+        if wp else "Wikipedia infobox"
+    )
+
+    return f"""
+    <section class="panel section" style="margin-top: 18px;">
+      <h2 style="margin:0 0 10px;">{title_html}</h2>
+      <p class='muted' style='margin:0 0 10px; font-size:13px;'>
+        Pulled from the
+        <a href='https://huggingface.co/datasets/wikimedia/structured-wikipedia'
+           target='_blank' rel='noopener'>wikimedia/structured-wikipedia</a>
+        snapshot — see <code>data/raw/wikipedia_pl_facts.*.jsonl</code> and
+        <code>pl_fact.csv</code> for the long-table provenance.
+      </p>
+      <table class='kv-table'>
+        <tbody>{''.join(rows_html)}</tbody>
+      </table>
+    </section>"""
+
+
 def render_language_pages(
     *,
     dist_root: Path,
@@ -3165,11 +4122,21 @@ def render_language_pages(
     slug_to_prev_next: dict[str, tuple[Language | None, Language | None]],
     github_owner_repo: str | None,
     related_by_language: dict[str, list[dict[str, Any]]],
-    audit_summary: dict[str, Any] | None,
     enrichments: dict[str, TaxonomyEnrichment] | None = None,
+    program_provenance: dict[tuple[str, str], TurnInfo] | None = None,
 ) -> None:
     enrichments = enrichments or {}
+    program_provenance = program_provenance or {}
     lang_by_name = {l.name: l for l in languages}
+    # Case-insensitive name → slug map used by the Wikipedia-infobox panel
+    # to cross-link `influenced_by` / `implementation_languages` items.
+    # Both canonical names and aliases participate so "C++" picks up its
+    # page even when an article writes "Cplusplus".
+    infobox_name_to_slug: dict[str, str] = {}
+    for l in languages:
+        for n in [l.name, *l.aliases]:
+            if n:
+                infobox_name_to_slug.setdefault(n.lower(), l.slug)
     for lang in languages:
         page = dist_root / "l" / lang.slug / "index.html"
         rel = rel_prefix(page, dist_root)
@@ -3201,18 +4168,6 @@ def render_language_pages(
         if lang.model:
             prov_bits.append(f"model {safe(lang.model)}")
         prov_line = f"<div class='muted'>Provenance: {' · '.join(prov_bits)}</div>" if prov_bits else ""
-
-        audit_pill = ""
-        audit_line = ""
-        if audit_summary:
-            per_lang = audit_summary.get("by_language", {}).get(lang.name)
-            if per_lang:
-                total = int(per_lang.get("total", 0))
-                err = int(per_lang.get("error", 0))
-                warn = int(per_lang.get("warn", 0))
-                if total > 0:
-                    audit_pill = f"<span class='pill'>Audit: {total} (err {err}, warn {warn})</span>"
-                    audit_line = "<div class='muted'>Audit findings present for this language. See audit.json for details.</div>"
 
         related_items = related_by_language.get(lang.name, [])
         related_html = ""
@@ -3258,9 +4213,20 @@ def render_language_pages(
             report_lang_url = github_new_issue_url(owner_repo=github_owner_repo, title=title, body="\n".join(body_lines))
             issues_lang_url = github_issue_search_url(owner_repo=github_owner_repo, query=f'is:issue \"{lang.name}\"')
 
-        programs_html = []
+        # Split programs by how they got here so the rendered headings
+        # honestly label each contributor type. The /l/<slug>/ contribute
+        # form writes manifest.json with `created_via_issue`; LLM-loop
+        # turns don't.
+        llm_programs_html: list[str] = []
+        community_programs_html: list[str] = []
+        no_programs_html = ""
         if not lang.programs:
-            programs_html.append("<p class='muted'>No programs recorded for this language yet.</p>")
+            no_programs_html = (
+                '<section class="panel section">'
+                '<h2 style="margin:0 0 10px;">Programs</h2>'
+                '<p class="muted">No programs recorded for this language yet.</p>'
+                '</section>'
+            )
         else:
             for idx, prog in enumerate(lang.programs):
                 code_id = f"code-{idx}"
@@ -3299,20 +4265,68 @@ def render_language_pages(
                     links.append(f"<a href='{safe(report_prog_url)}' target='_blank' rel='noopener'>Report</a>")
                 links_html = " · ".join(links)
 
-                prog_prov_bits: list[str] = []
-                if lang.turn_commit:
+                # Per-program provenance — three cases, in priority order:
+                #   1. Program's manifest carries created_via_issue → it was
+                #      submitted via the /l/<slug>/ contribute form.
+                #      Render "Submitted via #N" (human contributor, NOT
+                #      an LLM); never fall through to lang.agent/model.
+                #   2. Git history has a `turn:` commit that added this
+                #      program's files → use that turn's trailers
+                #      (commit, agent, model, …). Correct for both single-
+                #      and multi-program LLM-loop PLs.
+                #   3. Neither — fall back to the language-level turn
+                #      (the original /loop turn that added the language +
+                #      its first program). Only stops being accurate when
+                #      a non-turn commit added a program AND the manifest
+                #      lacks created_via_issue; that case is rare.
+                prog_prov_line = ""
+                if prog.created_via_issue is not None:
                     if github_owner_repo:
-                        url = github_commit_url(owner_repo=github_owner_repo, commit=lang.turn_commit)
-                        prog_prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(lang.turn_commit[:10])}</a>")
+                        issue_url = f"https://github.com/{github_owner_repo}/issues/{prog.created_via_issue}"
+                        prog_prov_line = (
+                            f"<div class='muted'>Provenance: submitted via "
+                            f"<a href='{safe(issue_url)}' target='_blank' rel='noopener'>"
+                            f"#{prog.created_via_issue}</a> on the "
+                            f"<a href='{rel}l/{lang.slug}/index.html#contribute'>"
+                            f"Propose-extension form</a></div>"
+                        )
                     else:
-                        prog_prov_bits.append(f"commit {safe(lang.turn_commit[:10])}")
-                if lang.turn_authored_at:
-                    prog_prov_bits.append(f"authored {safe(lang.turn_authored_at)}")
-                if lang.agent:
-                    prog_prov_bits.append(f"agent {safe(lang.agent)}")
-                if lang.model:
-                    prog_prov_bits.append(f"model {safe(lang.model)}")
-                prog_prov_line = f"<div class='muted'>Provenance: {' · '.join(prog_prov_bits)}</div>" if prog_prov_bits else ""
+                        prog_prov_line = (
+                            f"<div class='muted'>Provenance: submitted via "
+                            f"issue #{prog.created_via_issue}</div>"
+                        )
+                else:
+                    prog_turn = program_provenance.get((lang.folder_rel, prog.sha256))
+                    prov_commit = prog_turn.commit if prog_turn else lang.turn_commit
+                    prov_authored_at = prog_turn.authored_at if prog_turn else lang.turn_authored_at
+                    prov_agent = (prog_turn.trailers.get("Agent") if prog_turn else lang.agent) or None
+                    prov_model = (prog_turn.trailers.get("Model") if prog_turn else lang.model) or None
+                    prov_ws = (
+                        normalize_web_search(prog_turn.trailers.get("WebSearch"))
+                        if prog_turn else lang.web_search
+                    )
+                    prov_temp = (
+                        parse_temperature(prog_turn.trailers.get("Temperature"))
+                        if prog_turn else lang.temperature
+                    )
+                    prog_prov_bits: list[str] = []
+                    if prov_commit:
+                        if github_owner_repo:
+                            url = github_commit_url(owner_repo=github_owner_repo, commit=prov_commit)
+                            prog_prov_bits.append(f"commit <a href='{safe(url)}' target='_blank' rel='noopener'>{safe(prov_commit[:10])}</a>")
+                        else:
+                            prog_prov_bits.append(f"commit {safe(prov_commit[:10])}")
+                    if prov_authored_at:
+                        prog_prov_bits.append(f"authored {safe(prov_authored_at)}")
+                    if prov_agent:
+                        prog_prov_bits.append(f"agent {safe(prov_agent)}")
+                    if prov_model:
+                        prog_prov_bits.append(f"model {safe(prov_model)}")
+                    if prov_ws:
+                        prog_prov_bits.append(f"WebSearch {safe(prov_ws)}")
+                    if prov_temp is not None:
+                        prog_prov_bits.append(f"Temp {prov_temp:g}")
+                    prog_prov_line = f"<div class='muted'>Provenance: {' · '.join(prog_prov_bits)}</div>" if prog_prov_bits else ""
 
                 meta_bits = []
                 if prog.license_guess:
@@ -3334,8 +4348,7 @@ def render_language_pages(
                 else:
                     code_block = "<p class='muted'>Code file missing.</p>"
 
-                programs_html.append(
-                    f"""
+                program_block = f"""
                     <section class="panel section" style="margin-top: 18px;">
                       <h2 style="margin:0 0 8px;">{safe(prog.title)}</h2>
                       <div class="muted">{links_html}</div>
@@ -3343,7 +4356,10 @@ def render_language_pages(
                       {code_block}
                     </section>
                     """
-                )
+                if prog.created_via_issue is not None:
+                    community_programs_html.append(program_block)
+                else:
+                    llm_programs_html.append(program_block)
 
         # ----- Phase 1: cross-source presence / ext claims / SWH samples / heuristics -----
         enr = enrichments.get(lang.name)
@@ -3351,15 +4367,32 @@ def render_language_pages(
         ext_claims_html = ""
         swh_samples_html = ""
         heuristics_html = ""
+        # Phase-2 Wikipedia infobox panel (paradigms, typing, designer, …).
+        # Empty string when this PL has no infobox facts.
+        infobox_panel_html = _render_wikipedia_infobox_panel(
+            enr, rel, infobox_name_to_slug,
+        )
 
         # 1a. Cross-source presence pills. Always emit a "Sources mentioning"
         # section when the PL has *any* attestation (LLM + taxonomy sources),
         # even if name-matching to the taxonomy failed.
         pills = []
-        if lang.programs:
+        # Count LLM-curated programs only (exclude community-contributed
+        # ones — manifest.json carries `created_via_issue` for those).
+        llm_program_count = sum(
+            1 for p in lang.programs if p.created_via_issue is None
+        )
+        community_program_count = len(lang.programs) - llm_program_count
+        if llm_program_count:
             pills.append(
                 f"<a class='pill src-llm' href='{rel}source/llm/index.html' "
-                f"title='Curated by an LLM in this repo'>LLM (this repo) · {len(lang.programs)}</a>"
+                f"title='Curated by an LLM in this repo'>LLM (this repo) · {llm_program_count}</a>"
+            )
+        if community_program_count:
+            pills.append(
+                f"<a class='pill' href='{rel}review/curator/index.html' "
+                f"title='Submitted by visitors through the per-PL contribute form'>"
+                f"Community · {community_program_count}</a>"
             )
         taxonomy_pill_count = 0
         if enr is not None:
@@ -3373,6 +4406,14 @@ def render_language_pages(
             if not wikipedia_url and enr.in_sources.get("wikipedia"):
                 wikipedia_url = _legacy_wikipedia_url_for(enr.canonical_name)
             wikipedia_present = enr.in_sources.get("wikipedia") or bool(wikipedia_url)
+            # Per-source URLs propagated through pl.csv. When set, the pill
+            # deep-links to the source's own page for this PL; otherwise it
+            # falls back to the generic /source/<src>/ roster.
+            _per_pl_source_urls = {
+                "esolang": (enr.esolang_url, "esolangs.org wiki entry"),
+                "rosettacode": (enr.rosettacode_url, "Rosetta Code category"),
+                "pldb": (enr.pldb_url, "PLDB concept source (breck7/pldb)"),
+            }
             for src in _TAXONOMY_SOURCES:
                 if src == "wikipedia":
                     if not wikipedia_present:
@@ -3390,12 +4431,21 @@ def render_language_pages(
                         )
                     taxonomy_pill_count += 1
                     continue
-                if enr.in_sources.get(src):
+                if not enr.in_sources.get(src):
+                    continue
+                direct_url, direct_title = _per_pl_source_urls.get(src, ("", ""))
+                if direct_url:
+                    pills.append(
+                        f"<a class='pill src-{src}' href='{safe(direct_url)}' "
+                        f"target='_blank' rel='noopener' title='{safe(direct_title)}'>"
+                        f"{safe(src.capitalize())}</a>"
+                    )
+                else:
                     pills.append(
                         f"<a class='pill src-{src}' href='{rel}source/{src}/index.html'>"
                         f"{safe(src.capitalize())}</a>"
                     )
-                    taxonomy_pill_count += 1
+                taxonomy_pill_count += 1
             # Wikidata pill: stable cross-system identifier for the PL,
             # populated by Phase B of the taxonomy overlay. Render alongside
             # the per-PL Wikipedia article link; the two complement each
@@ -3411,7 +4461,11 @@ def render_language_pages(
                     f"Wikidata · {safe(enr.wikidata_qid)}</a>"
                 )
                 taxonomy_pill_count += 1
-        n_present = taxonomy_pill_count + (1 if lang.programs else 0)
+        n_present = (
+            taxonomy_pill_count
+            + (1 if llm_program_count else 0)
+            + (1 if community_program_count else 0)
+        )
         pl_id_line = (
             f"<div class='muted' style='margin-bottom:8px;'>{n_present} source{'s' if n_present != 1 else ''} · pl_id: <code>{safe(enr.pl_id)}</code></div>"
             if enr is not None else
@@ -3569,6 +4623,48 @@ def render_language_pages(
         </section>
         """
 
+        # Contribute panel — unified "Propose a file extension" form.
+        # Required: reference URL. At least one of {extension, program code}
+        # must be provided too. Submission opens a pl-contribute issue;
+        # pl_contribute_pr.yml runs the curator script and opens a draft PR.
+        # See _build_pl_contribute_form for full pipeline notes.
+        #
+        # Two render paths:
+        #   - PL has an in-repo folder (lang.folder_rel non-empty): pass it
+        #     through; the curator script writes program files there.
+        #   - Taxonomy-only PL (folder_rel empty but enr.pl_id exists,
+        #     e.g. /l/when-2a66b99d/ from the Esolang import): synthesize
+        #     a folder hint; the curator script auto-promotes by writing
+        #     languages/<folder>/meta.json from pl_taxonomy/pl.csv + the
+        #     submitter's reference URL, then proceeds normally.
+        contribute_html = ""
+        eligible_for_contribute = bool(
+            github_owner_repo and (
+                lang.folder_rel or (enr is not None and enr.pl_id)
+            )
+        )
+        if eligible_for_contribute:
+            pl_id_for_form = enr.pl_id if enr is not None else ""
+            # For taxonomy-only PLs, the curator script will create
+            # languages/<this folder>/ on the fly. Mirror the directory-
+            # safe-name rule from tools/process_pl_contribute.py so the
+            # hint already matches what the script would produce.
+            lang_folder_for_form = lang.folder_rel or (
+                re.sub(r"[^A-Za-z0-9._-]", "_", lang.name).strip("_") or "Unnamed"
+            )
+            form_html = _build_pl_contribute_form(
+                lang_name=lang.name,
+                pl_id=pl_id_for_form,
+                lang_folder=lang_folder_for_form,
+                github_owner_repo=github_owner_repo,
+            )
+            contribute_html = f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;" id="contribute">Contribute — propose a file extension</h2>
+          {form_html}
+        </section>
+        """
+
         prev_lang, next_lang = slug_to_prev_next.get(lang.slug, (None, None))
         prev_href = f"{rel}l/{prev_lang.slug}/index.html" if prev_lang else f"{rel}index.html"
         prev_label = f"← {safe(prev_lang.name)}" if prev_lang else "← Home"
@@ -3611,21 +4707,34 @@ def render_language_pages(
             {evidence_pill}
             {f'<a class=\"pill\" href=\"{safe(report_lang_url)}\" target=\"_blank\" rel=\"noopener\">Report issue</a>' if report_lang_url else ''}
             {f'<a class=\"pill\" href=\"{safe(issues_lang_url)}\" target=\"_blank\" rel=\"noopener\">View issues</a>' if issues_lang_url else ''}
-            {audit_pill}
           </div>
           {alias_html}
           {prov_line}
-          {audit_line}
         </section>
         {cross_source_html}
+        {infobox_panel_html}
         {ext_claims_html}
         {related_html}
-        <section class="panel section">
-          <h2 style="margin:0 0 10px;">LLM-contributed programs</h2>
-          {"".join(programs_html)}
-        </section>
+        {no_programs_html}
+        {(
+            '<section class="panel section">'
+            '<h2 style="margin:0 0 10px;">LLM-contributed programs</h2>'
+            + "".join(llm_programs_html) +
+            '</section>'
+        ) if llm_programs_html else ''}
+        {(
+            '<section class="panel section">'
+            '<h2 style="margin:0 0 10px;">Community-contributed programs</h2>'
+            '<div class="muted" style="margin-bottom:8px; font-size:13px;">'
+            'Submitted by visitors through the '
+            '<a href="#contribute">Propose-extension form</a>; each one was '
+            'reviewed in a draft PR before landing.</div>'
+            + "".join(community_programs_html) +
+            '</section>'
+        ) if community_programs_html else ''}
         {swh_samples_html}
         {heuristics_html}
+        {contribute_html}
         {pager}
         """
 
@@ -3640,6 +4749,38 @@ def render_language_pages(
             ),
             encoding="utf-8",
         )
+
+        # Slug unification: in-repo PLs that match the taxonomy now use
+        # the pl_id-based slug (sha1) instead of the legacy name-based
+        # slug (sha256). For every such PL, write a meta-refresh redirect
+        # at the LEGACY slug so any existing external link or cached URL
+        # keeps resolving. ~2,300 stubs per build for the in-repo PLs
+        # with taxonomy matches; ~250 bytes each → ~575 KB site weight.
+        #
+        # Only emit for in-repo PLs (folder_rel non-empty). Taxonomy-only
+        # PLs were always rendered at the sha1(pl_id) slug, so there's
+        # no legacy URL to redirect from.
+        legacy_slug = make_legacy_lang_slug(lang.name) if lang.folder_rel else None
+        if legacy_slug and legacy_slug != lang.slug:
+            old_page = dist_root / "l" / legacy_slug / "index.html"
+            old_page.parent.mkdir(parents=True, exist_ok=True)
+            new_url = f"../{lang.slug}/index.html"
+            old_page.write_text(
+                f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url={new_url}">
+<link rel="canonical" href="{new_url}">
+<title>{safe(lang.name)} (moved) · PL Catalog</title>
+</head>
+<body>
+<p>This page moved. Redirecting to <a href="{new_url}">{safe(lang.name)}</a>…</p>
+</body>
+</html>
+""",
+                encoding="utf-8",
+            )
 
 
 def render_contribute_add_pl_page(
@@ -3771,60 +4912,169 @@ def render_contribute_add_pl_page(
     )
 
 
-def render_audit_page(*, dist_root: Path, generated_at: str, github_owner_repo: str | None) -> None:
-    page = dist_root / "audit" / "index.html"
+def render_candidates_page(
+    *,
+    dist_root: Path,
+    generated_at: str,
+    github_owner_repo: str | None,
+) -> int:
+    """Write /candidates/index.html — a curated bulk view of Wikidata items
+    that look like PLs (markup / query / serialization / DSL / spec /
+    stylesheet language + Wikipedia article) but aren't `instance_of
+    Q9143` and aren't in pl_list.txt yet. Each row has a one-click
+    "Use as new PL ↗" button linking to /contribute/add-pl/ pre-filled.
+
+    The CSV is produced by `tools/build_pl_candidates.py`; refresh it
+    whenever you bump the wikidata_p1195 snapshot.
+    """
+    csv_path = ROOT / "data" / "derived" / "pl_candidates.csv"
+    page = dist_root / "candidates" / "index.html"
     rel = rel_prefix(page, dist_root)
+    page.parent.mkdir(parents=True, exist_ok=True)
+
+    rows = _read_csv(csv_path)
+    if not rows:
+        body = f"""
+        <section class="panel section">
+          <h1 style="margin:0 0 8px;">PL candidates</h1>
+          <p class='muted'>
+            No candidates indexed yet. Run <code>python3 tools/build_pl_candidates.py</code>
+            to regenerate <code>data/derived/pl_candidates.csv</code>.
+          </p>
+        </section>"""
+        page.write_text(
+            layout(title="PL candidates · PL Catalog", rel=rel, body=body,
+                   generated_at=generated_at, github_owner_repo=github_owner_repo),
+            encoding="utf-8",
+        )
+        return 0
+
+    add_pl_root = f"{rel}contribute/add-pl/index.html"
+    by_kind: dict[str, int] = {}
+    table_rows = []
+    for r in rows:
+        qid = r.get("qid") or ""
+        label = r.get("label") or qid
+        desc = r.get("description") or ""
+        aliases = r.get("aliases") or ""
+        wp_url = r.get("wikipedia_url") or ""
+        wd_url = r.get("wikidata_url") or ""
+        exts = r.get("extensions") or ""
+        kind = r.get("matched_pl_kind") or "?"
+        for k in kind.split(";"):
+            k = k.strip()
+            if k:
+                by_kind[k] = by_kind.get(k, 0) + 1
+
+        # Per-row "Use as new PL" link: pre-fills the Add-PL form with the
+        # Wikidata label, aliases, Wikipedia URL, and ALL its P1195
+        # extensions (so a single submission claims them as primary +
+        # secondary in the order Wikidata listed them).
+        ext_param = ", ".join(e.strip() for e in exts.split(";") if e.strip())
+        aliases_param = ", ".join(a.strip() for a in aliases.split(";") if a.strip())
+        qs = urlencode({
+            "name": label,
+            "evidence_url": wp_url or wd_url,
+            "extensions": ext_param,
+            "aliases": aliases_param,
+        }, quote_via=quote)
+        action_btn = (
+            f"<a class='btn' href='{add_pl_root}?{qs}' "
+            f"title='Open the Add-PL form pre-filled with this entry' "
+            f"style='font-size:12px; padding:3px 8px;'>Use as new PL ↗</a>"
+        )
+        label_html = (
+            f"<a href='{safe(wp_url)}' target='_blank' rel='noopener'>{safe(label)}</a>"
+            if wp_url else safe(label)
+        )
+        wd_link = (
+            f" <a class='muted' href='{safe(wd_url)}' target='_blank' rel='noopener' "
+            f"title='Wikidata item'>{safe(qid)}</a>"
+            if wd_url else ""
+        )
+        ext_codes = " ".join(
+            f"<code>{safe(e.strip())}</code>"
+            for e in exts.split(";") if e.strip()
+        ) or "<span class='muted'>&mdash;</span>"
+        table_rows.append(
+            f"<tr class='wikidata-row' "
+            f"data-search='{safe((label + ' ' + desc + ' ' + qid + ' ' + kind + ' ' + aliases + ' ' + exts).lower())}'>"
+            f"<td>{label_html}{wd_link}"
+            + (f"<div class='muted' style='font-size:12px;'>{safe(desc)}</div>" if desc else "")
+            + f"</td>"
+            f"<td><span class='muted'>{safe(kind)}</span></td>"
+            f"<td>{ext_codes}</td>"
+            f"<td>{action_btn}</td>"
+            f"</tr>"
+        )
+
+    kind_pills = " · ".join(
+        f"<strong>{safe(k)}</strong>: {n}" for k, n in sorted(by_kind.items())
+    )
     body = f"""
     <section class="panel section">
-      <h1 style="margin:0 0 8px;">Audit view</h1>
-      <p class="muted" style="margin:0 0 14px;">Explainable, on-demand rendering of <code>data/audit.json</code>.</p>
-      <button id="auditLoad" class="btn" type="button">Load audit</button>
-      <span id="auditStatus" class="muted" style="margin-left:10px;"></span>
-    </section>
-
-    <section class="panel section" id="auditSummary" style="margin-top:18px;">
-      <div class="muted">Audit not loaded yet.</div>
-    </section>
-
-    <section class="panel section" style="margin-top:18px;">
-      <h2>Most-affected languages</h2>
-      <div id="auditTopLangs" class="muted">Audit not loaded yet.</div>
-    </section>
-
-    <section class="panel section" style="margin-top:18px;">
-      <h2>Findings</h2>
-      <div class="audit-controls" style="margin: 10px 0 12px;">
-        <input id="auditFilter" type="search" placeholder="Filter by language, kind, or text…" autocomplete="off" />
-        <select id="auditSeverity">
-          <option value="all">All severities</option>
-          <option value="error">Errors</option>
-          <option value="warn">Warnings</option>
-          <option value="info">Infos</option>
-        </select>
+      <h1 style="margin:0 0 8px;">PL candidates ({len(rows)})</h1>
+      <p class='muted' style='margin:0 0 12px;'>
+        Wikidata items that look like programming languages — markup,
+        query, serialization, DSL, specification, or stylesheet languages
+        with a Wikipedia article — that aren't in <code>pl_list.txt</code>
+        yet. The strict filter is documented in
+        <code>tools/build_pl_candidates.py</code>; the broader 500-item
+        and 13k-item tiers are deliberately excluded to keep precision
+        high.
+      </p>
+      <p class='muted' style='margin:0 0 12px;'>{kind_pills}</p>
+      <p class='muted' style='margin:0 0 8px;'>
+        Click <strong>Use as new PL ↗</strong> on any row to open the
+        Add-PL form pre-filled with the entry's name, Wikipedia URL,
+        and all its P1195 extensions. One submission → standard pl-add
+        pipeline → draft PR → review + merge.
+      </p>
+      <div style='display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px;'>
+        <input type='search' class='wikidata-filter' placeholder='Filter by name, kind, extension, description, QID…'
+               style='flex:1; min-width:200px; padding:6px 10px; font-size:13px;' />
       </div>
-      <div id="auditFindings" class="muted">Audit not loaded yet.</div>
-    </section>
-
-    <div class="audit-grid" style="margin-top:18px;">
-      <section class="panel section">
-        <h2>Duplicate candidates</h2>
-        <div id="auditDuplicates" class="muted">Audit not loaded yet.</div>
-      </section>
-      <section class="panel section">
-        <h2>Clusters</h2>
-        <div id="auditClusters" class="muted">Audit not loaded yet.</div>
-      </section>
-    </div>
-    """
-
-    page.parent.mkdir(parents=True, exist_ok=True)
+      <table class='kv-table'>
+        <thead><tr><th>Candidate</th><th>Kind (Wikidata <code>P31</code>)</th><th>P1195 extensions</th><th>Action</th></tr></thead>
+        <tbody>{''.join(table_rows)}</tbody>
+      </table>
+    </section>"""
     page.write_text(
-        layout(title="Audit · PL Catalog", rel=rel, body=body, generated_at=generated_at, github_owner_repo=github_owner_repo),
+        layout(title="PL candidates · PL Catalog", rel=rel, body=body,
+               description="Wikidata items that look like PLs but aren't in the catalog yet.",
+               generated_at=generated_at, github_owner_repo=github_owner_repo),
         encoding="utf-8",
     )
+    return len(rows)
 
 
-def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]:
+def load_canonical_to_pl_id() -> dict[str, str]:
+    """Map lower(canonical_name) → pl_id from pl_taxonomy/pl.csv.
+
+    Used to stabilize per-PL slugs across the taxonomy-only ↔ in-repo
+    lifecycle: when an in-repo PL matches a taxonomy entry, its page
+    gets the pl_id-based slug (same one synthesize_taxonomy_only_languages
+    would produce), not the name-based one. See make_lang_slug.
+    """
+    import csv as _csv
+    path = TAXONOMY_DIR / "pl.csv"
+    if not path.exists():
+        return {}
+    out: dict[str, str] = {}
+    with path.open() as f:
+        for row in _csv.DictReader(f):
+            canonical = (row.get("canonical_name") or "").strip().lower()
+            pl_id = (row.get("pl_id") or "").strip()
+            if canonical and pl_id and canonical not in out:
+                out[canonical] = pl_id
+    return out
+
+
+def build_languages(
+    *,
+    turns_by_language: dict[str, TurnInfo],
+    canonical_to_pl_id: dict[str, str] | None = None,
+) -> list[Language]:
     meta_paths = sorted(LANGUAGES_DIR.rglob("meta.json"))
     languages: list[Language] = []
     for meta_path in meta_paths:
@@ -3839,10 +5089,25 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
         aliases = list(meta.get("aliases") or [])
         evidence_url = str(meta.get("evidence_url") or "").strip()
         added_at = str(meta.get("added_at") or "").strip()
+        lang_created_via_issue_raw = meta.get("created_via_issue")
+        lang_created_via_issue: int | None
+        try:
+            lang_created_via_issue = (
+                int(lang_created_via_issue_raw)
+                if lang_created_via_issue_raw is not None
+                else None
+            )
+        except (TypeError, ValueError):
+            lang_created_via_issue = None
 
         folder = meta_path.parent
         folder_rel = folder.relative_to(LANGUAGES_DIR).as_posix()
-        slug = make_lang_slug(name)
+        # If this PL is in the taxonomy, use its pl_id for the slug
+        # suffix; otherwise fall back to the legacy sha256(name) hash.
+        # Unified with synthesize_taxonomy_only_languages so the URL
+        # doesn't change when a taxonomy-only PL gets promoted.
+        pl_id_for_slug = (canonical_to_pl_id or {}).get(canonical_name(name).lower())
+        slug = make_lang_slug(name, pl_id=pl_id_for_slug)
 
         turn = turns_by_language.get(canonical_name(name).lower())
         agent = turn.trailers.get("Agent") if turn else None
@@ -3874,6 +5139,13 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
                     code_text = code_bytes.decode("utf-8", errors="replace")
                     code_out_name = derive_code_out_name(code_path.name)
 
+                created_via_issue_raw = manifest.get("created_via_issue")
+                created_via_issue: int | None
+                try:
+                    created_via_issue = int(created_via_issue_raw) if created_via_issue_raw is not None else None
+                except (TypeError, ValueError):
+                    created_via_issue = None
+
                 programs.append(
                     Program(
                         sha256=sha256,
@@ -3885,6 +5157,7 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
                         code_bytes=code_bytes,
                         code_text=code_text,
                         code_out_name=code_out_name,
+                        created_via_issue=created_via_issue,
                     )
                 )
 
@@ -3903,6 +5176,7 @@ def build_languages(*, turns_by_language: dict[str, TurnInfo]) -> list[Language]
                 model=model,
                 temperature=temperature,
                 web_search=web_search,
+                created_via_issue=lang_created_via_issue,
             )
         )
 
@@ -4130,7 +5404,7 @@ def compute_prev_next(languages: list[Language]) -> dict[str, tuple[Language | N
     return mapping
 
 
-def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) -> None:
+def build_site(*, out: Path, github_owner_repo: str | None) -> None:
     if not LANGUAGES_DIR.exists():
         raise SystemExit(f"Missing {LANGUAGES_DIR}")
 
@@ -4138,9 +5412,14 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
 
     turns = read_turns_from_git()
     turns_by_language = index_turns_by_language(turns)
+    program_provenance = index_program_provenance_from_git(turns)
     turn_stats = compute_turn_stats(turns)
 
-    languages = build_languages(turns_by_language=turns_by_language)
+    canonical_to_pl_id = load_canonical_to_pl_id()
+    languages = build_languages(
+        turns_by_language=turns_by_language,
+        canonical_to_pl_id=canonical_to_pl_id,
+    )
     counts = letter_counts(languages)
     programs_total = sum(len(l.programs) for l in languages)
     top_domains, top_licenses, top_exts = compute_top_domains_licenses_exts(languages)
@@ -4153,7 +5432,6 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
     (out / "browse").mkdir(parents=True, exist_ok=True)
     (out / "extensions").mkdir(parents=True, exist_ok=True)
     (out / "stats").mkdir(parents=True, exist_ok=True)
-    (out / "audit").mkdir(parents=True, exist_ok=True)
     (out / "data").mkdir(parents=True, exist_ok=True)
 
     copy_assets(out=out)
@@ -4161,25 +5439,6 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
     # JSON can carry `has_swh`, `taxonomy_only`, source-count, etc. for filters.
     write_ext_index_json(out=out, languages=languages, generated_at=generated_at)
     copy_program_files(out=out, languages=languages)
-
-    audit_available = False
-    if with_audit:
-        audit_out = out / "data" / "audit.json"
-        try:
-            subprocess.run(
-                [sys.executable, str(ROOT / "tools" / "audit_repo.py"), "--out", str(audit_out)],
-                cwd=str(ROOT),
-                check=True,
-                text=True,
-                capture_output=True,
-            )
-            audit_available = audit_out.exists()
-        except Exception:
-            audit_available = False
-
-    audit_summary = load_audit_summary(out / "data" / "audit.json")
-    if audit_summary:
-        audit_available = True
 
     related_by_language = compute_related_languages(languages, k=5)
 
@@ -4249,8 +5508,6 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
         temps_avg=turn_stats["temps_avg"],
         temp_buckets=list(turn_stats["temp_buckets"]),
         github_owner_repo=github_owner_repo,
-        audit_summary=audit_summary if audit_available else None,
-        audit_page_rel=f"{rel_prefix(out / 'audit' / 'index.html', out)}audit/index.html",
         taxonomy_stats=taxonomy_stats,
     )
     render_language_pages(
@@ -4260,13 +5517,16 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
         slug_to_prev_next=slug_to_prev_next,
         github_owner_repo=github_owner_repo,
         related_by_language=related_by_language,
-        audit_summary=audit_summary if audit_available else None,
         enrichments=enrichments,
+        program_provenance=program_provenance,
     )
-    render_audit_page(dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo)
     render_contribute_add_pl_page(
         dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo,
     )
+    n_candidates = render_candidates_page(
+        dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo,
+    )
+    print(f"Wrote /candidates/ ({n_candidates} PL candidates).")
 
     # Phase 2b: per-extension pages.
     try:
@@ -4292,7 +5552,9 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
         )
         print(f"Wrote {n_src_pages} per-source pages + index at /source/.")
     except Exception as e:
+        import traceback
         print(f"WARNING: per-source page rendering failed ({type(e).__name__}: {e}).")
+        print(traceback.format_exc())
 
     # Crowd-source: extension review queue.
     try:
@@ -4312,10 +5574,27 @@ def build_site(*, out: Path, github_owner_repo: str | None, with_audit: bool) ->
             dist_root=out,
             generated_at=generated_at,
             github_owner_repo=github_owner_repo,
+            languages=languages,
         )
         print(f"Wrote /review/curator/ ({n_curator} submitted labels).")
     except Exception as e:
         print(f"WARNING: curator review rendering failed ({type(e).__name__}: {e}).")
+
+    # Recent-submissions audit view — unified timeline across all three
+    # contribution channels. Pairs with auto-merge: maintainer scans
+    # this page weekly instead of reviewing per-PR.
+    try:
+        render_recent_submissions_page(
+            dist_root=out,
+            generated_at=generated_at,
+            github_owner_repo=github_owner_repo,
+            languages=languages,
+        )
+        print("Wrote /review/recent/.")
+    except Exception as e:
+        import traceback
+        print(f"WARNING: recent-submissions rendering failed ({type(e).__name__}: {e}).")
+        print(traceback.format_exc())
 
     # Phase 2 polish: /samples/ index — every PL that has real SWH evidence.
     try:
@@ -4339,11 +5618,6 @@ def main(argv: list[str]) -> int:
         default=None,
         help="GitHub repo as owner/repo for “Report issue” links (default: auto from git origin). Use '-' to disable.",
     )
-    parser.add_argument(
-        "--with-audit",
-        action="store_true",
-        help="Also generate data/audit.json (duplicates/integrity/clustering hints).",
-    )
     args = parser.parse_args(argv)
 
     out = Path(args.out)
@@ -4360,7 +5634,7 @@ def main(argv: list[str]) -> int:
     else:
         github_owner_repo = (args.github or "").strip() or guess_github_owner_repo()
 
-    build_site(out=out, github_owner_repo=github_owner_repo, with_audit=bool(args.with_audit))
+    build_site(out=out, github_owner_repo=github_owner_repo)
     print(f"[web] built site at {out}")
     return 0
 

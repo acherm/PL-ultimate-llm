@@ -2116,7 +2116,13 @@ def render_source_pages(
         "pldb": "Programming Language DataBase — a curated community DB.",
         "linguist": "GitHub's Linguist — the file-type detector used to render \"% of repo\" stats on GitHub.",
         "pygments": "Pygments — the syntax highlighter; entry means there's a hand-written lexer.",
-        "wikipedia": "Wikipedia article in the Programming Language category.",
+        "wikipedia": (
+            "Wikipedia article in the Programming Language category. "
+            "Per-PL infobox facts (paradigms, typing, designer, year, "
+            "influenced-by, license, …) are pulled separately via the "
+            "wikimedia/structured-wikipedia dataset and rendered on "
+            "each /l/&lt;slug&gt;/ page — see the Enrichment sources panel below."
+        ),
         "esolang": "esolangs.org — the catalog of esoteric languages.",
         "hyperpolyglot": "hyperpolyglot.org — side-by-side language comparison tables.",
         "rosettacode": "Rosetta Code — task implementations across languages.",
@@ -2187,10 +2193,86 @@ def render_source_pages(
         n = len(by_source.get(src, []))
         if n == 0:
             continue
+        # The Wikipedia blurb intentionally contains markup (an entity-
+        # encoded angle-bracket placeholder for the slug). Don't run it
+        # through safe() — it would escape the markup and the blurb
+        # would render literal HTML on the page. The dict is in-process
+        # author-controlled, so it's safe to emit verbatim.
+        blurb = SOURCE_BLURBS.get(src, "") if src == "wikipedia" else safe(SOURCE_BLURBS.get(src, ""))
         listing.append(
             f"<tr><td><a href='./{src}/index.html'><span class='pill src-{src}'>{safe(src.capitalize())}</span></a></td>"
-            f"<td>{n:,}</td><td>{safe(SOURCE_BLURBS.get(src, ''))}</td></tr>"
+            f"<td>{n:,}</td><td>{blurb}</td></tr>"
         )
+
+    # ----- Enrichment sources (Wikidata + structured-wikipedia) -----
+    # These aren't rosters (they're cross-referenced data graphs), but they
+    # carry as much page-visible content as any roster does, so they get
+    # their own panel here rather than being buried in the per-PL pages.
+    n_with_qid = sum(1 for e in enrichments.values() if e.wikidata_qid)
+    n_with_facts = sum(
+        1 for e in enrichments.values()
+        if e.paradigms or e.typing or e.designed_by or e.first_appeared
+        or e.influenced_by or e.license or e.implementation_languages
+    )
+    enrichment_html = f"""
+    <section class="panel section">
+      <h2 style="margin:0 0 8px;">Enrichment sources</h2>
+      <p class='muted'>
+        Not rosters of names — structured data graphs we pull
+        per-PL facts and cross-system identifiers out of. Both are
+        date-pinned snapshots under <code>data/raw/</code>; the
+        provenance for every cell rendered on a PL page is in
+        <code>data/derived/pl_taxonomy/pl_fact.csv</code>.
+      </p>
+      <table class='kv-table'>
+        <thead><tr><th>Source</th><th>PLs</th><th>What it is</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class='pill src-wikidata'>Wikidata</span></td>
+            <td>{n_with_qid:,}</td>
+            <td>
+              Cross-system identifier graph. We pull two pinned
+              snapshots from <a href='https://query.wikidata.org/'
+              target='_blank' rel='noopener'>WDQS</a>:
+              <em>(a)</em> every item carrying P1195
+              (<a href='https://www.wikidata.org/wiki/Property:P1195'
+              target='_blank' rel='noopener'>filename extension</a>),
+              <em>(b)</em> every item whose <code>instance of</code>
+              (P31) is in the 175-QID PL-types closure
+              (programming language, markup language, query language,
+              logic, esoteric). The union closes gaps where Wikidata
+              has the article + types but no P1195 — R was the
+              canonical example. Each pl.csv row carries a
+              <code>wikidata_qid</code> when matched; the rest of the
+              site cross-links via that.
+            </td>
+          </tr>
+          <tr>
+            <td><span class='pill src-wikipedia'>Wikipedia infoboxes</span></td>
+            <td>{n_with_facts:,}</td>
+            <td>
+              Pre-parsed Wikipedia infobox trees from the
+              <a href='https://huggingface.co/datasets/wikimedia/structured-wikipedia'
+              target='_blank' rel='noopener'>wikimedia/structured-wikipedia</a>
+              HF dataset. One Parquet pass over enwiki extracts both
+              filename extensions (composited with the legacy
+              <code>mwparserfromhell</code> snapshot for the
+              ~36 multi-section infoboxes upstream flattens) and the
+              "Programming language" infobox facts
+              — paradigms, typing discipline, designer, first
+              appeared, influenced by, license, implementation
+              languages, homepage. Those land in
+              <code>data/raw/wikipedia_pl_facts.&lt;date&gt;.jsonl</code> and
+              get spliced into pl.csv when PLDB is empty
+              (PLDB-primary rule); the long-table view lives at
+              <code>data/derived/pl_taxonomy/pl_fact.csv</code>.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    """
+
     page = out_dir / "index.html"
     rel = rel_prefix(page, dist_root)
     body = f"""
@@ -2199,11 +2281,14 @@ def render_source_pages(
       <p class='muted'>Where each programming-language record comes from. A PL can be in multiple sources; cross-presence is what makes attribution credible.</p>
     </section>
     <section class="panel section">
+      <h2 style="margin:0 0 8px;">Rosters</h2>
+      <p class='muted'>Curated name lists. Cross-presence across rosters is what makes a PL claim credible.</p>
       <table class='kv-table'>
         <thead><tr><th>Source</th><th>PLs</th><th>What it is</th></tr></thead>
         <tbody>{''.join(listing)}</tbody>
       </table>
     </section>
+    {enrichment_html}
     """
     page.write_text(
         layout(title="Sources · PL Catalog", rel=rel, body=body,

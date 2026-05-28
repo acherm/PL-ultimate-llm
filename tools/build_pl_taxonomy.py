@@ -531,17 +531,44 @@ def _is_wikidata_pl_by_keyword(record: dict) -> bool:
 
 
 def load_wikidata_pl_records() -> list[dict]:
-    """Read the pinned Wikidata snapshot, filter to PL-shaped items."""
-    path = _latest_snapshot("wikidata_p1195.*.jsonl")
-    if path is None:
-        return []
-    out: list[dict] = []
-    with path.open(encoding="utf-8") as f:
-        for line in f:
+    """Read the pinned Wikidata snapshots and union into one PL-shaped set.
+
+    Two sources, deduped by QID:
+      - `wikidata_p1195.*.jsonl` — items carrying P1195. We keep those whose
+        instance_of (P31) intersects the curated PL-types closure.
+      - `wikidata_pl_items.*.jsonl` — items typed as a PL by P31 even
+        without P1195. Closes the R-shaped gap (Q206904 has no P1195) and
+        ~1 200 other PL pages Wikidata simply hasn't tagged with an
+        extension. These records arrive without an `extensions` array —
+        we pad it so downstream code that does `rec.get("extensions") or
+        []` stays simple.
+    """
+    out: dict[str, dict] = {}
+    p1195_path = _latest_snapshot("wikidata_p1195.*.jsonl")
+    if p1195_path is not None:
+        with p1195_path.open(encoding="utf-8") as f:
+            for line in f:
+                rec = json.loads(line)
+                if _is_wikidata_pl(rec):
+                    out[rec["qid"]] = rec
+
+    pl_items_path = _latest_snapshot("wikidata_pl_items.*.jsonl")
+    if pl_items_path is not None:
+        for line in pl_items_path.open(encoding="utf-8"):
             rec = json.loads(line)
-            if _is_wikidata_pl(rec):
-                out.append(rec)
-    return out
+            qid = rec.get("qid")
+            if not qid or qid in out:
+                continue
+            # PL-items are pre-filtered by the P31 closure at fetch time,
+            # so we trust them without re-running `_is_wikidata_pl`. Pad
+            # the fields the P1195 schema carries so downstream consumers
+            # don't need to special-case the source.
+            rec.setdefault("extensions", [])
+            rec.setdefault("mime_types", [])
+            rec.setdefault("description", "")
+            out[qid] = rec
+
+    return list(out.values())
 
 
 def load_all_wikidata_p1195_records() -> list[dict]:

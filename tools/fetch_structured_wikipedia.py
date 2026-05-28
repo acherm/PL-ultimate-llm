@@ -78,10 +78,21 @@ PARQUET_COLUMNS = ["name", "url", "identifier", "main_entity", "infoboxes", "ver
 # Inputs
 # ---------------------------------------------------------------------------
 
-def load_target_qids(p1195_path: Path) -> dict[str, dict]:
+def load_target_qids(p1195_path: Path,
+                     pl_items_path: Path | None = None) -> dict[str, dict]:
     """Return {qid: {label, enwiki_title, wikidata_extensions}} for every
-    P1195 record that has an enwiki sitelink. Matches the legacy filter in
-    `fetch_wikipedia_infoboxes.load_enwiki_items`."""
+    target QID with an enwiki sitelink.
+
+    Two sources, unioned and deduped by QID:
+      - `p1195_path` (required): Wikidata items carrying P1195. Carries
+        per-item filename-extension claims that the Phase-1 ext extractor
+        compares against the structured-wikipedia infobox.
+      - `pl_items_path` (optional): Wikidata items typed as a PL via the
+        instance-of (P31) closure but NOT necessarily carrying P1195. Closes
+        the R-shaped gap where Wikidata is missing the extension claim. The
+        `wikidata_extensions` list is empty for these, so downstream
+        "wikipedia_missing" stays meaningful.
+    """
     out: dict[str, dict] = {}
     with p1195_path.open() as f:
         for line in f:
@@ -99,6 +110,25 @@ def load_target_qids(p1195_path: Path) -> dict[str, dict]:
                     (e.get("value") or "").lower() for e in rec.get("extensions") or []
                 ],
             }
+    if pl_items_path and pl_items_path.exists():
+        n_added = 0
+        with pl_items_path.open() as f:
+            for line in f:
+                rec = json.loads(line)
+                qid = rec.get("qid")
+                if not qid or qid in out:
+                    continue
+                if not rec.get("enwiki_title"):
+                    continue
+                out[qid] = {
+                    "qid": qid,
+                    "label": rec.get("label") or "",
+                    "enwiki_title": rec.get("enwiki_title") or "",
+                    "wikidata_extensions": [],
+                }
+                n_added += 1
+        print(f"[load] union with {pl_items_path.name}: +{n_added} PL-typed QIDs "
+              f"not in P1195", flush=True)
     return out
 
 
@@ -561,6 +591,17 @@ def main():
              "matching snapshot under data/raw/.",
     )
     p.add_argument(
+        "--pl-items",
+        help="wikidata_pl_items.<date>.jsonl path (PL-typed items, may or "
+             "may not carry P1195). Defaults to the latest matching "
+             "snapshot under data/raw/. Pass --no-pl-items to disable the "
+             "union and run with only the P1195 set.",
+    )
+    p.add_argument(
+        "--no-pl-items", action="store_true",
+        help="Disable the PL-items union; restrict targets to the P1195 set.",
+    )
+    p.add_argument(
         "--limit-shards", type=int, default=None,
         help="Stop after N parquet shards (smoke test).",
     )
@@ -591,7 +632,22 @@ def main():
         p1195_path = candidates[-1]
     print(f"[load] P1195 snapshot: {p1195_path}", flush=True)
 
-    targets = load_target_qids(p1195_path)
+    # Resolve optional PL-items snapshot (closes the no-P1195 gap, e.g. R).
+    pl_items_path: Path | None = None
+    if not args.no_pl_items:
+        if args.pl_items:
+            pl_items_path = Path(args.pl_items)
+        else:
+            candidates = sorted(DATA_DIR.glob("wikidata_pl_items.*.jsonl"))
+            if candidates:
+                pl_items_path = candidates[-1]
+        if pl_items_path:
+            print(f"[load] PL-items snapshot: {pl_items_path}", flush=True)
+        else:
+            print("[load] no wikidata_pl_items.*.jsonl under data/raw/ — "
+                  "running with P1195 only", flush=True)
+
+    targets = load_target_qids(p1195_path, pl_items_path)
     print(f"[load] {len(targets)} target QIDs (with enwiki_title)", flush=True)
 
     revision = args.revision or resolve_dataset_revision()

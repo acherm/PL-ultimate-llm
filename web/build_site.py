@@ -145,6 +145,19 @@ class TaxonomyEnrichment:
     # slug-normalized canonical name) when `in_pldb=yes`. Set to "" when
     # there's no in_pldb signal or no lang_id_master.
     pldb_url: str = ""
+    # Wikipedia infobox facts (Phase 2 of the structured-wikipedia
+    # integration). Sourced from data/raw/wikipedia_pl_facts.<date>.jsonl
+    # via build_pl_taxonomy.py; per-cell rule is "PLDB primary, Wikipedia
+    # fills empties". Multi-value cells use the same " | "-separated
+    # convention as elsewhere in pl.csv.
+    paradigms: str = ""
+    typing: str = ""
+    designed_by: str = ""
+    first_appeared: str = ""
+    influenced_by: str = ""
+    license: str = ""
+    implementation_languages: str = ""
+    homepage: str = ""
 
 
 def _read_csv(path: Path) -> list[dict]:
@@ -734,6 +747,14 @@ def synthesize_taxonomy_only_languages(
             esolang_url=str(row.get("esolang_url") or "").strip(),
             rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
             pldb_url=_pldb_url_for(row),
+            paradigms=str(row.get("paradigms") or "").strip(),
+            typing=str(row.get("typing") or "").strip(),
+            designed_by=str(row.get("designed_by") or "").strip(),
+            first_appeared=str(row.get("first_appeared") or "").strip(),
+            influenced_by=str(row.get("influenced_by") or "").strip(),
+            license=str(row.get("license") or "").strip(),
+            implementation_languages=str(row.get("implementation_languages") or "").strip(),
+            homepage=str(row.get("homepage") or "").strip(),
         )
     return new_langs, new_enrichments
 
@@ -801,6 +822,14 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             esolang_url=str(row.get("esolang_url") or "").strip(),
             rosettacode_url=str(row.get("rosettacode_url") or "").strip(),
             pldb_url=_pldb_url_for(row),
+            paradigms=str(row.get("paradigms") or "").strip(),
+            typing=str(row.get("typing") or "").strip(),
+            designed_by=str(row.get("designed_by") or "").strip(),
+            first_appeared=str(row.get("first_appeared") or "").strip(),
+            influenced_by=str(row.get("influenced_by") or "").strip(),
+            license=str(row.get("license") or "").strip(),
+            implementation_languages=str(row.get("implementation_languages") or "").strip(),
+            homepage=str(row.get("homepage") or "").strip(),
         )
     return out
 
@@ -3991,6 +4020,100 @@ def render_stats_page(
     )
 
 
+_INFOBOX_FIELDS = (
+    # (enrichment-attr, display-label, cross-link?)
+    ("paradigms",                "Paradigms",       False),
+    ("typing",                   "Typing",          False),
+    ("designed_by",              "Designed by",     False),
+    ("first_appeared",           "First appeared",  False),
+    ("influenced_by",            "Influenced by",   True),
+    ("license",                  "License",         False),
+    ("implementation_languages", "Implemented in",  True),
+)
+
+
+def _render_wikipedia_infobox_panel(
+    enr: TaxonomyEnrichment | None,
+    rel: str,
+    name_to_slug: dict[str, str],
+) -> str:
+    """Render the Wikipedia-derived infobox panel for a per-PL page.
+
+    Returns "" when the PL has no Phase-2 facts at all (most PLs that
+    aren't in the structured-wikipedia P1195 enwiki set). Otherwise emits
+    a key-value table over the eight fact fields, cross-linking
+    influenced_by and implementation_languages items to their own PL
+    pages where the name resolves to a known slug.
+    """
+    if enr is None:
+        return ""
+    # Cheap "any data?" gate: skip the whole panel when every field is
+    # empty (typical for PLs without a Wikipedia infobox).
+    has_any = any(getattr(enr, attr, "") for attr, _, _ in _INFOBOX_FIELDS) \
+              or bool(enr.homepage)
+    if not has_any:
+        return ""
+
+    def cross_link(item: str) -> str:
+        # Strict (case-insensitive) lookup; fall through to plain text
+        # when the influenced_by name doesn't resolve to a tracked PL.
+        slug = name_to_slug.get(item.lower())
+        if slug:
+            return f"<a href='{rel}l/{slug}/index.html'>{safe(item)}</a>"
+        return safe(item)
+
+    rows_html: list[str] = []
+    for attr, label, do_link in _INFOBOX_FIELDS:
+        raw = (getattr(enr, attr, "") or "").strip()
+        if not raw:
+            continue
+        items = [s.strip() for s in raw.split(" | ") if s.strip()]
+        if not items:
+            continue
+        if do_link:
+            cells = " · ".join(cross_link(it) for it in items)
+        else:
+            cells = " · ".join(safe(it) for it in items)
+        rows_html.append(f"<tr><th>{label}</th><td>{cells}</td></tr>")
+
+    hp = (enr.homepage or "").strip()
+    if hp:
+        # Only render http(s) URLs as a link; leave anything else (rare,
+        # e.g. a bare domain) as text to avoid building a broken anchor.
+        if hp.startswith(("http://", "https://")):
+            hp_cell = f"<a href='{safe(hp)}' target='_blank' rel='noopener'>{safe(hp)}</a>"
+        else:
+            hp_cell = safe(hp)
+        rows_html.append(f"<tr><th>Homepage</th><td>{hp_cell}</td></tr>")
+
+    if not rows_html:
+        return ""
+
+    # Header gets a discreet Wikipedia link when we have one — same QID
+    # join used by build_pl_taxonomy.py, so the user can verify the
+    # source of any cell with one click.
+    wp = (enr.wikipedia_url or "").strip()
+    title_html = (
+        f"<a href='{safe(wp)}' target='_blank' rel='noopener'>Wikipedia infobox</a> ↗"
+        if wp else "Wikipedia infobox"
+    )
+
+    return f"""
+    <section class="panel section" style="margin-top: 18px;">
+      <h2 style="margin:0 0 10px;">{title_html}</h2>
+      <p class='muted' style='margin:0 0 10px; font-size:13px;'>
+        Pulled from the
+        <a href='https://huggingface.co/datasets/wikimedia/structured-wikipedia'
+           target='_blank' rel='noopener'>wikimedia/structured-wikipedia</a>
+        snapshot — see <code>data/raw/wikipedia_pl_facts.*.jsonl</code> and
+        <code>pl_fact.csv</code> for the long-table provenance.
+      </p>
+      <table class='kv-table'>
+        <tbody>{''.join(rows_html)}</tbody>
+      </table>
+    </section>"""
+
+
 def render_language_pages(
     *,
     dist_root: Path,
@@ -4005,6 +4128,15 @@ def render_language_pages(
     enrichments = enrichments or {}
     program_provenance = program_provenance or {}
     lang_by_name = {l.name: l for l in languages}
+    # Case-insensitive name → slug map used by the Wikipedia-infobox panel
+    # to cross-link `influenced_by` / `implementation_languages` items.
+    # Both canonical names and aliases participate so "C++" picks up its
+    # page even when an article writes "Cplusplus".
+    infobox_name_to_slug: dict[str, str] = {}
+    for l in languages:
+        for n in [l.name, *l.aliases]:
+            if n:
+                infobox_name_to_slug.setdefault(n.lower(), l.slug)
     for lang in languages:
         page = dist_root / "l" / lang.slug / "index.html"
         rel = rel_prefix(page, dist_root)
@@ -4235,6 +4367,11 @@ def render_language_pages(
         ext_claims_html = ""
         swh_samples_html = ""
         heuristics_html = ""
+        # Phase-2 Wikipedia infobox panel (paradigms, typing, designer, …).
+        # Empty string when this PL has no infobox facts.
+        infobox_panel_html = _render_wikipedia_infobox_panel(
+            enr, rel, infobox_name_to_slug,
+        )
 
         # 1a. Cross-source presence pills. Always emit a "Sources mentioning"
         # section when the PL has *any* attestation (LLM + taxonomy sources),
@@ -4575,6 +4712,7 @@ def render_language_pages(
           {prov_line}
         </section>
         {cross_source_html}
+        {infobox_panel_html}
         {ext_claims_html}
         {related_html}
         {no_programs_html}

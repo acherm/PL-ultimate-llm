@@ -321,6 +321,7 @@ published by SWH on the next derived dataset (asking).
 | Linguist heuristics catalog as runnable predicates | ✅ done |
 | Content-based classifier | ✅ done |
 | SWH parquet mining (DuckDB query, IN-set shape, sample mode) | ✅ done |
+| Bloom-pushdown via `contents_with_extensions/` (`filename_last_extension` BLOB) | ✅ done (2026-06-01) — default; smoke test on `.fsf` shard 0: 78 hits in 99 s cold / 5.7 s warm. `--legacy-dataset` opt-out kept for reproducing pre-2026-06 runs. |
 | Qualified SWHID per row via GitHub side-channel | ✅ done |
 | Sample bytes on disk with metadata.json | ✅ done |
 | `--shard-sample N` for tractable scans + DuckDB progress bar | ✅ done (2026-05-15); semantics caveat below |

@@ -8,11 +8,18 @@ Following the exchange with Valentin (SWH), the cheap and scalable way to find
 real SWH examples for ~3.8k languages is NOT to ask the REST API per blob, but
 to query the public derived dataset:
 
-    s3://softwareheritage/derived_datasets/<YYYY-MM-DD>/contents/*.parquet
+    s3://softwareheritage/derived_datasets/<YYYY-MM-DD>/contents_with_extensions/*.parquet
 
 It has columns:
-    id, length, filename, filename_occurrences,
-    first_occurrence_timestamp, first_occurrence_revrel, first_occurrence_origin
+    id, length, filename, filename_all_extensions, filename_last_extension,
+    filename_occurrences, first_occurrence_timestamp, first_occurrence_revrel,
+    first_occurrence_origin
+
+`filename_last_extension` and `filename_all_extensions` are BLOB columns added
+in the 2026-06 export. Both carry parquet-level Bloom filters, so filtering as
+`WHERE filename_last_extension IN ('fsf'::BLOB, ...)` is pushed into the scan
+and reads only the matching row groups. The pre-2026-06 dataset lives at
+`<date>/contents/` (no extension columns); pass `--legacy-dataset` to query it.
 
 Plus the nodes parquet, which maps numeric IDs to SWHIDs:
     s3://softwareheritage/derived_datasets/<YYYY-MM-DD>/nodes/node_type=cnt/*.parquet
@@ -83,6 +90,14 @@ OUT_SQL = OUT_DIR / "swh_extension_samples.sql"
 DEFAULT_DATASET_DATE = "2026-03-02"  # latest mentioned by Valentin
 DEFAULT_S3_PREFIX = "s3://softwareheritage/derived_datasets"
 DEFAULT_TOP_K = 5
+
+# Subdirectory under <s3-prefix>/<dataset-date>/ that holds the contents parquets.
+# `contents_with_extensions/` ships the BLOB columns `filename_last_extension`
+# and `filename_all_extensions` with Bloom-filter pushdown; the legacy
+# `contents/` table has neither column and forces a regex over decoded
+# filenames. We default to the new dataset; `--legacy-dataset` flips back.
+CONTENTS_SUBDIR_NEW = "contents_with_extensions"
+CONTENTS_SUBDIR_LEGACY = "contents"
 
 # Extensions that are too noisy or non-source to be useful evidence of a PL,
 # even when an inventory claims them.
@@ -213,6 +228,7 @@ def build_query(
     max_length: int = 200_000,
     min_occurrences: int = 5,
     sample_percent: float | None = None,
+    use_extensions_dataset: bool = True,
 ) -> tuple[str, dict[str, list[str]]]:
     """Return (SQL string, ext->list[lang] map for client-side bucketing).
 
@@ -226,14 +242,18 @@ def build_query(
     "how reused/widespread this program is". We sort DESC on it so top-K
     returns the *most-copied* programs for the requested extension.
 
-    The query:
-    1. Decodes the parquet `filename` blob into UTF-8, extracts the extension
-       via a single regex (capture group restricted to ASCII).
-    2. Filters against an IN-set of requested extensions and a length window.
-    3. Drops rows below `min_occurrences` — one-off blobs are noise for
+    The query (when `use_extensions_dataset=True`, the default):
+    1. Filters directly on `filename_last_extension` (BLOB column with Bloom
+       pushdown) against an IN-set of requested extensions, plus a length
+       window. No `decode()` or regex on the full filename.
+    2. Drops rows below `min_occurrences` — one-off blobs are noise for
        "find me a representative program" workflows and inflate the qualify
        pass's GitHub round-trips.
-    4. Picks top-K by occurrences DESC per extension.
+    3. Picks top-K by occurrences DESC per extension.
+
+    When `use_extensions_dataset=False` (legacy `contents/` table, no
+    extension columns), the WHERE clause regex-extracts the extension from
+    `decode(filename)` instead. Same output shape, much slower scan.
     """
     ext_to_langs: dict[str, list[str]] = defaultdict(list)
     for lang, entry in lang_to_exts.items():
@@ -245,7 +265,8 @@ def build_query(
 
     # Sort for stable SQL output and deduplicate (case-insensitive).
     ext_no_dot = sorted({ext.lower().lstrip(".") for ext in ext_to_langs.keys()})
-    in_list = ", ".join(f"'{e}'" for e in ext_no_dot)
+    in_list_text = ", ".join(f"'{e}'" for e in ext_no_dot)
+    in_list_blob = ", ".join(f"'{e}'::BLOB" for e in ext_no_dot)
     sample_clause = (
         f"USING SAMPLE {sample_percent} PERCENT (BERNOULLI)"
         if sample_percent is not None
@@ -262,16 +283,48 @@ def build_query(
         contents_arg = f"'{contents_path}'"
         contents_path_str = contents_path
 
-    sql = f"""\
--- SWH popular-content-names mining for {len(ext_no_dot)} extensions
--- spanning {len(lang_to_exts)} in-repo languages.
--- Contents source: {contents_path_str}
---
--- Strategy: extract the extension ONCE per row via a single regex (capture
--- group is restricted to ASCII so `lower()` is safe), then filter against an
--- IN-set. This is O(rows) vs the previous O(rows * extensions) cross-join.
--- The full filename is only decoded for the final K * N output rows.
-
+    if use_extensions_dataset:
+        # New dataset path: filter directly on the BLOB column. The Bloom
+        # filter on `filename_last_extension` lets DuckDB skip row groups
+        # whose extension set doesn't intersect ours — for niche extensions
+        # this is the difference between scanning the full ~3 GB shard and
+        # reading only a few row groups.
+        cnts_select = f"""\
+WITH cnts AS (
+    SELECT
+        c.id                                      AS content_id,
+        c.length                                  AS length,
+        c.filename                                AS filename_blob,
+        c.filename_last_extension                 AS ext_blob,
+        c.filename_occurrences                    AS occurrences,
+        c.first_occurrence_timestamp              AS first_ts,
+        c.first_occurrence_revrel                 AS first_revrel_id,
+        c.first_occurrence_origin                 AS first_origin_id
+    FROM read_parquet({contents_arg}) AS c
+    WHERE c.filename_last_extension IN ({in_list_blob})
+      AND c.length BETWEEN {min_length} AND {max_length}
+    {sample_clause}
+),
+matched AS (
+    SELECT
+        content_id, length, filename_blob, occurrences,
+        first_ts, first_revrel_id, first_origin_id,
+        '.' || decode(ext_blob, 'ignore') AS extension
+    FROM cnts
+    WHERE occurrences >= {min_occurrences}
+),"""
+        strategy_note = (
+            "Strategy: filter on `filename_last_extension` (BLOB) against an\n"
+            "-- IN-set of requested extensions. DuckDB pushes the predicate\n"
+            "-- into READ_PARQUET; the column's per-row-group Bloom filter\n"
+            "-- prunes row groups whose extension set doesn't overlap ours."
+        )
+    else:
+        # Legacy dataset: no extension column. Decode the full filename and
+        # regex-extract its last extension. O(rows) scan over the wide
+        # `filename` BLOB column (~50-150 B/row) — much more IO than the
+        # narrow `filename_last_extension` path above.
+        cnts_select = f"""\
 WITH cnts AS (
     SELECT
         c.id                                      AS content_id,
@@ -298,9 +351,23 @@ matched AS (
         '.' || ext_no_dot AS extension
     FROM cnts
     WHERE ext_no_dot <> ''
-      AND ext_no_dot IN ({in_list})
+      AND ext_no_dot IN ({in_list_text})
       AND occurrences >= {min_occurrences}
-),
+),"""
+        strategy_note = (
+            "Strategy: decode the filename and regex-extract the extension,\n"
+            "-- then filter against an IN-set. Legacy `contents/` dataset has\n"
+            "-- no extension column, so this scans the full `filename` BLOB."
+        )
+
+    sql = f"""\
+-- SWH popular-content-names mining for {len(ext_no_dot)} extensions
+-- spanning {len(lang_to_exts)} in-repo languages.
+-- Contents source: {contents_path_str}
+--
+-- {strategy_note}
+
+{cnts_select}
 ranked AS (
     SELECT *,
         row_number() OVER (
@@ -646,6 +713,12 @@ def parse_args() -> argparse.Namespace:
                    help=f"SWH derived dataset date (default: {DEFAULT_DATASET_DATE}).")
     p.add_argument("--s3-prefix", default=DEFAULT_S3_PREFIX,
                    help="Prefix for SWH derived datasets (default: %(default)s).")
+    p.add_argument("--legacy-dataset", action="store_true",
+                   help=f"Query the legacy `{CONTENTS_SUBDIR_LEGACY}/` parquet "
+                        f"subdir (no extension columns, regex-on-filename scan) "
+                        f"instead of the default `{CONTENTS_SUBDIR_NEW}/` "
+                        "(Bloom-filtered `filename_last_extension` BLOB column). "
+                        "Use only to reproduce pre-2026-06 mining runs.")
     p.add_argument("--shard", default=None,
                    help="Override the contents path with a single parquet (local or s3 URL). "
                         "Useful for low-cost smoke tests.")
@@ -785,8 +858,9 @@ def main() -> int:
     if langs_no_ext[:5]:
         print(f"Examples without extensions (skipped): {langs_no_ext[:5]}")
 
+    contents_subdir = CONTENTS_SUBDIR_LEGACY if args.legacy_dataset else CONTENTS_SUBDIR_NEW
     contents_path: str | list[str] = args.shard or (
-        f"{args.s3_prefix}/{args.dataset_date}/contents/*.parquet"
+        f"{args.s3_prefix}/{args.dataset_date}/{contents_subdir}/*.parquet"
     )
     nodes_base = args.nodes_base or f"{args.s3_prefix}/{args.dataset_date}/nodes"
     nodes_path_template = f"{nodes_base}/node_type={{node_type}}/*.parquet"
@@ -820,7 +894,7 @@ def main() -> int:
         import random
         shard_glob = (
             args.shard if args.shard
-            else f"{args.s3_prefix}/{args.dataset_date}/contents/*.parquet"
+            else f"{args.s3_prefix}/{args.dataset_date}/{contents_subdir}/*.parquet"
         )
         print(f"Listing shards under {shard_glob} ...")
         all_shards = sorted(r[0] for r in con.execute(
@@ -840,6 +914,7 @@ def main() -> int:
         top_k=args.top_k,
         min_occurrences=args.min_occurrences,
         sample_percent=args.sample_percent,
+        use_extensions_dataset=not args.legacy_dataset,
     )
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -856,7 +931,7 @@ def main() -> int:
         print("\n--- DRY RUN ---")
         print("Re-run with --execute to actually query SWH.")
         print("First, smoke-test with a single shard, e.g.:")
-        print(f"  --shard '{args.s3_prefix}/{args.dataset_date}/contents/0.parquet' --execute")
+        print(f"  --shard '{args.s3_prefix}/{args.dataset_date}/{contents_subdir}/0.parquet' --execute")
         return 0
 
     contents_desc = (

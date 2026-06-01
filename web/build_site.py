@@ -2015,9 +2015,62 @@ def render_samples_index_page(
     rows = list(rows_by_pl_id.values())
     rows.sort(key=lambda r: (-r["sample_count"], -r["total_occurrences"], r["lang"].name.lower()))
 
+    # Orphan section: extensions where we have real archived bytes from SWH
+    # but NO primary claimant in `ext_claim.csv` — i.e., the catalog doesn't
+    # yet attribute the extension to any language. Surfacing them invites
+    # reviewers to suggest a PL (or flag as binary/data) via /ext/<x>/'s
+    # existing label form, closing the loop from "mined but unattributed"
+    # back into ext_claim.csv.
+    samples_by_ext = load_swh_samples_by_ext()
+    exts_with_primary_claim: set[str] = set()
+    try:
+        for c in _read_csv(TAXONOMY_DIR / "ext_claim.csv"):
+            if c.get("strength") == "primary" and c.get("ext"):
+                exts_with_primary_claim.add(c["ext"].lower())
+    except Exception:
+        pass
+    orphan_by_ext: list[tuple[str, list[SwhSample]]] = []
+    for ext, samples in samples_by_ext.items():
+        if not ext or ext.lower() in exts_with_primary_claim:
+            continue
+        orphan_by_ext.append((ext, sorted(
+            samples, key=lambda s: -s.occurrences_in_swh
+        )))
+    orphan_by_ext.sort(key=lambda kv: (-sum(s.occurrences_in_swh for s in kv[1]), kv[0]))
+
     page = dist_root / "samples" / "index.html"
     rel = rel_prefix(page, dist_root)
     page.parent.mkdir(parents=True, exist_ok=True)
+
+    # Build the orphan section once so both branches (with-PL-rows and empty)
+    # can include it.
+    orphan_section = ""
+    if orphan_by_ext:
+        orphan_rows_html = []
+        for ext, samples in orphan_by_ext:
+            top = samples[0]
+            bare = f"https://archive.softwareheritage.org/swh:1:cnt:{top.sha1_git}/"
+            orphan_rows_html.append(
+                f"<tr>"
+                f"<td><a href='{rel}ext/{safe(ext.lstrip('.'))}/index.html'><code>{safe(ext)}</code></a></td>"
+                f"<td>{len(samples)}</td>"
+                f"<td>{sum(s.occurrences_in_swh for s in samples):,}</td>"
+                f"<td>"
+                f"<a href='{safe(bare)}' target='_blank' rel='noopener'>"
+                f"<code>{safe(top.filename)}</code> ({top.length} B)</a>"
+                f"</td>"
+                f"<td><a class='pill' href='{rel}ext/{safe(ext.lstrip('.'))}/index.html#label-form'>Suggest a label</a></td>"
+                f"</tr>"
+            )
+        orphan_section = f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Unattributed extensions — help us classify</h2>
+          <p class='muted'>{len(orphan_by_ext):,} file extensions where we have real archived bytes from Software Heritage but no language claimant in the catalog yet. If you recognize one — as a programming language, a data format, or noise — click <em>Suggest a label</em> to open a pre-filled GitHub issue. Each accepted label feeds back into <code>ext_claim.csv</code> on the next site rebuild.</p>
+          <table class='kv-table'>
+            <thead><tr><th>Extension</th><th>Samples</th><th>Σ origin occurrences</th><th>Top sample</th><th></th></tr></thead>
+            <tbody>{''.join(orphan_rows_html)}</tbody>
+          </table>
+        </section>"""
 
     if not rows:
         body = f"""
@@ -2026,7 +2079,7 @@ def render_samples_index_page(
           <p>No PL has a mined SWH sample yet. Run
             <code>python3 tools/swh_extension_mining.py --shard '/tmp/swh_shards/0.parquet' --execute --sample-percent 1</code>
             then <code>python3 tools/fetch_samples.py</code>.</p>
-        </section>"""
+        </section>{orphan_section}"""
     else:
         list_rows = []
         for r in rows:
@@ -2056,7 +2109,7 @@ def render_samples_index_page(
             <thead><tr><th>Language</th><th>pl_id</th><th>Samples</th><th>Σ origin occurrences</th><th>Top sample</th></tr></thead>
             <tbody>{''.join(list_rows)}</tbody>
           </table>
-        </section>"""
+        </section>{orphan_section}"""
     page.write_text(
         layout(title="Samples · PL Catalog", rel=rel, body=body,
                generated_at=generated_at, github_owner_repo=github_owner_repo),
@@ -3552,7 +3605,7 @@ def render_per_extension_pages(
                 </div>
               </div>"""
             form_html = f"""
-          <form class="ext-label-form"
+          <form id="label-form" class="ext-label-form"
                 data-ext="{safe(ext)}"
                 data-repo="{safe(github_owner_repo) if github_owner_repo else ''}">
             <div style="display:grid; gap:10px; grid-template-columns: 1fr 1fr; margin-top:10px;">

@@ -67,6 +67,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -748,8 +749,14 @@ def parse_args() -> argparse.Namespace:
                         "(e.g. --sample-percent 1).")
     p.add_argument("--memory-limit", default="6GB",
                    help="DuckDB memory limit (default: %(default)s).")
-    p.add_argument("--threads", type=int, default=8,
-                   help="DuckDB thread count (default: %(default)d).")
+    p.add_argument("--threads", type=int, default=max(16, (os.cpu_count() or 8) * 2),
+                   help="DuckDB thread count (default: max(16, cpu_count*2) = "
+                        "%(default)d on this host). Anon-S3 IO — not CPU — "
+                        "dominates the wall-clock; over-subscribing threads "
+                        "lets more parallel Bloom-metadata downloads overlap. "
+                        "Valentin's DataFusion run on the same dataset used 96 "
+                        "threads and saw ~99.8%% row-group pruning, so go big "
+                        "on machines near or far from us-east-1 alike.")
     p.add_argument("--min-occurrences", type=int, default=5,
                    help="Drop blobs whose most-popular-name occurs fewer than "
                         "this many times in the archive (default: %(default)d). "

@@ -1,0 +1,12 @@
+---
+layout:
+---
+callback([
+{% assign reverse_posts = site.posts | reverse %}
+{% for post in reverse_posts %}
+  {
+    "text": "{{post.title | replace:'"','\"'}}",
+    "href": "{{site.url}}{{site.baseurl}}{{post.url}}"
+  } {% unless forloop.last %},{% endunless%}
+{% endfor %}
+])

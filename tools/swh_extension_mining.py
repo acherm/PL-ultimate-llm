@@ -1022,23 +1022,35 @@ def main() -> int:
                          r[columns.index("length")],
                          r[columns.index("extension")]) for r in rows}
         print(f"Building qualified SWHIDs for {len(unique_files)} unique (filename, length) pairs...")
-        ok = drift = miss = 0
+        ok = drift = miss = err = 0
         for i, (fname, flen, ext) in enumerate(sorted(unique_files), start=1):
-            res = qualify_via_github(
-                fname, flen,
-                token=token,
-                max_candidates=args.qualify_max_candidates,
-                verify_in_swh=not args.qualify_skip_swh_verify,
-                classifier=classifier,
-                file_ext=ext,
-            )
+            # Per-row try/except so a single TimeoutError / DNS hiccup /
+            # urllib bug doesn't abort a multi-hour pass and discard every
+            # OK row mined so far. We log the error onto the row's
+            # qualify_status and keep going; the CSV at the end captures
+            # whatever made it through.
+            try:
+                res = qualify_via_github(
+                    fname, flen,
+                    token=token,
+                    max_candidates=args.qualify_max_candidates,
+                    verify_in_swh=not args.qualify_skip_swh_verify,
+                    classifier=classifier,
+                    file_ext=ext,
+                )
+            except Exception as e:
+                res = QualifyResult(
+                    status="network_error",
+                    notes=f"{type(e).__name__}: {e!s:.120}",
+                )
+                err += 1
             qualify_cache[(fname, flen)] = res
             if res.status == "ok": ok += 1
             elif res.status == "commit_drift": drift += 1
-            else: miss += 1
+            elif res.status != "network_error": miss += 1
             if i % 10 == 0 or i == len(unique_files):
-                print(f"  [{i}/{len(unique_files)}] ok={ok} drift={drift} miss={miss}")
-        print(f"Qualify done: ok={ok}, commit_drift={drift}, no_anchor/no_match={miss}")
+                print(f"  [{i}/{len(unique_files)}] ok={ok} drift={drift} miss={miss} err={err}")
+        print(f"Qualify done: ok={ok}, commit_drift={drift}, no_anchor/no_match={miss}, network_error={err}")
 
     # Write CSV: explode each (extension) row into one row per claiming language.
     out_path = Path(args.out_csv)

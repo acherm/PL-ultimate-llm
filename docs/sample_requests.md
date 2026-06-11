@@ -1,5 +1,11 @@
 # Sample-mining requests
 
+> **Submitting one specific file instead?** This flow mines *per
+> extension* and cannot target a particular file. To submit a single
+> known program (local bytes and/or content SWHID), use
+> `python3 tools/submit_sample.py` — see
+> [`cli_roadmap.md`](cli_roadmap.md).
+
 Per-extension pages let any visitor request that the maintainer run a
 **targeted SWH mining pass** for a specific extension. Useful when an
 extension has zero archived examples on the site (e.g. `.mjava`) and

@@ -126,6 +126,10 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
 - Phase 2 — `build_review_consensus.py` (gold/silver/disputed,
   Krippendorff's α) + `auto_review.py` (pygments first, blinded +
   filename-aware modes; LLM reviewers later).
-- Phase 3 — public-site integration: read-only review panels on sample
-  cards + a `/reviews/` dashboard (coverage, agreement, tool-vs-human).
+- Phase 3 — public-site integration. ✅ partial: sample cards on ext/PL
+  pages render a read-only "Reviews (ground truth)" panel (latest verdict
+  per reviewer, ✓ agree / ⚠ disputed pill when ≥2 humans). Note: pushed
+  reviews are public — a reviewer determined to peek before submitting
+  can; the local UI still blinds by default. Remaining: `/reviews/`
+  dashboard (coverage, agreement, tool-vs-human).
 - Phase 4 — review packs + `ingest_reviews.py` for clone-less reviewers.

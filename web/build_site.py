@@ -106,6 +106,7 @@ class SwhSample:
     occurrences_in_swh: int | None  # None = never counted (e.g. manual submissions)
     predicted_via: str
     predicted_heuristic_id: str | None
+    reviews: tuple = ()  # latest per-reviewer ground-truth verdicts (reviews/)
 
 
 @dataclass(frozen=True)
@@ -480,6 +481,77 @@ def load_heuristics() -> tuple[list[dict], dict[str, list[dict]]]:
     return rules, by_ext
 
 
+REVIEWS_DIR = ROOT / "reviews"
+
+
+def load_reviews_by_sha() -> dict[str, list[dict]]:
+    """reviews/<sha1_git>/*.json → sha -> latest verdict per reviewer.
+
+    Read-only display mapping of the per-program ground-truth reviews
+    (docs/reviews.md). Files sort oldest-first, so a reviewer's later
+    review (supersede or amend) naturally replaces their earlier slot;
+    reviewer identity is (kind, id, version) so tool upgrades coexist.
+    """
+    out: dict[str, list[dict]] = {}
+    if not REVIEWS_DIR.exists():
+        return out
+    for sha_dir in sorted(REVIEWS_DIR.iterdir()):
+        if not sha_dir.is_dir():
+            continue
+        latest: dict[tuple, dict] = {}
+        for p in sorted(sha_dir.glob("*.json")):
+            try:
+                r = json.loads(p.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            rv = r.get("reviewer") or {}
+            v = r.get("verdict") or {}
+            latest[(rv.get("kind"), rv.get("id"), rv.get("version"))] = {
+                "kind": rv.get("kind") or "?",
+                "id": rv.get("id") or "?",
+                "version": rv.get("version"),
+                "label": v.get("label"),
+                "confidence": v.get("confidence"),
+                "comment": r.get("comment"),
+                "created_at": r.get("created_at") or "",
+                "amended": bool(r.get("amended_at")),
+            }
+        if latest:
+            out[sha_dir.name] = sorted(
+                latest.values(), key=lambda x: (x["kind"] != "human", x["id"]))
+    return out
+
+
+def _reviews_html(s: "SwhSample") -> str:
+    """Ground-truth panel for one sample card; empty string if unreviewed."""
+    if not s.reviews:
+        return ""
+    human_labels = [r["label"] for r in s.reviews
+                    if r["kind"] == "human" and r["label"]]
+    flag = ""
+    if len(human_labels) >= 2:
+        flag = ("<span class='pill' title='all human reviewers gave the same label'>✓ humans agree</span>"
+                if len(set(human_labels)) == 1 else
+                "<span class='pill' title='human reviewers disagree — that is data too'>⚠ disputed</span>")
+    rows = []
+    for r in s.reviews:
+        icon = "👤" if r["kind"] == "human" else "🤖"
+        ver = f" {safe(r['version'])}" if r.get("version") else ""
+        label = (f"<code>{safe(r['label'])}</code>" if r["label"]
+                 else "<i>comment only</i>")
+        conf = f" <span class='muted'>({safe(r['confidence'])})</span>" if r.get("confidence") else ""
+        amended = " <span class='pill'>amended</span>" if r.get("amended") else ""
+        comment = (f"<div class='muted' style='margin-left:24px;'>{safe(r['comment'])}</div>"
+                   if r.get("comment") else "")
+        rows.append(
+            f"<div style='margin-top:3px;'>{icon} <strong>{safe(r['id'])}</strong>{ver}"
+            f" → {label}{conf}{amended}"
+            f" <span class='muted'>{safe(r['created_at'][:10])}</span></div>{comment}")
+    return ("<div style='margin-top:8px; border-top:1px solid rgba(127,127,127,.3); padding-top:6px;'>"
+            f"<span class='muted'>Reviews (ground truth · <a href='https://github.com/acherm/PL-ultimate-llm/blob/swh-evidence-v1/docs/reviews.md'>how?</a>)</span> {flag}"
+            + "".join(rows) + "</div>")
+
+
 def load_swh_samples() -> dict[str, list[SwhSample]]:
     """Walk samples/ and group by pl_id.
 
@@ -493,6 +565,7 @@ def load_swh_samples() -> dict[str, list[SwhSample]]:
     out: dict[str, list[SwhSample]] = {}
     if not SAMPLES_DIR.exists():
         return out
+    reviews_map = load_reviews_by_sha()
 
     # Build ext -> [pl_ids that claim it as primary] for ambiguous fan-out.
     # Dedupe per (ext, pl_id) — a single pl_id can claim the same ext from
@@ -532,6 +605,7 @@ def load_swh_samples() -> dict[str, list[SwhSample]]:
                 code_text = None
         return SwhSample(
             pl_id=pl_id_for_sample,
+            reviews=tuple(reviews_map.get(m.get("sha1_git") or sha_dir.name, [])),
             sha1_git=m.get("sha1_git") or sha_dir.name,
             filename=filename,
             length=int(m.get("length_bytes") or 0),
@@ -604,6 +678,7 @@ def load_swh_samples_by_ext() -> dict[str, list[SwhSample]]:
     out: dict[str, list[SwhSample]] = {}
     if not SAMPLES_DIR.exists():
         return out
+    reviews_map = load_reviews_by_sha()
 
     def _read_meta(sha_dir: Path) -> dict | None:
         mp = sha_dir / "metadata.json"
@@ -628,6 +703,7 @@ def load_swh_samples_by_ext() -> dict[str, list[SwhSample]]:
                 pass
         return SwhSample(
             pl_id=(m.get("predicted_pl_id") or "").strip() or "unclassified",
+            reviews=tuple(reviews_map.get(m.get("sha1_git") or sha_dir.name, [])),
             sha1_git=m.get("sha1_git") or sha_dir.name,
             filename=filename,
             length=int(m.get("length_bytes") or 0),
@@ -2897,6 +2973,7 @@ def render_per_extension_pages(
                   <a href='{safe(bare_browser_url)}' target='_blank' rel='noopener'>Open in SWH</a> ·
                   <a href='{safe(s.swh_raw_url)}' target='_blank' rel='noopener'>Raw bytes</a>
                 </div>
+                {_reviews_html(s)}
               </article>""")
 
         # SWH popularity block (SWH-MSR-ARV-derived). Case-aggregated.
@@ -4730,6 +4807,7 @@ def render_language_pages(
                   <a href='{safe(s.swh_raw_url)}' target='_blank' rel='noopener'>Raw bytes (SWH)</a>
                   {' · ' + gh_link if gh_link else ''}
                 </div>
+                {_reviews_html(s)}
                 {code_block}
               </article>""")
                 swh_samples_html = f"""

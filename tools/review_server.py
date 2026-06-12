@@ -126,6 +126,18 @@ class App:
 # HTTP layer
 # ---------------------------------------------------------------------------
 
+def _is_git_tracked(path: Path) -> bool:
+    """True if git knows the file (committed or staged) — i.e. it may have
+    been shared and must not be mutated. Untracked files are local drafts."""
+    try:
+        rel = path.resolve().relative_to(ROOT)
+    except ValueError:
+        return False  # outside the repo (e.g. test dirs): always a draft
+    r = subprocess.run(["git", "ls-files", "--error-unmatch", str(rel)],
+                       capture_output=True, cwd=ROOT)
+    return r.returncode == 0
+
+
 class Handler(BaseHTTPRequestHandler):
     app: App = None  # set by serve()
 
@@ -271,7 +283,22 @@ class Handler(BaseHTTPRequestHandler):
                                     app.default_reviewer)
 
         mine, others = app.reviews_split(sha, reviewer_id)
-        supersedes = mine[-1]["_file"] if mine else None
+
+        # Edit policy: while your latest review is still uncommitted it is a
+        # local draft — re-submitting AMENDS it in place (the file is
+        # replaced, no supersede clutter). Once it is committed/shared it is
+        # an immutable fact — re-submitting SUPERSEDES it.
+        mode, supersedes, amend_target = "new", None, None
+        if mine:
+            last = mine[-1]
+            last_path = app.reviews_dir / sha / last["_file"]
+            if _is_git_tracked(last_path):
+                mode = "superseded"
+                supersedes = last["_file"]
+            else:
+                mode = "amended"
+                supersedes = (last.get("verdict") or {}).get("supersedes")
+                amend_target = last_path
 
         review = store.new_review(
             subject=subj,
@@ -282,17 +309,26 @@ class Handler(BaseHTTPRequestHandler):
             shown=app.shown_block(subj),
             supersedes=supersedes,
         )
+        if mode == "amended":
+            # Same judgment, corrected content: keep the original timestamp
+            # (and filename ordering), stamp the amendment separately.
+            review["created_at"] = mine[-1]["created_at"]
+            review["amended_at"] = store.utc_now_iso()
         try:
             path = store.write_review(review, reviews_dir=app.reviews_dir,
                                       known_pl_ids=app.known_pl_ids)
         except ValueError as e:
             return self._err(422, str(e))
         except FileExistsError:
-            return self._err(409, "identical review already written")
+            return self._err(409, "no change — this exact review is already "
+                                  "on record")
+        if amend_target is not None and amend_target != path:
+            amend_target.unlink(missing_ok=True)
 
         review["_file"] = path.name
         return self._json({
             "ok": True,
+            "mode": mode,
             "file": str(path.relative_to(ROOT) if path.is_relative_to(ROOT)
                         else path),
             "review": review,
@@ -582,9 +618,10 @@ function renderHistory(mine, others) {
       `<span class="pill">${esc(rv.kind)}${rv.version ? ' ' + esc(rv.version) : ''}</span> ` +
       `<span class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</span> ` +
       (old ? '<span class="pill">superseded</span> ' : '') +
+      (o.amended_at ? '<span class="pill">amended</span> ' : '') +
       `${v.label ? `<code>${esc(v.label)}</code> (${esc(v.confidence || '')})` : '<i>comment only</i>'}` +
       (cls === 'mine' ? ` <button class="editbtn" data-i="${i}" ` +
-        `title="load into the form; submitting writes a new review that supersedes your latest">edit</button>` : '') +
+        `title="load into the form — saving amends in place while uncommitted, supersedes once shared">edit</button>` : '') +
       `${o.comment ? `<div class="muted">${esc(o.comment)}</div>` : ''}</div>`;
   };
   let html = '';
@@ -624,8 +661,11 @@ async function submitReview() {
   const r = await resp.json();
   if (!resp.ok) { toast('✗ ' + r.error, 5000); return; }
   state.session++; $('session').textContent = 'session: ' + state.session;
-  toast('✓ saved ' + r.file.split('/').pop());
-  state.cur.mine.push(r.review);
+  toast(r.mode === 'amended' ? '✓ amended in place (was still uncommitted)'
+      : r.mode === 'superseded' ? '✓ saved — previous review superseded'
+      : '✓ saved ' + r.file.split('/').pop());
+  if (r.mode === 'amended') state.cur.mine[state.cur.mine.length - 1] = r.review;
+  else state.cur.mine.push(r.review);
   if (r.others && r.others.length) { renderHistory(state.cur.mine, r.others); }
   else nextSample();
 }
@@ -738,8 +778,8 @@ def main() -> int:
     p.add_argument("--open", action="store_true", help="open a browser tab")
     args = p.parse_args()
 
-    app = App(samples_dir=Path(args.samples_dir),
-              reviews_dir=Path(args.reviews_dir),
+    app = App(samples_dir=Path(args.samples_dir).resolve(),
+              reviews_dir=Path(args.reviews_dir).resolve(),
               default_reviewer=store.slugify(args.reviewer)
               if args.reviewer else store.default_reviewer_id())
     Handler.app = app

@@ -97,11 +97,14 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
 - **Review history**: opening a program shows its full review log — your
   own reviews always (superseded ones dimmed), others' once you have a
   verdict on record.
-- **Editing**: reviews are immutable, so "edit" = supersede. The `edit`
-  button on your own reviews loads label/confidence/comment back into the
-  form; submitting writes a new review whose `supersedes` names your
-  previous one (automatic). To discard an accidental review that hasn't
-  been committed yet, just delete its file under `reviews/<sha>/`.
+- **Editing** mirrors git's amend-before-push rule. The `edit` button loads
+  your review back into the form; on save the server decides automatically:
+  while your latest review is **uncommitted** it's a local draft — the file
+  is **amended in place** (original `created_at` kept, `amended_at` stamped,
+  no supersede clutter); once it's **committed/shared** it's an immutable
+  fact — a new review is written with `supersedes` chaining to it. To
+  discard an accidental uncommitted review entirely, delete its file under
+  `reviews/<sha>/`.
   From the command line:
   `python3 tools/reviewstore.py` (summary of everything reviewed) or
   `python3 tools/reviewstore.py <sha-prefix | filename substring>`

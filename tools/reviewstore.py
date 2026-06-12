@@ -340,6 +340,8 @@ def _print_reviews(sha: str, subject: dict, revs: list[dict]) -> None:
         v = r.get("verdict") or {}
         rv = r.get("reviewer") or {}
         flags = " [superseded]" if r.get("_file") in superseded else ""
+        if r.get("amended_at"):
+            flags += " [amended]"
         label = v.get("label") or "(comment only)"
         conf = f" ({v['confidence']})" if v.get("confidence") else ""
         ver = f" {rv['version']}" if rv.get("version") else ""

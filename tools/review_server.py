@@ -26,9 +26,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import subprocess
 import sys
+import urllib.error
 import urllib.parse
+import urllib.request
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -38,6 +41,25 @@ import reviewstore as store
 
 ROOT = store.ROOT
 MAX_CODE_CHARS = 120_000
+
+# --- repo context (READMEs & co from the origin, via the SWH API) ----------
+SWH_BASE = "https://archive.softwareheritage.org"
+CONTEXT_CACHE = ROOT / "data" / "derived" / "swh_context_cache.json"
+MAX_PREVIEW_CHARS = 4_000
+_CTX_NAME = re.compile(
+    r"^(readme|contributing|licen[cs]e|copying|authors|install|news|hacking|"
+    r"changelog|code_of_conduct)\b", re.I)
+_QUAL_ORIGIN = re.compile(r";origin=([^;]+)")
+_QUAL_ANCHOR = re.compile(r";anchor=swh:1:rev:([0-9a-f]{40})")
+_QUAL_PATH = re.compile(r";path=(.+)$")
+_HEX40 = re.compile(r"^[0-9a-f]{40}$")
+
+
+def _swh_get(url: str) -> bytes:
+    req = urllib.request.Request(
+        url, headers={"User-Agent": "PL-ultimate-llm/review_server"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.read()
 
 
 # ---------------------------------------------------------------------------
@@ -55,6 +77,79 @@ class App:
         self.ext_claimants = store.load_ext_claimants()  # ext -> [claims]
         self.samples = store.load_samples_index(samples_dir)  # sha -> subject
         self.suggestions_rev = store.git_head_short()
+        try:
+            self.ctx_cache = json.loads(CONTEXT_CACHE.read_text(encoding="utf-8"))
+        except Exception:
+            self.ctx_cache = {}
+        self.ctx_cache.setdefault("context", {})
+        self.ctx_cache.setdefault("previews", {})
+
+    # -- repo context ---------------------------------------------------------
+
+    def _save_ctx_cache(self) -> None:
+        try:
+            CONTEXT_CACHE.parent.mkdir(parents=True, exist_ok=True)
+            CONTEXT_CACHE.write_text(
+                json.dumps(self.ctx_cache, indent=1, ensure_ascii=False),
+                encoding="utf-8")
+        except Exception:
+            pass
+
+    def repo_context(self, sha: str) -> dict:
+        """READMEs & co at the origin repo's anchored revision: repo root +
+        every directory along the sample's path (monorepo root READMEs are
+        often uninformative; the nearest one usually is). Cached on disk."""
+        cached = self.ctx_cache["context"].get(sha)
+        if cached is not None:
+            return cached
+        q = self.samples[sha].get("qualified_swhid") or ""
+        origin = (m.group(1) if (m := _QUAL_ORIGIN.search(q)) else None)
+        anchor = (m.group(1) if (m := _QUAL_ANCHOR.search(q)) else None)
+        path = (m.group(1) if (m := _QUAL_PATH.search(q)) else None)
+        result = {"origin": origin, "anchor": anchor, "files": [], "note": None}
+        if not anchor:
+            result["note"] = ("no anchor revision in this sample's provenance "
+                              "— the repo tree cannot be resolved")
+        else:
+            dirs = [""]
+            if path:
+                parts = path.strip("/").split("/")[:-1]
+                dirs += ["/".join(parts[:i + 1]) for i in range(len(parts))]
+            try:
+                for d in dirs[:6]:
+                    url = (f"{SWH_BASE}/api/1/revision/{anchor}/directory/"
+                           + (urllib.parse.quote(d) + "/" if d else ""))
+                    data = json.loads(_swh_get(url))
+                    for e in data.get("content", []):
+                        if e.get("type") == "file" and _CTX_NAME.match(e.get("name", "")):
+                            result["files"].append({
+                                "dir": "/" + d if d else "/",
+                                "name": e["name"],
+                                "sha1_git": e.get("target"),
+                                "length": e.get("length"),
+                                "browser_url": f"{SWH_BASE}/swh:1:cnt:{e.get('target')}/",
+                            })
+            except urllib.error.HTTPError as ex:
+                result["note"] = (f"SWH API error: HTTP {ex.code}"
+                                  + (" (rate limited — retry later)" if ex.code == 429 else ""))
+            except Exception as ex:
+                result["note"] = f"SWH API error: {type(ex).__name__}"
+        if result["note"] is None or not anchor:  # cache definite answers only
+            self.ctx_cache["context"][sha] = result
+            self._save_ctx_cache()
+        return result
+
+    def context_preview(self, cnt_sha: str) -> str:
+        cached = self.ctx_cache["previews"].get(cnt_sha)
+        if cached is not None:
+            return cached
+        data = _swh_get(f"{SWH_BASE}/api/1/content/sha1_git:{cnt_sha}/raw/")
+        text = data[:65536].decode("utf-8", errors="replace")[:MAX_PREVIEW_CHARS]
+        if len(data) > MAX_PREVIEW_CHARS:
+            text += "\n…(truncated)…"
+        self.ctx_cache["previews"][cnt_sha] = text
+        self._save_ctx_cache()
+        return text
 
     # -- suggestions --------------------------------------------------------
 
@@ -246,6 +341,21 @@ class Handler(BaseHTTPRequestHandler):
             rows.sort(key=lambda r: (r["ext"], r["filename"].lower()))
             return self._json({"rows": rows})
 
+        if route == "/api/context":
+            sha = (q.get("sha") or "").lower()
+            if sha not in app.samples:
+                return self._err(404, f"unknown sample sha {sha!r}")
+            return self._json(app.repo_context(sha))
+
+        if route == "/api/context/preview":
+            cs = (q.get("sha1_git") or "").lower()
+            if not _HEX40.match(cs):
+                return self._err(400, "bad sha1_git")
+            try:
+                return self._json({"text": app.context_preview(cs)})
+            except Exception as e:
+                return self._err(502, f"SWH fetch failed: {type(e).__name__}")
+
         if route == "/api/pls":
             needle = (q.get("q") or "").lower().strip()
             if not needle:
@@ -300,13 +410,17 @@ class Handler(BaseHTTPRequestHandler):
                 supersedes = (last.get("verdict") or {}).get("supersedes")
                 amend_target = last_path
 
+        shown = app.shown_block(subj)
+        # bias trace: did the reviewer consult the origin repo's READMEs
+        # before giving this verdict?
+        shown["context_loaded"] = bool(payload.get("context_loaded"))
         review = store.new_review(
             subject=subj,
             reviewer={"kind": "human", "id": reviewer_id},
             label=(payload.get("label") or "").strip() or None,
             confidence=payload.get("confidence"),
             comment=payload.get("comment"),
-            shown=app.shown_block(subj),
+            shown=shown,
             supersedes=supersedes,
         )
         if mode == "amended":
@@ -445,6 +559,13 @@ kbd { background:#222a33; border:1px solid var(--line); border-radius:4px;
       <div id="suggs"></div>
     </div>
     <div class="panel">
+      <div class="muted" style="margin-bottom:6px">Repo context
+        <button id="ctxload" style="margin-left:8px; font-size:12px">load READMEs &amp; co</button></div>
+      <div id="ctxbody" class="muted" style="font-size:13px">
+        README/CONTRIBUTING/LICENSE from the origin repo at the anchored
+        revision — repo root + the file's path (SWH API, cached).</div>
+    </div>
+    <div class="panel">
       <div class="row"><div class="muted">Verdict</div>
         <div id="label-now">— no label —</div></div>
       <div class="row">
@@ -541,6 +662,8 @@ async function loadSample(shaOverride) {
   const r = await (await fetch('api/sample?' + p)).json();
   state.cur = r; clearLabel(); $('comment').value = '';
   $('reveal').innerHTML = '';
+  state.ctxLoaded = false;
+  $('ctxbody').textContent = 'README/CONTRIBUTING/LICENSE from the origin repo at the anchored revision — repo root + the file’s path (SWH API, cached).';
   document.querySelector('input[name=conf][value=medium]').checked = true;
 
   const s = r.subject;
@@ -655,6 +778,7 @@ async function submitReview() {
     label: state.label,
     confidence: document.querySelector('input[name=conf]:checked').value,
     comment: $('comment').value,
+    context_loaded: !!state.ctxLoaded,
   };
   const resp = await fetch('api/review', { method: 'POST',
     headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -721,6 +845,37 @@ function renderBrowse() {
 $('browsebtn').addEventListener('click', () => toggleBrowse());
 $('bfilter').addEventListener('input', renderBrowse);
 $('bstatus').addEventListener('change', renderBrowse);
+
+async function loadContext() {
+  if (!state.cur) return;
+  $('ctxbody').textContent = 'asking SWH…';
+  const r = await (await fetch('api/context?sha=' + state.cur.subject.sha1_git)).json();
+  if (r.error) { $('ctxbody').textContent = '✗ ' + r.error; return; }
+  state.ctxLoaded = true;
+  let html = '';
+  if (r.origin) html += `<div>origin: <a href="${esc(r.origin)}" target="_blank" rel="noopener">${esc(r.origin)}</a></div>`;
+  if (r.note) html += `<div class="muted">${esc(r.note)}</div>`;
+  if (r.files.length) {
+    html += r.files.map((f, i) =>
+      `<div style="margin-top:3px"><code class="muted">${esc(f.dir)}</code> ` +
+      `<a href="${esc(f.browser_url)}" target="_blank" rel="noopener">${esc(f.name)}</a> ` +
+      `<span class="muted">${f.length} B</span> ` +
+      `<button class="ctxprev" data-sha="${esc(f.sha1_git)}" data-pre="ctxpre-${i}" ` +
+      `style="font-size:11px; padding:0 6px">preview</button>` +
+      `<pre id="ctxpre-${i}" style="display:none; max-height:280px; margin-top:4px"></pre></div>`).join('');
+  } else if (!r.note) {
+    html += '<div class="muted">no README/CONTRIBUTING/LICENSE found at the root or along the path</div>';
+  }
+  $('ctxbody').innerHTML = html;
+  document.querySelectorAll('.ctxprev').forEach(b => b.addEventListener('click', async () => {
+    const pre = $(b.dataset.pre);
+    if (pre.style.display === 'block') { pre.style.display = 'none'; return; }
+    pre.textContent = 'fetching…'; pre.style.display = 'block';
+    const pr = await (await fetch('api/context/preview?sha1_git=' + b.dataset.sha)).json();
+    pre.textContent = pr.error ? ('✗ ' + pr.error) : pr.text;
+  }));
+}
+$('ctxload').addEventListener('click', loadContext);
 
 document.addEventListener('keydown', e => {
   const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);

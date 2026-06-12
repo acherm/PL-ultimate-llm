@@ -97,6 +97,16 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
 - **Review history**: opening a program shows its full review log — your
   own reviews always (superseded ones dimmed), others' once you have a
   verdict on record.
+- **Repo context**: the "load READMEs & co" button resolves the sample's
+  origin + anchor revision (from its qualified SWHID) via the SWH API and
+  lists `README*`/`CONTRIBUTING*`/`LICENSE*`/`CHANGELOG*`… at the repo
+  root **and in every directory along the file's path** (the nearest
+  README beats a monorepo root README), with inline previews. Lookups are
+  cached in `data/derived/swh_context_cache.json` (commit it to share
+  across reviewers). Whether context was consulted before the verdict is
+  recorded in the review's `shown.context_loaded` (bias trace). Samples
+  without an anchor revision (bare/aspirational provenance) get a note
+  instead.
 - **Editing** mirrors git's amend-before-push rule. The `edit` button loads
   your review back into the form; on save the server decides automatically:
   while your latest review is **uncommitted** it's a local draft — the file

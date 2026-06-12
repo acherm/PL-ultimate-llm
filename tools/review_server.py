@@ -205,6 +205,34 @@ class Handler(BaseHTTPRequestHandler):
                 "others": others if mine else None,
             })
 
+        if route == "/api/samples":
+            reviewer = store.slugify(q.get("reviewer") or app.default_reviewer)
+            by_sha = store.reviews_by_sha(reviews_dir=app.reviews_dir)
+            rows = []
+            for sha, s in app.samples.items():
+                latest = store.latest_per_reviewer(by_sha.get(sha, []))
+                mine = [r for r in latest
+                        if r["reviewer"]["kind"] == "human"
+                        and r["reviewer"]["id"] == reviewer]
+                rows.append({
+                    "sha1_git": sha,
+                    "filename": s["filename"],
+                    "ext": s["ext"],
+                    "length": s["length"],
+                    "slots": s["slots"],
+                    "predicted_pl_id": s["predicted_pl_id"],
+                    "n_human": sum(1 for r in latest
+                                   if r["reviewer"]["kind"] == "human"),
+                    "n_machine": sum(1 for r in latest
+                                     if r["reviewer"]["kind"] != "human"),
+                    # own verdict only — others stay blind in the browser too
+                    "my_label": ((mine[0].get("verdict") or {}).get("label")
+                                 if mine else None),
+                    "reviewed_by_me": bool(mine),
+                })
+            rows.sort(key=lambda r: (r["ext"], r["filename"].lower()))
+            return self._json({"rows": rows})
+
         if route == "/api/pls":
             needle = (q.get("q") or "").lower().strip()
             if not needle:
@@ -324,6 +352,15 @@ textarea { width:100%; min-height:60px; resize:vertical; }
 #toast { position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
          background:#222a33; border:1px solid var(--line); padding:8px 14px;
          border-radius:8px; display:none; z-index:10; }
+#browse { display:none; margin:12px; }
+#btable { width:100%; border-collapse:collapse; font-size:13px; }
+#btable th { text-align:left; color:var(--muted); font-weight:500;
+             border-bottom:1px solid var(--line); padding:4px 8px;
+             position:sticky; top:46px; background:var(--panel); }
+#btable td { padding:3px 8px; border-bottom:1px solid #20262e; }
+#btable tr[data-sha] { cursor:pointer; }
+#btable tr[data-sha]:hover { background:#222a33; }
+#btable tr.done td { opacity:.55; }
 kbd { background:#222a33; border:1px solid var(--line); border-radius:4px;
       padding:0 5px; font-size:11px; }
 </style></head>
@@ -335,11 +372,25 @@ kbd { background:#222a33; border:1px solid var(--line); border-radius:4px;
   <label class="muted">ext <input id="extfilter" size="6" list="extlist" placeholder="all">
   <datalist id="extlist"></datalist></label>
   <button id="reload">reload queue</button>
+  <button id="browsebtn">browse (b)</button>
   <span id="pos" class="pill"></span>
   <span id="session" class="pill">session: 0</span>
   <span class="muted" style="margin-left:auto">
-    <kbd>1</kbd>–<kbd>9</kbd> pick · <kbd>⌃⏎</kbd> submit · <kbd>s</kbd> skip</span>
+    <kbd>1</kbd>–<kbd>9</kbd> pick · <kbd>⌃⏎</kbd> submit · <kbd>s</kbd> skip · <kbd>b</kbd> browse</span>
 </header>
+<div id="browse" class="panel">
+  <div style="display:flex; gap:10px; align-items:center; margin-bottom:8px; flex-wrap:wrap">
+    <input id="bfilter" placeholder="filter (filename, ext, slot, predicted)…" style="flex:1; min-width:200px">
+    <select id="bstatus">
+      <option value="all">all</option>
+      <option value="unreviewed">no human review yet</option>
+      <option value="not-mine">not reviewed by me</option>
+      <option value="mine">reviewed by me</option>
+    </select>
+    <span id="bcount" class="pill"></span>
+  </div>
+  <table id="btable"></table>
+</div>
 <main>
   <div id="codecol">
     <div class="panel" style="padding:0">
@@ -392,7 +443,8 @@ kbd { background:#222a33; border:1px solid var(--line); border-radius:4px;
 <div id="toast"></div>
 <script>
 const $ = id => document.getElementById(id);
-let state = { queue: [], idx: 0, cur: null, label: null, session: 0 };
+let state = { queue: [], idx: 0, cur: null, label: null, session: 0,
+              standalone: null, browseRows: [] };
 
 function toast(msg, ms=2600) {
   $('toast').textContent = msg; $('toast').style.display = 'block';
@@ -427,7 +479,7 @@ async function loadQueue() {
   const p = new URLSearchParams({ strategy: $('strategy').value,
     ext: $('extfilter').value, reviewer: $('reviewer').value });
   const r = await (await fetch('api/queue?' + p)).json();
-  state.queue = r.queue; state.idx = 0;
+  state.queue = r.queue; state.idx = 0; state.standalone = null;
   if (!state.queue.length) {
     $('pos').textContent = 'queue empty 🎉';
     $('fhead').innerHTML = '<span class="muted">Nothing matches this queue — change strategy/ext.</span>';
@@ -437,9 +489,12 @@ async function loadQueue() {
   await loadSample();
 }
 
-async function loadSample() {
-  const sha = state.queue[state.idx];
-  $('pos').textContent = `${state.idx + 1} / ${state.queue.length}`;
+async function loadSample(shaOverride) {
+  const sha = shaOverride || state.queue[state.idx];
+  if (!sha) { toast('queue empty — try browse (b) or other filters'); return; }
+  state.standalone = shaOverride || null;
+  $('pos').textContent = shaOverride
+    ? 'browse pick' : `${state.idx + 1} / ${state.queue.length}`;
   const p = new URLSearchParams({ sha, reviewer: $('reviewer').value });
   const r = await (await fetch('api/sample?' + p)).json();
   state.cur = r; clearLabel(); $('comment').value = '';
@@ -540,9 +595,56 @@ async function submitReview() {
 }
 
 function nextSample() {
+  if (state.standalone) {           // came from browse → back to the queue
+    state.standalone = null;
+    if (state.queue.length) loadSample(); else toggleBrowse(true);
+    return;
+  }
   if (state.idx + 1 < state.queue.length) { state.idx++; loadSample(); }
   else { toast('end of queue — reload to refresh'); }
 }
+
+async function toggleBrowse(force) {
+  const b = $('browse');
+  const show = force !== undefined ? force : b.style.display !== 'block';
+  b.style.display = show ? 'block' : 'none';
+  document.querySelector('main').style.display = show ? 'none' : 'flex';
+  if (show) {
+    const r = await (await fetch('api/samples?reviewer=' +
+      encodeURIComponent($('reviewer').value))).json();
+    state.browseRows = r.rows; renderBrowse();
+    $('bfilter').focus();
+  }
+}
+
+function renderBrowse() {
+  const f = $('bfilter').value.toLowerCase();
+  const st = $('bstatus').value;
+  const rows = state.browseRows.filter(r =>
+    (!f || r.filename.toLowerCase().includes(f) || r.ext.includes(f) ||
+     r.slots.join(',').toLowerCase().includes(f) ||
+     (r.predicted_pl_id || '').includes(f)) &&
+    (st === 'all' ? true :
+     st === 'unreviewed' ? r.n_human === 0 :
+     st === 'mine' ? r.reviewed_by_me : !r.reviewed_by_me));
+  $('bcount').textContent = `${rows.length} / ${state.browseRows.length}`;
+  $('btable').innerHTML =
+    '<tr><th>file</th><th>ext</th><th>bytes</th><th>slot</th>' +
+    '<th>predicted</th><th>👤</th><th>🤖</th><th>my label</th></tr>' +
+    rows.map(r =>
+      `<tr data-sha="${r.sha1_git}" class="${r.reviewed_by_me ? 'done' : ''}">` +
+      `<td><code>${esc(r.filename)}</code></td><td>${esc(r.ext)}</td>` +
+      `<td>${r.length}</td><td class="muted">${esc(r.slots.join(', '))}</td>` +
+      `<td>${esc(r.predicted_pl_id || '—')}</td>` +
+      `<td>${r.n_human || ''}</td><td>${r.n_machine || ''}</td>` +
+      `<td>${r.my_label ? '<code>' + esc(r.my_label) + '</code>' : ''}</td></tr>`
+    ).join('');
+  document.querySelectorAll('#btable tr[data-sha]').forEach(tr =>
+    tr.addEventListener('click', () => { toggleBrowse(false); loadSample(tr.dataset.sha); }));
+}
+$('browsebtn').addEventListener('click', () => toggleBrowse());
+$('bfilter').addEventListener('input', renderBrowse);
+$('bstatus').addEventListener('change', renderBrowse);
 
 document.addEventListener('keydown', e => {
   const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName);
@@ -553,6 +655,7 @@ document.addEventListener('keydown', e => {
     if (b) setLabel(b.dataset.label);
   }
   if (e.key === 's') nextSample();
+  if (e.key === 'b') toggleBrowse();
 });
 $('reload').addEventListener('click', loadQueue);
 init();

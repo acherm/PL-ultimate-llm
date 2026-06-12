@@ -90,6 +90,10 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
   `second-opinion` (others reviewed it, you haven't), `all`; optional ext
   filter. Order is a deterministic shuffle seeded by reviewer id, so
   distributed reviewers naturally spread coverage without coordination.
+- **Browse mode** (`b`): a filterable table of every program (filename,
+  ext, slot, predicted PL, human/machine review counts, your own label —
+  others' labels stay blind here too). Click a row to review it; skip
+  returns to the queue.
 - Identity is claimed (`git config user.name` by default, or the UI field /
   `--as`), corroborated by the git commit that introduces the files.
 

@@ -38,6 +38,7 @@ Use-cases to cover (one subcommand each):
 | Use-case | Web form today | CLI status |
 |---|---|---|
 | Submit a specific program file w/ extension (SWHID and/or local bytes) | **none** (the gap) | ✅ seed: `tools/submit_sample.py` |
+| Review a program → PL ground truth (multi-reviewer, humans + tools) | **none** | ✅ seed: `tools/review_server.py` (local web UI; see [`reviews.md`](reviews.md)) |
 | Request per-extension SWH mining | `/ext/<x>/` → `sample-request` issue | TODO (`gh issue create` wrapper) |
 | Label / review an extension | `/ext/<x>/` → ext-review flow | TODO |
 | Claim an ext / attach a program to a PL | `/l/<slug>/` → `pl-contribute` issue | TODO |

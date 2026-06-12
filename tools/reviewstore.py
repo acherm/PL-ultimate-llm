@@ -322,3 +322,77 @@ def latest_per_reviewer(reviews: list[dict]) -> list[dict]:
         rev = r.get("reviewer") or {}
         latest[(rev.get("kind"), rev.get("id"), rev.get("version"))] = r
     return list(latest.values())
+
+
+# ---------------------------------------------------------------------------
+# CLI: list reviews for a program (or a summary of everything reviewed)
+# ---------------------------------------------------------------------------
+
+def _print_reviews(sha: str, subject: dict, revs: list[dict]) -> None:
+    name = subject.get("filename") or "?"
+    ext = subject.get("ext") or "?"
+    print(f"{name} ({ext}) · {sha}")
+    if not revs:
+        print("  (no reviews yet)")
+        return
+    superseded = {(r.get("verdict") or {}).get("supersedes") for r in revs}
+    for r in revs:
+        v = r.get("verdict") or {}
+        rv = r.get("reviewer") or {}
+        flags = " [superseded]" if r.get("_file") in superseded else ""
+        label = v.get("label") or "(comment only)"
+        conf = f" ({v['confidence']})" if v.get("confidence") else ""
+        ver = f" {rv['version']}" if rv.get("version") else ""
+        print(f"  {r.get('created_at', '?')}  {rv.get('id', '?')} "
+              f"<{rv.get('kind', '?')}{ver}>  {label}{conf}{flags}")
+        if r.get("comment"):
+            print(f"      {r['comment']}")
+
+
+def _cli(argv: list[str]) -> int:
+    import argparse
+    p = argparse.ArgumentParser(
+        description="List reviews. With no argument: summary of every "
+                    "reviewed program. With a sha1_git (full or prefix) or "
+                    "a filename substring: that program's full review log.")
+    p.add_argument("query", nargs="?")
+    args = p.parse_args(argv)
+
+    samples = load_samples_index()
+    by_sha = reviews_by_sha()
+
+    if not args.query:
+        if not by_sha:
+            print("no reviews yet (reviews/ is empty)")
+            return 0
+        print(f"{len(by_sha)} program(s) reviewed:")
+        for sha in sorted(by_sha):
+            s = samples.get(sha, {})
+            revs = by_sha[sha]
+            latest = latest_per_reviewer(revs)
+            print(f"  {sha[:12]}  {(s.get('filename') or '?'):<36} "
+                  f"{len(revs)} review(s) / {len(latest)} reviewer(s)")
+        return 0
+
+    qq = args.query.lower()
+    matches = [sha for sha in samples if sha.startswith(qq)]
+    if not matches:
+        matches = [sha for sha, s in samples.items()
+                   if qq in (s.get("filename") or "").lower()]
+    if not matches:  # reviews can exist for content no longer in samples/
+        matches = [sha for sha in by_sha if sha.startswith(qq)]
+    if not matches:
+        print(f"no program matches {args.query!r}")
+        return 1
+    for i, sha in enumerate(sorted(matches)[:20]):
+        if i:
+            print()
+        _print_reviews(sha, samples.get(sha, {}), by_sha.get(sha, []))
+    if len(matches) > 20:
+        print(f"\n…and {len(matches) - 20} more matches; narrow the query.")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys
+    raise SystemExit(_cli(sys.argv[1:]))

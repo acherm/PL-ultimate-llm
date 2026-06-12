@@ -349,6 +349,8 @@ a { color:var(--acc); }
 .results div:hover { background:#222a33; }
 textarea { width:100%; min-height:60px; resize:vertical; }
 .revealed { border-left:3px solid var(--warn); padding-left:8px; margin:6px 0; }
+.revealed.mine { border-left-color:var(--ok); }
+.revealed.old { opacity:.5; }
 #toast { position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
          background:#222a33; border:1px solid var(--line); padding:8px 14px;
          border-radius:8px; display:none; z-index:10; }
@@ -521,11 +523,11 @@ async function loadSample(shaOverride) {
   document.querySelectorAll('#suggs .sugg').forEach(b =>
     b.addEventListener('click', () => setLabel(b.dataset.label)));
 
-  const mineNote = r.mine.length ? ` · you already reviewed this (${r.mine.length}×, new submit supersedes)` : '';
-  $('othersnote').textContent = r.others_count
+  const mineNote = r.mine.length ? ` · you already reviewed this (new submit supersedes)` : '';
+  $('othersnote').textContent = (r.others_count && !r.others)
     ? `${r.others_count} other review(s) — hidden until you submit${mineNote}`
-    : (r.mine.length ? `no other reviews${mineNote}` : '');
-  if (r.others) renderOthers(r.others);
+    : (r.mine.length && !r.others_count ? `no other reviews${mineNote}` : '');
+  renderHistory(r.mine, r.others);
 }
 
 function setLabel(l) {
@@ -563,16 +565,29 @@ $('plsearch').addEventListener('input', () => {
   }, 150);
 });
 
-function renderOthers(others) {
-  if (!others.length) return;
-  $('reveal').innerHTML = '<div class="muted" style="margin-top:8px">Other reviews</div>' +
-    others.map(o => {
-      const rv = o.reviewer, v = o.verdict || {};
-      return `<div class="revealed"><b>${esc(rv.id)}</b> ` +
-        `<span class="pill">${esc(rv.kind)}${rv.version ? ' ' + esc(rv.version) : ''}</span> ` +
-        `${v.label ? `<code>${esc(v.label)}</code> (${esc(v.confidence || '')})` : '<i>comment only</i>'}` +
-        `${o.comment ? `<div class="muted">${esc(o.comment)}</div>` : ''}</div>`;
-    }).join('');
+function renderHistory(mine, others) {
+  const superseded = new Set();
+  [...(mine || []), ...(others || [])].forEach(r => {
+    const s = (r.verdict || {}).supersedes; if (s) superseded.add(s);
+  });
+  const item = (o, cls) => {
+    const rv = o.reviewer, v = o.verdict || {};
+    const old = superseded.has(o._file);
+    return `<div class="revealed ${cls}${old ? ' old' : ''}"><b>${esc(rv.id)}</b> ` +
+      `<span class="pill">${esc(rv.kind)}${rv.version ? ' ' + esc(rv.version) : ''}</span> ` +
+      `<span class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</span> ` +
+      (old ? '<span class="pill">superseded</span> ' : '') +
+      `${v.label ? `<code>${esc(v.label)}</code> (${esc(v.confidence || '')})` : '<i>comment only</i>'}` +
+      `${o.comment ? `<div class="muted">${esc(o.comment)}</div>` : ''}</div>`;
+  };
+  let html = '';
+  if (mine && mine.length)
+    html += '<div class="muted" style="margin-top:8px">Your reviews</div>' +
+            mine.map(o => item(o, 'mine')).join('');
+  if (others && others.length)
+    html += '<div class="muted" style="margin-top:8px">Other reviews</div>' +
+            others.map(o => item(o, '')).join('');
+  $('reveal').innerHTML = html;
 }
 
 async function submitReview() {
@@ -590,7 +605,8 @@ async function submitReview() {
   if (!resp.ok) { toast('✗ ' + r.error, 5000); return; }
   state.session++; $('session').textContent = 'session: ' + state.session;
   toast('✓ saved ' + r.file.split('/').pop());
-  if (r.others && r.others.length) { renderOthers(r.others); }
+  state.cur.mine.push(r.review);
+  if (r.others && r.others.length) { renderHistory(state.cur.mine, r.others); }
   else nextSample();
 }
 

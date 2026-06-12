@@ -94,6 +94,12 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
   ext, slot, predicted PL, human/machine review counts, your own label —
   others' labels stay blind here too). Click a row to review it; skip
   returns to the queue.
+- **Review history**: opening a program shows its full review log — your
+  own reviews always (superseded ones dimmed), others' once you have a
+  verdict on record. From the command line:
+  `python3 tools/reviewstore.py` (summary of everything reviewed) or
+  `python3 tools/reviewstore.py <sha-prefix | filename substring>`
+  (one program's log). Raw data: `cat reviews/<sha>/*.json`.
 - Identity is claimed (`git config user.name` by default, or the UI field /
   `--as`), corroborated by the git commit that introduces the files.
 

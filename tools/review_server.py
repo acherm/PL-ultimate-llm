@@ -352,6 +352,7 @@ textarea { width:100%; min-height:60px; resize:vertical; }
 .revealed { border-left:3px solid var(--warn); padding-left:8px; margin:6px 0; }
 .revealed.mine { border-left-color:var(--ok); }
 .revealed.old { opacity:.5; }
+.editbtn { font-size:11px; padding:1px 7px; margin-left:4px; }
 #toast { position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
          background:#222a33; border:1px solid var(--line); padding:8px 14px;
          border-radius:8px; display:none; z-index:10; }
@@ -448,7 +449,7 @@ kbd { background:#222a33; border:1px solid var(--line); border-radius:4px;
 <script>
 const $ = id => document.getElementById(id);
 let state = { queue: [], idx: 0, cur: null, label: null, session: 0,
-              standalone: null, browseRows: [] };
+              standalone: null, browseRows: [], histMine: [] };
 
 function toast(msg, ms=2600) {
   $('toast').textContent = msg; $('toast').style.display = 'block';
@@ -569,11 +570,12 @@ $('plsearch').addEventListener('input', () => {
 });
 
 function renderHistory(mine, others) {
+  state.histMine = mine || [];
   const superseded = new Set();
   [...(mine || []), ...(others || [])].forEach(r => {
     const s = (r.verdict || {}).supersedes; if (s) superseded.add(s);
   });
-  const item = (o, cls) => {
+  const item = (o, cls, i) => {
     const rv = o.reviewer, v = o.verdict || {};
     const old = superseded.has(o._file);
     return `<div class="revealed ${cls}${old ? ' old' : ''}"><b>${esc(rv.id)}</b> ` +
@@ -581,16 +583,31 @@ function renderHistory(mine, others) {
       `<span class="muted">${esc((o.created_at || '').slice(0, 16).replace('T', ' '))}</span> ` +
       (old ? '<span class="pill">superseded</span> ' : '') +
       `${v.label ? `<code>${esc(v.label)}</code> (${esc(v.confidence || '')})` : '<i>comment only</i>'}` +
+      (cls === 'mine' ? ` <button class="editbtn" data-i="${i}" ` +
+        `title="load into the form; submitting writes a new review that supersedes your latest">edit</button>` : '') +
       `${o.comment ? `<div class="muted">${esc(o.comment)}</div>` : ''}</div>`;
   };
   let html = '';
   if (mine && mine.length)
     html += '<div class="muted" style="margin-top:8px">Your reviews</div>' +
-            mine.map(o => item(o, 'mine')).join('');
+            mine.map((o, i) => item(o, 'mine', i)).join('');
   if (others && others.length)
     html += '<div class="muted" style="margin-top:8px">Other reviews</div>' +
-            others.map(o => item(o, '')).join('');
+            others.map(o => item(o, '', -1)).join('');
   $('reveal').innerHTML = html;
+  document.querySelectorAll('#reveal .editbtn').forEach(b =>
+    b.addEventListener('click', () => loadIntoForm(state.histMine[+b.dataset.i])));
+}
+
+function loadIntoForm(o) {
+  if (!o) return;
+  const v = o.verdict || {};
+  clearLabel();
+  if (v.label) setLabel(v.label);
+  const conf = document.querySelector(`input[name=conf][value="${v.confidence || 'medium'}"]`);
+  if (conf) conf.checked = true;
+  $('comment').value = o.comment || '';
+  toast('loaded into the form — submit to supersede your latest review');
 }
 
 async function submitReview() {

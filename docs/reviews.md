@@ -96,7 +96,13 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
   returns to the queue.
 - **Review history**: opening a program shows its full review log — your
   own reviews always (superseded ones dimmed), others' once you have a
-  verdict on record. From the command line:
+  verdict on record.
+- **Editing**: reviews are immutable, so "edit" = supersede. The `edit`
+  button on your own reviews loads label/confidence/comment back into the
+  form; submitting writes a new review whose `supersedes` names your
+  previous one (automatic). To discard an accidental review that hasn't
+  been committed yet, just delete its file under `reviews/<sha>/`.
+  From the command line:
   `python3 tools/reviewstore.py` (summary of everything reviewed) or
   `python3 tools/reviewstore.py <sha-prefix | filename substring>`
   (one program's log). Raw data: `cat reviews/<sha>/*.json`.

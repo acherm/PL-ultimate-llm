@@ -170,6 +170,7 @@ class Handler(BaseHTTPRequestHandler):
                 "exts": sorted(ext_counts.items()),
                 "strategies": ["unreviewed-by-me", "unreviewed",
                                "second-opinion", "all"],
+                "rev": app.suggestions_rev,
                 "fixed_labels": list(store.FIXED_LABELS),
                 "confidences": list(store.CONFIDENCES),
             })
@@ -377,6 +378,7 @@ kbd { background:#222a33; border:1px solid var(--line); border-radius:4px;
   <button id="browsebtn">browse (b)</button>
   <span id="pos" class="pill"></span>
   <span id="session" class="pill">session: 0</span>
+  <span id="rev" class="pill" title="git revision the server was started from"></span>
   <span class="muted" style="margin-left:auto">
     <kbd>1</kbd>–<kbd>9</kbd> pick · <kbd>⌃⏎</kbd> submit · <kbd>s</kbd> skip · <kbd>b</kbd> browse</span>
 </header>
@@ -456,6 +458,7 @@ function esc(s) { const d = document.createElement('div'); d.textContent = s; re
 
 async function init() {
   const st = await (await fetch('api/state')).json();
+  $('rev').textContent = 'rev ' + (st.rev || '?');
   $('reviewer').value = localStorage.reviewer || st.default_reviewer;
   for (const s of st.strategies) {
     const o = document.createElement('option'); o.value = o.textContent = s;

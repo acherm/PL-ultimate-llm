@@ -201,8 +201,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--notes", default=None,
                    help="Free-text note stored in metadata.json (provenance, "
                         "what the file is, why it was submitted).")
-    p.add_argument("--occurrences", type=int, default=0,
-                   help="occurrences_in_swh if known from mining (default 0).")
+    p.add_argument("--occurrences", type=int, default=None,
+                   help="occurrences_in_swh if known from mining (default: "
+                        "unknown, stored as null — distinct from a measured 0).")
     p.add_argument("--samples-dir", default=str(DEFAULT_SAMPLES_DIR),
                    help="Target samples root (default: %(default)s).")
     p.add_argument("--form", action="store_true",

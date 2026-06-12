@@ -103,7 +103,7 @@ class SwhSample:
     github_raw_url: str | None
     code_text: str | None  # decoded UTF-8 (best effort) for preview rendering
     ext: str
-    occurrences_in_swh: int
+    occurrences_in_swh: int | None  # None = never counted (e.g. manual submissions)
     predicted_via: str
     predicted_heuristic_id: str | None
 
@@ -230,6 +230,13 @@ def load_swh_ext_popularity() -> dict[str, dict]:
                 entry["case_variants"].append((raw_ext, total))
     _SWH_POPULARITY_CACHE = out
     return out
+
+
+def _fmt_seen_swh(n: int | None) -> str:
+    """Occurrence chip for sample cards. None = the count was never measured
+    (manual submissions bypass the parquet mining), which is different from a
+    measured 0 — render it as unknown, not as a claim of rarity."""
+    return f"seen {n}× in SWH" if n is not None else "SWH occurrences unknown"
 
 
 def _fmt_occ(n: int) -> str:
@@ -534,7 +541,8 @@ def load_swh_samples() -> dict[str, list[SwhSample]]:
             github_raw_url=m.get("github_raw_url"),
             code_text=code_text,
             ext=m.get("ext") or "",
-            occurrences_in_swh=int(m.get("occurrences_in_swh") or 0),
+            occurrences_in_swh=(int(m["occurrences_in_swh"])
+                                if m.get("occurrences_in_swh") is not None else None),
             predicted_via=m.get("predicted_via") or "fallback (ambiguous ext)",
             predicted_heuristic_id=m.get("predicted_heuristic_id"),
         )
@@ -629,7 +637,8 @@ def load_swh_samples_by_ext() -> dict[str, list[SwhSample]]:
             github_raw_url=m.get("github_raw_url"),
             code_text=code_text,
             ext=ext,
-            occurrences_in_swh=int(m.get("occurrences_in_swh") or 0),
+            occurrences_in_swh=(int(m["occurrences_in_swh"])
+                                if m.get("occurrences_in_swh") is not None else None),
             predicted_via=m.get("predicted_via") or "",
             predicted_heuristic_id=m.get("predicted_heuristic_id"),
         )
@@ -739,7 +748,7 @@ def synthesize_taxonomy_only_languages(
             in_sources=in_sources,
             extension_claims=my_claims,
             heuristics_for_my_exts=applicable_heur,
-            swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -s.occurrences_in_swh),
+            swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -(s.occurrences_in_swh or 0)),
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
@@ -814,7 +823,7 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             in_sources=in_sources,
             extension_claims=my_claims,
             heuristics_for_my_exts=applicable_heur,
-            swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -s.occurrences_in_swh),
+            swh_samples=sorted(swh_samples.get(pl_id, []), key=lambda s: -(s.occurrences_in_swh or 0)),
             created_via_issue=str(row.get("created_via_issue") or "").strip(),
             wikidata_qid=str(row.get("wikidata_qid") or "").strip(),
             wikipedia_url=str(row.get("wikipedia_url") or "").strip(),
@@ -2009,7 +2018,7 @@ def render_samples_index_page(
                 "lang": lang,
                 "enr": enr,
                 "sample_count": len(enr.swh_samples),
-                "total_occurrences": sum(s.occurrences_in_swh for s in enr.swh_samples),
+                "total_occurrences": sum(s.occurrences_in_swh or 0 for s in enr.swh_samples),
                 "top_sample": enr.swh_samples[0],
             }
     rows = list(rows_by_pl_id.values())
@@ -2034,9 +2043,9 @@ def render_samples_index_page(
         if not ext or ext.lower() in exts_with_primary_claim:
             continue
         orphan_by_ext.append((ext, sorted(
-            samples, key=lambda s: -s.occurrences_in_swh
+            samples, key=lambda s: -(s.occurrences_in_swh or 0)
         )))
-    orphan_by_ext.sort(key=lambda kv: (-sum(s.occurrences_in_swh for s in kv[1]), kv[0]))
+    orphan_by_ext.sort(key=lambda kv: (-sum(s.occurrences_in_swh or 0 for s in kv[1]), kv[0]))
 
     page = dist_root / "samples" / "index.html"
     rel = rel_prefix(page, dist_root)
@@ -2054,7 +2063,7 @@ def render_samples_index_page(
                 f"<tr>"
                 f"<td><a href='{rel}ext/{safe(ext.lstrip('.'))}/index.html'><code>{safe(ext)}</code></a></td>"
                 f"<td>{len(samples)}</td>"
-                f"<td>{sum(s.occurrences_in_swh for s in samples):,}</td>"
+                f"<td>{sum(s.occurrences_in_swh or 0 for s in samples):,}</td>"
                 f"<td>"
                 f"<a href='{safe(bare)}' target='_blank' rel='noopener'>"
                 f"<code>{safe(top.filename)}</code> ({top.length} B)</a>"
@@ -2869,7 +2878,7 @@ def render_per_extension_pages(
 
         # SWH samples (grouped by predicted PL for clarity).
         sample_items = []
-        for s in sorted(swh_by_ext.get(ext, []), key=lambda x: -x.occurrences_in_swh):
+        for s in sorted(swh_by_ext.get(ext, []), key=lambda x: -(x.occurrences_in_swh or 0)):
             pid = s.pl_id
             name = pl_canonical.get(pid, pid)
             slug = pl_id_to_slug.get(pid)
@@ -2880,7 +2889,7 @@ def render_per_extension_pages(
             sample_items.append(f"""
               <article class="panel" style="margin-bottom:10px; padding:12px;">
                 <header style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:baseline;">
-                  <div><strong>{safe(s.filename)}</strong> <span class='muted'>· {s.length} B · seen {s.occurrences_in_swh}× in SWH</span></div>
+                  <div><strong>{safe(s.filename)}</strong> <span class='muted'>· {s.length} B · {_fmt_seen_swh(s.occurrences_in_swh)}</span></div>
                   <div>predicted: {pl_link} <span class='pill'>via {safe(s.predicted_via)}</span></div>
                 </header>
                 <div class='muted' style='font-family:monospace; word-break:break-all; margin-top:4px;'>{safe(s.qualified_swhid)}</div>
@@ -4712,7 +4721,7 @@ def render_language_pages(
                     items.append(f"""
               <article class="panel" style="margin-bottom:10px; padding:12px;">
                 <header style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:baseline;">
-                  <div><strong>{safe(s.filename)}</strong> <span class='muted'>· {s.length} B · ext <code>{safe(s.ext)}</code> · seen {s.occurrences_in_swh}× in SWH</span></div>
+                  <div><strong>{safe(s.filename)}</strong> <span class='muted'>· {s.length} B · ext <code>{safe(s.ext)}</code> · {_fmt_seen_swh(s.occurrences_in_swh)}</span></div>
                   <div style='display:flex; flex-wrap:wrap; gap:6px;'>{via_pill}{h_pill}</div>
                 </header>
                 <div class='muted' style='font-family:monospace; word-break:break-all; margin-top:4px;'>{safe(s.qualified_swhid)}</div>

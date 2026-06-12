@@ -101,7 +101,11 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
   origin + anchor revision (from its qualified SWHID) via the SWH API and
   lists `README*`/`CONTRIBUTING*`/`LICENSE*`/`CHANGELOG*`… at the repo
   root **and in every directory along the file's path** (the nearest
-  README beats a monorepo root README), with inline previews. Lookups are
+  README beats a monorepo root README), with inline previews. Every entry
+  carries full deep links: file-at-commit on the origin forge
+  (GitHub `blob/`, GitLab `-/blob/`, Bitbucket, Codeberg — best-effort by
+  host) and the fully-qualified SWH URL (`cnt;origin;anchor;path`); the
+  sample file itself gets the same trio (forge / raw / SWH-qualified). Lookups are
   cached in `data/derived/swh_context_cache.json` (commit it to share
   across reviewers). Whether context was consulted before the verdict is
   recorded in the review's `shown.context_loaded` (bias trace). Samples

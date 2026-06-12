@@ -62,6 +62,53 @@ def _swh_get(url: str) -> bytes:
         return r.read()
 
 
+def forge_file_urls(origin: str | None, anchor: str | None,
+                    path: str | None) -> dict | None:
+    """Deep links to a file at a pinned commit on the origin forge.
+
+    Best-effort URL templating per forge family; returns
+    {forge, blob_url, raw_url} or None when the forge is unknown (the SWH
+    link still works in that case — it is the canonical citation anyway).
+    """
+    if not origin or not anchor or not path:
+        return None
+    base = origin.rstrip("/")
+    if base.endswith(".git"):
+        base = base[:-4]
+    p = urllib.parse.quote(path.lstrip("/"))
+    host = urllib.parse.urlparse(base).netloc.lower()
+    if host == "github.com":
+        repo = base.split("github.com/", 1)[1]
+        return {"forge": "github",
+                "blob_url": f"{base}/blob/{anchor}/{p}",
+                "raw_url": f"https://raw.githubusercontent.com/{repo}/{anchor}/{p}"}
+    if "gitlab" in host:  # gitlab.com + self-hosted (gitlab.freedesktop.org, …)
+        return {"forge": "gitlab",
+                "blob_url": f"{base}/-/blob/{anchor}/{p}",
+                "raw_url": f"{base}/-/raw/{anchor}/{p}"}
+    if host == "bitbucket.org":
+        return {"forge": "bitbucket",
+                "blob_url": f"{base}/src/{anchor}/{p}",
+                "raw_url": f"{base}/raw/{anchor}/{p}"}
+    if host in ("codeberg.org", "gitea.com"):
+        return {"forge": host.split(".")[0],
+                "blob_url": f"{base}/src/commit/{anchor}/{p}",
+                "raw_url": f"{base}/raw/commit/{anchor}/{p}"}
+    return None
+
+
+def swh_qualified_url(cnt_sha: str, origin: str | None, anchor: str | None,
+                      path: str | None) -> str:
+    q = f"swh:1:cnt:{cnt_sha}"
+    if origin:
+        q += f";origin={origin}"
+    if anchor:
+        q += f";anchor=swh:1:rev:{anchor}"
+    if path:
+        q += f";path={path}"
+    return f"{SWH_BASE}/{q}/"
+
+
 # ---------------------------------------------------------------------------
 # App state (taxonomy + samples loaded once; reviews re-read per request)
 # ---------------------------------------------------------------------------
@@ -100,13 +147,20 @@ class App:
         every directory along the sample's path (monorepo root READMEs are
         often uninformative; the nearest one usually is). Cached on disk."""
         cached = self.ctx_cache["context"].get(sha)
-        if cached is not None:
+        if cached is not None and "sample_urls" in cached:  # old-format → refetch
             return cached
         q = self.samples[sha].get("qualified_swhid") or ""
         origin = (m.group(1) if (m := _QUAL_ORIGIN.search(q)) else None)
         anchor = (m.group(1) if (m := _QUAL_ANCHOR.search(q)) else None)
         path = (m.group(1) if (m := _QUAL_PATH.search(q)) else None)
-        result = {"origin": origin, "anchor": anchor, "files": [], "note": None}
+        result = {
+            "origin": origin, "anchor": anchor, "files": [], "note": None,
+            # full deep links for the sample file itself
+            "sample_urls": {
+                "swh": swh_qualified_url(sha, origin, anchor, path),
+                "forge": forge_file_urls(origin, anchor, path),
+            },
+        }
         if not anchor:
             result["note"] = ("no anchor revision in this sample's provenance "
                               "— the repo tree cannot be resolved")
@@ -122,12 +176,16 @@ class App:
                     data = json.loads(_swh_get(url))
                     for e in data.get("content", []):
                         if e.get("type") == "file" and _CTX_NAME.match(e.get("name", "")):
+                            fpath = "/" + (f"{d}/" if d else "") + e["name"]
+                            forge = forge_file_urls(origin, anchor, fpath)
                             result["files"].append({
                                 "dir": "/" + d if d else "/",
                                 "name": e["name"],
                                 "sha1_git": e.get("target"),
                                 "length": e.get("length"),
-                                "browser_url": f"{SWH_BASE}/swh:1:cnt:{e.get('target')}/",
+                                "browser_url": swh_qualified_url(
+                                    e.get("target"), origin, anchor, fpath),
+                                "forge_url": forge["blob_url"] if forge else None,
                             })
             except urllib.error.HTTPError as ex:
                 result["note"] = (f"SWH API error: HTTP {ex.code}"
@@ -853,13 +911,23 @@ async function loadContext() {
   if (r.error) { $('ctxbody').textContent = '✗ ' + r.error; return; }
   state.ctxLoaded = true;
   let html = '';
-  if (r.origin) html += `<div>origin: <a href="${esc(r.origin)}" target="_blank" rel="noopener">${esc(r.origin)}</a></div>`;
+  if (r.origin) html += `<div>origin: <a href="${esc(r.origin)}" target="_blank" rel="noopener">${esc(r.origin)}</a>` +
+    (r.anchor ? ` <span class="muted">@</span> <code>${esc(r.anchor.slice(0, 12))}</code>` : '') + `</div>`;
+  const su = r.sample_urls || {};
+  if (su.swh) {
+    const fg = su.forge;
+    html += `<div style="margin-top:2px">this file: ` +
+      (fg ? `<a href="${esc(fg.blob_url)}" target="_blank" rel="noopener">${esc(fg.forge)}</a> · ` +
+            `<a href="${esc(fg.raw_url)}" target="_blank" rel="noopener">raw</a> · ` : '') +
+      `<a href="${esc(su.swh)}" target="_blank" rel="noopener">SWH (qualified)</a></div>`;
+  }
   if (r.note) html += `<div class="muted">${esc(r.note)}</div>`;
   if (r.files.length) {
     html += r.files.map((f, i) =>
       `<div style="margin-top:3px"><code class="muted">${esc(f.dir)}</code> ` +
       `<a href="${esc(f.browser_url)}" target="_blank" rel="noopener">${esc(f.name)}</a> ` +
       `<span class="muted">${f.length} B</span> ` +
+      (f.forge_url ? `<a href="${esc(f.forge_url)}" target="_blank" rel="noopener" style="font-size:11px">origin↗</a> ` : '') +
       `<button class="ctxprev" data-sha="${esc(f.sha1_git)}" data-pre="ctxpre-${i}" ` +
       `style="font-size:11px; padding:0 6px">preview</button>` +
       `<pre id="ctxpre-${i}" style="display:none; max-height:280px; margin-top:4px"></pre></div>`).join('');

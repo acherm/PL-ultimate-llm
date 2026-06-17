@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6a6cbe0dd64e8d4466f4e71a6dfa985bf1237203",
+    "sha1_git": "6a6cbe0dd64e8d4466f4e71a6dfa985bf1237203",
+    "filename": "/ORCR0030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1127464,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6a6cbe0dd64e8d4466f4e71a6dfa985bf1237203/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6a6cbe0dd64e8d4466f4e71a6dfa985bf1237203/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1127464,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 23418,
+    "blank_lines": 0,
+    "comment_lines": 3611,
+    "code_lines": 19807,
+    "comment_ratio": 0.154,
+    "max_line_length": 80,
+    "avg_line_length": 47.1,
+    "long_lines_over_72": 155,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 53,
+    "call_count": 55,
+    "perform_count": 822,
+    "goto_count": 11,
+    "pic_count": 946,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely GnuCOBOL/OpenCOBOL given JMA ORCA open-source context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCR0030",
+          "ENVIRONMENT DIVISION, DATA DIVISION, PROCEDURE DIVISION all present",
+          "fixed-format source (max line 80, long_lines_over_72 only 155)",
+          "946 PIC clauses, 822 PERFORM, 55 CALL statements",
+          "no EXEC SQL / EXEC CICS — batch-style COBOL",
+          "JMA ORCA open-source medical receipt software — typically compiled with GnuCOBOL/OpenCOBOL on Linux"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt (claim) software. It performs point-score aggregation and editing for medical treatment categories (診療区分別点数集計), building and editing receipt (レセプト) data including insurance combinations, co-payment amounts, prescription fees, and various medical procedure classifications. It is a large batch processing component that computes and formats receipt claim records for submission.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Very large program: 23,418 lines, ~1.1 MB",
+        "Extensive Japanese comments (Shift-JIS / latin-1 decoded) describing revision history spanning 2000–2006",
+        "No EXEC SQL or EXEC CICS — pure COBOL batch logic",
+        "No COMP-3 usage despite heavy numeric processing (unusual)",
+        "55 CALL statements indicating modular design with many subprogram calls",
+        "822 PERFORM statements reflecting complex procedural logic",
+        "11 GOTO statements (minimal, mostly for error/exit branching)",
+        "Open-source JMA ORCA project (Japan Medical Association standard receipt software)",
+        "Detailed multi-year revision history in comments (2000–2006)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Shift-JIS encoded Japanese text (visible as mojibake in the truncated header). The program is clearly genuine production COBOL from the well-known open-source JMA ORCA medical billing system. The absence of COMP-3 is notable for a numeric-heavy billing program but may reflect the specific COBOL runtime (GnuCOBOL) or coding conventions used by this project. The 1.1 MB size and 23,418 lines make this one of the larger single COBOL source files."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15012,
+      "completion_tokens": 751,
+      "total_tokens": 15763,
+      "cost": 0.056301,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.056301,
+        "upstream_inference_prompt_cost": 0.045036,
+        "upstream_inference_completions_cost": 0.011265
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.66,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

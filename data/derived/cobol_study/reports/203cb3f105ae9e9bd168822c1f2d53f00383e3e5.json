@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:203cb3f105ae9e9bd168822c1f2d53f00383e3e5",
+    "sha1_git": "203cb3f105ae9e9bd168822c1f2d53f00383e3e5",
+    "filename": "/ORCSC40200204.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 67294,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:203cb3f105ae9e9bd168822c1f2d53f00383e3e5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:203cb3f105ae9e9bd168822c1f2d53f00383e3e5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 67294,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1615,
+    "blank_lines": 0,
+    "comment_lines": 505,
+    "code_lines": 1110,
+    "comment_ratio": 0.313,
+    "max_line_length": 74,
+    "avg_line_length": 40.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC40200204"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 11,
+    "perform_count": 69,
+    "goto_count": 19,
+    "pic_count": 67,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely NEC/Fujitsu mainframe or GnuCOBOL for Linux, given JMA ORCA project context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE/END-EVALUATE constructs",
+          "PERFORM VARYING ... UNTIL with inline END-PERFORM",
+          "SEARCH ... VARYING ... AT END ... WHEN",
+          "OCCURS ... INDEXED BY",
+          "INITIALIZE statement",
+          "COPY statements with REPLACING",
+          "EXIT PROGRAM",
+          "LINKAGE SECTION with USING clause",
+          "Fixed-format source (columns 7-72)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software. It performs checking, editing, and automatic calculation (santei) for medical treatment act (shinsatsu koi) entries, including handling of oxygen therapy codes, disaster/injury insurance (rousai) additions, and extinction/cauterization treatment processing. It is invoked with a mode flag (KBN) to perform per-item checks, whole-record checks, or fully automatic calculation.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS (pure batch/subprogram logic)",
+        "Heavy use of COPY statements for shared record layouts (CPK02SPASCR.INC, CPTENSU.INC, CPSANTEI.INC, CPORCSC90/91/92.INC, MCPDATA.INC, etc.)",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, ORCSC00AREA, WRK-SCR-REC, SPA-AREA)",
+        "SEARCH with SET and INDEXED BY for table lookup (oxygen code table, treatment table)",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
+        "OCCURS with INDEXED for treatment disposition table (TBL-SYOCHI-AREA)",
+        "No COMP-3 usage despite numeric computation",
+        "19 GO TO statements alongside structured PERFORM loops",
+        "11 CALL statements to external subprograms",
+        "Program ID matches filename: ORCSC40200204"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but contains Japanese text encoded in EUC-JP or Shift-JIS, causing the comment lines to appear as mojibake. The program is clearly part of the open-source JMA ORCA medical receipt system (copyright 2002, Japan Medical Association). The source is truncated at 16000 chars out of 67294 bytes total; the full program contains 1615 lines. The fixed-format layout, division structure, and COBOL syntax are unambiguous."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7961,
+      "completion_tokens": 800,
+      "total_tokens": 8761,
+      "cost": 0.035883,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035883,
+        "upstream_inference_prompt_cost": 0.023883,
+        "upstream_inference_completions_cost": 0.012
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 21.86,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

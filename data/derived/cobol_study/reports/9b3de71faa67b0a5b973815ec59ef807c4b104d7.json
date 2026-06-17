@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9b3de71faa67b0a5b973815ec59ef807c4b104d7",
+    "sha1_git": "9b3de71faa67b0a5b973815ec59ef807c4b104d7",
+    "filename": "/lgapdb01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 25535,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9b3de71faa67b0a5b973815ec59ef807c4b104d7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9b3de71faa67b0a5b973815ec59ef807c4b104d7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 25535,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 647,
+    "blank_lines": 83,
+    "comment_lines": 118,
+    "code_lines": 446,
+    "comment_ratio": 0.209,
+    "max_line_length": 72,
+    "avg_line_length": 38.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LGAPDB01"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 57,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC SQL ... END-EXEC (DB2 embedded SQL)",
+          "EXEC CICS ... END-EXEC (CICS commands: ABEND, RETURN, Link)",
+          "PROCESS SQL compiler directive at top",
+          "IDENTITY_VAL_LOCAL() DB2 function",
+          "EIBCALEN, EIBTRNID, EIBTRMID, EIBTASKN (CICS EIB fields)",
+          "DFHCOMMAREA linkage section",
+          "INCLUDE SQLCA, INCLUDE LGPOLICY, INCLUDE LGCMAREA",
+          "USAGE IS POINTER",
+          "S9(4) COMP / S9(9) COMP integer types"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "LGAPDB01 is a CICS-hosted subprogram that adds (inserts) a new insurance policy record to a DB2 database. It handles multiple policy types (Endowment, House, Motor, Commercial, Claim) by inserting rows into the POLICY table and the appropriate type-specific table, then links to LGAPVS01 for further processing.",
+        "domain": "insurance",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2) embedded SQL with INSERT, SELECT, SET IDENTITY_VAL_LOCAL()",
+        "EXEC CICS commands (ABEND, RETURN, Link)",
+        "PROCESS SQL compiler directive",
+        "INCLUDE of SQLCA, LGPOLICY, LGCMAREA copybooks via EXEC SQL INCLUDE",
+        "Varying-length VARCHAR field handling (WS-VARY-FIELD with 49-level items)",
+        "CICS EIB field usage (EIBCALEN, EIBTRNID, EIBTRMID, EIBTASKN)",
+        "EVALUATE on CA-REQUEST-ID to dispatch policy type",
+        "CICS LINK to LGAPVS01 subprogram",
+        "Error message writing via WRITE-ERROR-MESSAGE paragraph"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (out of 25535 bytes / 647 lines), so INSERT-ENDOW and subsequent paragraphs (INSERT-HOUSE, INSERT-MOTOR, INSERT-COMMERCIAL, INSERT-CLAIM, WRITE-ERROR-MESSAGE) are not fully visible. IBM copyright 2011-2021 confirms this is from the IBM CICS sample application (GENAPP). All structural indicators are consistent with production IBM Enterprise COBOL for z/OS."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5231,
+      "completion_tokens": 741,
+      "total_tokens": 5972,
+      "cost": 0.026808,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026808,
+        "upstream_inference_prompt_cost": 0.015693,
+        "upstream_inference_completions_cost": 0.011115
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.27,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

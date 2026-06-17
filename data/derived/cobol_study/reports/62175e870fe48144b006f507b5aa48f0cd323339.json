@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:62175e870fe48144b006f507b5aa48f0cd323339",
+    "sha1_git": "62175e870fe48144b006f507b5aa48f0cd323339",
+    "filename": "/NOconvert_brad+rma.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 49171,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:62175e870fe48144b006f507b5aa48f0cd323339/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:62175e870fe48144b006f507b5aa48f0cd323339/raw/"
+  },
+  "indicators": {
+    "bytes_len": 49171,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1677,
+    "blank_lines": 278,
+    "comment_lines": 268,
+    "code_lines": 1131,
+    "comment_ratio": 0.192,
+    "max_line_length": 84,
+    "avg_line_length": 28.3,
+    "long_lines_over_72": 51,
+    "source_format_guess": "unknown",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "cpirma5"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 0,
+    "perform_count": 34,
+    "goto_count": 19,
+    "pic_count": 266,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely running on Unix/Linux, given socket program context and .slr copybook extensions)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "78 level constants (VALUE clauses on 78 items)",
+          "88-level condition names throughout",
+          "COPY statements with quoted filenames (.slr extension)",
+          "PIC 9(4) COMP for binary status field",
+          "date-written/date-compiled in identification division",
+          "select ... assign to printer with file-status",
+          "no EXEC SQL or EXEC CICS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A batch COBOL program (cpirma5) for a Regional Medical Associates system that processes patient master records, supporting lookup, add, and update operations on patient demographic data including health numbers, chart numbers, birth dates, and version codes. It is called from a C socket program (cpi5.c) and writes audit and error reports.",
+        "domain": "healthcare/medical records",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "78-level constants used for buffer sizes and error codes",
+        "Multiple COPY statements referencing external .slr and .ws copybooks (none expanded in this excerpt)",
+        "Called from a C socket program (cpi5.c) — inter-language integration",
+        "Province lookup table with old/new province code mapping",
+        "MRN dummy-key detection logic (ikey-based MRN suppression)",
+        "Multiple audit/error report files (cpirma5_a/b/c/e.log)",
+        "Redefines used for binary status field (COMP)",
+        "Detailed modification history spanning 2002–2003",
+        "No EXEC SQL, no EXEC CICS, no COMP-3"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 characters; the PROCEDURE DIVISION is not visible in this excerpt. The .slr copybook extension and socket-program integration suggest a Micro Focus or similar Unix-targeted COBOL environment. The 78-level items are a COBOL-85 feature. The program appears to be a real production system for a Canadian medical practice (province codes include ON, QC, BC, etc.)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7460,
+      "completion_tokens": 631,
+      "total_tokens": 8091,
+      "cost": 0.031845,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031845,
+        "upstream_inference_prompt_cost": 0.02238,
+        "upstream_inference_completions_cost": 0.009465
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.46,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

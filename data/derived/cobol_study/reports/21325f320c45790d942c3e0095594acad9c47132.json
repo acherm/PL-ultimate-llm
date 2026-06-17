@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:21325f320c45790d942c3e0095594acad9c47132",
+    "sha1_git": "21325f320c45790d942c3e0095594acad9c47132",
+    "filename": "/ORCR1010.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 283791,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:21325f320c45790d942c3e0095594acad9c47132/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:21325f320c45790d942c3e0095594acad9c47132/raw/"
+  },
+  "indicators": {
+    "bytes_len": 283791,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5697,
+    "blank_lines": 0,
+    "comment_lines": 1219,
+    "code_lines": 4478,
+    "comment_ratio": 0.214,
+    "max_line_length": 80,
+    "avg_line_length": 48.8,
+    "long_lines_over_72": 78,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR1010"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 7,
+    "perform_count": 199,
+    "goto_count": 2,
+    "pic_count": 480,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or similar open-source COBOL, likely targeting a Linux/Unix environment given the JMA ORCA project context",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS clauses",
+          "COPY with REPLACING using // delimiters (common in GnuCOBOL/OpenCOBOL)",
+          "Fixed-format source with 80-column lines",
+          "No EXEC SQL or EXEC CICS",
+          "PROGRAM-ID ORCR1010 matches JMA ORCA open-source medical receipt software project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA open-source medical receipt software system. It processes public medical insurance receipt data (specifically for outpatient/inpatient claims), performing point/score aggregation by diagnosis category. It reads and writes indexed ISAM files (RECE100, RECE120, RECE130) and produces error output.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY statements with REPLACING using // delimiter syntax (GnuCOBOL style)",
+        "Multiple indexed ISAM files with DYNAMIC access mode",
+        "Extensive Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1 producing mojibake)",
+        "Large working-storage section with many flag and counter areas (PIC 9(01) flags)",
+        "No COMP-3 packed decimal usage despite financial calculations",
+        "No EXEC SQL or EXEC CICS",
+        "7 CALL statements, 199 PERFORM statements indicating modular structure",
+        "Error file (RECEERR-FILE) for sequential error output",
+        "Version history spanning 2007-2015 with many revisions for Japanese health insurance reform compliance"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains extensive Japanese text in comments that has been decoded as latin-1, producing mojibake (garbled characters). The actual encoding is likely EUC-JP or Shift-JIS. The COPY statements reference external copybooks (.INC files) that are not included in this file. The program is clearly part of the well-known JMA ORCA open-source medical receipt software project used in Japanese medical practices. The absence of COMP-3 is somewhat unusual for financial/billing software but may reflect a deliberate style choice or platform constraint."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10107,
+      "completion_tokens": 746,
+      "total_tokens": 10853,
+      "cost": 0.041511,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.041511,
+        "upstream_inference_prompt_cost": 0.030321,
+        "upstream_inference_completions_cost": 0.01119
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.23,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

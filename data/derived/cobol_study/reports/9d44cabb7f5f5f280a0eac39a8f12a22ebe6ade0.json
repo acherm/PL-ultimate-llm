@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9d44cabb7f5f5f280a0eac39a8f12a22ebe6ade0",
+    "sha1_git": "9d44cabb7f5f5f280a0eac39a8f12a22ebe6ade0",
+    "filename": "/ORCBM028.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 71187,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9d44cabb7f5f5f280a0eac39a8f12a22ebe6ade0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9d44cabb7f5f5f280a0eac39a8f12a22ebe6ade0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 71187,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1538,
+    "blank_lines": 0,
+    "comment_lines": 408,
+    "code_lines": 1130,
+    "comment_ratio": 0.265,
+    "max_line_length": 86,
+    "avg_line_length": 45.3,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBM028"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 24,
+    "call_count": 6,
+    "perform_count": 65,
+    "goto_count": 0,
+    "pic_count": 97,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCBM028",
+          "COPY statements with REPLACING using // delimiters",
+          "PROCEDURE DIVISION USING multiple parameters",
+          "OCCURS clauses, REDEFINES, PIC X/9 definitions",
+          "EXIT PROGRAM",
+          "INITIALIZE statements",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "Japanese text in comments (JMA - Japan Medical Association ORCA project)",
+          "grpsys prefix on lines (GnuCOBOL/OpenCOBOL group-level indicator)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical billing. It generates monthly summary/aggregate reports (社保・総括表) for medical insurance claims, handling both outpatient and inpatient cases (HCM2I/HCM2J/HCM2S/HCM2T data). It processes insurance number data, prints formatted reports with counts, days, points, and meal/food therapy costs broken down by insurance category.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments and program documentation (Shift-JIS/EUC-JP encoded, displayed as latin-1 mojibake)",
+        "COPY statements with // delimiter REPLACING (OpenCOBOL/GnuCOBOL style)",
+        "LINKAGE SECTION with complex OCCURS tables for insurance summary data",
+        "Multiple COPY includes for modular record layouts (CPJOBKANRI, CPHKNNUM, CPSYSKANRI, etc.)",
+        "grpsys-prefixed lines suggesting group/system-level COPY or special preprocessor directives",
+        "No EXEC SQL or EXEC CICS (DB access via CALL subprograms)",
+        "6 CALL statements for subprogram-based DB access and utilities",
+        "OCCURS up to 100 for insurance category tables",
+        "Version history spanning 2003-2007 with multiple revisions"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS), causing mojibake in comments. The 'grpsys' prefix on two lines appears to be a special preprocessor or group-system marker used in the ORCA build system. Commented-out COPY lines (with *****) show version evolution of included record layouts. The program is clearly production medical billing software from the Japanese JMA ORCA open-source project."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8216,
+      "completion_tokens": 769,
+      "total_tokens": 8985,
+      "cost": 0.036183,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036183,
+        "upstream_inference_prompt_cost": 0.024648,
+        "upstream_inference_completions_cost": 0.011535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.1,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

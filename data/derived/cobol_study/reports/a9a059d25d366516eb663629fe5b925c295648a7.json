@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a9a059d25d366516eb663629fe5b925c295648a7",
+    "sha1_git": "a9a059d25d366516eb663629fe5b925c295648a7",
+    "filename": "/ORCGK02NYU.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 553059,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a9a059d25d366516eb663629fe5b925c295648a7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a9a059d25d366516eb663629fe5b925c295648a7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 553059,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 13007,
+    "blank_lines": 0,
+    "comment_lines": 3735,
+    "code_lines": 9272,
+    "comment_ratio": 0.287,
+    "max_line_length": 74,
+    "avg_line_length": 41.5,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGK02NYU"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 81,
+    "call_count": 129,
+    "perform_count": 653,
+    "goto_count": 173,
+    "pic_count": 385,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN FILE-NAME1 ORGANIZATION IS LINE SEQUENTIAL FILE STATUS IS",
+          "PIC X(n), PIC 9(n) declarations throughout",
+          "COPY statements referencing .INC files (ENUM-VALUE, CPK02SPASCR.INC, COMMON-SPA, K01COMMON-SPA, K02SCR-SPA)",
+          "FILE-CONTROL with SELECT/ASSIGN pattern typical of GnuCOBOL/OpenCOBOL on Linux (/var/tmp/ paths)",
+          "No EXEC SQL, no EXEC CICS, no COMP-3",
+          "JMA ORCA open-source medical software project, known to use GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard receipt (medical billing) software system. It handles hospital admission (nyuuin) act input processing — specifically the entry and management of inpatient medical procedures and billing data. It interacts with SPA (screen parameter area) files and parameter files stored in /var/tmp/.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC-JP encoded comments (latin-1 decoded, hence garbled display)",
+        "Large SPA (Screen Parameter Area) file I/O pattern typical of ORCA subsystems",
+        "LINE SEQUENTIAL file organization for both parameter and SPA data files",
+        "Very large record sizes (PIC X(60000), PIC X(30000)) for inter-program data passing",
+        "Extensive COPY statements for shared data structures",
+        "No EXEC SQL or EXEC CICS — file-based IPC instead",
+        "129 CALL statements indicating heavy subprogram delegation",
+        "653 PERFORM statements and 173 GOTO statements — complex procedural logic",
+        "Files stored under /var/tmp/ with terminal-ID suffixes (multi-user support)",
+        "Revision history spanning 2002–2004 with named developer (NACL)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in EUC-JP (Japanese) but was decoded as latin-1, causing the Japanese comments to appear as garbled latin-1 sequences. The program is clearly part of the well-known open-source JMA ORCA medical billing system for Japan. The large file size (553 KB, 13007 lines) and extensive flag/index/working-storage areas confirm a mature, production-grade application. The COPY statements reference copybooks that are not included in this file."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8571,
+      "completion_tokens": 792,
+      "total_tokens": 9363,
+      "cost": 0.037593,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037593,
+        "upstream_inference_prompt_cost": 0.025713,
+        "upstream_inference_completions_cost": 0.01188
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.09,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

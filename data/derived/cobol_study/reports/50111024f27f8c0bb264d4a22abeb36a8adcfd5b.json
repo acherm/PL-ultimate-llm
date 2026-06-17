@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:50111024f27f8c0bb264d4a22abeb36a8adcfd5b",
+    "sha1_git": "50111024f27f8c0bb264d4a22abeb36a8adcfd5b",
+    "filename": "/susesqf02b.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14458,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:50111024f27f8c0bb264d4a22abeb36a8adcfd5b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:50111024f27f8c0bb264d4a22abeb36a8adcfd5b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14458,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 351,
+    "blank_lines": 8,
+    "comment_lines": 92,
+    "code_lines": 251,
+    "comment_ratio": 0.268,
+    "max_line_length": 116,
+    "avg_line_length": 39.2,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "susesqf02b"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 46,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "cobc -x compiler invocation in comments with GnuCOBOL flags (-fbinary-size, -fnotrunc, -fbinary-byteorder)",
+          "function all intrinsic in REPOSITORY",
+          "GOBACK used as main program terminator",
+          "END-READ, END-IF, END-RETURN inline terminators (COBOL-85 style)",
+          "COMP-1, COMP-2, COMP-3 usage",
+          "SORT verb with INPUT PROCEDURE / OUTPUT PROCEDURE",
+          "ACCEPT ... FROM ENVIRONMENT"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A batch COBOL sort program that reads sequential input records, sorts them on an ascending character key field, and writes summarised/aggregated output records by summing numeric fields within each key group. It validates required environment variables (dd_infile, dd_outfile, dd_sortwork) before processing.",
+        "domain": "utility",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
+        "SD (sort description) file section entry",
+        "COMP-1 (single-precision float) and COMP-2 (double-precision float) fields",
+        "COMP-3 (packed decimal) fields",
+        "REDEFINES clauses on sort record fields",
+        "ACCEPT ... FROM ENVIRONMENT for environment variable validation",
+        "COPY directive referencing wktotsum01 copybook",
+        "Inline debug display statements commented out with 'test00**' prefix",
+        "FUNCTION ALL INTRINSIC in REPOSITORY",
+        "Multiple sign representations: LEADING, TRAILING SEPARATE, LEADING SEPARATE"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file references a COPY statement for 'wktotsum01' copybook (not shown) which defines Tot-* fields used throughout. Debug lines are conditionally commented with 'test00**' prefix rather than a standard debug mechanism. The program is authored by Sauro Menna (2016) under LGPL 3.0. The 'test00**' prefix lines are treated as comments by the fixed-format COBOL compiler since they start in column 7 with non-standard indicator characters."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4665,
+      "completion_tokens": 653,
+      "total_tokens": 5318,
+      "cost": 0.02379,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02379,
+        "upstream_inference_prompt_cost": 0.013995,
+        "upstream_inference_completions_cost": 0.009795
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.91,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c6746cb969a19c78f82fa4ecff8f2e3c495e527e",
+    "sha1_git": "c6746cb969a19c78f82fa4ecff8f2e3c495e527e",
+    "filename": "/ORCR0480.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 140853,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c6746cb969a19c78f82fa4ecff8f2e3c495e527e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c6746cb969a19c78f82fa4ecff8f2e3c495e527e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 140853,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3290,
+    "blank_lines": 2,
+    "comment_lines": 854,
+    "code_lines": 2434,
+    "comment_ratio": 0.26,
+    "max_line_length": 116,
+    "avg_line_length": 41.8,
+    "long_lines_over_72": 20,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0480"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 35,
+    "call_count": 6,
+    "perform_count": 223,
+    "goto_count": 16,
+    "pic_count": 172,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or similar open-source COBOL (ORCA/JMA medical system)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS SEQUENTIAL / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING using // delimiters",
+          "OCCURS clause, REDEFINES, PIC X/9 data items",
+          "Fixed-format source layout with comment lines in column 7 (*)",
+          "No EXEC SQL or EXEC CICS — batch file-based processing"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ORCR0480 is a batch COBOL program that generates detailed receipt (claim) files for the ORCA JMA standard medical receipt software system, specifically handling long-term/short-term care and self-pay receipts. It reads indexed patient and claim data files (RECE41, RECE43, RECE47, RECE471), processes and edits the data (including disease names, treatment periods, and billing amounts), and writes output receipt detail files along with error and date files.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
+        "Multiple COPY statements with REPLACING using // delimiter syntax",
+        "Indexed sequential file I/O (ISAM) for multiple claim-related files",
+        "No EXEC SQL or EXEC CICS — purely file-based batch processing",
+        "OCCURS tables for hospital/system master data (TBL-SYS1001, TBL-SYS4001, etc.)",
+        "REDEFINES used for date and numeric field overlays",
+        "Open-source JMA ORCA medical receipt system (Copyright 2002 JMA)",
+        "Extensive revision history spanning 2000–2007 in comments",
+        "223 PERFORM statements indicating structured procedural decomposition",
+        "16 GOTO statements present"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine production COBOL from the open-source ORCA (JMA standard receipt software) project used in Japanese medical clinics. Japanese comments are encoded in EUC-JP or Shift-JIS but decoded as latin-1, producing mojibake. The COPY statements reference external copybooks (.INC files) that are not included in this excerpt. The program is large (3290 lines) and shows multiple years of maintenance history, consistent with production medical billing software."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9066,
+      "completion_tokens": 744,
+      "total_tokens": 9810,
+      "cost": 0.038358,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038358,
+        "upstream_inference_prompt_cost": 0.027198,
+        "upstream_inference_completions_cost": 0.01116
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.8,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

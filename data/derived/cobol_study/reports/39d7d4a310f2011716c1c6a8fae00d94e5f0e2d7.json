@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:39d7d4a310f2011716c1c6a8fae00d94e5f0e2d7",
+    "sha1_git": "39d7d4a310f2011716c1c6a8fae00d94e5f0e2d7",
+    "filename": "/ORCGJ022.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 19498,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:39d7d4a310f2011716c1c6a8fae00d94e5f0e2d7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:39d7d4a310f2011716c1c6a8fae00d94e5f0e2d7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 19498,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 556,
+    "blank_lines": 0,
+    "comment_lines": 233,
+    "code_lines": 323,
+    "comment_ratio": 0.419,
+    "max_line_length": 74,
+    "avg_line_length": 34.1,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGJ022"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 27,
+    "call_count": 5,
+    "perform_count": 26,
+    "goto_count": 4,
+    "pic_count": 21,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN syntax",
+          "END-EVALUATE, END-IF, END-PERFORM terminators",
+          "PROCEDURE DIVISION USING with multiple linkage areas",
+          "EXIT PROGRAM",
+          "CALL 'ORCSNUM', CALL 'ORCSDAY' subprogram calls",
+          "COPY directives for .INC and .SPA copybooks",
+          "Fixed-format source layout"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a screen-handling subprogram for the ORCA JMA (Japan Medical Association) standard medical receipt software. It handles input of visit/treatment frequency counts (day counts) on an accounting card screen (J022 window). It validates numeric input, stores day counts into SPA working storage, and navigates between screen fields and windows.",
+        "domain": "healthcare / medical billing (Japanese medical receipt processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Heavy use of COPY directives for screen and SPA area definitions (.INC, .SPA files)",
+        "Japanese Shift-JIS / EUC-JP encoded comments (rendered as mojibake in latin-1)",
+        "MCP (Message Control Program) event-driven screen handling pattern typical of ORCA",
+        "CALL to utility subprograms: ORCSNUM (numeric conversion), ORCSDAY (date conversion)",
+        "EVALUATE with ALSO for multi-condition dispatch",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "No EXEC SQL or EXEC CICS",
+        "GO TO used for early exit from input validation sections"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the open-source ORCA medical receipt system developed by JMA (Japan Medical Association). Comments are encoded in Japanese (EUC-JP or Shift-JIS), which appears as mojibake when decoded as latin-1. The program follows a well-established ORCA architectural pattern with MCP event handling, SPA (scratchpad area) management, and modular COPY-based screen definitions. The copy_count shown as 0 in mechanical indicators appears to be an undercount since the source clearly contains many COPY statements."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6532,
+      "completion_tokens": 674,
+      "total_tokens": 7206,
+      "cost": 0.029706,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029706,
+        "upstream_inference_prompt_cost": 0.019596,
+        "upstream_inference_completions_cost": 0.01011
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.12,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

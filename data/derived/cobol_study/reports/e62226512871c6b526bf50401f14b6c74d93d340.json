@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e62226512871c6b526bf50401f14b6c74d93d340",
+    "sha1_git": "e62226512871c6b526bf50401f14b6c74d93d340",
+    "filename": "/ORCDBAPIV3.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6273,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e62226512871c6b526bf50401f14b6c74d93d340/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e62226512871c6b526bf50401f14b6c74d93d340/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6273,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 170,
+    "blank_lines": 0,
+    "comment_lines": 84,
+    "code_lines": 86,
+    "comment_ratio": 0.494,
+    "max_line_length": 74,
+    "avg_line_length": 35.9,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCDBAPIV3"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 1,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE TRUE / WHEN / END-EVALUATE syntax",
+          "EXIT PROGRAM statement",
+          "INITIALIZE verb",
+          "COPY directives for MCPAREA, MCPDATA3.INC, COMMON-SPA",
+          "PROCEDURE DIVISION USING with multiple parameters",
+          "Fixed-format source with columns respected"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is an API parameter-access module (V3) for the ORCA JMA standard medical receipt software system. It acts as a subprogram that validates hospital number parameters, dispatches database/XML function calls via MCP (Message Control Program) infrastructure, and routes control to a MONFUNC call handler. It handles DB open/close/fetch/commit and XML open/close operations.",
+        "domain": "healthcare/medical billing (JMA ORCA receipt software)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-encoded comments (EUC-JP or Shift-JIS, decoded as latin-1 garbled)",
+        "COPY of MCPAREA, MCPDATA3.INC, COMMON-SPA linkage copybooks",
+        "EVALUATE TRUE with compound WHEN conditions",
+        "CALL to external 'MONFUNC' subprogram",
+        "MCP-VERSION and MCP-REDIRECT fields set before dispatch",
+        "Hospital number numeric validation logic",
+        "No EXEC SQL or EXEC CICS — pure COBOL API wrapper"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the open-source JMA ORCA medical receipt system, a well-known Japanese healthcare software project. Comments are in Japanese (likely EUC-JP) but were decoded as latin-1, resulting in garbled characters. The COPY statements reference copybooks not shown here (MCPAREA, MCPDATA3.INC, COMMON-SPA). Five lines exceed 72 characters, consistent with fixed-format COBOL that occasionally extends into columns 73+. The dialect is most likely GnuCOBOL given the open-source ORCA project context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2894,
+      "completion_tokens": 635,
+      "total_tokens": 3529,
+      "cost": 0.018207,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018207,
+        "upstream_inference_prompt_cost": 0.008682,
+        "upstream_inference_completions_cost": 0.009525
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.84,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

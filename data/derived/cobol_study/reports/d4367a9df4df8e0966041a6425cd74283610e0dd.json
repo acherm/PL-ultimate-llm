@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d4367a9df4df8e0966041a6425cd74283610e0dd",
+    "sha1_git": "d4367a9df4df8e0966041a6425cd74283610e0dd",
+    "filename": "/ORCHCM34.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 355451,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d4367a9df4df8e0966041a6425cd74283610e0dd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d4367a9df4df8e0966041a6425cd74283610e0dd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 355451,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 8472,
+    "blank_lines": 0,
+    "comment_lines": 2037,
+    "code_lines": 6435,
+    "comment_ratio": 0.24,
+    "max_line_length": 76,
+    "avg_line_length": 41.0,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCHCM34"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 64,
+    "call_count": 28,
+    "perform_count": 626,
+    "goto_count": 23,
+    "pic_count": 526,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS LINE SEQUENTIAL / INDEXED",
+          "COPY statements with REPLACING clauses",
+          "PIC clauses throughout WORKING-STORAGE",
+          "OCCURS clause usage",
+          "Fixed-format source, max line length 76",
+          "No EXEC SQL or EXEC CICS — batch file-based program",
+          "JMA ORCA open-source medical receipt software project, known to use GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard medical receipt software system. It processes medical accounting/billing card data (会計カード), reading indexed and sequential files of patient treatment records and producing printed output. It appears to handle inpatient/outpatient billing calculations, insurance combinations, and formatted report generation.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
+        "COPY statements referencing multiple .INC copybooks (CPSRYACCT.INC, CPSRYACT.INC, CPCOMMONPRT.INC, CPASGNPARA.INC, HCM341V01.INC, HCM342V01.INC, etc.)",
+        "ORGANIZATION IS INDEXED with DYNAMIC access mode",
+        "ORGANIZATION IS LINE SEQUENTIAL for flat file input",
+        "Large number of flag fields (FLG-AREA) and index fields (IDX-AREA) indicating complex processing logic",
+        "28 CALL statements and 626 PERFORM statements indicating modular, production-grade structure",
+        "No COMP-3 usage despite being a financial/billing program",
+        "Large file (355 KB, 8472 lines) consistent with production system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in garbled display of comments. The program is clearly part of the well-known open-source JMA ORCA medical receipt system used in Japanese clinics. The COPY count of 0 in mechanical indicators likely reflects that COPY statements reference external .INC files not counted by the tool, yet they are clearly present in the source. The program is a large, mature batch billing report generator."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7200,
+      "completion_tokens": 743,
+      "total_tokens": 7943,
+      "cost": 0.032745,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032745,
+        "upstream_inference_prompt_cost": 0.0216,
+        "upstream_inference_completions_cost": 0.011145
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.65,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

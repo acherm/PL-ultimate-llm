@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ff35a3a8284c4f0345045d9be0a8a315f34a459e",
+    "sha1_git": "ff35a3a8284c4f0345045d9be0a8a315f34a459e",
+    "filename": "/ORCGC04.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 90860,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ff35a3a8284c4f0345045d9be0a8a315f34a459e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ff35a3a8284c4f0345045d9be0a8a315f34a459e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 90860,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2122,
+    "blank_lines": 0,
+    "comment_lines": 495,
+    "code_lines": 1627,
+    "comment_ratio": 0.233,
+    "max_line_length": 89,
+    "avg_line_length": 41.8,
+    "long_lines_over_72": 11,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGC04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 11,
+    "perform_count": 146,
+    "goto_count": 30,
+    "pic_count": 41,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGC04",
+          "EVALUATE ... ALSO ... WHEN ... ALSO",
+          "END-EVALUATE, END-IF, END-PERFORM, END-STRING constructs",
+          "COPY directives with quoted filenames (e.g. COPY \"ENUM-VALUE\")",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "PERFORM VARYING ... FROM ... BY ... UNTIL",
+          "INITIALIZE verb used extensively",
+          "No EXEC SQL or EXEC CICS",
+          "MCP-STATUS / MCP-EVENT / MCP-PUTTYPE / MCP-WINDOW suggest ORCA/OpenCOBOL MCP framework"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical clinics. It implements a disease-name (Byomei) search and registration screen component (component C04), handling initialization, screen transitions, user input, and master-file lookups for disease codes. It is a subprogram called via the ORCA MCP (Message Control Program) framework.",
+        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "ORCA MCP framework (MCP-STATUS, MCP-EVENT, MCP-PUTTYPE, MCP-WINDOW, PERFORM 900-PUT-WINDOW)",
+        "Extensive use of COPY for screen areas (C02.INC through C11.INC, CERR.INC, CID*.INC)",
+        "Japanese EUC/Shift-JIS encoded comments (disease name registration system)",
+        "LINKAGE SECTION with multiple COPY-based areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "No EXEC SQL or EXEC CICS — DB access via PERFORM-based subprogram calls (900-BYOMEI-READ-SEC, 900-USBYO-INV-SEC)",
+        "EVALUATE ALSO construct for multi-condition dispatch",
+        "STRING ... DELIMITED BY SPACE ... INTO for building concatenated disease name strings",
+        "146 PERFORM statements and 30 GO TO statements indicating complex procedural flow",
+        "Open Source JMA license header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded with latin-1 but contains Japanese EUC or Shift-JIS encoded comment text, which appears garbled in the latin-1 rendering. This is normal for ORCA project source files. The program is clearly a production-grade subprogram within the well-known open-source Japanese medical receipt (レセプト) system ORCA, developed by JMA. The 'online-cics' program_type label is used loosely here — the program uses the ORCA MCP event-driven framework rather than CICS, but the interaction model (screen events, PUTG/CLICKED, window management) is analogous."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7295,
+      "completion_tokens": 857,
+      "total_tokens": 8152,
+      "cost": 0.03474,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03474,
+        "upstream_inference_prompt_cost": 0.021885,
+        "upstream_inference_completions_cost": 0.012855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.63,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

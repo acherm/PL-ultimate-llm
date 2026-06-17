@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cc77a61808b405c91c35a2258abba1125589cfa5",
+    "sha1_git": "cc77a61808b405c91c35a2258abba1125589cfa5",
+    "filename": "/ORCGU02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 359942,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cc77a61808b405c91c35a2258abba1125589cfa5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cc77a61808b405c91c35a2258abba1125589cfa5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 359942,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 8564,
+    "blank_lines": 0,
+    "comment_lines": 2491,
+    "code_lines": 6073,
+    "comment_ratio": 0.291,
+    "max_line_length": 86,
+    "avg_line_length": 41.0,
+    "long_lines_over_72": 11,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGU02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 65,
+    "call_count": 74,
+    "perform_count": 495,
+    "goto_count": 74,
+    "pic_count": 185,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "COPY directives for copybooks (ENUM-VALUE, COMMON-SPA, U02COMMON-SPA, CPMKPASS.INC)",
+          "PIC X / PIC 9 declarations consistent with COBOL-85",
+          "OCCURS clauses, REDEFINES, VALUE clauses",
+          "No EXEC SQL or EXEC CICS — pure COBOL",
+          "Project header identifies JMA ORCA open-source medical software, known to use GnuCOBOL/OpenCOBOL on Linux",
+          "File paths like /var/tmp/ and scripts/claim/HL01.sh indicate Linux/Unix environment"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is the reception/patient-registration screen component (U02) of the ORCA JMA standard medical receipt software system. It handles outpatient reception, patient lookup by number or name, insurance confirmation, appointment management, and transitions to related screens such as patient registration and prescription entry. It is a large batch/online program managing patient visit reception workflows.",
+        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS despite being an online screen program — uses CALL-based middleware (74 CALLs, 495 PERFORMs)",
+        "74 GOTO statements indicating older structured style",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
+        "COPY directives for shared SPA (Scratchpad Area) copybooks typical of ORCA architecture",
+        "OCCURS tables for insurance combinations, sort tables, and public expense (Kouhi) tables",
+        "REDEFINES usage for display formatting",
+        "Large program: 8564 lines, ~360KB",
+        "Extensive revision history in comments spanning 2000–2017",
+        "References to CLAIM/HL7 integration (HL01.sh script)",
+        "PUSH notification support added in version 05.00.00 (2017)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the comments are in Japanese (likely EUC-JP or UTF-8), causing garbled display of non-ASCII characters. This is a well-known production open-source medical system (JMA ORCA). The program_type is listed as online-cics as a proxy for 'online screen program' — it does not use CICS but uses a similar SPA-based screen management architecture proprietary to ORCA. Source is truncated at 16000 chars; the full file is 8564 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10259,
+      "completion_tokens": 801,
+      "total_tokens": 11060,
+      "cost": 0.042792,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.042792,
+        "upstream_inference_prompt_cost": 0.030777,
+        "upstream_inference_completions_cost": 0.012015
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.27,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

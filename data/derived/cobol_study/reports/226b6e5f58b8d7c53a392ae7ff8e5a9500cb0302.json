@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:226b6e5f58b8d7c53a392ae7ff8e5a9500cb0302",
+    "sha1_git": "226b6e5f58b8d7c53a392ae7ff8e5a9500cb0302",
+    "filename": "/email2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28650,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:226b6e5f58b8d7c53a392ae7ff8e5a9500cb0302/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:226b6e5f58b8d7c53a392ae7ff8e5a9500cb0302/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28650,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 724,
+    "blank_lines": 115,
+    "comment_lines": 88,
+    "code_lines": 521,
+    "comment_ratio": 0.144,
+    "max_line_length": 96,
+    "avg_line_length": 37.6,
+    "long_lines_over_72": 15,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EMAIL2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 10,
+    "perform_count": 18,
+    "goto_count": 21,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "ACUCOBOL-GT (AcuCOBOL / Micro Focus AcuCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "USAGE SIGNED-INT, USAGE UNSIGNED-INT, USAGE HANDLE, USAGE POINTER — ACUCOBOL-GT extensions",
+          "78-level constants (VALUE clauses on 78 items)",
+          "SET ENVIRONMENT ... TO — ACUCOBOL-GT runtime configuration verb",
+          "DISPLAY MESSAGE BOX ... TITLE ... ICON ... TYPE — ACUCOBOL-GT GUI extensions",
+          "H-ACU-WND SIGNED-INT IS EXTERNAL — ACUCOBOL-GT external variable syntax",
+          "CALL 'MAPI32.DLL' — Windows DLL call style used by ACUCOBOL-GT",
+          "SET CONFIGURATION directive syntax",
+          "COPY with .DEF and .LIB extensions typical of ACUCOBOL-GT projects",
+          "Italian comment: 'Questo programma deve essere compilato con le opzioni: -Dw32 -Dl4' — ACUCOBOL-GT compiler flags",
+          "ACCEPT ... FROM CENTURY-DATE — ACUCOBOL-GT intrinsic"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program sends an email via the Windows MAPI (Simple MAPI / MAPI32.DLL) interface. It logs on to a MAPI session, resolves the recipient, constructs a MapiMessage structure (subject, body, attachments, originator, recipient), sends the message, then logs off and shuts down. It is designed to be called as a subprogram from a larger ACUCOBOL-GT application.",
+        "domain": "utility",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Direct Windows MAPI32.DLL calls via ACUCOBOL-GT CALL mechanism",
+        "USAGE POINTER fields mirroring C structs (MapiMessage, MapiRecipDesc, MapiFileDesc)",
+        "78-level constants for MAPI error codes and flags",
+        "ACUCOBOL-GT GUI extensions: DISPLAY MESSAGE BOX with TITLE, ICON, TYPE",
+        "USAGE SIGNED-INT / UNSIGNED-INT / HANDLE — ACUCOBOL-GT native types",
+        "SET ENVIRONMENT 'DLL-CONVENTION' TO 1 — ACUCOBOL-GT DLL calling convention control",
+        "Inline C-struct comments (| char[...]; | ULONG etc.) documenting the MAPI layout",
+        "LINKAGE SECTION with COPY of external definition file (LK-EMAIL2.LIB)",
+        "Italian-language comments indicating Italian development team",
+        "OCCURS EmailMaxAttachCount for attachment array — symbolic constant from copybook"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (of 28650 bytes); the PROCEDURE DIVISION is only partially visible but enough is shown to confirm purpose and dialect. The pipe-delimited inline comments (| ULONG, | LPTSTR) are an unusual documentation convention mapping COBOL fields to their C-struct counterparts. The program is clearly production-quality ACUCOBOL-GT code targeting Win32 MAPI email sending."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5891,
+      "completion_tokens": 893,
+      "total_tokens": 6784,
+      "cost": 0.031068,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031068,
+        "upstream_inference_prompt_cost": 0.017673,
+        "upstream_inference_completions_cost": 0.013395
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 21.89,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

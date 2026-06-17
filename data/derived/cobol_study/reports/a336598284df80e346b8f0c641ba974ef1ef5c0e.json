@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a336598284df80e346b8f0c641ba974ef1ef5c0e",
+    "sha1_git": "a336598284df80e346b8f0c641ba974ef1ef5c0e",
+    "filename": "/CWXTDATE.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4989,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a336598284df80e346b8f0c641ba974ef1ef5c0e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a336598284df80e346b8f0c641ba974ef1ef5c0e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4989,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 111,
+    "blank_lines": 0,
+    "comment_lines": 12,
+    "code_lines": 99,
+    "comment_ratio": 0.108,
+    "max_line_length": 80,
+    "avg_line_length": 43.0,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CWXTDATE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 25,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (Compuware/Xpediter TSO training context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "GOBACK statement",
+          "PROCEDURE DIVISION USING with LINKAGE SECTION parameters",
+          "88-level condition name (CHECKED-FOR-EOM)",
+          "REDEFINES with OCCURS table",
+          "Fixed-format columns, sequence numbers visible in long lines (e.g. '11032000')",
+          "Compuware Corporation header comment referencing Xpediter/TSO"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A called subprogram (CWXTDATE) that performs two date-related calculations: (1) computing an employee's years of service by comparing hire date to run date, and (2) determining whether the run date is the last day of the month (end-of-month indicator), including leap-year handling for February. It is part of a Compuware Xpediter/TSO COBOL demo/training suite.",
+        "domain": "education/tutorial",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with four parameters passed via PROCEDURE DIVISION USING",
+        "REDEFINES clause on DATE-TABLE to create an OCCURS 12 TIMES table for month/day lookup",
+        "88-level condition name used as a switch (CHECKED-FOR-EOM)",
+        "GOBACK instead of STOP RUN (subprogram pattern)",
+        "Sequence numbers embedded in source lines (e.g. '11032000') indicating mainframe source management",
+        "Intentional bug in 3000-CALC-LEAP-YEAR: DIVIDE BY 0 (likely a training exercise to demonstrate debugging with Xpediter)",
+        "Compuware Corporation branding in comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The DIVIDE RUN-YY BY 0 in paragraph 3000-CALC-LEAP-YEAR is almost certainly an intentional bug inserted for Xpediter/TSO debugging training purposes (should be DIVIDE 4 INTO RUN-YY for leap-year check). The program is otherwise well-structured. Sequence numbers visible at columns 73-80 on some lines confirm mainframe fixed-format origin."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2321,
+      "completion_tokens": 644,
+      "total_tokens": 2965,
+      "cost": 0.016623,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016623,
+        "upstream_inference_prompt_cost": 0.006963,
+        "upstream_inference_completions_cost": 0.00966
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 13.72,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

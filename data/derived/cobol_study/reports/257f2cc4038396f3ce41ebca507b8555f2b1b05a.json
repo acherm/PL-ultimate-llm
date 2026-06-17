@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:257f2cc4038396f3ce41ebca507b8555f2b1b05a",
+    "sha1_git": "257f2cc4038396f3ce41ebca507b8555f2b1b05a",
+    "filename": "/DY3230.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10507,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:257f2cc4038396f3ce41ebca507b8555f2b1b05a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:257f2cc4038396f3ce41ebca507b8555f2b1b05a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10507,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 267,
+    "blank_lines": 37,
+    "comment_lines": 0,
+    "code_lines": 230,
+    "comment_ratio": 0.0,
+    "max_line_length": 68,
+    "avg_line_length": 37.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DY3230"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 4,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 48,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely running on DOS/Windows environment, possibly RM/COBOL or similar Brazilian PC COBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "SCREEN SECTION with LINE/COLUMN/BCK-CLR/FOR-CLR clauses",
+          "ACCEPT ... FROM ESCAPE KEY (Micro Focus / RM-COBOL screen handling)",
+          "ACCEPT ... FROM TIME",
+          "GOBACK statement",
+          "PROCEDURE DIVISION USING PRM-OPR (LINKAGE SECTION parameter)",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "DYNAMIC access mode on INDEXED files",
+          "DELETE FILE CADTMP (file deletion verb)",
+          "Extended screen attributes like BCK-CLR, FOR-CLR, AUTO"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program generates mailing-label reports ('Mala-Direta') for customers. It reads from an indexed customer master file (CADMDR) within a user-specified code range, formats address labels (name, address, city, state, ZIP), writes them to a temporary indexed file (CADTMP), and then calls a print routine (DYIMPR) to produce the report.",
+        "domain": "business/CRM (customer mailing/direct mail)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "SCREEN SECTION with extended color attributes (BCK-CLR, FOR-CLR) and box-drawing characters (IBM CP437/850 encoding)",
+        "ACCEPT ... FROM ESCAPE KEY for keyboard navigation",
+        "CALL to external routines: DYSPOL (security/splash), DYMSGM (messages), DYHELP (help), DYIMPR (print)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "Dynamic indexed file access with START/READ NEXT",
+        "DELETE FILE verb for temporary file cleanup",
+        "Latin-1 / CP850 encoded screen characters (Û, ß, Ü, É, º, etc.)",
+        "COPY statements for file record layouts (CADMDR.CPY, CADTMP.CPY)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file uses IBM CP850/CP437 box-drawing characters in screen definitions, typical of Brazilian PC-based COBOL applications from the 1990s. The program is part of a larger application suite (DY prefix naming convention). COPY files (CADMDR.CPY, CADTMP.CPY) are not included, so field-level details of the master and temp files are inferred from context. The 'online-cics' label is not accurate in the CICS sense — this is a screen-based interactive batch/online program using Micro Focus or similar screen I/O, not CICS."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4613,
+      "completion_tokens": 772,
+      "total_tokens": 5385,
+      "cost": 0.025419,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025419,
+        "upstream_inference_prompt_cost": 0.013839,
+        "upstream_inference_completions_cost": 0.01158
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.0,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

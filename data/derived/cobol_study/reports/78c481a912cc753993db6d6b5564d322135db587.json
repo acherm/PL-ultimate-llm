@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:78c481a912cc753993db6d6b5564d322135db587",
+    "sha1_git": "78c481a912cc753993db6d6b5564d322135db587",
+    "filename": "/ORCR0430.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 122200,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:78c481a912cc753993db6d6b5564d322135db587/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:78c481a912cc753993db6d6b5564d322135db587/raw/"
+  },
+  "indicators": {
+    "bytes_len": 122200,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2650,
+    "blank_lines": 0,
+    "comment_lines": 567,
+    "code_lines": 2083,
+    "comment_ratio": 0.214,
+    "max_line_length": 78,
+    "avg_line_length": 45.1,
+    "long_lines_over_72": 13,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0430"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 23,
+    "perform_count": 167,
+    "goto_count": 0,
+    "pic_count": 182,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or similar open-source COBOL compiler targeting Linux/Unix",
+        "standard": "COBOL-85",
+        "evidence": [
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC — standard COBOL-85 file control",
+          "COPY ... REPLACING //token// BY //token// — pseudo-text delimiters typical of GnuCOBOL/OpenCOBOL",
+          "REDEFINES used without COMP-3, consistent with open-source COBOL",
+          "JMA (Japan Medical Association) ORCA project — known to use GnuCOBOL on Linux",
+          "No EXEC SQL / EXEC CICS — not IBM mainframe dialect",
+          "ASSIGN to environment variable names (RECE41PARA etc.) — GnuCOBOL convention",
+          "Fixed-format source with comment lines in column 7 (*)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA ORCA medical receipt (claims) processing system. It creates monthly insurance claim detail files for rehabilitation/self-pay receipts, including comment editing functionality. It reads indexed receipt files (RECE41, RECE44, RECE45 and variants) and produces output detail files with error logging.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY ... REPLACING with //pseudo-text// delimiters (GnuCOBOL style)",
+        "Multiple indexed files with DYNAMIC and SEQUENTIAL access modes",
+        "REDEFINES used for array-style access to calendar/schedule data",
+        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, showing mojibake)",
+        "Large OCCURS tables for medical procedure and name information",
+        "No COMP-3 packed decimal usage despite numeric fields",
+        "23 CALL statements indicating modular subprogram architecture",
+        "167 PERFORM statements indicating structured procedural decomposition",
+        "Error file (RECEERR) for logging processing errors"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in mojibake in comments. The program is clearly part of the well-known open-source JMA ORCA medical receipt software project used in Japanese medical practices. The COPY statements reference external copybooks (.INC files) that are not included in this excerpt, so full data structure details are not visible. The truncation at 16000 chars means the PROCEDURE DIVISION is not shown, but all structural indicators confirm genuine production COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7855,
+      "completion_tokens": 744,
+      "total_tokens": 8599,
+      "cost": 0.034725,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034725,
+        "upstream_inference_prompt_cost": 0.023565,
+        "upstream_inference_completions_cost": 0.01116
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.69,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:559650b1439e47f60de9b2e35d6f30f6640a9f27",
+    "sha1_git": "559650b1439e47f60de9b2e35d6f30f6640a9f27",
+    "filename": "/ORCSPRTNM.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 27320,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:559650b1439e47f60de9b2e35d6f30f6640a9f27/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:559650b1439e47f60de9b2e35d6f30f6640a9f27/raw/"
+  },
+  "indicators": {
+    "bytes_len": 27320,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 684,
+    "blank_lines": 0,
+    "comment_lines": 208,
+    "code_lines": 476,
+    "comment_ratio": 0.304,
+    "max_line_length": 74,
+    "avg_line_length": 38.9,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSPRTNM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 12,
+    "call_count": 13,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 14,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA medical software)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCSPRTNM",
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "END-IF, END-STRING constructs",
+          "CALL 'coblog' USING (GnuCOBOL-style runtime call)",
+          "FUNCTION NUMVAL(...) intrinsic function",
+          "D prefix debug lines (D    DISPLAY ...)",
+          "EXIT PROGRAM",
+          "COPY directives with .INC files",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This subprogram retrieves the online receipt print program name and output destination printer name for the ORCA (JMA standard medical receipt) system. Given a classification code and inpatient/outpatient flag, it resolves the appropriate print program name (e.g., ORCHC01, ORCHCN01) either from system management master data or defaults. It is part of the Japan Medical Association open-source medical billing software.",
+        "domain": "healthcare / medical billing (Japanese medical receipt processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
+        "D-level debug DISPLAY lines (conditional debug output)",
+        "COPY directives for multiple .INC copybooks (CPSK1031, CPSK1032, CPSK1034, CPSK1035, CPORCSPRTNM, etc.)",
+        "CALL to 'coblog' for error logging (GnuCOBOL runtime convention)",
+        "CALL to 'ORCSORCAPG' and 'ORCSACCESS' internal subprograms",
+        "FUNCTION NUMVAL intrinsic function usage",
+        "STRING ... DELIMITED BY SIZE/SPACE ... INTO ... END-STRING",
+        "LINKAGE SECTION with three passed areas (parameter, SPA, SYSKANRI)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The source file is genuine COBOL from the ORCA (JMA standard receipt software) open-source project, a well-known Japanese medical billing system. Comments are in Japanese encoded in EUC-JP or Shift-JIS, which appear garbled when decoded as latin-1. The program is a subprogram (called via CALL/USING) that maps classification codes to print program names for both inpatient and outpatient contexts. The 'D' prefix on DISPLAY lines is a standard GnuCOBOL/OpenCOBOL debug-line convention. Source was truncated at 16000 chars but enough is visible to classify confidently."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7250,
+      "completion_tokens": 804,
+      "total_tokens": 8054,
+      "cost": 0.03381,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03381,
+        "upstream_inference_prompt_cost": 0.02175,
+        "upstream_inference_completions_cost": 0.01206
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.74,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

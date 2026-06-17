@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e54a2f5b10658691dd291add8925815d80a5a5ec",
+    "sha1_git": "e54a2f5b10658691dd291add8925815d80a5a5ec",
+    "filename": "/ORCSC40200203.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 33249,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e54a2f5b10658691dd291add8925815d80a5a5ec/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e54a2f5b10658691dd291add8925815d80a5a5ec/raw/"
+  },
+  "indicators": {
+    "bytes_len": 33249,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 824,
+    "blank_lines": 0,
+    "comment_lines": 318,
+    "code_lines": 506,
+    "comment_ratio": 0.386,
+    "max_line_length": 74,
+    "avg_line_length": 37.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC40200203"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 11,
+    "call_count": 4,
+    "perform_count": 35,
+    "goto_count": 3,
+    "pic_count": 41,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or OpenCOBOL (ORCA project, likely compiled with open-source COBOL runtime on Linux)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "PERFORM VARYING ... UNTIL ... END-PERFORM",
+          "IF ... END-IF",
+          "INITIALIZE statement",
+          "COPY with REPLACING",
+          "EXIT PROGRAM",
+          "PROCEDURE DIVISION USING with multiple parameters",
+          "Fixed-format source layout"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) medical billing system for Japan. It performs medical procedure (診療行為) checking and calculation for treatment acts (処置), including automatic addition of time-based surcharges, age-based surcharges, oxygen correction rates, and narcotic/biological preparation flags. It is a subprogram called with a mode flag (KBN) to perform per-item checks, whole-claim checks, or automatic calculation.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese comments and variable names (Shift-JIS/UTF-8 mixed with ASCII code)",
+        "COPY statements referencing multiple include files (CPK02SPASCR.INC, CPTENSU.INC, CPSANTEI.INC, CPORCSC90.INC, CPORCSC91.INC, CPORCSC92.INC, MCPDATA.INC, MCPAREA, CPORCSC00.INC, COMMON-SPA)",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, ORCSC00AREA, WRK-SCR-REC, SPA-AREA)",
+        "EVALUATE used for dispatch on LNK-ORCSC-KBN (mode 1/2/3)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Open Source medical billing software (JMA ORCA project, copyright 2002)",
+        "GO TO used sparingly (3 occurrences) for section exits",
+        "High comment ratio (38.6%) with structured section headers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly production COBOL from the JMA ORCA open-source medical receipt software project (Japan, circa 2002). The COPY statements reference many external copybooks that are not shown. The dialect is most likely GnuCOBOL or a compatible open-source COBOL compiler used in the ORCA project on Linux. The source is truncated at 16000 chars out of 33249 bytes, so the full PROCEDURE DIVISION is not visible, but enough is present to confirm purpose and structure."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6083,
+      "completion_tokens": 782,
+      "total_tokens": 6865,
+      "cost": 0.029979,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029979,
+        "upstream_inference_prompt_cost": 0.018249,
+        "upstream_inference_completions_cost": 0.01173
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.72,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

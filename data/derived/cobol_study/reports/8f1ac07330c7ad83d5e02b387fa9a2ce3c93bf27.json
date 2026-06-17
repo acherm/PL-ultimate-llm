@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8f1ac07330c7ad83d5e02b387fa9a2ce3c93bf27",
+    "sha1_git": "8f1ac07330c7ad83d5e02b387fa9a2ce3c93bf27",
+    "filename": "/P1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 34011,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8f1ac07330c7ad83d5e02b387fa9a2ce3c93bf27/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8f1ac07330c7ad83d5e02b387fa9a2ce3c93bf27/raw/"
+  },
+  "indicators": {
+    "bytes_len": 34011,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 829,
+    "blank_lines": 0,
+    "comment_lines": 438,
+    "code_lines": 391,
+    "comment_ratio": 0.528,
+    "max_line_length": 71,
+    "avg_line_length": 40.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ARIC461"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 5,
+    "call_count": 0,
+    "perform_count": 47,
+    "goto_count": 0,
+    "pic_count": 17,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS/z/OS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS present (has_exec_cics: true)",
+          "EIBCALEN, EIBAID, DFHENTER, DFHPF3, DFHCLEAR — standard CICS EIB and AID fields",
+          "COPY DFHBMSCA, COPY DFHAID — IBM CICS-supplied copybooks",
+          "COPY COMMAREA — typical IBM CICS communication area pattern",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "COMP (binary) for WS-CICS-RC: PIC S9(4) COMP",
+          "Fixed format, max line length 71, no lines over 72",
+          "PROGRAM-ID ARIC461 — IBM naming convention"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ARIC461 is a CICS online program that displays and manages the main menu of an application called GESTARTS. It handles user input (function keys, ENTER, CLEAR), validates menu choices (1–6), routes to sub-programs (ARIC462–ARIC467), and manages invalid key/choice error messages.",
+        "domain": "banking or business management (application named GESTARTS — likely client/customer management)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (BMS map send/receive, RETURN with TRANSID, XCTL or LINK to sub-programs)",
+        "COPY DFHBMSCA — IBM BMS attribute byte copybook",
+        "COPY DFHAID — IBM CICS attention identifier copybook",
+        "COPY COMMAREA — CICS communication area",
+        "COPY ARIN461 — application-specific BMS map symbolic description",
+        "COPY TABMSG — application message table",
+        "EVALUATE TRUE and EVALUATE EIBAID constructs for structured dispatch",
+        "88-level condition names for program state (FIN-TRANS, TRANS-ON, CHOIX-OK)",
+        "Table of sub-program names (WS-TABNOM-PROG) with OCCURS REDEFINES",
+        "French-language comments and variable names",
+        "High comment ratio (~53%) with structured cartouche-style documentation"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (829 total lines); the visible portion is sufficient to confirm all classifications. The program follows a rigorous structured COBOL style taught at ESTIAC FORMATION (a French IT training company), created 23/02/2023 by Lambert-Huyghe, Antigone. Despite being a training/school exercise in origin, the code structure, CICS patterns, and documentation style are production-quality. No COPY TABPGMID (commented out) suggests minor incompleteness or intentional omission."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4521,
+      "completion_tokens": 806,
+      "total_tokens": 5327,
+      "cost": 0.025653,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025653,
+        "upstream_inference_prompt_cost": 0.013563,
+        "upstream_inference_completions_cost": 0.01209
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.56,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

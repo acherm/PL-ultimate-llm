@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dd677133392997119e08aa8d726ecea2ee124cdc",
+    "sha1_git": "dd677133392997119e08aa8d726ecea2ee124cdc",
+    "filename": "/ZFAM002.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 184776,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dd677133392997119e08aa8d726ecea2ee124cdc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dd677133392997119e08aa8d726ecea2ee124cdc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 184776,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 4343,
+    "blank_lines": 768,
+    "comment_lines": 736,
+    "code_lines": 2839,
+    "comment_ratio": 0.206,
+    "max_line_length": 72,
+    "avg_line_length": 40.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PIC",
+      "ZFAM002"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 3,
+    "call_count": 4,
+    "perform_count": 234,
+    "goto_count": 0,
+    "pic_count": 438,
+    "comp3_count": 5,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "CBL CICS(SP) compiler directive at top",
+          "EXEC CICS implied by has_exec_cics=true and CBL CICS(SP)",
+          "USAGE POINTER data items",
+          "COMP-3 and COMP binary fields",
+          "REDEFINES usage consistent with IBM Enterprise COBOL",
+          "max_line_length=72 fixed format, no long lines",
+          "Named Counter references (CICS-specific facility)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ZFAM002 is the primary 'Basic Mode' program for zFAM (z/OS File Access Manager), a CICS-based RESTful file access service. It handles HTTP-style POST, GET, PUT, and DELETE operations against VSAM/RLS key and file stores, supporting text (XML, JSON) and binary (GIF, JPEG, PDF, video) records up to 2GB. It manages features such as TTL, LOB handling, key generation with modulo, replication, and range-based deletes.",
+        "domain": "utility",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (CBL CICS(SP) compiler option)",
+        "USAGE POINTER for dynamic address management (GETMAIN)",
+        "COMP-3 fields for packed decimal arithmetic",
+        "Named Counter Server usage for unique key/modulo generation",
+        "VSAM/RLS and Coupling Facility Data Table (CFDT) support",
+        "HTTP header parsing (Content-Type, zFAM-TTL, zFAM-LOB, zFAM-Append, zFAM-UID, zFAM-Modulo, zFAM-RangeBegin, zFAM-RangeEnd, zFAM-ECR)",
+        "Global enqueue (CICSGRS) for modulo generation",
+        "LINK to multiple sub-programs (ZFAM003, ZFAM004, ZFAM005, ZFAM007, ZFAM008, ZFAM009, ZFAM011, ZFAM031, ZFAM041, ZFAM090)",
+        "Large record support (text up to 3.2MB, binary up to 2GB)",
+        "Fixed-format source, max 72 columns"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to the first 16000 characters (Working-Storage only visible); the Procedure Division is not shown but its presence is confirmed by mechanical indicators (234 PERFORMs, 4 CALLs, EXEC CICS). The program is clearly a production-quality open-source CICS utility (zFAM project by Rich Jackson and Randy Frerking). The program-id list includes 'PIC' which is an artifact of the mechanical parser picking up a PIC clause, not a real PROGRAM-ID."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5592,
+      "completion_tokens": 827,
+      "total_tokens": 6419,
+      "cost": 0.029181,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029181,
+        "upstream_inference_prompt_cost": 0.016776,
+        "upstream_inference_completions_cost": 0.012405
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.8,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

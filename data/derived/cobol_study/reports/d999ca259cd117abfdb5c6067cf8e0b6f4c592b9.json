@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d999ca259cd117abfdb5c6067cf8e0b6f4c592b9",
+    "sha1_git": "d999ca259cd117abfdb5c6067cf8e0b6f4c592b9",
+    "filename": "/DBCBEX16.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10750,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d999ca259cd117abfdb5c6067cf8e0b6f4c592b9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d999ca259cd117abfdb5c6067cf8e0b6f4c592b9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10750,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 305,
+    "blank_lines": 40,
+    "comment_lines": 34,
+    "code_lines": 231,
+    "comment_ratio": 0.128,
+    "max_line_length": 71,
+    "avg_line_length": 34.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DBCBEX16"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 22,
+    "goto_count": 0,
+    "pic_count": 59,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (with DB2 embedded SQL, also compatible with IBM Enterprise COBOL on z/OS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC SQL ... END-EXEC blocks (DB2 embedded SQL)",
+          "COMP-5 usage (GnuCOBOL/Micro Focus extension)",
+          "GOBACK statement",
+          "EXEC SQL CONNECT RESET END-EXEC (GnuCOBOL DB2 connection pattern)",
+          "Comments explicitly mention GnuCOBOL and ZOS differences",
+          "COPY WSFST / COPY WSDT with REPLACING (copybook references)",
+          "RECORDING MODE IS F (IBM-style FD clause)",
+          "NEXT SENTENCE usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program reads all employee records from a DB2 view (VEMP) using a cursor and produces a formatted printed report with page headers, column headers, detail lines, and a footer showing total record count. It handles DB2 connection setup (including GnuCOBOL-specific connection logic) and cursor open/fetch/close lifecycle.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL embedded DB2 (DECLARE CURSOR, OPEN, FETCH, CLOSE, CONNECT RESET)",
+        "SQLCA included via EXEC SQL INCLUDE SQLCA",
+        "COMP-5 for SQL status field (GnuCOBOL/Micro Focus binary)",
+        "Sequential file output for printed report with pagination logic",
+        "COPY statements with REPLACING for reusable working-storage snippets (WSFST, WSDT)",
+        "Explicit GnuCOBOL vs z/OS DB2 connection differences documented in comments",
+        "FUNCTION CURRENT-DATE usage",
+        "88-level condition names for SQL status codes including negative value (-803)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is explicitly described as a learning/tutorial example ('Created to learn') by the author. It is part of a series (DBCBEX16 = DB COBOL Example 1-6). The COPY statements reference external copybooks (WSFST, WSDT) not shown in the source. The 9816-Create-Cursor-DB1 paragraph is effectively empty (commented-out debug display), which is intentional for this example. Minor typo in EOJ message: 'DCBCEX16' instead of 'DBCBEX16'."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4345,
+      "completion_tokens": 713,
+      "total_tokens": 5058,
+      "cost": 0.02373,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02373,
+        "upstream_inference_prompt_cost": 0.013035,
+        "upstream_inference_completions_cost": 0.010695
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.44,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

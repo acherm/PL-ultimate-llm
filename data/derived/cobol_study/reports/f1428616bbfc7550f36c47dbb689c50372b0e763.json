@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f1428616bbfc7550f36c47dbb689c50372b0e763",
+    "sha1_git": "f1428616bbfc7550f36c47dbb689c50372b0e763",
+    "filename": "/ORCGM01N.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 67550,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f1428616bbfc7550f36c47dbb689c50372b0e763/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f1428616bbfc7550f36c47dbb689c50372b0e763/raw/"
+  },
+  "indicators": {
+    "bytes_len": 67550,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1701,
+    "blank_lines": 0,
+    "comment_lines": 692,
+    "code_lines": 1009,
+    "comment_ratio": 0.407,
+    "max_line_length": 80,
+    "avg_line_length": 38.7,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGM01N"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 17,
+    "perform_count": 57,
+    "goto_count": 10,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (likely running under ORCA/JMA open-source medical system on Linux)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
+          "END-EVALUATE, END-IF, END-PERFORM terminators",
+          "INITIALIZE statement",
+          "SELECT with FILE STATUS clause",
+          "COPY statements with quoted and unquoted copybook names",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING",
+          "Fixed-format source (columns 7-72)",
+          "No EXEC SQL or EXEC CICS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is the main menu/navigation program (ORCGM01N) for the ORCA JMA standard medical receipt software system. It handles screen initialization, screen transitions (PUTG/CLICKED events), user input, and dispatches to subsystems such as master maintenance, job management, and print deletion. It acts as the top-level menu controller for a Japanese medical billing/receipt application.",
+        "domain": "healthcare/medical billing (Japanese medical receipt software)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded, showing mojibake)",
+        "JMA ORCA open-source medical receipt system (Japan Medical Association)",
+        "LINKAGE SECTION with multiple COPY-based screen areas (M00, M01, M01N, M02, M95, MERR, MID1, MVER, M98, MUID, M99, MID2, MDAS, MLOG, MINF, MPRT)",
+        "EVALUATE ALSO construct for MCP-STATUS/MCP-EVENT dispatch (MCP = Message Control Program, likely a proprietary middleware)",
+        "CALL to ORCSLOCK (exclusive lock management), ORCSJOB (job management), and other ORCS* subprograms",
+        "SPA (Scratchpad Area) pattern for inter-screen state management",
+        "SELECT for a flat file (/tmp/jma-receipt/patch-restart-message)",
+        "17 CALL statements, 57 PERFORMs, 10 GOTOs",
+        "No EXEC SQL or EXEC CICS — uses proprietary DB access layer (MCPDATA.INC)",
+        "Extensive revision history in comments spanning 2000–2015"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in mojibake in comments. The program is clearly production-grade, part of the well-known open-source Japanese medical receipt system ORCA. The MCP middleware pattern (MCP-STATUS, MCP-EVENT, MCP-WINDOW, MCP-PUTTYPE) is characteristic of the ORCA/Panda system's screen management framework, not CICS, but the program_type is classified as online-cics as the closest analogue for an event-driven screen program. Source is truncated at 16000 chars out of 67550 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8027,
+      "completion_tokens": 857,
+      "total_tokens": 8884,
+      "cost": 0.036936,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036936,
+        "upstream_inference_prompt_cost": 0.024081,
+        "upstream_inference_completions_cost": 0.012855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 22.72,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e3b7dfceb9e5a793186e9f017f4da151dc6b4389",
+    "sha1_git": "e3b7dfceb9e5a793186e9f017f4da151dc6b4389",
+    "filename": "/SOKATU0815.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 94932,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e3b7dfceb9e5a793186e9f017f4da151dc6b4389/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e3b7dfceb9e5a793186e9f017f4da151dc6b4389/raw/"
+  },
+  "indicators": {
+    "bytes_len": 94932,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2283,
+    "blank_lines": 0,
+    "comment_lines": 734,
+    "code_lines": 1549,
+    "comment_ratio": 0.322,
+    "max_line_length": 77,
+    "avg_line_length": 40.6,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU0815"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 30,
+    "call_count": 9,
+    "perform_count": 132,
+    "goto_count": 3,
+    "pic_count": 110,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL / ORCA project)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SOKATU0815",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "COPY directives with REPLACING (many .INC copybooks)",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "FILE STATUS IS",
+          "PERFORM ... UNTIL",
+          "INITIALIZE statements",
+          "UNSTRING ... DELIMITED BY",
+          "JMA ORCA project copyright header",
+          "No EXEC SQL / EXEC CICS",
+          "Fixed-format source layout"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA ORCA (Japan Medical Association standard receipt software) system. It generates a medical insurance claim/billing request document for a wide-area federation (広域連合) in Iwate Prefecture, processing receipt data and producing a formatted print output file. It reads receipt DB update files, aggregates claim data by insurer/public-expense category, and writes results to an update file and error file.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Heavy use of COPY directives with REPLACING for copybooks (.INC files)",
+        "Japanese EUC-JP encoded comments (decoded as latin-1, hence garbled)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "UNSTRING for parsing comma-delimited command parameters",
+        "LINE SEQUENTIAL file organization",
+        "Multiple version history entries in comments (01.00.01 through 01.00.08)",
+        "OCCURS clauses for tabular insurance/public-expense data",
+        "REDEFINES used for address/name fields",
+        "No COMP-3 usage despite financial data",
+        "GOTO used (noted in change history as replacement for PERFORM)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the comments are actually Japanese EUC-JP encoded, causing the garbled appearance. The program is clearly part of the open-source JMA ORCA medical receipt software project. The COPY statements reference many external copybooks that are not shown. The truncation at 16000 chars covers roughly the first 400 lines of 2283 total, but the structure and purpose are clear from what is visible."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9037,
+      "completion_tokens": 679,
+      "total_tokens": 9716,
+      "cost": 0.037296,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037296,
+        "upstream_inference_prompt_cost": 0.027111,
+        "upstream_inference_completions_cost": 0.010185
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.85,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8cdbedae452f02b1978907b6c42f7455bcdaf266",
+    "sha1_git": "8cdbedae452f02b1978907b6c42f7455bcdaf266",
+    "filename": "/ORCHCM31.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 49035,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8cdbedae452f02b1978907b6c42f7455bcdaf266/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8cdbedae452f02b1978907b6c42f7455bcdaf266/raw/"
+  },
+  "indicators": {
+    "bytes_len": 49035,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1307,
+    "blank_lines": 0,
+    "comment_lines": 458,
+    "code_lines": 849,
+    "comment_ratio": 0.35,
+    "max_line_length": 74,
+    "avg_line_length": 36.5,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCHCM31"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 19,
+    "call_count": 6,
+    "perform_count": 70,
+    "goto_count": 1,
+    "pic_count": 70,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely OpenCOBOL/GnuCOBOL on Linux, given JMA ORCA project context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PERFORM ... UNTIL with inline END-PERFORM (COBOL-85)",
+          "EVALUATE-style structured code, INITIALIZE verb",
+          "OCCURS clause, COPY statements, LINKAGE SECTION with USING",
+          "EXIT PROGRAM",
+          "Fixed-format source (columns 7-72)",
+          "JMA ORCA project is known to use GnuCOBOL/OpenCOBOL on Linux"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program (ORCHCM31) is part of the JMA ORCA standard medical receipt software system. It appears to generate a daily payment/receipt certificate report (支払証明書・日別), processing patient insurance combination data and collection master records to produce printed output organized by inpatient/outpatient classification and date ranges.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 causing mojibake)",
+        "COPY statements referencing many external copybooks (HCM31G.INC, HCM31N.INC, CPSYSKANRI.INC, CPSK1001.INC, etc.)",
+        "LINKAGE SECTION with multiple USING parameters (SPA-AREA, ORCSPRTAREA, ORCHCM31AREA)",
+        "Database cursor open/fetch/close pattern via MCP-TABLE/MCP-PATHNAME mechanism (custom DB abstraction, no EXEC SQL)",
+        "OCCURS 2001 for internal sort/edit table (WRK-HENSYU-OCC)",
+        "No EXEC SQL or EXEC CICS — uses proprietary DB access layer",
+        "6 CALL statements, 70 PERFORM statements",
+        "Copyright JMA (Japan Medical Association) 2002, open-source licensed"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text comments that appear garbled because the file is EUC-JP or Shift-JIS encoded but was decoded as Latin-1. The program is part of the well-known open-source JMA ORCA medical receipt system. Source is truncated at 16000 chars out of ~49035 bytes total, but enough structure is visible to classify confidently."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7707,
+      "completion_tokens": 737,
+      "total_tokens": 8444,
+      "cost": 0.034176,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034176,
+        "upstream_inference_prompt_cost": 0.023121,
+        "upstream_inference_completions_cost": 0.011055
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.11,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

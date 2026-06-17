@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:34796930c7b6712aea7515fec767abee023f94df",
+    "sha1_git": "34796930c7b6712aea7515fec767abee023f94df",
+    "filename": "/ORCR0500.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 61229,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:34796930c7b6712aea7515fec767abee023f94df/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:34796930c7b6712aea7515fec767abee023f94df/raw/"
+  },
+  "indicators": {
+    "bytes_len": 61229,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1339,
+    "blank_lines": 1,
+    "comment_lines": 364,
+    "code_lines": 974,
+    "comment_ratio": 0.272,
+    "max_line_length": 89,
+    "avg_line_length": 44.7,
+    "long_lines_over_72": 13,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0500"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 75,
+    "call_count": 24,
+    "perform_count": 25,
+    "goto_count": 3,
+    "pic_count": 50,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "END-UNSTRING terminator (COBOL-85 scope terminators)",
+          "COPY statements with REPLACING clause",
+          "PERFORM ... UNTIL construct",
+          "ACCEPT ... FROM TIME",
+          "UNSTRING ... DELIMITED BY ... INTO",
+          "No EXEC SQL or EXEC CICS",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It handles printing of monthly receipt (Rezept) data, specifically managing print jobs for medical insurance claim forms (both inpatient and outpatient variants). It reads print parameters, manages job control via a database, and outputs formatted print data to a print file.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive use of COPY statements for Japanese medical receipt form layouts (HCM/HCN series .INC files)",
+        "UNSTRING used to parse comma-delimited command parameters from LINKAGE SECTION",
+        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, showing mojibake)",
+        "Large PRT-PRTDATA field of 20000 bytes",
+        "No COMP-3 usage despite being a production financial/billing system",
+        "Multiple versioned copybooks (V01-V04 variants) for different form layouts",
+        "File STATUS fields for error handling",
+        "ORGANIZATION IS LINE SEQUENTIAL for print output file"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in mojibake in comments and string literals. The program is clearly production medical billing software from the Japanese ORCA project (JMA Open Source medical receipt system), with a detailed revision history dating from 2000 to 2006. The source is truncated at 16000 chars but the structure is clear. The 'grpsys' prefix on some lines before COPY statements appears to be a group/section tag used by the build system."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8311,
+      "completion_tokens": 721,
+      "total_tokens": 9032,
+      "cost": 0.035748,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035748,
+        "upstream_inference_prompt_cost": 0.024933,
+        "upstream_inference_completions_cost": 0.010815
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.54,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

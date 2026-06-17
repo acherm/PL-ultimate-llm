@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:824e23cbe7f0dc50f2932785f5c333962c7e9c5d",
+    "sha1_git": "824e23cbe7f0dc50f2932785f5c333962c7e9c5d",
+    "filename": "/EM0206.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9112,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:824e23cbe7f0dc50f2932785f5c333962c7e9c5d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:824e23cbe7f0dc50f2932785f5c333962c7e9c5d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9112,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 278,
+    "blank_lines": 56,
+    "comment_lines": 2,
+    "code_lines": 220,
+    "comment_ratio": 0.009,
+    "max_line_length": 70,
+    "avg_line_length": 30.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EM0206"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 17,
+    "goto_count": 0,
+    "pic_count": 46,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus / GnuCOBOL (PC-based, likely compiled with OpenCOBOL or similar)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "ASSIGN TO DISK with ORGANIZATION IS LINE SEQUENTIAL",
+          "VALUE OF FILE-ID IS 'CADCLI.DAT'",
+          "LABEL RECORD IS OMMITED (non-standard spelling but COBOL-85 era)",
+          "SOURCE-COMPUTER / OBJECT-COMPUTER IBM-PC",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "88-level condition ESTADO-VALIDO with multiple VALUES",
+          "OCCURS 11 TIMES on elementary item within group"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Reads customer registration records from CADCLI.DAT, validates each record (CPF digit check, name, Brazilian state code, city, email), writes valid records to CADOK.DAT, and prints a report of inconsistent/invalid records to RELOCOR with page headers.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "CPF (Brazilian tax ID) validation with two-digit check digit algorithm using COMPUTE, MULTIPLY, DIVIDE REMAINDER",
+        "88-level condition for all 27 Brazilian state codes",
+        "OCCURS on elementary PIC 9 for digit-by-digit CPF processing",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "VALUE OF FILE-ID for PC-style file assignment",
+        "Page-overflow logic using CT-LIN counter",
+        "WRITE ... AFTER ADVANCING PAGE / LINE for report formatting",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Authored by 'FABIO COSTA' at FATEC-SP (a Brazilian technical college) in October 2015, clearly a student assignment. Minor typo: 'OMMITED' instead of 'OMITTED'. The CPF validation logic resets CTR1/CTR2 between the two passes but the SOMA1/SOMA2 paragraphs share the same counters, which may have a subtle bug (CTR2 starts at 10 for SOMA1 but should start at 10 for 9 iterations covering digits 1-9, then resets to 11 for SOMA2 covering digits 1-10 — logic appears intentional but unusual). Overall a well-structured student program."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3938,
+      "completion_tokens": 699,
+      "total_tokens": 4637,
+      "cost": 0.022299,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022299,
+        "upstream_inference_prompt_cost": 0.011814,
+        "upstream_inference_completions_cost": 0.010485
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.89,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

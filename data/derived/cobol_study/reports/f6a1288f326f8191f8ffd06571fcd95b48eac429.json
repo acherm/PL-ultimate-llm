@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f6a1288f326f8191f8ffd06571fcd95b48eac429",
+    "sha1_git": "f6a1288f326f8191f8ffd06571fcd95b48eac429",
+    "filename": "/ORCR0040.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 299900,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f6a1288f326f8191f8ffd06571fcd95b48eac429/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f6a1288f326f8191f8ffd06571fcd95b48eac429/raw/"
+  },
+  "indicators": {
+    "bytes_len": 299900,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6723,
+    "blank_lines": 0,
+    "comment_lines": 1655,
+    "code_lines": 5068,
+    "comment_ratio": 0.246,
+    "max_line_length": 78,
+    "avg_line_length": 43.6,
+    "long_lines_over_72": 27,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0040"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 41,
+    "call_count": 20,
+    "perform_count": 577,
+    "goto_count": 0,
+    "pic_count": 297,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA medical software)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "COPY ... REPLACING //token// BY //token// (OpenCOBOL/GnuCOBOL style delimiters)",
+          "FD records with COPY includes (.INC files)",
+          "PIC X(02), PIC 9(01) style picture clauses",
+          "Fixed-format source, max line 78",
+          "No EXEC SQL / EXEC CICS",
+          "Project is ORCA (JMA Open Source medical receipt software, known to use GnuCOBOL)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program (ORCR0040) is part of the ORCA JMA standard medical receipt (claim) software system. It handles editing and automatic generation of comments on medical receipt (Rezept) records, processing receipt detail files (RECE02, RECE04, RECE05 and their work/output variants) to insert or update comment entries based on treatment type, rehabilitation, drug adjustments, and other clinical billing rules.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY ... REPLACING with // delimiters (GnuCOBOL/OpenCOBOL convention)",
+        "Multiple indexed file selects with DYNAMIC and SEQUENTIAL access modes",
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Large program: ~6700 lines, 577 PERFORM statements, 20 CALL statements",
+        "Revision history spanning 2002–2009 with named maintainers",
+        "Work file variants (RECE049, RECE059) alongside primary files"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in EUC-JP (Japanese) but was decoded as latin-1, causing the Japanese characters to appear as mojibake in the comments. The program is clearly part of the well-known open-source ORCA medical receipt system maintained by JMA (Japan Medical Association). The COPY statements reference .INC copybooks that were not expanded in the truncated view, but the structure is unambiguously production COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9901,
+      "completion_tokens": 723,
+      "total_tokens": 10624,
+      "cost": 0.040548,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040548,
+        "upstream_inference_prompt_cost": 0.029703,
+        "upstream_inference_completions_cost": 0.010845
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.48,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

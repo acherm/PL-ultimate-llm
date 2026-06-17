@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1f0a3d16aff8ae5fe3d2e93933fec236c06a7ce0",
+    "sha1_git": "1f0a3d16aff8ae5fe3d2e93933fec236c06a7ce0",
+    "filename": "/ORCGI01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 930407,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1f0a3d16aff8ae5fe3d2e93933fec236c06a7ce0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1f0a3d16aff8ae5fe3d2e93933fec236c06a7ce0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 930407,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 21396,
+    "blank_lines": 10,
+    "comment_lines": 5356,
+    "code_lines": 16030,
+    "comment_ratio": 0.25,
+    "max_line_length": 89,
+    "avg_line_length": 42.5,
+    "long_lines_over_72": 111,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 106,
+    "call_count": 108,
+    "perform_count": 1559,
+    "goto_count": 247,
+    "pic_count": 415,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "COPY statements referencing copybooks like 'ENUM-VALUE', 'COMMON-SPA', 'I0COMMON-SPA', 'I0SCR-SPA'",
+          "PIC 9(01), PIC 9(05) style picture clauses",
+          "Fixed-format source layout (columns 7-72)",
+          "PROGRAM-ID ORCGI01 — part of JMA ORCA open-source medical receipt software, known to use GnuCOBOL",
+          "No EXEC SQL or EXEC CICS, no COMP-3 — consistent with GnuCOBOL batch/subprogram style",
+          "108 CALL statements, 1559 PERFORM, 247 GOTO — large production program"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a hospital admission/discharge registration component (入退院登録, I01) of the JMA ORCA standard medical receipt (billing) software system. It handles patient admission and discharge recording, insurance combination checks, ward/room fee calculations, and related medical administration workflows for Japanese healthcare facilities.",
+        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Part of JMA ORCA open-source Japanese medical receipt software (Copyright JMA 2002)",
+        "Extensive Japanese-language comments encoded in EUC-JP / latin-1 decoded (mojibake visible)",
+        "Very large program: ~21,000 lines, 930 KB",
+        "108 CALL statements indicating heavy use of subprogram architecture",
+        "1559 PERFORM statements and 247 GOTO statements",
+        "COPY statements for shared copybooks (COMMON-SPA, I0COMMON-SPA, I0SCR-SPA, ENUM-VALUE)",
+        "No EXEC SQL, no EXEC CICS, no COMP-3",
+        "Detailed revision history spanning 2002–2014 with named developers",
+        "Handles Japanese insurance system specifics: elderly patient flags, specific admission fee codes, disaster/emergency admissions"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains EUC-JP encoded Japanese text, resulting in mojibake in comment lines. The program is clearly part of the well-known JMA ORCA open-source medical receipt system. The COPY count shown as 0 in mechanical indicators appears inconsistent with the visible COPY statements in the source snippet — likely the mechanical parser missed them. The program is a large, mature production component with a long documented change history."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12093,
+      "completion_tokens": 775,
+      "total_tokens": 12868,
+      "cost": 0.047904,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.047904,
+        "upstream_inference_prompt_cost": 0.036279,
+        "upstream_inference_completions_cost": 0.011625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.27,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

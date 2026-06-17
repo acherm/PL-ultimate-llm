@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9f33c0a465686cd32f5964f186a7de875eeb10fe",
+    "sha1_git": "9f33c0a465686cd32f5964f186a7de875eeb10fe",
+    "filename": "/TPROG16.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4579,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9f33c0a465686cd32f5964f186a7de875eeb10fe/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9f33c0a465686cd32f5964f186a7de875eeb10fe/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4579,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 150,
+    "blank_lines": 0,
+    "comment_lines": 31,
+    "code_lines": 119,
+    "comment_ratio": 0.207,
+    "max_line_length": 62,
+    "avg_line_length": 29.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TPROG16"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 3,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (mainframe)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-370 / OBJECT-COMPUTER. IBM-370",
+          "ASSIGN UT-S-INPUT / UT-S-OUTPUT (IBM mainframe DD-name convention)",
+          "RECORDING MODE IS F",
+          "LABEL RECORDS OMITTED",
+          "BLOCK CONTAINS 0 RECORDS",
+          "GOBACK statement",
+          "COPY TCPYA16 / COPY TCPYB16 (copybook references without REPLACING)",
+          "NOT INFILE-EOF condition name usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A training program that calls a subroutine TSUBR16 to open and read an input file, then formats and writes the retrieved text lines to an output file with decorative star-line borders. It uses two copybooks (TCPYA16 for header data and TCPYB16 for the linkage/pass-around area) and delegates file I/O to the called subprogram.",
+        "domain": "education/tutorial",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "CALL 'TSUBR16' USING PASS-ME-AROUND (3 calls with action-flag protocol: R=read, C=close)",
+        "COPY TCPYA16 and COPY TCPYB16 copybook references (not expanded in this file)",
+        "PERFORM ... THRU paragraph-exit pattern (GET-MESSAGE THRU GET-MESSAGE-X)",
+        "GOBACK instead of STOP RUN",
+        "IBM mainframe file assignment syntax (UT-S-INPUT / UT-S-OUTPUT)",
+        "Compuware ISPW training material copyright notice"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The copybooks TCPYA16 and TCPYB16 are referenced but not expanded here, so data-names like PASS-ME-AROUND, ACTION-FLAG, INFILE-EOF, TEXT-PORTION, MESSANGER, STAR-LINE-1, FLASH-LINE, BODY-LINE, BODY-TEXT, MESSAGE-LINE are defined externally. The program is clearly a Compuware ISPW training artifact dated 1996. No SQL or CICS constructs present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2401,
+      "completion_tokens": 658,
+      "total_tokens": 3059,
+      "cost": 0.017073,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017073,
+        "upstream_inference_prompt_cost": 0.007203,
+        "upstream_inference_completions_cost": 0.00987
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.72,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

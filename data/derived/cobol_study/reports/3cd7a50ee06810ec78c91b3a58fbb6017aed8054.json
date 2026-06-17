@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3cd7a50ee06810ec78c91b3a58fbb6017aed8054",
+    "sha1_git": "3cd7a50ee06810ec78c91b3a58fbb6017aed8054",
+    "filename": "/ORCR0670.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 31993,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3cd7a50ee06810ec78c91b3a58fbb6017aed8054/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3cd7a50ee06810ec78c91b3a58fbb6017aed8054/raw/"
+  },
+  "indicators": {
+    "bytes_len": 31993,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 799,
+    "blank_lines": 1,
+    "comment_lines": 243,
+    "code_lines": 555,
+    "comment_ratio": 0.305,
+    "max_line_length": 76,
+    "avg_line_length": 39.0,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0670"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 17,
+    "call_count": 16,
+    "perform_count": 25,
+    "goto_count": 8,
+    "pic_count": 26,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely running on a Linux/Unix system given ORCA/JMA medical software context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "COPY statements with REPLACING clause",
+          "PERFORM ... UNTIL / PERFORM VARYING ... BY ... UNTIL",
+          "OPEN I-O, OPEN INPUT, OPEN OUTPUT",
+          "INDEXED file organization with DYNAMIC access and RECORD KEY",
+          "INITIALIZE verb",
+          "END-IF, END-PERFORM inline scope terminators (COBOL-85+)",
+          "CALL 'ORCDBMAIN' USING ... with multiple parameters",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED ... ACCESS MODE IS DYNAMIC"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This batch program (ORCR0670) is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It performs disease-name (byomei) editing/compilation for inpatient receipt processing, reading receipt detail files (RECE62, RECE63), checking and updating patient disease name records (tbl_ptbyomei) via a database call, and writing results to output files including an error file.",
+        "domain": "healthcare / medical billing (Japanese medical insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese comments encoded in latin-1 (Shift-JIS or EUC-JP garbled as latin-1)",
+        "CALL 'ORCDBMAIN' for database access (custom DB abstraction layer, not EXEC SQL)",
+        "CALL 'ORCSJOB' for job management/step control",
+        "COPY statements referencing .INC copybooks (CPRCF062.INC, CPRCF063.INC, CPJOBKANRI.INC, etc.)",
+        "COPY with REPLACING for file record aliases (RECE63W)",
+        "Multiple indexed files with DYNAMIC access mode",
+        "LINKAGE SECTION with COMMAND-PARAM for shell/program invocation",
+        "Conditional STOP RUN vs EXIT PROGRAM based on SHELLID parameter",
+        "grpsys-prefixed comment/code lines indicating group system integration points",
+        "No EXEC SQL or EXEC CICS — uses proprietary ORCDBMAIN call interface"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly production COBOL from the open-source ORCA medical receipt system developed by JMA (Japan Medical Association). Japanese text in comments is garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The 'grpsys' prefix on some lines appears to be a conditional compilation or group-system marker. The program uses 16 CALLs to external subprograms for DB access, job management, date conversion, and disease-name construction. Source is truncated at 16000 chars but the structure is clear."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7482,
+      "completion_tokens": 841,
+      "total_tokens": 8323,
+      "cost": 0.035061,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035061,
+        "upstream_inference_prompt_cost": 0.022446,
+        "upstream_inference_completions_cost": 0.012615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.71,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

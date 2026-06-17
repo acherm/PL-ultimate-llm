@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:85d7492712f52db41ebc34bc64a41eebe3addfed",
+    "sha1_git": "85d7492712f52db41ebc34bc64a41eebe3addfed",
+    "filename": "/SOKATU1515.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 89912,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:85d7492712f52db41ebc34bc64a41eebe3addfed/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:85d7492712f52db41ebc34bc64a41eebe3addfed/raw/"
+  },
+  "indicators": {
+    "bytes_len": 89912,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2209,
+    "blank_lines": 3,
+    "comment_lines": 660,
+    "code_lines": 1546,
+    "comment_ratio": 0.299,
+    "max_line_length": 76,
+    "avg_line_length": 39.7,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU1515"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 11,
+    "perform_count": 128,
+    "goto_count": 0,
+    "pic_count": 111,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SOKATU1515",
+          "PERFORM ... UNTIL with END-UNSTRING (COBOL-85 scope terminators)",
+          "UNSTRING ... INTO ... END-UNSTRING",
+          "OCCURS clauses, REDEFINES, VALUE LOW-VALUE",
+          "COPY with REPLACING syntax",
+          "SELECT ... ORGANIZATION IS LINE SEQUENTIAL",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING",
+          "No EXEC SQL / EXEC CICS",
+          "JMA ORCA open-source medical receipt software project header comment"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that generates a medical insurance claim (receipt) billing request document for the Japanese JMA ORCA standard receipt software system, specifically handling new/wide-area combined and diagnosis-treatment billing requests (Shinkyu/Kouiki-Rengou/Shinryo Hoshuu Seikyusho). It reads claim DB update files, accumulates summary totals by public expense (Kouhi) category, and produces formatted output.",
+        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Part of JMA ORCA open-source Japanese medical receipt software",
+        "Heavy use of COPY statements for shared record layouts (CPRCF010.INC, CPPTINF.INC, CPHKNNUM.INC, etc.)",
+        "UNSTRING of comma-delimited COMMAND-PARAM for parameter passing",
+        "Multi-level OCCURS tables for public expense (Kouhi) billing aggregation",
+        "Japanese Shift-JIS / EUC-JP encoded comments (decoded as latin-1, hence garbled)",
+        "No EXEC SQL or EXEC CICS — file-based DB update pattern",
+        "LINKAGE SECTION with COMMAND-PARAM PIC X(256) for shell invocation",
+        "Revision history embedded in comments (2008–2010)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP or Shift-JIS, causing garbled display. The program is clearly production-grade medical billing software from the JMA ORCA project (circa 2008–2010). All four COBOL divisions are present. The truncated source shows only the first ~16 KB of an ~88 KB file; the PROCEDURE DIVISION body is largely unseen but the structure is unambiguous."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8227,
+      "completion_tokens": 729,
+      "total_tokens": 8956,
+      "cost": 0.035616,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035616,
+        "upstream_inference_prompt_cost": 0.024681,
+        "upstream_inference_completions_cost": 0.010935
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.05,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

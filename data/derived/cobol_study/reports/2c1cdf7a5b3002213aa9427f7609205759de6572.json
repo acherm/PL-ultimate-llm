@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2c1cdf7a5b3002213aa9427f7609205759de6572",
+    "sha1_git": "2c1cdf7a5b3002213aa9427f7609205759de6572",
+    "filename": "/SEIKYU1005.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 160272,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2c1cdf7a5b3002213aa9427f7609205759de6572/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2c1cdf7a5b3002213aa9427f7609205759de6572/raw/"
+  },
+  "indicators": {
+    "bytes_len": 160272,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3620,
+    "blank_lines": 1,
+    "comment_lines": 1609,
+    "code_lines": 2010,
+    "comment_ratio": 0.445,
+    "max_line_length": 79,
+    "avg_line_length": 43.3,
+    "long_lines_over_72": 66,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU1005"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 79,
+    "perform_count": 129,
+    "goto_count": 3,
+    "pic_count": 123,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SEIKYU1005",
+          "ORGANIZATION IS INDEXED / LINE SEQUENTIAL",
+          "COPY directives with REPLACING",
+          "comment references to 'open-cobol1.0' in revision history",
+          "fixed-format source with standard DIVISIONS",
+          "OCCURS clauses, REDEFINES, VALUE clauses consistent with COBOL-85"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch COBOL program (SEIKYU1005) that generates group welfare/public expense medical fee claim summary forms (specifically forms 145, 245, 146, 246, 143, 243) for the Japanese ORCA medical receipt software system. It reads indexed claim files and town/insurer number data, performs billing amount calculations including high-cost medical expense limits, and produces printed output.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
+        "Heavy use of COPY statements with REPLACING for include files (.INC)",
+        "Japanese-language comments encoded in latin-1 (actually Shift-JIS/EUC-JP garbled)",
+        "79 CALL statements indicating extensive subprogram linkage",
+        "OCCURS tables for insurance code lookups",
+        "REDEFINES used for hospital name/address splitting",
+        "Detailed revision history spanning 2005–2016 with named authors",
+        "Part of JMA (Japan Medical Association) open-source ORCA project",
+        "SELECT with ORGANIZATION IS INDEXED and DYNAMIC access for claim file",
+        "SELECT with LINE SEQUENTIAL for town/insurer number flat file"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in latin-1 per the decoder, but the Japanese comments are actually Shift-JIS or EUC-JP bytes interpreted as latin-1, causing mojibake in the displayed text. The source is clearly genuine production COBOL from the ORCA medical receipt system maintained by JMA Japan. The high comment ratio (44.5%) is largely due to the extensive revision history block at the top. COPY statements reference external .INC copybooks not shown here."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11299,
+      "completion_tokens": 662,
+      "total_tokens": 11961,
+      "cost": 0.043827,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.043827,
+        "upstream_inference_prompt_cost": 0.033897,
+        "upstream_inference_completions_cost": 0.00993
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.7,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

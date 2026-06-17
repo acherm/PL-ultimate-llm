@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e1202738b16956b2b3a850c45b349b53ba612415",
+    "sha1_git": "e1202738b16956b2b3a850c45b349b53ba612415",
+    "filename": "/A00000D126.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 217283,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e1202738b16956b2b3a850c45b349b53ba612415/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e1202738b16956b2b3a850c45b349b53ba612415/raw/"
+  },
+  "indicators": {
+    "bytes_len": 217283,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4984,
+    "blank_lines": 2,
+    "comment_lines": 2167,
+    "code_lines": 2815,
+    "comment_ratio": 0.435,
+    "max_line_length": 93,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 22,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "A00000D126"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 43,
+    "call_count": 134,
+    "perform_count": 153,
+    "goto_count": 5,
+    "pic_count": 181,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (open-cobol)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. A00000D126",
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "Comment references 'open-cobol 0.23' adaptation (2005/03/02)",
+          "SELECT ... ORGANIZATION INDEXED ACCESS MODE DYNAMIC RECORD KEY",
+          "COPY directives with REPLACING clauses",
+          "PIC clauses, WORKING-STORAGE SECTION, FILE SECTION",
+          "Fixed-format source layout"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a monthly billing/receipt summary report program (月次台帳・月計表) for the ORCA Japanese Medical Association standard receipt software system. It processes inpatient/outpatient medical billing records, computes totals (insurance amounts, self-pay amounts, subsidies, reductions, deposits), and produces a monthly ledger printout. It handles multiple insurance combinations, doctor codes, ward categories, and various fee adjustments.",
+        "domain": "healthcare/medical billing",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS bytes interpreted as latin-1)",
+        "COPY directives referencing external copybooks (CPCOMMONSHELL.INC, CPERRFL.INC, A00000D126.INC, A00000D1261.INC)",
+        "134 CALL statements indicating heavy use of subprogram calls",
+        "153 PERFORM statements",
+        "Indexed file I/O with DYNAMIC access mode",
+        "Extensive revision history spanning 2004-2009",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "OCCURS clauses for arrays (insurance combinations, self-pay items)",
+        "Signed numeric fields (S9) for financial calculations",
+        "Program option support via INI file (later removed per comments)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the Japanese comments are multi-byte encoded (likely EUC-JP), causing mojibake in the displayed text. The program is clearly part of the open-source ORCA medical receipt system developed by the Japan Medical Association. The large size (4984 lines, ~217KB), extensive revision history, copyright header, and production-quality structure all indicate a mature production program. No truncation issues affect the classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9543,
+      "completion_tokens": 705,
+      "total_tokens": 10248,
+      "cost": 0.039204,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039204,
+        "upstream_inference_prompt_cost": 0.028629,
+        "upstream_inference_completions_cost": 0.010575
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 21.12,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

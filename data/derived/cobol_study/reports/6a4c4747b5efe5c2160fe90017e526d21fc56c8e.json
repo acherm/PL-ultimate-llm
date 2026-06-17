@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6a4c4747b5efe5c2160fe90017e526d21fc56c8e",
+    "sha1_git": "6a4c4747b5efe5c2160fe90017e526d21fc56c8e",
+    "filename": "/SOKATU1150.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 81594,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6a4c4747b5efe5c2160fe90017e526d21fc56c8e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6a4c4747b5efe5c2160fe90017e526d21fc56c8e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 81594,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1820,
+    "blank_lines": 1,
+    "comment_lines": 439,
+    "code_lines": 1380,
+    "comment_ratio": 0.241,
+    "max_line_length": 82,
+    "avg_line_length": 43.8,
+    "long_lines_over_72": 13,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU1150"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 15,
+    "call_count": 23,
+    "perform_count": 67,
+    "goto_count": 8,
+    "pic_count": 98,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SOKATU1150",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "COPY directives with REPLACING (CPRCF010.INC, CPCOMMONDAT2.INC, MCPAREA, etc.)",
+          "INITIALIZE statements",
+          "OCCURS clauses with nested tables",
+          "SELECT ... ORGANIZATION IS LINE SEQUENTIAL",
+          "UNSTRING ... DELIMITED BY ... INTO",
+          "Fixed-format source layout"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch aggregation/reporting program for the JMA (Japan Medical Association) ORCA standard medical receipt software. It collects and summarizes monthly insurance claim (receipt) data for social insurance and general summary tables, producing an update file and error file. The program handles various reform-year logic (2002, 2003, 2008, 2012, etc.) for Japanese medical billing.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — DB access via CALL to MCP subroutines (MCPAREA, MCPDATA.INC copybooks)",
+        "Extensive COPY statements for shared record layouts (CPRCF010.INC, CPPTINF.INC, CPSK1001.INC, CPSK2007.INC, etc.)",
+        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
+        "UNSTRING used to parse comma-delimited command parameters",
+        "Large multi-dimensional OCCURS tables for insurance summary accumulation",
+        "Japanese-language comments (EUC-JP or Shift-JIS encoded, decoded as latin-1 producing mojibake)",
+        "Detailed revision history spanning 2002–2020 in comments",
+        "Open-source JMA ORCA project license header",
+        "23 CALL statements to external subroutines (MCPSUB, job management, etc.)",
+        "No COMP-3 usage despite financial calculations"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in a Japanese encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing all Japanese characters in comments to appear as mojibake. The source is clearly genuine production COBOL from the open-source JMA ORCA medical receipt system. The program is part of a well-maintained codebase with a revision history from 2002 to 2020. The COPY statements reference many external copybooks that are not shown but are standard ORCA infrastructure files."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9051,
+      "completion_tokens": 762,
+      "total_tokens": 9813,
+      "cost": 0.038583,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038583,
+        "upstream_inference_prompt_cost": 0.027153,
+        "upstream_inference_completions_cost": 0.01143
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.65,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:25Z"
+}

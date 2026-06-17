@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dc76353f9159ded21f86c40ef38de9985795abd8",
+    "sha1_git": "dc76353f9159ded21f86c40ef38de9985795abd8",
+    "filename": "/ORCBPRVPRT.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 29455,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dc76353f9159ded21f86c40ef38de9985795abd8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dc76353f9159ded21f86c40ef38de9985795abd8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 29455,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 737,
+    "blank_lines": 0,
+    "comment_lines": 231,
+    "code_lines": 506,
+    "comment_ratio": 0.313,
+    "max_line_length": 74,
+    "avg_line_length": 39.0,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBPRVPRT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 23,
+    "call_count": 18,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 100,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (likely running on Linux/Unix with PostgreSQL via MCP layer, part of ORCA/JMA medical system)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "END-UNSTRING, END-IF terminators (COBOL-85 scope terminators)",
+          "PERFORM ... UNTIL construct",
+          "CALL statements with USING clause",
+          "COPY statements with REPLACING",
+          "SELECT ... ASSIGN ... FILE STATUS",
+          "INITIALIZE verb",
+          "ACCEPT ... FROM DATE"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program (ORCBPRVPRT) is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It prints a preview check list ('receipt check list') by reading from a preview database and outputting formatted error/check records. It handles job management, patient number conversion, system date handling, and formatted print output.",
+        "domain": "healthcare/medical billing (Japanese medical receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-encoded comments and string literals (Shift-JIS/EUC-JP encoded, decoded as latin-1 causing mojibake)",
+        "No EXEC SQL or EXEC CICS — uses a proprietary MCP (Message Control Program) database access layer via CALL statements",
+        "Extensive use of COPY statements for copybooks (CPPRVKANRI.INC, CPSYSKANRI.INC, CPPTINF.INC, etc.)",
+        "UNSTRING used to parse comma-delimited command-line parameters",
+        "Job management subsystem (ORCSJOB CALL)",
+        "File STATUS checking on sequential error file (RECEERR-FILE)",
+        "18 CALL statements to various subprograms",
+        "No COMP-3 usage despite being a production financial/medical system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS that was decoded as latin-1, resulting in garbled multi-byte characters in comments and string literals. The program is clearly part of the open-source ORCA JMA medical receipt system (copyright 2002 JMA). Source is truncated at 16000 chars out of 29455 bytes, so the PROCEDURE DIVISION is only partially visible, but enough structure is present for confident classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7389,
+      "completion_tokens": 693,
+      "total_tokens": 8082,
+      "cost": 0.032562,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032562,
+        "upstream_inference_prompt_cost": 0.022167,
+        "upstream_inference_completions_cost": 0.010395
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.43,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

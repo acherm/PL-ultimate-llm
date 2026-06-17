@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7e6022087bc612153cab291d3801ddbc4458259b",
+    "sha1_git": "7e6022087bc612153cab291d3801ddbc4458259b",
+    "filename": "/ORCGJ02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 512261,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7e6022087bc612153cab291d3801ddbc4458259b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7e6022087bc612153cab291d3801ddbc4458259b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 512261,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 12180,
+    "blank_lines": 0,
+    "comment_lines": 3171,
+    "code_lines": 9009,
+    "comment_ratio": 0.26,
+    "max_line_length": 74,
+    "avg_line_length": 41.1,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGJ02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 81,
+    "call_count": 81,
+    "perform_count": 848,
+    "goto_count": 106,
+    "pic_count": 277,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA",
+        "standard": "COBOL-85",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "COPY directives with .INC files",
+          "FILE-CONTROL with ASSIGN to file-name variables",
+          "Fixed-format columns, IDENTIFICATION/ENVIRONMENT/DATA/PROCEDURE DIVISION structure",
+          "No EXEC SQL or EXEC CICS",
+          "Linux-style file paths (/var/tmp/)",
+          "PROGRAM-ID ORCGJ02 matching JMA ORCA open-source medical software"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch/interactive accounting card input program (component J02) of the JMA ORCA standard medical receipt software system for Japan. It handles patient accounting card entry, insurance combination management, diagnosis history, and receipt review functions for a Japanese medical clinic billing system.",
+        "domain": "healthcare / medical billing (Japanese medical insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in EUC-JP (decoded as latin-1, hence garbled)",
+        "Large SPA (scratchpad area) file I/O for screen state persistence",
+        "Extensive use of COPY directives for shared data structures (CPJ02SPASCR.INC, COMMON-SPA, J01COMMON-SPA, J02SCR-SPA, ENUM-VALUE)",
+        "No EXEC SQL or EXEC CICS",
+        "81 CALL statements and 848 PERFORM statements indicating complex modular structure",
+        "106 GOTO statements",
+        "Large working storage (30000-byte SPA record, 10-occurrence array)",
+        "JMA Open Source License header",
+        "Linux file paths (/var/tmp/)",
+        "Extensive flag and index working-storage areas typical of ORCA programs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is 512KB with 12180 lines, consistent with a large production COBOL program. Comments are in Japanese EUC-JP encoding but were decoded as latin-1, resulting in garbled multi-byte characters. The program is part of the well-known JMA ORCA open-source medical receipt software project for Japan. The COPY statements reference external copybooks not shown here. No COMP-3 usage detected despite being a financial/billing application, which is consistent with GnuCOBOL/OpenCOBOL usage on Linux."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8787,
+      "completion_tokens": 696,
+      "total_tokens": 9483,
+      "cost": 0.036801,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036801,
+        "upstream_inference_prompt_cost": 0.026361,
+        "upstream_inference_completions_cost": 0.01044
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.83,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

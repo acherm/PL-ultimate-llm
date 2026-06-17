@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:156358ae54c7ff447d714840ece88bfb92402181",
+    "sha1_git": "156358ae54c7ff447d714840ece88bfb92402181",
+    "filename": "/ORCSCWKSRY.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 220738,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:156358ae54c7ff447d714840ece88bfb92402181/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:156358ae54c7ff447d714840ece88bfb92402181/raw/"
+  },
+  "indicators": {
+    "bytes_len": 220738,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4950,
+    "blank_lines": 0,
+    "comment_lines": 1449,
+    "code_lines": 3501,
+    "comment_ratio": 0.293,
+    "max_line_length": 76,
+    "avg_line_length": 43.6,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSCWKSRY"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 36,
+    "call_count": 21,
+    "perform_count": 157,
+    "goto_count": 13,
+    "pic_count": 163,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or Micro Focus (Linux/Unix environment, JMA ORCA project)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "OCCURS ... INDEXED BY clause",
+          "REDEFINES clause",
+          "COPY statements with REPLACING",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "File paths like /var/tmp/ indicating Unix/Linux environment",
+          "No EXEC SQL or EXEC CICS",
+          "PERFORM and CALL usage consistent with COBOL-85"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA open-source medical receipt software system. It handles work/diagnosis act expansion and registration processing (WKSRY: 診療行為 = medical treatment acts), computing medical fee points, insurance calculations, and related billing logic. It appears to be a subprogram called for processing medical treatment records including time-based surcharges, group/bundled diagnoses, and insurance combinations.",
+        "domain": "healthcare/medical billing (Japanese medical insurance receipt processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, appearing garbled)",
+        "COPY statements referencing multiple INC files (CPWKSRYACT.INC, CPTENSU.INC, CPTENSUPLUS.INC, CMSYONIKATBL.INC, CMTIMEKSN2016.INC)",
+        "OCCURS with INDEXED BY for table handling",
+        "REDEFINES for table overlay",
+        "21 CALL statements indicating heavy use of subprogram calls",
+        "157 PERFORM statements indicating structured procedural decomposition",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Large file (220KB, 4950 lines) suggesting production-grade complexity",
+        "Extensive revision history in comments spanning 2005-2016",
+        "Unix file paths (/var/tmp/) confirming Linux deployment"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known JMA ORCA (Open Receipt Computer Advantage) project, an open-source Japanese medical billing system. Comments are in Japanese encoded in EUC-JP or Shift-JIS but decoded here as latin-1, causing garbled display. The program name ORCSCWKSRY suggests it is the 'work diagnosis act' (診療行為) processing subprogram. The extensive change history, large size, and structured use of COPY books and subprogram calls all indicate mature production code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9383,
+      "completion_tokens": 756,
+      "total_tokens": 10139,
+      "cost": 0.039489,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039489,
+        "upstream_inference_prompt_cost": 0.028149,
+        "upstream_inference_completions_cost": 0.01134
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.04,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

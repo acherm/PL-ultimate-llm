@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b13de34ad68feb8d4f90291ac0276876b4f52c88",
+    "sha1_git": "b13de34ad68feb8d4f90291ac0276876b4f52c88",
+    "filename": "/ORCSSKJKEEP.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 78211,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b13de34ad68feb8d4f90291ac0276876b4f52c88/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b13de34ad68feb8d4f90291ac0276876b4f52c88/raw/"
+  },
+  "indicators": {
+    "bytes_len": 78211,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1719,
+    "blank_lines": 0,
+    "comment_lines": 423,
+    "code_lines": 1296,
+    "comment_ratio": 0.246,
+    "max_line_length": 75,
+    "avg_line_length": 44.5,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSSKJKEEP"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 5,
+    "perform_count": 163,
+    "goto_count": 3,
+    "pic_count": 70,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PERFORM ... VARYING ... UNTIL construct",
+          "INITIALIZE statement",
+          "COPY statements for include files (.INC)",
+          "CALL 'ORCSDAY' USING linkage areas",
+          "EXIT PROGRAM",
+          "PIC 9(nn) and PIC X(nn) data definitions",
+          "OCCURS clauses without INDEXED BY (COBOL-85 style)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles hospitalization fee calculation data maintenance, specifically determining targets for meal/food expense replacement processing related to psychiatric ward long-term hospitalization (a 2016 Japanese medical fee revision). It reads and validates patient master, hospitalization accounting, and insurance combination records to produce output flags and dates for downstream processing.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS garbled as latin-1)",
+        "Extensive use of COPY statements for modular record layouts (.INC files)",
+        "CALL to external subprograms: ORCSDAY (date utility), ORCSLNK, etc.",
+        "LINKAGE SECTION with SPA-AREA (common SPA pattern typical of ORCA/OpenCOBOL batch subprograms)",
+        "OCCURS tables for hospitalization history and insurance combination tracking",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP (middleware control parameter) table/pathname pattern for DB access",
+        "DISPLAY statements left in production code (debug traces)",
+        "163 PERFORM statements indicating complex procedural logic",
+        "Copyright notice: JMA Open Source License, 2002"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing mojibake in the display. The MCP-TABLE/MCP-PATHNAME pattern is characteristic of the ORCA open-source medical claims system used widely in Japan. DISPLAY debug statements suggest this may be a development/test build of an otherwise production module. No embedded SQL; database access is abstracted through the MCP copybook mechanism. Source is truncated at 16000 chars out of 78211 bytes, so later sections (including most of PROCEDURE DIVISION) are not visible, but the structure is unambiguous."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8609,
+      "completion_tokens": 757,
+      "total_tokens": 9366,
+      "cost": 0.037182,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037182,
+        "upstream_inference_prompt_cost": 0.025827,
+        "upstream_inference_completions_cost": 0.011355
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.96,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

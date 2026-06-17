@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a882047d3b030dd1459ec85ffa3fca06c008ae88",
+    "sha1_git": "a882047d3b030dd1459ec85ffa3fca06c008ae88",
+    "filename": "/ORCGI01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 367298,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a882047d3b030dd1459ec85ffa3fca06c008ae88/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a882047d3b030dd1459ec85ffa3fca06c008ae88/raw/"
+  },
+  "indicators": {
+    "bytes_len": 367298,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 9228,
+    "blank_lines": 5,
+    "comment_lines": 2651,
+    "code_lines": 6572,
+    "comment_ratio": 0.287,
+    "max_line_length": 74,
+    "avg_line_length": 38.8,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 56,
+    "call_count": 27,
+    "perform_count": 574,
+    "goto_count": 197,
+    "pic_count": 171,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGI01",
+          "WORKING-STORAGE SECTION with PIC clauses",
+          "COPY statements with REPLACING",
+          "OCCURS ... INDEXED BY",
+          "PIC S9(9) BINARY (not COMP-3, consistent with GnuCOBOL/OpenCOBOL)",
+          "Fixed-format source, max line length 74",
+          "JMA ORCA open-source medical software project copyright header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch/online registration program for hospital admission and discharge (入退院登録) within the ORCA JMA standard medical receipt software system. It manages patient hospitalization records, insurance combination data, disease name records, and related billing/collection information. It is part of the Japanese Medical Association's open-source clinic management system.",
+        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive use of COPY statements for shared record layouts (no inline EXEC SQL or EXEC CICS)",
+        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 causing mojibake)",
+        "Large working-storage with many flag, index, and work areas",
+        "OCCURS tables with INDEXED BY for patient history, insurance combinations, and billing records",
+        "PIC S9(9) BINARY usage (no COMP-3)",
+        "27 CALL statements and 574 PERFORM statements indicating a large, modular production program",
+        "197 GO TO statements typical of older COBOL-85 style",
+        "No EXEC SQL or EXEC CICS — likely uses file I/O or PostgreSQL via CALL interface"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is 367KB / 9228 lines and was truncated to 16000 chars for review; the full program is much larger. Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as Latin-1, producing mojibake. The ORCA project is a well-known open-source Japanese medical clinic management system. The program handles hospital admission/discharge registration (入退院登録 I01). No COPY count was reported mechanically (copy_count=0) despite many COPY statements visible in the source — this may be a mechanical counting artifact."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8176,
+      "completion_tokens": 711,
+      "total_tokens": 8887,
+      "cost": 0.035193,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035193,
+        "upstream_inference_prompt_cost": 0.024528,
+        "upstream_inference_completions_cost": 0.010665
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.88,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

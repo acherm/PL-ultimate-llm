@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:47cfe94c3ed5a608fcfe5e61590756324baa22dc",
+    "sha1_git": "47cfe94c3ed5a608fcfe5e61590756324baa22dc",
+    "filename": "/ORCR0300.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 287896,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:47cfe94c3ed5a608fcfe5e61590756324baa22dc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:47cfe94c3ed5a608fcfe5e61590756324baa22dc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 287896,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6194,
+    "blank_lines": 1,
+    "comment_lines": 1640,
+    "code_lines": 4553,
+    "comment_ratio": 0.265,
+    "max_line_length": 116,
+    "avg_line_length": 45.5,
+    "long_lines_over_72": 49,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0300"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 45,
+    "call_count": 54,
+    "perform_count": 389,
+    "goto_count": 17,
+    "pic_count": 411,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely GnuCOBOL / OpenCOBOL given JMA ORCA open-source context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT … ASSIGN … ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY statements referencing .INC copybooks",
+          "PIC X(nn) field definitions",
+          "Fixed-format source layout (columns 7-72)",
+          "PERFORM (389 occurrences), CALL (54 occurrences), GO TO (17 occurrences)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ORCR0300 is a batch program that creates/edits receipt (レセプト) electronic claim files in CSV format for the JMA (Japan Medical Association) ORCA standard medical-receipt software system. It reads multiple indexed receipt detail files (RECE02–RECE11) and writes formatted claim records, handling insurance history, surgical history, diagnosis details, drug/device items, comments, and various regional/prefectural billing rules.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
+        "Multiple INDEXED files with DYNAMIC access (RECE02, RECE03, RECE04, RECE05, RECE09, RECE11)",
+        "COPY statements referencing external copybooks (.INC files: CPRCF002, CPRCF0031, CPRCF0041, CPRCF005, CPRCF009, CPRCF011)",
+        "Extensive Japanese-language comments (EUC-JP / latin-1 decoded, hence garbled in ASCII view)",
+        "Large program: ~6200 lines, 54 CALLs, 389 PERFORMs",
+        "Detailed revision history spanning 2003–2006 with named developers",
+        "No COMP-3 usage despite numeric processing (uses PIC X and PIC 9 fields)",
+        "Error file (RECEERR-FILE) for exception reporting",
+        "Open-source JMA ORCA project (Japan Medical Association)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP encoded, appearing garbled. The program is part of the well-known open-source JMA ORCA medical receipt system. Source is truncated at 16000 chars out of ~288KB; the full program is substantially larger. No COMP-3 fields visible in the truncated portion despite arithmetic operations, which is slightly unusual but not disqualifying. The .INC copybooks are referenced via COPY but not inlined, so copy_count=0 in the mechanical indicators reflects only inline COPYs counted differently."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12979,
+      "completion_tokens": 811,
+      "total_tokens": 13790,
+      "cost": 0.051102,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.051102,
+        "upstream_inference_prompt_cost": 0.038937,
+        "upstream_inference_completions_cost": 0.012165
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.37,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

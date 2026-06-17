@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:565fce844b7702a6d5924e6bbbda0b8e8466e770",
+    "sha1_git": "565fce844b7702a6d5924e6bbbda0b8e8466e770",
+    "filename": "/ORCR0655.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 39162,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:565fce844b7702a6d5924e6bbbda0b8e8466e770/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:565fce844b7702a6d5924e6bbbda0b8e8466e770/raw/"
+  },
+  "indicators": {
+    "bytes_len": 39162,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 945,
+    "blank_lines": 0,
+    "comment_lines": 286,
+    "code_lines": 659,
+    "comment_ratio": 0.303,
+    "max_line_length": 74,
+    "avg_line_length": 40.4,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0655"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 19,
+    "call_count": 2,
+    "perform_count": 60,
+    "goto_count": 0,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or Micro Focus COBOL on Linux/Unix, likely targeting the ORCA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM ... UNTIL with END-IF / END-UNSTRING / END-IF scope terminators (COBOL-85)",
+          "INITIALIZE verb used on multiple data areas",
+          "OPEN I-O and OPEN INPUT/OUTPUT with indexed files using DYNAMIC access",
+          "COPY ... REPLACING //token// BY //token// syntax (double-slash delimiters typical of GnuCOBOL/OpenCOBOL)",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING",
+          "EXIT PROGRAM vs STOP RUN conditional branch",
+          "No EXEC SQL or EXEC CICS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This batch program (ORCR0655) is part of the ORCA Japan Medical Association standard receipt (medical billing) software. It consolidates/aggregates same-item receipt line entries (同一剤のまとめ) across indexed files (RECE62, RECE64, RECE65, RECE642, RECE64W) for medical claim processing. It reads receipt detail records, groups them by treatment category, and rewrites the consolidated results to working/output files.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
+        "COPY ... REPLACING with double-slash delimiter syntax",
+        "Multiple indexed files with DYNAMIC and SEQUENTIAL access modes opened on the same physical file via different SELECT aliases (RECE642-FILE / RECE642X-FILE)",
+        "Job management sub-call (ORCSJOB) for step/cancel control",
+        "UNSTRING used to parse comma-delimited COMMAND-PARAM from LINKAGE SECTION",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "STOP RUN vs EXIT PROGRAM conditional on shell ID (RECEPTX)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in garbled multi-byte characters in comments. The program is clearly part of the open-source ORCA medical receipt system (JMA, Japan). The COPY statements reference external copybooks (.INC files) that are not shown, so full data layout cannot be verified. The double-slash REPLACING syntax and overall structure are consistent with GnuCOBOL/OpenCOBOL as used in the ORCA project."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7103,
+      "completion_tokens": 757,
+      "total_tokens": 7860,
+      "cost": 0.032664,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032664,
+        "upstream_inference_prompt_cost": 0.021309,
+        "upstream_inference_completions_cost": 0.011355
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.27,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:43952712bf3fdbcf7f7686264a9cfdfa9f39ad7d",
+    "sha1_git": "43952712bf3fdbcf7f7686264a9cfdfa9f39ad7d",
+    "filename": "/ORCSC54201004.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 72849,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:43952712bf3fdbcf7f7686264a9cfdfa9f39ad7d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:43952712bf3fdbcf7f7686264a9cfdfa9f39ad7d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 72849,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1709,
+    "blank_lines": 0,
+    "comment_lines": 539,
+    "code_lines": 1170,
+    "comment_ratio": 0.315,
+    "max_line_length": 74,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC54201004"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 4,
+    "perform_count": 80,
+    "goto_count": 7,
+    "pic_count": 77,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Fujitsu/NEC COBOL (Japanese mainframe/open systems)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "EVALUATE ... WHEN ... END-EVALUATE (COBOL-85)",
+          "PERFORM VARYING ... UNTIL with END-PERFORM",
+          "COPY statements with REPLACING clause",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "PIC 9(nn) and PIC X(nn) data definitions",
+          "EXIT PROGRAM",
+          "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled), typical of Japanese COBOL systems (ORCA/JMA medical software)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA Standard Receipt Software) medical billing system for Japan. It performs checking, editing, and automatic calculation (santei) of medical procedure (shinryo koi) line items, including anesthesia checks, oxygen supplement ratio auto-addition, time-based surcharge calculations, and waste disposal processing. It is a subprogram called with a linkage area containing shared parameters.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
+        "COPY statements referencing multiple domain-specific copybooks (CPTENSU.INC, CPSANTEI.INC, CPORCSC00.INC, MCPAREA, etc.)",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, ORCSC00AREA, WRK-SCR-REC, SPA-AREA)",
+        "OCCURS clause for table handling (TBL-MASUICHK-OCC OCCURS 400, TBL-CHK-OCC OCCURS 31)",
+        "REDEFINES clause usage",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Open source medical billing software (JMA Open Source License)",
+        "Version history spanning 2000-2010 in comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but Japanese comments are almost certainly Shift-JIS or EUC-JP, causing mojibake in the comment display. The program is clearly production medical billing software from the ORCA project (Japan Medical Association). The COPY statements reference many external copybooks not shown in the truncated source. The 16000-char truncation covers roughly the first 400 lines of 1709 total, but the structure and purpose are clear from what is visible."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8198,
+      "completion_tokens": 778,
+      "total_tokens": 8976,
+      "cost": 0.036264,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036264,
+        "upstream_inference_prompt_cost": 0.024594,
+        "upstream_inference_completions_cost": 0.01167
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.95,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

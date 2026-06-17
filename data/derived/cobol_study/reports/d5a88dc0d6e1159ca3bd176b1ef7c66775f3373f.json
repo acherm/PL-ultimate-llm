@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d5a88dc0d6e1159ca3bd176b1ef7c66775f3373f",
+    "sha1_git": "d5a88dc0d6e1159ca3bd176b1ef7c66775f3373f",
+    "filename": "/ORCGW06.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 190298,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d5a88dc0d6e1159ca3bd176b1ef7c66775f3373f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d5a88dc0d6e1159ca3bd176b1ef7c66775f3373f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 190298,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4496,
+    "blank_lines": 0,
+    "comment_lines": 1034,
+    "code_lines": 3462,
+    "comment_ratio": 0.23,
+    "max_line_length": 74,
+    "avg_line_length": 41.3,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW06"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 73,
+    "call_count": 24,
+    "perform_count": 267,
+    "goto_count": 3,
+    "pic_count": 152,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL / ORCA project)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGW06",
+          "COPY directives for COMMON-SPA, W01COMMON-SPA, ENUM-VALUE",
+          "OCCURS clauses, PIC X/9 definitions consistent with COBOL-85",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "ORCA project header: 'JMA standard receipt software', Japan Medical Association copyright 2002",
+          "No EXEC SQL or EXEC CICS blocks",
+          "24 CALL statements, 267 PERFORM statements typical of GnuCOBOL batch programs"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system and handles staff/employee information management (職員情報 - W06 component) within the system administration subsystem. It manages user registration, authority settings, specialty department codes, and various flag configurations for medical staff in a Japanese medical billing system.",
+        "domain": "healthcare/medical billing (Japanese medical association receipt software)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
+        "Large SPA (Scratch Pad Area) working storage structure with multiple nested OCCURS tables",
+        "COPY statements for shared SPA definitions (COMMON-SPA, W01COMMON-SPA, ENUM-VALUE)",
+        "No EXEC SQL or EXEC CICS — likely uses CALL-based database access",
+        "Extensive version history in comments spanning 2000-2010",
+        "24 CALL statements suggesting modular subprogram architecture",
+        "267 PERFORM statements indicating complex procedural logic",
+        "Only 3 GOTO statements (minimal use)",
+        "No COMP-3 usage despite being a production financial/medical system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was archived with latin-1 decoding but the comments contain Japanese text encoded in EUC-JP or Shift-JIS, resulting in mojibake. The source is clearly genuine production COBOL from the open-source ORCA medical receipt software project by the Japan Medical Association. The truncated portion shows only the WORKING-STORAGE SECTION; the PROCEDURE DIVISION with the actual logic is not visible but inferred from the mechanical indicators (267 PERFORMs, 24 CALLs). The 6 lines over 72 characters are minor and likely within the 80-column tolerance of the compiler used."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8687,
+      "completion_tokens": 736,
+      "total_tokens": 9423,
+      "cost": 0.037101,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037101,
+        "upstream_inference_prompt_cost": 0.026061,
+        "upstream_inference_completions_cost": 0.01104
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.25,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b777f6c11f76aa14426f27e3025407c9b5f6ef6b",
+    "sha1_git": "b777f6c11f76aa14426f27e3025407c9b5f6ef6b",
+    "filename": "/POSTCHQ.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 94376,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b777f6c11f76aa14426f27e3025407c9b5f6ef6b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b777f6c11f76aa14426f27e3025407c9b5f6ef6b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 94376,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2844,
+    "blank_lines": 200,
+    "comment_lines": 273,
+    "code_lines": 2371,
+    "comment_ratio": 0.103,
+    "max_line_length": 74,
+    "avg_line_length": 31.2,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "POSTCHQ"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 74,
+    "call_count": 6,
+    "perform_count": 181,
+    "goto_count": 115,
+    "pic_count": 494,
+    "comp3_count": 30,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely MF Personal COBOL or MF COBOL for DOS/Windows)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$set LINKCOUNT\"448\" compiler directive at top (Micro Focus style)",
+          "COMP-5 usage (Micro Focus native binary)",
+          "CRT STATUS IS KEY-STATUS (Micro Focus screen handling)",
+          "CURSOR IS CSTART, CONSOLE IS CRT (Micro Focus special-names)",
+          "X\"B3\", X\"CD\" hex literals for box-drawing characters (PC/DOS era)",
+          "COPY statements with .SL, .FDE, .FD, .WS, .ID suffixes (Micro Focus library conventions)",
+          "88-level condition names on WS-POST",
+          "COMP-3 for packed decimal fields"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "POSTCHQ posts cheques from a batch/print file to the accounts payable system. It handles both normal cheques and post-dated cheques (routing the latter to a PDCHEQ file), updates creditor accounts, and generates a printed audit report with batch and page numbering.",
+        "domain": "banking",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Micro Focus $set compiler directive",
+        "COMP-3 (packed decimal) for monetary and batch fields",
+        "COMP-5 (native binary) for index/subscript fields",
+        "CRT STATUS / CURSOR / CONSOLE special-names for interactive terminal support",
+        "Extensive use of COPY statements for file definitions and working-storage",
+        "Box-drawing characters (X\"B3\", X\"CD\", \"³\", \"°\") for screen UI",
+        "Post-dated cheque handling via PDCHEQ file",
+        "General ledger integration (GLTRAN, GACCNT)",
+        "Printer control fields with condensed/expanded print type codes",
+        "GNU GPL copyright notice embedded in SECURITY paragraph",
+        "181 PERFORM statements and 115 GOTO statements indicating complex procedural flow"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 characters; the PROCEDURE DIVISION is not visible in the excerpt but the structural indicators confirm 2371 code lines and 181 PERFORMs/115 GOTOs. The program is clearly a real-world accounts payable cheque posting system authored by J.W. Lemmon (APAC), version 8.13.07 dated March 2008, licensed under GPL v2+. The use of PC box-drawing characters and Micro Focus-specific features strongly suggests a DOS/Windows Micro Focus COBOL environment."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8056,
+      "completion_tokens": 742,
+      "total_tokens": 8798,
+      "cost": 0.035298,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035298,
+        "upstream_inference_prompt_cost": 0.024168,
+        "upstream_inference_completions_cost": 0.01113
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.51,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

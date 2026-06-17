@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cf9be8858f6d86ac7f2db014393e389a086a4a87",
+    "sha1_git": "cf9be8858f6d86ac7f2db014393e389a086a4a87",
+    "filename": "/ORCGW03.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 76864,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cf9be8858f6d86ac7f2db014393e389a086a4a87/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cf9be8858f6d86ac7f2db014393e389a086a4a87/raw/"
+  },
+  "indicators": {
+    "bytes_len": 76864,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1923,
+    "blank_lines": 1,
+    "comment_lines": 545,
+    "code_lines": 1377,
+    "comment_ratio": 0.284,
+    "max_line_length": 74,
+    "avg_line_length": 39.0,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW03"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 59,
+    "call_count": 12,
+    "perform_count": 127,
+    "goto_count": 12,
+    "pic_count": 65,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGW03",
+          "EVALUATE ... ALSO ... WHEN constructs (COBOL-85)",
+          "END-IF, END-EVALUATE, END-PERFORM scope terminators",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING",
+          "COPY directives for .INC files (MCPAREA, ORCA-SPA, LINKAREA, W01.INC through W99.INC)",
+          "No EXEC SQL or EXEC CICS",
+          "Fixed-format source layout"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system used in Japanese medical institutions. It handles facility/installation standard information settings (施設基準情報設定), managing screen navigation, data entry, and database read/write operations for system management master records. It is a screen-driven subprogram that interacts with a GUI front-end via MCP (message/control protocol) events.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, causing mojibake in latin-1 decoding)",
+        "MCP (Message Control Protocol) event-driven architecture with MCP-STATUS and MCP-EVENT evaluation",
+        "Extensive use of COPY statements for screen layouts (W01.INC through W99.INC) and data structures",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "No EXEC SQL — uses proprietary MCP database access (PERFORM 910-DBSELECT-SEC, 990-DBCLOSE-SEC)",
+        "OCCURS clauses for table structures (SPA-GMN-TBLO OCCURS 25, SPA-NAI-TBLO OCCURS 1000)",
+        "SPA (Scratch Pad Area) pattern for inter-program state management",
+        "127 PERFORM statements indicating complex procedural logic",
+        "Open Source license header (JMA Open Source License)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine production COBOL from the open-source ORCA medical receipt system developed by the Japan Medical Association (JMA). Japanese comments are garbled because the file is likely EUC-JP or Shift-JIS encoded but was decoded as latin-1. The COPY count of 0 in mechanical indicators is likely because the copybook references use quoted filenames (COPY 'COMMON-SPA') which may not have been detected by the mechanical parser. The program uses a proprietary MCP database abstraction layer rather than EXEC SQL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7144,
+      "completion_tokens": 792,
+      "total_tokens": 7936,
+      "cost": 0.033312,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033312,
+        "upstream_inference_prompt_cost": 0.021432,
+        "upstream_inference_completions_cost": 0.01188
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.14,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

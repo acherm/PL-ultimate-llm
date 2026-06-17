@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bb689cebb7b330a68be593735de9bd1a48c2d49e",
+    "sha1_git": "bb689cebb7b330a68be593735de9bd1a48c2d49e",
+    "filename": "/ORCGW07.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 476847,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bb689cebb7b330a68be593735de9bd1a48c2d49e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bb689cebb7b330a68be593735de9bd1a48c2d49e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 476847,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 10208,
+    "blank_lines": 0,
+    "comment_lines": 1989,
+    "code_lines": 8219,
+    "comment_ratio": 0.195,
+    "max_line_length": 79,
+    "avg_line_length": 45.7,
+    "long_lines_over_72": 14,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW07"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 74,
+    "call_count": 28,
+    "perform_count": 755,
+    "goto_count": 10,
+    "pic_count": 532,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "COPY statements referencing 'COMMON-SPA' and 'W01COMMON-SPA'",
+          "PIC X / PIC 9 field definitions throughout",
+          "OCCURS clauses used extensively",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL or EXEC CICS — standalone batch/subprogram",
+          "Japanese comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
+          "Project header identifies JMA Open Source License / ORCA medical receipt software"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system used by Japanese medical institutions. It implements system management / automatic calculation information settings (screen W07), handling configuration parameters for outpatient management, time-surcharge checks, hospitalization initial-visit fees, drug information provision fees, and various other medical billing control flags. It is a screen-driven configuration/settings maintenance program.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Extensive Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake)",
+        "Large SPA (Scratchpad Area) working-storage structure with many OCCURS tables for screen state",
+        "28 CALL statements and 755 PERFORM statements indicating complex procedural logic",
+        "No EXEC SQL or EXEC CICS — likely uses proprietary ORCA middleware for screen/DB access",
+        "COPY statements for shared SPA copybooks (COMMON-SPA, W01COMMON-SPA)",
+        "Long revision history spanning 2000–2009 with named developers",
+        "Fixed-format COBOL with max line length 79, 14 lines slightly over 72 cols"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in latin-1 but the Japanese comments are actually EUC-JP or Shift-JIS, causing mojibake in the displayed text. The program is clearly production-grade medical software from the open-source ORCA project maintained by the Japan Medical Association. The 'online' classification is based on the screen SPA structure and CALL-based middleware pattern typical of ORCA, not CICS. No COMP-3 usage detected despite medical/financial domain, which is consistent with GnuCOBOL/OpenCOBOL usage. Source truncated at 16000 chars out of ~477KB total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10441,
+      "completion_tokens": 764,
+      "total_tokens": 11205,
+      "cost": 0.042783,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.042783,
+        "upstream_inference_prompt_cost": 0.031323,
+        "upstream_inference_completions_cost": 0.01146
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.49,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

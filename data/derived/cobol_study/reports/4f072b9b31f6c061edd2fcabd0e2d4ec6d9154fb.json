@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4f072b9b31f6c061edd2fcabd0e2d4ec6d9154fb",
+    "sha1_git": "4f072b9b31f6c061edd2fcabd0e2d4ec6d9154fb",
+    "filename": "/ORCR0040.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 598656,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4f072b9b31f6c061edd2fcabd0e2d4ec6d9154fb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4f072b9b31f6c061edd2fcabd0e2d4ec6d9154fb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 598656,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 13129,
+    "blank_lines": 0,
+    "comment_lines": 2640,
+    "code_lines": 10489,
+    "comment_ratio": 0.201,
+    "max_line_length": 78,
+    "avg_line_length": 44.6,
+    "long_lines_over_72": 55,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0040"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 43,
+    "call_count": 53,
+    "perform_count": 1083,
+    "goto_count": 0,
+    "pic_count": 540,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical software",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING using // delimiters (GnuCOBOL/OpenCOBOL style)",
+          "FD records with COPY statements for copybooks (.INC extension)",
+          "WORKING-STORAGE SECTION with COPY statements",
+          "Fixed-format source, max line 78, comment lines in column 7 (*)",
+          "No EXEC SQL / EXEC CICS — pure batch COBOL",
+          "PROGRAM-ID ORCR0040 matches filename ORCR0040.CBL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt (claims) software. It handles comment editing/auto-recording for medical receipts, processing multiple indexed receipt data files (RECE02, RECE04, RECE05 and their work/output variants) and writing error records. The program has been extensively maintained over many years to support Japanese national health insurance billing rule changes.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC/Shift-JIS encoded comments throughout (latin-1 decoded, hence garbled display)",
+        "COPY with // delimiter REPLACING syntax (GnuCOBOL/OpenCOBOL convention)",
+        "Multiple indexed VSAM-style files with DYNAMIC access mode",
+        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
+        "Very large program: ~13,000 lines, 53 CALL statements, 1083 PERFORM statements",
+        "Extensive revision history spanning 2000–2018 in comment header",
+        "Copybook includes via .INC files (CPRCF002.INC, CPRCF004.INC, CPRCF005.INC, etc.)",
+        "No COMP-3 usage despite being a financial/billing system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded with latin-1 but the Japanese comments are likely EUC-JP or Shift-JIS encoded, causing garbled display. The COPY REPLACING with // delimiters is characteristic of GnuCOBOL/OpenCOBOL. The program is clearly production-grade medical billing software from the open-source ORCA project maintained by the Japan Medical Association. The truncation at 16000 chars covers only the header and early DATA DIVISION; the bulk of the PROCEDURE DIVISION is not shown but the structural indicators (1083 PERFORMs, 53 CALLs, 540 PICs) confirm a large, complex production program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12719,
+      "completion_tokens": 826,
+      "total_tokens": 13545,
+      "cost": 0.050547,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.050547,
+        "upstream_inference_prompt_cost": 0.038157,
+        "upstream_inference_completions_cost": 0.01239
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.23,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

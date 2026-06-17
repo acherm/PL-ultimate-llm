@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2edb0f5f5f2d5fa22f052e79d5572d4e4b3e78e3",
+    "sha1_git": "2edb0f5f5f2d5fa22f052e79d5572d4e4b3e78e3",
+    "filename": "/HCIPDB01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7581,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2edb0f5f5f2d5fa22f052e79d5572d4e4b3e78e3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2edb0f5f5f2d5fa22f052e79d5572d4e4b3e78e3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7581,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 163,
+    "blank_lines": 0,
+    "comment_lines": 69,
+    "code_lines": 94,
+    "comment_ratio": 0.423,
+    "max_line_length": 72,
+    "avg_line_length": 45.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "HCIPDB01"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 1,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 13,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS/DB2)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS ABEND ABCODE / EXEC CICS RETURN END-EXEC",
+          "EXEC SQL INCLUDE SQLCA / INCLUDE HCCMAREA END-EXEC",
+          "EIB fields: EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN",
+          "USAGE IS POINTER in WS-HEADER",
+          "PIC S9(4) COMP and PIC S9(9) COMP for DB2 host variables",
+          "Evaluate/End-Evaluate on SQLCODE",
+          "Fixed format, max line length 72, COPY statements"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "An online CICS program (transaction HCAZ, option 2 – Inquire Patient) that receives a commarea containing a patient ID, validates the commarea, issues a DB2 SELECT against the PATIENT table, and returns patient demographic details (name, DOB, insurance card, address, contact info, username) back to the caller via the commarea.",
+        "domain": "healthcare / patient management",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL with DB2 host variables (SQLCA included, SELECT with INTO clause)",
+        "EXEC CICS commands (ABEND, RETURN) with EIB field references",
+        "EXEC SQL INCLUDE HCCMAREA in LINKAGE SECTION (unusual placement)",
+        "Intentional bug markers (%bug1, %bug2) suggesting a training/demo scenario",
+        "COPY statements for error-handling copybooks (HCERRSWS, HCERRSPD)",
+        "PERFORM WRITE-ERROR-MESSAGE for error handling",
+        "USAGE IS POINTER for commarea address",
+        "Commented-out bug injection code for educational purposes"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The %bug markers and comment 'Look for %bug to introduce bugs' strongly suggest this is part of an IBM CICS/DB2 training or demo system (possibly IBM's Health Care sample application). Despite the educational framing, the code structure, EIB usage, SQL patterns, and error handling are all production-quality IBM Enterprise COBOL conventions. The EXEC SQL INCLUDE inside LINKAGE SECTION is a legitimate IBM DB2 COBOL technique for mapping a commarea to a DB2-defined structure."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2609,
+      "completion_tokens": 696,
+      "total_tokens": 3305,
+      "cost": 0.018267,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018267,
+        "upstream_inference_prompt_cost": 0.007827,
+        "upstream_inference_completions_cost": 0.01044
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 15.41,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

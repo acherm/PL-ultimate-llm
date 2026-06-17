@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dc5216205c2ab36f4cda843b988889c079807a92",
+    "sha1_git": "dc5216205c2ab36f4cda843b988889c079807a92",
+    "filename": "/ORCR1030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 401848,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dc5216205c2ab36f4cda843b988889c079807a92/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dc5216205c2ab36f4cda843b988889c079807a92/raw/"
+  },
+  "indicators": {
+    "bytes_len": 401848,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 8994,
+    "blank_lines": 0,
+    "comment_lines": 2038,
+    "code_lines": 6956,
+    "comment_ratio": 0.227,
+    "max_line_length": 78,
+    "avg_line_length": 43.7,
+    "long_lines_over_72": 27,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR1030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 40,
+    "call_count": 45,
+    "perform_count": 799,
+    "goto_count": 0,
+    "pic_count": 409,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or Micro Focus COBOL on Linux/Unix",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY ... REPLACING //token// BY //token// syntax (double-slash delimiters typical of GnuCOBOL/Micro Focus)",
+          "FD records with COPY statements for include files (.INC extension)",
+          "PIC X(nn) and PIC 9(nn) data definitions throughout",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL or EXEC CICS blocks",
+          "Japanese medical association copyright header; ORCA project (JMA open-source medical software, known to use GnuCOBOL)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program (ORCR1030) is part of the ORCA JMA standard medical receipt (claims) software system. It processes and edits receipt comment data for public-injury (Kouhai) receipts covering outpatient and inpatient cases. It reads, transforms, and writes indexed receipt data files (RECE100, RECE120, RECE130 series) and generates or updates comment records on medical claims.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY ... REPLACING with double-slash delimiter syntax (GnuCOBOL/Micro Focus style)",
+        "Multiple indexed VSAM-style files with DYNAMIC access mode",
+        "Large working-storage with many flag (FLG-*), counter (CNT-*), and index (IDX-*) areas",
+        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS rendered as Latin-1)",
+        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
+        "45 CALL statements and 799 PERFORM statements indicating a large, modular batch program",
+        "Error file (RECEERR-FILE) for logging processing errors",
+        "Extensive revision history in comments spanning 2007–2016"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as Latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing mojibake in the displayed text. The COPY statements reference external .INC copybooks that are not shown. The double-slash REPLACING delimiter is characteristic of GnuCOBOL or Micro Focus rather than IBM Enterprise COBOL. The program is part of the well-known open-source ORCA medical claims system developed by JMA (Japan Medical Association). Source is truncated at 16000 chars out of ~402KB total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8575,
+      "completion_tokens": 806,
+      "total_tokens": 9381,
+      "cost": 0.037815,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037815,
+        "upstream_inference_prompt_cost": 0.025725,
+        "upstream_inference_completions_cost": 0.01209
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.69,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

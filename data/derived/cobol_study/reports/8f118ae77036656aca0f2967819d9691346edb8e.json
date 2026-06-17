@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8f118ae77036656aca0f2967819d9691346edb8e",
+    "sha1_git": "8f118ae77036656aca0f2967819d9691346edb8e",
+    "filename": "/irs.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 45786,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8f118ae77036656aca0f2967819d9691346edb8e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8f118ae77036656aca0f2967819d9691346edb8e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 45786,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1017,
+    "blank_lines": 0,
+    "comment_lines": 423,
+    "code_lines": 594,
+    "comment_ratio": 0.416,
+    "max_line_length": 146,
+    "avg_line_length": 44.0,
+    "long_lines_over_72": 169,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "irs"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 13,
+    "call_count": 40,
+    "perform_count": 40,
+    "goto_count": 15,
+    "pic_count": 112,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          ">>source free (GnuCOBOL compiler directive)",
+          "*> comment style (GnuCOBOL/OpenCOBOL)",
+          "binary-char data type (GnuCOBOL extension)",
+          "copy 'screenio.cpy' and other GnuCOBOL-style copybooks",
+          "comment 'start of conversion to open/Gnu cobol' in change log",
+          "File-Info layout referencing 'GNU v2 manual'",
+          "program-id. irs. with free format"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "Main menu control program for the IRS (Integrated Revenue/Accounting System) module of the Applewood Computers Accounting System (ACAS). It manages system navigation, calls subordinate programs (irs010–irs090), handles backup scripts, and maintains system parameter files. It also handles date validation, OS detection, and environment variable processing.",
+        "domain": "accounting/finance (small business accounting system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "GnuCOBOL free-format source (>>source free directive)",
+        "Extensive change log spanning 1982–2020",
+        "Multiple COPY statements for copybooks (envdiv.cob, screenio.cpy, wsmaps03.cob, wscall.cob, wstime.cob, wsfnctn.cob, etc.)",
+        "Screen section usage via screenio.cpy",
+        "OS-type detection (Linux, Windows, OS/2, macOS) for backup script selection",
+        "CALL count of 40 including calls to sys002, maps04, acas000, irs010–irs090",
+        "PERFORM count of 40 and GOTO count of 15",
+        "binary-char (GnuCOBOL extension)",
+        "File-Info structure for CBL-FILE-INFO intrinsic",
+        "GNU GPL licensed open-source accounting software",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly a long-lived production COBOL program (originally written 1982, last modified 2020) for a real accounting system. The free-format directive and GnuCOBOL-specific features are unambiguous. The source was truncated at 16000 chars out of ~45786 bytes, but the visible portion is sufficient for confident classification. The high comment ratio (0.416) is largely due to the extensive change log and copyright header."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6041,
+      "completion_tokens": 751,
+      "total_tokens": 6792,
+      "cost": 0.029388,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029388,
+        "upstream_inference_prompt_cost": 0.018123,
+        "upstream_inference_completions_cost": 0.011265
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.32,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

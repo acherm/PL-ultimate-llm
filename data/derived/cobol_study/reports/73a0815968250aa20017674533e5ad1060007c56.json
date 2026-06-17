@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:73a0815968250aa20017674533e5ad1060007c56",
+    "sha1_git": "73a0815968250aa20017674533e5ad1060007c56",
+    "filename": "/ORCR0640.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 491913,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:73a0815968250aa20017674533e5ad1060007c56/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:73a0815968250aa20017674533e5ad1060007c56/raw/"
+  },
+  "indicators": {
+    "bytes_len": 491913,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 10307,
+    "blank_lines": 0,
+    "comment_lines": 1932,
+    "code_lines": 8375,
+    "comment_ratio": 0.187,
+    "max_line_length": 78,
+    "avg_line_length": 46.7,
+    "long_lines_over_72": 35,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0640"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 43,
+    "call_count": 84,
+    "perform_count": 526,
+    "goto_count": 4,
+    "pic_count": 417,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or similar open-source COBOL, possibly targeting a Japanese medical system environment",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING clause (COPY 'CPRCF064.INC' REPLACING //RECE64// BY //RECE644//)",
+          "Fixed-format source layout, max line length 78",
+          "PROGRAM-ID ORCR0640",
+          "No EXEC SQL or EXEC CICS",
+          "Japanese medical association copyright header (JMA Open Source License, ORCA project)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical billing. It appears to aggregate and compute point/score totals broken down by medical treatment category (診療区分別点数集計) for inpatient receipt processing. It reads and writes multiple indexed ISAM files (RECE62, RECE64, RECE65, RECE69) related to medical receipt records.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY statements with REPLACING clause for reusing file record layouts under different names",
+        "Multiple indexed sequential files with DYNAMIC and SEQUENTIAL access modes",
+        "Very large program (~10,000 lines, ~492 KB) with extensive revision history in Japanese comments",
+        "84 CALL statements and 526 PERFORM statements indicating complex modular logic",
+        "No COMP-3 usage despite being a financial/billing system",
+        "No EXEC SQL or EXEC CICS — file I/O is flat ISAM",
+        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, showing mojibake)",
+        "JMA Open Source License header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in a Japanese character encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, resulting in mojibake in the comment lines. The COBOL structure itself is unambiguous. The COPY statements reference .INC files which are copybooks not included in this excerpt. The program is clearly a production medical billing component from the open-source ORCA project maintained by the Japan Medical Association, with a detailed revision history spanning 2002–2006."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 13212,
+      "completion_tokens": 721,
+      "total_tokens": 13933,
+      "cost": 0.050451,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.050451,
+        "upstream_inference_prompt_cost": 0.039636,
+        "upstream_inference_completions_cost": 0.010815
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.84,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

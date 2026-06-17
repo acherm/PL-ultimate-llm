@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:84a7ec21024549614e768d1d4407c86e3c267155",
+    "sha1_git": "84a7ec21024549614e768d1d4407c86e3c267155",
+    "filename": "/ORCBMRCSV09.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 117914,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:84a7ec21024549614e768d1d4407c86e3c267155/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:84a7ec21024549614e768d1d4407c86e3c267155/raw/"
+  },
+  "indicators": {
+    "bytes_len": 117914,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 2729,
+    "blank_lines": 2,
+    "comment_lines": 608,
+    "code_lines": 2119,
+    "comment_ratio": 0.223,
+    "max_line_length": 74,
+    "avg_line_length": 40.8,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBMRCSV09"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 32,
+    "call_count": 14,
+    "perform_count": 199,
+    "goto_count": 3,
+    "pic_count": 130,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (Japanese medical open-source)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM ... UNTIL with END-PERFORM style",
+          "UNSTRING ... END-UNSTRING",
+          "INITIALIZE verb used extensively",
+          "OCCURS ... INDEXED BY clause",
+          "LINKAGE SECTION with USING on PROCEDURE DIVISION",
+          "LINE SEQUENTIAL file organization",
+          "COPY statements with REPLACING using // delimiters (GnuCOBOL style)",
+          "CALL to external subprograms like 'ORCSGETTEMP'",
+          "Fixed-format source, max line length 74"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This batch program generates medical care information CSV data files for the ORCA (JMA standard receipt software) system. It reads patient, insurance, diagnosis, and medical-act records from a database and writes formatted CSV output representing clinical/receipt data. It is part of the Japanese Medical Association's open-source electronic medical record and billing system.",
+        "domain": "healthcare / medical billing (Japanese receipt software)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese comments and variable names (UTF-8 encoded)",
+        "Extensive use of COPY statements for record layouts (copybooks)",
+        "UNSTRING used to parse comma-delimited command parameters",
+        "OCCURS with INDEXED BY for table handling",
+        "LINE SEQUENTIAL file organization for CSV output",
+        "No EXEC SQL or EXEC CICS — DB access via CALL to subprograms",
+        "REDEFINES used for numeric/character dual-view of fields",
+        "14 external CALL targets (subprograms for DB, utilities)",
+        "199 PERFORM statements indicating complex procedural logic",
+        "Open-source JMA ORCA project license header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 characters; the full program is 2729 lines. The file is genuine production COBOL from the Japanese open-source ORCA medical receipt system. UTF-8 encoding is confirmed and Japanese text is present in comments and data names. The COPY statement delimiter style (//) is characteristic of GnuCOBOL. No embedded SQL or CICS; database interaction is abstracted through CALL subprograms."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6872,
+      "completion_tokens": 667,
+      "total_tokens": 7539,
+      "cost": 0.030621,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030621,
+        "upstream_inference_prompt_cost": 0.020616,
+        "upstream_inference_completions_cost": 0.010005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.17,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

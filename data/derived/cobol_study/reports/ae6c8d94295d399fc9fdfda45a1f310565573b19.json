@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ae6c8d94295d399fc9fdfda45a1f310565573b19",
+    "sha1_git": "ae6c8d94295d399fc9fdfda45a1f310565573b19",
+    "filename": "/ORCBM510.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 35252,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ae6c8d94295d399fc9fdfda45a1f310565573b19/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ae6c8d94295d399fc9fdfda45a1f310565573b19/raw/"
+  },
+  "indicators": {
+    "bytes_len": 35252,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 909,
+    "blank_lines": 0,
+    "comment_lines": 308,
+    "code_lines": 601,
+    "comment_ratio": 0.339,
+    "max_line_length": 74,
+    "avg_line_length": 37.8,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBM510"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 24,
+    "call_count": 24,
+    "perform_count": 30,
+    "goto_count": 1,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (Linux/Unix variant, likely GnuCOBOL or similar open-source)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM UNTIL / END-PERFORM structured constructs",
+          "EVALUATE / WHEN / END-EVALUATE",
+          "END-UNSTRING, END-IF used throughout",
+          "CALL 'ORCMCPSUB' / 'ORCSJOB' style subprogram calls",
+          "COPY statements with REPLACING clause",
+          "Fixed-format source layout (columns 7-72)",
+          "PROCEDURE DIVISION USING COMMAND-PARAM"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ORCBM510 is a batch COBOL program that generates and prints detailed symptom/diagnosis receipt reports (レセプト明細 - medical receipt detail) for the ORCA Japan Medical Association standard receipt software system. It reads claim management data, patient information, and receipt calculation records, formats them into print layout structures (HCM37), and outputs paginated printed reports distinguishing between social insurance and national insurance submissions.",
+        "domain": "healthcare/medical billing (Japanese medical receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in Latin-1 (Shift-JIS or EUC-JP mojibake)",
+        "Extensive use of COPY statements for modular record layouts (CPRECEDEN.INC, CPPTINF.INC, CPPTKOHINF.INC, CPSYSKANRI.INC, etc.)",
+        "24 CALL statements to external subprograms (ORCMCPSUB, ORCSJOB, etc.)",
+        "Japanese era date conversion (Meiji/Taisho/Showa/Heisei) via 31012-SEIWA-HEN-SEC",
+        "UNSTRING used to parse comma-delimited command parameters",
+        "File status checking with STS-RECEERR",
+        "No EXEC SQL or EXEC CICS — DB access via custom MCP subprogram interface",
+        "JMA Open Source License header (Japan Medical Association ORCA project)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded as Latin-1 (likely EUC-JP or Shift-JIS decoded as Latin-1), resulting in mojibake in the comments and string literals. This is a genuine production program from the well-known open-source ORCA medical receipt system developed by the Japan Medical Association. The source was truncated at 16000 chars out of 35252 bytes, but enough structure is visible to classify with high confidence."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7628,
+      "completion_tokens": 741,
+      "total_tokens": 8369,
+      "cost": 0.033999,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033999,
+        "upstream_inference_prompt_cost": 0.022884,
+        "upstream_inference_completions_cost": 0.011115
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.46,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

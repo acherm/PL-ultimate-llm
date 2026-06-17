@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:52860265717e8d6c3efb78d1cf2c946ea5424271",
+    "sha1_git": "52860265717e8d6c3efb78d1cf2c946ea5424271",
+    "filename": "/ORCBG014.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 239336,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:52860265717e8d6c3efb78d1cf2c946ea5424271/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:52860265717e8d6c3efb78d1cf2c946ea5424271/raw/"
+  },
+  "indicators": {
+    "bytes_len": 239336,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5565,
+    "blank_lines": 0,
+    "comment_lines": 1492,
+    "code_lines": 4073,
+    "comment_ratio": 0.268,
+    "max_line_length": 113,
+    "avg_line_length": 42.0,
+    "long_lines_over_72": 46,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBG014"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 30,
+    "call_count": 47,
+    "perform_count": 260,
+    "goto_count": 47,
+    "pic_count": 258,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA standard receipt software for Linux)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / LINE SEQUENTIAL",
+          "FD records with PIC clauses",
+          "COPY directives referencing .INC files (CPCOMMONDAT2.INC, HCMSL55.INC, CPORCSPRTLNK.INC)",
+          "Fixed-format source layout",
+          "OCCURS clause, FILE STATUS, DYNAMIC access mode",
+          "No EXEC SQL / EXEC CICS — pure batch COBOL",
+          "File paths like /var/tmp/ indicate Linux/Unix environment consistent with GnuCOBOL/OpenCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system used by Japanese medical institutions. It generates an insurance-claim confirmation list (保険請求確認リスト), reading from an indexed statistics file and producing CSV and error output files. It handles various insurance categories (社保, 国保, 公費, 広域連合, etc.) and processing classifications for monthly claim submissions.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments and data names encoded in latin-1 (EUC-JP or Shift-JIS bytes interpreted as latin-1)",
+        "COPY directives referencing project-specific .INC copybooks (CPCOMMONDAT2.INC, HCMSL55.INC, CPORCSPRTLNK.INC)",
+        "Indexed file (TOKEI-FILE) with a complex composite key spanning insurance type, submission destination, insurer number, processing classification, etc.",
+        "CSV output file generation (/var/tmp/ path, LINE SEQUENTIAL)",
+        "Error file output (RECEERR-FILE)",
+        "Large program: 5565 lines, 47 CALLs, 260 PERFORMs, 47 GOTOs",
+        "No COMP-3 usage despite numeric fields (uses PIC 9 display format)",
+        "Version history embedded in comments spanning 2005–2011",
+        "Open-source JMA license header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the Japanese text is almost certainly EUC-JP or Shift-JIS; the garbled characters in comments are a decoding artifact and do not affect the COBOL structure assessment. The source is clearly genuine production COBOL from the well-known open-source ORCA medical receipt system maintained by the Japan Medical Association."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11812,
+      "completion_tokens": 785,
+      "total_tokens": 12597,
+      "cost": 0.047211,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.047211,
+        "upstream_inference_prompt_cost": 0.035436,
+        "upstream_inference_completions_cost": 0.011775
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.68,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

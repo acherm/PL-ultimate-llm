@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:19e5dc617b7f7de82a6c1a3e95b6b4ce29713bf6",
+    "sha1_git": "19e5dc617b7f7de82a6c1a3e95b6b4ce29713bf6",
+    "filename": "/COACTVWS.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 34561,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:19e5dc617b7f7de82a6c1a3e95b6b4ce29713bf6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:19e5dc617b7f7de82a6c1a3e95b6b4ce29713bf6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 34561,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 850,
+    "blank_lines": 97,
+    "comment_lines": 117,
+    "code_lines": 636,
+    "comment_ratio": 0.155,
+    "max_line_length": 72,
+    "avg_line_length": 39.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COACTVWS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 11,
+    "call_count": 0,
+    "perform_count": 16,
+    "goto_count": 6,
+    "pic_count": 91,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS HANDLE ABEND LABEL(...) END-EXEC",
+          "EXEC CICS usage throughout (has_exec_cics: true)",
+          "DFHCOMMAREA, EIBCALEN, DFHBMSCA, DFHAID copybooks",
+          "COPY DFHBMSCA / COPY DFHAID (IBM-supplied BMS copybooks)",
+          "PIC S9(09) COMP (binary computational fields)",
+          "Fixed format, max line length 72, no long lines",
+          "88-level condition names with VALUE clauses",
+          "OCCURS 1 TO 32767 TIMES DEPENDING ON EIBCALEN in LINKAGE SECTION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "COACTVWS is a CICS presentation-layer program for an Account View screen (transaction ALS9). It accepts an account ID from the user, calls the RPC program COACTVWL to retrieve account and customer data, and displays the results on a BMS map (COACTVW/CACTVWA). It handles navigation to/from menu, card list, card detail, and card update screens.",
+        "domain": "banking",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (BMS map send/receive, HANDLE ABEND, program LINK/XCTL)",
+        "RPC pattern: calls COACTVWL via CICS LINK passing WS-RPC-COMMAREA",
+        "BMS copybooks: DFHBMSCA, DFHAID, COACTVW mapset",
+        "Multiple COPY statements for common copybooks (COCOM01Y, CSDAT01Y, CSMSG01Y, CSMSG02Y, CSUSR01Y, COTTL01Y, CVCRD01Y)",
+        "88-level condition names used extensively for flags and return codes",
+        "LINKAGE SECTION with DFHCOMMAREA using DEPENDING ON EIBCALEN",
+        "No EXEC SQL (pure CICS, no DB2 direct access in this program)",
+        "Amazon/AWS Apache 2.0 licensed (CardDemo open-source sample application)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is part of the AWS CardDemo open-source COBOL sample application (Apache 2.0 license, copyright Amazon.com). The source is truncated at 16000 chars but the structure is clear. All four COBOL divisions are present. The program follows standard IBM CICS/BMS patterns consistent with IBM Enterprise COBOL targeting z/OS. No COMP-3 fields are used in the visible portion, though the copybooks (not shown) may contain them."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5281,
+      "completion_tokens": 777,
+      "total_tokens": 6058,
+      "cost": 0.027498,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027498,
+        "upstream_inference_prompt_cost": 0.015843,
+        "upstream_inference_completions_cost": 0.011655
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.61,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

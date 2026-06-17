@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5b1ded1fda3b23f4ad18871010a473e792d9b994",
+    "sha1_git": "5b1ded1fda3b23f4ad18871010a473e792d9b994",
+    "filename": "/ORCR0640.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 387791,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5b1ded1fda3b23f4ad18871010a473e792d9b994/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5b1ded1fda3b23f4ad18871010a473e792d9b994/raw/"
+  },
+  "indicators": {
+    "bytes_len": 387791,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 8156,
+    "blank_lines": 1,
+    "comment_lines": 1540,
+    "code_lines": 6615,
+    "comment_ratio": 0.189,
+    "max_line_length": 78,
+    "avg_line_length": 46.5,
+    "long_lines_over_72": 44,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0640"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 79,
+    "perform_count": 420,
+    "goto_count": 2,
+    "pic_count": 347,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical software",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "COPY ... REPLACING syntax",
+          "PIC X(nn) / PIC 9(nn) field definitions",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "ORCA project (JMA Japan Medical Association open-source medical software, known to use GnuCOBOL/OpenCOBOL)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch COBOL program (ORCR0640) that is part of the ORCA JMA Standard Receipt Software system for Japanese medical billing. It processes inpatient (nyuin) receipt/claim data, reading and writing indexed ISAM files (RECE62, RECE64, RECE65) to generate or update medical insurance claim records. The program handles complex Japanese medical billing rules including point calculations, co-payment amounts, and various insurance categories.",
+        "domain": "healthcare / medical insurance billing (Japanese NHI receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based ISAM processing",
+        "Multiple indexed files with DYNAMIC and SEQUENTIAL access modes",
+        "Extensive COPY ... REPLACING for file record definitions",
+        "Large working-storage with many flag (FLG-*), counter (CNT-*), and index (IDX-*) areas",
+        "79 CALL statements indicating heavy use of subprogram calls",
+        "420 PERFORM statements indicating structured procedural decomposition",
+        "Japanese-language comments encoded in EUC-JP (rendered as latin-1 mojibake)",
+        "Long revision history spanning 2002–2005 with named developers",
+        "No COMP-3 usage despite numeric fields — uses display numeric"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in EUC-JP Japanese but was decoded as latin-1, causing the Japanese comments to appear as mojibake. The program is clearly part of the well-known open-source ORCA (JMA Standard Receipt Software) project used in Japanese medical clinics. The COPY statements reference external copybooks (.INC files) whose content is not shown but are counted as copy_count=0 by the mechanical indicator — likely because the COPY lines themselves are present but the copybook bodies were not inlined. The program is large (8156 lines, ~388KB) and production-quality."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9757,
+      "completion_tokens": 741,
+      "total_tokens": 10498,
+      "cost": 0.040386,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040386,
+        "upstream_inference_prompt_cost": 0.029271,
+        "upstream_inference_completions_cost": 0.011115
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.1,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

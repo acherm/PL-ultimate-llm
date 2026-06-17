@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:705e6471388e98b2a2cd846ca52d2dd64e04eee2",
+    "sha1_git": "705e6471388e98b2a2cd846ca52d2dd64e04eee2",
+    "filename": "/ORCGXG04.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 52900,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:705e6471388e98b2a2cd846ca52d2dd64e04eee2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:705e6471388e98b2a2cd846ca52d2dd64e04eee2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 52900,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1260,
+    "blank_lines": 0,
+    "comment_lines": 310,
+    "code_lines": 950,
+    "comment_ratio": 0.246,
+    "max_line_length": 74,
+    "avg_line_length": 41.0,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGXG04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 16,
+    "call_count": 6,
+    "perform_count": 77,
+    "goto_count": 14,
+    "pic_count": 33,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL / OpenCOBOL (JMA ORCA medical system)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGXG04",
+          "EVALUATE ... ALSO ... WHEN constructs",
+          "PERFORM UNTIL with inline END-PERFORM",
+          "BINARY usage on WRK-LIST-ROW",
+          "COPY directives with quoted filenames (e.g. COPY \"COMMON-SPA\")",
+          "LINKAGE SECTION with USING clause",
+          "EXIT PROGRAM",
+          "Japanese comments encoded in latin-1 (JMA ORCA open-source project)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a screen-handling subprogram (window XG04) within the JMA ORCA Japanese medical receipt software system. It manages an output-selection screen for medical information system data export, reading from a 'tbl_file_mis' database table and populating screen/SPA areas with file output records. It handles initialization, screen transitions, and entry events via an EVALUATE on MCP-STATUS/MCP-EVENT.",
+        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Japanese text in comments (Shift-JIS/EUC encoded, stored as latin-1)",
+        "JMA ORCA open-source medical receipt system (copyright 2002 Japan Medical Association)",
+        "Extensive use of COPY statements for shared SPA/linkage areas",
+        "MCP (Message Control Program) interface pattern typical of ORCA's OpenCOBOL/GnuCOBOL framework",
+        "EVALUATE ALSO (multiple subject EVALUATE) for event-driven screen dispatch",
+        "BINARY PIC S9(9) for row index",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP database access layer",
+        "SEARCH with VARYING and AT END for table lookup",
+        "6 CALL statements, 77 PERFORMs, 14 GOTOs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Japanese multi-byte characters (likely EUC-JP or Shift-JIS) in comments and string literals, causing mojibake in the displayed text. The program is clearly part of the well-known JMA ORCA open-source medical receipt system. The 'online-cics' program_type label is used loosely — ORCA uses its own MCP event-driven framework analogous to CICS, not actual CICS. No COMP-3 usage despite being a production system, which is consistent with GnuCOBOL/OpenCOBOL targets."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6650,
+      "completion_tokens": 761,
+      "total_tokens": 7411,
+      "cost": 0.031365,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031365,
+        "upstream_inference_prompt_cost": 0.01995,
+        "upstream_inference_completions_cost": 0.011415
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.87,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

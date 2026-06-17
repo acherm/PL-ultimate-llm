@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a1107ecd7e802803936b9fdb75785192bbeb3944",
+    "sha1_git": "a1107ecd7e802803936b9fdb75785192bbeb3944",
+    "filename": "/ORCBG016.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 74623,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a1107ecd7e802803936b9fdb75785192bbeb3944/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a1107ecd7e802803936b9fdb75785192bbeb3944/raw/"
+  },
+  "indicators": {
+    "bytes_len": 74623,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1878,
+    "blank_lines": 1,
+    "comment_lines": 540,
+    "code_lines": 1337,
+    "comment_ratio": 0.288,
+    "max_line_length": 74,
+    "avg_line_length": 38.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBG016"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 32,
+    "call_count": 19,
+    "perform_count": 124,
+    "goto_count": 6,
+    "pic_count": 96,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (Japanese medical system, likely running on Linux/Unix with GnuCOBOL or Micro Focus)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PERFORM ... END-PERFORM style (COBOL-85)",
+          "END-IF, END-UNSTRING inline terminators",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY",
+          "COPY statements with REPLACING clause",
+          "CALL 'ORCSJOB' USING",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING",
+          "SELECT ... ASSIGN TO symbolic names (BG0161, BG0162)",
+          "grpsys conditional compilation-style comment markers suggesting platform-specific build"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch reporting program (ORCBG016) that is part of the ORCA Japanese Medical Association standard receipt (claims) software. It queries and aggregates medical treatment act (診療行為) counts for a specified period, producing a report of designated medical procedure occurrence counts. It reads indexed files for treatment act usage and accounting data, processes parameters such as year-month, inpatient/outpatient classification, department code, and procedure codes, and outputs results.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — uses indexed ISAM files (ORGANIZATION IS INDEXED) for data access",
+        "Extensive use of COPY statements with REPLACING for copybook inclusion (CPSRYACCT.INC, CPPTINF.INC, CPSYSKANRI.INC, etc.)",
+        "Japanese Shift-JIS / EUC-JP encoded comments (decoded as latin-1, hence garbled)",
+        "grpsys conditional comment markers for group/system-specific code variants",
+        "UNSTRING of COMMAND-PARAM for parameter parsing",
+        "CALL to external subprograms: ORCSJOB, ORCSPRT, etc. (19 CALLs total)",
+        "OCCURS clauses for arrays (days, procedure codes, patient info)",
+        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
+        "No COMP-3 packed decimal fields despite financial/medical domain",
+        "124 PERFORM statements indicating structured procedural decomposition"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Japanese EUC-JP or Shift-JIS encoded comments, causing garbled display. The program is clearly part of the open-source ORCA (JMA standard receipt software) project, a well-known Japanese medical billing system. The grpsys prefix on some lines suggests a conditional build system or group-system variant. Source is truncated at 16000 chars out of 74623 bytes total, but enough structure is visible to classify with high confidence."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7454,
+      "completion_tokens": 823,
+      "total_tokens": 8277,
+      "cost": 0.034707,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034707,
+        "upstream_inference_prompt_cost": 0.022362,
+        "upstream_inference_completions_cost": 0.012345
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.82,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

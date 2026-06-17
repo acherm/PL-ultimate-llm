@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1c130fbcf147023a40f6e0834cee3d3468ac9102",
+    "sha1_git": "1c130fbcf147023a40f6e0834cee3d3468ac9102",
+    "filename": "/Vchmnt01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 18623,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1c130fbcf147023a40f6e0834cee3d3468ac9102/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1c130fbcf147023a40f6e0834cee3d3468ac9102/raw/"
+  },
+  "indicators": {
+    "bytes_len": 18623,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 589,
+    "blank_lines": 0,
+    "comment_lines": 41,
+    "code_lines": 548,
+    "comment_ratio": 0.07,
+    "max_line_length": 65,
+    "avg_line_length": 30.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "VCHMNT01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 0,
+    "perform_count": 123,
+    "goto_count": 0,
+    "pic_count": 13,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or Micro Focus (PC/workstation COBOL, likely from a textbook series)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "INSPECT ... CONVERTING LOWER-ALPHA TO UPPER-ALPHA",
+          "88-level condition MENU-PICK-IS-VALID VALUES 0 THRU 4",
+          "EXIT PROGRAM / STOP RUN pattern",
+          "COPY directives referencing .CBL files (SLVND02.CBL, SLVOUCH.CBL, etc.)",
+          "PIC Z(5) and PIC ZZZ,ZZ9.99- editing",
+          "No EXEC SQL, no EXEC CICS, no COMP-3"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Interactive menu-driven maintenance program for a Voucher file, supporting Add, Change, Inquire, and Delete operations. It also reads a Vendor file for validation and a Control file to auto-generate sequential voucher numbers. Fields such as PAID-AMOUNT, PAID-DATE, and CHECK-NO are display-only and not modifiable.",
+        "domain": "accounting/payables (small business accounts-payable voucher system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INSPECT CONVERTING for case-folding (lower to upper)",
+        "Auto-increment voucher number via a Control file",
+        "Conditional display of paid vs. unpaid voucher fields",
+        "Multiple COPY directives for file-control, FD, and working-storage sections",
+        "Date entry/validation via a shared GET-A-DATE routine (WSDATE01.CBL copybook)",
+        "No EXEC SQL, no EXEC CICS, no COMP-3 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (589 total lines); the display routines for VOUCHER-DATE onward and file I/O paragraphs are cut off but the overall structure is clear. The COPY filenames and naming conventions (SLVND02, SLVOUCH, FDVND04, WSCASE01, WSDATE01) are consistent with the textbook series by Stern/Stern or a similar PC-COBOL curriculum package. The program uses a terminal-scroll approach (SCROLL-LINE 25 TIMES for clear-screen) typical of non-CICS batch-interactive programs."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6841,
+      "completion_tokens": 675,
+      "total_tokens": 7516,
+      "cost": 0.030648,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030648,
+        "upstream_inference_prompt_cost": 0.020523,
+        "upstream_inference_completions_cost": 0.010125
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 21.8,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

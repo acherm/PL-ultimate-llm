@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4c7d3aec0af662c383004888553c826ed3488c21",
+    "sha1_git": "4c7d3aec0af662c383004888553c826ed3488c21",
+    "filename": "/SOKATU3100.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 76303,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4c7d3aec0af662c383004888553c826ed3488c21/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4c7d3aec0af662c383004888553c826ed3488c21/raw/"
+  },
+  "indicators": {
+    "bytes_len": 76303,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1752,
+    "blank_lines": 2,
+    "comment_lines": 677,
+    "code_lines": 1073,
+    "comment_ratio": 0.387,
+    "max_line_length": 74,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU3100"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 24,
+    "call_count": 49,
+    "perform_count": 61,
+    "goto_count": 4,
+    "pic_count": 64,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SOKATU3100",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "END-UNSTRING terminator",
+          "COPY with REPLACING using // delimiters",
+          "ORGANIZATION IS INDEXED / LINE SEQUENTIAL file definitions",
+          "CALL 'ORCSJOB' pattern typical of ORCA/JMA open-source medical system",
+          "Fixed-format source with comment lines in column 7 (*)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA JMA Standard Receipt Software (Japanese Medical Association open-source medical billing system). It generates and sends a 'Sōkatsu Seikyu Meisaisho Sōfusho' — a detailed claim/receipt transmission cover document for monthly medical insurance billing. It reads temporary claim files, updates receipt DB files, and produces output files including error logs.",
+        "domain": "healthcare / medical insurance billing (Japanese NHI)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-encoded comments (latin-1 decoded, originally likely EUC-JP or Shift-JIS)",
+        "COPY statements referencing many .INC copybooks (CPPTINF, CPHKNJAINF, CPRCF010, CPSK1001, CPSK1002, CPSK1900, CPSK1901, CPSK1902, etc.)",
+        "CALL to external subprograms: ORCSJOB, ORCSPRT, ORCSDAY, ORCSLNK, CPMKPASS",
+        "UNSTRING on COMMAND-PARAM for parameter parsing",
+        "INDEXED and LINE SEQUENTIAL file organizations",
+        "Revision history embedded in comments with version tags (01.00.01, 01.00.02, 01.00.03)",
+        "LINKAGE SECTION with COMMAND-PARAM for batch invocation",
+        "No EXEC SQL or EXEC CICS — DB access via CALL subprograms",
+        "49 CALL statements, 61 PERFORMs indicating substantial procedural logic"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but Japanese comments are garbled — original encoding was likely EUC-JP or Shift-JIS. The program is clearly part of the well-known open-source ORCA (JMA Standard Receipt Software) project used in Japanese medical clinics. COPY statements reference many external copybooks not shown in the truncated source. The 677 comment lines (39%) reflect thorough Japanese documentation and revision history annotations."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7198,
+      "completion_tokens": 756,
+      "total_tokens": 7954,
+      "cost": 0.032934,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032934,
+        "upstream_inference_prompt_cost": 0.021594,
+        "upstream_inference_completions_cost": 0.01134
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.48,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

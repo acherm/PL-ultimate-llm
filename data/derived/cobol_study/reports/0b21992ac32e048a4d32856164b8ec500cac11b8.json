@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0b21992ac32e048a4d32856164b8ec500cac11b8",
+    "sha1_git": "0b21992ac32e048a4d32856164b8ec500cac11b8",
+    "filename": "/irspostingMT.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 52895,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0b21992ac32e048a4d32856164b8ec500cac11b8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0b21992ac32e048a4d32856164b8ec500cac11b8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 52895,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1388,
+    "blank_lines": 4,
+    "comment_lines": 417,
+    "code_lines": 967,
+    "comment_ratio": 0.301,
+    "max_line_length": 110,
+    "avg_line_length": 37.1,
+    "long_lines_over_72": 70,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "irspostingMT"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 30,
+    "perform_count": 26,
+    "goto_count": 34,
+    "pic_count": 38,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-2002",
+        "evidence": [
+          ">>source free (GnuCOBOL compiler directive)",
+          "*> comment style (GnuCOBOL/COBOL-2002+)",
+          "BINARY-CHAR UNSIGNED, BINARY-LONG UNSIGNED (GnuCOBOL extensions)",
+          "COMP-5 usage (GnuCOBOL/Micro Focus)",
+          "SET ENVIRONMENT ... TO ... syntax",
+          "USAGE POINTER",
+          "EXEC SQL via JC pre-SQL preprocessor (not native DB2/CICS)",
+          "CALL to MySQL_errno, MySQL_sqlstate, MySQL_error (GnuCOBOL MySQL C-library bindings)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "This program is a MySQL relational database handler (DAL – Data Access Layer) for an IRS (Internal Revenue/Reporting System) postings table within the ACAS (Applewood Computers Accounting System). It handles open, close, read-next, read-indexed, write, rewrite, delete, delete-all, and start operations against the IRSPOSTING-REC MySQL table, translating COBOL file-function codes into SQL commands via a JC pre-SQL preprocessor and direct MySQL C-library CALLs.",
+        "domain": "accounting/finance",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>source free GnuCOBOL compiler directive",
+        "EXEC SQL via JC pre-SQL preprocessor (inline SQL comments rather than true EXEC SQL blocks)",
+        "Direct CALL to MySQL C-library functions: MySQL_errno, MySQL_sqlstate, MySQL_error",
+        "BINARY-CHAR UNSIGNED and BINARY-LONG UNSIGNED GnuCOBOL data types",
+        "USAGE POINTER for MySQL result set handle",
+        "COPY statements for shared copybooks (mysql-variables.cpy, wsfnctn.cob, irswspost.cob, etc.)",
+        "SCREEN SECTION with foreground-color for error display",
+        "Cursor management via 88-level condition names (Cursor-Active / Cursor-Not-Active)",
+        "GO TO used extensively for function dispatch (EVALUATE ... GO TO pattern)",
+        "GNU GPL v2/v3 dual-licensed with commercial restriction notice",
+        "No COMP-3 usage despite accounting domain"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file uses a JC pre-SQL preprocessor whose directives appear as COBOL comments (lines starting with *> /MYSQL ...\\), so has_exec_sql in the mechanical indicators likely refers to these pseudo-SQL comment blocks rather than true EXEC SQL ... END-EXEC syntax. The program is part of a larger multi-module accounting system (ACAS v3.02+) with a clear versioning history and copyright lineage from 1976–2024, strongly indicating production-grade software. Author is Vincent B Coen of Applewood Computers."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5840,
+      "completion_tokens": 831,
+      "total_tokens": 6671,
+      "cost": 0.029985,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029985,
+        "upstream_inference_prompt_cost": 0.01752,
+        "upstream_inference_completions_cost": 0.012465
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.56,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

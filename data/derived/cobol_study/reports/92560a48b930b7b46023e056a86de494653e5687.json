@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:92560a48b930b7b46023e056a86de494653e5687",
+    "sha1_git": "92560a48b930b7b46023e056a86de494653e5687",
+    "filename": "/ZFAM004.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 30785,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:92560a48b930b7b46023e056a86de494653e5687/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:92560a48b930b7b46023e056a86de494653e5687/raw/"
+  },
+  "indicators": {
+    "bytes_len": 30785,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 732,
+    "blank_lines": 131,
+    "comment_lines": 127,
+    "code_lines": 474,
+    "comment_ratio": 0.211,
+    "max_line_length": 71,
+    "avg_line_length": 40.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ZFAM004"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 29,
+    "goto_count": 0,
+    "pic_count": 111,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "CBL CICS(SP) compiler directive at top",
+          "EXEC CICS READ FILE(...) GTEQ NOHANDLE END-EXEC",
+          "EXEC CICS LINK PROGRAM(...) COMMAREA(...) NOHANDLE END-EXEC",
+          "DFHRESP(NOTFND), DFHRESP(NORMAL) special registers",
+          "EIB fields: EIBRESP, EIBRESP2, EIBTRNID, EIBDS, EIBFN",
+          "COMP-3 usage, USAGE POINTER, REDEFINES",
+          "PERFORM ... THRU ... WITH TEST AFTER",
+          "Fixed format, max line length 71"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ZFAM004 is a CICS online program that handles HTTP GET requests for the z/OS File Access Manager (zFAM) framework. It processes GE (greater-than-or-equal) and GT (greater-than) browse operations against a zFAM key/file structure, as well as 'ex' (existence check) queries. It reads the KEY and FILE VSAM structures, stages the response data, and returns appropriate HTTP status codes (200, 204, 507) to the caller.",
+        "domain": "utility",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (READ, LINK, and implied WEB commands)",
+        "CBL CICS(SP) compiler option directive",
+        "DFHCOMMAREA linkage for inter-program communication via XCTL/LINK",
+        "USAGE POINTER with REDEFINES for dynamic storage addressing",
+        "COMP-3 for packed-decimal fields",
+        "HTTP status code management (200, 204, 503, 507)",
+        "COPY statements for ZFAMFKC and ZFAMFFC copybooks",
+        "GTEQ read option for VSAM browse-like access",
+        "EIB register usage (EIBRESP, EIBRESP2, EIBTRNID, EIBDS, EIBFN)",
+        "zFAM channel/container model (ZFAM_CONTAINER, ZFAM_CHANNEL)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source was truncated at 16000 chars (~55% of the 30785-byte file); the full PROCEDURE DIVISION including paragraphs 3300 onward, 4000-SEND-RESPONSE, 5000-EXISTENCE, and 9xxx error/utility paragraphs are not shown but are referenced in the visible code. All visible evidence is consistent with a production IBM Enterprise COBOL CICS program. The COPY statements for ZFAMFKC and ZFAMFFC are external copybooks not shown inline."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5379,
+      "completion_tokens": 809,
+      "total_tokens": 6188,
+      "cost": 0.028272,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028272,
+        "upstream_inference_prompt_cost": 0.016137,
+        "upstream_inference_completions_cost": 0.012135
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.14,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:43319828bb8ec280ff9f7e1200f8d702963c2939",
+    "sha1_git": "43319828bb8ec280ff9f7e1200f8d702963c2939",
+    "filename": "/ORCGW11.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 149741,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:43319828bb8ec280ff9f7e1200f8d702963c2939/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:43319828bb8ec280ff9f7e1200f8d702963c2939/raw/"
+  },
+  "indicators": {
+    "bytes_len": 149741,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3645,
+    "blank_lines": 1,
+    "comment_lines": 1087,
+    "code_lines": 2557,
+    "comment_ratio": 0.298,
+    "max_line_length": 80,
+    "avg_line_length": 40.1,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW11"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 58,
+    "call_count": 15,
+    "perform_count": 258,
+    "goto_count": 24,
+    "pic_count": 46,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (or compatible, likely GnuCOBOL/OpenCOBOL given the ORCA/JMA open-source context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
+          "END-EVALUATE, END-IF, END-PERFORM inline scope terminators",
+          "COPY statements for copybooks (.INC files)",
+          "PROCEDURE DIVISION USING with multiple linkage parameters",
+          "EXIT PROGRAM statement",
+          "Fixed-format source (max line 80, long_lines_over_72 only 9)",
+          "No EXEC SQL / EXEC CICS — pure COBOL",
+          "INITIALIZE verb used extensively"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program (ORCGW11) is part of the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles system management information settings, specifically printer assignment and window/screen management for output destinations. It processes screen navigation, initialization, data entry, and display for a subsystem configuration screen.",
+        "domain": "healthcare / medical billing",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Extensive use of COPY statements for copybooks (W01.INC through W99.INC, WERR.INC, WID1.INC, WID2.INC, CPSYSKANRI.INC, CPSK1030.INC, CPSK1031.INC, etc.)",
+        "PROCEDURE DIVISION USING with MCPAREA, SPAAREA, LINKAREA, SCRAREA — MCP (Message Control Program) style online framework",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT — event-driven screen handling",
+        "Japanese comments encoded in latin-1 (EUC-JP or Shift-JIS garbled as latin-1)",
+        "Revision history spanning 2000–2006 with multiple contributors",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "OCCURS clauses for checkbox/flag arrays",
+        "REDEFINES usage",
+        "15 CALL statements, 258 PERFORM statements, 24 GOTO statements",
+        "Open-source JMA ORCA medical software project"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the comments contain Japanese text (likely EUC-JP or Shift-JIS), which appears garbled. The program is clearly production-grade medical software from the JMA ORCA open-source project, with a detailed revision history. The MCP-based framework (MCP-STATUS, MCP-EVENT, MCP-WINDOW, PUT-WINDOW) is characteristic of the ORCA system's own screen management layer rather than CICS, but the program_type is classified as online because it is an interactive screen-handling program driven by events."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8367,
+      "completion_tokens": 825,
+      "total_tokens": 9192,
+      "cost": 0.037476,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037476,
+        "upstream_inference_prompt_cost": 0.025101,
+        "upstream_inference_completions_cost": 0.012375
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.51,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,116 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:22732c113c84841a98795bda8b3385b808c0394c",
+    "sha1_git": "22732c113c84841a98795bda8b3385b808c0394c",
+    "filename": "/branch_sale.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3484,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:22732c113c84841a98795bda8b3385b808c0394c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:22732c113c84841a98795bda8b3385b808c0394c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3484,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 90,
+    "blank_lines": 9,
+    "comment_lines": 0,
+    "code_lines": 81,
+    "comment_ratio": 0.0,
+    "max_line_length": 71,
+    "avg_line_length": 37.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BRANCH-SALE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or similar open-source COBOL (possibly Micro Focus)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "END-READ, END-PERFORM scope terminators (COBOL-85+)",
+          "SET END-OF-SALES-FILE TO TRUE with level-88 condition",
+          "ORGANIZATION IS LINE SEQUENTIAL (common in GnuCOBOL/Micro Focus)",
+          "PERFORM VARYING ... UNTIL with inline body",
+          "No COMP-3, no EXEC SQL/CICS, no IBM-specific extensions"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Reads a sequential file of branch sales records and accumulates candy sales totals and branch counts by US state (up to 50 states). Prints a report showing per-state sales, branch counts, average sales, and US-wide totals.",
+        "domain": "retail/education-tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OCCURS 50 TIMES table for state-level aggregation",
+        "Level-88 condition name used as end-of-file flag (SET ... TO TRUE)",
+        "Edited PIC clauses with currency symbols and comma insertion for formatted output",
+        "DISPLAY used for report output (no WRITE to print file)",
+        "ORGANIZATION IS LINE SEQUENTIAL flat file input"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program has a minor bug: in PRINT-RESULTS the final DISPLAY uses PRN-AVERAGE-SALES instead of PRN-US-AVERAGE-SALES. Also, COMPUTE inside PERFORM VARYING will cause a divide-by-zero for states with zero branches. These are typical student-exercise oversights. The author name 'NUTHJAREE' and the candy-shop domain reinforce the educational context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2014,
+      "completion_tokens": 529,
+      "total_tokens": 2543,
+      "cost": 0.013977,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013977,
+        "upstream_inference_prompt_cost": 0.006042,
+        "upstream_inference_completions_cost": 0.007935
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.02,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

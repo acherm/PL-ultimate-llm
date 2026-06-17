@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3ac308e6890776ab5099cd78ee06afb24dc7f31b",
+    "sha1_git": "3ac308e6890776ab5099cd78ee06afb24dc7f31b",
+    "filename": "/ORCR0961.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 150309,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3ac308e6890776ab5099cd78ee06afb24dc7f31b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3ac308e6890776ab5099cd78ee06afb24dc7f31b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 150309,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3493,
+    "blank_lines": 1,
+    "comment_lines": 860,
+    "code_lines": 2632,
+    "comment_ratio": 0.246,
+    "max_line_length": 116,
+    "avg_line_length": 42.0,
+    "long_lines_over_72": 23,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0961"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 7,
+    "perform_count": 240,
+    "goto_count": 14,
+    "pic_count": 203,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "COPY statements with REPLACING using // delimiters (OpenCOBOL/GnuCOBOL style)",
+          "PIC X / PIC 9 declarations, OCCURS clauses, REDEFINES",
+          "Fixed-format source layout, comment lines with * in column 7",
+          "No EXEC SQL or EXEC CICS — standalone batch COBOL",
+          "Japanese EUC/Shift-JIS encoded comments (JMA ORCA open-source medical software)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Generates monthly business detail files for long-term care / self-pay insurance receipts (Rōsai/Jibai-sekinin), including pension/disability data editing and print data compilation. Part of the JMA ORCA open-source medical receipt (レセプト) software suite.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive COPY statements with REPLACING using // delimiters (GnuCOBOL convention)",
+        "Multiple INDEXED files with SEQUENTIAL and DYNAMIC access modes",
+        "Japanese EUC/latin-1-decoded comments describing revision history and functional areas",
+        "No COMP-3 usage despite financial calculations (uses PIC 9 display numeric)",
+        "No EXEC SQL or EXEC CICS",
+        "OCCURS tables for hospital/system management data (up to 100 occurrences)",
+        "REDEFINES used for date/age fields",
+        "240 PERFORM statements indicating heavily structured procedural decomposition",
+        "14 GOTO statements present",
+        "7 CALL statements to external subprograms"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS) in comments, causing mojibake in the latin-1 rendering. This is the JMA ORCA (Japan Medical Association standard receipt software) project, a well-known open-source Japanese medical billing system. The program ID ORCR0961 and copyright notice confirm this. The COPY includes reference copybooks (.INC files) that are not shown but are standard ORCA library members."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8566,
+      "completion_tokens": 717,
+      "total_tokens": 9283,
+      "cost": 0.036453,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036453,
+        "upstream_inference_prompt_cost": 0.025698,
+        "upstream_inference_completions_cost": 0.010755
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.28,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

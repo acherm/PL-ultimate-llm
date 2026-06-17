@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:df954e2aca82f378f9d7d62549d59ce97581915e",
+    "sha1_git": "df954e2aca82f378f9d7d62549d59ce97581915e",
+    "filename": "/LGBAT003.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 71428,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:df954e2aca82f378f9d7d62549d59ce97581915e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:df954e2aca82f378f9d7d62549d59ce97581915e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 71428,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1511,
+    "blank_lines": 304,
+    "comment_lines": 382,
+    "code_lines": 825,
+    "comment_ratio": 0.316,
+    "max_line_length": 80,
+    "avg_line_length": 46.3,
+    "long_lines_over_72": 172,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "13630000",
+      "LGBAT003",
+      "MOVE",
+      "PIC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 9,
+    "perform_count": 42,
+    "goto_count": 10,
+    "pic_count": 214,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "USAGE BINARY for numeric fields",
+          "COMP-3 packed decimal fields",
+          "EJECT directives",
+          "IMS DL/I call structures (GU, GHU, GHN, GN, ISRT, REPL, DLET)",
+          "RECORDING MODE IS F / BLOCK CONTAINS in FD",
+          "88-level condition names",
+          "REDEFINES clauses",
+          "Fixed-format source with sequence numbers in columns 73-80 (e.g. 00380000)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "LGBAT003 is a GenApp demonstration batch program emphasizing IMS batch processing. It reads customer data from an IMS HIDAM database (CUSTMRDB) using DL/I calls, and demonstrates three IMS scenarios: abnormal termination via bad status code, S0C7 data exception abend, and a poor performance scenario. It also reads input parameters from a flat file to control which scenarios are executed.",
+        "domain": "insurance",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "IMS DL/I calls with SSA (Segment Search Arguments) for qualified and unqualified retrieval",
+        "IMS call function definitions (GU, GHU, GHN, GN, ISRT, REPL, DLET)",
+        "COMP-3 packed decimal fields",
+        "USAGE BINARY fields",
+        "REDEFINES clauses used extensively",
+        "88-level condition names for switches",
+        "EJECT directives for listing control",
+        "Sequence numbers in columns 73-80 (IBM mainframe style)",
+        "Deliberate S0C7 abend scenario via numeric field manipulation",
+        "Input parameter file driving scenario selection"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly part of the IBM GenApp (General Insurance Application) demonstration suite, originally developed by Compuware. The program is a well-structured mainframe batch COBOL program targeting IBM z/OS with IMS. Sequence numbers in columns 73-80 confirm IBM mainframe fixed-format source. No EXEC SQL or EXEC CICS blocks are present; IMS access is via native DL/I CALL statements."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4871,
+      "completion_tokens": 655,
+      "total_tokens": 5526,
+      "cost": 0.024438,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024438,
+        "upstream_inference_prompt_cost": 0.014613,
+        "upstream_inference_completions_cost": 0.009825
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.65,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

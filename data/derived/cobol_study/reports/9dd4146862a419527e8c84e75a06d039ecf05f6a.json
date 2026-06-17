@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9dd4146862a419527e8c84e75a06d039ecf05f6a",
+    "sha1_git": "9dd4146862a419527e8c84e75a06d039ecf05f6a",
+    "filename": "/ORCR0030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 947442,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9dd4146862a419527e8c84e75a06d039ecf05f6a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9dd4146862a419527e8c84e75a06d039ecf05f6a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 947442,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 19484,
+    "blank_lines": 0,
+    "comment_lines": 3197,
+    "code_lines": 16287,
+    "comment_ratio": 0.164,
+    "max_line_length": 80,
+    "avg_line_length": 47.6,
+    "long_lines_over_72": 140,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 50,
+    "call_count": 52,
+    "perform_count": 686,
+    "goto_count": 11,
+    "pic_count": 879,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely GnuCOBOL given open-source ORCA/JMA context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCR0030",
+          "ENVIRONMENT DIVISION, DATA DIVISION, PROCEDURE DIVISION all present",
+          "Fixed-format source (max line 80, long_lines_over_72 = 140)",
+          "879 PIC clauses, 686 PERFORM statements, 52 CALL statements",
+          "No EXEC SQL or EXEC CICS, no COMP-3 — consistent with GnuCOBOL open-source medical system",
+          "JMA Open Source License header; project code name ORCA (Japan Medical Association)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ORCR0030 is a batch COBOL program that aggregates and calculates medical claim (receipt) point totals broken down by diagnosis/treatment category for the ORCA JMA standard receipt software system. It processes insurance claim data, computing scores/points for various medical acts (prescriptions, examinations, surgery, etc.) and formats the results for receipt printing.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — file-based batch processing",
+        "No COMP-3 usage despite heavy numeric computation (879 PIC clauses)",
+        "52 CALL statements indicating modular design with many subprogram calls",
+        "686 PERFORM statements — heavily structured procedural logic",
+        "Extensive Japanese-language comments (Shift-JIS/EUC-JP encoded, decoded as latin-1)",
+        "Long revision history spanning 2000–2006 with named developers",
+        "Open-source JMA (Japan Medical Association) ORCA project",
+        "11 GOTO statements — mostly legacy flow control",
+        "Nearly 19,500 lines — large production program"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the comments contain Japanese text (likely EUC-JP or Shift-JIS), which appears garbled in the latin-1 rendering. This is a large, well-documented production program from the open-source JMA ORCA medical receipt system. The revision history is extensive (2000–2006+), confirming production maturity. No COMP-3 is unusual for a numeric-heavy billing program but may reflect GnuCOBOL conventions or deliberate choice."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15011,
+      "completion_tokens": 710,
+      "total_tokens": 15721,
+      "cost": 0.055683,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.055683,
+        "upstream_inference_prompt_cost": 0.045033,
+        "upstream_inference_completions_cost": 0.01065
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.07,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

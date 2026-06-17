@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:eef8c1cc24901f730b078e61637a9efdafdb2513",
+    "sha1_git": "eef8c1cc24901f730b078e61637a9efdafdb2513",
+    "filename": "/ORCGW02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 181110,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:eef8c1cc24901f730b078e61637a9efdafdb2513/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:eef8c1cc24901f730b078e61637a9efdafdb2513/raw/"
+  },
+  "indicators": {
+    "bytes_len": 181110,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4060,
+    "blank_lines": 1,
+    "comment_lines": 902,
+    "code_lines": 3157,
+    "comment_ratio": 0.222,
+    "max_line_length": 76,
+    "avg_line_length": 43.6,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 59,
+    "call_count": 18,
+    "perform_count": 235,
+    "goto_count": 36,
+    "pic_count": 201,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "WORKING-STORAGE SECTION with PIC clauses and OCCURS",
+          "COPY statements referencing copybooks (COMMON-SPA, W01COMMON-SPA)",
+          "Fixed-format source with comment lines in columns 1-6 (*)",
+          "No EXEC SQL or EXEC CICS — standalone batch/subprogram style",
+          "Japanese comments encoded in latin-1 (JIS/EUC-JP garbled), consistent with ORCA open-source medical software project by JMA (Japan Medical Association)",
+          "PROGRAM-ID ORCGW02 matches ORCA naming convention"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA Standard Receipt Software) system, specifically handling medical institution information settings (system management information configuration, screen W02). It manages data such as hospital codes, prefecture numbers, bed counts, prescription flags, discount/tax rounding classifications, and data collection flags for a Japanese medical billing system.",
+        "domain": "healthcare / medical billing (Japanese insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake)",
+        "Extensive OCCURS clauses for combo-box list data (prefecture lists, classification lists)",
+        "No EXEC SQL or EXEC CICS — uses CALL-based integration (18 CALLs)",
+        "235 PERFORM statements indicating structured procedural decomposition",
+        "COPY statements for shared SPA (scratchpad area) copybooks",
+        "Detailed revision history in comments spanning 2001–2005",
+        "Open-source JMA ORCA medical receipt software copyright header",
+        "No COMP-3 usage despite financial/billing domain"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded with latin-1 but the Japanese comments are actually EUC-JP or Shift-JIS encoded, appearing as garbled characters. The source is clearly production-grade medical billing software from the Japanese JMA ORCA project. The truncation at 16000 chars covers only the DATA DIVISION; the PROCEDURE DIVISION with 235 PERFORMs and 36 GOTOs is not shown but confirmed by mechanical indicators. No COMP-3 is unusual for a billing system but consistent with the indicators provided."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7595,
+      "completion_tokens": 712,
+      "total_tokens": 8307,
+      "cost": 0.033465,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033465,
+        "upstream_inference_prompt_cost": 0.022785,
+        "upstream_inference_completions_cost": 0.01068
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.87,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:25Z"
+}

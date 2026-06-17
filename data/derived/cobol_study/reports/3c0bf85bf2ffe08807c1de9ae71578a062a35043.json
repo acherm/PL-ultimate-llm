@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3c0bf85bf2ffe08807c1de9ae71578a062a35043",
+    "sha1_git": "3c0bf85bf2ffe08807c1de9ae71578a062a35043",
+    "filename": "/ORCGX100.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5378,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3c0bf85bf2ffe08807c1de9ae71578a062a35043/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3c0bf85bf2ffe08807c1de9ae71578a062a35043/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5378,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 151,
+    "blank_lines": 0,
+    "comment_lines": 82,
+    "code_lines": 69,
+    "comment_ratio": 0.543,
+    "max_line_length": 74,
+    "avg_line_length": 34.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGX100"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 18,
+    "call_count": 1,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN ... ALSO ... END-EVALUATE",
+          "EXIT PROGRAM",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "PERFORM with section names",
+          "Fixed-format source layout",
+          "COPY statements with quoted filenames (GnuCOBOL style)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles a disease/condition code list screen (component named ORCGX100), acting as a screen navigation controller. On LINK status it initializes, otherwise it navigates back to the previous screen using a PUT-WINDOW call to ORCDBMAIN.",
+        "domain": "healthcare/medical (Japanese medical billing/receipt system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-encoded comments (latin-1 decoded, originally likely EUC-JP or Shift-JIS)",
+        "ORCA JMA open-source medical system framework",
+        "Multiple COPY statements for screen area includes (X01.INC through X100.INC, XERR.INC, XID1.INC, XID2.INC)",
+        "CALL to ORCDBMAIN (ORCA database main routine)",
+        "MCP-STATUS/MCP-EVENT EVALUATE pattern typical of ORCA screen programs",
+        "LINKAGE SECTION with multiple copybook areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "No EXEC SQL or EXEC CICS",
+        "High comment ratio (54%) due to Japanese documentation headers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but decoded as latin-1, resulting in garbled multi-byte characters in comments. The program follows the standard ORCA screen program pattern used throughout the JMA medical receipt software suite. The 'grpsys' label on the CALL line appears to be a continuation label artifact. COPY count shown as 0 in mechanical indicators but the source clearly contains many COPY statements — likely the mechanical parser did not count quoted-string COPY variants."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2599,
+      "completion_tokens": 667,
+      "total_tokens": 3266,
+      "cost": 0.017802,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017802,
+        "upstream_inference_prompt_cost": 0.007797,
+        "upstream_inference_completions_cost": 0.010005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.03,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

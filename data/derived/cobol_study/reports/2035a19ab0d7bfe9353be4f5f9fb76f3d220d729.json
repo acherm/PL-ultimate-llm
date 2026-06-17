@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2035a19ab0d7bfe9353be4f5f9fb76f3d220d729",
+    "sha1_git": "2035a19ab0d7bfe9353be4f5f9fb76f3d220d729",
+    "filename": "/ORCGS10.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 33483,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2035a19ab0d7bfe9353be4f5f9fb76f3d220d729/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2035a19ab0d7bfe9353be4f5f9fb76f3d220d729/raw/"
+  },
+  "indicators": {
+    "bytes_len": 33483,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 900,
+    "blank_lines": 1,
+    "comment_lines": 322,
+    "code_lines": 577,
+    "comment_ratio": 0.358,
+    "max_line_length": 74,
+    "avg_line_length": 36.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGS10"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 8,
+    "perform_count": 54,
+    "goto_count": 3,
+    "pic_count": 35,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (Japanese Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGS10",
+          "EVALUATE ... ALSO ... WHEN ... END-EVALUATE",
+          "PERFORM VARYING ... UNTIL ... END-PERFORM",
+          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
+          "EXIT PROGRAM",
+          "COPY directives for MCPAREA, ORCA-SPA, LINKAREA, screen includes",
+          "Fixed-format source layout, max line length ~74"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a screen handler for the ORCA Japanese Medical Association standard receipt (claims) software system. It manages a patient list screen (screen S10) that displays patients with outstanding or pending receipt/payment records for a given billing month, including patient details such as name, sex, birthdate, age, and payment category. It handles screen initialization, navigation events, and entry/validation logic.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in Latin-1 (actually Shift-JIS or EUC-JP stored as binary)",
+        "Multiple COPY statements for screen layouts (S02.INC through S10.INC, SERR.INC, SID*.INC) and data records",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "Bubble-sort implemented inline using PERFORM VARYING with index swapping",
+        "EVALUATE TRUE / WHEN conditions for multi-branch logic",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP (Message Control Program) table-access wrappers",
+        "OCCURS 101 table for patient list with composite sort key",
+        "BINARY (COMP) usage for row index (WRK-PTLIST-ROW PIC S9(9) BINARY)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the Japanese comments are almost certainly Shift-JIS or EUC-JP, causing mojibake in the displayed text. The program is part of the open-source ORCA medical receipt system developed by the Japan Medical Association (JMA), copyright 2002. The MCP-based DB access pattern (MCP-TABLE, MCP-PATHNAME, PERFORM 910-DBCLOSECURSOR-SEC) is characteristic of the ORCA/GnuCOBOL runtime environment rather than CICS or DB2, so 'online-cics' is used loosely to mean an event-driven screen program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6924,
+      "completion_tokens": 766,
+      "total_tokens": 7690,
+      "cost": 0.032262,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032262,
+        "upstream_inference_prompt_cost": 0.020772,
+        "upstream_inference_completions_cost": 0.01149
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.02,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

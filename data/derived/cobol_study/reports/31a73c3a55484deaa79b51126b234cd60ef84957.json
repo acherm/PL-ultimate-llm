@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:31a73c3a55484deaa79b51126b234cd60ef84957",
+    "sha1_git": "31a73c3a55484deaa79b51126b234cd60ef84957",
+    "filename": "/ORCGM97.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 38506,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:31a73c3a55484deaa79b51126b234cd60ef84957/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:31a73c3a55484deaa79b51126b234cd60ef84957/raw/"
+  },
+  "indicators": {
+    "bytes_len": 38506,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1051,
+    "blank_lines": 0,
+    "comment_lines": 411,
+    "code_lines": 640,
+    "comment_ratio": 0.391,
+    "max_line_length": 74,
+    "avg_line_length": 35.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGM97"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 13,
+    "perform_count": 56,
+    "goto_count": 11,
+    "pic_count": 29,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus or similar (likely GnuCOBOL / OpenCOBOL, given the ORCA/JMA open-source medical context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE … ALSO … WHEN … END-EVALUATE",
+          "INITIALIZE statement",
+          "END-IF, END-EVALUATE terminators",
+          "OCCURS clause with numeric literal",
+          "EXIT PROGRAM",
+          "CALL 'MCPSUB' USING … / CALL 'ORCSMKPASS' USING …",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "Fixed-format source (columns 7-72)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program (ORCGM97) is part of the JMA (Japan Medical Association) open-source medical receipt software 'ORCA'. It manages a program-update screen (M97), handling online/offline update modes, job management, screen navigation, and shell-script invocation for applying software upgrades.",
+        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 — garbled multibyte characters visible)",
+        "Screen-driven UI via MCP (Message Control Program) subsystem with CALL 'MCPSUB'",
+        "Shell script invocation via CALL 'ORCSMKPASS' and MCP-FUNC 'SHELL'",
+        "Multiple COPY statements for shared include files (CPPGKANRI.INC, CPJOBKANRI.INC, etc.)",
+        "LINKAGE SECTION with multiple COPY-based areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "OCCURS 99 for list data in SPA",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP database access layer",
+        "JMA Open Source License header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine COBOL source from the JMA ORCA medical receipt system (circa 2004 based on comment dates). Japanese comments are stored in a multibyte encoding (likely EUC-JP) but were decoded as Latin-1, producing garbled text. The program uses a proprietary screen/MCP framework rather than CICS, but the structure and event-driven pattern are analogous to online CICS programs. No COMP-3 usage detected despite being a business application, which is slightly unusual but not disqualifying."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6792,
+      "completion_tokens": 734,
+      "total_tokens": 7526,
+      "cost": 0.031386,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031386,
+        "upstream_inference_prompt_cost": 0.020376,
+        "upstream_inference_completions_cost": 0.01101
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.03,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

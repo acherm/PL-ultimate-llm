@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d252882f77e93c3b8522edbc5fff44c44662ed4b",
+    "sha1_git": "d252882f77e93c3b8522edbc5fff44c44662ed4b",
+    "filename": "/ORCR0620.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 215396,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d252882f77e93c3b8522edbc5fff44c44662ed4b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d252882f77e93c3b8522edbc5fff44c44662ed4b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 215396,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4562,
+    "blank_lines": 0,
+    "comment_lines": 956,
+    "code_lines": 3606,
+    "comment_ratio": 0.21,
+    "max_line_length": 113,
+    "avg_line_length": 46.2,
+    "long_lines_over_72": 48,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0620"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 50,
+    "call_count": 12,
+    "perform_count": 255,
+    "goto_count": 12,
+    "pic_count": 121,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING syntax",
+          "Fixed-format source layout",
+          "PROGRAM-ID ORCR0620",
+          "Japanese medical association (JMA) ORCA open-source receipt software copyright header",
+          "No EXEC SQL or EXEC CICS — pure batch COBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that creates and edits inpatient receipt (レセプト) basic information records for the ORCA JMA standard medical receipt software system. It reads and writes multiple indexed ISAM files (RECE61–RECE69) containing receipt, insurance history, and patient data, and produces an error file. The program handles complex insurance combination logic, elderly patient flags, admission/discharge history, and various regional public expense rules for Japanese medical billing.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based ISAM (indexed sequential) I/O",
+        "Multiple indexed files with DYNAMIC and SEQUENTIAL access modes",
+        "COPY with REPLACING for file record reuse (RECE62X variant)",
+        "Extensive Japanese-language comments (EUC-JP / latin-1 decoded)",
+        "Long revision history spanning 2002–2012 with named developers",
+        "12 CALL statements, 255 PERFORM statements, 12 GO TO statements",
+        "No COMP-3 packed decimal fields visible in truncated section",
+        "Error output file (RECEERR) for batch error reporting"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP (or Shift-JIS), appearing as mojibake in the latin-1 rendering. This is normal for archived Japanese COBOL source. The source is clearly genuine production COBOL from the open-source ORCA medical receipt system maintained by the Japan Medical Association (JMA). Only the first ~16 KB of a 215 KB file was shown; the PROCEDURE DIVISION is not visible in the excerpt but its presence is confirmed by the mechanical indicators (perform_count=255, goto_count=12, call_count=12)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12855,
+      "completion_tokens": 718,
+      "total_tokens": 13573,
+      "cost": 0.049335,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.049335,
+        "upstream_inference_prompt_cost": 0.038565,
+        "upstream_inference_completions_cost": 0.01077
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 26.94,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

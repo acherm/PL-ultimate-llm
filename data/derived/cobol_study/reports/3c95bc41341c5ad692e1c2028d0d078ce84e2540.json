@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3c95bc41341c5ad692e1c2028d0d078ce84e2540",
+    "sha1_git": "3c95bc41341c5ad692e1c2028d0d078ce84e2540",
+    "filename": "/ORCGI04.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 116256,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3c95bc41341c5ad692e1c2028d0d078ce84e2540/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3c95bc41341c5ad692e1c2028d0d078ce84e2540/raw/"
+  },
+  "indicators": {
+    "bytes_len": 116256,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3046,
+    "blank_lines": 0,
+    "comment_lines": 1007,
+    "code_lines": 2039,
+    "comment_ratio": 0.331,
+    "max_line_length": 74,
+    "avg_line_length": 37.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 58,
+    "call_count": 15,
+    "perform_count": 149,
+    "goto_count": 48,
+    "pic_count": 82,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (or compatible open-source COBOL, likely GnuCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN ... ALSO ... END-EVALUATE (COBOL-85 structured)",
+          "END-IF, END-EVALUATE terminators throughout",
+          "PROCEDURE DIVISION USING with multiple linkage areas",
+          "COPY with REPLACING clauses",
+          "Fixed-format source, columns 7-72",
+          "No EXEC SQL / EXEC CICS — standalone batch/subprogram style",
+          "OCCURS clauses without INDEXED BY (simple table)",
+          "Japanese comments encoded in Latin-1 (EUC-JP or Shift-JIS stored as latin-1)",
+          "PROGRAM-ID ORCGI04 matching JMA ORCA open-source medical software project"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a screen-handling subprogram for the JMA ORCA open-source medical receipt (billing) system, specifically handling a 'payment confirmation' screen (I04) within the hospital admission/discharge business subsystem. It manages screen initialization, navigation, data entry, and linkage to patient, insurance, and payment master records.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Part of JMA ORCA open-source Japanese medical receipt software",
+        "Heavy use of COPY statements with REPLACING for record layout reuse",
+        "Japanese text in comments (EUC-JP or Shift-JIS, decoded as Latin-1 producing mojibake)",
+        "LINKAGE SECTION with multiple areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "Screen SPA (Scratchpad Area) pattern typical of COBOL screen management middleware",
+        "EVALUATE with ALSO for multi-condition dispatch",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP (Message Control Program) interface",
+        "PERFORM count of 149 and GOTO count of 48 indicating substantial procedural logic",
+        "Multiple OCCURS tables for patient, insurance, and medical act records"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly production COBOL from the JMA ORCA project (Japan Medical Association open-source receipt software, circa 2000-2002). Japanese comments are garbled because the original encoding (likely EUC-JP or Shift-JIS) was decoded as Latin-1. The dialect is most likely GnuCOBOL or Micro Focus given the open-source Linux-based ORCA platform. Source is truncated at 16000 chars out of 116256 bytes total, but enough is visible to classify confidently."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8162,
+      "completion_tokens": 767,
+      "total_tokens": 8929,
+      "cost": 0.035991,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035991,
+        "upstream_inference_prompt_cost": 0.024486,
+        "upstream_inference_completions_cost": 0.011505
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.49,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

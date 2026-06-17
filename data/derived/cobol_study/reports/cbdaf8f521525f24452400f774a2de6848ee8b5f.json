@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cbdaf8f521525f24452400f774a2de6848ee8b5f",
+    "sha1_git": "cbdaf8f521525f24452400f774a2de6848ee8b5f",
+    "filename": "/ORCGJ02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 673050,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cbdaf8f521525f24452400f774a2de6848ee8b5f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cbdaf8f521525f24452400f774a2de6848ee8b5f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 673050,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 15786,
+    "blank_lines": 0,
+    "comment_lines": 4069,
+    "code_lines": 11717,
+    "comment_ratio": 0.258,
+    "max_line_length": 74,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGJ02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 90,
+    "call_count": 97,
+    "perform_count": 1033,
+    "goto_count": 111,
+    "pic_count": 350,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL / OpenCOBOL (JMA ORCA project, Linux-based)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "Fixed-format source with standard column layout",
+          "COPY statements referencing .INC files (e.g. 'CPJ02SPASCR.INC', 'ENUM-VALUE', 'COMMON-SPA')",
+          "No EXEC SQL or EXEC CICS — pure COBOL",
+          "File paths like '/var/tmp/' indicate Linux/Unix environment consistent with GnuCOBOL/OpenCOBOL",
+          "ORGANIZATION IS INDEXED, ACCESS MODE IS DYNAMIC — standard COBOL-85 file handling",
+          "Japanese comments encoded in EUC-JP/latin-1 decoded, consistent with JMA ORCA open-source project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a medical accounting/billing card input program (component J02) of the JMA ORCA standard receipt software system used in Japanese medical institutions. It handles patient accounting card entry, insurance combination checking, hospitalization records, and medical fee calculation. It is part of the Japan Medical Association's open-source clinic management system.",
+        "domain": "healthcare/medical billing",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — file-based I/O only",
+        "Extensive Japanese comments (EUC-JP encoded, decoded as latin-1)",
+        "Large program: ~15,786 lines, 97 CALL statements, 1,033 PERFORM statements",
+        "COPY statements referencing multiple include files (copybooks) for SPA areas and screen control",
+        "REDEFINES clauses used for display formatting (e.g. WRK-TENSU-X)",
+        "Indexed file organization with DYNAMIC access mode",
+        "Long revision history spanning 2000–2016 with multiple contributors",
+        "No COMP-3 usage despite being a financial/billing application"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known JMA ORCA (Open Receipt Computer for All) project, a Japanese open-source medical receipt/billing system. Japanese text in comments is EUC-JP encoded but was decoded as latin-1, resulting in mojibake in the displayed text. The source is clearly genuine production COBOL targeting a Linux/Unix environment, most likely compiled with GnuCOBOL or OpenCOBOL. The truncation at 16,000 chars covers only the DATA DIVISION; the PROCEDURE DIVISION with the bulk of logic is not shown but is confirmed present by mechanical indicators."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9590,
+      "completion_tokens": 758,
+      "total_tokens": 10348,
+      "cost": 0.04014,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04014,
+        "upstream_inference_prompt_cost": 0.02877,
+        "upstream_inference_completions_cost": 0.01137
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.19,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

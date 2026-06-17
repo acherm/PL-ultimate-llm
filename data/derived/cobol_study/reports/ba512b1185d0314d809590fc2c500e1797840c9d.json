@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ba512b1185d0314d809590fc2c500e1797840c9d",
+    "sha1_git": "ba512b1185d0314d809590fc2c500e1797840c9d",
+    "filename": "/ORCR0485.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 140641,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ba512b1185d0314d809590fc2c500e1797840c9d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ba512b1185d0314d809590fc2c500e1797840c9d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 140641,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3272,
+    "blank_lines": 2,
+    "comment_lines": 875,
+    "code_lines": 2395,
+    "comment_ratio": 0.268,
+    "max_line_length": 116,
+    "avg_line_length": 42.0,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0485"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 6,
+    "perform_count": 215,
+    "goto_count": 14,
+    "pic_count": 165,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or similar open-source COBOL (JMA ORCA project)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS SEQUENTIAL / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING using // delimiters",
+          "PIC X(nn) / PIC 9(nn) data definitions",
+          "OCCURS clause in working-storage",
+          "Fixed-format source layout",
+          "JMA ORCA open-source medical receipt software project (Linux/GnuCOBOL context)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software system. It generates and edits monthly billing/receipt detail files for self-pay (jikofutankin) insurance claims, processing indexed patient and disease-name files to produce output receipt data. It handles editing of receipt comments, disease names, treatment periods, and related billing information.",
+        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based COBOL with INDEXED sequential files",
+        "Heavy use of COPY statements with REPLACING for reusable record layouts (.INC copybooks)",
+        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, rendered as mojibake)",
+        "Multiple indexed file selects (RECE41, RECE43, RECE47, RECE471, RECEERR)",
+        "REDEFINES clause usage",
+        "OCCURS for table storage (up to 100 occurrences)",
+        "215 PERFORM statements indicating structured procedural decomposition",
+        "6 CALL statements for external subprogram invocations",
+        "No COMP-3 packed decimal usage despite financial calculations",
+        "Long revision history in comments spanning 2002–2009"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file comments are in Japanese (EUC-JP or Shift-JIS) but decoded as Latin-1, producing mojibake. The program is clearly production-grade medical billing software from the JMA ORCA open-source project. The .CBL extension and fixed-format layout are consistent with GnuCOBOL on Linux, which is the platform ORCA targets. No COMP-3 is used despite numeric financial fields, which is somewhat unusual but consistent with GnuCOBOL defaults. Source was truncated at 16000 chars out of 140641 bytes, so the full PROCEDURE DIVISION was not visible, but structural indicators (215 PERFORMs, 14 GOTOs, 165 PICs) confirm a substantial production program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9445,
+      "completion_tokens": 793,
+      "total_tokens": 10238,
+      "cost": 0.04023,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04023,
+        "upstream_inference_prompt_cost": 0.028335,
+        "upstream_inference_completions_cost": 0.011895
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.19,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

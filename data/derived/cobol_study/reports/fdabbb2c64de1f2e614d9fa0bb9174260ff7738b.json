@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fdabbb2c64de1f2e614d9fa0bb9174260ff7738b",
+    "sha1_git": "fdabbb2c64de1f2e614d9fa0bb9174260ff7738b",
+    "filename": "/ORCR0030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1561114,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fdabbb2c64de1f2e614d9fa0bb9174260ff7738b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fdabbb2c64de1f2e614d9fa0bb9174260ff7738b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1561114,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 32099,
+    "blank_lines": 0,
+    "comment_lines": 4721,
+    "code_lines": 27378,
+    "comment_ratio": 0.147,
+    "max_line_length": 82,
+    "avg_line_length": 47.6,
+    "long_lines_over_72": 269,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 59,
+    "call_count": 60,
+    "perform_count": 1114,
+    "goto_count": 9,
+    "pic_count": 1413,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely GnuCOBOL / OpenCOBOL given JMA ORCA open-source context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCR0030",
+          "ENVIRONMENT DIVISION, DATA DIVISION, PROCEDURE DIVISION all present",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "PIC count 1413, PERFORM count 1114, CALL count 60 — typical production COBOL",
+          "No EXEC SQL / EXEC CICS — batch-style program",
+          "JMA ORCA open-source medical receipt software project (Japanese)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch COBOL program (ORCR0030) belonging to the JMA ORCA open-source medical receipt software system used in Japan. It appears to aggregate and calculate point/score totals by medical treatment category (診療区分別点数集計) for insurance claim receipts (レセプト). The program handles complex Japanese national health insurance billing rules including co-payment amounts, prescription fees, examination counts, and various special treatment categories.",
+        "domain": "healthcare / medical insurance billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive Japanese-language comments (Shift-JIS / EUC-JP encoded, rendered as Latin-1 mojibake)",
+        "Very large file: ~1.56 MB, 32099 lines — clearly a substantial production program",
+        "No EXEC SQL or EXEC CICS — pure batch COBOL",
+        "No COMP-3 usage despite being a financial/billing program",
+        "60 CALL statements indicating modular design with many subprogram calls",
+        "1114 PERFORM statements reflecting complex procedural logic",
+        "Long revision history spanning 2000–2006 with many named contributors",
+        "Open-source JMA ORCA project (Japan Medical Association standard receipt software)",
+        "No COPY statements (copy_count=0) — all data definitions inline"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the comments contain Japanese text originally encoded in EUC-JP or Shift-JIS, appearing as mojibake. The program is part of the well-known open-source JMA ORCA medical billing system. The absence of COMP-3 is somewhat unusual for a billing program but not disqualifying. The 1.56 MB size and 32099 lines confirm this is a large, mature production program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15014,
+      "completion_tokens": 721,
+      "total_tokens": 15735,
+      "cost": 0.055857,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.055857,
+        "upstream_inference_prompt_cost": 0.045042,
+        "upstream_inference_completions_cost": 0.010815
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.66,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

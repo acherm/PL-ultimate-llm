@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2f6c6d236a6923c3e7dee22936bac126928d31d9",
+    "sha1_git": "2f6c6d236a6923c3e7dee22936bac126928d31d9",
+    "filename": "/ORCGG03.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 56580,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2f6c6d236a6923c3e7dee22936bac126928d31d9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2f6c6d236a6923c3e7dee22936bac126928d31d9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 56580,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1478,
+    "blank_lines": 0,
+    "comment_lines": 486,
+    "code_lines": 992,
+    "comment_ratio": 0.329,
+    "max_line_length": 74,
+    "avg_line_length": 37.3,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGG03"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 33,
+    "call_count": 16,
+    "perform_count": 84,
+    "goto_count": 17,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGG03",
+          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
+          "EVALUATE ... ALSO ... WHEN ... ALSO",
+          "PERFORM VARYING ... FROM ... BY ... UNTIL",
+          "EXIT PROGRAM",
+          "COPY directives with REPLACING",
+          "BINARY usage (S9(9) BINARY)",
+          "No EXEC SQL / EXEC CICS",
+          "MCP-STATUS / MCP-EVENT / MCP-WIDGET pattern typical of ORCA/JMA OpenCOBOL framework"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a screen-handling component (parameter explanation screen G03) within the ORCA JMA Standard Receipt Software system, specifically for monthly statistics (月次統計). It manages initialization, screen transitions, parameter display/editing, and database lookups against the tbl_toukeimemo table for statistical memo records.",
+        "domain": "healthcare / medical billing (Japanese medical association receipt software)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Part of the ORCA (JMA Standard Receipt Software) open-source Japanese medical billing system",
+        "Uses MCP (Message Control Program) framework for screen/window management instead of CICS",
+        "Japanese comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 causing mojibake)",
+        "Extensive use of COPY statements for modular file layouts and subprogram interfaces",
+        "LINKAGE SECTION with multiple copybooks (MCPAREA, ORCA-SPA, LINKAREA, screen areas)",
+        "EVALUATE ALSO construct for multi-condition dispatch on MCP-STATUS/MCP-EVENT/MCP-WIDGET",
+        "No COMP-3 usage; uses BINARY for pointer-like fields",
+        "16 CALL statements and 84 PERFORMs indicating complex control flow",
+        "Database access via MCP data interface (not embedded SQL)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine production COBOL from the ORCA JMA open-source medical receipt system (Japan). Japanese comments appear as mojibake because the file is EUC-JP or Shift-JIS encoded but was decoded as Latin-1. The MCP framework is ORCA-specific middleware replacing CICS for screen management. The program handles the G03 parameter explanation screen for monthly statistics reporting. Source is truncated at 16000 chars out of 56580 bytes total, but enough is visible to classify with high confidence."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7045,
+      "completion_tokens": 756,
+      "total_tokens": 7801,
+      "cost": 0.032475,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032475,
+        "upstream_inference_prompt_cost": 0.021135,
+        "upstream_inference_completions_cost": 0.01134
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.71,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

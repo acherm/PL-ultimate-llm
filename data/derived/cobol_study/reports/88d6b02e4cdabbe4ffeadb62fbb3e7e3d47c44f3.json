@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:88d6b02e4cdabbe4ffeadb62fbb3e7e3d47c44f3",
+    "sha1_git": "88d6b02e4cdabbe4ffeadb62fbb3e7e3d47c44f3",
+    "filename": "/A00000D123.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 228190,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:88d6b02e4cdabbe4ffeadb62fbb3e7e3d47c44f3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:88d6b02e4cdabbe4ffeadb62fbb3e7e3d47c44f3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 228190,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5041,
+    "blank_lines": 6,
+    "comment_lines": 2314,
+    "code_lines": 2721,
+    "comment_ratio": 0.46,
+    "max_line_length": 93,
+    "avg_line_length": 43.3,
+    "long_lines_over_72": 35,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "A00000D123"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 44,
+    "call_count": 142,
+    "perform_count": 159,
+    "goto_count": 7,
+    "pic_count": 175,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (open-cobol)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. A00000D123",
+          "All four DIVISIONS present",
+          "COPY statements with REPLACING",
+          "SELECT ... ORGANIZATION INDEXED ... ACCESS MODE DYNAMIC ... RECORD KEY",
+          "Comment references 'open-cobol 0.23' adaptation (2005/03/02)",
+          "Fixed-format source layout",
+          "PIC clauses, WORKING-STORAGE SECTION, FILE SECTION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch reporting program for the ORCA (JMA standard receipt software) medical billing system in Japan. It generates monthly aggregate/summary reports (月次帳票 - monthly statement/receipt report) for outpatient visits, processing patient insurance and billing data. It handles calculations for medical fees, co-payments, subsidies, and consumption tax across multiple insurance types.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based I/O",
+        "Extensive Japanese comments (EUC-JP or Shift-JIS encoded, decoded as latin-1 producing mojibake)",
+        "COPY statements referencing multiple INC files (CPCOMMONSHELL.INC, A00000D123.INC, A00000D1231.INC, CPERRFL.INC)",
+        "142 CALL statements indicating heavy use of subprograms",
+        "INDEXED file with DYNAMIC access mode",
+        "OCCURS clauses for arrays (e.g., WRK-TJIHI-G OCCURS 10)",
+        "Signed numeric fields with V (implied decimal) for monetary calculations",
+        "Long revision history spanning 2004-2009 with named developers",
+        "Open-source JMA ORCA project (Japan Medical Association)",
+        "No COMP-3 usage despite financial calculations"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in a Japanese character encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese text in comments to appear as mojibake. The program is clearly part of the open-source JMA ORCA medical receipt software project. The high comment ratio (0.46) reflects extensive revision history comments. The 142 CALL statements suggest a modular architecture with many shared subprograms. Source is truncated at 16000 chars out of 228190 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9637,
+      "completion_tokens": 716,
+      "total_tokens": 10353,
+      "cost": 0.039651,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039651,
+        "upstream_inference_prompt_cost": 0.028911,
+        "upstream_inference_completions_cost": 0.01074
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.98,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f55c84523942cd91eac97e56beea8dbf1fb52b01",
+    "sha1_git": "f55c84523942cd91eac97e56beea8dbf1fb52b01",
+    "filename": "/ORCGQSUB03.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15796,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f55c84523942cd91eac97e56beea8dbf1fb52b01/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f55c84523942cd91eac97e56beea8dbf1fb52b01/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15796,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 418,
+    "blank_lines": 0,
+    "comment_lines": 171,
+    "code_lines": 247,
+    "comment_ratio": 0.409,
+    "max_line_length": 74,
+    "avg_line_length": 36.8,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGQSUB03"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 8,
+    "call_count": 4,
+    "perform_count": 23,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "END-IF, END-PERFORM (COBOL-85 scope terminators)",
+          "PERFORM UNTIL with inline body",
+          "EXIT PROGRAM",
+          "CALL 'ORCMCPSUB' USING — custom MCP database interface",
+          "COPY directives for .INC files (CPJYURRK.INC, CPHKNCOMBI.INC, etc.)",
+          "Fixed-format source with columns 7-72"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A subprogram (ORCGQSUB03) that retrieves and assembles insurance combination (HKNCOMBI) information for a patient inquiry. It checks inpatient records first, then outpatient reception records, and returns the insurance combination number, insurance number, insurance combination name, department code, and last date to the caller via a linkage area.",
+        "domain": "healthcare / medical billing (Japanese medical receipt software — JMA ORCA system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)",
+        "Custom database access via CALL 'ORCMCPSUB' with DBSELECT/DBFETCH/DBCLOSECURSOR function codes (proprietary MCP layer)",
+        "Heavy use of COPY for record layouts (.INC files)",
+        "No EXEC SQL or EXEC CICS — uses an abstraction layer instead",
+        "Part of the open-source JMA ORCA medical receipt system",
+        "PERFORM UNTIL loop for cursor-style fetch iteration"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known Japanese open-source medical receipt software 'ORCA' developed by JMA. Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The COPY statements reference external .INC copybooks not shown here. The database access pattern (DBSELECT → DBFETCH → DBCLOSECURSOR) is characteristic of the ORCA MCP middleware layer."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6467,
+      "completion_tokens": 644,
+      "total_tokens": 7111,
+      "cost": 0.029061,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029061,
+        "upstream_inference_prompt_cost": 0.019401,
+        "upstream_inference_completions_cost": 0.00966
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.18,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

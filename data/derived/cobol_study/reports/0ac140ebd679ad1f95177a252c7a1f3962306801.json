@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0ac140ebd679ad1f95177a252c7a1f3962306801",
+    "sha1_git": "0ac140ebd679ad1f95177a252c7a1f3962306801",
+    "filename": "/ORCGW122.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 84327,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0ac140ebd679ad1f95177a252c7a1f3962306801/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0ac140ebd679ad1f95177a252c7a1f3962306801/raw/"
+  },
+  "indicators": {
+    "bytes_len": 84327,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2090,
+    "blank_lines": 0,
+    "comment_lines": 557,
+    "code_lines": 1533,
+    "comment_ratio": 0.267,
+    "max_line_length": 74,
+    "avg_line_length": 39.3,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW122"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 70,
+    "call_count": 13,
+    "perform_count": 110,
+    "goto_count": 28,
+    "pic_count": 75,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGW122",
+          "EVALUATE ... ALSO ... WHEN syntax",
+          "END-EVALUATE, END-IF terminators",
+          "COPY directives with quoted filenames (.INC, .CBL pattern)",
+          "PROCEDURE DIVISION USING with multiple linkage areas",
+          "EXIT PROGRAM",
+          "Fixed-format source layout (columns 7-72)",
+          "JMA ORCA open-source medical receipt software project header comment"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard medical receipt software system. It handles screen management and data entry for a receipt printing / public expense (Kouhi) entry order configuration screen (W122). It manages list display, selection, validation, and update of public expense entry order settings within the system administration subsystem.",
+        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS mojibake)",
+        "Extensive use of COPY statements for screen layouts (W01.INC through WERR.INC, WID1.INC, WID2.INC) and data structures",
+        "MCP (Message Control Program) style screen handling via MCP-STATUS / MCP-EVENT EVALUATE dispatch — typical of ORCA/GnuCOBOL GUI framework",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA — multi-area linkage pattern",
+        "SPA (Screen Parameter Area) pattern for inter-screen state passing",
+        "OCCURS tables for head/body list management",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP DB access layer (MCPDATA.INC)",
+        "No COMP-3 usage despite production-level complexity",
+        "13 CALL statements, 110 PERFORMs, 28 GOTOs — structured but with legacy goto usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the Japanese comments are actually multi-byte encoded (likely EUC-JP), causing mojibake in the latin-1 rendering. This is a production module from the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. The MCP framework is specific to ORCA/GnuCOBOL on Linux. Source is truncated at 16000 chars out of 84327 bytes (2090 lines total), but enough is visible to classify with high confidence."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7024,
+      "completion_tokens": 775,
+      "total_tokens": 7799,
+      "cost": 0.032697,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032697,
+        "upstream_inference_prompt_cost": 0.021072,
+        "upstream_inference_completions_cost": 0.011625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.53,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

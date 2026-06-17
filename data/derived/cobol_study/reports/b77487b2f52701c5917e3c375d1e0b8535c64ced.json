@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b77487b2f52701c5917e3c375d1e0b8535c64ced",
+    "sha1_git": "b77487b2f52701c5917e3c375d1e0b8535c64ced",
+    "filename": "/ORCR0420.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 319236,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b77487b2f52701c5917e3c375d1e0b8535c64ced/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b77487b2f52701c5917e3c375d1e0b8535c64ced/raw/"
+  },
+  "indicators": {
+    "bytes_len": 319236,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6375,
+    "blank_lines": 1,
+    "comment_lines": 1204,
+    "code_lines": 5170,
+    "comment_ratio": 0.189,
+    "max_line_length": 79,
+    "avg_line_length": 49.1,
+    "long_lines_over_72": 64,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0420"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 35,
+    "call_count": 2,
+    "perform_count": 177,
+    "goto_count": 2,
+    "pic_count": 336,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / possibly Micro Focus – JMA ORCA project (Linux-based medical billing system)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED, ACCESS MODE IS DYNAMIC, RECORD KEY, FILE STATUS – standard ISAM file handling",
+          "COPY ... REPLACING //token// BY //token// syntax (double-slash pseudo-text delimiters, common in GnuCOBOL/Micro Focus)",
+          "PIC X(nn) and PIC 9(nn) throughout",
+          "No EXEC SQL, no EXEC CICS, no COMP-3 – consistent with GnuCOBOL batch style",
+          "Copyright JMA (Japan Medical Association) ORCA project, known to use GnuCOBOL on Linux",
+          "Fixed-format source, max line 79 chars"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Monthly billing batch program for the JMA ORCA medical receipt (claims) system, specifically handling Rousai (workers' compensation) and Jibaiseki (automobile liability) insurance claim detail file creation and point-score aggregation. It reads and writes multiple indexed ISAM files (RECE41, RECE44, RECE45, RECE4A, RECE4B) to build and update claim records, and writes an error file for exceptions.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple SELECT entries for the same physical file under different logical names (DYNAMIC vs SEQUENTIAL access modes) – a common COBOL technique for dual-access",
+        "COPY ... REPLACING with double-slash pseudo-text delimiters for record-name substitution across shared copybooks",
+        "No EXEC SQL or EXEC CICS – pure file-based (ISAM) processing",
+        "No COMP-3 packed-decimal fields visible in the truncated section",
+        "Extensive Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake in the archive)",
+        "Long revision history spanning 2002–2007 with named developers",
+        "177 PERFORM statements indicating deeply structured procedural decomposition",
+        "Error file (RECEERR-FILE) for audit/exception logging",
+        "Open-source JMA ORCA project (JMA Open Source License)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded as latin-1 but the comments are actually EUC-JP (Japanese encoding), causing mojibake in the displayed text. The source is clearly genuine production COBOL from the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. The COPY statements reference external copybooks (.INC files) that are not included in this excerpt, so full data structure analysis is not possible from this file alone. The truncation at 16000 chars covers only the identification, environment, file, and the beginning of working-storage sections."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10719,
+      "completion_tokens": 841,
+      "total_tokens": 11560,
+      "cost": 0.044772,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.044772,
+        "upstream_inference_prompt_cost": 0.032157,
+        "upstream_inference_completions_cost": 0.012615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.13,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4e6bc6060f7f2f48110daa934dcc60b6c7c77bd9",
+    "sha1_git": "4e6bc6060f7f2f48110daa934dcc60b6c7c77bd9",
+    "filename": "/ORCGW13.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 110711,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4e6bc6060f7f2f48110daa934dcc60b6c7c77bd9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4e6bc6060f7f2f48110daa934dcc60b6c7c77bd9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 110711,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2737,
+    "blank_lines": 0,
+    "comment_lines": 761,
+    "code_lines": 1976,
+    "comment_ratio": 0.278,
+    "max_line_length": 74,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW13"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 54,
+    "call_count": 28,
+    "perform_count": 170,
+    "goto_count": 32,
+    "pic_count": 134,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGW13",
+          "COPY directives with quoted filenames (e.g. COPY \"COMMON-SPA\")",
+          "OCCURS clauses, PIC X/9 definitions consistent with COBOL-85",
+          "BINARY usage (PIC S9(9) BINARY)",
+          "Fixed-format source with standard division structure",
+          "No EXEC SQL or EXEC CICS — standalone batch/subprogram style",
+          "LINKAGE SECTION with SCRAREA and multiple COPY includes typical of ORCA/OpenCOBOL GUI framework"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system used in Japanese medical billing. It handles system management information settings for a medical institution (specifically disaster/casualty medical facility information, W13 screen). It manages screen state, table data for medical fee classifications, tax categories, equipment codes, and damage classification lists.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS rendered as latin-1 mojibake)",
+        "Extensive use of COPY statements for screen layouts (W01.INC through W99.INC) and data structures",
+        "LINKAGE SECTION with MCP (Message Control Program) area — typical of ORCA's OpenCOBOL/GnuCOBOL GUI framework",
+        "OCCURS clauses for list/table management (up to 50 entries for equipment codes, 40 for damage classifications)",
+        "PIC S9(9) BINARY for row indices",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "28 CALL statements, 170 PERFORMs, 32 GOTOs — substantial procedural logic",
+        "Open Source license header (JMA Open Source License)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in latin-1 but contains Japanese text (EUC-JP or Shift-JIS) that appears as mojibake. The source is truncated at 16000 chars out of ~110KB total. The program is part of the well-known open-source ORCA medical receipt software project maintained by the Japan Medical Association. The COPY statements reference many external copybooks that are not shown. The W01.INC–W30.INC etc. includes suggest a screen-based subprogram driven by an MCP (screen/widget) framework typical of ORCA's GnuCOBOL/OpenCOBOL architecture."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7383,
+      "completion_tokens": 784,
+      "total_tokens": 8167,
+      "cost": 0.033909,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033909,
+        "upstream_inference_prompt_cost": 0.022149,
+        "upstream_inference_completions_cost": 0.01176
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.78,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

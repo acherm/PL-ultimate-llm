@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0af679890cd1a83f2be48fe50c02398684f85d37",
+    "sha1_git": "0af679890cd1a83f2be48fe50c02398684f85d37",
+    "filename": "/LGICUS01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 2
+  },
+  "content": {
+    "length": 8564,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0af679890cd1a83f2be48fe50c02398684f85d37/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0af679890cd1a83f2be48fe50c02398684f85d37/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8564,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 190,
+    "blank_lines": 21,
+    "comment_lines": 60,
+    "code_lines": 109,
+    "comment_ratio": 0.355,
+    "max_line_length": 72,
+    "avg_line_length": 44.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LGICUS01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 30,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS LINK / RETURN / ABEND / ASKTIME / FORMATTIME END-EXEC",
+          "EIBCALEN, EIBTRNID, EIBTRMID, EIBTASKN EIB fields",
+          "DFHCOMMAREA in LINKAGE SECTION",
+          "COPY LGPOLICY / COPY LGCMAREA (IBM-style copybooks)",
+          "USAGE IS POINTER",
+          "PIC S9(4) COMP / PIC S9(8) COMP",
+          "IBM copyright header CB12 product tag",
+          "Fixed format, max line length 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program implements the 'Inquire Customer' business logic for an insurance application. It validates the incoming CICS COMMAREA, then delegates to a database back-end program (LGICDB01) via EXEC CICS LINK to retrieve customer details. Error conditions are reported by linking to a logging program (LGSTSQ).",
+        "domain": "insurance",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (LINK, RETURN, ABEND, ASKTIME, FORMATTIME)",
+        "DFHCOMMAREA with COPY LGCMAREA in LINKAGE SECTION",
+        "COPY LGPOLICY copybook",
+        "EIB field usage (EIBCALEN, EIBTRNID, EIBTRMID, EIBTASKN)",
+        "EXEC CICS ABEND ABCODE('LGCA') NODUMP for missing commarea",
+        "Error logging via EXEC CICS LINK to LGSTSQ",
+        "USAGE IS POINTER for commarea address",
+        "No EXEC SQL — pure CICS, DB access delegated to LGICDB01"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is part of the IBM CICS TS sample application (CB12 product tag, copyright IBM 2011-2013). The file is complete and well-structured. COPY statements reference LGPOLICY and LGCMAREA which are not shown but are standard copybooks for this sample. No truncation or encoding issues detected."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3013,
+      "completion_tokens": 663,
+      "total_tokens": 3676,
+      "cost": 0.018984,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018984,
+        "upstream_inference_prompt_cost": 0.009039,
+        "upstream_inference_completions_cost": 0.009945
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.23,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

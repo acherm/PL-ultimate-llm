@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:04daba4c27b23692f3d876580f4ad12935d3761e",
+    "sha1_git": "04daba4c27b23692f3d876580f4ad12935d3761e",
+    "filename": "/Vnddsp02.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5260,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:04daba4c27b23692f3d876580f4ad12935d3761e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:04daba4c27b23692f3d876580f4ad12935d3761e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5260,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 163,
+    "blank_lines": 0,
+    "comment_lines": 3,
+    "code_lines": 160,
+    "comment_ratio": 0.018,
+    "max_line_length": 66,
+    "avg_line_length": 31.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "VNDDSP02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 26,
+    "goto_count": 0,
+    "pic_count": 25,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (educational/PC variant)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM ... UNTIL construct",
+          "READ ... NEXT RECORD AT END",
+          "OPEN I-O VENDOR-FILE",
+          "DISPLAY and ACCEPT for terminal interaction",
+          "PIC ZZZZ9 for page number",
+          "COPY directives referencing .CBL files",
+          "77-level items in WORKING-STORAGE",
+          "No EXEC SQL or EXEC CICS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Displays records from a Vendor File to the terminal, formatting them across multiple lines (vendor number, name, contact, address, city/state/zip, phone). Supports pagination with a title line, column headers, and a press-enter prompt between pages.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY directives for file-control (SLVND01.CBL) and FD (FDVND02.CBL)",
+        "Terminal-based pagination using DISPLAY and ACCEPT",
+        "Multi-line record display layout (4 lines per vendor record)",
+        "PIC ZZZZ9 edited numeric for page number display",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program references two COPY files (SLVND01.CBL and FDVND02.CBL) that are not shown; the vendor record field names (VENDOR-NUMBER, VENDOR-NAME, etc.) are assumed to be defined there. The style, naming conventions, and structure are consistent with a textbook or course exercise on sequential file processing. The OPEN I-O mode for a display-only program is slightly unusual but not uncommon in student code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2780,
+      "completion_tokens": 545,
+      "total_tokens": 3325,
+      "cost": 0.016515,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016515,
+        "upstream_inference_prompt_cost": 0.00834,
+        "upstream_inference_completions_cost": 0.008175
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.07,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:53f72d1790a0adc9ecdcccaea2057dc46576c017",
+    "sha1_git": "53f72d1790a0adc9ecdcccaea2057dc46576c017",
+    "filename": "/ORCR0600.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 93428,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:53f72d1790a0adc9ecdcccaea2057dc46576c017/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:53f72d1790a0adc9ecdcccaea2057dc46576c017/raw/"
+  },
+  "indicators": {
+    "bytes_len": 93428,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2163,
+    "blank_lines": 0,
+    "comment_lines": 532,
+    "code_lines": 1631,
+    "comment_ratio": 0.246,
+    "max_line_length": 74,
+    "avg_line_length": 42.2,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0600"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 63,
+    "perform_count": 144,
+    "goto_count": 7,
+    "pic_count": 58,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or OpenCOBOL (JMA ORCA project, Linux-based medical system)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCR0600",
+          "PERFORM ... UNTIL with END-PERFORM",
+          "CALL 'ORCMCPSUB' USING ... (custom DB middleware)",
+          "COPY directives with REPLACING",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "EXIT PROGRAM / STOP RUN",
+          "SELECT ... ASSIGN ... FILE STATUS",
+          "INITIALIZE statement",
+          "END-IF, END-PERFORM inline scope terminators"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software system. It creates provisional receipt/payment data (仮収納データ作成) for medical billing. It reads patient information, insurance combinations, treatment accounting records, and hospitalization data, then generates or updates receipt records for the Japanese national health insurance claims process.",
+        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL — uses a custom MCP (middleware) DB abstraction layer via CALL 'ORCMCPSUB'",
+        "No EXEC CICS — standalone batch with STOP RUN / EXIT PROGRAM",
+        "Extensive use of COPY statements for record layouts (CPJOBKANRI.INC, CPSRYACCT.INC, CPPTINF.INC, etc.)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell/program invocation",
+        "Japanese Shift-JIS/EUC encoded comments (medical domain terminology)",
+        "Job management sub-calls (ORCSJOB, ORCMCPSUB) indicating a framework-based batch system",
+        "OCCURS clauses for tables (insurance combinations, day-count tables)",
+        "63 CALL statements indicating heavy use of subprogram architecture",
+        "Error file (RECEERR-FILE) for logging processing errors"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Japanese EUC or Shift-JIS encoded comments, which appear garbled in the latin-1 rendering. This is a production program from the open-source JMA ORCA medical receipt system (circa 2002-2005). The program uses a proprietary DB middleware layer (ORCMCPSUB/MCP) rather than embedded SQL. Copyright notice confirms JMA authorship. The 'RECEPTX' shell ID check controls whether the program exits via STOP RUN or EXIT PROGRAM, suggesting it can run both standalone and as a called subprogram."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7688,
+      "completion_tokens": 759,
+      "total_tokens": 8447,
+      "cost": 0.034449,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034449,
+        "upstream_inference_prompt_cost": 0.023064,
+        "upstream_inference_completions_cost": 0.011385
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.09,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

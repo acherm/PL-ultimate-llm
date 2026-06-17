@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:290394dfb31122dd74dcf52357f8df764d09a577",
+    "sha1_git": "290394dfb31122dd74dcf52357f8df764d09a577",
+    "filename": "/ORCSCHKTCHK.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 120223,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:290394dfb31122dd74dcf52357f8df764d09a577/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:290394dfb31122dd74dcf52357f8df764d09a577/raw/"
+  },
+  "indicators": {
+    "bytes_len": 120223,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2734,
+    "blank_lines": 0,
+    "comment_lines": 669,
+    "code_lines": 2065,
+    "comment_ratio": 0.245,
+    "max_line_length": 74,
+    "avg_line_length": 43.0,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSCHKTCHK"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 19,
+    "call_count": 9,
+    "perform_count": 200,
+    "goto_count": 2,
+    "pic_count": 103,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCSCHKTCHK",
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "END-IF used throughout",
+          "COPY directives with REPLACING clause",
+          "OCCURS clauses with PIC definitions",
+          "PROCEDURE DIVISION USING with multiple linkage parameters",
+          "EXIT PROGRAM",
+          "No EXEC SQL or EXEC CICS",
+          "Fixed-format source, max line 74"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a subprogram within the ORCA JMA (Japan Medical Association) standard medical receipt software system. It performs comprehensive check processing for 'Houkatu' (comprehensive/bundled) medical treatment billing, validating billing codes, calculation periods, hospitalization fees, and related master data. It handles multiple processing modes including full check, auto-generation check, error deletion, and hospitalization fee calculation checks.",
+        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
+        "Multiple COPY statements referencing domain-specific copybooks (CPHKTSANTEI.INC, CPHKTSRYCD.INC, CPSANTEI.INC, CPNYUINACCT.INC, etc.)",
+        "LINKAGE SECTION with multiple passed areas (SPA, screen SPA, check parameter areas)",
+        "OCCURS tables up to 600 entries for billing check master data",
+        "No EXEC SQL or EXEC CICS — database access via MCP (middleware call pattern with MCP-TABLE, MCP-RC)",
+        "EVALUATE used for multi-mode dispatch (syori codes 1-6)",
+        "Open Source license header (JMA Open Source License)",
+        "Version history spanning 2007–2017 with Japanese revision notes"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine production COBOL from the open-source ORCA medical receipt system developed by JMA (Japan Medical Association). Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The database access pattern uses an MCP middleware layer (PERFORM 910-DBSELECT-SEC with MCP-TABLE/MCP-RC fields) rather than embedded SQL. The COPY statements reference many domain-specific copybooks that are not shown. Source is truncated at 16000 chars out of 120223 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8523,
+      "completion_tokens": 746,
+      "total_tokens": 9269,
+      "cost": 0.036759,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036759,
+        "upstream_inference_prompt_cost": 0.025569,
+        "upstream_inference_completions_cost": 0.01119
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.62,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6525db765fcfa65063619afbbc3a0b51af827275",
+    "sha1_git": "6525db765fcfa65063619afbbc3a0b51af827275",
+    "filename": "/ORCGP02W1.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 319996,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6525db765fcfa65063619afbbc3a0b51af827275/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6525db765fcfa65063619afbbc3a0b51af827275/raw/"
+  },
+  "indicators": {
+    "bytes_len": 319996,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 7360,
+    "blank_lines": 0,
+    "comment_lines": 1936,
+    "code_lines": 5424,
+    "comment_ratio": 0.263,
+    "max_line_length": 78,
+    "avg_line_length": 42.5,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGP02W1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 48,
+    "call_count": 30,
+    "perform_count": 413,
+    "goto_count": 52,
+    "pic_count": 319,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "COPY statements for copybooks (ENUM-VALUE, COMMON-SPA, P02COMMON-SPA, P02SCR-SPA)",
+          "PIC clauses with standard COBOL syntax",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL or EXEC CICS — consistent with GnuCOBOL batch/screen program",
+          "OCCURS with INDEXED BY clause",
+          "Project header identifies JMA ORCA open-source medical software, known to use GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Patient registration and insurance information management screen program (P02) for the ORCA JMA standard medical receipt software system. It handles patient basic information entry, insurance/public expense (hoken/kouhi) registration, validation, and related screen workflows. The program manages patient data including name, birthdate, address, insurance numbers, and various insurance type combinations.",
+        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1 producing mojibake)",
+        "Extensive revision history spanning 2000–2008 with named developers",
+        "COPY statements for shared SPA (scratchpad area) copybooks typical of ORCA architecture",
+        "OCCURS with INDEXED BY for name/insurance table handling",
+        "Large working-storage section with many flag, counter, index, and work areas",
+        "30 CALL statements and 413 PERFORM statements indicating complex modular structure",
+        "52 GOTO statements",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite being a production financial/medical system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known open-source JMA ORCA medical receipt software project for Japan. Comments are in Japanese (EUC-JP or Shift-JIS) but decoded as latin-1, producing garbled characters. The source is large (7360 lines, ~320KB) and clearly production-grade. The program_type is listed as batch but it likely drives a screen-based (character terminal or GTK) UI via the ORCA framework rather than CICS. No copybook-only content — full program with all four divisions present."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10036,
+      "completion_tokens": 733,
+      "total_tokens": 10769,
+      "cost": 0.041103,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.041103,
+        "upstream_inference_prompt_cost": 0.030108,
+        "upstream_inference_completions_cost": 0.010995
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.05,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

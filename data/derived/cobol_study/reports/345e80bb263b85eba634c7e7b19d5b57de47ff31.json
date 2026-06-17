@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:345e80bb263b85eba634c7e7b19d5b57de47ff31",
+    "sha1_git": "345e80bb263b85eba634c7e7b19d5b57de47ff31",
+    "filename": "/ORCBD999.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 73064,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:345e80bb263b85eba634c7e7b19d5b57de47ff31/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:345e80bb263b85eba634c7e7b19d5b57de47ff31/raw/"
+  },
+  "indicators": {
+    "bytes_len": 73064,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1831,
+    "blank_lines": 0,
+    "comment_lines": 524,
+    "code_lines": 1307,
+    "comment_ratio": 0.286,
+    "max_line_length": 74,
+    "avg_line_length": 38.9,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBD999"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 24,
+    "call_count": 15,
+    "perform_count": 92,
+    "goto_count": 1,
+    "pic_count": 143,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY directives with REPLACING clauses",
+          "PERFORM ... UNTIL construct",
+          "INITIALIZE statements",
+          "UNSTRING ... DELIMITED BY",
+          "OCCURS clause in SUM-AREA",
+          "REDEFINES usage",
+          "Project header: 'ORCA' JMA (Japan Medical Association) open source medical receipt software"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA JMA standard medical receipt (claims) software system. It generates a daily statistics CSV file ('nikkei_' + date + '.csv') containing patient visit and insurance billing data for a given treatment date. It reads from an indexed receipt/payment file (BD00801), processes insurance combination records, and outputs structured CSV data with patient and insurance point/amount summaries.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments (rendered as Latin-1 mojibake in the excerpt)",
+        "Multiple COPY statements referencing project-specific copybooks (CPSYUNOU.INC, CPPTINF.INC, CPHKNCOMBI.INC, etc.)",
+        "INDEXED file with DYNAMIC access and composite ISAM key with REDEFINES",
+        "CSV output generation with Japanese column headers defined as FILLER VALUE literals",
+        "OCCURS 11 for SUM-AREA accumulating insurance category counts and amounts",
+        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
+        "UNSTRING on COMMAND-PARAM for parsing comma-delimited arguments",
+        "No EXEC SQL or EXEC CICS — uses proprietary DB access via COPY-included subprogram linkage areas (MCPAREA, MCPDATA.INC)",
+        "Date constants for Japanese fiscal year boundaries (H190401=20070401, H200401=20080401)",
+        "WRK-KAIGYO PIC X(01) VALUE X'0D' — carriage return for CSV line endings"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS) in comments and string literals, causing mojibake in the excerpt. This does not affect the COBOL structure assessment. The program is clearly part of the well-known open-source ORCA medical receipt system maintained by JMA (Japan Medical Association). The COPY statements reference many project-specific copybooks not shown here. No COMP-3 usage detected despite being a financial/billing program — amounts use plain PIC S9(08)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7802,
+      "completion_tokens": 820,
+      "total_tokens": 8622,
+      "cost": 0.035706,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035706,
+        "upstream_inference_prompt_cost": 0.023406,
+        "upstream_inference_completions_cost": 0.0123
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.41,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

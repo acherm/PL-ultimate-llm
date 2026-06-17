@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:aac28b4dff591ffb6215b9581fcc1705ba2a82d0",
+    "sha1_git": "aac28b4dff591ffb6215b9581fcc1705ba2a82d0",
+    "filename": "/stockvalorise.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6970,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:aac28b4dff591ffb6215b9581fcc1705ba2a82d0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:aac28b4dff591ffb6215b9581fcc1705ba2a82d0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6970,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 205,
+    "blank_lines": 34,
+    "comment_lines": 1,
+    "code_lines": 170,
+    "comment_ratio": 0.006,
+    "max_line_length": 147,
+    "avg_line_length": 33.0,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "stockvalorise"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 48,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus / GnuCOBOL with OO-style program-id alias (possibly Micro Focus Visual COBOL or NetCOBOL targeting .NET/Windows)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "program-id. stockvalorise as \"FaStock.stockvalorise\" — namespace/alias syntax typical of Micro Focus Visual COBOL or GnuCOBOL .NET",
+          "EXEC SQL CONNECT USING :connexion-database with ADO.NET-style connection string (SqlClient factory) — Micro Focus ESQL or GnuCOBOL ODBC",
+          "select assign to dynamic CheminFichier — dynamic file assignment",
+          "organization is line sequential",
+          "end program stockvalorise — explicit end marker",
+          "SQLCODE = 100 or 101 — non-standard dual check suggesting Micro Focus runtime"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that generates a 'Stock Valorisé' (valued inventory) report to a text file. It iterates over suppliers via a DB2/SQL cursor, then for each supplier fetches articles with their stock value and price, computes totals per article and per supplier, and writes formatted lines including grand total.",
+        "domain": "inventory/stock management (retail or warehouse)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL with ADO.NET-style connection string (SqlClient, SQL Server/SQLEXPRESS) — unusual embedded SQL dialect",
+        "EXEC SQL INCLUDE SQLCA",
+        "Cursor-based SQL iteration (DECLARE/OPEN/FETCH/CLOSE) for both suppliers and stock articles",
+        "Dynamic file assignment (assign to dynamic CheminFichier)",
+        "MOVE CORRESPONDING used extensively",
+        "French-language identifiers and report labels (Stock Valorisé, fournisseur, article)",
+        "No COMP-3 usage despite numeric calculations",
+        "program-id alias syntax (as \"FaStock.stockvalorise\")"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The connection string references System.Data.SqlClient and SQL Server Express, strongly suggesting a Windows/.NET environment with Micro Focus Visual COBOL or a similar dialect. SQLCODE = 101 check (in addition to 100) is non-standard and may be dialect-specific. The file is decoded as latin-1, consistent with the accented character 'é' in 'Valorisé'. No IDENTIFICATION DIVISION header is present (program-id appears directly), which is valid in many modern COBOL dialects."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2891,
+      "completion_tokens": 716,
+      "total_tokens": 3607,
+      "cost": 0.019413,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019413,
+        "upstream_inference_prompt_cost": 0.008673,
+        "upstream_inference_completions_cost": 0.01074
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.31,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

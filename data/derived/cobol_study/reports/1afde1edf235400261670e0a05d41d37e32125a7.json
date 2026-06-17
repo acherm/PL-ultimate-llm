@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1afde1edf235400261670e0a05d41d37e32125a7",
+    "sha1_git": "1afde1edf235400261670e0a05d41d37e32125a7",
+    "filename": "/CRP023.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 44074,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1afde1edf235400261670e0a05d41d37e32125a7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1afde1edf235400261670e0a05d41d37e32125a7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 44074,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 972,
+    "blank_lines": 87,
+    "comment_lines": 343,
+    "code_lines": 542,
+    "comment_ratio": 0.388,
+    "max_line_length": 109,
+    "avg_line_length": 43.3,
+    "long_lines_over_72": 29,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CRP023"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 32,
+    "call_count": 3,
+    "perform_count": 43,
+    "goto_count": 15,
+    "pic_count": 168,
+    "comp3_count": 13,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely Micro Focus Visual COBOL or Net Express)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$set LINKCOUNT\"512\" GNT\"CRP023.GNT\" — Micro Focus compiler directive with GNT (generated native code) target",
+          "CURSOR IS CSTART / CONSOLE IS CRT / CRT STATUS IS KEY-STATUS — Micro Focus CRT screen handling extensions",
+          "COMP-5 usage (Micro Focus native binary)",
+          "COPY with quoted filenames including extensions (e.g. COPY \"CONTROL.SL\", COPY \"DateVariables.cpy\")",
+          "OCCURS without INDEXED BY in table definitions typical of Micro Focus style"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch report program that produces a Creditor's Purchases Journal for an accounts payable / creditor management system. It reads creditor, transaction, control, and parameter files and prints a formatted journal report with date ranges, branch details, supplier lines, GRN/invoice numbers, costs, and selling prices.",
+        "domain": "accounting/finance (accounts payable, creditor management)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Micro Focus $set compiler directive with GNT output target",
+        "CRT STATUS / CONSOLE IS CRT — interactive screen handling extensions",
+        "COMP-3 (packed decimal) for financial accumulators",
+        "COMP-5 (Micro Focus native binary) for indexes and counters",
+        "Multiple COPY statements for file-control, FDE, and working-storage segments",
+        "Printer detail record with multiple REDEFINES for different line layouts",
+        "OCCURS table (W90-TABLE) for branch/name lookup",
+        "GPL open-source licence notice embedded in SECURITY paragraph",
+        "Version comment: 9.04.05 June 2018"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to the first 16 000 characters; the PROCEDURE DIVISION is not visible in the excerpt but structural indicators confirm 43 PERFORMs, 15 GOTOs, and 3 CALLs. The program is part of a larger APAC accounting suite (CRP02x series). The $set directive and GNT extension are definitive Micro Focus markers. Copyright 1983–2017 by James William Lemmon."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6055,
+      "completion_tokens": 668,
+      "total_tokens": 6723,
+      "cost": 0.028185,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028185,
+        "upstream_inference_prompt_cost": 0.018165,
+        "upstream_inference_completions_cost": 0.01002
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.12,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

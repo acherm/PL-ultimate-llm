@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:80345eea9424212e54d601747838f30f92b32679",
+    "sha1_git": "80345eea9424212e54d601747838f30f92b32679",
+    "filename": "/sincsqf04b.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 2
+  },
+  "content": {
+    "length": 7544,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:80345eea9424212e54d601747838f30f92b32679/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:80345eea9424212e54d601747838f30f92b32679/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7544,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 208,
+    "blank_lines": 3,
+    "comment_lines": 74,
+    "code_lines": 131,
+    "comment_ratio": 0.361,
+    "max_line_length": 115,
+    "avg_line_length": 34.3,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "sincsqf04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 12,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "cobc -x compiler invocation in comments with GnuCOBOL-specific flags (-fbinary-size, -fnotrunc, -fbinary-byteorder)",
+          "FUNCTION ALL INTRINSIC in REPOSITORY",
+          "GOBACK usage",
+          "END-READ, END-IF, END-RETURN inline terminators",
+          "SORT with INPUT PROCEDURE / OUTPUT PROCEDURE",
+          "RETURN file-sort AT END ... END-RETURN"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A COBOL sort module that reads records from an input file, filters them based on multiple field conditions, sorts them on an ascending key (srt-ch-field), and writes the sorted/filtered records to an output file. It also maintains input and output record counters and includes totalizer and reset-totalizer routines.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
+        "FUNCTION ALL INTRINSIC in REPOSITORY",
+        "Multiple COPY statements for file-control, FD, and working-storage sections",
+        "Inline comments with ## markers indicating template/modifiable sections",
+        "RELEASE and RETURN verbs for sort processing",
+        "Totalizer and reset-totalizer paragraphs using COPY for reusable logic",
+        "GnuCOBOL-specific compiler flags documented in comments"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The ## markers throughout the code suggest this is a template or tutorial program by Sauro Menna, designed to demonstrate COBOL sort techniques with modifiable sections. The COPY statements reference external copybooks (sinsqf01, soutsqf01, ssrtsqf01, finsqf01, foutsqf01, fsrtsqf01, wktotsum01, wkenvfield, prenvfield1, prenvfield2, praddsrttot, przerotot) that are not shown. The fs-sort file status variable appears to be used for both the sort file and the output file in different paragraphs, which may be intentional given the copybook structure."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2694,
+      "completion_tokens": 633,
+      "total_tokens": 3327,
+      "cost": 0.017577,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017577,
+        "upstream_inference_prompt_cost": 0.008082,
+        "upstream_inference_completions_cost": 0.009495
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.56,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

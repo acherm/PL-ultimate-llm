@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fc6802575d0866398a8883ba61f5e0a29d06bd96",
+    "sha1_git": "fc6802575d0866398a8883ba61f5e0a29d06bd96",
+    "filename": "/ORCS02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 602737,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fc6802575d0866398a8883ba61f5e0a29d06bd96/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fc6802575d0866398a8883ba61f5e0a29d06bd96/raw/"
+  },
+  "indicators": {
+    "bytes_len": 602737,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 12071,
+    "blank_lines": 0,
+    "comment_lines": 1704,
+    "code_lines": 10367,
+    "comment_ratio": 0.141,
+    "max_line_length": 108,
+    "avg_line_length": 48.9,
+    "long_lines_over_72": 101,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCS02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 87,
+    "perform_count": 294,
+    "goto_count": 9,
+    "pic_count": 292,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or similar open-source COBOL on Linux",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "WORKING-STORAGE SECTION with PIC clauses",
+          "OCCURS clauses, PERFORM, CALL, GOTO usage consistent with COBOL-85",
+          "Comment header states 'OS LINUX' and project is JMA open-source (ORCA project, known to use GnuCOBOL/OpenCOBOL)",
+          "Fixed-format source with columns 7-72 used for code",
+          "No EXEC SQL or EXEC CICS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a patient cost-sharing (patient co-payment) calculation subroutine for inpatient billing, part of the JMA ORCA standard medical receipt software used in Japanese medical institutions. It computes patient burden amounts (負担金算定) for various insurance combinations including national health insurance, public assistance, and regional subsidies. It handles complex Japanese medical insurance rules including income-based limits, long-term hospitalization, and multiple public subsidy schemes.",
+        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure COBOL logic",
+        "No COMP-3 usage despite being a financial calculation program",
+        "87 CALL statements indicating heavy use of external subroutines",
+        "294 PERFORM statements reflecting complex calculation logic",
+        "Large working storage with many calculation work areas (WK-KEISAN, WK-TOKUSYU, etc.)",
+        "OCCURS clauses for multi-insurance (up to 4 public subsidies)",
+        "Japanese-language comments encoded in EUC-JP or Shift-JIS (rendered as latin-1 artifacts)",
+        "Extensive revision history spanning 2002-2005 with 80+ documented changes",
+        "Part of the open-source JMA ORCA project (Japan Medical Association)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is 602KB / 12071 lines — a very large production subprogram. Japanese comments are encoded in a multi-byte encoding (likely EUC-JP) but were decoded as latin-1, causing mojibake in the displayed text. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. No COMP-3 is unusual for financial COBOL but consistent with some GnuCOBOL/OpenCOBOL coding styles. Source was truncated to 16000 chars; the full procedure division was not visible but structural indicators confirm all four divisions are present."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11346,
+      "completion_tokens": 768,
+      "total_tokens": 12114,
+      "cost": 0.045558,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.045558,
+        "upstream_inference_prompt_cost": 0.034038,
+        "upstream_inference_completions_cost": 0.01152
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.18,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

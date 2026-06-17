@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:70e1037a5def288e45db73ee6d24605eb8adf22a",
+    "sha1_git": "70e1037a5def288e45db73ee6d24605eb8adf22a",
+    "filename": "/ORCRDPC10.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 292378,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:70e1037a5def288e45db73ee6d24605eb8adf22a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:70e1037a5def288e45db73ee6d24605eb8adf22a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 292378,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6438,
+    "blank_lines": 0,
+    "comment_lines": 1723,
+    "code_lines": 4715,
+    "comment_ratio": 0.268,
+    "max_line_length": 85,
+    "avg_line_length": 44.4,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCRDPC10"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 51,
+    "call_count": 10,
+    "perform_count": 365,
+    "goto_count": 13,
+    "pic_count": 560,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "NEC/Fujitsu or similar Japanese mainframe COBOL (possibly Micro Focus or vendor COBOL for Japanese systems)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY constructs",
+          "ORGANIZATION IS LINE SEQUENTIAL for flat files",
+          "COPY with REPLACING using // delimiters (Micro Focus / some Japanese COBOL dialects)",
+          "OCCURS clauses, PIC X/9 definitions, VALUE LOW-VALUE / VALUE ZERO",
+          "No EXEC SQL or EXEC CICS — pure file-based batch",
+          "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded as garbled)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that creates DPC (診療報酬点数 — medical fee claim) E and F files from receipt (レセプト) detail data stored in indexed files. It processes hospital admission/outpatient receipt records (RECE62, RECE64, RECE65, RECE68, RECE69, RECE900) and writes output to sequential DPC files (DPCE, DPCF) used for Japanese medical insurance billing.",
+        "domain": "healthcare / Japanese medical insurance billing (DPC/PDPS)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "All comments are in Japanese (EUC or Shift-JIS, decoded as latin-1 garble)",
+        "COPY with REPLACING using // delimiter syntax (Micro Focus style)",
+        "Multiple indexed ISAM files with DYNAMIC access",
+        "No COMP-3 usage despite numeric fields (PIC 9 only)",
+        "No EXEC SQL or EXEC CICS — purely file-based",
+        "Large program: 6438 lines, 560 PIC clauses, 365 PERFORMs",
+        "Extensive revision history in comments spanning 2007–2014",
+        "COPY statements reference external copybooks (.INC files) for record layouts"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly production COBOL for a Japanese hospital information system handling DPC (Diagnosis Procedure Combination) medical fee claim file creation. Comments are in Japanese encoded in EUC-JP or Shift-JIS but decoded here as latin-1, producing garbled characters. The COPY REPLACING with // delimiters is characteristic of Micro Focus COBOL or certain Japanese vendor COBOL compilers. No COMP-3 is unusual for a numeric-heavy program but consistent with some Japanese COBOL environments. Source was truncated to first 16000 chars; full program is ~292KB / 6438 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8839,
+      "completion_tokens": 765,
+      "total_tokens": 9604,
+      "cost": 0.037992,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037992,
+        "upstream_inference_prompt_cost": 0.026517,
+        "upstream_inference_completions_cost": 0.011475
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 21.32,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:17a6793706e2c08b656f62a2acb419b7429a35ea",
+    "sha1_git": "17a6793706e2c08b656f62a2acb419b7429a35ea",
+    "filename": "/ORCR0460.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 128645,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:17a6793706e2c08b656f62a2acb419b7429a35ea/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:17a6793706e2c08b656f62a2acb419b7429a35ea/raw/"
+  },
+  "indicators": {
+    "bytes_len": 128645,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2792,
+    "blank_lines": 1,
+    "comment_lines": 864,
+    "code_lines": 1927,
+    "comment_ratio": 0.31,
+    "max_line_length": 127,
+    "avg_line_length": 45.1,
+    "long_lines_over_72": 37,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0460"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 17,
+    "call_count": 12,
+    "perform_count": 151,
+    "goto_count": 8,
+    "pic_count": 247,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (Japanese medical software)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "COPY with REPLACING syntax",
+          "OCCURS clauses, REDEFINES, PIC X/9 definitions",
+          "Fixed-format source layout",
+          "JMA Open Source License header referencing Japan Medical Association",
+          "File extensions .INC for copybooks, typical of GnuCOBOL/OpenCOBOL ORCA project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical billing. It generates monthly business receipt detail files for self-pay and insurance claims, specifically editing and compiling point-score (tensu) requirement lists. It reads indexed files (RECE41, RECE44, RECE45, RECE46) and produces formatted output records.",
+        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-encoded comments (EUC-JP or Shift-JIS rendered as latin-1 mojibake)",
+        "Multiple indexed file I/O with DYNAMIC and SEQUENTIAL access modes",
+        "COPY with REPLACING for reusing record layouts across multiple files",
+        "Large OCCURS tables for daily examination counts and receipt detail records",
+        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
+        "No COMP-3 usage despite financial/medical billing context",
+        "12 CALL statements suggesting modular subprogram architecture",
+        "151 PERFORM statements indicating structured procedural decomposition",
+        "Error file (RECEERR) for logging processing errors"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded with latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS), causing mojibake in the comments and program description fields. The source is clearly from the open-source ORCA medical receipt system maintained by the Japan Medical Association (JMA). The COPY statements reference external copybooks (.INC files) not shown in the truncated source, so full data division structure cannot be verified. The absence of COMP-3 is notable for a financial application but consistent with the ORCA codebase style. Program ID ORCR0460 matches the filename."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8727,
+      "completion_tokens": 710,
+      "total_tokens": 9437,
+      "cost": 0.036831,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036831,
+        "upstream_inference_prompt_cost": 0.026181,
+        "upstream_inference_completions_cost": 0.01065
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.21,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

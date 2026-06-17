@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:14dd668b017d8f252a1f4da03c80e62e98ad0938",
+    "sha1_git": "14dd668b017d8f252a1f4da03c80e62e98ad0938",
+    "filename": "/ORCSBTUSENTEI.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 25241,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:14dd668b017d8f252a1f4da03c80e62e98ad0938/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:14dd668b017d8f252a1f4da03c80e62e98ad0938/raw/"
+  },
+  "indicators": {
+    "bytes_len": 25241,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 620,
+    "blank_lines": 1,
+    "comment_lines": 203,
+    "code_lines": 416,
+    "comment_ratio": 0.328,
+    "max_line_length": 76,
+    "avg_line_length": 39.7,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSBTUSENTEI"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 10,
+    "call_count": 7,
+    "perform_count": 27,
+    "goto_count": 11,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system — likely compiled with GnuCOBOL or a compatible open-source COBOL compiler on Linux",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PERFORM VARYING … UNTIL with END-PERFORM",
+          "EVALUATE … WHEN … END-EVALUATE",
+          "IF … END-IF inline conditionals",
+          "COPY directives referencing .INC files (CPSYSKANRI.INC, CPSK5001.INC, etc.)",
+          "CALL 'ORCSAGECHK' / 'ORCSDAY' external subprogram calls",
+          "OCCURS clause with INDEXED BY",
+          "No EXEC SQL / EXEC CICS — pure COBOL",
+          "Project header identifies JMA Open Source (ORCA) — known to use GnuCOBOL/OpenCOBOL on Linux"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This subprogram (ORCSBTUSENTEI) retrieves and assembles inpatient disease/condition (病棟選定) charge determination information for a given patient and service month. It fetches system master data (table 5001 — ward/room charge settings), patient hospitalization history records, and calculates applicable daily charge amounts, taking into account elderly patient status via a separate age-check subprogram.",
+        "domain": "healthcare / medical billing (Japanese medical insurance claims — ORCA JMA receipt software)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Part of the open-source ORCA (JMA standard receipt software) project for Japanese medical billing",
+        "Heavy use of COPY statements referencing project-specific .INC copybooks",
+        "LINKAGE SECTION with a single parameter area (ORCSBTUSENTEIAREA) — classic subprogram interface",
+        "CALL to external subprograms: ORCSDAY (date utilities), ORCSAGECHK (age/elderly determination)",
+        "EVALUATE used for charge-type branching (FTNKBN '1', '2', OTHER)",
+        "Japanese-encoded comments (Latin-1 decoded, originally EUC-JP or Shift-JIS)",
+        "Cursor-style DB access via MCP (middleware) with open/fetch/close pattern (910-DBCLOSECURSOR-SEC)",
+        "OCCURS 300 table for disease charge records (SRH-5001-AREA)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are clearly Japanese (likely EUC-JP or Shift-JIS in the original). The program is part of the well-known open-source ORCA medical receipt system maintained by the Japan Medical Association. Source is truncated at 16000 chars (~65% of the file) but enough structure is visible to classify with high confidence. The MCP (middleware call protocol) pattern is characteristic of ORCA's PostgreSQL access layer via GnuCOBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7043,
+      "completion_tokens": 866,
+      "total_tokens": 7909,
+      "cost": 0.034119,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034119,
+        "upstream_inference_prompt_cost": 0.021129,
+        "upstream_inference_completions_cost": 0.01299
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 23.45,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

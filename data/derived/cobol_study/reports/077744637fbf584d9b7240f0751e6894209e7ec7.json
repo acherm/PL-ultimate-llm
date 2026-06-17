@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:077744637fbf584d9b7240f0751e6894209e7ec7",
+    "sha1_git": "077744637fbf584d9b7240f0751e6894209e7ec7",
+    "filename": "/ORCSC80201204.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 173936,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:077744637fbf584d9b7240f0751e6894209e7ec7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:077744637fbf584d9b7240f0751e6894209e7ec7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 173936,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3978,
+    "blank_lines": 0,
+    "comment_lines": 1045,
+    "code_lines": 2933,
+    "comment_ratio": 0.263,
+    "max_line_length": 78,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC80201204"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 23,
+    "call_count": 19,
+    "perform_count": 211,
+    "goto_count": 15,
+    "pic_count": 222,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or similar open-source COBOL (ORCA/JMA project)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PIC clauses, WORKING-STORAGE SECTION, OCCURS, REDEFINES — standard COBOL-85 constructs",
+          "COPY with REPLACING directive",
+          "No EXEC SQL or EXEC CICS — batch-style program",
+          "Fixed format, max line length 78, comment lines with * in column 7",
+          "PROGRAM-ID ORCSC80201204 matches JMA ORCA open-source medical receipt software project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical billing. It performs calculation and validation checks for medical treatment (診療行為) entries, including rehabilitation, psychiatric care, oxygen therapy, and various April revision compliance checks. It is a batch subprogram called by the larger ORCA billing subsystem.",
+        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, appearing garbled)",
+        "COPY with REPLACING directive (CPK02SPASCR.INC)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite being a calculation-heavy program",
+        "Extensive use of OCCURS for date/count arrays",
+        "REDEFINES used for numeric/character overlay of work fields",
+        "19 CALL statements, 211 PERFORM statements — complex procedural logic",
+        "Long revision history spanning 2002–2012 in comments",
+        "Open-source JMA ORCA project (Japan Medical Association)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in a Japanese character encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese comments to appear as garbled latin-1 sequences. The COBOL structure is unambiguous. The program is clearly production medical billing software from the JMA ORCA project, with a detailed change history from 2000 to 2012. No copybook-only or JCL indicators; this is a full program unit."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9196,
+      "completion_tokens": 677,
+      "total_tokens": 9873,
+      "cost": 0.037743,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037743,
+        "upstream_inference_prompt_cost": 0.027588,
+        "upstream_inference_completions_cost": 0.010155
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.23,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

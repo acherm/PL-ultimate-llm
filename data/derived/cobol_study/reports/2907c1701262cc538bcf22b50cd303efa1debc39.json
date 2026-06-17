@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2907c1701262cc538bcf22b50cd303efa1debc39",
+    "sha1_git": "2907c1701262cc538bcf22b50cd303efa1debc39",
+    "filename": "/MONTHINC.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3472,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2907c1701262cc538bcf22b50cd303efa1debc39/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2907c1701262cc538bcf22b50cd303efa1debc39/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3472,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 114,
+    "blank_lines": 14,
+    "comment_lines": 2,
+    "code_lines": 98,
+    "comment_ratio": 0.02,
+    "max_line_length": 69,
+    "avg_line_length": 29.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MONTHINC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 11,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or Micro Focus (likely student/academic environment)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "GOBACK statement",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "88-level condition names with FILE-AT-END VALUE '10'",
+          "PERFORM VARYING ... END-PERFORM",
+          "OCCURS with INDEXED BY",
+          "THRU pattern for paragraph ranges"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Reads a province master file (PROV.DAT) and a monthly income file (MONTHR.DAT), loads province records into a working-storage table of up to 6 entries, processes each monthly record (currently just displaying it), and then reports province codes/names and record counts.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OCCURS 6 TIMES INDEXED BY for province table",
+        "Dual FILE STATUS fields with 88-level conditions",
+        "PERFORM THRU EXIT pattern throughout",
+        "GOBACK instead of STOP RUN",
+        "WS-INCOME-TOTAL defined but never populated (stub/incomplete logic)",
+        "LINE SEQUENTIAL organization for month input file"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program appears to be a student exercise or work-in-progress: WS-INCOME-TOTAL is declared but never used, and 2100-PROCESS-MONTH only displays the raw record without parsing or accumulating income. The AUTHOR field 'PASIN-RWRK' suggests a personal/academic context. No EXEC SQL or EXEC CICS. No lines exceed 72 characters, consistent with fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2122,
+      "completion_tokens": 504,
+      "total_tokens": 2626,
+      "cost": 0.013926,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013926,
+        "upstream_inference_prompt_cost": 0.006366,
+        "upstream_inference_completions_cost": 0.00756
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.71,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

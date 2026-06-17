@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b827b1508625cdefadf75de645609d7b04a5f8e5",
+    "sha1_git": "b827b1508625cdefadf75de645609d7b04a5f8e5",
+    "filename": "/SEIKYU4317.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 98785,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b827b1508625cdefadf75de645609d7b04a5f8e5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b827b1508625cdefadf75de645609d7b04a5f8e5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 98785,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2265,
+    "blank_lines": 0,
+    "comment_lines": 890,
+    "code_lines": 1375,
+    "comment_ratio": 0.393,
+    "max_line_length": 77,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 11,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU4317"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 61,
+    "perform_count": 83,
+    "goto_count": 4,
+    "pic_count": 86,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROCEDURE DIVISION USING COMMAND-PARAM (linkage section parameter passing)",
+          "UNSTRING ... DELIMITED BY ... INTO ... END-UNSTRING (COBOL-85 scope terminator)",
+          "PERFORM ... UNTIL construct",
+          "COPY with REPLACING clause",
+          "INITIALIZE statements",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC file control",
+          "No EXEC SQL or EXEC CICS",
+          "JMA ORCA open-source medical receipt software project header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program generates public-expense (Kouhi) medical billing claim documents (seikyu-sho, item 145) for the JMA ORCA standard receipt software system. It reads indexed patient/insurance files, processes billing data for long-term care and outpatient/inpatient combinations, and writes formatted claim output and error files.",
+        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Part of JMA ORCA open-source Japanese medical receipt software",
+        "Heavy use of COPY statements for modular record layouts (CPSK1001.INC, CPSK1002.INC, CPPTINF.INC, CPHKNNUM.INC, etc.)",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
+        "UNSTRING of COMMAND-PARAM for batch parameter passing via LINKAGE SECTION",
+        "Indexed file I/O with DYNAMIC access mode",
+        "Program option table (OCCURS 100) for configurable public-expense target codes",
+        "No EXEC SQL or EXEC CICS — uses file-based DB access via subprogram CALLs",
+        "61 CALL statements indicating heavy subprogram delegation",
+        "Version history spanning 2005–2018 with named maintainers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File contains Japanese text encoded in EUC-JP or Shift-JIS but decoded as latin-1, producing mojibake in the comment lines. The program is clearly production-grade medical billing software from the JMA ORCA project. COPY statements reference many external copybooks (not included) so full data layout cannot be verified from this excerpt alone. Source is truncated at 16000 chars out of ~98785 bytes."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8689,
+      "completion_tokens": 726,
+      "total_tokens": 9415,
+      "cost": 0.036957,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036957,
+        "upstream_inference_prompt_cost": 0.026067,
+        "upstream_inference_completions_cost": 0.01089
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.31,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

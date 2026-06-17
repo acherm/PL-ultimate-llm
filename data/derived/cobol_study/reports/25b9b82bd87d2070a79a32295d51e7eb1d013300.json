@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:25b9b82bd87d2070a79a32295d51e7eb1d013300",
+    "sha1_git": "25b9b82bd87d2070a79a32295d51e7eb1d013300",
+    "filename": "/ORCSC92.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 120693,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:25b9b82bd87d2070a79a32295d51e7eb1d013300/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:25b9b82bd87d2070a79a32295d51e7eb1d013300/raw/"
+  },
+  "indicators": {
+    "bytes_len": 120693,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2863,
+    "blank_lines": 0,
+    "comment_lines": 840,
+    "code_lines": 2023,
+    "comment_ratio": 0.293,
+    "max_line_length": 74,
+    "avg_line_length": 41.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC92"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 37,
+    "perform_count": 138,
+    "goto_count": 16,
+    "pic_count": 76,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or Micro Focus (Linux/Unix-based, likely OpenCOBOL/GnuCOBOL given ORCA project context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "EVALUATE ... WHEN constructs (COBOL-85)",
+          "END-IF, END-EVALUATE inline terminators (COBOL-85)",
+          "COPY statements with REPLACING clause",
+          "OCCURS clauses, REDEFINES, PIC clauses",
+          "INITIALIZE verb",
+          "PERFORM with structured sections",
+          "No EXEC SQL or EXEC CICS",
+          "PROGRAM-ID ORCSC92 matches filename ORCSC92.CBL",
+          "ORCA project (JMA Japan Medical Association open-source receipt software, known to use GnuCOBOL/OpenCOBOL)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a component of the ORCA (JMA Standard Receipt Software) system for Japanese medical billing. It handles point-score (tensu) editing and calculation checks for medical procedures (shinryo koui), including validity checks, concurrent-use checks, and hospitalization record processing. It is a subprogram called with a LINKAGE SECTION interface, processing medical act codes and updating shared SPA (screen parameter area) data.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in EUC-JP or Shift-JIS (rendered as Latin-1 mojibake in the archived form)",
+        "Extensive use of COPY statements referencing domain-specific copybooks (CPTENSU.INC, CPSANTEI.INC, CPCHK.INC, CPPTNYUINRRK.INC, etc.)",
+        "COPY with REPLACING for reusing record layouts under different prefixes",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, ORCSC92AREA, SPA-SCR-REC, SPA-AREA)",
+        "EVALUATE/WHEN for dispatch on processing mode (KBN codes 1,3,4,5,6)",
+        "No EXEC SQL or EXEC CICS — file I/O abstracted through called subprograms (CALL count=37)",
+        "OCCURS tables for santei (calculation history) and input code management",
+        "Version history spanning 2000–2005 with detailed Japanese change log",
+        "Part of JMA ORCA open-source medical receipt software project"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded with latin-1 but contains Japanese text (EUC-JP or Shift-JIS multibyte characters) in comments and string literals, causing mojibake in the displayed content. This is normal for ORCA project COBOL sources. The COPY statements reference many external copybooks not shown here; copy_count is reported as 0 by the mechanical indicator, which likely means the tool did not count COPY inside DATA DIVISION or counted differently — visually there are clearly many COPY statements present. The program is a well-structured production subprogram with 2863 lines, extensive commenting (~29%), and a long revision history."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8969,
+      "completion_tokens": 902,
+      "total_tokens": 9871,
+      "cost": 0.040437,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040437,
+        "upstream_inference_prompt_cost": 0.026907,
+        "upstream_inference_completions_cost": 0.01353
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 21.81,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

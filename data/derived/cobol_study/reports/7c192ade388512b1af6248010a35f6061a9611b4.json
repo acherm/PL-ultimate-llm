@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7c192ade388512b1af6248010a35f6061a9611b4",
+    "sha1_git": "7c192ade388512b1af6248010a35f6061a9611b4",
+    "filename": "/ORCSP02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 167783,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7c192ade388512b1af6248010a35f6061a9611b4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7c192ade388512b1af6248010a35f6061a9611b4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 167783,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3754,
+    "blank_lines": 0,
+    "comment_lines": 901,
+    "code_lines": 2853,
+    "comment_ratio": 0.24,
+    "max_line_length": 74,
+    "avg_line_length": 43.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSP02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 49,
+    "call_count": 60,
+    "perform_count": 229,
+    "goto_count": 6,
+    "pic_count": 87,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "END-IF used throughout",
+          "CALL 'ORCMCPSUB' USING ... pattern",
+          "COPY directives with .INC files",
+          "PROCEDURE DIVISION USING multiple linkage items",
+          "EXIT PROGRAM",
+          "INITIALIZE statements",
+          "fixed-format source with comment lines in column 7"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a patient registration screen editing and SPA (Scratch Pad Area) initialization subprogram for the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles initial parameter setup, patient information retrieval, insurance/public expense information loading, and screen data preparation for the patient registration subsystem (P02). It is called with processing mode 'INIT' or 'GMN' to set up or refresh screen state.",
+        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — database access via CALL 'ORCMCPSUB' (MCP abstraction layer)",
+        "Extensive use of COPY statements with .INC copybooks (CPPTINF, CPPTHKNINF, CPPTKOHINF, etc.)",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled display)",
+        "LINKAGE SECTION with multiple SPA (Scratch Pad Area) parameters — typical ORCA screen subprogram pattern",
+        "REDEFINES used for display formatting (WRK-RATE-EDIT-R, WRK-NENREI-GR)",
+        "60 CALL statements, 229 PERFORM statements — substantial procedural logic",
+        "No COMP-3 usage despite being a production financial/medical system",
+        "Copyright notice: JMA Open Source License, 2002"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known open-source ORCA (JMA standard receipt software) project from Japan, circa 2002-2003. Japanese comments are encoded in EUC-JP or Shift-JIS but were decoded as latin-1, causing mojibake in the displayed text. The source is truncated at 16000 chars out of 167783 bytes (3754 lines total), but the visible portion is clearly representative. The MCP (Message Control Program) abstraction layer replaces direct SQL, which explains has_exec_sql=false despite database operations. The 5 lines over 72 characters are minor and consistent with fixed-format COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8762,
+      "completion_tokens": 767,
+      "total_tokens": 9529,
+      "cost": 0.037791,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037791,
+        "upstream_inference_prompt_cost": 0.026286,
+        "upstream_inference_completions_cost": 0.011505
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.14,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

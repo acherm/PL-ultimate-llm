@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cf730d5c41b4fe5e6cfa4347658b3c6fb2e3fb01",
+    "sha1_git": "cf730d5c41b4fe5e6cfa4347658b3c6fb2e3fb01",
+    "filename": "/ORCSODRS01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13720,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cf730d5c41b4fe5e6cfa4347658b3c6fb2e3fb01/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cf730d5c41b4fe5e6cfa4347658b3c6fb2e3fb01/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13720,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 365,
+    "blank_lines": 0,
+    "comment_lines": 162,
+    "code_lines": 203,
+    "comment_ratio": 0.444,
+    "max_line_length": 74,
+    "avg_line_length": 36.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSODRS01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 7,
+    "perform_count": 14,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA dialect",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID ORCSODRS01 matches filename",
+          "All four DIVISIONS present in standard fixed format",
+          "PERFORM UNTIL with END-PERFORM, END-IF inline scope terminators (COBOL-85)",
+          "COPY with REPLACING clause",
+          "CALL 'ORCDBMAIN' USING pattern repeated for DB operations",
+          "grpsys prefix on conditional COPY/CALL lines suggesting conditional compilation or source-level tagging used by ORCA/JMA system",
+          "No EXEC SQL or EXEC CICS — DB access via CALL to ORCDBMAIN",
+          "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled), consistent with Japanese medical software"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This subprogram is part of the ORCA JMA standard medical receipt software. It deletes an order record and its associated order-item records from the database, first fetching existing order items via a cursor (KEY3 select/fetch loop) and then performing DELETE operations on tbl_order and tbl_odritem tables via calls to ORCDBMAIN.",
+        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "grpsys-prefixed lines used as conditional source-level tags (likely processed by a preprocessor or build tool)",
+        "Database access via CALL 'ORCDBMAIN' with MCP-FUNC set to DBSELECT/DBFETCH/DBDELETE/DBINSERT/DBUPDATE/DBCLOSECURSOR",
+        "COPY statements with REPLACING for reusable record layouts (CPODRITEM.INC, CPORDER.INC, etc.)",
+        "OCCURS 30 in LINKAGE SECTION for order item array",
+        "Japanese comments (Shift-JIS or EUC-JP, rendered as garbled latin-1)",
+        "No EXEC SQL or EXEC CICS — proprietary DB middleware abstraction",
+        "COMPUTE used for index increment",
+        "EXIT PROGRAM as subprogram terminator"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file uses Japanese comments encoded in a multibyte encoding (likely EUC-JP or Shift-JIS) that was decoded as latin-1, causing garbled display. The 'grpsys' prefix on certain lines appears to be a source-level conditional compilation or group-system tagging mechanism specific to the ORCA build environment. The duplicate paragraph label '910-DB-SELECT-EXT' (appears twice) is a minor anomaly but does not affect COBOL classification. The program is clearly a production subprogram from the JMA ORCA open-source medical receipt system."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5361,
+      "completion_tokens": 796,
+      "total_tokens": 6157,
+      "cost": 0.028023,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028023,
+        "upstream_inference_prompt_cost": 0.016083,
+        "upstream_inference_completions_cost": 0.01194
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c7a2d8c9249ef18a5d734cb68ff7965c3f0a00b2",
+    "sha1_git": "c7a2d8c9249ef18a5d734cb68ff7965c3f0a00b2",
+    "filename": "/ORCGI01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1071386,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c7a2d8c9249ef18a5d734cb68ff7965c3f0a00b2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c7a2d8c9249ef18a5d734cb68ff7965c3f0a00b2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1071386,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 23580,
+    "blank_lines": 12,
+    "comment_lines": 5343,
+    "code_lines": 18225,
+    "comment_ratio": 0.227,
+    "max_line_length": 91,
+    "avg_line_length": 44.4,
+    "long_lines_over_72": 92,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 102,
+    "call_count": 307,
+    "perform_count": 1342,
+    "goto_count": 245,
+    "pic_count": 394,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA standard receipt software)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PIC 9(01), PIC X(08), PIC S9(9) BINARY usage",
+          "COPY statements referencing copybooks like 'ENUM-VALUE', 'COMMON-SPA', 'I0COMMON-SPA'",
+          "Fixed-format source layout with comment lines in column 7",
+          "PROGRAM-ID. ORCGI01",
+          "Japanese medical association (JMA) ORCA open-source project, known to use GnuCOBOL/OpenCOBOL",
+          "No EXEC SQL or EXEC CICS blocks",
+          "307 CALL statements and 1342 PERFORM statements consistent with large production COBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a large production COBOL program (ORCGI01) that handles hospital admission/discharge registration (入退院登録) as part of the ORCA JMA standard medical receipt software system. It manages patient admission records, insurance combinations, ward/room assignments, discharge processing, and related billing calculations for Japanese medical institutions.",
+        "domain": "healthcare / medical billing (Japanese hospital information system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — database access likely via CALL to subprograms (307 CALLs)",
+        "Extensive Japanese comments (Shift-JIS / EUC-JP encoded, decoded as latin-1 producing mojibake)",
+        "COPY statements for shared copybooks (COMMON-SPA, I0COMMON-SPA, I0SCR-SPA, ENUM-VALUE)",
+        "PIC S9(9) BINARY for widget state (GUI integration typical of ORCA/GnuCOBOL)",
+        "Very large file: 23,580 lines, ~1 MB — clearly production-grade",
+        "Detailed revision history spanning 2002–2008 with named developers",
+        "No COMP-3 usage despite being a financial/billing system",
+        "245 GOTO statements alongside 1342 PERFORMs — older structured style"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in a Japanese encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese text in comments to appear as mojibake. The program is part of the well-known open-source ORCA (JMA standard receipt software) project used in Japanese medical clinics and hospitals. The COPY statements reference zero copybooks counted mechanically (copy_count=0), which may indicate the copybooks were not separately indexed or the count reflects a different metric. The source is clearly genuine COBOL and not generated code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11919,
+      "completion_tokens": 805,
+      "total_tokens": 12724,
+      "cost": 0.047832,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.047832,
+        "upstream_inference_prompt_cost": 0.035757,
+        "upstream_inference_completions_cost": 0.012075
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.11,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

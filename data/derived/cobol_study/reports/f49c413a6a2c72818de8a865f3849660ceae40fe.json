@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f49c413a6a2c72818de8a865f3849660ceae40fe",
+    "sha1_git": "f49c413a6a2c72818de8a865f3849660ceae40fe",
+    "filename": "/0-FKEYS.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 19958,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f49c413a6a2c72818de8a865f3849660ceae40fe/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f49c413a6a2c72818de8a865f3849660ceae40fe/raw/"
+  },
+  "indicators": {
+    "bytes_len": 19958,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 400,
+    "blank_lines": 18,
+    "comment_lines": 28,
+    "code_lines": 354,
+    "comment_ratio": 0.073,
+    "max_line_length": 67,
+    "avg_line_length": 47.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "0-FKEYS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 308,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus or similar PC-based COBOL (possibly ACUCOBOL-GT or Micro Focus Personal COBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / PROGRAM-ID. 0-FKEYS",
+          "WORKING-STORAGE SECTION with 01/03 level items",
+          "PIC X(7) VALUE clauses throughout",
+          "Fixed-format source, no EXEC SQL/CICS",
+          "French/German/English label strings suggest multilingual PC application",
+          "Box-drawing characters in comments (IBM PC code page 437/850)",
+          "No COMP-3, no file I/O sections visible — data-only structure typical of Micro Focus PC COBOL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program defines a large table of function-key labels in three languages (French, German, English) for up to 100 function-key slots. It appears to be a data-definition module (or shared working-storage segment) that supplies multilingual key-label strings to a larger interactive application. The PROCEDURE DIVISION is minimal (only 1 PERFORM), suggesting the real work is done by callers referencing these data structures.",
+        "domain": "payroll / HR (labels like CONGE, PRIME, CONTRAT, URLAUB, PRMIE, VACATI suggest a human-resources or payroll system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Multilingual function-key label table (French, German, English) with 100 entries per language",
+        "IBM PC box-drawing characters in comments (code page 437/850), decoded as latin-1",
+        "Inline annotation markers (<--, !) on data items indicating special/disabled entries",
+        "308 PIC clauses, all PIC X(7) — purely alphanumeric data definitions",
+        "No COMP-3, no file I/O, no EXEC SQL/CICS",
+        "Only 1 PERFORM in the entire program — nearly all logic is data declaration"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File was decoded with latin-1; box-drawing characters in comments are consistent with IBM PC code page 437/850 used in DOS-era Micro Focus or similar PC COBOL environments. The source is truncated at 16000 chars so the PROCEDURE DIVISION content is not visible, but the single PERFORM count and the nature of the file strongly suggest this is a data-definition/initialization module for a larger multilingual interactive (screen-based) application, likely HR/payroll. The '!' and '<--' annotations on some data items appear to be developer notes marking disabled or special-purpose keys."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8409,
+      "completion_tokens": 733,
+      "total_tokens": 9142,
+      "cost": 0.036222,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036222,
+        "upstream_inference_prompt_cost": 0.025227,
+        "upstream_inference_completions_cost": 0.010995
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.48,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

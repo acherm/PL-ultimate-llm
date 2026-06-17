@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:53ad8677427f034cde3ed9a74d919c0255477ba2",
+    "sha1_git": "53ad8677427f034cde3ed9a74d919c0255477ba2",
+    "filename": "/VGETKEYLABELS.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1715,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:53ad8677427f034cde3ed9a74d919c0255477ba2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:53ad8677427f034cde3ed9a74d919c0255477ba2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1715,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 46,
+    "blank_lines": 3,
+    "comment_lines": 7,
+    "code_lines": 36,
+    "comment_ratio": 0.163,
+    "max_line_length": 68,
+    "avg_line_length": 35.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "VGETKEYLABELS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 1,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 8,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL)",
+        "standard": "COBOL-2002",
+        "evidence": [
+          ">>source format free. (GnuCOBOL compiler directive)",
+          "*> comment style (GnuCOBOL/modern COBOL)",
+          "COMP-5 usage (common in GnuCOBOL/Micro Focus)",
+          "USAGE POINTER",
+          "GOBACK statement",
+          "free-format source with >> directive"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "A subprogram that retrieves key labels from a VPLUS (HP terminal/forms system) memory block and copies them into a linkage section labels structure. It accepts a form organization ID, a count of labels, and a labels buffer, then populates the caller's labels array from the HOT-KEY-LABEL table in the VPLUS memory block.",
+        "domain": "terminal/forms management (HP VPLUS system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "GnuCOBOL free-format compiler directive (>>source format free.)",
+        "USAGE POINTER with SET ADDRESS OF for dynamic memory addressing",
+        "COPY of vplus/COMAREA and vplus/VPLUSMEM copybooks (HP VPLUS forms system)",
+        "COMP-5 binary items",
+        "HOT-KEY-LABEL table reference from VPLUSMEM copybook",
+        "CALL to 'GetPtrVplusBlock1' to obtain pointer to VPLUS memory block"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This program is part of an HP VPLUS terminal forms system interface, likely ported to GnuCOBOL. The COPY statements reference vplus/ prefixed copybooks that are not shown. The program is small but follows production patterns (pointer manipulation, structured linkage, bounds checking on numoflabels)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 1421,
+      "completion_tokens": 558,
+      "total_tokens": 1979,
+      "cost": 0.012633,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.012633,
+        "upstream_inference_prompt_cost": 0.004263,
+        "upstream_inference_completions_cost": 0.00837
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.21,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

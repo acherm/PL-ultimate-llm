@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:32ed70d29474968c14fcb92c8a99d29fcef21ca8",
+    "sha1_git": "32ed70d29474968c14fcb92c8a99d29fcef21ca8",
+    "filename": "/Program04_Type_R_Processing.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10096,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:32ed70d29474968c14fcb92c8a99d29fcef21ca8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:32ed70d29474968c14fcb92c8a99d29fcef21ca8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10096,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 265,
+    "blank_lines": 34,
+    "comment_lines": 12,
+    "code_lines": 219,
+    "comment_ratio": 0.052,
+    "max_line_length": 71,
+    "avg_line_length": 37.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Program04_Type_R_Processing"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 70,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or IBM Enterprise COBOL (standard-compatible)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM UNTIL / END-PERFORM structured syntax",
+          "GOBACK statement",
+          "ACCEPT ws-date FROM DATE / ACCEPT ws-time FROM TIME",
+          "END PROGRAM terminator",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "COMPUTE ... ROUNDED",
+          "VALUE SPACES on group/elementary items"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Reads a returns transaction file and produces a formatted report listing each return's transaction code, amount, payment type, store number, invoice number, SKU code, and calculated tax owed (13%). Writes totals for record count, total transaction amount, and total tax owed at the end.",
+        "domain": "retail/point-of-sale reporting",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ACCEPT FROM DATE and ACCEPT FROM TIME for report header timestamp",
+        "COMPUTE with ROUNDED for tax calculation at 13% rate",
+        "PERFORM VARYING with dual exit conditions (line count or EOF)",
+        "Pagination logic with ws-lines-per-page constant (20 lines)",
+        "Edited PIC clauses: $$,$$9.99, $z,zz9.99, 99/99/99, 99b99b99b99",
+        "No COPY statements, no EXEC SQL, no EXEC CICS",
+        "Relative file paths used for input/output files"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author line names three individuals and references course MAFD-4202 with a date of April 2018, confirming this is a student group project. The logic is straightforward and correct for its stated purpose. The page-count increment happens after writing the header rather than before moving to ws-rh-current-page, which is a minor sequencing quirk but not a fatal error. No truncation or encoding issues observed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3409,
+      "completion_tokens": 569,
+      "total_tokens": 3978,
+      "cost": 0.018762,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018762,
+        "upstream_inference_prompt_cost": 0.010227,
+        "upstream_inference_completions_cost": 0.008535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.01,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

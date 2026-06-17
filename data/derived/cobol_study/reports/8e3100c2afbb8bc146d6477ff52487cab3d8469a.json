@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8e3100c2afbb8bc146d6477ff52487cab3d8469a",
+    "sha1_git": "8e3100c2afbb8bc146d6477ff52487cab3d8469a",
+    "filename": "/OINV12.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 117641,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8e3100c2afbb8bc146d6477ff52487cab3d8469a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8e3100c2afbb8bc146d6477ff52487cab3d8469a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 117641,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3256,
+    "blank_lines": 207,
+    "comment_lines": 576,
+    "code_lines": 2473,
+    "comment_ratio": 0.189,
+    "max_line_length": 75,
+    "avg_line_length": 34.1,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "OINV12"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 107,
+    "call_count": 0,
+    "perform_count": 200,
+    "goto_count": 80,
+    "pic_count": 317,
+    "comp3_count": 15,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely RM/COBOL or Micro Focus with $set directive)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$set LINKCOUNT\"772\" compiler directive at top",
+          "COMP-5 usage (Micro Focus/RM extension)",
+          "CURSOR IS CSTART / CONSOLE IS CRT in SPECIAL-NAMES",
+          "VALUE OF FILE-ID clause in FD",
+          "COPY statements with .SL and .FDE/.IFD/.GFD suffixes typical of Micro Focus/RM",
+          "88-level condition names on 77-level items",
+          "Fixed-format source with sequence numbers in columns 1-6"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "OINV12 is a batch/console invoice printing program for a sales/accounts-receivable system. It processes invoices and credit notes, calculates VAT (Value Added Tax) per line item, integrates sales into a General Ledger, and prints formatted invoices to a printer while optionally opening a cash drawer via a serial port.",
+        "domain": "accounting/retail (invoicing, debtors, VAT, general ledger integration)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 (packed decimal) for monetary and tax calculations",
+        "COMP-5 (binary) for indexes and counters — Micro Focus extension",
+        "CURSOR IS / CONSOLE IS CRT in SPECIAL-NAMES for screen I/O",
+        "Cash drawer control via COM1 serial port (FD CSHDRW VALUE OF FILE-ID \"COM1\")",
+        "Extensive inline VAT rounding commentary with worked examples",
+        "Multiple COPY statements with .SL/.FDE/.IFD/.GFD suffixes (copybook library)",
+        "$set LINKCOUNT compiler directive",
+        "GNU GPL licensing notice embedded in SECURITY paragraph",
+        "Box-drawing characters (IBM CP437/850) in comments and working-storage literals",
+        "No EXEC SQL or EXEC CICS — pure file-based I/O"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1; box-drawing characters in comments and WS-DB-LINE literals are consistent with IBM CP437/850 encoding used in DOS-era Micro Focus or RM/COBOL environments. The program is part of a larger commercial accounting suite (APAC/OINV series) authored by J.W. Lemmon, version 8.15.04 dated January 2012. Source is truncated at 16000 chars out of 117641 bytes total; procedure division not visible in the excerpt but PERFORM count (200) and GOTO count (80) confirm substantial procedural logic."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7133,
+      "completion_tokens": 752,
+      "total_tokens": 7885,
+      "cost": 0.032679,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032679,
+        "upstream_inference_prompt_cost": 0.021399,
+        "upstream_inference_completions_cost": 0.01128
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.09,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

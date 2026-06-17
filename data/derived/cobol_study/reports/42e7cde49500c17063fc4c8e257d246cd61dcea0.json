@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:42e7cde49500c17063fc4c8e257d246cd61dcea0",
+    "sha1_git": "42e7cde49500c17063fc4c8e257d246cd61dcea0",
+    "filename": "/ORCGW28.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 76068,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:42e7cde49500c17063fc4c8e257d246cd61dcea0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:42e7cde49500c17063fc4c8e257d246cd61dcea0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 76068,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2017,
+    "blank_lines": 2,
+    "comment_lines": 708,
+    "code_lines": 1307,
+    "comment_ratio": 0.351,
+    "max_line_length": 74,
+    "avg_line_length": 36.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW28"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 46,
+    "call_count": 10,
+    "perform_count": 106,
+    "goto_count": 37,
+    "pic_count": 90,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL / OpenCOBOL (ORCA project, Linux-based Japanese medical system)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN syntax",
+          "END-IF, END-EVALUATE scope terminators",
+          "BINARY clause on PIC S9(9)",
+          "OCCURS clauses without INDEXED BY",
+          "COPY statements with quoted filenames (.INC, .CBL pattern)",
+          "PROCEDURE DIVISION USING with multiple linkage items",
+          "EXIT PROGRAM",
+          "Fixed-format source with comment lines in column 7"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) Japanese medical billing system. It handles the screen logic for setting up hospital-specific admission fee (入院料) information, including selection ranges, fee classification, tax classification, and validity date ranges. It is a screen-driven subprogram called via a window manager (MCP) framework.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 producing mojibake)",
+        "MCP (screen/window manager) framework with MCP-STATUS and MCP-EVENT evaluation",
+        "Extensive use of COPY statements for shared data structures (.INC files)",
+        "OCCURS 400 table for hospital department list items",
+        "BINARY (COMP) usage for count fields",
+        "No EXEC SQL or EXEC CICS — uses custom DB access via COPY/CALL pattern",
+        "LINKAGE SECTION with multiple areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "Open Source license header (JMA Open Source License)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine production COBOL from the open-source ORCA Japanese medical receipt software project (circa 2002-2004). Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as Latin-1, resulting in garbled display. The dialect is most consistent with GnuCOBOL/OpenCOBOL targeting Linux, as ORCA is known to use. The 5 lines slightly over 72 characters are minor and typical of this codebase. No embedded SQL or CICS; database access is abstracted through COPY/CALL-based MCP framework."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7327,
+      "completion_tokens": 705,
+      "total_tokens": 8032,
+      "cost": 0.032556,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032556,
+        "upstream_inference_prompt_cost": 0.021981,
+        "upstream_inference_completions_cost": 0.010575
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.67,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

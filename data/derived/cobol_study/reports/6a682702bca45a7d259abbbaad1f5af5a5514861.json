@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6a682702bca45a7d259abbbaad1f5af5a5514861",
+    "sha1_git": "6a682702bca45a7d259abbbaad1f5af5a5514861",
+    "filename": "/ORCS01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1471636,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6a682702bca45a7d259abbbaad1f5af5a5514861/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6a682702bca45a7d259abbbaad1f5af5a5514861/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1471636,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 29408,
+    "blank_lines": 2,
+    "comment_lines": 3541,
+    "code_lines": 25865,
+    "comment_ratio": 0.12,
+    "max_line_length": 108,
+    "avg_line_length": 49.0,
+    "long_lines_over_72": 355,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCS01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 32,
+    "call_count": 90,
+    "perform_count": 683,
+    "goto_count": 16,
+    "pic_count": 746,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA standard receipt software for Linux)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCS01",
+          "All four divisions present in fixed format",
+          "Linux target explicitly stated in comments",
+          "No EXEC SQL, no EXEC CICS, no COMP-3 — consistent with GnuCOBOL/OpenCOBOL",
+          "Copyright 2002 JMA (Japan Medical Association) ORCA project",
+          "683 PERFORM statements, 90 CALL statements — standard COBOL-85 style"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ORCS01 is a patient co-payment (負担金) calculation subroutine for the ORCA (JMA standard receipt software) medical billing system used in Japan. It computes patient out-of-pocket charges under various Japanese health insurance schemes (elderly care, national health insurance, workers' accident, etc.), handling complex rules for co-payment ratios, upper-limit amounts, rounding, and regional public expense supplements. It is part of a larger open-source medical receipt (レセプト) processing system.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Extremely large single-file COBOL program (~1.47 MB, ~29,000 lines)",
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1 artifacts)",
+        "No EXEC SQL or EXEC CICS — pure COBOL batch calculation logic",
+        "No COMP-3 usage despite heavy arithmetic — unusual for IBM mainframe style",
+        "90 CALL statements indicating modular architecture with many subroutines",
+        "683 PERFORM statements reflecting complex nested calculation logic",
+        "Long revision history spanning 2000–2008 with 100+ named revisions",
+        "Open-source JMA ORCA project (JMA Open Source License)",
+        "Targets Linux OS explicitly"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the Japanese comments are EUC-JP encoded, causing mojibake in the displayed text. The program is clearly genuine production COBOL from the well-known open-source Japanese medical receipt system ORCA. The absence of COMP-3 and the Linux target strongly suggest GnuCOBOL/OpenCOBOL rather than IBM Enterprise COBOL. The source is truncated at 16,000 chars but the structural indicators confirm all four divisions are present."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15324,
+      "completion_tokens": 733,
+      "total_tokens": 16057,
+      "cost": 0.056967,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.056967,
+        "upstream_inference_prompt_cost": 0.045972,
+        "upstream_inference_completions_cost": 0.010995
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.38,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

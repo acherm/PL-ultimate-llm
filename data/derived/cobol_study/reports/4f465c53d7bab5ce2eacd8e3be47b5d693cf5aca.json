@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4f465c53d7bab5ce2eacd8e3be47b5d693cf5aca",
+    "sha1_git": "4f465c53d7bab5ce2eacd8e3be47b5d693cf5aca",
+    "filename": "/acas023.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28462,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4f465c53d7bab5ce2eacd8e3be47b5d693cf5aca/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4f465c53d7bab5ce2eacd8e3be47b5d693cf5aca/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28462,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 662,
+    "blank_lines": 3,
+    "comment_lines": 358,
+    "code_lines": 301,
+    "comment_ratio": 0.543,
+    "max_line_length": 121,
+    "avg_line_length": 42.0,
+    "long_lines_over_72": 138,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "acas023"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 8,
+    "call_count": 6,
+    "perform_count": 9,
+    "goto_count": 36,
+    "pic_count": 9,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          ">>source free (GnuCOBOL compiler directive)",
+          "*> comment style (GnuCOBOL/COBOL-2002 style)",
+          "EXEC SQL present (embedded SQL)",
+          "88-level condition names",
+          "EVALUATE/END-EVALUATE",
+          "PERFORM with inline END-PERFORM implied",
+          "version note '3.2' and '3.3.00' referencing GnuCOBOL v3.2",
+          "COPY directives with .cob extension typical of GnuCOBOL projects"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "This is a file handler (FH) module for the ACAS (Applewood Computers Accounting System) Purchase Ledger subsystem, specifically managing I/O for the 'Delfolio' (Delivery Invoice Numbers) file/table. It supports both COBOL flat-file (ISAM) access and RDBMS (via a DAL module) for read, write, rewrite, delete, start, and open/close operations.",
+        "domain": "accounting/ERP (purchase ledger)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC SQL (embedded SQL for RDBMS DAL integration)",
+        ">>source free (GnuCOBOL compiler directive)",
+        "*> comment style throughout",
+        "Dual-mode processing: COBOL flat files and RDBMS",
+        "LINKAGE SECTION with multiple copybook-defined records",
+        "EVALUATE/WHEN constructs",
+        "GOTO used extensively (36 occurrences)",
+        "Extensive inline documentation and change history",
+        "GNU GPL licensed open-source accounting system",
+        "No COMP-3 usage despite accounting domain"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to 16000 chars out of 28462 bytes; the full procedure division is not visible but the structure is clear. The program is part of a larger multi-module accounting system (ACAS). The high comment ratio (54%) is due to extensive header documentation and change history. The EXEC SQL blocks are present but not visible in the truncated portion; their presence is confirmed by mechanical indicators. The use of >>source free and *> comments is characteristic of GnuCOBOL. The COBOL-85 standard is the best fit given EVALUATE, inline END-IF, and 88-level conditions, though some COBOL-2002 syntactic features (free format directive) are also used."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5190,
+      "completion_tokens": 725,
+      "total_tokens": 5915,
+      "cost": 0.026445,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026445,
+        "upstream_inference_prompt_cost": 0.01557,
+        "upstream_inference_completions_cost": 0.010875
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.59,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

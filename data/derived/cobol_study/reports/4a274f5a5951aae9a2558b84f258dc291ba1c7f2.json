@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4a274f5a5951aae9a2558b84f258dc291ba1c7f2",
+    "sha1_git": "4a274f5a5951aae9a2558b84f258dc291ba1c7f2",
+    "filename": "/BNK1DCS.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 65606,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4a274f5a5951aae9a2558b84f258dc291ba1c7f2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4a274f5a5951aae9a2558b84f258dc291ba1c7f2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 65606,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 2063,
+    "blank_lines": 379,
+    "comment_lines": 368,
+    "code_lines": 1316,
+    "comment_ratio": 0.219,
+    "max_line_length": 72,
+    "avg_line_length": 30.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BNK1DCS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 7,
+    "call_count": 0,
+    "perform_count": 63,
+    "goto_count": 12,
+    "pic_count": 87,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL for z/OS (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROCESS CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD) compiler directive",
+          "CBL CICS('SP,EDF') compiler option",
+          "EXEC CICS HANDLE ABEND, EXEC CICS RETURN TRANSID, EXEC CICS SEND CONTROL",
+          "EXEC CICS ASSIGN APPLID/PROGRAM",
+          "EXEC CICS LINK PROGRAM",
+          "DFHCOMMAREA, EIBCALEN, EIBAID, EIBRESP, EIBRESP2, EIBTASKN, EIBTRNID EIB fields",
+          "DFHRESP(NORMAL) special register",
+          "COPY DFHAID, COPY DFHBMSCA (IBM BMS copybooks)",
+          "COMP-3 usage, S9(8) COMP",
+          "IBM-370 SOURCE/OBJECT-COMPUTER entries"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "BNK1DCS is a CICS online program in the CICS Banking Sample Application (CBSA) that displays customer details on a BMS map. It also supports deleting a customer record (PF5), updating a customer record (PF10/Enter), and returning to the main menu (PF3), using CICS COMMAREA to pass state between pseudo-conversational interactions.",
+        "domain": "banking",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS commands throughout (HANDLE ABEND, RETURN TRANSID, SEND CONTROL, ASSIGN, LINK)",
+        "BMS map interaction (BNK1DCO, CUSTNOL, MESSAGEO — from COPY BNK1DCM)",
+        "Pseudo-conversational design with COMMAREA (DFHCOMMAREA) and RETURN TRANSID('ODCS')",
+        "COMP-3 usage (WS-U-TIME PIC S9(15) COMP-3)",
+        "Abend handling via EXEC CICS HANDLE ABEND and LINK to ABNDPROC",
+        "COPY of multiple application copybooks: BNK1DCM, DFHAID, DFHBMSCA, INQCUST, DELCUS, UPDCUST, ABNDINFO",
+        "NSYMBOL(NATIONAL) compiler option indicating potential DBCS/Unicode awareness",
+        "Terminal UCTRAN save/restore pattern (STORE-TERM-DEF / RESTORE-TERM-DEF)",
+        "88-level condition names for SEND-FLAG and VALID-DATA-SW"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to the first 16000 characters but the visible content is clearly a complete, well-structured production-quality CICS COBOL program from the IBM CICS Banking Sample Application (CBSA), an open-source reference application. All four COBOL divisions are present, the structure is consistent, and the CICS idioms are standard IBM Enterprise COBOL patterns."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6267,
+      "completion_tokens": 870,
+      "total_tokens": 7137,
+      "cost": 0.031851,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031851,
+        "upstream_inference_prompt_cost": 0.018801,
+        "upstream_inference_completions_cost": 0.01305
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.86,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:25Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d7504e31cf16e0072114466a0f8eaa39462edb7b",
+    "sha1_git": "d7504e31cf16e0072114466a0f8eaa39462edb7b",
+    "filename": "/ORAPI023R1V2.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 122879,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d7504e31cf16e0072114466a0f8eaa39462edb7b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d7504e31cf16e0072114466a0f8eaa39462edb7b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 122879,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2898,
+    "blank_lines": 0,
+    "comment_lines": 820,
+    "code_lines": 2078,
+    "comment_ratio": 0.283,
+    "max_line_length": 74,
+    "avg_line_length": 41.4,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORAPI023R1V2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 63,
+    "call_count": 35,
+    "perform_count": 134,
+    "goto_count": 13,
+    "pic_count": 126,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA platform",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORAPI023R1V2",
+          "SELECT ... ASSIGN FILE-NAME2 ORGANIZATION IS SEQUENTIAL FILE STATUS IS ...",
+          "COPY directives with REPLACING clauses throughout",
+          "OCCURS clauses without INDEXED BY (COBOL-85 style)",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "File paths like /var/tmp/ indicating Unix/Linux environment typical of GnuCOBOL/OpenCOBOL",
+          "LINKAGE SECTION with COPY 'MCPAREA', 'ORCA-SPA', 'LINKAREA' — JMA ORCA framework"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software system. It implements a claim/medical-act simulation (ÀÁµá³Û¥·¥å¥ß¥ì¡¼¥·¥ç¥ó — 'claim simulation') for the API linkage module, processing insurance billing and medical procedure data. It reads parameter files, processes patient and medical-act master data, and produces XML-based API responses for insurance claim calculation.",
+        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — uses file I/O instead",
+        "Extensive use of COPY statements (copybooks) for JMA ORCA framework structures",
+        "Japanese text in comments (EUC-JP or Shift-JIS encoded, decoded as latin-1 producing mojibake)",
+        "XML API request/response structures via copybooks (CPACSIMULATEV2REQ.INC, CPACSIMULATEV2RES.INC)",
+        "Unix file paths (/var/tmp/) indicating Linux deployment",
+        "LINKAGE SECTION with MCP (Message Control Program) area — ORCA middleware pattern",
+        "Large program: ~2900 lines, 35 CALLs, 134 PERFORMs",
+        "REDEFINES used for table access (TBL-HKNTEN-MEI-RES REDEFINES TBL-HKNTEN-MEI-AREA)",
+        "No COMP-3 usage despite numeric processing — unusual for billing software",
+        "OCCURS up to 600 entries for medical act work table"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the Japanese comments are encoded in EUC-JP or Shift-JIS, resulting in mojibake in the displayed text. The program is clearly part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. The COPY statements reference many proprietary JMA copybooks not shown here. The 'V2' suffix in the program name suggests this is version 2 of the API simulation module. Source is truncated at 16000 chars out of ~122KB total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9116,
+      "completion_tokens": 865,
+      "total_tokens": 9981,
+      "cost": 0.040323,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040323,
+        "upstream_inference_prompt_cost": 0.027348,
+        "upstream_inference_completions_cost": 0.012975
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 23.16,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4db6b9e892aeee4249d81906b83088b90bd888af",
+    "sha1_git": "4db6b9e892aeee4249d81906b83088b90bd888af",
+    "filename": "/ORCGJ02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 276799,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4db6b9e892aeee4249d81906b83088b90bd888af/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4db6b9e892aeee4249d81906b83088b90bd888af/raw/"
+  },
+  "indicators": {
+    "bytes_len": 276799,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6706,
+    "blank_lines": 0,
+    "comment_lines": 2289,
+    "code_lines": 4417,
+    "comment_ratio": 0.341,
+    "max_line_length": 75,
+    "avg_line_length": 40.3,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGJ02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 54,
+    "call_count": 83,
+    "perform_count": 392,
+    "goto_count": 95,
+    "pic_count": 175,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical software",
+        "standard": "COBOL-85",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL (common in GnuCOBOL/Micro Focus)",
+          "FILE STATUS clause usage",
+          "COPY with REPLACING syntax",
+          "Fixed-format source with standard IDENTIFICATION/ENVIRONMENT/DATA/PROCEDURE divisions",
+          "No EXEC SQL or EXEC CICS",
+          "Linux file paths (/var/tmp/) suggesting open-source COBOL runtime",
+          "PROGRAM-ID ORCGJ02 matching JMA ORCA open-source medical software project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch/interactive accounting card input program (component J02) of the ORCA JMA Standard Receipt Software, a Japanese medical association open-source medical billing system. It handles patient insurance accounting card entry, including patient lookup, insurance combination management, treatment history, and hospitalization records. The program reads/writes SPA (screen parameter area) files and calls numerous subprograms for data retrieval and update.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS garbled)",
+        "Extensive use of COPY statements for modular record layouts (no inline copybook text shown)",
+        "83 CALL statements indicating heavy subprogram architecture",
+        "392 PERFORM statements and 95 GOTO statements",
+        "LINE SEQUENTIAL file organization for SPA screen parameter files",
+        "No EXEC SQL or EXEC CICS — file-based I/O only",
+        "REDEFINES used for numeric display formatting",
+        "Large SPA-DATA-REC of 30000 bytes for screen parameter passing",
+        "Open-source JMA ORCA medical receipt software copyright header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known open-source JMA ORCA (Japan Medical Association standard receipt software) project. Japanese comments are present but appear garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The source is clearly production-grade medical billing software. All four COBOL divisions are present. The 276KB file with 6706 lines and extensive COPY statements is consistent with a large production COBOL program. No COMP-3 usage detected despite being a financial/billing application, which is somewhat unusual but consistent with GnuCOBOL usage on Linux."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8607,
+      "completion_tokens": 722,
+      "total_tokens": 9329,
+      "cost": 0.036651,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036651,
+        "upstream_inference_prompt_cost": 0.025821,
+        "upstream_inference_completions_cost": 0.01083
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.06,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

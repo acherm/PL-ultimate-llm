@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3c9ffbb4bdadac3b29ba10e9d67d2fee58bf1fce",
+    "sha1_git": "3c9ffbb4bdadac3b29ba10e9d67d2fee58bf1fce",
+    "filename": "/pw06030c.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 31728,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3c9ffbb4bdadac3b29ba10e9d67d2fee58bf1fce/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3c9ffbb4bdadac3b29ba10e9d67d2fee58bf1fce/raw/"
+  },
+  "indicators": {
+    "bytes_len": 31728,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 700,
+    "blank_lines": 62,
+    "comment_lines": 39,
+    "code_lines": 599,
+    "comment_ratio": 0.061,
+    "max_line_length": 222,
+    "avg_line_length": 44.3,
+    "long_lines_over_72": 117,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW06030C"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 15,
+    "call_count": 0,
+    "perform_count": 76,
+    "goto_count": 1,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (or compatible, likely used with htmlpp preprocessor for CGI/web generation)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$set preprocess (htmlpp) endp — Micro Focus-style compiler directive",
+          "$set sourceformat\"free\" — Micro Focus free-format directive",
+          "external-form clause for CGI input",
+          "identified by clauses on PIC fields (Micro Focus web/CGI extension)",
+          "exec html ... end-exec blocks for HTML generation",
+          "78 level constant (COBOL-85)",
+          "exit section statement",
+          "evaluate / end-evaluate, perform varying ... until (COBOL-85)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "A CGI/web COBOL program that manages the relationship between 'Contas Gerenciais' (Management Accounts) and 'Departamentos' (Departments) in what appears to be a Brazilian financial/accounting system. It supports loading, saving, and deleting account-department associations via an HTML form interface.",
+        "domain": "banking/finance (Brazilian management accounting system)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Micro Focus $set compiler directives (htmlpp preprocessor, free sourceformat)",
+        "EXEC HTML blocks for server-side HTML/JavaScript generation",
+        "external-form and identified by clauses for CGI form field binding",
+        "Multiple COPY statements for file definitions and working storage",
+        "78-level constants",
+        "Portuguese-language comments and data names (Brazilian Portuguese)",
+        "Session validation and standard header performs (9000-validar-sessao, 8000-cabecalho-padrao)",
+        "REDEFINES with OCCURS for list item processing",
+        "No EXEC SQL or EXEC CICS — uses indexed/relative file I/O instead"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file uses the Micro Focus htmlpp preprocessor to embed HTML and JavaScript within COBOL source, a pattern common in Brazilian ERP/web COBOL systems. The $set sourceformat\"free\" directive means the code is free-format despite the mechanical indicator suggesting fixed (the indicator may have been computed without accounting for the directive). The program is clearly production-grade with error handling, session management, and structured section layout. Annotation comments like *>AJ191006:59753 suggest a change-tracking system."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4997,
+      "completion_tokens": 664,
+      "total_tokens": 5661,
+      "cost": 0.024951,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024951,
+        "upstream_inference_prompt_cost": 0.014991,
+        "upstream_inference_completions_cost": 0.00996
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.87,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b10310c3da2794241f90bb22063bceca00ea3bb0",
+    "sha1_git": "b10310c3da2794241f90bb22063bceca00ea3bb0",
+    "filename": "/FRAUDMOD.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1928,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b10310c3da2794241f90bb22063bceca00ea3bb0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b10310c3da2794241f90bb22063bceca00ea3bb0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1928,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 62,
+    "blank_lines": 12,
+    "comment_lines": 7,
+    "code_lines": 43,
+    "comment_ratio": 0.14,
+    "max_line_length": 70,
+    "avg_line_length": 30.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "FRAUDMOD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS PUT CONTAINER ... CHANNEL ... END-EXEC",
+          "EXEC CICS LINK PROGRAM ... CHANNEL ... END-EXEC",
+          "EXEC CICS GET CONTAINER ... END-EXEC",
+          "EXEC CICS RETURN END-EXEC",
+          "DFHCOMMAREA in LINKAGE SECTION",
+          "Fixed-format source, no lines over 72 columns"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program invokes an IBM Watson/OpenPages machine-learning scoring service (ALNSCORE) via CICS channels and containers to perform fraud detection on transaction data. It passes a model UUID, input class, and transaction input data (amount, merchant info, user) to the scorer, then retrieves and displays the output probability scores.",
+        "domain": "banking",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS PUT CONTAINER / GET CONTAINER (CICS channel/container API)",
+        "EXEC CICS LINK to external ML scoring program ALNSCORE",
+        "EXEC CICS RETURN for CICS transaction termination",
+        "UUID-style MODEL_ID value suggesting IBM Analytics/Watson ML integration",
+        "COPY statements for MODELIN and MODELOUT (copybooks not shown)",
+        "Commented-out PERFORM loop for iterating probability array",
+        "DFHCOMMAREA used as linkage area"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The COPY statements reference MODELIN and MODELOUT copybooks that are not included in this file, so the full data structure is not visible. The program appears to be a real production CICS program integrating with an IBM machine-learning scoring engine (likely IBM Analytic Accelerator or Watson ML on z/OS). The commented-out PERFORM loop suggests iterative probability display was considered but not finalized."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 1486,
+      "completion_tokens": 567,
+      "total_tokens": 2053,
+      "cost": 0.012963,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.012963,
+        "upstream_inference_prompt_cost": 0.004458,
+        "upstream_inference_completions_cost": 0.008505
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 11.32,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:39c781b2783f056c889b73c44fe60092fa6ae729",
+    "sha1_git": "39c781b2783f056c889b73c44fe60092fa6ae729",
+    "filename": "/lgucdb01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9148,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:39c781b2783f056c889b73c44fe60092fa6ae729/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:39c781b2783f056c889b73c44fe60092fa6ae729/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9148,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 222,
+    "blank_lines": 24,
+    "comment_lines": 57,
+    "code_lines": 141,
+    "comment_ratio": 0.288,
+    "max_line_length": 72,
+    "avg_line_length": 40.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LGUCDB01"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 34,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROCESS SQL compiler directive at top",
+          "EXEC SQL ... END-EXEC with DB2 INCLUDE SQLCA and INCLUDE LGPOLICY",
+          "EXEC CICS ... END-EXEC (CICS commands: ABEND, RETURN, LINK, ASKTIME, FORMATTIME)",
+          "EIBCALEN, EIBTRNID, EIBTRMID, EIBTASKN EIB fields typical of IBM CICS",
+          "PIC S9(9) COMP for DB2 integer host variables",
+          "USAGE IS POINTER",
+          "Fixed format, max line length 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This CICS online program updates customer details in a DB2 CUSTOMER table using host variables populated from a COMMAREA. After the DB2 UPDATE, it links to LGUCVS01 (presumably a VSAM update counterpart) and handles errors by writing messages to a transient data queue via LGSTSQ.",
+        "domain": "insurance",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL DB2 embedded SQL (UPDATE statement with host variables)",
+        "EXEC CICS LINK, ABEND, RETURN, ASKTIME, FORMATTIME",
+        "PROCESS SQL compiler directive",
+        "EXEC SQL INCLUDE LGPOLICY and SQLCA in DATA DIVISION",
+        "EXEC SQL INCLUDE LGCMAREA in LINKAGE SECTION",
+        "EIB fields used for transaction/terminal/task identification",
+        "Error logging via CICS LINK to LGSTSQ TDQ writer",
+        "IBM copyright notice (2011, 2021) indicating production lineage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Part of the IBM CICS TS sample insurance application (LZSS/GenApp). The program is clearly production-quality IBM Enterprise COBOL targeting CICS/DB2. No ambiguity in classification."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3327,
+      "completion_tokens": 598,
+      "total_tokens": 3925,
+      "cost": 0.018951,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018951,
+        "upstream_inference_prompt_cost": 0.009981,
+        "upstream_inference_completions_cost": 0.00897
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 13.62,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:43c94d413dc785ea20560ccbe7241740cc8216cc",
+    "sha1_git": "43c94d413dc785ea20560ccbe7241740cc8216cc",
+    "filename": "/ORCBT010.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 141862,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:43c94d413dc785ea20560ccbe7241740cc8216cc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:43c94d413dc785ea20560ccbe7241740cc8216cc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 141862,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3053,
+    "blank_lines": 2,
+    "comment_lines": 560,
+    "code_lines": 2491,
+    "comment_ratio": 0.184,
+    "max_line_length": 79,
+    "avg_line_length": 45.5,
+    "long_lines_over_72": 19,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBT010"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 42,
+    "call_count": 60,
+    "perform_count": 100,
+    "goto_count": 11,
+    "pic_count": 91,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or Micro Focus COBOL — likely GnuCOBOL given the ORCA/JMA open-source medical context",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT … ASSIGN … ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING using // delimiters (Micro Focus / GnuCOBOL style)",
+          "PERFORM … UNTIL construct",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING",
+          "No EXEC SQL / EXEC CICS — pure file-based batch",
+          "JMA ORCA open-source project — known to use GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that creates/updates monthly statistical data files for the ORCA JMA standard medical receipt (claims) software system. It reads patient insurance, diagnosis, treatment-act, and other master records and writes three indexed statistical data files (TOUKEI01/02/03) plus an error file. It is part of the monthly statistics subsystem of a Japanese medical billing application.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Heavy use of COPY … REPLACING with // delimiter syntax for copybook inclusion",
+        "Multiple indexed files opened in both DYNAMIC and SEQUENTIAL access modes simultaneously via separate FD entries sharing the same ASSIGN target",
+        "Japanese comments encoded in Latin-1 (EUC-JP or Shift-JIS bytes mis-decoded), indicating a Japanese-language source base",
+        "LINKAGE SECTION with COMMAND-PARAM for job parameter passing",
+        "Large working-storage with OCCURS tables for insurance combination and statistical data",
+        "No COMP-3 packed-decimal usage despite numeric fields — all PIC 9 display",
+        "60 CALL statements indicating heavy use of external subprograms (date conversion, DB search, job control, etc.)",
+        "Open-source JMA ORCA project copyright header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but comments are actually Japanese (EUC-JP or Shift-JIS), appearing as mojibake. Source is truncated to 16000 chars out of ~141 KB; the PROCEDURE DIVISION body is largely unseen but structural indicators (100 PERFORMs, 60 CALLs, 11 GOTOs, 3053 lines) confirm a substantial production batch program. The // REPLACING delimiter style is characteristic of GnuCOBOL/Micro Focus rather than IBM Enterprise COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7711,
+      "completion_tokens": 766,
+      "total_tokens": 8477,
+      "cost": 0.034623,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034623,
+        "upstream_inference_prompt_cost": 0.023133,
+        "upstream_inference_completions_cost": 0.01149
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 22.33,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:25Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a507e6e7f7f5b6d97e54891b2bde68af8f616d36",
+    "sha1_git": "a507e6e7f7f5b6d97e54891b2bde68af8f616d36",
+    "filename": "/5-J.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 18376,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a507e6e7f7f5b6d97e54891b2bde68af8f616d36/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a507e6e7f7f5b6d97e54891b2bde68af8f616d36/raw/"
+  },
+  "indicators": {
+    "bytes_len": 18376,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 541,
+    "blank_lines": 75,
+    "comment_lines": 16,
+    "code_lines": 450,
+    "comment_ratio": 0.034,
+    "max_line_length": 72,
+    "avg_line_length": 32.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "5-J"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 17,
+    "call_count": 7,
+    "perform_count": 31,
+    "goto_count": 0,
+    "pic_count": 42,
+    "comp3_count": 12,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "ACUCOBOL-GT or Micro Focus (likely ACUCOBOL given ASSIGN TO RANDOM and C$RERR)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "ASSIGN TO RANDOM for indexed file (ACUCOBOL-GT convention)",
+          "CALL \"C$RERR\" USING EXTENDED-STATUS (ACUCOBOL-GT runtime library call)",
+          "DECIMAL-POINT IS COMMA with comma as decimal separator (e.g. ,005)",
+          "EVALUATE / END-EVALUATE, inline PERFORM with END-PERFORM (COBOL-85)",
+          "LABEL RECORD STANDARD",
+          "SELECT OPTIONAL with ORGANIZATION IS INDEXED, ACCESS IS DYNAMIC",
+          "COPY statements for file-control and FD entries"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program performs an analytical payroll journal update ('mise à jour journal de paie analytique'). It reads payroll journal, working-time (jours), pay-code (codpaie), and parameter (parex) files, then distributes salary amounts across analytical cost centres/postings and writes results to an intermediate indexed file (INTER). It handles proration of salary components by analytical keys and cotisation (social contribution) ventilation.",
+        "domain": "payroll",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 (packed decimal) fields used extensively for monetary and hour amounts",
+        "OCCURS clauses with large tables (up to 300 elements) for salary components",
+        "DECIMAL-POINT IS COMMA with European-style decimal literals (e.g. ,005)",
+        "CALL \"C$RERR\" — ACUCOBOL-GT runtime error routine",
+        "CALL \"0-ERROR\", \"5-CLEAN\", \"6-CARRI\", \"6-GCCOL\", \"6-CODSAL\", \"0-TODAY\" — modular subprogram calls",
+        "ASSIGN TO RANDOM for indexed file (ACUCOBOL-GT file assignment)",
+        "USE AFTER ERROR PROCEDURE declaratives for multiple files",
+        "Inline sequence labels (SOCOM, SISTO, LUXLAI) suggesting customer-specific conditional compilation or patch markers",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING — called as subprogram",
+        "Multiple COPY statements for file-control, FD, and working-storage records"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains customer-specific sequence-area labels (SOCOM, SISTO, LUXLAI) in columns 1-6, which are site-specific conditional patches rather than standard COBOL features. The program is clearly production payroll software, likely Belgian or French-speaking given the French comments and European decimal convention. Source was truncated at 16000 chars; the full file is 18376 bytes. The ASSIGN TO RANDOM syntax and C$RERR call strongly suggest ACUCOBOL-GT, though Micro Focus with ACUCOBOL compatibility is also possible."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7114,
+      "completion_tokens": 819,
+      "total_tokens": 7933,
+      "cost": 0.033627,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033627,
+        "upstream_inference_prompt_cost": 0.021342,
+        "upstream_inference_completions_cost": 0.012285
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.03,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

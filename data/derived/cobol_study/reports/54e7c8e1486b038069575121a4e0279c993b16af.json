@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:54e7c8e1486b038069575121a4e0279c993b16af",
+    "sha1_git": "54e7c8e1486b038069575121a4e0279c993b16af",
+    "filename": "/BYHV36.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 32400,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:54e7c8e1486b038069575121a4e0279c993b16af/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:54e7c8e1486b038069575121a4e0279c993b16af/raw/"
+  },
+  "indicators": {
+    "bytes_len": 32400,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 400,
+    "blank_lines": 0,
+    "comment_lines": 138,
+    "code_lines": 262,
+    "comment_ratio": 0.345,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 400,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BYHV36"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 1,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 65,
+    "comp3_count": 9,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "MetaWare Technologies COBOL (translated/ported, likely targeting GnuCOBOL or similar open-source runtime)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "Comment header: 'MetaWare Technologies Cobol-Translater 0.9.16 13/06/2016'",
+          "ORGANIZATION LINE SEQUENTIAL (translated from mainframe sequential)",
+          "DECIMAL-POINT IS COMMA (European locale, typical of French mainframe COBOL)",
+          "COMP-3 packed decimal usage",
+          "88-level condition names",
+          "LABEL RECORD STANDARD / BLOCK CONTAINS 0 RECORDS (mainframe-style FD clauses)",
+          "Sequence numbers in columns 73-80 (e.g. 00010000, 00020001)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program processes stock movement files resulting from the merger of two subsidiary companies ('filiales'). It reads two input movement files (FHV030 and FHV031), filters/excludes certain records based on matching criteria, and writes the retained movements to an output file (FGS40). It also reads a company code file (FNSOC) and a parameter file (FPARAM).",
+        "domain": "retail/distribution inventory (stock valuation - 'VALO DES STOCKS')",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal fields (monetary and quantity fields)",
+        "DECIMAL-POINT IS COMMA (French/European locale)",
+        "MetaWare COBOL translator comments marking transformed SELECT statements (Tr-Select-Sequential)",
+        "Original mainframe SELECT statements preserved as comments alongside translated LINE SEQUENTIAL versions",
+        "French-language comments and field names throughout",
+        "Sequence numbers in columns 73-80 indicating mainframe origin",
+        "Multiple input files with complex record layouts (146-byte and 179-byte records)",
+        "88-level condition names for file status flags (DEBUT/FIN)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was originally written for an IBM mainframe environment (evidenced by fixed-format, sequence numbers, LABEL RECORD STANDARD, BLOCK CONTAINS 0, COMP-3, and French mainframe conventions) and was subsequently translated by 'MetaWare Technologies Cobol-Translater 0.9.16' in 2016 to run on a non-mainframe platform using LINE SEQUENTIAL file organization. The source is truncated at 16000 chars (about half the full 32400-byte file), so the PROCEDURE DIVISION is not visible, but all structural indicators confirm genuine production COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4309,
+      "completion_tokens": 731,
+      "total_tokens": 5040,
+      "cost": 0.023892,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023892,
+        "upstream_inference_prompt_cost": 0.012927,
+        "upstream_inference_completions_cost": 0.010965
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.5,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

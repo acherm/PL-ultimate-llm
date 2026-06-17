@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2456bdbde331fb2281e93dc58d546674d1ad74eb",
+    "sha1_git": "2456bdbde331fb2281e93dc58d546674d1ad74eb",
+    "filename": "/3-ENTREE.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14688,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2456bdbde331fb2281e93dc58d546674d1ad74eb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2456bdbde331fb2281e93dc58d546674d1ad74eb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14688,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 450,
+    "blank_lines": 76,
+    "comment_lines": 28,
+    "code_lines": 346,
+    "comment_ratio": 0.075,
+    "max_line_length": 72,
+    "avg_line_length": 30.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "3-ENTREE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 22,
+    "call_count": 16,
+    "perform_count": 36,
+    "goto_count": 0,
+    "pic_count": 21,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely RM/COBOL or Micro Focus with ACUCOBOL-GT screen handling)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "ACCEPT ... LINE ... POSITION ... SIZE ... TAB UPDATE NO BEEP CURSOR ... ON EXCEPTION EXC-KEY (screen I/O syntax typical of Micro Focus / ACUCOBOL-GT)",
+          "DISPLAY ... LINE ... POSITION ... SIZE (screen DISPLAY syntax)",
+          "CALL 'C$RERR' (ACUCOBOL-GT runtime library call)",
+          "USE AFTER ERROR PROCEDURE ON CONTRAT (DECLARATIVES section)",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "READ CONTRAT PREVIOUS NO LOCK (ISAM-style file I/O with PREVIOUS and NO LOCK)",
+          "EXIT PROGRAM (COBOL-85 subprogram termination)",
+          "EVALUATE / END-EVALUATE, END-IF, END-READ (COBOL-85 scope terminators)",
+          "COPY statements for multiple copybooks (.CPY, .REC, .FC, .FDE, .NXX extensions)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program handles the printing/generation of 'entrée' (entry/contract) documents for personnel records. It presents an interactive screen to the user to select parameters (person type, status, cost centre, re-edition flag, signatory), then iterates over contract and personnel records to produce output via a dynamically-called model program (e.g. 'DEF' or 'DESP').",
+        "domain": "HR / payroll / personnel management",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "ACUCOBOL-GT runtime call C$RERR for extended file error status",
+        "Screen I/O using ACCEPT/DISPLAY with LINE/POSITION/SIZE/TAB/UPDATE/NO BEEP/CURSOR clauses",
+        "ISAM-style sequential file navigation with READ PREVIOUS NO LOCK and START KEY <",
+        "Dynamic CALL using variable MODELE (set to 'DEF' or 'DESP') for pluggable report model",
+        "DECLARATIVES section with USE AFTER ERROR PROCEDURE",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "Extensive use of COPY statements for copybooks (.REC, .CPY, .FC, .FDE, .NXX)",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING (subprogram interface)",
+        "French-language identifiers and comments (ENTREE, CONTRAT, CARRIERE, PRESENCE, etc.)",
+        "GO TO used within named paragraphs for loop control (READ-PERSON, CONTRAT-1)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly production COBOL from a French HR/payroll application. The screen handling syntax (ACCEPT ... TAB UPDATE NO BEEP CURSOR, CALL 'C$RERR') strongly suggests ACUCOBOL-GT or a compatible Micro Focus variant. The duplicate WHEN 4 clause in the EVALUATE block (lines ~155-165) appears to be a copy-paste bug in the source. Decoded with latin-1, consistent with French accented characters in box-drawing comment headers."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5937,
+      "completion_tokens": 893,
+      "total_tokens": 6830,
+      "cost": 0.031206,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031206,
+        "upstream_inference_prompt_cost": 0.017811,
+        "upstream_inference_completions_cost": 0.013395
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 22.34,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

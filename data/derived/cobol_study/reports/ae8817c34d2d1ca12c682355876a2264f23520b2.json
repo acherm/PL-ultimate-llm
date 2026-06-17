@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ae8817c34d2d1ca12c682355876a2264f23520b2",
+    "sha1_git": "ae8817c34d2d1ca12c682355876a2264f23520b2",
+    "filename": "/cllpg637.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 89191,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ae8817c34d2d1ca12c682355876a2264f23520b2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ae8817c34d2d1ca12c682355876a2264f23520b2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 89191,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1239,
+    "blank_lines": 158,
+    "comment_lines": 233,
+    "code_lines": 848,
+    "comment_ratio": 0.216,
+    "max_line_length": 72,
+    "avg_line_length": 71.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CLLPG637"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 7,
+    "perform_count": 53,
+    "goto_count": 9,
+    "pic_count": 229,
+    "comp3_count": 38,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (MVS/z/OS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "RECORDING MODE IS F / LABEL RECORD IS STANDARD / BLOCK CONTAINS 0 RECORDS — classic IBM mainframe FD clauses",
+          "ASSIGN TO UT-S-<ddname> — IBM JCL DD-name assignment convention",
+          "SD for sort work file (SORTWK01) — IBM DFSORT/SYNCSORT pattern",
+          "COMP-3 packed-decimal fields throughout",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "COPY 'I#CLLPPN' / COPY 'I#CLLPX0' — IBM-style copybook names with # character",
+          "EJECT compiler directive used as page-break",
+          "Sequence-number area used for change tags (e.g. VH0812 in columns 1-6)",
+          "FILE STATUS IS ... pattern",
+          "Max line length exactly 72 — fixed-format mainframe standard"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch report program (CLLPG637) that reads parameter and sequential input files containing letter-emission data (LADO107 and related files), sorts records via a SORT work file, and generates a client-level report (RELATO) plus an image file (IMAGAVIS). It was later adapted for Brazilian 'Lei da Transparência' compliance.",
+        "domain": "banking",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed-decimal fields (38 occurrences)",
+        "OCCURS 11 TIMES table within sort record for multiple debt/charge occurrences",
+        "SD sort-work file (DFSORT/SYNCSORT pattern)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "Multiple COPY statements referencing IBM-style copybooks (I#CLLPPN, I#CLLPX0)",
+        "Change-tag prefixes in sequence-number area (VH0812) for audit trail",
+        "EJECT directives for listing pagination",
+        "FILE STATUS fields for all files",
+        "S9(13)V99 COMP-3 signed monetary fields (IOF, interest, penalties, legal costs)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to the first ~16 KB of an 89 KB file (1239 lines total). All visible evidence is consistent with IBM mainframe COBOL production code from a Brazilian financial institution, dated 1998 with modifications through 2014. The # character in copybook names is standard for IBM z/OS PDS member naming. No EXEC SQL or EXEC CICS found; purely batch sequential processing."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4322,
+      "completion_tokens": 762,
+      "total_tokens": 5084,
+      "cost": 0.024396,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024396,
+        "upstream_inference_prompt_cost": 0.012966,
+        "upstream_inference_completions_cost": 0.01143
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.7,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

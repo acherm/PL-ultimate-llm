@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:455a8775e8b7d16417f6c007d301155eb1ad915f",
+    "sha1_git": "455a8775e8b7d16417f6c007d301155eb1ad915f",
+    "filename": "/SEIKYU2307.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 97248,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:455a8775e8b7d16417f6c007d301155eb1ad915f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:455a8775e8b7d16417f6c007d301155eb1ad915f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 97248,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2269,
+    "blank_lines": 1,
+    "comment_lines": 840,
+    "code_lines": 1428,
+    "comment_ratio": 0.37,
+    "max_line_length": 79,
+    "avg_line_length": 41.9,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU2307"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 58,
+    "perform_count": 76,
+    "goto_count": 5,
+    "pic_count": 109,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SEIKYU2307",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "COPY directives with REPLACING clauses",
+          "INITIALIZE statements",
+          "UNSTRING ... DELIMITED BY ... INTO",
+          "ORGANIZATION IS INDEXED / LINE SEQUENTIAL file definitions",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL or EXEC CICS — pure COBOL",
+          "JMA ORCA open-source medical receipt software copyright header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch COBOL program that generates medical insurance billing claim documents (seikyu-sho / 請求書) for inpatient care under the Japanese national health insurance system, specifically for Aichi/Tokushima prefectural public expense medical fee billing (insurance numbers 181, 281, 381, 481, 182, 282, 183, 283, 184, 284, 185, 285). It reads indexed claim files, applies fee calculations, and produces printed output via the JMA ORCA receipt software framework.",
+        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple COPY (copybook) includes for shared data structures (CPSK1001.INC, CPSK1002.INC, CPHKNJAINF.INC, CPPTINF.INC, etc.)",
+        "REPLACING clause used extensively in COPY statements",
+        "UNSTRING used to parse comma-delimited command-line parameters",
+        "INDEXED file with DYNAMIC access mode",
+        "LINE SEQUENTIAL file for city/municipality name lookup",
+        "REDEFINES clauses for hospital name/address fields",
+        "OCCURS 200 table for city data, OCCURS 100 for parameter table",
+        "Japanese-encoded comments (latin-1 decoded, likely EUC-JP or Shift-JIS content)",
+        "Revision history embedded in comments spanning 2005–2010",
+        "JMA ORCA open-source medical software framework (Japan Medical Association)",
+        "No COMP-3 packed decimal usage despite financial calculations",
+        "LINKAGE SECTION with COMMAND-PARAM for batch invocation"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded as latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS encoded, causing mojibake in the displayed text. The program is part of the well-known JMA ORCA open-source Japanese medical receipt software suite. The truncated source shows only the first ~16KB of a ~97KB file (2269 lines total); the PROCEDURE DIVISION logic beyond the initialization section is not visible but the structural indicators (76 PERFORMs, 58 CALLs, 5 GOTOs) confirm a substantial production batch program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8120,
+      "completion_tokens": 831,
+      "total_tokens": 8951,
+      "cost": 0.036825,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036825,
+        "upstream_inference_prompt_cost": 0.02436,
+        "upstream_inference_completions_cost": 0.012465
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.49,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:25Z"
+}

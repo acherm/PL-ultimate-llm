@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c2f00ee4ebe8776b5bfafa36460cd9719c4e8bde",
+    "sha1_git": "c2f00ee4ebe8776b5bfafa36460cd9719c4e8bde",
+    "filename": "/fullatbat.aspx.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 60425,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c2f00ee4ebe8776b5bfafa36460cd9719c4e8bde/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c2f00ee4ebe8776b5bfafa36460cd9719c4e8bde/raw/"
+  },
+  "indicators": {
+    "bytes_len": 60425,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1275,
+    "blank_lines": 127,
+    "comment_lines": 34,
+    "code_lines": 1114,
+    "comment_ratio": 0.03,
+    "max_line_length": 135,
+    "avg_line_length": 46.4,
+    "long_lines_over_72": 180,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 2,
+    "program_ids": [],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 50,
+    "call_count": 2,
+    "perform_count": 2,
+    "goto_count": 23,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus Visual COBOL / COBOL for .NET (OO COBOL targeting ASP.NET)",
+        "standard": "COBOL-2002",
+        "evidence": [
+          "class-id batsweb.fullatbat is partial implements type System.Web.UI.ICallbackEventHandler inherits type System.Web.UI.Page",
+          "method-id Page_Load protected / method-id Button5_Click protected",
+          "type System.Web.UI.Page, type RunUnit, type Single, type String — .NET type references",
+          "self::Session, self::Request::QueryString[\"league\"] — .NET property access syntax",
+          "invoke bat666rununit::Call(\"BAT666WEBF\") — OO COBOL method invocation",
+          "local-storage section inside methods",
+          "set ... to new batsweb.bat666Data — OO instantiation",
+          "attribute System.Web.Services.WebMethod — .NET attribute decoration",
+          "COPY \"Y:\\SYDEXSOURCE\\...\" — Windows path copybooks"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "An ASP.NET web page (code-behind) written in Micro Focus COBOL for .NET that implements a 'full at-bat' baseball statistics viewer. It loads player and game data from indexed files, populates UI controls (dropdowns, checkboxes, text boxes), and handles client callback events to retrieve and display video paths associated with selected at-bat records.",
+        "domain": "sports statistics / baseball analytics web application",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "OO COBOL class definition with 'class-id ... is partial' targeting ASP.NET System.Web.UI.Page",
+        "Implements ICallbackEventHandler for AJAX-style client callbacks (RaiseCallbackEvent / GetCallbackResult)",
+        "Multiple method-id definitions (Page_Load, Button5_Click, loadList, atBat_Selected, playAll, CleanupPage)",
+        ".NET type references (System.Text.StringBuilder, System.Single, System.Web.Services.WebMethod)",
+        "VSAM-style indexed file access (SELECT ... ORGANIZATION IS INDEXED, ACCESS IS DYNAMIC, LOCK MANUAL)",
+        "COPY statements referencing Windows UNC-style paths (Y:\\SYDEXSOURCE\\...)",
+        "Session state management via self::Session::Item(...)",
+        "GOTO-heavy procedural loops within methods (team-loop, runners-loop, 5-loop, lines-loop, videos-loop)",
+        "INSPECT ... REPLACING ALL \" \" BY X'A0' for non-breaking space substitution in table rows",
+        "RunUnit object used to call legacy COBOL programs (BAT666WEBF) from within .NET context"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is a genuine Micro Focus Visual COBOL (or Micro Focus COBOL for .NET) source file — a partial class code-behind for an ASP.NET .aspx page. The .aspx.cbl extension is the standard Micro Focus convention for COBOL ASP.NET code-behind files. The code bridges legacy COBOL business logic (RunUnit, indexed files, COPY books) with .NET web infrastructure. The source is truncated at 16000 chars but enough is visible to classify with high confidence. No EXEC SQL or EXEC CICS present; the 'online' nature is via ASP.NET rather than CICS."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5619,
+      "completion_tokens": 922,
+      "total_tokens": 6541,
+      "cost": 0.030687,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030687,
+        "upstream_inference_prompt_cost": 0.016857,
+        "upstream_inference_completions_cost": 0.01383
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.88,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c039e04c98496a01e5ef3b95c1b00ee63ba12194",
+    "sha1_git": "c039e04c98496a01e5ef3b95c1b00ee63ba12194",
+    "filename": "/ORCGH99.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 51548,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c039e04c98496a01e5ef3b95c1b00ee63ba12194/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c039e04c98496a01e5ef3b95c1b00ee63ba12194/raw/"
+  },
+  "indicators": {
+    "bytes_len": 51548,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1296,
+    "blank_lines": 0,
+    "comment_lines": 392,
+    "code_lines": 904,
+    "comment_ratio": 0.302,
+    "max_line_length": 94,
+    "avg_line_length": 38.8,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGH99"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 27,
+    "call_count": 4,
+    "perform_count": 67,
+    "goto_count": 13,
+    "pic_count": 31,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus or similar COBOL used in the ORCA (JMA) open-source medical system, likely compiled with OpenCOBOL/GnuCOBOL on Linux",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE … ALSO … WHEN syntax (COBOL-85)",
+          "END-EVALUATE, END-IF, END-PERFORM inline terminators",
+          "PERFORM UNTIL with inline body",
+          "COPY with REPLACING … BY … using // delimiters",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL / EXEC CICS — pure COBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt (claims) software. It handles the handwritten-correction screen (H99) for the claims management subsystem, supporting display, entry, and confirmation of receipt correction data. It searches the claims database (tbl_seikyu), reads related master data, and manages screen navigation and field editing.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "COPY statements with REPLACING using // delimiter convention (Micro Focus / OpenCOBOL style)",
+        "LINKAGE SECTION driven by MCP (Message Control Program) area — event-driven screen handler pattern",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
+        "Multiple COPY-included file layouts (CPHENREI-BODY.INC, CPSYSKANRI.INC, MCPDATA.INC, etc.)",
+        "EVALUATE MCP-STATUS / MCP-EVENT for screen event dispatch",
+        "PERFORM with inline UNTIL loops",
+        "GO TO used for section exits (structured exit pattern)",
+        "No COMP-3 packed decimal fields visible",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP database access layer (900-DBSELECT-SEC etc.)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known open-source ORCA medical receipt system developed by JMA (Japan Medical Association). Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as latin-1, producing garbled characters. The program uses a proprietary MCP (Message Control Program) middleware layer for screen I/O and database access rather than CICS or raw SQL, but the overall structure and event-driven pattern is analogous to an online CICS program. Source was truncated at 16000 chars; the full file is 51548 bytes / 1296 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7673,
+      "completion_tokens": 769,
+      "total_tokens": 8442,
+      "cost": 0.034554,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034554,
+        "upstream_inference_prompt_cost": 0.023019,
+        "upstream_inference_completions_cost": 0.011535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.85,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

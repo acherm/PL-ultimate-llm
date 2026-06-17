@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:92bc389c17db719ba463002db6da1cf3599abfcb",
+    "sha1_git": "92bc389c17db719ba463002db6da1cf3599abfcb",
+    "filename": "/A00000L103.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 107913,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:92bc389c17db719ba463002db6da1cf3599abfcb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:92bc389c17db719ba463002db6da1cf3599abfcb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 107913,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2414,
+    "blank_lines": 1,
+    "comment_lines": 968,
+    "code_lines": 1445,
+    "comment_ratio": 0.401,
+    "max_line_length": 79,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "A00000L103"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 42,
+    "call_count": 80,
+    "perform_count": 85,
+    "goto_count": 0,
+    "pic_count": 146,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (open-cobol)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. A00000L103",
+          "All four DIVISIONS present",
+          "COPY statements with REPLACING clauses",
+          "OCCURS clauses, PIC definitions",
+          "Comment referencing 'open-cobol 0.23' migration",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "ORGANIZATION INDEXED / ACCESS MODE DYNAMIC file control",
+          "No EXEC SQL or EXEC CICS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch report/list program (component of the ORCA Japan Medical Association standard receipt software) that produces an inpatient/outpatient patient list ('在院患者一覧' – patient census list). It reads patient, insurance, medical-act, and hospitalization history data from indexed files and writes a formatted print output, including error file handling.",
+        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Part of the JMA ORCA open-source medical receipt software project",
+        "Heavy use of COPY statements for modular record layouts (30+ copybooks)",
+        "ORGANIZATION INDEXED with DYNAMIC access for temporary work file",
+        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1)",
+        "No EXEC SQL or EXEC CICS – DB access via CALL subprograms (MCP pattern)",
+        "80 CALL statements indicating extensive subprogram-based architecture",
+        "Version history spanning 2004–2008 with named maintainers",
+        "OCCURS tables for insurance combination and self-pay management",
+        "Error file (RECEERR-FILE) for runtime error reporting"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded as latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing mojibake in the displayed text. The source is clearly genuine production COBOL from the ORCA medical software project. The truncation at 16000 chars covers only the DATA DIVISION; the PROCEDURE DIVISION is not shown but its presence is confirmed by mechanical indicators (perform_count=85, call_count=80, goto_count=0)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8845,
+      "completion_tokens": 664,
+      "total_tokens": 9509,
+      "cost": 0.036495,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036495,
+        "upstream_inference_prompt_cost": 0.026535,
+        "upstream_inference_completions_cost": 0.00996
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.69,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

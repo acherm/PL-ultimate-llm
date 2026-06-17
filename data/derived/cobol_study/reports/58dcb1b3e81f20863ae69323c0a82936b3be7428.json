@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:58dcb1b3e81f20863ae69323c0a82936b3be7428",
+    "sha1_git": "58dcb1b3e81f20863ae69323c0a82936b3be7428",
+    "filename": "/ORCGW13.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 154738,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:58dcb1b3e81f20863ae69323c0a82936b3be7428/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:58dcb1b3e81f20863ae69323c0a82936b3be7428/raw/"
+  },
+  "indicators": {
+    "bytes_len": 154738,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3709,
+    "blank_lines": 0,
+    "comment_lines": 961,
+    "code_lines": 2748,
+    "comment_ratio": 0.259,
+    "max_line_length": 74,
+    "avg_line_length": 40.7,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW13"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 69,
+    "call_count": 16,
+    "perform_count": 240,
+    "goto_count": 42,
+    "pic_count": 252,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or Micro Focus COBOL (Linux/Unix-based, likely OpenCOBOL/GnuCOBOL given the ORCA project context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "COPY statements used for shared areas (COMMON-SPA, W01COMMON-SPA, ENUM-VALUE)",
+          "OCCURS clauses, PIC X/9 definitions consistent with COBOL-85",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "PROGRAM-ID ORCGW13 matches filename",
+          "No EXEC SQL or EXEC CICS blocks",
+          "JMA ORCA project is known to use GnuCOBOL/OpenCOBOL on Linux"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt software) system, specifically handling system management information settings for medical insurance billing (W13 screen). It manages configuration parameters such as insurance billing categories, tax classifications, point unit prices, and related medical fee schedule settings for Japanese medical institutions.",
+        "domain": "healthcare/medical billing (Japanese medical insurance receipt processing)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS rendered as latin-1)",
+        "Large SPA (Scratchpad Area) working storage structure typical of Japanese medical system screen programs",
+        "OCCURS clauses for list/table structures (up to 50 entries for KIZAITBL, 40 for TBL)",
+        "COPY statements for shared parameter areas (COMMON-SPA, W01COMMON-SPA, ENUM-VALUE)",
+        "No COMP-3 usage despite being a production financial/billing system",
+        "16 CALL statements and 240 PERFORM statements indicating complex business logic",
+        "42 GOTO statements suggesting older structured programming style",
+        "Open source license header (JMA Open Source License)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS bytes interpreted as latin-1), which is common for older Japanese COBOL systems archived without proper encoding metadata. The program is part of the well-known open-source ORCA medical receipt software project by the Japan Medical Association. Source is truncated at 16000 chars out of 154738 bytes total, but enough structure is visible to classify confidently. The screen-oriented SPA (Scratchpad Area) pattern and naming conventions (GMN = screen, NAI = internal) are characteristic of the ORCA project's online transaction processing style, though no EXEC CICS is present — it likely uses a proprietary screen handler."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7200,
+      "completion_tokens": 787,
+      "total_tokens": 7987,
+      "cost": 0.033405,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033405,
+        "upstream_inference_prompt_cost": 0.0216,
+        "upstream_inference_completions_cost": 0.011805
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.6,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

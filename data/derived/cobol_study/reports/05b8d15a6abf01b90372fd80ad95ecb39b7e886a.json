@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:05b8d15a6abf01b90372fd80ad95ecb39b7e886a",
+    "sha1_git": "05b8d15a6abf01b90372fd80ad95ecb39b7e886a",
+    "filename": "/LGICUS01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9603,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:05b8d15a6abf01b90372fd80ad95ecb39b7e886a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:05b8d15a6abf01b90372fd80ad95ecb39b7e886a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9603,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 219,
+    "blank_lines": 22,
+    "comment_lines": 62,
+    "code_lines": 135,
+    "comment_ratio": 0.315,
+    "max_line_length": 72,
+    "avg_line_length": 42.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LGICUS01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 30,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL for z/OS",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS LINK, ABEND, RETURN, ASKTIME, FORMATTIME, ReadQ TS commands",
+          "DFHCOMMAREA, EIBCALEN, EIBTRNID, EIBTRMID, EIBTASKN EIB fields",
+          "DFHRESP(NORMAL) usage",
+          "IBM copyright header 'LICENSED MATERIALS - PROPERTY OF IBM'",
+          "COPY LGPOLICY and COPY LGCMAREA copybooks",
+          "Fixed format, max line length 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a CICS online program that handles customer inquiry requests. It validates the commarea, optionally checks a CICS Temporary Storage Queue for an 'MQ hit' flag, and then links to either LGICDB01 (the normal database inquiry program) or a placeholder program ('AAAAAAAA') to retrieve customer details. It is part of the IBM CICS Insurance Application sample (CB12).",
+        "domain": "insurance",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS commands: LINK, ABEND, RETURN, ASKTIME, FORMATTIME, ReadQ TS",
+        "EIB field usage (EIBCALEN, EIBTRNID, EIBTRMID, EIBTASKN)",
+        "DFHRESP(NORMAL) conditional response checking",
+        "COPY LGPOLICY and COPY LGCMAREA (external copybooks not shown)",
+        "Temporary Storage Queue read loop to detect MQ routing flag",
+        "Error logging via LINK to LGSTSQ utility program",
+        "IBM CB12 Insurance sample application"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly part of the IBM CICS Insurance Application sample (CB12), a well-known IBM tutorial/demo application. The 'AAAAAAAA' program name used in the MQ-Hit branch appears to be a placeholder or test stub. Two COPY statements reference external copybooks (LGPOLICY, LGCMAREA) not included in the file. No SQL is present; all data access is via CICS LINK to a separate DB program."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3322,
+      "completion_tokens": 657,
+      "total_tokens": 3979,
+      "cost": 0.019821,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019821,
+        "upstream_inference_prompt_cost": 0.009966,
+        "upstream_inference_completions_cost": 0.009855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.39,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

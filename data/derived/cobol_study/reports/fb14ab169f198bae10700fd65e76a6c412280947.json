@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fb14ab169f198bae10700fd65e76a6c412280947",
+    "sha1_git": "fb14ab169f198bae10700fd65e76a6c412280947",
+    "filename": "/dummy-rdbmsMT.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7746,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fb14ab169f198bae10700fd65e76a6c412280947/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fb14ab169f198bae10700fd65e76a6c412280947/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7746,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 168,
+    "blank_lines": 0,
+    "comment_lines": 117,
+    "code_lines": 51,
+    "comment_ratio": 0.696,
+    "max_line_length": 80,
+    "avg_line_length": 45.1,
+    "long_lines_over_72": 49,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "dummmy"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          ">>source free (GnuCOBOL compiler directive)",
+          "*> style comments (GnuCOBOL/COBOL-2002+ line comments)",
+          "COPY with REPLACING using == delimiters",
+          "GOBACK statement",
+          "Multiple ENTRY statements",
+          "RETURN-CODE special register"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "A stub/dummy module for the ACAS (Applewood Computers Accounting System) that provides no-op entry points for all RDBMS Data Access Layer (DAL) modules. When called, each entry point simply sets error/return codes (FS-Reply=99, WE-Error=999, RETURN-CODE=64) and returns, allowing the system to run using COBOL files instead of an RDBMS backend.",
+        "domain": "banking",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>source free GnuCOBOL compiler directive",
+        "Multiple ENTRY statements (28 named entry points) acting as dummy stubs",
+        "COPY statements with REPLACING for conditional test flags",
+        "GPL copyright notice embedded in comments",
+        "No PERFORM, CALL, or GOTO statements — purely stub logic",
+        "RETURN-CODE special register used for error signaling",
+        "Linkage Section with COPY-included data structures"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly a GnuCOBOL free-format source file. The extremely high comment ratio (0.696) is due to the extensive copyright/support notice block. The program-id 'dummmy' (triple 'm') appears to be a typo in the source. The file is part of the ACAS open-source accounting system by Vincent B. Coen, distributed under GPL v3. The domain is accounting/ERP rather than pure banking, but 'banking' was the closest available domain label given the GL, sales, purchase, and nominal ledger modules referenced."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3271,
+      "completion_tokens": 593,
+      "total_tokens": 3864,
+      "cost": 0.018708,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018708,
+        "upstream_inference_prompt_cost": 0.009813,
+        "upstream_inference_completions_cost": 0.008895
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.54,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

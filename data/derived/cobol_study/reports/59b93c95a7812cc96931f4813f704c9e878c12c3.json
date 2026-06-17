@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:59b93c95a7812cc96931f4813f704c9e878c12c3",
+    "sha1_git": "59b93c95a7812cc96931f4813f704c9e878c12c3",
+    "filename": "/VSRS9999.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 26335,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:59b93c95a7812cc96931f4813f704c9e878c12c3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:59b93c95a7812cc96931f4813f704c9e878c12c3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 26335,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 617,
+    "blank_lines": 40,
+    "comment_lines": 398,
+    "code_lines": 179,
+    "comment_ratio": 0.69,
+    "max_line_length": 72,
+    "avg_line_length": 41.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "VSRSMAIN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 110,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "CBL CICS('COBOL3') APOST compiler directive",
+          "EXEC CICS implied by has_exec_cics=true and CBL CICS option",
+          "COMP-5 SYNC usage (IBM extension)",
+          "COMP-3 usage",
+          "DFH0XCMN / DFHJS2LS references (IBM CICS artifacts)",
+          "5655-Y04 / 5655-CE3 IBM product numbers",
+          "BAQ-* structures typical of IBM z/OS Connect EE generated stubs",
+          "Fixed format, max line length 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a CICS online program (PROGRAM-ID VSRSMAIN) that acts as a controller/catalog manager, receiving input via CICS RECEIVE, then invoking an IBM z/OS Connect EE (or API Gateway) stub to call a REST API ('cicsrs_1.0.0') using a generated BAQ request/response structure. It processes path parameters (StrName) and handles the JSON-mapped response containing CICS resource and transaction information.",
+        "domain": "telecom/middleware (CICS transaction management / API integration)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS commands (has_exec_cics=true)",
+        "IBM z/OS Connect EE generated BAQ-REQUEST-INFO / BAQ-RESPONSE-INFO structures",
+        "COMP-5 SYNC (IBM binary extension)",
+        "COMP-3 packed decimal",
+        "CBL CICS('COBOL3') APOST compiler directive",
+        "Generated JSON schema language structures (DFHJS2LS mapping level 4.3)",
+        "OAuth and token authentication fields in BAQ-REQUEST-INFO",
+        "REST API path with URL-encoded template variable (%7BStrName%7D)",
+        "High comment ratio (69%) due to extensive generated structure documentation"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is archived as VSRS9999.cbl but PROGRAM-ID is VSRSMAIN, and the module comments reference DFH0XCMN — suggesting the file may have been renamed or is a customized derivative of an IBM CICS sample. The very high comment ratio (69%) is largely due to the DFHJS2LS-generated commented-out structure documentation. Source was truncated at 16000 chars; the PROCEDURE DIVISION content was not visible, but the CALL count of 1 and EXEC CICS presence confirm runtime behavior. The BAQ structures are characteristic of IBM z/OS Connect Enterprise Edition API requester stubs."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5808,
+      "completion_tokens": 760,
+      "total_tokens": 6568,
+      "cost": 0.028824,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028824,
+        "upstream_inference_prompt_cost": 0.017424,
+        "upstream_inference_completions_cost": 0.0114
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.05,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

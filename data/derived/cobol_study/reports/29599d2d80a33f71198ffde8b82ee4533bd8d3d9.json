@@ -1,0 +1,117 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:29599d2d80a33f71198ffde8b82ee4533bd8d3d9",
+    "sha1_git": "29599d2d80a33f71198ffde8b82ee4533bd8d3d9",
+    "filename": "/ORCR0840.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 484736,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:29599d2d80a33f71198ffde8b82ee4533bd8d3d9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:29599d2d80a33f71198ffde8b82ee4533bd8d3d9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 484736,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 10027,
+    "blank_lines": 0,
+    "comment_lines": 1711,
+    "code_lines": 8316,
+    "comment_ratio": 0.171,
+    "max_line_length": 80,
+    "avg_line_length": 47.3,
+    "long_lines_over_72": 37,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0840"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 45,
+    "call_count": 6,
+    "perform_count": 473,
+    "goto_count": 2,
+    "pic_count": 406,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA open-source medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY ... REPLACING //token// BY //token// syntax (COBOL-85 REPLACING with pseudo-text delimiters)",
+          "Fixed-format source, columns 1-80, comment lines with * in column 7",
+          "No EXEC SQL or EXEC CICS; no COMP-3; 473 PERFORMs typical of structured COBOL-85 batch"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ORCR0840 is a batch COBOL program that is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It computes and aggregates diagnosis-category point totals for hospitalization receipts (specifically for long-term care / self-pay categories). It reads and writes multiple indexed ISAM receipt files (RECE82, RECE84, RECE85, RECE8A, RECE8B) and produces an error file.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY ... REPLACING with pseudo-text delimiters (//token//) to reuse copybooks for multiple file descriptors",
+        "Multiple indexed ISAM files with both DYNAMIC and SEQUENTIAL access selectors for the same physical file",
+        "Extensive Japanese-language comments (EUC-JP / latin-1 decoded) documenting revision history spanning 2003–2010",
+        "No EXEC SQL, no EXEC CICS, no COMP-3",
+        "6 CALL statements, 473 PERFORM statements, only 2 GO TO statements — highly structured",
+        "Large program: ~10,000 lines, ~485 KB"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded as latin-1 but the comments contain Japanese text encoded in EUC-JP (or Shift-JIS), which explains the garbled multi-byte characters in the displayed excerpt. The COPY statements reference external copybooks (.INC files) that are not included in this file; copy_count is reported as 0 by the mechanical scanner, likely because the COPY verb appears inside FD sections and the scanner may not have counted them, but they are clearly present in the source. The program is part of the well-known open-source ORCA medical receipt system maintained by JMA/NACL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12807,
+      "completion_tokens": 744,
+      "total_tokens": 13551,
+      "cost": 0.049581,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.049581,
+        "upstream_inference_prompt_cost": 0.038421,
+        "upstream_inference_completions_cost": 0.01116
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.63,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

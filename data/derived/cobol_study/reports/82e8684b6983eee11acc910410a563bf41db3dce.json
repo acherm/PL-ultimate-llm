@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:82e8684b6983eee11acc910410a563bf41db3dce",
+    "sha1_git": "82e8684b6983eee11acc910410a563bf41db3dce",
+    "filename": "/samos2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5022,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:82e8684b6983eee11acc910410a563bf41db3dce/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:82e8684b6983eee11acc910410a563bf41db3dce/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5022,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 118,
+    "blank_lines": 9,
+    "comment_lines": 44,
+    "code_lines": 65,
+    "comment_ratio": 0.404,
+    "max_line_length": 71,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SAMOS2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 21,
+    "comp3_count": 11,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (or OS/VS COBOL heritage)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SAMOS2",
+          "COMP-3 packed decimal fields",
+          "COMP for binary fields",
+          "GOBACK statement",
+          "PROCEDURE DIVISION USING with LINKAGE SECTION",
+          "comment header references 'OS/VS COBOL Compiler'",
+          "fixed-format source, no long lines over 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A subroutine called by SAMOS1 that calculates customer account balance statistics (count, total, average, minimum, maximum, range) from customer records passed via the LINKAGE SECTION. It contains an intentional bug in the BALANCE-MAX calculation (the first-time flag is checked after it has already been set to 'N') used as a teaching aid for IBM Debug Tool workshops.",
+        "domain": "education/tutorial",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "COMP-3 (packed decimal) for all monetary/statistical fields",
+        "COMP (binary) for CUST-ORDERS-YTD and BALANCE-AVERAGE",
+        "LINKAGE SECTION with two parameters (CUST-REC, CUST-BALANCE-STATS)",
+        "GOBACK instead of STOP RUN (subprogram pattern)",
+        "Intentional bug in BALANCE-MAX logic documented in comments",
+        "Inline copybook expansion (commented-out COPY statement with REPLACING)",
+        "First-time switch pattern using WS-FIRST-TIME-SW"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program is explicitly described as a teaching aid for IBM PD Tools (Debug Tool, Fault Analyzer, APA) workshops. The bug is intentional: WS-FIRST-TIME-SW is moved to 'N' after PERFORM 100-CALC-BALANCE-STATISTICS in 000-MAIN, but the first-time check inside 100-CALC-BALANCE-STATISTICS for BALANCE-MAX lacks an END-IF, causing the subsequent IF CUST-ACCT-BALANCE > BALANCE-MAX to always execute even on the first call, potentially overwriting the initialized value incorrectly. The copybook is inlined rather than COPYed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2428,
+      "completion_tokens": 655,
+      "total_tokens": 3083,
+      "cost": 0.017109,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017109,
+        "upstream_inference_prompt_cost": 0.007284,
+        "upstream_inference_completions_cost": 0.009825
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 14.99,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

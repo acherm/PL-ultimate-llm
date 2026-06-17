@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c12dee230d3036465e302bb349e80a27b14a92db",
+    "sha1_git": "c12dee230d3036465e302bb349e80a27b14a92db",
+    "filename": "/HCMADB02.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 21911,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c12dee230d3036465e302bb349e80a27b14a92db/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c12dee230d3036465e302bb349e80a27b14a92db/raw/"
+  },
+  "indicators": {
+    "bytes_len": 21911,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 441,
+    "blank_lines": 33,
+    "comment_lines": 131,
+    "code_lines": 277,
+    "comment_ratio": 0.321,
+    "max_line_length": 110,
+    "avg_line_length": 48.7,
+    "long_lines_over_72": 31,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "HCMADB02"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 115,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS ... END-EXEC constructs",
+          "EXEC SQL / SQLCA structure with IBM-style sequence numbers (00010000 etc.)",
+          "USAGE IS POINTER",
+          "EIB fields (EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN)",
+          "EXEC CICS ABEND ABCODE(...) NODUMP",
+          "PIC S9(9) COMP for DB2 INTEGER host variables",
+          "DFHCOMMAREA in LINKAGE SECTION",
+          "IBM copyright notice in copybook comment",
+          "Fixed-format source with sequence numbers in SQLCA expansion"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This CICS online program (HCMADB02) adds prescription details for a patient to a DB2 database. It receives patient and prescription data via a COMMAREA, validates the commarea, processes start and end dates, and performs DB2 INSERT/UPDATE operations for prescription records in a healthcare application.",
+        "domain": "healthcare",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2) embedded SQL with SQLCA",
+        "EXEC CICS commands including ABEND, RETURN",
+        "EIB (Execute Interface Block) fields used for transaction/terminal/task identification",
+        "DFHCOMMAREA linkage with multiple REDEFINES for different request types (patient, medication, meditation, threshold, visit)",
+        "Inline-expanded copybooks with source path comments (HCERRSWS.cpy, SQLCA.cpy, HCCMAREA.cpy)",
+        "FUNCTION INTEGER-OF-DATE intrinsic function for date arithmetic",
+        "FUNCTION CURRENT-DATE usage (commented out fix for date abend)",
+        "USAGE IS POINTER for commarea address",
+        "IBM-style sequence numbers on SQLCA lines",
+        "Error message structure with SQLCODE display"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (out of 21911 bytes / 441 lines), so the full PROCEDURE DIVISION including SQL statements is not visible. The inline copybook expansion comments reveal the original source paths on a Windows development machine (C:\\REGI_EZSOURCE\\...) targeting an IBM z/OS environment. The program is part of a larger healthcare mobile application suite (ZMOBILE). Comment markers like '%regi' indicate developer annotations for bug fixes related to date abends."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5458,
+      "completion_tokens": 716,
+      "total_tokens": 6174,
+      "cost": 0.027114,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027114,
+        "upstream_inference_prompt_cost": 0.016374,
+        "upstream_inference_completions_cost": 0.01074
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.02,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

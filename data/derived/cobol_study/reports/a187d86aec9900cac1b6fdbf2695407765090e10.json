@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a187d86aec9900cac1b6fdbf2695407765090e10",
+    "sha1_git": "a187d86aec9900cac1b6fdbf2695407765090e10",
+    "filename": "/gestor_archivo.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7837,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a187d86aec9900cac1b6fdbf2695407765090e10/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a187d86aec9900cac1b6fdbf2695407765090e10/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7837,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 191,
+    "blank_lines": 3,
+    "comment_lines": 35,
+    "code_lines": 153,
+    "comment_ratio": 0.186,
+    "max_line_length": 72,
+    "avg_line_length": 40.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "gestor_archivo"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 14,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "comment line 'cobc -x principal.cbl estclientes.cbl -o estadisticas.exe' indicates GnuCOBOL compiler",
+          "GOBACK used as return from subprogram",
+          "PROCEDURE DIVISION USING with LINKAGE SECTION parameters",
+          "EVALUATE/END-EVALUATE, END-READ, END-WRITE, END-REWRITE, END-DELETE, END-START (COBOL-85 scope terminators)",
+          "ORGANIZATION IS INDEXED with ACCESS IS DYNAMIC and FILE STATUS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A subprogram (file manager) that provides a generic interface for CRUD operations on an indexed ISAM file (ESTCLI.BIN) containing client statistics records. It accepts an operation code ('O','A','C','S','R','N','W','U','D') via LINKAGE SECTION and dispatches to open, close, start, read, read-next, write, rewrite, or delete routines accordingly.",
+        "domain": "unknown (likely business/client management)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with operacion, registro, fs-clientes parameters — called as a subprogram",
+        "ORGANIZATION IS INDEXED with ACCESS IS DYNAMIC and composite RECORD KEY (COD-CLI + NRO-SEC)",
+        "FILE STATUS IS FS-ESTCLI propagated back to caller via fs-clientes",
+        "EVALUATE on operation code dispatching to multiple file I/O paragraphs",
+        "START with KEY IS GREATER for sequential positioning",
+        "Tab characters used for indentation (mixed with spaces — visible in source)",
+        "Commented-out DISPLAY debug statements in read-next-clientes"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The file uses tab characters for some indentation (visible in the source), which is non-standard for fixed-format COBOL but tolerated by GnuCOBOL. The program is clearly a subprogram component of a larger system (referenced alongside principal.cbl and estclientes.cbl in the build comment). The composite key structure and file-status handling suggest a student or academic project rather than production code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2946,
+      "completion_tokens": 647,
+      "total_tokens": 3593,
+      "cost": 0.018543,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018543,
+        "upstream_inference_prompt_cost": 0.008838,
+        "upstream_inference_completions_cost": 0.009705
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 15.04,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

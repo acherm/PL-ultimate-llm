@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8a691f3d9737d842993eaa849c42e8dcac4a36d3",
+    "sha1_git": "8a691f3d9737d842993eaa849c42e8dcac4a36d3",
+    "filename": "/RoutBTDLIUP.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6550,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8a691f3d9737d842993eaa849c42e8dcac4a36d3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8a691f3d9737d842993eaa849c42e8dcac4a36d3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6550,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 170,
+    "blank_lines": 33,
+    "comment_lines": 47,
+    "code_lines": 90,
+    "comment_ratio": 0.343,
+    "max_line_length": 80,
+    "avg_line_length": 37.5,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "NOME-RTE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 1,
+    "perform_count": 5,
+    "goto_count": 4,
+    "pic_count": 20,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (mainframe)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. NOME-RTE with mainframe-style comments",
+          "COMP (binary) fields in PCB-AREA (S9(5) COMP)",
+          "SET ADDRESS OF PCB-AREA TO LNKDB-PTRPCB — pointer manipulation typical of IBM mainframe",
+          "GOBACK used as return statement",
+          "IMS/DLI PCB structure (DBD-NAME, SEG-LEVEL, ST-CODE, PROC-OPT, KEFEDBAK)",
+          "COPY ERRVSMRT and COPY LNKDBRT — mainframe copybook conventions",
+          "Fixed format, columns 1-80, sequence numbers in rightmost columns (e.g. 00000700)",
+          "END-IF used (COBOL-85+)",
+          "DATE-WRITTEN/DATE-COMPILED clauses"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A batch IMS/DLI subprogram (routing routine) that handles ISRT, DLET, and REPL DLI commands. It initialises working areas, sets up the IMS PCB pointer, dispatches to the appropriate DLI operation based on an operation code, and manages error/abend handling. The program is a template/skeleton with the actual command dispatch replaced by a placeholder (#OPE#).",
+        "domain": "database (IMS/DLI mainframe)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "IMS/DLI PCB structure in LINKAGE SECTION (DBD-NAME, SEG-LEVEL, ST-CODE, PROC-OPT, KEFEDBAK, etc.)",
+        "SET ADDRESS OF for pointer-based PCB linkage — classic IMS COBOL pattern",
+        "COPY statements for ERRVSMRT and LNKDBRT copybooks (not expanded here)",
+        "GOBACK used for return to caller",
+        "Placeholder tokens (#OPE#, #CODE#) suggesting a code-generation or template pattern",
+        "Large working-storage data areas (5 × 12000-byte + 5 × 400-byte SSA areas) for DLI segment I/O",
+        "Error routing section with named error codes (NOOP, DLSA) and abend return codes (ADL0, ADL1)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains placeholder tokens (#OPE#, #CODE#) indicating this is likely a code-generation template or skeleton that gets populated before compilation. The COPY statements reference external copybooks (ERRVSMRT, LNKDBRT) not shown here. Sequence numbers visible in the rightmost columns of the LINKAGE SECTION confirm IBM mainframe fixed-format source. The comment block references 'Mainframe Affinity' development group and a 2005 release date."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2670,
+      "completion_tokens": 803,
+      "total_tokens": 3473,
+      "cost": 0.020055,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020055,
+        "upstream_inference_prompt_cost": 0.00801,
+        "upstream_inference_completions_cost": 0.012045
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

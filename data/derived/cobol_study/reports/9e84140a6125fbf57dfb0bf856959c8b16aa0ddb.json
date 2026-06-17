@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9e84140a6125fbf57dfb0bf856959c8b16aa0ddb",
+    "sha1_git": "9e84140a6125fbf57dfb0bf856959c8b16aa0ddb",
+    "filename": "/pw03155r.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 58078,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9e84140a6125fbf57dfb0bf856959c8b16aa0ddb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9e84140a6125fbf57dfb0bf856959c8b16aa0ddb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 58078,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1112,
+    "blank_lines": 96,
+    "comment_lines": 43,
+    "code_lines": 973,
+    "comment_ratio": 0.042,
+    "max_line_length": 221,
+    "avg_line_length": 51.2,
+    "long_lines_over_72": 324,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW03155R"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 13,
+    "perform_count": 63,
+    "goto_count": 0,
+    "pic_count": 190,
+    "comp3_count": 5,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (or compatible, e.g. AcuCOBOL/GnuCOBOL with Micro Focus extensions)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$set preprocess (htmlpp) endp — Micro Focus/compatible compiler directive",
+          "$set sourceformat\"free\" — Micro Focus-style compiler directive",
+          "$set constant PadraoCSV — Micro Focus constant directive",
+          "$if PadraoCSV defined — Micro Focus conditional compilation",
+          "78 level constant items",
+          "COMP-3 usage",
+          "decimal-point is comma in SPECIAL-NAMES",
+          "value of file-id — Micro Focus SD syntax",
+          "88-level condition names",
+          "free-format source despite fixed mechanical guess"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "Batch report program (PW03155R) that generates a 'Relatório de Investimento Financeiro' (Financial Investment Report) for a Brazilian business system. It reads multiple indexed files (clients, merchandise, areas, sales managers, comodato/investment records), sorts data, and produces a formatted report with optional CSV output.",
+        "domain": "distribution/retail (Brazilian business — comodato/investment tracking)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Micro Focus compiler directives ($set, $if/$if defined)",
+        "HTML preprocessor directive ($set preprocess (htmlpp))",
+        "Conditional CSV output via $if PadraoCSV defined",
+        "COMP-3 packed-decimal fields",
+        "decimal-point is comma (Brazilian locale)",
+        "SD sort file with multiple COPY-based file definitions",
+        "Multiple COPY statements for file-control and FD sections (copybooks not inlined)",
+        "78-level constant for version",
+        "Portuguese-language identifiers and comments",
+        "value of file-id syntax for sort file"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to 16000 chars out of 58078 bytes (1112 lines total); the visible portion is sufficient to confirm dialect and purpose. The mechanical 'fixed' format guess is incorrect — the $set sourceformat\"free\" directive and code structure confirm free format. Many COPY statements reference external copybooks not shown. The program appears to be part of a larger Brazilian ERP/distribution system."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4940,
+      "completion_tokens": 664,
+      "total_tokens": 5604,
+      "cost": 0.02478,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02478,
+        "upstream_inference_prompt_cost": 0.01482,
+        "upstream_inference_completions_cost": 0.00996
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 324.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

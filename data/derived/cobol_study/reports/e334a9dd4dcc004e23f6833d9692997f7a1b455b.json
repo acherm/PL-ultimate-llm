@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e334a9dd4dcc004e23f6833d9692997f7a1b455b",
+    "sha1_git": "e334a9dd4dcc004e23f6833d9692997f7a1b455b",
+    "filename": "/ORCBD008.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 56638,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e334a9dd4dcc004e23f6833d9692997f7a1b455b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e334a9dd4dcc004e23f6833d9692997f7a1b455b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 56638,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1408,
+    "blank_lines": 0,
+    "comment_lines": 428,
+    "code_lines": 980,
+    "comment_ratio": 0.304,
+    "max_line_length": 74,
+    "avg_line_length": 37.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBD008"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 25,
+    "call_count": 13,
+    "perform_count": 53,
+    "goto_count": 0,
+    "pic_count": 70,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely OpenCOBOL/GnuCOBOL on Linux, part of ORCA medical system)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM UNTIL with END-PERFORM",
+          "EVALUATE / WHEN / END-EVALUATE",
+          "INITIALIZE statement",
+          "OCCURS clause without INDEXED BY",
+          "COPY with REPLACING using // delimiters",
+          "DYNAMIC access mode on indexed file",
+          "CALL 'ORCSGETTEMP' USING",
+          "fixed-format source with comment lines in column 7"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ORCBD008 is a batch report-generation program for the ORCA Japanese medical receipt (レセプト) system. It reads a collection (収納) file, sorts and formats daily summary report data (日計表, HCM41), and produces printed output covering patient insurance billing totals. It handles multiple processing modes (by slip issue date or treatment date) and supports group medical practice.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments and data names (Shift-JIS/UTF-8 mixed)",
+        "COPY statements with // REPLACING delimiters for multiple copybooks (CPSYUNOU.INC, CPPTINF.INC, etc.)",
+        "INDEXED file with DYNAMIC access and multiple REDEFINES key layouts",
+        "Version history annotations in comments (01.00.01 through 04.02.01)",
+        "Conditional compilation-style comment blocks marking UPD-START/UPD-END and ADD-START/ADD-END",
+        "LINKAGE SECTION with external parameter area (ORCBD008AREA via CPORCBD008.INC)",
+        "No EXEC SQL or EXEC CICS — DB access via CALL to internal subroutines (MCP pattern)",
+        "OCCURS 11 for summary accumulation array (SUM-OCC)",
+        "Date conversion subroutines (CPORCSDAY.INC, 31012-SEIWA-HEN-SEC for Japanese era date)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is part of the open-source ORCA (JMA standard receipt software) project, a well-known Japanese medical billing system. The source uses UTF-8 encoding with Japanese characters in comments and string literals. The COPY statements reference many external copybooks not shown here. The program is clearly production-grade with a formal version history and copyright notice."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6695,
+      "completion_tokens": 719,
+      "total_tokens": 7414,
+      "cost": 0.03087,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03087,
+        "upstream_inference_prompt_cost": 0.020085,
+        "upstream_inference_completions_cost": 0.010785
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 23.73,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

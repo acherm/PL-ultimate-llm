@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:eca497a69cc76a6d06b6ada1911bbf7b96202be3",
+    "sha1_git": "eca497a69cc76a6d06b6ada1911bbf7b96202be3",
+    "filename": "/ORCGKID2.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7399,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:eca497a69cc76a6d06b6ada1911bbf7b96202be3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:eca497a69cc76a6d06b6ada1911bbf7b96202be3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7399,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 204,
+    "blank_lines": 0,
+    "comment_lines": 98,
+    "code_lines": 106,
+    "comment_ratio": 0.48,
+    "max_line_length": 74,
+    "avg_line_length": 35.3,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGKID2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 32,
+    "call_count": 1,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN ... ALSO syntax (COBOL-85)",
+          "EXIT PROGRAM statement",
+          "PERFORM with section names",
+          "CALL 'ORCDBMAIN' USING",
+          "LINKAGE SECTION with USING clause in PROCEDURE DIVISION",
+          "Fixed-format source layout",
+          "JMA ORCA open-source medical software project headers"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a screen-handling subprogram (component ORCGKID2) within the JMA ORCA standard medical receipt software system. It handles a confirmation screen (screen 2 / KID2) for medical treatment input, processing button-click events to navigate back or trigger printing of prescriptions and medication information. It sets flags and calls ORCDBMAIN to perform window transitions.",
+        "domain": "healthcare / medical billing (Japanese medical receipt processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements for screen layout and shared areas (MCPAREA, ORCA-SPA, LINKAREA, K01.INC through KERR2.INC, KID1.INC, KID2.INC, etc.)",
+        "Japanese text in comments (Shift-JIS / EUC-JP encoded, rendered as Latin-1 mojibake)",
+        "EVALUATE ALSO (multi-subject EVALUATE) for event/widget dispatch",
+        "CALL to 'ORCDBMAIN' for window/database operations",
+        "MCP (Message Control Program) interface pattern typical of ORCA system",
+        "No EXEC SQL or EXEC CICS",
+        "Only 1 PIC clause in working storage (rest via COPY)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known Japanese open-source JMA ORCA medical receipt system. Comments are in Japanese (EUC-JP or Shift-JIS) but decoded as Latin-1, causing mojibake. The 'grpsys' tokens appearing before the CALL statement are likely label prefixes or source-control markers specific to the ORCA build system. The high comment ratio (48%) is due to the extensive Japanese comment blocks."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3573,
+      "completion_tokens": 667,
+      "total_tokens": 4240,
+      "cost": 0.020724,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020724,
+        "upstream_inference_prompt_cost": 0.010719,
+        "upstream_inference_completions_cost": 0.010005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 15.86,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3ce4fe78c26bad2a04698f5c1a4b410b401c4349",
+    "sha1_git": "3ce4fe78c26bad2a04698f5c1a4b410b401c4349",
+    "filename": "/BCASH01P.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7380,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3ce4fe78c26bad2a04698f5c1a4b410b401c4349/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3ce4fe78c26bad2a04698f5c1a4b410b401c4349/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7380,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 90,
+    "blank_lines": 0,
+    "comment_lines": 29,
+    "code_lines": 61,
+    "comment_ratio": 0.322,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 90,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "PIC",
+      "bcash01p"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (CICS application)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "Copyright notice explicitly states 'Micro Focus'",
+          "DFHCOMMAREA in LINKAGE SECTION (CICS convention)",
+          "COPY CENTRY / COPY CRETURN (Micro Focus CICS entry/return copybooks)",
+          "END-PERFORM (COBOL-85)",
+          "Reference modification: DFHCOMMAREA (1:LENGTH OF WS-CASH-DATA)",
+          "PERFORM 5 TIMES with inline body"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "ATM business-logic program that retrieves a list of enabled/accessible accounts for a given user. It moves the passed COMMAREA into working storage, calls a data-access routine (via COPY CCASHX02) to fetch up to 5 accounts, then maps account number, description, balance, daily limit, date used, and date amount back into the communication area before returning.",
+        "domain": "banking",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "DFHCOMMAREA linkage (CICS program structure)",
+        "COPY CENTRY / COPY CRETURN (Micro Focus CICS boilerplate copybooks)",
+        "Multiple COPY statements for data structures (CCASHDAT, CCASHD02, CABENDD, CCASHX02)",
+        "Reference modification on DFHCOMMAREA",
+        "PERFORM 5 TIMES loop iterating over account array",
+        "No EXEC CICS or EXEC SQL — CICS calls abstracted through copybooks",
+        "Sequence numbers in columns 1-6 with program-id tag in columns 73-80"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The PROCEDURE DIVISION header is absent as a literal keyword — the procedure code begins inline after the LINKAGE SECTION via the COPY CENTRY copybook, which is why 'divisions_present.procedure' is false in the mechanical scan. The program_ids list shows 'PIC' as a spurious match from the PIC clause parsing. All 90 lines are padded to exactly 80 characters (avg_line_length 80.0), consistent with Micro Focus fixed-format source. The version comment at line 9000 ('Version 5.99c … 2011') confirms Micro Focus tooling."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2545,
+      "completion_tokens": 667,
+      "total_tokens": 3212,
+      "cost": 0.01764,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01764,
+        "upstream_inference_prompt_cost": 0.007635,
+        "upstream_inference_completions_cost": 0.010005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.77,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

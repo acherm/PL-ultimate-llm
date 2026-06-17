@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ae7d89a389424d5ce563c5260042d641c664c5f8",
+    "sha1_git": "ae7d89a389424d5ce563c5260042d641c664c5f8",
+    "filename": "/ORCBZ003.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 46326,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ae7d89a389424d5ce563c5260042d641c664c5f8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ae7d89a389424d5ce563c5260042d641c664c5f8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 46326,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1156,
+    "blank_lines": 0,
+    "comment_lines": 356,
+    "code_lines": 800,
+    "comment_ratio": 0.308,
+    "max_line_length": 74,
+    "avg_line_length": 39.1,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBZ003"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 27,
+    "call_count": 18,
+    "perform_count": 63,
+    "goto_count": 0,
+    "pic_count": 40,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PERFORM ... UNTIL with END-IF / END-PERFORM inline scope terminators (COBOL-85)",
+          "UNSTRING ... DELIMITED BY ... INTO with multiple targets",
+          "COPY directives with .INC copybooks",
+          "CALL 'ORCSJOB' / 'ORCSDAY' etc. — ORCA project naming convention",
+          "Fixed-format source, columns 7-72",
+          "Japanese text in comments encoded as latin-1 (actually Shift-JIS/EUC-JP garbled)",
+          "Copyright JMA (Japan Medical Association) 2002 — ORCA open-source medical software"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that performs bulk printing of outpatient medical record cards (Karute card #1) for a given treatment month and department. It is part of the ORCA (JMA Standard Receipt Software) system used in Japanese medical institutions. The program initialises system parameters, reads patient and insurance combination data, and drives a print job via the ORCA print subsystem.",
+        "domain": "healthcare / medical records (Japanese clinic/hospital management)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — DB access is via CALL to ORCA middleware (MCP layer, MCPAREA/MCPDATA copybooks)",
+        "18 CALL statements to ORCA subsystem routines (ORCSJOB, ORCSDAY, etc.)",
+        "63 PERFORM statements — structured, no GOTO",
+        "Extensive use of COPY for copybooks (.INC files): patient master, insurance combination, job control, print control, etc.",
+        "UNSTRING on COMMAND-PARAM for comma-delimited argument parsing",
+        "Japanese comments (Shift-JIS/EUC-JP, decoded as latin-1 producing mojibake)",
+        "LINKAGE SECTION with COMMAND-PARAM PIC X(256) — invoked as a subprogram/command",
+        "Program option handling section (CPORCSPRGOPTION.INC)",
+        "No COMP-3 packed decimal fields visible in truncated source"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars (~1/3 of the 46326-byte file). Japanese text in comments is garbled because the file is Shift-JIS or EUC-JP but was decoded as latin-1. The ORCA project is a well-known open-source Japanese medical receipt/clinic management system; this program (ORCBZ003) handles batch printing of outpatient chart cover sheets. The COPY count of 0 in mechanical indicators is likely because the copybook COPY statements use quoted filenames (e.g. COPY \"CPSYSKANRI.INC\") which the mechanical scanner may not have recognised."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7736,
+      "completion_tokens": 843,
+      "total_tokens": 8579,
+      "cost": 0.035853,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035853,
+        "upstream_inference_prompt_cost": 0.023208,
+        "upstream_inference_completions_cost": 0.012645
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.81,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

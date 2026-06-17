@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:68551caa54e0c955fffd769e5fa24ef7072dd901",
+    "sha1_git": "68551caa54e0c955fffd769e5fa24ef7072dd901",
+    "filename": "/BKPXXC2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 31674,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:68551caa54e0c955fffd769e5fa24ef7072dd901/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:68551caa54e0c955fffd769e5fa24ef7072dd901/raw/"
+  },
+  "indicators": {
+    "bytes_len": 31674,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 391,
+    "blank_lines": 0,
+    "comment_lines": 175,
+    "code_lines": 216,
+    "comment_ratio": 0.448,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 391,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BKPXXC2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 22,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (CICS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC CICS HANDLE CONDITION ERROR(...) END-EXEC",
+          "EXEC CICS LINK PROGRAM(...) COMMAREA(...) END-EXEC",
+          "EXEC CICS SEND MAP / RECEIVE MAP END-EXEC",
+          "EXEC CICS RETURN TRANSID(EIBTRNID) COMMAREA(...) END-EXEC",
+          "DFHRESP(NORMAL), DFHBMUNN, DFHBMPRO, DFHBMSCA copybook references",
+          "EIBCALEN, EIBTRNID EIB fields",
+          "PROCESS CICS('COBOL3,APOST,SP') compiler directive comment",
+          "Fixed-format lines all 80 chars, sequence numbers in cols 73-80"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a CICS online banking detail-screen program (client side of a split DFH0CALL demo). It handles account inquiry, add (open), and update (change) operations by sending/receiving a BMS detail map, linking to a CRUD server program (BKPXXS1) for file I/O, and returning control to the menu transaction.",
+        "domain": "banking",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (HANDLE CONDITION, LINK, SEND MAP, RECEIVE MAP, RETURN)",
+        "BMS map handling with DFHBMSCA attribute bytes (DFHBMUNN, DFHBMPRO)",
+        "EIB fields: EIBCALEN, EIBTRNID",
+        "DFHRESP(NORMAL) response checking",
+        "Multiple COPY statements (BKMXXGA, BKMXXGB, BKCLOG, DFHBMSCA, BKCLINK, BKCACCT)",
+        "LINKAGE SECTION with DFHCOMMAREA",
+        "88-level condition names",
+        "Currency symbol comments for £ and ¥ variants",
+        "High GOTO count (22) typical of older CICS pseudo-conversational style"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is truncated at 16000 chars out of 31674 bytes; the CHECK paragraph and subsequent validation/file-write logic are cut off. The program is clearly a production-style IBM CICS COBOL program from a banking demo suite (DFH0CALL split into client BKPXXC2 and server BKPXXS1). Comment ratio is high (44.8%) due to extensive inline documentation. All 391 lines are exactly 80 characters (fixed format with sequence numbers)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4569,
+      "completion_tokens": 768,
+      "total_tokens": 5337,
+      "cost": 0.025227,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025227,
+        "upstream_inference_prompt_cost": 0.013707,
+        "upstream_inference_completions_cost": 0.01152
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.23,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

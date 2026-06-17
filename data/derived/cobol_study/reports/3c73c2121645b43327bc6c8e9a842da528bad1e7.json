@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3c73c2121645b43327bc6c8e9a842da528bad1e7",
+    "sha1_git": "3c73c2121645b43327bc6c8e9a842da528bad1e7",
+    "filename": "/cop999.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 134658,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3c73c2121645b43327bc6c8e9a842da528bad1e7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3c73c2121645b43327bc6c8e9a842da528bad1e7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 134658,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2879,
+    "blank_lines": 152,
+    "comment_lines": 76,
+    "code_lines": 2651,
+    "comment_ratio": 0.028,
+    "max_line_length": 72,
+    "avg_line_length": 44.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COP100"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 79,
+    "call_count": 33,
+    "perform_count": 238,
+    "goto_count": 0,
+    "pic_count": 252,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "COPY with quoted filenames: COPY \"COP100.CPB\", COPY \"DS-CNTRL.MF\", COPY \"CBPRINT.CPY\"",
+          "78 level constant: 78 REFRESH-TEXT-AND-DATA-PROC VALUE 255",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "PRINTER IS LPRINTER in SPECIAL-NAMES",
+          "BLANK WHEN ZEROS clause usage",
+          "Fixed format, max line length 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a contract consultation/reporting program (COP100) for a photography and video studio ('Kello Foto & Video'). It reads multiple indexed files covering contracts, events, brides/gifts (brinde), financial data, and contacts, then produces a detailed printed report covering contract data, financial scheduling, event details, credit data, and contact information.",
+        "domain": "photography/video studio business management (contracts, billing, events)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive use of COPY statements for both SELECT and FD sections (40+ copybooks)",
+        "78-level constant (Micro Focus extension)",
+        "DECIMAL-POINT IS COMMA (European/Brazilian locale)",
+        "PRINTER IS LPRINTER special-names clause",
+        "Quoted copybook filenames (Micro Focus style)",
+        "OCCURS clause for arrays (COMISSAO, FONE)",
+        "Large number of PERFORM statements (238) indicating structured procedural logic",
+        "33 CALL statements suggesting modular design with subprograms",
+        "Portuguese-language comments and data names (Brazilian Portuguese)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite financial calculations"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is clearly production COBOL from a Brazilian photography/video business system, circa 1999. The extensive copybook usage means much of the actual file/record definitions are not visible in the truncated source. The 78-level item and quoted COPY filenames are strong Micro Focus indicators. No COMP-3 is unusual for financial data but consistent with what is shown. Portuguese comments confirm Brazilian origin."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6532,
+      "completion_tokens": 651,
+      "total_tokens": 7183,
+      "cost": 0.029361,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029361,
+        "upstream_inference_prompt_cost": 0.019596,
+        "upstream_inference_completions_cost": 0.009765
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 25.65,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

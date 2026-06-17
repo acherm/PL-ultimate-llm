@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9496d8e8ba054aec2f93a1b426437fd917e15986",
+    "sha1_git": "9496d8e8ba054aec2f93a1b426437fd917e15986",
+    "filename": "/ORCBINF1.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 66547,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9496d8e8ba054aec2f93a1b426437fd917e15986/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9496d8e8ba054aec2f93a1b426437fd917e15986/raw/"
+  },
+  "indicators": {
+    "bytes_len": 66547,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1609,
+    "blank_lines": 0,
+    "comment_lines": 460,
+    "code_lines": 1149,
+    "comment_ratio": 0.286,
+    "max_line_length": 74,
+    "avg_line_length": 40.4,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBINF1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 16,
+    "call_count": 6,
+    "perform_count": 155,
+    "goto_count": 3,
+    "pic_count": 85,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (Japanese medical software)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM ... UNTIL with END-PERFORM",
+          "INITIALIZE statement",
+          "END-UNSTRING, END-IF terminators",
+          "OCCURS ... INDEXED BY clauses",
+          "COPY directives for .INC files",
+          "CALL 'ORCSMCNDATE' USING pattern",
+          "LINKAGE SECTION with USING COMMAND-PARAM",
+          "No EXEC SQL / EXEC CICS",
+          "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that creates infectious disease survey data (感染症データ作成) for the ORCA Japanese Medical Association standard receipt software system. It reads patient visit history (受診履歴), patient disease records, and treatment activity data, then generates an output file reporting infectious disease surveillance information. It also performs judgment/classification of diseases using lookup tables.",
+        "domain": "healthcare / medical records (Japanese national medical billing system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese comments and string literals encoded in EUC-JP or Shift-JIS (rendered as latin-1 mojibake)",
+        "Multiple COPY directives for .INC copybooks (CPJOBKANRI, CPSYSKANRI, CPPTINF, CPJYURRK, CPSRYACCT, CPSRYACT, CPPTBYOMEI, CPINFECTION, CPINFJUDGMENT, etc.)",
+        "OCCURS ... INDEXED BY tables for disease and judgment lookups",
+        "UNSTRING of COMMAND-PARAM for argument parsing",
+        "CALL to external subprograms: ORCSMCNDATE, ORCSJOBKANRI",
+        "LINE SEQUENTIAL file organization for output",
+        "REDEFINES clause on date field",
+        "No COMP-3 packed decimal usage",
+        "Program version tracking via PRGSKBNO PIC X(08)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the open-source ORCA (JMA standard receipt software) project for Japanese medical institutions. Comments are in Japanese encoded as EUC-JP or Shift-JIS but decoded here as latin-1, causing mojibake. The source is clearly production-grade medical billing/surveillance software. COPY statements reference external copybooks not shown in the truncated source, so full data layout cannot be verified from this excerpt alone."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7435,
+      "completion_tokens": 728,
+      "total_tokens": 8163,
+      "cost": 0.033225,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033225,
+        "upstream_inference_prompt_cost": 0.022305,
+        "upstream_inference_completions_cost": 0.01092
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.59,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

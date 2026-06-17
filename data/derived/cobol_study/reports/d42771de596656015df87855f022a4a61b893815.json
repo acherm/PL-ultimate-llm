@@ -1,0 +1,114 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d42771de596656015df87855f022a4a61b893815",
+    "sha1_git": "d42771de596656015df87855f022a4a61b893815",
+    "filename": "/write-grade1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 2
+  },
+  "content": {
+    "length": 1596,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d42771de596656015df87855f022a4a61b893815/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d42771de596656015df87855f022a4a61b893815/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1596,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 58,
+    "blank_lines": 12,
+    "comment_lines": 0,
+    "code_lines": 46,
+    "comment_ratio": 0.0,
+    "max_line_length": 50,
+    "avg_line_length": 26.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "WRITE-SCORE1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or similar open-source COBOL (possibly Micro Focus)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK statement",
+          "All four DIVISIONS present",
+          "PIC X(8) and PIC 9(2)V9(2) usage"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Writes student score records to a sequential file named 'score.dat'. Each record contains a student ID, midterm score, final score, and project score. Five student records are written (though record 39030004 is missing its WRITE statement, likely a bug).",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Missing WRITE statement for student 39030004 (apparent bug or intentional omission)",
+        "ORGANIZATION IS LINE SEQUENTIAL for flat file output",
+        "GOBACK used instead of STOP RUN",
+        "Numeric scores moved as string literals to numeric PIC fields"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program has a clear bug: student 39030004's data is MOVEd but never WRITEn to the file. The author name 'NUTHJAREE' suggests a Thai student, consistent with an academic exercise. The typo 'SCORE-DETIAL' (should be SCORE-DETAIL) further supports student authorship."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 1418,
+      "completion_tokens": 441,
+      "total_tokens": 1859,
+      "cost": 0.010869,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.010869,
+        "upstream_inference_prompt_cost": 0.004254,
+        "upstream_inference_completions_cost": 0.006615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 8.63,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

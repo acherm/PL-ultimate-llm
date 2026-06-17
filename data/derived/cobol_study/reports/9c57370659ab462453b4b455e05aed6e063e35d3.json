@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9c57370659ab462453b4b455e05aed6e063e35d3",
+    "sha1_git": "9c57370659ab462453b4b455e05aed6e063e35d3",
+    "filename": "/ORCGJ02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 345046,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9c57370659ab462453b4b455e05aed6e063e35d3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9c57370659ab462453b4b455e05aed6e063e35d3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 345046,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 8296,
+    "blank_lines": 0,
+    "comment_lines": 2405,
+    "code_lines": 5891,
+    "comment_ratio": 0.29,
+    "max_line_length": 75,
+    "avg_line_length": 40.6,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGJ02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 65,
+    "call_count": 98,
+    "perform_count": 480,
+    "goto_count": 130,
+    "pic_count": 220,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA open-source medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS LINE SEQUENTIAL (common in GnuCOBOL/Micro Focus)",
+          "FILE-NAME assigned to string paths like '/var/tmp/J02SPASCR'",
+          "COPY directives referencing .INC files (CPJ02SPASCR.INC, ENUM-VALUE, COMMON-SPA, etc.)",
+          "PIC clauses, REDEFINES, OCCURS, VALUE clauses consistent with COBOL-85",
+          "No EXEC SQL or EXEC CICS blocks",
+          "Copyright JMA (Japan Medical Association) ORCA open-source project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch/interactive COBOL program (ORCGJ02) that is part of the JMA ORCA standard medical receipt (claims) software system. It handles accounting card input (会計カード入力) for a Japanese medical billing subsystem, managing patient insurance information, treatment records, hospitalization data, and receipt accounting workflows.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
+        "SPA (Scratch Pad Area) file I/O pattern typical of ORCA screen-based programs",
+        "LINE SEQUENTIAL file organization for SPA data exchange",
+        "Large working storage with many flag areas (FLG-*), index areas (IDX-*), and work areas",
+        "COPY directives for shared copybooks (COMMON-SPA, J01COMMON-SPA, J02SCR-SPA, ENUM-VALUE)",
+        "No EXEC SQL or EXEC CICS — file-based data access only",
+        "98 CALL statements indicating heavy use of subprogram calls",
+        "480 PERFORM statements and 130 GOTO statements — complex procedural logic",
+        "Large file (345KB, 8296 lines) indicating production-grade complexity",
+        "Version history comments spanning 2000–2004 with multiple contributors"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in garbled multi-byte characters in comments and string literals. The program is part of the well-known open-source JMA ORCA medical receipt system. The COPY statements reference external copybooks not shown here. The 'fixed' format is confirmed by max_line_length of 75 and source_format_guess. No COMP-3 usage despite being a financial/billing system is notable — numeric fields use plain PIC 9."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8610,
+      "completion_tokens": 805,
+      "total_tokens": 9415,
+      "cost": 0.037905,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037905,
+        "upstream_inference_prompt_cost": 0.02583,
+        "upstream_inference_completions_cost": 0.012075
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 21.8,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

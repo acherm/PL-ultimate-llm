@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0ef7f1e5a846c9dcba11e4ba1f95afb73c9f97c9",
+    "sha1_git": "0ef7f1e5a846c9dcba11e4ba1f95afb73c9f97c9",
+    "filename": "/LOADEMPL.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7652,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0ef7f1e5a846c9dcba11e4ba1f95afb73c9f97c9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0ef7f1e5a846c9dcba11e4ba1f95afb73c9f97c9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7652,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 213,
+    "blank_lines": 10,
+    "comment_lines": 6,
+    "code_lines": 197,
+    "comment_ratio": 0.03,
+    "max_line_length": 78,
+    "avg_line_length": 34.9,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LOADEMPL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or GnuCOBOL (generic COBOL-85+)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "GOBACK statement",
+          "EVALUATE TRUE ... END-EVALUATE",
+          "PERFORM WITH TEST BEFORE ... END-PERFORM",
+          "FUNCTION CURRENT-DATE",
+          "88-level condition names with VALUE SPACES",
+          "SET condition-name TO TRUE",
+          "STRING ... DELIMITED BY SIZE ... INTO",
+          "ORGANIZATION LINE SEQUENTIAL",
+          "FILE STATUS clause",
+          "COMP-3 usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Reads raw employee records from a sequential input file, validates each record (SSN area code and hire date checks), and writes valid records to one output file and invalid records with an error message to a separate error file. Displays counts of valid and errored records at completion.",
+        "domain": "payroll",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed-decimal counters (WS-VALID-COUNT, WS-ERROR-COUNT)",
+        "COPY statements for EMPLREC record layout (copybook references)",
+        "Three-file architecture: input, validated output, error output",
+        "FUNCTION CURRENT-DATE for date validation",
+        "88-level condition names used as flags (NO-ERRORS-FOUND, EMPL-IN-EOF, etc.)",
+        "GOBACK used instead of STOP RUN",
+        "Inline error handling with 9999-ABORT paragraph",
+        "SSN area code validation (666 and >740 rules)",
+        "Hire date range validation against company founding date and current date"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The COPY statements (COPY EMPLREC) reference an external copybook not shown in this file; the copy_count indicator shows 0 which may be a mechanical counting artifact since COPY verbs are clearly present in the source. The SSN validation logic references 'TEST-SSN IN EMPL-IN' which implies a condition-name defined in the EMPLREC copybook. Minor anomaly: in 5600-WRITE-ERROR-REC, the STRING for the error file write status incorrectly references EMPL-VALIDATED-STATUS instead of EMPL-ERRORS-STATUS — likely a copy-paste bug. Overall the code is well-structured and production-quality in style."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3129,
+      "completion_tokens": 676,
+      "total_tokens": 3805,
+      "cost": 0.019527,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019527,
+        "upstream_inference_prompt_cost": 0.009387,
+        "upstream_inference_completions_cost": 0.01014
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 14.15,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

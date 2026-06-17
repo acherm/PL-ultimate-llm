@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:91724086941ea93698f3d1eb126fbde7f70a54f8",
+    "sha1_git": "91724086941ea93698f3d1eb126fbde7f70a54f8",
+    "filename": "/ORCSC95SUB.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 75616,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:91724086941ea93698f3d1eb126fbde7f70a54f8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:91724086941ea93698f3d1eb126fbde7f70a54f8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 75616,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1735,
+    "blank_lines": 0,
+    "comment_lines": 507,
+    "code_lines": 1228,
+    "comment_ratio": 0.292,
+    "max_line_length": 74,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC95SUB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 20,
+    "call_count": 3,
+    "perform_count": 67,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (Japanese medical system, likely running on Linux/Unix)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "IF ... END-IF structured conditionals",
+          "PERFORM with section names",
+          "OCCURS clause on PIC X(01)",
+          "INITIALIZE verb",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "EXIT PROGRAM",
+          "COPY statements for include files (.INC extension)",
+          "Fixed-format source layout (columns 7-72)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a subprogram (ORCSC95SUB) that is part of the ORCA Japanese Medical Association standard receipt (claims) software. It handles initialization and editing of a common SPA (scratchpad area) parameter block used in medical billing/receipt processing, including reading system management master records and setting various flags for printing, bed counts, drug information, and fee calculation rules. It also handles correction processing for medical treatment dates.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments (rendered as Latin-1 mojibake in the archived file)",
+        "Extensive use of COPY statements for modular include files (CPSK*.INC, MCP*.INC, COMMON-SPA, etc.)",
+        "No EXEC SQL or EXEC CICS — DB access appears to be via CALL-based MCP (middleware) interface",
+        "LINKAGE SECTION with multiple SPA (scratchpad area) parameters passed via USING",
+        "EVALUATE used for dispatch on processing mode (KBN codes)",
+        "Date-based conditional logic for Japanese fiscal year reform dates (e.g., '20170901', '20180401')",
+        "No COMP-3 usage despite financial/billing domain",
+        "67 PERFORM statements indicating heavily structured procedural decomposition",
+        "Copyright notice: JMA Open Source License, 2002"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine COBOL source. Japanese comments are encoded in EUC-JP or Shift-JIS but were decoded as Latin-1, producing mojibake. The program is clearly production medical billing software from the ORCA project (Japan Medical Association open-source receipt system). The 0 COPY statements shown in mechanical indicators conflicts with the visible COPY statements in the source — the mechanical count likely failed to parse them due to encoding issues. The program references many external copybooks and uses a middleware call pattern (MCP) rather than direct SQL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8667,
+      "completion_tokens": 735,
+      "total_tokens": 9402,
+      "cost": 0.037026,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037026,
+        "upstream_inference_prompt_cost": 0.026001,
+        "upstream_inference_completions_cost": 0.011025
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.71,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a7144bbfc68a8e5b93e13ab09486c23497b01bd8",
+    "sha1_git": "a7144bbfc68a8e5b93e13ab09486c23497b01bd8",
+    "filename": "/A00000C100.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15081,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a7144bbfc68a8e5b93e13ab09486c23497b01bd8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a7144bbfc68a8e5b93e13ab09486c23497b01bd8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15081,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 373,
+    "blank_lines": 0,
+    "comment_lines": 129,
+    "code_lines": 244,
+    "comment_ratio": 0.346,
+    "max_line_length": 74,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "A00000C100"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 19,
+    "call_count": 11,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 82,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (JMA ORCA project, likely compiled with OpenCOBOL/GnuCOBOL on Linux)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... END-EVALUATE constructs",
+          "END-UNSTRING terminator",
+          "PERFORM without THRU (inline style)",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "INITIALIZE verb",
+          "Fixed-format source with columns 7-72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a dispatcher/controller program for a patient-count aggregation report in the JMA ORCA medical receipt software system. It parses command-line parameters, then routes execution to one of several sub-programs (A00000C110 through A00000C120) based on report type (by department, doctor, age, region, insurance) and inpatient/outpatient flag. It is part of the 'daily ledger' subsystem.",
+        "domain": "healthcare / medical billing (Japanese medical receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements for modular include files (CPCOMMONSHELL.INC, CPERRFL.INC, CPORCSPRTLNK.INC, etc.)",
+        "EVALUATE used as a dispatch table to call 11 different sub-programs",
+        "UNSTRING used to parse comma-delimited command-line parameters",
+        "Japanese comments encoded in EUC-JP or Shift-JIS (rendered as latin-1 mojibake)",
+        "No EXEC SQL or EXEC CICS — DB access delegated to called sub-programs",
+        "LINKAGE SECTION with COMMAND-PARAM PIC X(256) for shell invocation",
+        "JMA Open Source License header (ORCA project)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the comments contain Japanese text originally encoded in EUC-JP or Shift-JIS, appearing as mojibake. The program is part of the well-known open-source JMA ORCA medical receipt system used in Japanese clinics. All four COBOL divisions are present and the structure is consistent with production-grade batch COBOL. The tab character visible in the WRK-POSTMAEG area is a minor anomaly in an otherwise fixed-format file."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 7060,
+      "completion_tokens": 676,
+      "total_tokens": 7736,
+      "cost": 0.03132,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03132,
+        "upstream_inference_prompt_cost": 0.02118,
+        "upstream_inference_completions_cost": 0.01014
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.16,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a89317fce3d7e88b6afe84b8da7c36378a6bc2df",
+    "sha1_git": "a89317fce3d7e88b6afe84b8da7c36378a6bc2df",
+    "filename": "/SEIKYU1805.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 127822,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a89317fce3d7e88b6afe84b8da7c36378a6bc2df/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a89317fce3d7e88b6afe84b8da7c36378a6bc2df/raw/"
+  },
+  "indicators": {
+    "bytes_len": 127822,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2925,
+    "blank_lines": 1,
+    "comment_lines": 1338,
+    "code_lines": 1586,
+    "comment_ratio": 0.458,
+    "max_line_length": 81,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 28,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU1805"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 36,
+    "call_count": 64,
+    "perform_count": 84,
+    "goto_count": 3,
+    "pic_count": 153,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (open-cobol)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SEIKYU1805",
+          "open-cobol1.0対応 comments referencing open-cobol compatibility fixes",
+          "COPY directives with REPLACING clauses",
+          "SELECT ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "OCCURS clauses, REDEFINES, PIC clauses consistent with COBOL-85",
+          "No EXEC SQL or EXEC CICS blocks",
+          "Fixed-format source with comment lines in column 7 (*)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch report/print program for the ORCA Japan Medical Association standard receipt software system. It generates a list of patients subject to local public expense (地方公費) medical assistance billing, covering receipt types 191, 193, 194, 196, and 198. It reads an indexed billing file (MF110), computes patient burden amounts, and produces printed output sorted by insurance number and patient ID.",
+        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS garbled as latin-1)",
+        "Extensive revision history in comments spanning 2007–2016",
+        "COPY statements referencing multiple INC copybooks (SEI1805.INC, CPCOMMONPRT.INC, CPCOMMONSHELL.INC, etc.)",
+        "INDEXED file with DYNAMIC access mode",
+        "OCCURS 100 tables for parameters and target public expense codes",
+        "REDEFINES usage for hospital name/address fields",
+        "No EXEC SQL or EXEC CICS — pure file-based I/O",
+        "64 CALL statements indicating heavy use of external subprograms",
+        "Program option (PG option) driven target public expense code selection added in 2016"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in a Japanese encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese characters to appear garbled. The program is clearly part of the well-known open-source ORCA medical receipt system maintained by the Japan Medical Association. The dialect is most likely GnuCOBOL (formerly open-cobol) based on explicit compatibility comments, though the code style is compatible with standard COBOL-85."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9831,
+      "completion_tokens": 705,
+      "total_tokens": 10536,
+      "cost": 0.040068,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040068,
+        "upstream_inference_prompt_cost": 0.029493,
+        "upstream_inference_completions_cost": 0.010575
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.51,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

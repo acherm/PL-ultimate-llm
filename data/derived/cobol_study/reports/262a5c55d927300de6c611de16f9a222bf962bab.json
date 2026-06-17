@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:262a5c55d927300de6c611de16f9a222bf962bab",
+    "sha1_git": "262a5c55d927300de6c611de16f9a222bf962bab",
+    "filename": "/OBSQ3A.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 52407,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:262a5c55d927300de6c611de16f9a222bf962bab/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:262a5c55d927300de6c611de16f9a222bf962bab/raw/"
+  },
+  "indicators": {
+    "bytes_len": 52407,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 647,
+    "blank_lines": 0,
+    "comment_lines": 44,
+    "code_lines": 603,
+    "comment_ratio": 0.068,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 647,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "OBSQ34"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 45,
+    "goto_count": 29,
+    "pic_count": 148,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (or compatible mainframe COBOL, likely CCVS85 test suite)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "CCVS85 VERSION 1.0 ISSUED IN JANUARY 1986 in comments",
+          "MULTIPLE FILE TAPE CONTAINS clause in I-O-CONTROL",
+          "LABEL RECORD IS STANDARD / LABEL RECORDS ARE STANDARD",
+          "XXXXX082/XXXXX083 placeholder computer names typical of CCVS",
+          "XXXXP004/XXXXP005 etc. placeholder assign names typical of CCVS",
+          "PICTURE / PIC usage consistent with COBOL-85",
+          "BLOCK CONTAINS / RECORD CONTAINS clauses",
+          "P-prefixed lines (conditional compilation markers for CCVS)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a CCVS85 (COBOL Compiler Validation System) test program that validates the MULTIPLE FILE TAPE clause of the I-O-CONTROL paragraph. It creates two tapes each containing four sequential files, one without the NO REWIND option and one using the POSITION phrase, then writes test results for downstream validation programs (OBSQ4A, OBSQ5A).",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "MULTIPLE FILE TAPE CONTAINS clause with POSITION phrase in I-O-CONTROL",
+        "Eight sequential file selects (SQ-FS1 through SQ-FS8) on tape",
+        "P-prefixed lines indicating conditional/optional CCVS compilation sections (RAW-DATA indexed file)",
+        "CCVS85 standard test harness structure with TEST-RESULTS, PAR-NAME, DOTVALUE, P-OR-F fields",
+        "Placeholder computer and file names (XXXXX082, XXXXP004, etc.) for portability",
+        "No EXEC SQL, no EXEC CICS, no COMP-3 usage",
+        "45 PERFORMs and 29 GOTOs typical of CCVS test scaffolding"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly part of the CCVS85 (COBOL Compiler Validation Suite) test suite, program OBSQ3A (PROGRAM-ID OBSQ34 in sequence name). The 'P' in column 7 on certain lines is a CCVS conditional compilation flag for optional features. The source is truncated at 16000 chars but the structure is unambiguous. All 647 lines are padded to exactly 80 characters (fixed format). The sequence numbers in columns 1-6 and the program identifier in columns 73-80 are consistent with standard CCVS formatting."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5562,
+      "completion_tokens": 769,
+      "total_tokens": 6331,
+      "cost": 0.028221,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028221,
+        "upstream_inference_prompt_cost": 0.016686,
+        "upstream_inference_completions_cost": 0.011535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.75,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

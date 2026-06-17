@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4949fefb09b076ed631d918f07710d5b897acfd3",
+    "sha1_git": "4949fefb09b076ed631d918f07710d5b897acfd3",
+    "filename": "/TSUBR47.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2945,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4949fefb09b076ed631d918f07710d5b897acfd3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4949fefb09b076ed631d918f07710d5b897acfd3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2945,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 88,
+    "blank_lines": 0,
+    "comment_lines": 24,
+    "code_lines": 64,
+    "comment_ratio": 0.273,
+    "max_line_length": 62,
+    "avg_line_length": 31.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TSUBR47"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 2,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (MVS/OS/390)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-370 / OBJECT-COMPUTER. IBM-370",
+          "ASSIGN UT-S-INPUT (IBM JCL-style DD name convention)",
+          "RECORDING MODE IS F",
+          "LABEL RECORDS OMITTED",
+          "BLOCK CONTAINS 0 RECORDS",
+          "GOBACK statement",
+          "COPY TCPYB47 (external copybook reference)",
+          "PROCEDURE DIVISION USING PASS-ME-AROUND"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A training subprogram called from TPROG47 that reads sequential file records on demand. It accepts a linkage area (PASS-ME-AROUND) and performs open, read, or close operations on an input file based on action flags passed by the caller.",
+        "domain": "education/tutorial",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "GOBACK instead of STOP RUN (subprogram pattern)",
+        "PROCEDURE DIVISION USING linkage parameter",
+        "COPY TCPYB47 for linkage section definition",
+        "88-level condition names for flags (INFILE-OPEN, ACTION-READ, ACTION-CLOSE, INFILE-EOF, KEEPER)",
+        "PERFORM THRU pattern with EXIT paragraph",
+        "IBM-style ASSIGN UT-S-INPUT DD name"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The COPY TCPYB47 statement is present but the copybook content is not shown; the linkage data names (PASS-ME-AROUND, INFILE-EOF-FLAG, ACTION-READ, ACTION-CLOSE, INCOMING-DATA, KEEPER) are defined there. The program is explicitly a Benchmark ISPW training artifact dated 1996. No SQL or CICS constructs are present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 1791,
+      "completion_tokens": 564,
+      "total_tokens": 2355,
+      "cost": 0.013833,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013833,
+        "upstream_inference_prompt_cost": 0.005373,
+        "upstream_inference_completions_cost": 0.00846
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.04,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

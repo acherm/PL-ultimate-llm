@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7281cf8d6c6fae049aab5c025361626375c06df6",
+    "sha1_git": "7281cf8d6c6fae049aab5c025361626375c06df6",
+    "filename": "/ORCHC02V02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 234178,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7281cf8d6c6fae049aab5c025361626375c06df6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7281cf8d6c6fae049aab5c025361626375c06df6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 234178,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5473,
+    "blank_lines": 0,
+    "comment_lines": 1642,
+    "code_lines": 3831,
+    "comment_ratio": 0.3,
+    "max_line_length": 74,
+    "avg_line_length": 41.8,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCHC02V02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 44,
+    "call_count": 16,
+    "perform_count": 345,
+    "goto_count": 1,
+    "pic_count": 286,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... FILE STATUS IS pattern",
+          "COPY with REPLACING clause",
+          "PIC X, PIC 9, OCCURS, REDEFINES usage consistent with COBOL-85",
+          "No EXEC SQL or EXEC CICS",
+          "Fixed format, max line 74, comment lines in column 7 with *",
+          "PROGRAM-ID ORCHC02V02 matches filename",
+          "Japanese comments encoded in latin-1 (actually EUC-JP or Shift-JIS garbled)",
+          "Project identified as ORCA (JMA Open Source medical software, known to use GnuCOBOL/OpenCOBOL)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a prescription/receipt printing component (A5 format) for the ORCA JMA standard medical receipt software system used in Japanese medical institutions. It handles printing of prescription slips including patient insurance information, drug details, dosage quantities, and various medical billing data. It is part of the 'ORCHC02' prescription print subsystem.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese comments encoded in EUC-JP or Shift-JIS (rendered as latin-1 mojibake)",
+        "Extensive revision history spanning 2002-2015 with version numbers",
+        "COPY statements referencing project-specific copybooks (HC02V02.INC, CPCOMMONPRT.INC)",
+        "16 CALL statements, 345 PERFORM statements indicating complex procedural logic",
+        "No COMP-3 packed decimal usage despite financial/billing domain",
+        "No EXEC SQL or EXEC CICS — file-based I/O only",
+        "PRT-FILE with large record size PIC X(10000) for print output",
+        "OCCURS clauses for insurance combination and drug detail arrays",
+        "REDEFINES used for numeric/display conversion of quantities",
+        "Open source JMA ORCA project copyright notice"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine production COBOL from the open-source ORCA medical receipt system developed by the Japan Medical Association (JMA). Japanese text in comments is encoded in EUC-JP or Shift-JIS but decoded as latin-1, causing mojibake. The program has a long maintenance history (2002-2015) with many revision entries. No COPY body is shown (copybooks referenced externally). The single GOTO (goto_count=1) is typical of legacy COBOL. Zero COMP-3 is somewhat unusual for a billing system but not disqualifying."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10205,
+      "completion_tokens": 798,
+      "total_tokens": 11003,
+      "cost": 0.042585,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.042585,
+        "upstream_inference_prompt_cost": 0.030615,
+        "upstream_inference_completions_cost": 0.01197
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.6,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8a3199923ec0fe2b33b524185ab21fb2b678c859",
+    "sha1_git": "8a3199923ec0fe2b33b524185ab21fb2b678c859",
+    "filename": "/SOCK08.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 79650,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8a3199923ec0fe2b33b524185ab21fb2b678c859/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8a3199923ec0fe2b33b524185ab21fb2b678c859/raw/"
+  },
+  "indicators": {
+    "bytes_len": 79650,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1464,
+    "blank_lines": 11,
+    "comment_lines": 327,
+    "code_lines": 1126,
+    "comment_ratio": 0.225,
+    "max_line_length": 72,
+    "avg_line_length": 53.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOCK08"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 13,
+    "perform_count": 16,
+    "goto_count": 13,
+    "pic_count": 460,
+    "comp3_count": 102,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (with ODBC/SQL extensions)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$SET SQL(dbman=ODBC, TARGETDB=MSSQLSERVER, NOAUTOCOMMIT) compiler directive at top",
+          "EXEC SQL / END-EXEC blocks with SQLDA, SQLCA, DECLARE SECTION",
+          "EXEC CICS present (has_exec_cics=true)",
+          "COMP and COMP-3 usage throughout",
+          "88-level condition names",
+          "POINTER data type (01 P pointer)",
+          "VALUE Z\"KIXSYS\" (null-terminated string literal, Micro Focus extension)",
+          "Fixed-format source, max line length 72",
+          "PROGRAM-ID. SOCK08 with AUTHOR and DATE-COMPILED paragraphs"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "SOCK08 is a broker/middleware program for web services supporting premium rating, acting as version 2 of SOCK07. It handles socket-based messaging (send/receive buffers), interacts with a Microsoft SQL Server database via ODBC-based embedded SQL, and processes insurance-related contract and rate data (dealer state, contract numbers, effective dates, coverage). It also interfaces with CICS for transaction management.",
+        "domain": "insurance",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Micro Focus $SET compiler directive with ODBC/MSSQLSERVER target and NOAUTOCOMMIT",
+        "EXEC SQL with SQLDA, SQLCA, BEGIN/END DECLARE SECTION (DB2-style embedded SQL via ODBC)",
+        "EXEC CICS (CICS transaction environment)",
+        "COMP-3 packed decimal fields extensively used (102 occurrences)",
+        "POINTER data type usage",
+        "Null-terminated string literal VALUE Z\"KIXSYS\" (Micro Focus extension)",
+        "Inline copybook content for ELCFUNDT and ELCDATE (date conversion structures)",
+        "Socket/message buffer handling (ws-send-buf, ws-recv-buf)",
+        "Indicator variables for SQL NULL handling",
+        "Mathematical/actuarial computation fields (gamma, angle, temp-value series, COMP-3 precision fields)",
+        "Change log embedded in comments with dated entries"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 characters out of ~79650 bytes; the full procedure division is not visible but structural indicators confirm all four divisions are present. The program appears to be production insurance software from a company called CSO/Cowtown, with a change log dating from 2017. Copybook content for ELCFUNDT and ELCDATE is inlined rather than via COPY statements (copy_count=0 confirmed). The $SET directive and Z-string literal are definitive Micro Focus COBOL markers."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5632,
+      "completion_tokens": 793,
+      "total_tokens": 6425,
+      "cost": 0.028791,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028791,
+        "upstream_inference_prompt_cost": 0.016896,
+        "upstream_inference_completions_cost": 0.011895
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 432.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

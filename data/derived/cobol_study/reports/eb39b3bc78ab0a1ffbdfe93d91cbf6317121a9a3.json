@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:eb39b3bc78ab0a1ffbdfe93d91cbf6317121a9a3",
+    "sha1_git": "eb39b3bc78ab0a1ffbdfe93d91cbf6317121a9a3",
+    "filename": "/mar-handler.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 29543,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:eb39b3bc78ab0a1ffbdfe93d91cbf6317121a9a3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:eb39b3bc78ab0a1ffbdfe93d91cbf6317121a9a3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 29543,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 945,
+    "blank_lines": 111,
+    "comment_lines": 154,
+    "code_lines": 680,
+    "comment_ratio": 0.185,
+    "max_line_length": 85,
+    "avg_line_length": 30.3,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "mar-handler"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 8,
+    "perform_count": 68,
+    "goto_count": 0,
+    "pic_count": 8,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "ACUCOBOL-GT (AcuCOBOL / Micro Focus ACUCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "COPY 'acugui.def' and COPY 'acucobol.def' — ACUCOBOL-specific copybooks",
+          "USAGE IS SIGNED-SHORT — ACUCOBOL extension",
+          "ACCEPT ... FROM System-Info / Terminal-Info — ACUCOBOL runtime intrinsics",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "EXIT PARAGRAPH — COBOL-2002/ACUCOBOL extension",
+          "UNLOCK ALL / UNLOCK mxart — ACUCOBOL file-locking extension",
+          "READ ... WITH LOCK — ACUCOBOL/Micro Focus extension",
+          "CALL 'mis-handler$custom' — dollar-sign in program name typical of ACUCOBOL",
+          "{Bench} comment tags suggest generated from a Bench (kobalt) CASE tool",
+          "DISPLAY ... UPON SYSERR — standard but common in ACUCOBOL environments"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A test/handler program for indexed and relative file I/O operations, exercising ACUCOBOL file-handling features such as record locking, sequential/relative access, read-next/previous, delete, rewrite, and custom event handlers. It appears to be a generated test harness (from a 'Bench' CASE tool by kobalt) for validating file-handler behavior against multiple ISAM files (MXMARQUE, MXART, MXCATFOU, etc.).",
+        "domain": "utility",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ACUCOBOL SIGNED-SHORT usage",
+        "READ ... WITH LOCK and UNLOCK ALL file-locking extensions",
+        "EXIT PARAGRAPH (COBOL-2002/ACUCOBOL)",
+        "ACCEPT FROM System-Info / Terminal-Info (ACUCOBOL runtime)",
+        "CALL 'mis-handler$custom' with dollar-sign in name (ACUCOBOL convention)",
+        "Generated code with {Bench} comment markers from kobalt CASE tool",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "DECLARATIVES section with USE AFTER STANDARD ERROR",
+        "Multiple COPY statements for both .sl (SELECT) and .fd (FD) file definitions",
+        "READ PREVIOUS (ACUCOBOL/Micro Focus extension)",
+        "DISPLAY ... UPON SYSERR"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is truncated at 16000 chars; the full 29543-byte source was not shown. The mechanical indicator shows copy_count=0 but the source clearly contains many COPY statements — this discrepancy suggests the mechanical parser may not have counted them. The program was generated on 2020-11-03 by the 'kobalt' Bench CASE tool and targets an ACUCOBOL-GT runtime environment. French-language comments confirm a French-speaking development context."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5946,
+      "completion_tokens": 846,
+      "total_tokens": 6792,
+      "cost": 0.030528,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030528,
+        "upstream_inference_prompt_cost": 0.017838,
+        "upstream_inference_completions_cost": 0.01269
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.19,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

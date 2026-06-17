@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3c7f51604e80da0759228b70008bcf0bbde79357",
+    "sha1_git": "3c7f51604e80da0759228b70008bcf0bbde79357",
+    "filename": "/CBL0001.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3760,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3c7f51604e80da0759228b70008bcf0bbde79357/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3c7f51604e80da0759228b70008bcf0bbde79357/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3760,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 99,
+    "blank_lines": 1,
+    "comment_lines": 37,
+    "code_lines": 61,
+    "comment_ratio": 0.378,
+    "max_line_length": 70,
+    "avg_line_length": 36.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBL0001"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "RECORDING MODE F (IBM-specific FD clause)",
+          "COMP-3 packed decimal usage",
+          "GOBACK statement",
+          "JCL DDNAME references (ACCTREC, PRTLINE) and z/OS context in comments",
+          "END-PERFORM, END-READ structured delimiters (COBOL-85+)",
+          "Fixed format, columns within 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Reads account records from a sequential file (ACCT-REC) and writes formatted output lines to a print file (PRINT-LINE). It moves account number, credit limit, balance, name, and comments fields from input to output records with currency-formatted PIC clauses.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed BCD for monetary fields (ACCT-LIMIT, ACCT-BALANCE)",
+        "Currency-edited PIC $$,$$$,$$9.99 for formatted monetary output",
+        "RECORDING MODE F (IBM-specific)",
+        "GOBACK instead of STOP RUN",
+        "Priming read pattern before PERFORM UNTIL loop",
+        "Extensive inline tutorial comments explaining COBOL concepts"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "This is clearly from the IBM/Open Mainframe Project 'COBOL Programming Course' (copyright notice present). It is a well-structured teaching example demonstrating file I/O, COMP-3, and edited PIC clauses on z/OS. No ambiguity about its nature."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2048,
+      "completion_tokens": 496,
+      "total_tokens": 2544,
+      "cost": 0.013584,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013584,
+        "upstream_inference_prompt_cost": 0.006144,
+        "upstream_inference_completions_cost": 0.00744
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.88,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

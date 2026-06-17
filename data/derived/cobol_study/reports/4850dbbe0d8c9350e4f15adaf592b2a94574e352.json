@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4850dbbe0d8c9350e4f15adaf592b2a94574e352",
+    "sha1_git": "4850dbbe0d8c9350e4f15adaf592b2a94574e352",
+    "filename": "/ZINKOMITSUDO2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4817,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4850dbbe0d8c9350e4f15adaf592b2a94574e352/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4850dbbe0d8c9350e4f15adaf592b2a94574e352/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4817,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 123,
+    "blank_lines": 10,
+    "comment_lines": 15,
+    "code_lines": 98,
+    "comment_ratio": 0.133,
+    "max_line_length": 72,
+    "avg_line_length": 38.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ZINKOMITSUDO2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "comment header says 'opencobol SAMPLE'",
+          "PERFORM UNTIL ... END-PERFORM (inline PERFORM)",
+          "EXIT PERFORM (GnuCOBOL/COBOL-2002 extension)",
+          "GOBACK used as program termination",
+          "RETURN-CODE special register",
+          "PIC N(04) for national/double-byte characters",
+          "fixed format, max line length 72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Reads a sequential population (ZINKO) file and a sequential area (MENSEKI) file, matches records by code, writes combined records to a result file, then reads back and displays the results. Effectively computes or reports population density data by joining two sequential files.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "PIC N(04) for double-byte (Japanese) character fields",
+        "EXIT PERFORM (COBOL-2002/GnuCOBOL extension)",
+        "Nested PERFORM UNTIL loops for sequential file matching",
+        "RETURN-CODE special register for error signaling",
+        "Japanese text in DISPLAY statements (latin-1 decoded, likely Shift-JIS or similar)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "Commented-out MAIN-EXT / GOBACK at end"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but contains Japanese characters in DISPLAY statements (e.g., names/labels for 氏名, 人口, 面積), suggesting the original encoding is likely Shift-JIS or EUC-JP. The program is a Tokyo System House tutorial sample from 2019. The logic has a minor structural oddity: a dangling END-IF after the inner READ block, which may be intentional or a copy-paste artifact. EXIT PERFORM is a GnuCOBOL/COBOL-2002 feature confirming the OpenCOBOL/GnuCOBOL dialect."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2122,
+      "completion_tokens": 627,
+      "total_tokens": 2749,
+      "cost": 0.015771,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015771,
+        "upstream_inference_prompt_cost": 0.006366,
+        "upstream_inference_completions_cost": 0.009405
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.57,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

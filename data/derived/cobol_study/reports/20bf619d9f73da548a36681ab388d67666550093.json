@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:20bf619d9f73da548a36681ab388d67666550093",
+    "sha1_git": "20bf619d9f73da548a36681ab388d67666550093",
+    "filename": "/CRP019.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 68611,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:20bf619d9f73da548a36681ab388d67666550093/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:20bf619d9f73da548a36681ab388d67666550093/raw/"
+  },
+  "indicators": {
+    "bytes_len": 68611,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1720,
+    "blank_lines": 142,
+    "comment_lines": 425,
+    "code_lines": 1153,
+    "comment_ratio": 0.269,
+    "max_line_length": 123,
+    "avg_line_length": 37.9,
+    "long_lines_over_72": 37,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CRP019"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 51,
+    "call_count": 3,
+    "perform_count": 72,
+    "goto_count": 60,
+    "pic_count": 295,
+    "comp3_count": 24,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely ACUCOBOL-GT or Micro Focus with GNT compilation)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$set LINKCOUNT\"448\" GNT\"CRP019.GNT\" — Micro Focus/ACUCOBOL compiler directive producing .GNT object",
+          "COMP-5 usage (Micro Focus native binary)",
+          "CURSOR IS CSTART / CONSOLE IS CRT / CRT STATUS IS KEY-STATUS — Micro Focus CRT screen handling",
+          "COPY with quoted filenames (.SL, .FDE, .WS, .VAT extensions)",
+          "COMP-3 packed decimal fields",
+          "Fixed-format source with comment lines in columns 1-6"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "CRP019 is a creditor cheques-issued reporting program in an accounts payable / creditor management system. It reads creditor, transaction, and parameter files to produce printed reports of cheques issued to creditors, with aging analysis (30–180 days). It supports interactive CRT screen display and printer output.",
+        "domain": "accounting/finance (accounts payable)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Micro Focus GNT compiler directive ($set LINKCOUNT GNT)",
+        "COMP-5 (native binary) and COMP-3 (packed decimal) usage",
+        "CRT screen handling with CURSOR IS / CONSOLE IS CRT / CRT STATUS",
+        "Multiple COPY statements for file definitions (.SL, .FDE) and working storage (.WS, .VAT)",
+        "Extensive printer line layout with REDEFINES for multiple report formats",
+        "Aging buckets: 30, 60, 90, 120, 150, 180 days",
+        "GPL open-source license notice embedded in SECURITY paragraph",
+        "72 PERFORM statements and 60 GOTO statements indicating structured but legacy-style procedural code",
+        "ASCII art logo in comment block"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 characters; the PROCEDURE DIVISION is not visible but the structural indicators (72 PERFORMs, 60 GOTOs, 295 PIC clauses, 1153 code lines) confirm a substantial production program. The $set directive and .GNT extension strongly indicate Micro Focus COBOL or ACUCOBOL-GT. The program has been maintained since 1983 through at least June 2018 (version 9.04.05). COPY statements reference external copybooks that are not shown."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6598,
+      "completion_tokens": 721,
+      "total_tokens": 7319,
+      "cost": 0.030609,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030609,
+        "upstream_inference_prompt_cost": 0.019794,
+        "upstream_inference_completions_cost": 0.010815
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.56,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:38d0a10219d4233ca59d1530e64017e23db104e1",
+    "sha1_git": "38d0a10219d4233ca59d1530e64017e23db104e1",
+    "filename": "/ORCR0104.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 306112,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:38d0a10219d4233ca59d1530e64017e23db104e1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:38d0a10219d4233ca59d1530e64017e23db104e1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 306112,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6845,
+    "blank_lines": 3,
+    "comment_lines": 1427,
+    "code_lines": 5415,
+    "comment_ratio": 0.209,
+    "max_line_length": 116,
+    "avg_line_length": 43.7,
+    "long_lines_over_72": 36,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0104"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 52,
+    "call_count": 111,
+    "perform_count": 303,
+    "goto_count": 33,
+    "pic_count": 340,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely NEC/Fujitsu mainframe or GnuCOBOL on Linux, given JMA ORCA project context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING using // delimiters (Micro Focus / GnuCOBOL style)",
+          "FD records with COPY copybooks",
+          "PIC X / PIC 9 declarations",
+          "Fixed-format source layout",
+          "PROGRAM-ID ORCR0104"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA open-source medical receipt (claims) software. It creates print files for medical insurance receipts (レセプト印刷用ファイル作成), specifically handling the 2003/April revision and later amendments for health insurance billing. It reads multiple indexed receipt data files, processes insurance history, benefit ratios, and customization items, and produces output for receipt printing.",
+        "domain": "healthcare/medical insurance billing",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple indexed VSAM-style files with DYNAMIC access mode",
+        "Extensive use of COPY with REPLACING (// delimiter style, Micro Focus/GnuCOBOL convention)",
+        "No EXEC SQL or EXEC CICS (pure file-based I/O)",
+        "111 CALL statements indicating heavy use of subprogram calls",
+        "303 PERFORM statements and 33 GOTO statements",
+        "Japanese comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1 causing mojibake)",
+        "Large program: ~6845 lines, ~306KB",
+        "Copyright JMA 2002, open-source medical receipt software (ORCA project)",
+        "No COMP-3 usage despite financial/billing domain"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing the garbled appearance. The COPY delimiter style (//) is characteristic of Micro Focus COBOL or GnuCOBOL. The ORCA project (JMA standard receipt software) is a well-known open-source Japanese medical billing system, confirming production-grade code. No COMP-3 is unusual for a financial application but consistent with the indicators."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9976,
+      "completion_tokens": 731,
+      "total_tokens": 10707,
+      "cost": 0.040893,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040893,
+        "upstream_inference_prompt_cost": 0.029928,
+        "upstream_inference_completions_cost": 0.010965
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.96,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

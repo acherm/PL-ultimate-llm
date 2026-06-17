@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:499b414ba7828986da2fb3b7b3a2f33b59b4ecf8",
+    "sha1_git": "499b414ba7828986da2fb3b7b3a2f33b59b4ecf8",
+    "filename": "/adscbl301.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9549,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:499b414ba7828986da2fb3b7b3a2f33b59b4ecf8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:499b414ba7828986da2fb3b7b3a2f33b59b4ecf8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9549,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 262,
+    "blank_lines": 56,
+    "comment_lines": 51,
+    "code_lines": 155,
+    "comment_ratio": 0.248,
+    "max_line_length": 69,
+    "avg_line_length": 35.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "adscbl301"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (or compatible, e.g. AcuCOBOL/GnuCOBOL on Linux/UNIX)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "COMP-X usage in linkage section (Micro Focus/ACUCOBOL extension)",
+          "CRT STATUS IS crt-status in SPECIAL-NAMES (screen handling extension)",
+          "LOCK MODE IS MANUAL / WITH LOCK ON RECORD (Micro Focus file locking syntax)",
+          "ORGANIZATION IS LINE SEQUENTIAL (Micro Focus extension)",
+          "COPY with quoted path string: copy \"/home/oasis/include/ads-pf015\"",
+          "Multiple ENTRY statements (Micro Focus/ACUCOBOL extension for multiple entry points)",
+          "ACCEPT ... FROM DATE YYYYMMDD (COBOL-85/2002 intrinsic date form)",
+          "END-IF, END-READ inline terminators (COBOL-85)",
+          "File path strings suggest Linux/UNIX environment (/home/oasis/...)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a supplemental package diagnostics COBOL routine for an ADS/RPS system. It provides multiple entry points to open/close/reopen an indexed file (ADSPF015), perform barcode lookups against that file, and return supplemental package data (PO number, invoice number, customer reference, department, date) to the caller. It also maintains an error log file (ERRORCOBLOG) for file I/O errors.",
+        "domain": "logistics/shipping (barcode-based package tracking, likely postal or parcel)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Multiple ENTRY statements (disklookup, closeallfiles, reopenfiles) — Micro Focus/ACUCOBOL extension",
+        "COMP-X in LINKAGE SECTION — Micro Focus/ACUCOBOL numeric type",
+        "CRT STATUS in SPECIAL-NAMES — screen handling extension",
+        "LOCK MODE IS MANUAL / WITH LOCK ON RECORD — Micro Focus file locking",
+        "ORGANIZATION IS LINE SEQUENTIAL — Micro Focus extension",
+        "COPY with absolute UNIX path string for copybook inclusion",
+        "34-digit barcode support (noted in change log, ls-barcode PIC X(34))",
+        "ACCEPT FROM DATE YYYYMMDD — Y2K-compliant date handling",
+        "STRING verb for error message construction",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly production COBOL from RPS, Inc. (a shipping/logistics company). The change log references an EPIC change in 2011 for 34-digit barcodes, indicating active maintenance. The COPY statement references an absolute path on a Linux/UNIX system (/home/oasis/include/ads-pf015), so the copybook content is not visible here. The use of COMP-X and ENTRY statements strongly suggests Micro Focus or ACUCOBOL-GT dialect running on Linux/UNIX."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3128,
+      "completion_tokens": 841,
+      "total_tokens": 3969,
+      "cost": 0.021999,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021999,
+        "upstream_inference_prompt_cost": 0.009384,
+        "upstream_inference_completions_cost": 0.012615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.62,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

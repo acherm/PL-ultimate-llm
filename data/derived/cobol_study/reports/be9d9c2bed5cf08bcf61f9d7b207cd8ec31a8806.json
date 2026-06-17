@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:be9d9c2bed5cf08bcf61f9d7b207cd8ec31a8806",
+    "sha1_git": "be9d9c2bed5cf08bcf61f9d7b207cd8ec31a8806",
+    "filename": "/ORCR0486.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 165809,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:be9d9c2bed5cf08bcf61f9d7b207cd8ec31a8806/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:be9d9c2bed5cf08bcf61f9d7b207cd8ec31a8806/raw/"
+  },
+  "indicators": {
+    "bytes_len": 165809,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3811,
+    "blank_lines": 1,
+    "comment_lines": 932,
+    "code_lines": 2878,
+    "comment_ratio": 0.245,
+    "max_line_length": 116,
+    "avg_line_length": 42.5,
+    "long_lines_over_72": 15,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0486"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 7,
+    "perform_count": 254,
+    "goto_count": 19,
+    "pic_count": 161,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely NEC/Fujitsu for Japanese medical systems)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS SEQUENTIAL / RECORD KEY / FILE STATUS",
+          "COPY with REPLACING clause",
+          "OCCURS clause without INDEXED BY (COBOL-85 style)",
+          "PIC X / PIC 9 / REDEFINES / VALUE LOW-VALUE / VALUE SPACE",
+          "Fixed-format source layout (columns 7-72)",
+          "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP bytes)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch COBOL program (ORCR0486) that is part of the ORCA Japanese Medical Association standard receipt (claims) software. It generates monthly insurance claim detail files for self-pay (Jikofutan/Jikohoken) receipts, handling data editing, printing, and file creation for health insurance billing. It reads indexed patient/insurance files (RECE41, RECE43, RECE47), formats receipt data including disease names, comments, and point totals, and writes output for printing.",
+        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based COBOL",
+        "Multiple COPY statements with REPLACING for parameterized copybooks (CPRCF041.INC, CPRCF043.INC, CPRCF047.INC, CPCOMMONSHELL.INC, etc.)",
+        "INDEXED file organization with SEQUENTIAL access",
+        "Japanese text in comments (Shift-JIS/EUC-JP encoded, stored as latin-1)",
+        "Large OCCURS table (TBL-RECE-OCC OCCURS 99 with PIC X(10000) items — ~1MB table)",
+        "REDEFINES usage",
+        "Extensive revision history spanning 2005–2011",
+        "Open-source JMA ORCA medical receipt software",
+        "No COMP-3 packed decimal fields visible",
+        "254 PERFORM statements indicating structured procedural decomposition",
+        "19 GOTO statements",
+        "7 CALL statements to external subprograms"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is genuine production COBOL from the open-source JMA ORCA medical receipt system (Japan). Japanese comments are encoded in EUC-JP or Shift-JIS, decoded as latin-1, causing mojibake in the displayed text. The program is large (3811 lines, ~166KB) with a detailed multi-year revision history, confirming production maturity. No embedded SQL or CICS; all I/O is via indexed sequential files. The COPY statements reference external copybooks not shown here."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9344,
+      "completion_tokens": 819,
+      "total_tokens": 10163,
+      "cost": 0.040317,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040317,
+        "upstream_inference_prompt_cost": 0.028032,
+        "upstream_inference_completions_cost": 0.012285
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.7,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

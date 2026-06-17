@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:87e9485557ea31fcf49f290c55a981624140938c",
+    "sha1_git": "87e9485557ea31fcf49f290c55a981624140938c",
+    "filename": "/zoom-gt.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 521504,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:87e9485557ea31fcf49f290c55a981624140938c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:87e9485557ea31fcf49f290c55a981624140938c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 521504,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 10703,
+    "blank_lines": 1363,
+    "comment_lines": 1069,
+    "code_lines": 8271,
+    "comment_ratio": 0.114,
+    "max_line_length": 103,
+    "avg_line_length": 47.7,
+    "long_lines_over_72": 50,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 1,
+    "program_ids": [
+      "Zoom-GT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 8,
+    "call_count": 2,
+    "perform_count": 183,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "ACUCOBOL-GT",
+        "standard": "COBOL-85",
+        "evidence": [
+          "program-id. Zoom-GT (matches filename zoom-gt.cbl)",
+          "copy \"acugui.def\" and copy \"acucobol.def\" — ACUCOBOL-specific GUI/runtime copybooks",
+          "78 level constants (ACUCOBOL/COBOL-85 extension)",
+          "signed-long data type (ACUCOBOL extension)",
+          "set environment ... to ... syntax (ACUCOBOL runtime environment variable setting)",
+          "call \"C$PARAMSIZE\" — ACUCOBOL built-in C$ library routine",
+          "call \"XZOOM\" — ACUCOBOL GUI zoom/lookup widget",
+          "cancel \"XZOOM\" — ACUCOBOL program cancellation",
+          "88-level with FALSE clause (COBOL-85)",
+          "LINKAGE SECTION with USING in PROCEDURE DIVISION",
+          "display message box — ACUCOBOL GUI extension",
+          "goba (truncated, likely 'goback') — visible at end of snippet"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a large dispatch/router program for an ACUCOBOL-GT GUI lookup (zoom) widget used in a business application. It receives a file/entity name via the LINKAGE SECTION and, based on that name, calls one of many PREPARA-* paragraphs to configure and launch the XZOOM lookup window for various business entities (clients, suppliers, articles, orders, invoices, warehouses, agents, etc.). It appears to be part of an Italian ERP or order-management system.",
+        "domain": "ERP / order management / distribution (Italian business application)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "ACUCOBOL-GT specific: acugui.def, acucobol.def copybooks",
+        "ACUCOBOL C$PARAMSIZE built-in call",
+        "ACUCOBOL XZOOM GUI lookup widget integration",
+        "SET ENVIRONMENT ... TO ... for XZOOM runtime configuration",
+        "78-level constants (ACUCOBOL/COBOL-85)",
+        "signed-long non-standard data type",
+        "Large EVALUATE dispatch table with 100+ WHEN branches",
+        "COPY directives for external evaluate extension (zoom-gt-evaluate-edi.cpy)",
+        "Italian-language comments and variable names",
+        "DISPLAY MESSAGE BOX GUI extension",
+        "No EXEC SQL or EXEC CICS",
+        "Very large file (~521KB, 10703 lines) — production-scale"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars but the structure is clear. The file is very large (521KB, 10703 lines) and contains a comprehensive dispatch table for an Italian ERP system's zoom/lookup subsystem. The 'goba' at the end of the snippet is almost certainly 'goback' truncated by the display limit. All indicators strongly point to ACUCOBOL-GT dialect."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5862,
+      "completion_tokens": 843,
+      "total_tokens": 6705,
+      "cost": 0.030231,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030231,
+        "upstream_inference_prompt_cost": 0.017586,
+        "upstream_inference_completions_cost": 0.012645
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.58,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

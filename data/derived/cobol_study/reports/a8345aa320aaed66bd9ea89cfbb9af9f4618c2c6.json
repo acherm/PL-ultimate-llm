@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a8345aa320aaed66bd9ea89cfbb9af9f4618c2c6",
+    "sha1_git": "a8345aa320aaed66bd9ea89cfbb9af9f4618c2c6",
+    "filename": "/ORCDTCHK003.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 26541,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a8345aa320aaed66bd9ea89cfbb9af9f4618c2c6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a8345aa320aaed66bd9ea89cfbb9af9f4618c2c6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 26541,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 666,
+    "blank_lines": 0,
+    "comment_lines": 239,
+    "code_lines": 427,
+    "comment_ratio": 0.359,
+    "max_line_length": 74,
+    "avg_line_length": 38.9,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCDTCHK003"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 12,
+    "perform_count": 23,
+    "goto_count": 1,
+    "pic_count": 41,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or Fujitsu COBOL (Japanese medical system, likely running on Linux/Unix with GnuCOBOL or Fujitsu NetCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "PERFORM UNTIL with END-PERFORM (COBOL-85 scope terminators)",
+          "UNSTRING ... DELIMITED BY ... INTO (standard COBOL-85)",
+          "STRING ... DELIMITED BY SIZE ... INTO ... END-STRING",
+          "COPY with REPLACING clause",
+          "EXIT PROGRAM",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "Japanese EUC/Shift-JIS encoded comments (JMA ORCA medical software, known to run on Linux with GnuCOBOL or Fujitsu NetCOBOL)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software. It reads a data-check intermediate file (DTCHK004), formats the check results into a checklist report layout (HCM401), and writes error output to an error file. It is a batch subprogram that generates a 'check list' (checklist creation) for medical data validation.",
+        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments and string literals (latin-1 decoded, appears garbled)",
+        "COPY statements referencing multiple INC copybooks (CPDTCHK004.INC, HCM401.INC, CPCOMMONDAT6.INC, CPORCSPRTLNK.INC, CPORCBSD01PARA.INC, CPJOBKANRI.INC, etc.)",
+        "COPY with REPLACING clause for parameterized copybook reuse",
+        "LINKAGE SECTION with DTCHK-RC (S9(09)) and COMMAND-PARAM (X(2000))",
+        "UNSTRING of COMMAND-PARAM delimited by comma to parse multiple parameters",
+        "CALL to external subprograms: ORCSJOB and others (12 total CALLs)",
+        "INDEXED file with SEQUENTIAL access (DTCHK004-FILE)",
+        "No EXEC SQL or EXEC CICS",
+        "Fixed-format source with comment lines in columns 1-6 using asterisk"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the open-source JMA ORCA medical receipt software project (Japan). Comments are in Japanese encoded as EUC-JP or Shift-JIS, decoded here as latin-1 causing garbled display. The program is a well-structured production subprogram with job management, parameter parsing, file I/O, and report formatting. Source was truncated at 16000 chars out of 26541 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7034,
+      "completion_tokens": 834,
+      "total_tokens": 7868,
+      "cost": 0.033612,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033612,
+        "upstream_inference_prompt_cost": 0.021102,
+        "upstream_inference_completions_cost": 0.01251
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.63,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

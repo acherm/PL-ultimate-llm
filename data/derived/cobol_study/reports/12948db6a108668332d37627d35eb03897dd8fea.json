@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:12948db6a108668332d37627d35eb03897dd8fea",
+    "sha1_git": "12948db6a108668332d37627d35eb03897dd8fea",
+    "filename": "/ORCS02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1419725,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:12948db6a108668332d37627d35eb03897dd8fea/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:12948db6a108668332d37627d35eb03897dd8fea/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1419725,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 28257,
+    "blank_lines": 0,
+    "comment_lines": 3129,
+    "code_lines": 25128,
+    "comment_ratio": 0.111,
+    "max_line_length": 108,
+    "avg_line_length": 49.2,
+    "long_lines_over_72": 142,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCS02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 38,
+    "call_count": 92,
+    "perform_count": 685,
+    "goto_count": 13,
+    "pic_count": 617,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) targeting Linux",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCS02",
+          "Fixed-format source with comment lines starting in column 7 (*)",
+          "Linux OS noted in header comments",
+          "No EXEC SQL or EXEC CICS; no COMP-3; 92 CALLs, 685 PERFORMs consistent with GnuCOBOL batch style",
+          "Copyright 2002 JMA (Japan Medical Association) ORCA project — known GnuCOBOL-based open-source medical system"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a patient co-payment (patient burden amount) calculation subroutine for inpatient (hospital admission) billing, part of the JMA ORCA open-source medical receipt software system. It computes the patient's share of medical costs under various Japanese health insurance schemes, handling numerous regional and special-case rules. It is called by higher-level billing programs to determine how much the patient owes.",
+        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Extremely large single COBOL source file (~1.4 MB, 28,257 lines)",
+        "Extensive Japanese-language comments (EUC-JP encoded, rendered as Latin-1 mojibake)",
+        "Very long revision history spanning 2002–2009 with 100+ named revisions",
+        "92 CALL statements (calls to external subroutines for insurance rule lookups)",
+        "685 PERFORM statements indicating complex procedural logic",
+        "No EXEC SQL, no EXEC CICS, no COMP-3",
+        "No COPY statements (copy_count=0) — all data definitions inline",
+        "13 GO TO statements",
+        "Part of the open-source JMA ORCA medical receipt software project for Linux"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as Latin-1 but the Japanese comments are actually EUC-JP encoded, causing mojibake in the displayed text. The program is clearly production-grade medical billing software from the well-known Japanese ORCA project. The large size (1.4 MB) and extensive revision history confirm long-term production use. The dialect is almost certainly GnuCOBOL/OpenCOBOL given the Linux target and ORCA project context."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15617,
+      "completion_tokens": 695,
+      "total_tokens": 16312,
+      "cost": 0.057276,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.057276,
+        "upstream_inference_prompt_cost": 0.046851,
+        "upstream_inference_completions_cost": 0.010425
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 16.53,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

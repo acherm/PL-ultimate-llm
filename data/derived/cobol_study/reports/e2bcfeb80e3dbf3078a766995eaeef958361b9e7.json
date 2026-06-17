@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e2bcfeb80e3dbf3078a766995eaeef958361b9e7",
+    "sha1_git": "e2bcfeb80e3dbf3078a766995eaeef958361b9e7",
+    "filename": "/ORCSMISAVE.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12122,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e2bcfeb80e3dbf3078a766995eaeef958361b9e7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e2bcfeb80e3dbf3078a766995eaeef958361b9e7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12122,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 307,
+    "blank_lines": 0,
+    "comment_lines": 116,
+    "code_lines": 191,
+    "comment_ratio": 0.378,
+    "max_line_length": 74,
+    "avg_line_length": 38.5,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSMISAVE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 5,
+    "call_count": 7,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "END-STRING, END-READ, END-IF structured delimiters (COBOL-85)",
+          "CALL 'system' USING ... RETURNING RESULT (C runtime interop typical of GnuCOBOL)",
+          "COPY directives with .INC extension common in GnuCOBOL/ORCA",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "Fixed-format source, columns 7-72"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This subprogram saves a medical image for the ORCA (JMA standard receipt software) system. It base64-encodes an image file from a temporary directory, reads the encoded data, then inserts or updates a record in the 'tbl_med_image' database table via the MONFUNC database interface. After processing, it deletes the temporary file.",
+        "domain": "healthcare / medical records (Japanese medical association receipt software)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "CALL 'system' to invoke shell commands (base64 encoding and rm -f) from COBOL",
+        "CALL 'MONFUNC' for database operations (DBSELECT, DBFETCH, DBINSERT, DBUPDATE, DBCLOSECURSOR) — ORCA-specific DB middleware",
+        "COPY of .INC and named copybooks (CPMEDIMAGE.INC, MCPAREA, MCPDATA.INC, CPORCSMIAREA.INC, COMMON-SPA)",
+        "Large PIC X(500000) image record and PIC X(510000) MCPREC field",
+        "Japanese comments encoded in EUC-JP (decoded as latin-1 artifacts)",
+        "LINKAGE SECTION with two parameters: ORCSMIAREA and SPA-AREA",
+        "No EXEC SQL or EXEC CICS — database access abstracted through MONFUNC calls"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The source file contains Japanese EUC-JP encoded comments that appear garbled because the file was decoded as latin-1. The program is clearly part of the open-source ORCA JMA medical receipt system (Japan Medical Association). The dialect is most likely GnuCOBOL given the CALL 'system' pattern and .INC copybook conventions used throughout the ORCA project."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5074,
+      "completion_tokens": 706,
+      "total_tokens": 5780,
+      "cost": 0.025812,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025812,
+        "upstream_inference_prompt_cost": 0.015222,
+        "upstream_inference_completions_cost": 0.01059
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.36,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

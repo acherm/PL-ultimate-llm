@@ -1,0 +1,115 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3fc57422656baa5e1e42e42ebcbf55572304c4a2",
+    "sha1_git": "3fc57422656baa5e1e42e42ebcbf55572304c4a2",
+    "filename": "/CEXM502B.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2744,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3fc57422656baa5e1e42e42ebcbf55572304c4a2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3fc57422656baa5e1e42e42ebcbf55572304c4a2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2744,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 34,
+    "blank_lines": 0,
+    "comment_lines": 0,
+    "code_lines": 34,
+    "comment_ratio": 0.0,
+    "max_line_length": 79,
+    "avg_line_length": 78.8,
+    "long_lines_over_72": 33,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": false
+    },
+    "n_divisions": 0,
+    "program_ids": [
+      "CEXM502B"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible mainframe COBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE TRUE ... END-EVALUATE (COBOL-85 construct)",
+          "88-level condition names with VALUES ... THRU",
+          "Fixed-format with sequence numbers in columns 1-6",
+          "ACCEPT/DISPLAY pattern typical of mainframe student exercises"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Accepts an age value from the user and categorizes it as Child (0-12), Teen (13-19), Adult (20-65), or Senior (65-99) using an EVALUATE TRUE statement with 88-level condition names. A simple educational exercise demonstrating the EVALUATE statement.",
+        "domain": "education/tutorial",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "EVALUATE TRUE with 88-level condition names",
+        "88-level conditions using VALUES ... THRU ranges",
+        "Overlapping range: age 65 matches both CND-ADULT and CND-SENIOR (potential logic bug)",
+        "Sequence numbers in columns 1-6 (mainframe style)",
+        "No FILE SECTION or external I/O beyond ACCEPT/DISPLAY"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program has a deliberate or accidental overlap: age 65 satisfies both CND-ADULT (20-65) and CND-SENIOR (65-99). In EVALUATE TRUE, the first matching WHEN wins, so age 65 would be classified as ADULT. This is likely a student exercise authored by 'EMMA KAY' on 7/18/2016 under project JEBA02. The comment_lines count of 0 from the mechanical indicators appears incorrect — lines 000310-000370 are clearly comment lines (asterisk in column 7), suggesting the mechanical parser may not have detected them."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 1408,
+      "completion_tokens": 542,
+      "total_tokens": 1950,
+      "cost": 0.012354,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.012354,
+        "upstream_inference_prompt_cost": 0.004224,
+        "upstream_inference_completions_cost": 0.00813
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.04,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

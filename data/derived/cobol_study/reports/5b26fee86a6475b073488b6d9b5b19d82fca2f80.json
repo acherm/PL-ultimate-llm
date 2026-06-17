@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5b26fee86a6475b073488b6d9b5b19d82fca2f80",
+    "sha1_git": "5b26fee86a6475b073488b6d9b5b19d82fca2f80",
+    "filename": "/ORCSPTNUM.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 24144,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5b26fee86a6475b073488b6d9b5b19d82fca2f80/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5b26fee86a6475b073488b6d9b5b19d82fca2f80/raw/"
+  },
+  "indicators": {
+    "bytes_len": 24144,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 600,
+    "blank_lines": 0,
+    "comment_lines": 216,
+    "code_lines": 384,
+    "comment_ratio": 0.36,
+    "max_line_length": 74,
+    "avg_line_length": 39.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSPTNUM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 13,
+    "call_count": 7,
+    "perform_count": 22,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCSPTNUM",
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "PERFORM VARYING ... UNTIL ... END-PERFORM",
+          "IF ... END-IF constructs throughout",
+          "COPY directives with REPLACING",
+          "CALL 'ORCSKANACHK2' / 'ORCSPTID' / 'orcsstring'",
+          "EXIT PROGRAM",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This subprogram (ORCSPTNUM) is part of the ORCA JMA standard medical receipt software. It accepts a patient number or patient name input, determines whether the input is a half-width numeric patient ID or a full-width Kana/Kanji name, and then searches the patient master database to resolve and return the corresponding patient ID and patient number. It handles group/branch hospital configurations and patient number construction management.",
+        "domain": "healthcare / medical records (Japanese medical receipt system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1 producing mojibake)",
+        "COPY directives for multiple include files (CPPTINF.INC, CPPTNUM.INC, CPSYSKANRI.INC, CPSK1009.INC, MCPAREA, etc.)",
+        "CALL to external subprograms: ORCSKANACHK2, ORCSPTID, orcsstring, and DB access routines",
+        "LINKAGE SECTION with COPY-based parameter area (CPORCSPTNUM.INC, COMMON-SPA)",
+        "MCP (Message Control Program) style DB access pattern (MCP-TABLE, MCP-PATHNAME, PERFORM 910-DBSELECT-SEC)",
+        "No EXEC SQL or EXEC CICS — DB access is via CALL/PERFORM abstraction layer",
+        "DISPLAY statement left in code (debug trace: DISPLAY 'WRK-NAME:' WRK-NAME)",
+        "Group hospital / branch hospital support (SPTNUM-GRPHOSPNUM)",
+        "Copyright notice: JMA Open Source License, 2002"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the well-known open-source ORCA (JMA standard receipt software) project from Japan. Japanese comments are garbled because the file is EUC-JP or Shift-JIS encoded but was decoded as latin-1. The COPY statements reference external copybooks not shown here. A DISPLAY debug statement remains in section 201-NAME-HEN-SEC, which is unusual for production but common in ORCA source releases. No COMP-3 usage despite numeric fields, which is consistent with GnuCOBOL/OpenCOBOL usage on Linux. The 'copy_count: 0' in mechanical indicators likely means the COPY directives were not counted by the tool, but they are clearly present in the source."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7232,
+      "completion_tokens": 875,
+      "total_tokens": 8107,
+      "cost": 0.034821,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034821,
+        "upstream_inference_prompt_cost": 0.021696,
+        "upstream_inference_completions_cost": 0.013125
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.38,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

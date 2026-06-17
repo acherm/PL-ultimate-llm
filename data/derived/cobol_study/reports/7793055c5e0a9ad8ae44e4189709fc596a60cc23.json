@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7793055c5e0a9ad8ae44e4189709fc596a60cc23",
+    "sha1_git": "7793055c5e0a9ad8ae44e4189709fc596a60cc23",
+    "filename": "/ACESSO.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14833,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7793055c5e0a9ad8ae44e4189709fc596a60cc23/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7793055c5e0a9ad8ae44e4189709fc596a60cc23/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14833,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 467,
+    "blank_lines": 90,
+    "comment_lines": 33,
+    "code_lines": 344,
+    "comment_ratio": 0.088,
+    "max_line_length": 101,
+    "avg_line_length": 30.8,
+    "long_lines_over_72": 36,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ACESSO"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 7,
+    "perform_count": 23,
+    "goto_count": 0,
+    "pic_count": 17,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus / GnuCOBOL with htmlpp preprocessor",
+        "standard": "COBOL-85",
+        "evidence": [
+          "$set preprocess (htmlpp) endp — Micro Focus/GnuCOBOL compiler directive",
+          "$set sourceformat\"free\" — free-format directive typical of Micro Focus/GnuCOBOL",
+          "EXEC HTML ... END-EXEC blocks (htmlpp preprocessor extension)",
+          "CBL_CREATE_DIR, CBL_CHECK_FILE_EXIST — Micro Focus runtime library calls",
+          "LOCAL-STORAGE SECTION — COBOL-85/Micro Focus extension",
+          "78 level constants (VALUE clauses) — COBOL-85",
+          "END-STRING, END-IF, END-EVALUATE inline terminators — COBOL-85",
+          "CANCEL \"MENUS\" — Micro Focus dynamic program management"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "This is the main access/login program for a web-based COBOL CGI application. It handles user authentication (login/senha), generates HTML pages via an htmlpp preprocessor, logs access events (IP address, date/time) to a CSV log file, and delegates to a MENUS subprogram after successful login.",
+        "domain": "web/CGI application (likely internal business system with customer/vendor management)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC HTML ... END-EXEC blocks via htmlpp preprocessor for CGI web output",
+        "CBL_CREATE_DIR and CBL_CHECK_FILE_EXIST Micro Focus runtime calls",
+        "ACCEPT ... FROM ENVIRONMENT-VALUE / DISPLAY ... UPON ENVIRONMENT-NAME for CGI environment variables (REMOTE_ADDR)",
+        "LOCAL-STORAGE SECTION",
+        "78-level constants for path definitions",
+        "COPY statements referencing local .cpy files (WS-PADRAO.cpy, LNK.cpy, ROTINAS-PADRAO.cpy)",
+        "CANCEL statement for dynamic program unloading",
+        "CSV log file with date/time/IP/message fields",
+        "decimal-point is comma (European locale)",
+        "Free-format source with $set compiler directives"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file uses the htmlpp preprocessor (a Micro Focus or GnuCOBOL extension) to embed HTML directly in COBOL source, making this a CGI web application. The $set directives and CBL_ runtime calls strongly indicate Micro Focus COBOL or GnuCOBOL. The COPY statements reference local files not shown. The program appears to be part of a larger multi-program system (MENUS subprogram, various copybooks). Decoded with latin-1 which is consistent with Portuguese-language comments (e.g., 'não existam', 'inválida')."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4369,
+      "completion_tokens": 786,
+      "total_tokens": 5155,
+      "cost": 0.024897,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024897,
+        "upstream_inference_prompt_cost": 0.013107,
+        "upstream_inference_completions_cost": 0.01179
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.69,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:25Z"
+}

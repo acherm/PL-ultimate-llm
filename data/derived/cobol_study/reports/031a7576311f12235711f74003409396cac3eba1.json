@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:031a7576311f12235711f74003409396cac3eba1",
+    "sha1_git": "031a7576311f12235711f74003409396cac3eba1",
+    "filename": "/ORCBM029.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 99443,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:031a7576311f12235711f74003409396cac3eba1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:031a7576311f12235711f74003409396cac3eba1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 99443,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2314,
+    "blank_lines": 1,
+    "comment_lines": 593,
+    "code_lines": 1720,
+    "comment_ratio": 0.256,
+    "max_line_length": 79,
+    "avg_line_length": 42.0,
+    "long_lines_over_72": 12,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBM029"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 30,
+    "call_count": 10,
+    "perform_count": 140,
+    "goto_count": 3,
+    "pic_count": 104,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCBM029",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "COPY directives with REPLACING clauses",
+          "INITIALIZE statement",
+          "PERFORM ... UNTIL construct",
+          "SELECT ... ASSIGN ... ORGANIZATION IS LINE SEQUENTIAL",
+          "FILE STATUS IS",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "VALUE LOW-VALUE",
+          "OCCURS clauses without INDEXED BY (COBOL-85 style)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch COBOL program (ORCBM029) that is part of the ORCA JMA (Japan Medical Association) standard medical receipt billing software. It processes national health insurance and public expense (Kokuho/Sōkatsu) monthly billing summary reports for medical and dental departments (HCM2M/HCM2N forms). It reads claim/receipt data, aggregates statistics by insurance type and public expense category, and produces printed output.",
+        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive COPY statements referencing domain-specific copybooks (CPPTINF, CPHKNJAINF, CPHKNNUM, CPSK1001, CPSK2007, CPSK2010, etc.)",
+        "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled as latin-1)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "Multi-level OCCURS tables for insurance type aggregation (SUM-TBL OCCURS 11, SUM-KOH-TBL OCCURS 100)",
+        "REDEFINES usage for hospital name/address fields",
+        "Version history spanning 2003–2016 with named revision entries",
+        "No EXEC SQL or EXEC CICS — uses file-based I/O with sequential files",
+        "10 CALL statements (to subprograms for job control, printing, date conversion, etc.)",
+        "140 PERFORM statements indicating substantial procedural logic",
+        "grpsys-prefixed lines for COPY COMMON-SPA (group system area)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded as latin-1 but the Japanese comments are actually encoded in EUC-JP or Shift-JIS, causing mojibake in the displayed text. The program is clearly production-grade medical billing software from the open-source ORCA project maintained by JMA (Japan Medical Association), with a long revision history from 2003 to 2016. The source is truncated at 16000 chars out of ~99443 bytes total, so the full PROCEDURE DIVISION logic is not visible, but the structure is unambiguous."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8845,
+      "completion_tokens": 812,
+      "total_tokens": 9657,
+      "cost": 0.038715,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038715,
+        "upstream_inference_prompt_cost": 0.026535,
+        "upstream_inference_completions_cost": 0.01218
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.94,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

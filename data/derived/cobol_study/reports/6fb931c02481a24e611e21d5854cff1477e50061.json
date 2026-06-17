@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6fb931c02481a24e611e21d5854cff1477e50061",
+    "sha1_git": "6fb931c02481a24e611e21d5854cff1477e50061",
+    "filename": "/ORCT0010.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 74898,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6fb931c02481a24e611e21d5854cff1477e50061/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6fb931c02481a24e611e21d5854cff1477e50061/raw/"
+  },
+  "indicators": {
+    "bytes_len": 74898,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1890,
+    "blank_lines": 1,
+    "comment_lines": 548,
+    "code_lines": 1341,
+    "comment_ratio": 0.29,
+    "max_line_length": 74,
+    "avg_line_length": 38.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCT0010"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 19,
+    "perform_count": 101,
+    "goto_count": 5,
+    "pic_count": 90,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or Micro Focus COBOL (Linux/Unix environment, JMA ORCA project)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED with DYNAMIC access and RECORD KEY",
+          "ORGANIZATION LINE SEQUENTIAL",
+          "COPY statements with REPLACING clause",
+          "UNSTRING ... DELIMITED BY ... INTO",
+          "CALL 'ORCSJOB' USING",
+          "PERFORM section-name pattern",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL or EXEC CICS",
+          "Japanese text in comments (JMA ORCA open-source medical billing system, known to use GnuCOBOL)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard medical receipt/billing software. It creates periodic billing (teiki seikyuu) collection data, processing patient hospitalization records and periodic billing management information to produce output files for regular insurance claim submissions.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive use of COPY statements with REPLACING for modular file/record layouts",
+        "UNSTRING used to parse comma-delimited command parameters from COMMAND-PARAM linkage",
+        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
+        "Multiple indexed and sequential files (TEIKI01, TEIKI03, error file)",
+        "Japanese-language comments and error messages (EUC-JP encoding, decoded as latin-1)",
+        "Job management sub-call (ORCSJOB) for step/job tracking",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "19 CALL statements indicating heavy use of subprogram architecture",
+        "Open-source JMA ORCA project copyright header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the Japanese comments are actually EUC-JP encoded, causing mojibake in the displayed text. The program is clearly part of the well-known open-source JMA ORCA medical billing system used in Japanese clinics. Source is truncated at 16000 chars out of ~75KB; the full procedure division is not shown but the structure is unambiguous. No COMP-3 usage despite being a financial/billing program, which is somewhat unusual but consistent with GnuCOBOL usage patterns in this project."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8074,
+      "completion_tokens": 727,
+      "total_tokens": 8801,
+      "cost": 0.035127,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035127,
+        "upstream_inference_prompt_cost": 0.024222,
+        "upstream_inference_completions_cost": 0.010905
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 17.32,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

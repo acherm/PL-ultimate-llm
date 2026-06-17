@@ -1,0 +1,117 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1be6a7b1cbb1f21bc070addb03cd6912dd3ea1fd",
+    "sha1_git": "1be6a7b1cbb1f21bc070addb03cd6912dd3ea1fd",
+    "filename": "/ORCGLERR.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5387,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1be6a7b1cbb1f21bc070addb03cd6912dd3ea1fd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1be6a7b1cbb1f21bc070addb03cd6912dd3ea1fd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5387,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 149,
+    "blank_lines": 0,
+    "comment_lines": 83,
+    "code_lines": 66,
+    "comment_ratio": 0.557,
+    "max_line_length": 74,
+    "avg_line_length": 35.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGLERR"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 1,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus or similar (JMA ORCA project, likely GnuCOBOL/OpenCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN ... END-EVALUATE (COBOL-85 structured construct)",
+          "EXIT PROGRAM",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "COPY directives with quoted filenames (.INC, .CBL style)",
+          "Fixed-format source layout"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is an error-message screen handler subprogram (ORCGLERR) in the JMA ORCA medical receipt software system. It handles screen navigation for an error display screen (LERR), primarily routing back to the originating page via a window PUT operation. On LINK event it performs initialization; on any other event it navigates back.",
+        "domain": "healthcare/medical billing (Japanese medical receipt software)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
+        "Multiple COPY statements for screen layout (.INC files: L01, L02, L03, L04, L99, LERR, LID1, LID2)",
+        "CALL to 'ORCMCPSUB' for window/MCP management",
+        "LINKAGE SECTION with multiple copybook-defined areas (MCPAREA, ORCA-SPA, LINKAREA)",
+        "EVALUATE with ALSO clause (COBOL-85)",
+        "JMA Open Source License header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS, decoded here as latin-1 resulting in mojibake in comments. The program is part of the well-known open-source JMA ORCA medical billing system used in Japan. The COPY count shown as 0 in mechanical indicators appears to be an undercount — the source clearly contains multiple COPY statements. The program is a thin screen-routing subprogram with minimal logic."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2649,
+      "completion_tokens": 611,
+      "total_tokens": 3260,
+      "cost": 0.017112,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017112,
+        "upstream_inference_prompt_cost": 0.007947,
+        "upstream_inference_completions_cost": 0.009165
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.21,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

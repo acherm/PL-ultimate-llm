@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9760ca61078358372616ccde4ac8a36dc86b6c9b",
+    "sha1_git": "9760ca61078358372616ccde4ac8a36dc86b6c9b",
+    "filename": "/ORCGS09.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 50381,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9760ca61078358372616ccde4ac8a36dc86b6c9b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9760ca61078358372616ccde4ac8a36dc86b6c9b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 50381,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1357,
+    "blank_lines": 1,
+    "comment_lines": 465,
+    "code_lines": 891,
+    "comment_ratio": 0.343,
+    "max_line_length": 74,
+    "avg_line_length": 36.1,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGS09"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 10,
+    "perform_count": 74,
+    "goto_count": 4,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGS09",
+          "EVALUATE ... ALSO ... WHEN ... END-EVALUATE",
+          "INITIALIZE statements",
+          "EXIT PROGRAM",
+          "PROCEDURE DIVISION USING multiple areas",
+          "COPY directives for copybooks (MCPAREA, ORCA-SPA, LINKAREA, etc.)",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "JMA ORCA open-source medical receipt software project header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a screen-handling component of the JMA ORCA standard medical receipt (claims) software system, specifically managing an insurance information update/entry screen (screen S09). It handles screen initialization, input validation (insured person number, society/national insurance classification, principal/family classification, symbol, number), combo-box population, and navigation between screens.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Part of JMA (Japan Medical Association) ORCA open-source medical receipt software",
+        "Japanese text in comments and string literals (EUC-JP or Shift-JIS encoded, decoded as latin-1)",
+        "Screen-based UI via MCP (Message Control Program) widget/event model (PUTG/CLICKED events)",
+        "Multiple COPY directives for copybooks (MCPAREA, ORCA-SPA, LINKAREA, screen includes S02-S10, SID1-SID4, etc.)",
+        "EVALUATE ALSO construct for multi-condition branching",
+        "SPA (Scratch Pad Area) pattern for inter-screen state management",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP database access layer",
+        "10 CALL statements (to subprograms for kana check, digit check, date retrieval, DB search)",
+        "74 PERFORM statements indicating structured procedural decomposition",
+        "Combo-box list management for insurance classification codes"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS), causing mojibake in the displayed comments and string literals. The program is clearly production-grade COBOL from the JMA ORCA medical software suite (circa 2009 based on the date 09.09.07 in the header). The MCP event model (MCP-STATUS, MCP-EVENT, MCP-WIDGET) is specific to the ORCA framework and resembles an online/interactive program rather than batch. Source is truncated at 16000 chars out of ~50KB total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7193,
+      "completion_tokens": 775,
+      "total_tokens": 7968,
+      "cost": 0.033204,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033204,
+        "upstream_inference_prompt_cost": 0.021579,
+        "upstream_inference_completions_cost": 0.011625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.14,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

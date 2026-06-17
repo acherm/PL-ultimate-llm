@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b33c131bdfd202b9de966ff5ffbe96ced43f2a4d",
+    "sha1_git": "b33c131bdfd202b9de966ff5ffbe96ced43f2a4d",
+    "filename": "/DB2CBLEX.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28780,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b33c131bdfd202b9de966ff5ffbe96ced43f2a4d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b33c131bdfd202b9de966ff5ffbe96ced43f2a4d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28780,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 351,
+    "blank_lines": 0,
+    "comment_lines": 135,
+    "code_lines": 216,
+    "comment_ratio": 0.385,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 351,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DB2CBLEX"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 2,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL (z/OS)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC SQL INCLUDE DCLEMP END-EXEC",
+          "EXEC SQL DECLARE EMP_RECORD CURSOR FOR ... END-EXEC",
+          "LABEL RECORDS ARE STANDARD / RECORDING MODE IS F / BLOCK CONTAINS 0 RECORDS",
+          "PIC S9(04) COMP VALUE 0",
+          "COMP-3 usage",
+          "CHAMP LINK CONTROL STATEMENTS header typical of IBM mainframe shop",
+          "DSN8110.EMP table reference (IBM DB2 sample schema)",
+          "Fixed format with sequence numbers in columns 73-80"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A batch DB2 program that opens a cursor against the IBM sample EMP table (DSN8110.EMP), fetches employee records (EMPNO, FIRSTNME, LASTNAME, WORKDEPT, SALARY) ordered by EMPNO, and writes them to a report output file. The change log shows repeated ORDER BY column experiments over 2017-2018.",
+        "domain": "education/tutorial",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2) cursor declaration against DSN8110.EMP (IBM DB2 sample table)",
+        "EXEC SQL INCLUDE SQLCA and EXEC SQL INCLUDE DCLEMP (DCLGEN copybook)",
+        "COPY REPORT (external copybook for report layout)",
+        "COMP-3 (packed decimal) usage",
+        "Fixed-format with sequence numbers in columns 73-80",
+        "CHAMP LINK CONTROL STATEMENTS (shop-specific pre-processor directives)",
+        "DB2OEXP/DB2OISO optimizer hints in header comments",
+        "Extensive change log showing iterative ORDER BY column changes"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program uses IBM's well-known DB2 sample table DSN8110.EMP and the change log documents many trivial ORDER BY column changes over roughly a year, strongly suggesting this is a student or training exercise rather than production code. The CHAMP LINK CONTROL STATEMENTS header indicates an IBM mainframe shop environment. Source was truncated at 16000 chars but all four COBOL divisions are present and the structure is clear."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 4113,
+      "completion_tokens": 672,
+      "total_tokens": 4785,
+      "cost": 0.022419,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022419,
+        "upstream_inference_prompt_cost": 0.012339,
+        "upstream_inference_completions_cost": 0.01008
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 14.54,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

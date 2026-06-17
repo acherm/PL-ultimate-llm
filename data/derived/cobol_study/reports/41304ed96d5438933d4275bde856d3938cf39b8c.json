@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:41304ed96d5438933d4275bde856d3938cf39b8c",
+    "sha1_git": "41304ed96d5438933d4275bde856d3938cf39b8c",
+    "filename": "/ORCR0900.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 22717,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:41304ed96d5438933d4275bde856d3938cf39b8c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:41304ed96d5438933d4275bde856d3938cf39b8c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 22717,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 552,
+    "blank_lines": 0,
+    "comment_lines": 180,
+    "code_lines": 372,
+    "comment_ratio": 0.326,
+    "max_line_length": 74,
+    "avg_line_length": 40.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0900"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 15,
+    "call_count": 12,
+    "perform_count": 12,
+    "goto_count": 0,
+    "pic_count": 40,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely NEC/Fujitsu for Japanese environment, possibly GnuCOBOL on Linux)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED, ACCESS MODE IS DYNAMIC/SEQUENTIAL, RECORD KEY, FILE STATUS clauses",
+          "COPY with REPLACING using // delimiters (common in IBM/Fujitsu COBOL)",
+          "PERFORM ... UNTIL with inline END-PERFORM",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "CALL 'ORCSJOB' USING pattern",
+          "grpsys indicator prefix on COPY line (non-standard indicator area usage)",
+          "Japanese EUC/Shift-JIS encoded comments (JMA medical software, Japan)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Batch program that processes receipt (medical claim) detail files for hospitalization/outpatient transfers and self-pay cases. It reads from an indexed receipt master file (RECE83), transforms/filters records based on system control parameters (e.g., transfer date flag SYS-2005-TENKIHENKBN), and writes output to a new indexed receipt detail file (RECE831). It also handles job management (start/stop/cancel) and error file output.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims processing - JMA ORCA system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments throughout (JMA ORCA open-source medical receipt software)",
+        "COPY statements with REPLACING using // delimiter syntax for multiple file layout variants",
+        "Job management via CALL 'ORCSJOB' for start/stop/cancel control",
+        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
+        "No EXEC SQL or EXEC CICS — uses indexed VSAM-style files directly",
+        "No COMP-3 usage despite being a production financial/medical system",
+        "grpsys prefix in indicator area on COPY line (non-standard area usage)",
+        "Cancellation check loop every 50 records (CNT-IN-CANCEL = 50)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS) in comments, which appear garbled under latin-1 decoding. This is part of the well-known open-source JMA ORCA (Japan Medical Association standard receipt software) project. The COPY statements reference external copybooks (.INC files) not shown, so full data layout cannot be verified. The 'grpsys' prefix on one line appears in the indicator area (columns 1-6), which is unusual but may be a source-level tag or preprocessor artifact."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7144,
+      "completion_tokens": 792,
+      "total_tokens": 7936,
+      "cost": 0.033312,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033312,
+        "upstream_inference_prompt_cost": 0.021432,
+        "upstream_inference_completions_cost": 0.01188
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.44,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

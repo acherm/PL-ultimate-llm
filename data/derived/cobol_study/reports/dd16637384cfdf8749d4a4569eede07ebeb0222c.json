@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dd16637384cfdf8749d4a4569eede07ebeb0222c",
+    "sha1_git": "dd16637384cfdf8749d4a4569eede07ebeb0222c",
+    "filename": "/ricaldin-bat.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 78939,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dd16637384cfdf8749d4a4569eede07ebeb0222c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dd16637384cfdf8749d4a4569eede07ebeb0222c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 78939,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2054,
+    "blank_lines": 149,
+    "comment_lines": 80,
+    "code_lines": 1825,
+    "comment_ratio": 0.042,
+    "max_line_length": 87,
+    "avg_line_length": 37.4,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "ricaldin-bat"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 72,
+    "call_count": 11,
+    "perform_count": 271,
+    "goto_count": 0,
+    "pic_count": 65,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely RM/COBOL or Micro Focus with ISAM extensions, Italian locale)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "SPECIAL-NAMES. decimal-point is comma",
+          "COMP-1 used for numeric (nargs pic 99 comp-1)",
+          "78 level constants (VALUE clauses at level 78)",
+          "ALTERNATE RECORD KEY with composite key syntax",
+          "COPY with REPLACING ... leading ... by ...",
+          "PROCEDURE DIVISION USING batch-linkage (linkage section)",
+          "DECLARATIVES with USE AFTER ERROR PROCEDURE",
+          "SET condition-name TO TRUE/FALSE pattern",
+          "Numerous .sl and .fd copybook extensions typical of Micro Focus/RM environments",
+          "EVALUATE with WHEN clauses, END-EVALUATE, END-STRING"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "A nightly batch program that recalculates dynamic warehouse/inventory progressive values (giacenza, impegnato, ordinato) by processing credit notes, unfilled orders, warehouse movements, supplier orders, and master orders. It resets dynamic values on a 'progmag' file and rebuilds them from transactional data since the last consolidation date. It also handles locking, logging, and email notification.",
+        "domain": "inventory/warehouse management (Italian ERP/distribution system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SPECIAL-NAMES decimal-point is comma (Italian locale)",
+        "Level 78 constants (VALUE clauses)",
+        "COMP-1 usage for a counter variable",
+        "Extensive DECLARATIVES with USE AFTER ERROR sections for each file",
+        "ALTERNATE RECORD KEY with composite multi-field key",
+        "Heavy use of COPY statements with .sl/.fd extensions (Micro Focus/RM style)",
+        "COPY with REPLACING ... leading ... by ... for file renaming",
+        "LINKAGE SECTION with batch-linkage copybook",
+        "Record locking handling (status 93/99)",
+        "Mail/email integration (lineseq-mail, mail.def)",
+        "Italian-language comments and variable names",
+        "No EXEC SQL or EXEC CICS",
+        "271 PERFORM statements, 11 CALL statements"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 characters; the full program is ~79KB/2054 lines. The dialect is most consistent with Micro Focus COBOL or RM/COBOL given the .sl/.fd copybook naming conventions, level-78 constants, and COMP-1 usage. The program is clearly a production Italian ERP batch job for warehouse/inventory recalculation. No ambiguity about it being genuine COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5183,
+      "completion_tokens": 762,
+      "total_tokens": 5945,
+      "cost": 0.026979,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026979,
+        "upstream_inference_prompt_cost": 0.015549,
+        "upstream_inference_completions_cost": 0.01143
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 2067.79,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

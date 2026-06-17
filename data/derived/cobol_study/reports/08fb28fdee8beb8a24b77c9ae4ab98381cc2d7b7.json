@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:08fb28fdee8beb8a24b77c9ae4ab98381cc2d7b7",
+    "sha1_git": "08fb28fdee8beb8a24b77c9ae4ab98381cc2d7b7",
+    "filename": "/ORCBG017S.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 98040,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:08fb28fdee8beb8a24b77c9ae4ab98381cc2d7b7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:08fb28fdee8beb8a24b77c9ae4ab98381cc2d7b7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 98040,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2435,
+    "blank_lines": 2,
+    "comment_lines": 666,
+    "code_lines": 1767,
+    "comment_ratio": 0.274,
+    "max_line_length": 74,
+    "avg_line_length": 39.3,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBG017S"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 35,
+    "call_count": 21,
+    "perform_count": 137,
+    "goto_count": 5,
+    "pic_count": 208,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely GnuCOBOL/OpenCOBOL given JMA ORCA open-source context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED ... ACCESS MODE IS DYNAMIC ... RECORD KEY ... FILE STATUS",
+          "COPY with REPLACING using // delimiters",
+          "OCCURS clauses, REDEFINES, PIC X/9 with VALUE literals",
+          "Fixed-format source (columns 7-72), comment lines with * in col 7",
+          "PROGRAM-ID ORCBG017S"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA open-source medical receipt (claims) software. It generates a monthly statistical report (CSV output) of medical procedures by category (診療行為別集計表 – medical-act-by-category aggregation table), reading indexed files of procedure activity and accounting data and writing CSV output.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS – pure file-based batch processing",
+        "Multiple COPY statements with REPLACING (copybook-driven data structures)",
+        "Indexed sequential file I/O with DYNAMIC access mode",
+        "Japanese Shift-JIS / EUC-JP encoded comments and data literals (decoded as latin-1, causing mojibake in display)",
+        "CSV output generation with Japanese column headers embedded as VALUE literals",
+        "OCCURS tables for procedure category codes and patient information",
+        "REDEFINES used to overlay table structure over flat value area",
+        "21 CALL statements indicating modular subprogram architecture",
+        "137 PERFORM statements indicating structured procedural decomposition",
+        "Error file (RECEERR-FILE) for logging processing errors"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS), causing garbled display of comments and string literals. The program is clearly part of the well-known JMA ORCA open-source medical receipt system, a production-grade Japanese healthcare application. The COPY statements reference external copybooks (CPSRYACCT.INC, COMMON-SPA, CPCOMMONDAT2.INC, CPRECEERR.INC, HCG017.INC, CPPTINF.INC) that are not included in this file. Version history comments indicate active maintenance from 2006 through 2019."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7570,
+      "completion_tokens": 744,
+      "total_tokens": 8314,
+      "cost": 0.03387,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03387,
+        "upstream_inference_prompt_cost": 0.02271,
+        "upstream_inference_completions_cost": 0.01116
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

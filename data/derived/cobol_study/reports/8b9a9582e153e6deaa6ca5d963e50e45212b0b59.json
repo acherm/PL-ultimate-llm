@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8b9a9582e153e6deaa6ca5d963e50e45212b0b59",
+    "sha1_git": "8b9a9582e153e6deaa6ca5d963e50e45212b0b59",
+    "filename": "/purchRES.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7773,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8b9a9582e153e6deaa6ca5d963e50e45212b0b59/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8b9a9582e153e6deaa6ca5d963e50e45212b0b59/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7773,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 216,
+    "blank_lines": 0,
+    "comment_lines": 115,
+    "code_lines": 101,
+    "comment_ratio": 0.532,
+    "max_line_length": 108,
+    "avg_line_length": 35.0,
+    "long_lines_over_72": 26,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PurchaseRES"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 1,
+    "perform_count": 10,
+    "goto_count": 3,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-2002",
+        "evidence": [
+          ">>source free (GnuCOBOL compiler directive)",
+          "*> style comments throughout",
+          "binary-char data type (GnuCOBOL extension)",
+          "perform forever construct",
+          "goback statement",
+          "COPY statements referencing .cob files typical of GnuCOBOL projects"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "This program restores a Purchase ledger file by reading records from a sequential backup file (.seq) and writing them back to an ISAM Purchase file. It is part of the ACAS (Applewood Computers Accounting System) v3.02 and later. It logs output via a called module ACAS-Sysout.",
+        "domain": "accounting/ERP",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "GnuCOBOL compiler directive >>source free",
+        "PERFORM FOREVER loop construct",
+        "CALL to external module ACAS-Sysout for logging",
+        "Multiple COPY statements for environment, file definitions, and working storage",
+        "GNU GPL licensed source with detailed copyright header",
+        "BINARY-CHAR data type (GnuCOBOL extension)",
+        "Environment variable handling (ACAS_BIN, ACAS_LEDGERS)",
+        "Return-Code manipulation before GOBACK"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly part of a larger accounting system (ACAS) with multiple COPY dependencies (envdiv.cob, selpl.cob, fdpl.cob, wspl.cob, wsfnctn.cob, wsnames.cob, wscall.cob, Test-Data-Flags.cob, Proc-Get-Env-Set-Files.cob) that are not shown. The high comment ratio (53%) is largely due to the extensive copyright and documentation header. The program is well-structured and production-quality. Author is identified as Vincent Bryan Coen, copyright 2016-2024."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3201,
+      "completion_tokens": 604,
+      "total_tokens": 3805,
+      "cost": 0.018663,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018663,
+        "upstream_inference_prompt_cost": 0.009603,
+        "upstream_inference_completions_cost": 0.00906
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 13.2,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

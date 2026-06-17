@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cd2721a8331594d9b83f086d9709f68b9bfe74d9",
+    "sha1_git": "cd2721a8331594d9b83f086d9709f68b9bfe74d9",
+    "filename": "/ORCSP02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 201166,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cd2721a8331594d9b83f086d9709f68b9bfe74d9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cd2721a8331594d9b83f086d9709f68b9bfe74d9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 201166,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4490,
+    "blank_lines": 0,
+    "comment_lines": 1055,
+    "code_lines": 3435,
+    "comment_ratio": 0.235,
+    "max_line_length": 74,
+    "avg_line_length": 43.8,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSP02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 54,
+    "call_count": 11,
+    "perform_count": 329,
+    "goto_count": 4,
+    "pic_count": 96,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (or compatible, likely GnuCOBOL/OpenCOBOL used in ORCA project)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "INITIALIZE statements",
+          "PROCEDURE DIVISION USING with multiple linkage parameters",
+          "COPY statements with REPLACING clause",
+          "EXIT PROGRAM",
+          "Fixed-format source with columns respected",
+          "No EXEC SQL or EXEC CICS",
+          "REDEFINES usage",
+          "PIC clauses with Z editing"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a patient registration screen editing and SPA (Scratch Pad Area) initialization subprogram for the ORCA (JMA standard receipt/medical billing) system in Japan. It handles patient master data, insurance information, public expense (Kohi) records, and related medical administration data for a clinic/hospital reception workflow. It is invoked with 'INIT' or 'GMN' processing modes to set up or update screen and SPA parameters.",
+        "domain": "healthcare/medical billing (Japanese medical insurance claims system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Extensive use of COPY statements for Japanese medical record layouts (CPPTINF, CPPTHKNINF, CPPTKOHINF, etc.)",
+        "Japanese EUC or Shift-JIS encoded comments (rendered as latin-1 mojibake in the archived file)",
+        "JMA Open Source License header (ORCA project)",
+        "LINKAGE SECTION with multiple SPA (Scratch Pad Area) parameters typical of ORCA screen subprograms",
+        "No EXEC SQL or EXEC CICS — uses MCP (Message Control Program) data area instead (MCPDATA.INC, MCPAREA)",
+        "REDEFINES used for display formatting",
+        "Large number of PERFORM statements (329) indicating structured procedural decomposition",
+        "Detailed revision history spanning 2001–2009 in comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly production COBOL from the open-source ORCA Japanese medical billing system (JMA). Comments are in Japanese encoded as EUC-JP or Shift-JIS but decoded as latin-1, causing mojibake. The COPY statements reference many domain-specific copybooks that are not shown. The dialect is consistent with GnuCOBOL or Micro Focus used in the ORCA project. Source is truncated at 16000 chars out of ~201KB total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9315,
+      "completion_tokens": 717,
+      "total_tokens": 10032,
+      "cost": 0.0387,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0387,
+        "upstream_inference_prompt_cost": 0.027945,
+        "upstream_inference_completions_cost": 0.010755
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.27,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

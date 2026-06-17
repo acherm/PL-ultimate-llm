@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:446040701fdc86ee61eff35fcd044b979b015b4d",
+    "sha1_git": "446040701fdc86ee61eff35fcd044b979b015b4d",
+    "filename": "/ORCGP02W2.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 242082,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:446040701fdc86ee61eff35fcd044b979b015b4d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:446040701fdc86ee61eff35fcd044b979b015b4d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 242082,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5084,
+    "blank_lines": 0,
+    "comment_lines": 1200,
+    "code_lines": 3884,
+    "comment_ratio": 0.236,
+    "max_line_length": 76,
+    "avg_line_length": 46.6,
+    "long_lines_over_72": 14,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGP02W2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 12,
+    "perform_count": 230,
+    "goto_count": 4,
+    "pic_count": 159,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or similar open-source COBOL for Linux/Unix",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCGP02W2",
+          "All four DIVISIONS present (IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE)",
+          "COPY directives with REPLACING clause (CPHKNCOMBI.INC, CPHKNNUM.INC, CPPTHKNINF.INC)",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL or EXEC CICS",
+          "File paths reference /var/tmp/ (Unix/Linux environment)",
+          "JMA (Japan Medical Association) ORCA open-source medical software project",
+          "OCCURS clauses, PIC X/9 data items consistent with COBOL-85"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA Standard Receipt Software) system, specifically handling patient insurance information combination processing (component P02). It builds and validates combinations of health insurance (hoken) and public expense (kouhi) coverage records for Japanese medical billing/receipt (rezept) generation.",
+        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
+        "COPY directives with REPLACING for reusable insurance combination record layouts (.INC copybooks)",
+        "Extensive revision history in comments spanning 2000-2006",
+        "Large OCCURS tables (up to 100 entries) for insurance and public expense records",
+        "No EXEC SQL or EXEC CICS — uses file I/O (commented-out INDEXED file SELECT entries suggest migration to DB)",
+        "12 CALL statements and 230 PERFORM statements indicating modular structure",
+        "Open-source JMA ORCA project (Japan Medical Association)",
+        "Fixed-format with max line length 76, consistent with traditional COBOL column discipline"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is decoded with latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS), causing mojibake in the comments. The FILE-CONTROL SELECT statements are all commented out, suggesting the program was refactored to use database calls instead of direct file I/O. The COPY statements reference .INC copybook files that are not shown. The program is clearly production-grade medical billing software from the Japanese ORCA open-source project."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10036,
+      "completion_tokens": 720,
+      "total_tokens": 10756,
+      "cost": 0.040908,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040908,
+        "upstream_inference_prompt_cost": 0.030108,
+        "upstream_inference_completions_cost": 0.0108
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.0,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

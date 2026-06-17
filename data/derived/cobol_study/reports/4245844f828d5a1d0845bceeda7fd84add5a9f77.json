@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4245844f828d5a1d0845bceeda7fd84add5a9f77",
+    "sha1_git": "4245844f828d5a1d0845bceeda7fd84add5a9f77",
+    "filename": "/ORCR0840.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 215702,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4245844f828d5a1d0845bceeda7fd84add5a9f77/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4245844f828d5a1d0845bceeda7fd84add5a9f77/raw/"
+  },
+  "indicators": {
+    "bytes_len": 215702,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4513,
+    "blank_lines": 0,
+    "comment_lines": 853,
+    "code_lines": 3660,
+    "comment_ratio": 0.189,
+    "max_line_length": 76,
+    "avg_line_length": 46.8,
+    "long_lines_over_72": 12,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0840"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 33,
+    "perform_count": 215,
+    "goto_count": 0,
+    "pic_count": 212,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. ORCR0840",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "COPY ... REPLACING //token// BY //token// (pseudo-text delimiters)",
+          "OCCURS clauses without DEPENDING ON (standard table usage)",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "No EXEC SQL / EXEC CICS — pure COBOL",
+          "JMA Open Source License header identifying ORCA medical software project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This batch program is part of the JMA ORCA standard medical receipt (claims) software system. It aggregates and tallies point scores (診療区分別点数集計) by medical treatment category for hospital admission receipts, reading from multiple indexed ISAM files (RECE82, RECE84, RECE85, RECE8A, RECE8B) and writing summarised results. It appears to handle both outpatient and inpatient billing data, including special processing for room charges, drip infusion, and residual/expired items.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple COPY statements with REPLACING pseudo-text (//RECE84// BY //RECE844//) to reuse record layouts",
+        "Multiple SELECT entries for the same physical file under different logical names (DYNAMIC vs SEQUENTIAL access)",
+        "Large working-storage tables with OCCURS (up to 100 occurrences) for treatment codes and daily tallies",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled in display)",
+        "33 CALL statements suggesting modular design with external subprograms",
+        "215 PERFORM statements indicating structured, paragraph-driven logic",
+        "Error file (RECEERR-FILE) for logging processing errors",
+        "No COMP-3 packed decimal usage despite numeric-heavy processing",
+        "No EXEC SQL or EXEC CICS — file I/O only via ISAM indexed files"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the comments contain Japanese text (likely EUC-JP or Shift-JIS), which appears garbled. The COPY statements reference external copybooks (.INC files) that are not included in this excerpt, so the full record layouts are not visible. The program is clearly part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. The copy_count reported as 0 by the mechanical indicator is likely because the COPY statements reference .INC files rather than standard .cpy extensions, or the tool did not count them."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6515,
+      "completion_tokens": 786,
+      "total_tokens": 7301,
+      "cost": 0.031335,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031335,
+        "upstream_inference_prompt_cost": 0.019545,
+        "upstream_inference_completions_cost": 0.01179
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.97,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

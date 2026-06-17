@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0f4049eb24eda623faa5e9dd5ee8349cb30092d7",
+    "sha1_git": "0f4049eb24eda623faa5e9dd5ee8349cb30092d7",
+    "filename": "/ORCL0012.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9572,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0f4049eb24eda623faa5e9dd5ee8349cb30092d7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0f4049eb24eda623faa5e9dd5ee8349cb30092d7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9572,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 240,
+    "blank_lines": 0,
+    "comment_lines": 105,
+    "code_lines": 135,
+    "comment_ratio": 0.438,
+    "max_line_length": 74,
+    "avg_line_length": 38.9,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCL0012"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 4,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system dialect",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PERFORM UNTIL with END-PERFORM",
+          "END-IF, END-PERFORM structured delimiters",
+          "INITIALIZE statement",
+          "EXIT PROGRAM",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "CALL 'ORCDBMAIN' USING pattern consistent with GnuCOBOL/OpenCOBOL",
+          "COPY directives referencing .INC files typical of ORCA JMA system",
+          "grpsys continuation-line tag used as inline comment/label"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This subprogram is part of the ORCA JMA standard medical receipt software (Japan Medical Association). It reads reception (uketuke) records from a database table, searches for a matching record based on patient ID, department, and insurance combination, and updates the transmission flag (SRFLG) on the matching record to mark it as sent.",
+        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments (rendered as mojibake in latin-1 decoding)",
+        "Custom database access via CALL 'ORCDBMAIN' (DBSELECT, DBFETCH, DBUPDATE, DBCLOSECURSOR pattern)",
+        "COPY of multiple .INC and named copybooks (CPUKETUKE.INC, COMMON-SPA, CPORCSDAY.INC, CPORCSLNK.INC, MCPAREA, MCPDATA.INC)",
+        "grpsys tag used as inline source annotation/label on certain lines",
+        "No EXEC SQL or EXEC CICS — database access abstracted through ORCDBMAIN",
+        "ACCEPT FROM DATE for system date retrieval",
+        "COMPUTE to convert 2-digit year to 4-digit year (Y2K-style handling)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but contains Japanese text encoded in EUC-JP or Shift-JIS, causing mojibake in the comment lines. The 'grpsys' tokens appearing at the start of some lines are not standard COBOL — they appear to be a source-management annotation or conditional compilation tag specific to the ORCA system. The program has no COPY count recorded mechanically (copy_count=0) despite clearly containing COPY statements; this may be a mechanical indicator limitation. The program is part of the well-known open-source JMA ORCA medical receipt system used in Japan."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4166,
+      "completion_tokens": 755,
+      "total_tokens": 4921,
+      "cost": 0.023823,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023823,
+        "upstream_inference_prompt_cost": 0.012498,
+        "upstream_inference_completions_cost": 0.011325
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.9,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

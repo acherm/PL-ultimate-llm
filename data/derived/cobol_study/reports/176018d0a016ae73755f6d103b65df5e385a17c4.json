@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:176018d0a016ae73755f6d103b65df5e385a17c4",
+    "sha1_git": "176018d0a016ae73755f6d103b65df5e385a17c4",
+    "filename": "/sudoku.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28134,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:176018d0a016ae73755f6d103b65df5e385a17c4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:176018d0a016ae73755f6d103b65df5e385a17c4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28134,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 639,
+    "blank_lines": 71,
+    "comment_lines": 20,
+    "code_lines": 548,
+    "comment_ratio": 0.035,
+    "max_line_length": 80,
+    "avg_line_length": 43.0,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SHOW-SUDOKU-BOARD",
+      "Sudoku",
+      "TABLE-ANALYSIS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 3,
+    "perform_count": 32,
+    "goto_count": 0,
+    "pic_count": 189,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "RECURSIVE clause on PROGRAM-ID (GnuCOBOL extension)",
+          "LOCAL-STORAGE SECTION (supported in GnuCOBOL)",
+          "*> inline comments (GnuCOBOL/COBOL-2002 style)",
+          "SCREEN SECTION with BLANK SCREEN, FOREGROUND-COLOR, BACKGROUND-COLOR, AUTO clauses",
+          "GOBACK used in nested/recursive subprograms",
+          "END PROGRAM statement",
+          "BLANK WHEN ZERO in SCREEN SECTION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "An interactive terminal-based Sudoku solver. The main program displays a screen-based UI allowing the user to enter known values, then calls a recursive subprogram (TABLE-ANALYSIS) that uses backtracking to find all solutions, and a display subprogram (SHOW-SUDOKU-BOARD) to present each solution found.",
+        "domain": "education/tutorial",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "SCREEN SECTION with full-screen TUI layout (LINE/COL positioning, BLANK WHEN ZERO, UNDERLINE, AUTO)",
+        "RECURSIVE PROGRAM-ID for backtracking algorithm",
+        "LOCAL-STORAGE SECTION for recursive-safe local variables",
+        "Three nested programs: Sudoku (main), TABLE-ANALYSIS (recursive solver), SHOW-SUDOKU-BOARD (display)",
+        "FOREGROUND-COLOR / BACKGROUND-COLOR on BLANK-SCREEN",
+        "*> style inline comments",
+        "88-level condition names for menu response handling",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars; the SHOW-SUDOKU-BOARD subprogram and the remainder of TABLE-ANALYSIS are not shown, but the structure is clear. The use of RECURSIVE, LOCAL-STORAGE, and *> comments strongly indicates GnuCOBOL. The program is a well-structured puzzle solver, consistent with a student or hobbyist project."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6469,
+      "completion_tokens": 634,
+      "total_tokens": 7103,
+      "cost": 0.028917,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028917,
+        "upstream_inference_prompt_cost": 0.019407,
+        "upstream_inference_completions_cost": 0.00951
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.17,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

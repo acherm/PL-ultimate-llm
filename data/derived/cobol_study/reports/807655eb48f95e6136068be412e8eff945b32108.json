@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:807655eb48f95e6136068be412e8eff945b32108",
+    "sha1_git": "807655eb48f95e6136068be412e8eff945b32108",
+    "filename": "/ORCR0620.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 213495,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:807655eb48f95e6136068be412e8eff945b32108/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:807655eb48f95e6136068be412e8eff945b32108/raw/"
+  },
+  "indicators": {
+    "bytes_len": 213495,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4529,
+    "blank_lines": 0,
+    "comment_lines": 952,
+    "code_lines": 3577,
+    "comment_ratio": 0.21,
+    "max_line_length": 113,
+    "avg_line_length": 46.1,
+    "long_lines_over_72": 48,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0620"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 50,
+    "call_count": 12,
+    "perform_count": 255,
+    "goto_count": 11,
+    "pic_count": 121,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED, ACCESS MODE IS DYNAMIC/SEQUENTIAL, RECORD KEY, FILE STATUS clauses",
+          "COPY ... REPLACING syntax",
+          "FD records with PIC X(200)",
+          "Japanese comments (JMA ORCA open-source medical receipt software)",
+          "No EXEC SQL or EXEC CICS — pure COBOL batch"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "Part of the JMA (Japan Medical Association) ORCA open-source medical receipt (claim) processing system. This program (ORCR0620) handles inpatient receipt basic information — reading, editing, and writing indexed receipt files (RECE61–RECE69) for hospital admission claim records. It appears to be a batch program that constructs or updates receipt records for inpatient billing submissions to Japanese health insurance.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Extensive Japanese-language comments (Shift-JIS / EUC-JP encoded, decoded as latin-1 producing mojibake)",
+        "Multiple indexed VSAM-style files (RECE61–RECE69) with DYNAMIC and SEQUENTIAL access",
+        "COPY ... REPLACING used for file record reuse (RECE62X variant)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite financial domain",
+        "12 CALL statements, 255 PERFORM statements — substantial procedural logic",
+        "Long revision history spanning 2002–2011 with named developers",
+        "Open-source JMA ORCA project (JMA Open Source License)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the Japanese comments are actually Shift-JIS or EUC-JP encoded, resulting in garbled display. The program is clearly production-grade medical billing software from the well-known Japanese open-source ORCA project. COPY statements reference external copybooks (.INC files) not shown in the truncated source. The source was truncated at 16000 chars out of 213495 bytes, so only the header, comments, ENVIRONMENT, and start of DATA DIVISION are visible, but all indicators confirm genuine COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12815,
+      "completion_tokens": 696,
+      "total_tokens": 13511,
+      "cost": 0.048885,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.048885,
+        "upstream_inference_prompt_cost": 0.038445,
+        "upstream_inference_completions_cost": 0.01044
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.94,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:25Z"
+}

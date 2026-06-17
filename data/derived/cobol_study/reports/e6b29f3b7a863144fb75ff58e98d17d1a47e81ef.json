@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e6b29f3b7a863144fb75ff58e98d17d1a47e81ef",
+    "sha1_git": "e6b29f3b7a863144fb75ff58e98d17d1a47e81ef",
+    "filename": "/ORCSNYUFTN.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 371651,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e6b29f3b7a863144fb75ff58e98d17d1a47e81ef/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e6b29f3b7a863144fb75ff58e98d17d1a47e81ef/raw/"
+  },
+  "indicators": {
+    "bytes_len": 371651,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 7606,
+    "blank_lines": 0,
+    "comment_lines": 1368,
+    "code_lines": 6238,
+    "comment_ratio": 0.18,
+    "max_line_length": 87,
+    "avg_line_length": 47.9,
+    "long_lines_over_72": 33,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSNYUFTN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 63,
+    "perform_count": 412,
+    "goto_count": 2,
+    "pic_count": 215,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) — JMA ORCA project, Linux-targeted",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "Fixed-format source with standard column layout",
+          "PIC clauses, OCCURS, WORKING-STORAGE SECTION",
+          "No EXEC SQL / EXEC CICS — pure COBOL",
+          "Comment header explicitly states 'OS LINUX' and JMA Open Source License",
+          "PROGRAM-ID ORCSNYUFTN matches filename",
+          "63 CALL statements, 412 PERFORM — typical production COBOL-85 style"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a medical billing calculation subprogram for the JMA (Japan Medical Association) ORCA standard receipt software. It computes patient co-payment amounts and hospitalization fees (入院料 = inpatient fees) for Japanese national health insurance claims. The program handles complex insurance combination rules, elderly patient co-payments, emergency transport fees, and various local government subsidy calculations.",
+        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — standalone batch subprogram",
+        "Extensive Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake)",
+        "Large OCCURS tables for daily inpatient fee classification (WRK-NYUINDAY-TABLE, WRK-HANBETU-TABLE, etc.)",
+        "63 CALL statements indicating heavy use of external subprograms",
+        "412 PERFORM statements — complex procedural logic",
+        "Only 2 GOTO statements — mostly structured",
+        "No COMP-3 packed decimal despite financial calculations",
+        "Long revision history spanning 2002–2012 with named developers (NACL team)",
+        "JMA Open Source License header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is encoded in EUC-JP Japanese but was decoded as latin-1, causing all Japanese text in comments and data names to appear as mojibake. The program is clearly a production-grade medical billing calculation module from the well-known open-source Japanese ORCA medical receipt system. The 371 KB size and 7606 lines confirm substantial production complexity. No copybooks (COPY count = 0) suggests all definitions are inline or the copybooks were already expanded."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11490,
+      "completion_tokens": 700,
+      "total_tokens": 12190,
+      "cost": 0.04497,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04497,
+        "upstream_inference_prompt_cost": 0.03447,
+        "upstream_inference_completions_cost": 0.0105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.77,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

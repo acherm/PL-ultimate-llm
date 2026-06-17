@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3471d184543bc108c4ef792d12a623d53f2f1d70",
+    "sha1_git": "3471d184543bc108c4ef792d12a623d53f2f1d70",
+    "filename": "/ACAS.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 26552,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3471d184543bc108c4ef792d12a623d53f2f1d70/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3471d184543bc108c4ef792d12a623d53f2f1d70/raw/"
+  },
+  "indicators": {
+    "bytes_len": 26552,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 757,
+    "blank_lines": 0,
+    "comment_lines": 382,
+    "code_lines": 375,
+    "comment_ratio": 0.505,
+    "max_line_length": 106,
+    "avg_line_length": 34.1,
+    "long_lines_over_72": 45,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ACAS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 14,
+    "perform_count": 20,
+    "goto_count": 27,
+    "pic_count": 45,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL",
+        "standard": "COBOL-85",
+        "evidence": [
+          ">>source free  (GnuCOBOL compiler directive)",
+          "*> style comments throughout (GnuCOBOL/COBOL-2002 style but used here with GnuCOBOL)",
+          "set ENVIRONMENT ... to ... (GnuCOBOL intrinsic)",
+          "binary-char PIC clause",
+          "copy ... replacing ... (standard COBOL COPY with REPLACING)",
+          "function current-date",
+          "accept ... from lines / from columns (GnuCOBOL screen handling)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "summary": "This is the main menu/control program for the ACAS (Applewood Computers Accounting System), an open-source accounting package. It presents a top-level menu allowing users to navigate to sub-systems such as IRS (ledger), Sales, Purchase, Stock, General, and optionally Payroll, EPOS, and Order Entry. It also handles first-time system setup, terminal size validation, and environment variable configuration.",
+        "domain": "accounting/ERP",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "GnuCOBOL >>source free compiler directive",
+        "Extensive use of COPY copybooks (wsnames.cob, wssystem.cob, wsmaps01.cob, etc.)",
+        "COPY ... REPLACING with many field renaming substitutions",
+        "SET ENVIRONMENT intrinsic for screen exception handling",
+        "Terminal size validation (lines >= 24, columns >= 80) with retry loop using GO TO",
+        "14 CALL statements to sub-programs (IRS, Sales, Purchase, Stock, General, sys002, Maps01, etc.)",
+        "GNU GPL v2 license header with commercial support pricing",
+        "Version history spanning 1976-2023 in comments",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars out of 26552 bytes; the procedure division is only partially visible. The program is clearly a real production accounting system (ACAS) with a long version history. The GnuCOBOL dialect is confirmed by the >>source free directive and GnuCOBOL-specific environment intrinsics. The high comment ratio (50%) is due to extensive copyright, change-log, and documentation comments."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5773,
+      "completion_tokens": 700,
+      "total_tokens": 6473,
+      "cost": 0.027819,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027819,
+        "upstream_inference_prompt_cost": 0.017319,
+        "upstream_inference_completions_cost": 0.0105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

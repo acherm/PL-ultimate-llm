@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a8386cc8d384d60a0c227d4dcfc242306b928557",
+    "sha1_git": "a8386cc8d384d60a0c227d4dcfc242306b928557",
+    "filename": "/ORCGP02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 151824,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a8386cc8d384d60a0c227d4dcfc242306b928557/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a8386cc8d384d60a0c227d4dcfc242306b928557/raw/"
+  },
+  "indicators": {
+    "bytes_len": 151824,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3641,
+    "blank_lines": 0,
+    "comment_lines": 952,
+    "code_lines": 2689,
+    "comment_ratio": 0.261,
+    "max_line_length": 74,
+    "avg_line_length": 40.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGP02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 69,
+    "call_count": 88,
+    "perform_count": 99,
+    "goto_count": 46,
+    "pic_count": 76,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL or Micro Focus (ORCA/JMA open-source medical system, likely compiled with OpenCOBOL/GnuCOBOL on Linux)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
+          "INITIALIZE statement used",
+          "COPY statements with REPLACING clause",
+          "PERFORM with END-PERFORM / END-EVALUATE / END-IF inline delimiters",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "No EXEC SQL or EXEC CICS",
+          "Fixed-format source (columns 7-72)",
+          "PROGRAM-ID ORCGP02 matches filename ORCGP02.CBL",
+          "JMA Open Source License header — ORCA project (Japan Medical Association), known to use OpenCOBOL/GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is the main program module (P02 screen) of the ORCA JMA standard medical receipt software, handling patient registration (patient master, insurance information, hospitalization records, etc.). It manages screen navigation, data entry, validation, and persistence for patient registration workflows including insurance combinations, hospitalization, and claim processing.",
+        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Extensive use of COPY statements for modular record layouts (30+ copybooks)",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "Screen/window management via MCP-WINDOW / MCP-STATUS / MCP-EVENT protocol (ORCA GUI framework)",
+        "EVALUATE ALSO construct for event-driven screen dispatch",
+        "Japanese comments encoded in EUC-JP (decoded as latin-1 garbled)",
+        "CLAIM file integration via shell script (HL01.sh)",
+        "No EXEC SQL — DB access via CALL to MCP subroutines",
+        "88 CALL statements indicating heavy subprogram architecture",
+        "Revision history spanning 2000–2003 with multiple authors"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but comments are actually EUC-JP Japanese text, appearing garbled. The ORCA project is a well-known open-source Japanese medical receipt system; this is a genuine production module. The 'online-cics' program_type label is approximate — ORCA uses its own MCP (Message Control Program) GUI framework rather than CICS, but the event-driven screen-handling pattern is analogous. No COMP-3 usage detected despite being a financial/medical billing system, which is unusual but consistent with the ORCA codebase style."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9055,
+      "completion_tokens": 800,
+      "total_tokens": 9855,
+      "cost": 0.039165,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039165,
+        "upstream_inference_prompt_cost": 0.027165,
+        "upstream_inference_completions_cost": 0.012
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.76,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

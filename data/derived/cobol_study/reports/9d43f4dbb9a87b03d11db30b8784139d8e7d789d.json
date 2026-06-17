@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9d43f4dbb9a87b03d11db30b8784139d8e7d789d",
+    "sha1_git": "9d43f4dbb9a87b03d11db30b8784139d8e7d789d",
+    "filename": "/ORCRDPC10.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 354628,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9d43f4dbb9a87b03d11db30b8784139d8e7d789d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9d43f4dbb9a87b03d11db30b8784139d8e7d789d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 354628,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 7657,
+    "blank_lines": 0,
+    "comment_lines": 2004,
+    "code_lines": 5653,
+    "comment_ratio": 0.262,
+    "max_line_length": 85,
+    "avg_line_length": 45.3,
+    "long_lines_over_72": 33,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCRDPC10"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 54,
+    "call_count": 12,
+    "perform_count": 470,
+    "goto_count": 16,
+    "pic_count": 520,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible Japanese mainframe COBOL (likely Fujitsu/NEC)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY IS — standard ISAM file handling",
+          "FILE STATUS IS clauses",
+          "COPY with REPLACING using // delimiters (Fujitsu/NEC style)",
+          "PIC X(nn) and PIC 9(nn) data definitions",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded as mojibake)",
+          "PERFORM count 470, CALL count 12 — typical production batch program"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This is a batch COBOL program (ORCRDPC10) that creates/edits DPC (receipt/claim) files for a Japanese medical receipt (レセプト) processing system, specifically handling admission (入院) receipt data. It reads and writes multiple indexed files (RECE62, RECE641, RECE65, RECE68, RECE69, RECE900) corresponding to receipt detail, admission history, and sequence number data, and produces an error file.",
+        "domain": "healthcare/medical insurance claims (Japanese medical receipt processing — ORCA system)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
+        "Multiple INDEXED files with DYNAMIC access (ISAM-style)",
+        "COPY statements with REPLACING using // delimiter syntax (Fujitsu/NEC COBOL convention)",
+        "Extensive Japanese-language comments (EUC or Shift-JIS, rendered as mojibake under latin-1 decoding)",
+        "Long revision history spanning 2007–2017 with named developers (NACL team)",
+        "No COMP-3 usage despite numeric fields — unusual for mainframe but consistent with open-source ORCA (GnuCOBOL/OpenCOBOL target)",
+        "470 PERFORM statements indicating complex procedural logic",
+        "16 GOTO statements",
+        "Program belongs to ORCA (Open Receipt Computer Advantage) — Japanese open-source medical claims system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is part of the ORCA (日医標準レセプトソフト) open-source Japanese medical receipt software, likely compiled with GnuCOBOL/OpenCOBOL on Linux rather than a traditional mainframe. Comments are in Japanese (EUC-JP or Shift-JIS) and appear garbled under latin-1 decoding. The COPY delimiter style (//) and absence of COMP-3 are consistent with GnuCOBOL/Fujitsu-compatible dialect. Source is truncated at 16000 chars out of 354628 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10791,
+      "completion_tokens": 829,
+      "total_tokens": 11620,
+      "cost": 0.044808,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.044808,
+        "upstream_inference_prompt_cost": 0.032373,
+        "upstream_inference_completions_cost": 0.012435
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.59,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

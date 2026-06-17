@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:37da13c346270cf7237e04ded3bf449208f44921",
+    "sha1_git": "37da13c346270cf7237e04ded3bf449208f44921",
+    "filename": "/SOKATU0210.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 130323,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:37da13c346270cf7237e04ded3bf449208f44921/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:37da13c346270cf7237e04ded3bf449208f44921/raw/"
+  },
+  "indicators": {
+    "bytes_len": 130323,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2937,
+    "blank_lines": 2,
+    "comment_lines": 1263,
+    "code_lines": 1672,
+    "comment_ratio": 0.43,
+    "max_line_length": 82,
+    "avg_line_length": 43.4,
+    "long_lines_over_72": 29,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU0210"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 33,
+    "call_count": 61,
+    "perform_count": 98,
+    "goto_count": 3,
+    "pic_count": 94,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "standard": "COBOL-85",
+        "evidence": [
+          "PROGRAM-ID. SOKATU0210",
+          "ORGANIZATION IS INDEXED / LINE SEQUENTIAL file control entries",
+          "COPY with REPLACING clauses",
+          "PIC X / PIC 9 data definitions",
+          "OCCURS clauses",
+          "REDEFINES",
+          "No EXEC SQL / EXEC CICS",
+          "JMA ORCA open-source medical receipt software copyright header",
+          "COPY of .INC copybooks typical of GnuCOBOL/OpenCOBOL ORCA builds"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard medical receipt software. It handles monthly claim/receipt aggregation processing (国保・請求書集計処理 – national health insurance claim summary), generating printed claim forms and updating receipt DB files. It reads a temporary indexed file of receipt data, aggregates totals by insurer category, and writes output for printing and DB update.",
+        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS – uses file-based I/O with indexed and sequential files",
+        "Heavy use of COPY copybooks (.INC files) for record layouts and common areas",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
+        "Extensive revision history in comments spanning 2005–2017",
+        "OCCURS 30 table for public expense (公費) number aggregation",
+        "SPA (shared parameter area) copybook usage",
+        "Shell linkage area (CPORCSPRTLNK.INC) suggesting inter-process print linkage",
+        "61 CALL statements indicating heavy use of external subprograms",
+        "Program option handling (FLG-PRGOPTION, WRK-OPTION-TBL)",
+        "REDEFINES used for hospital name/address splitting"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS), causing comment text to appear garbled. The program is clearly production-grade medical billing software from the JMA ORCA project, with a long maintenance history. Source is truncated at 16000 chars out of 130323 bytes; the procedure division is not shown but inferred from indicators (98 PERFORMs, 61 CALLs, 3 GOTOs)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9743,
+      "completion_tokens": 745,
+      "total_tokens": 10488,
+      "cost": 0.040404,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040404,
+        "upstream_inference_prompt_cost": 0.029229,
+        "upstream_inference_completions_cost": 0.011175
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 19.75,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

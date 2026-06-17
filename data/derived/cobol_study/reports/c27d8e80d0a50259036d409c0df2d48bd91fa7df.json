@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c27d8e80d0a50259036d409c0df2d48bd91fa7df",
+    "sha1_git": "c27d8e80d0a50259036d409c0df2d48bd91fa7df",
+    "filename": "/ORCBZ001.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 32980,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c27d8e80d0a50259036d409c0df2d48bd91fa7df/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c27d8e80d0a50259036d409c0df2d48bd91fa7df/raw/"
+  },
+  "indicators": {
+    "bytes_len": 32980,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 817,
+    "blank_lines": 0,
+    "comment_lines": 243,
+    "code_lines": 574,
+    "comment_ratio": 0.297,
+    "max_line_length": 74,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBZ001"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 19,
+    "call_count": 15,
+    "perform_count": 24,
+    "goto_count": 3,
+    "pic_count": 32,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) or Micro Focus COBOL on Linux/Unix",
+        "standard": "COBOL-85",
+        "evidence": [
+          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
+          "END-IF, END-EVALUATE, END-STRING scope terminators",
+          "INITIALIZE verb used extensively",
+          "COPY with REPLACING clause",
+          "UNSTRING ... INTO with multiple targets",
+          "CALL by identifier string (e.g. CALL \"ORCSJOB\")",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "PROCEDURE DIVISION USING COMMAND-PARAM (command-line linkage pattern common in GnuCOBOL/MF batch)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the ORCA (JMA standard receipt/medical billing software) system. It generates a list of available patient numbers (empty patient number list) for a Japanese medical institution. It reads system management master data, constructs patient number formats, handles printing management, and writes error output to an error file.",
+        "domain": "healthcare / medical billing (Japanese medical association receipt software)",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Japanese EUC or Shift-JIS encoded comments and string literals (decoded as latin-1, causing mojibake in display)",
+        "Extensive use of COPY statements for modular include files (CPCOMMONDAT2.INC, HCMZ001.INC, CPSYSKANRI.INC, etc.)",
+        "CALL to external subprograms: ORCSJOB, ORCSDAY, and others for job management, date conversion, printing",
+        "UNSTRING used to parse comma-delimited COMMAND-PARAM linkage area",
+        "EVALUATE with ALSO for multi-condition branching on patient number format configuration",
+        "File STATUS checking on error file (RECEERR-FILE)",
+        "No EXEC SQL or EXEC CICS — DB access via MCP (message-based middleware calls via MCPAREA/MCPDATA copybooks)",
+        "GO TO used sparingly for early exit (100-INIT-EXT pattern)",
+        "PERFORM with named SECTIONs throughout"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but contains Japanese multi-byte characters (likely EUC-JP or Shift-JIS), causing the comment and string literal text to appear as mojibake. The program logic is clearly readable despite this. The COPY statements reference many external copybooks not shown here, so full data structure analysis is incomplete. The program is part of the well-known open-source Japanese medical receipt system ORCA, which is a real production system. No COMP-3 usage detected despite being a financial/billing domain program, which is somewhat unusual but consistent with GnuCOBOL usage patterns."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7507,
+      "completion_tokens": 793,
+      "total_tokens": 8300,
+      "cost": 0.034416,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034416,
+        "upstream_inference_prompt_cost": 0.022521,
+        "upstream_inference_completions_cost": 0.011895
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 21.09,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:23Z"
+}

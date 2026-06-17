@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ea1539e1ca133d6aebbc121850a2d31e46dfbed3",
+    "sha1_git": "ea1539e1ca133d6aebbc121850a2d31e46dfbed3",
+    "filename": "/ORCR0030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 359455,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ea1539e1ca133d6aebbc121850a2d31e46dfbed3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ea1539e1ca133d6aebbc121850a2d31e46dfbed3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 359455,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 7380,
+    "blank_lines": 1,
+    "comment_lines": 1540,
+    "code_lines": 5839,
+    "comment_ratio": 0.209,
+    "max_line_length": 78,
+    "avg_line_length": 47.7,
+    "long_lines_over_72": 64,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 69,
+    "perform_count": 237,
+    "goto_count": 3,
+    "pic_count": 406,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "IBM Enterprise COBOL or compatible (likely GnuCOBOL / OpenCOBOL given JMA ORCA open-source context)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / PROGRAM-ID ORCR0030",
+          "ENVIRONMENT DIVISION, DATA DIVISION, PROCEDURE DIVISION all present",
+          "Fixed-format source with comment lines in column 7 (*)",
+          "PIC clauses (406 occurrences), PERFORM (237), CALL (69)",
+          "No EXEC SQL / EXEC CICS — pure batch COBOL",
+          "JMA ORCA open-source medical receipt software — known to target GnuCOBOL/OpenCOBOL on Linux"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt (claim) software. It aggregates and edits point-score data broken down by diagnosis/treatment category for insurance claim receipts (レセプト). It handles complex Japanese medical insurance billing rules including co-payment amounts, special items, and various insurance combinations.",
+        "domain": "healthcare / medical insurance billing",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS — pure procedural COBOL",
+        "No COMP-3 packed decimal fields detected",
+        "69 CALL statements indicating heavy use of subprogram architecture",
+        "237 PERFORM statements — structured programming style",
+        "Extensive Japanese-language comments (EUC-JP / latin-1 decoded) describing revision history spanning 2000–2006",
+        "Long revision history (100+ change entries) indicating mature production code",
+        "Fixed-format columns, max line length 78",
+        "No COPY statements — self-contained program"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file was decoded with latin-1 but the comments contain Japanese text encoded in EUC-JP (or Shift-JIS), which appears garbled under latin-1 decoding. This is cosmetic only and does not affect the COBOL classification. The program is part of the well-known open-source JMA ORCA medical receipt system, confirming its production nature. The large size (359 KB, 7380 lines) and extensive change log are consistent with a long-lived production component."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15011,
+      "completion_tokens": 662,
+      "total_tokens": 15673,
+      "cost": 0.054963,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.054963,
+        "upstream_inference_prompt_cost": 0.045033,
+        "upstream_inference_completions_cost": 0.00993
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.86,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:21Z"
+}

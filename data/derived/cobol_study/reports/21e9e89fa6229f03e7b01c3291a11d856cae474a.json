@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:21e9e89fa6229f03e7b01c3291a11d856cae474a",
+    "sha1_git": "21e9e89fa6229f03e7b01c3291a11d856cae474a",
+    "filename": "/8-CSMUL.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 22578,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:21e9e89fa6229f03e7b01c3291a11d856cae474a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:21e9e89fa6229f03e7b01c3291a11d856cae474a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 22578,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 668,
+    "blank_lines": 90,
+    "comment_lines": 29,
+    "code_lines": 549,
+    "comment_ratio": 0.05,
+    "max_line_length": 72,
+    "avg_line_length": 31.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "8-CSMUL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 15,
+    "perform_count": 61,
+    "goto_count": 0,
+    "pic_count": 49,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "ACUCOBOL-GT or Micro Focus (likely ACUCOBOL-GT based on ACCEPT/DISPLAY syntax and C$RERR call)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "CALL \"C$RERR\" USING EXTENDED-STATUS — ACUCOBOL-GT runtime library call",
+          "ACCEPT ... LINE ... POSITION ... TAB UPDATE NO BEEP CURSOR ... ON EXCEPTION EXC-KEY — ACUCOBOL-GT screen I/O syntax",
+          "CONTROL \"UPPER\" clause on ACCEPT",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+          "EVALUATE/END-EVALUATE, END-READ, END-IF — COBOL-85 constructs",
+          "PROCEDURE DIVISION USING LINK-V with LINKAGE SECTION",
+          "COPY statements referencing .FC, .FDE, .CPY, .REC files"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program generates a periodic summary/control report of salary codes (codes salaire) for employees. It reads payroll data from a CODPAIE indexed file, filters by firm, employee, and month range, matches against configured salary code parameters, and writes results to a CSV-like sequential output file (TF-CSM) for export or further processing.",
+        "domain": "payroll/HR",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "ACUCOBOL-GT screen I/O: ACCEPT with LINE/POSITION/TAB/UPDATE/NO BEEP/CURSOR/CONTROL clauses",
+        "CALL 'C$RERR' for extended file error handling — ACUCOBOL-GT runtime",
+        "DECLARATIVES with USE AFTER ERROR PROCEDURE",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING — subprogram/called module pattern",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "Multiple COPY statements for shared record layouts (.REC, .CPY, .FC, .FDE)",
+        "REDEFINES used extensively for dual numeric/text field access",
+        "OCCURS clause on TF-DONNEES for multi-value output fields",
+        "LINE SEQUENTIAL file organization for CSV-style export",
+        "French-language comments and variable names (AVANT, APRES, AFFICHAGE, etc.)",
+        "Function key control via EXC-KFR array (ACUCOBOL-GT key management)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program is clearly part of a larger French-language payroll application suite (module names like 6-CODSAL, 6-REGIS, 6-CARRI, 4-CSTAB suggest a numbered module architecture). The box-drawing characters in comments (Ú, Ä, ¿, À, ³) are CP850/latin-1 encoded, consistent with the latin-1 decoding reported. The source was truncated at 16000 chars out of 22578 bytes, so the latter portion of the PROCEDURE DIVISION is not visible, but the overall structure is clear."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6625,
+      "completion_tokens": 854,
+      "total_tokens": 7479,
+      "cost": 0.032685,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032685,
+        "upstream_inference_prompt_cost": 0.019875,
+        "upstream_inference_completions_cost": 0.01281
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.47,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

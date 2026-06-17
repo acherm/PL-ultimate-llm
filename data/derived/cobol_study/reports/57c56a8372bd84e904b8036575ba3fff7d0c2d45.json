@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:57c56a8372bd84e904b8036575ba3fff7d0c2d45",
+    "sha1_git": "57c56a8372bd84e904b8036575ba3fff7d0c2d45",
+    "filename": "/ORCSCKNKCHK.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 58716,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:57c56a8372bd84e904b8036575ba3fff7d0c2d45/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:57c56a8372bd84e904b8036575ba3fff7d0c2d45/raw/"
+  },
+  "indicators": {
+    "bytes_len": 58716,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1346,
+    "blank_lines": 0,
+    "comment_lines": 343,
+    "code_lines": 1003,
+    "comment_ratio": 0.255,
+    "max_line_length": 74,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSCKNKCHK"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 16,
+    "call_count": 4,
+    "perform_count": 122,
+    "goto_count": 1,
+    "pic_count": 65,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "GnuCOBOL (OpenCOBOL) / Micro Focus – likely GnuCOBOL given ORCA project context",
+        "standard": "COBOL-85",
+        "evidence": [
+          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
+          "EVALUATE … WHEN … END-EVALUATE (COBOL-85)",
+          "PERFORM VARYING … UNTIL … END-PERFORM (COBOL-85 inline PERFORM)",
+          "COPY directives for .INC files (ORCA project copybooks)",
+          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
+          "Fixed-format source, columns 7-72",
+          "ORCA project (JMA Japan Medical Association open-source medical billing system) – known to use GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program is a subprogram within the ORCA JMA standard medical receipt (billing) software system. It performs contraindicated-drug combination checks (禁忌薬剤チェック) for medical treatments, validating drug interactions and checking against master tables (tbl_interact, tbl_chk) for prohibited drug combinations. It supports multiple check modes (individual entry check and full/all check) driven by a function-code parameter.",
+        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "No EXEC SQL or EXEC CICS – database access via proprietary MCP (Message Control Program) interface using MCPDATA-REC, MCP-TABLE, MCP-PATHNAME fields",
+        "Heavy use of COPY for copybooks (.INC files) – CPSRYACT.INC, CPINTERACT.INC, CPCHK.INC, MCPDATA.INC, MCPAREA, etc.",
+        "Japanese EUC-JP encoded comments (latin-1 decoded, hence garbled) describing system name, component, author, revision history",
+        "OCCURS clauses for drug-check tables (up to 100 and 30 entries)",
+        "LINKAGE SECTION with multiple SPA (scratchpad area) parameters – typical ORCA subprogram calling convention",
+        "EVALUATE used for dispatch on function code (KBN)",
+        "122 PERFORM statements indicating complex procedural logic",
+        "No COMP-3 usage despite being a production financial/medical system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP encoded, causing mojibake in the displayed text. The program is clearly part of the well-known open-source ORCA medical billing system developed by JMA (Japan Medical Association). Copyright notice confirms 2002 JMA. Source is truncated at 16000 chars out of 58716 bytes total, but enough is visible to make confident assessments. The COPY statements reference zero-byte copybooks in this view (copy count=0 in mechanical indicators may mean the copybooks were not resolved/inlined)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7562,
+      "completion_tokens": 833,
+      "total_tokens": 8395,
+      "cost": 0.035181,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035181,
+        "upstream_inference_prompt_cost": 0.022686,
+        "upstream_inference_completions_cost": 0.012495
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 20.89,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:22Z"
+}

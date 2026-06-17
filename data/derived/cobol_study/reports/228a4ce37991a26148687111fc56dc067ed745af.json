@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:228a4ce37991a26148687111fc56dc067ed745af",
+    "sha1_git": "228a4ce37991a26148687111fc56dc067ed745af",
+    "filename": "/crp9102C.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 54513,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:228a4ce37991a26148687111fc56dc067ed745af/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:228a4ce37991a26148687111fc56dc067ed745af/raw/"
+  },
+  "indicators": {
+    "bytes_len": 54513,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1248,
+    "blank_lines": 89,
+    "comment_lines": 65,
+    "code_lines": 1094,
+    "comment_ratio": 0.056,
+    "max_line_length": 72,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CRP9102C"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 10,
+    "perform_count": 94,
+    "goto_count": 0,
+    "pic_count": 167,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/1",
+    "model": "anthropic/claude-sonnet-4.6",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": "true",
+      "not_cobol_label": "null",
+      "dialect": {
+        "guess": "Micro Focus COBOL (likely Visual COBOL or COBOL for Windows)",
+        "standard": "COBOL-85",
+        "evidence": [
+          "COPY 'CRP9102C.CPB' and COPY 'DS-CNTRL.MF' with quoted filenames (Micro Focus style)",
+          "class-control. / Window is class 'wclass' — OO COBOL extension typical of Micro Focus",
+          "77 janelaPrincipal object reference — OO COBOL object reference",
+          "COMP-X and COMP-5 usage (Micro Focus-specific USAGE clauses)",
+          "COPY 'CBPRINT.CPY' and 'PARAMETR' with Micro Focus-style includes",
+          "78 level number (constant definition, Micro Focus extension)",
+          "PRINTER IS LPRINTER in SPECIAL-NAMES",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GS-EXIT-FLG-TRUE style data block naming consistent with Micro Focus screen/GUI frameworks"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "summary": "This program generates a bank remittance file ('arquivo remessa') for Banco do Brasil, a Brazilian bank. It reads accounts receivable and customer data from indexed files, builds structured remittance records (header, detail, trailer), and writes them to a sequential output file. It also produces a printed report of the remittance.",
+        "domain": "banking",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OO COBOL extensions: class-control, object reference (Micro Focus)",
+        "COMP-X and COMP-5 usage clauses (Micro Focus-specific)",
+        "78-level constants (Micro Focus extension)",
+        "Multiple COPY statements for file SELECT and FD entries (modular file definitions)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale convention)",
+        "PRINTER IS LPRINTER in SPECIAL-NAMES for report output",
+        "Indexed files with ALTERNATE RECORD KEY WITH DUPLICATES",
+        "Brazilian Portuguese comments and data names (domain: Brazilian banking)",
+        "No EXEC SQL or EXEC CICS",
+        "Remittance record layout for Banco do Brasil (CNAB format implied)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file is clearly a production COBOL program from a Brazilian ERP or accounts-receivable system, targeting Banco do Brasil's remittance (CNAB) format. The Micro Focus dialect is strongly indicated by OO COBOL constructs, COMP-X/COMP-5, 78-level items, and quoted COPY filenames. Source is truncated at 16000 chars but enough structure is visible to classify with high confidence. The 'copy dslang.cpy.' at line 1 before IDENTIFICATION DIVISION is unusual but is a Micro Focus-style directive/copy."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6646,
+      "completion_tokens": 779,
+      "total_tokens": 7425,
+      "cost": 0.031623,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031623,
+        "upstream_inference_prompt_cost": 0.019938,
+        "upstream_inference_completions_cost": 0.011685
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Google",
+    "latency_s": 18.86,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T18:33:24Z"
+}

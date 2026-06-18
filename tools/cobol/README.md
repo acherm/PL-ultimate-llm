@@ -80,6 +80,29 @@ verdict through `taxonomy.normalize_*`, so older free-text (`cobol-judge/1`)
 verdicts collapse into the same clean enum distributions **without a
 re-judge** — just re-run `run_study --no-judge` to regenerate the summary.
 
+## Human review / annotation tool
+
+A local web app to review samples and record human ground-truth that
+confirms or corrects the judge:
+
+```bash
+python3 -m tools.cobol.review_server          # http://127.0.0.1:8765
+python3 -m tools.cobol.review_server --port 9000 --reviewer alice
+```
+
+- **Index** lists every report (filter by filename / family / domain) and
+  marks which are reviewed.
+- **Per sample** shows the source (from `.cache/cobol/`), the mechanical
+  indicators, and the LLM-judge verdict (with its evidence), beside a form:
+  is-it-COBOL, agreement-with-judge, corrected dialect-family / domain /
+  source-format (dropdowns from `taxonomy.py`), a free-text **origin URL**
+  (paste the forge link when you find one — origin isn't recoverable from a
+  bare cnt SWHID), and notes.
+- Reviews are append-only JSON, one file per review, under
+  `reviews_cobol/<sha1_git>/<UTC>--<reviewer>--<hash8>.json` (`cobol-review/1`)
+  — git is the sync layer, no DB, no merge conflicts. These are meant to be
+  committed (ground truth), unlike the regenerable study outputs.
+
 ## Notes & caveats
 
 - **SWH quota:** anonymous access is ~120 requests/hour. We make **1 request

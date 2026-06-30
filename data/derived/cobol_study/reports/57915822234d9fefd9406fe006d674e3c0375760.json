@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:57915822234d9fefd9406fe006d674e3c0375760",
+    "sha1_git": "57915822234d9fefd9406fe006d674e3c0375760",
+    "filename": "/ph070102.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12771,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:57915822234d9fefd9406fe006d674e3c0375760/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:57915822234d9fefd9406fe006d674e3c0375760/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12771,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 229,
+    "blank_lines": 19,
+    "comment_lines": 26,
+    "code_lines": 184,
+    "comment_ratio": 0.124,
+    "max_line_length": 189,
+    "avg_line_length": 54.8,
+    "long_lines_over_72": 76,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PH070102"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 1,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and OO extensions (INVOKE, REPOSITORY with CLASS), likely part of a Brazilian web/CGI framework using EXEC HTML blocks. Compiler directives $set preprocess(htmlpp) and $set sourceformat\"free\" are characteristic of GnuCOBOL.",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "invoke utils \"retornaDataComBarra\"",
+          "repository. class EscreveJson as \"PY990002\" class Utils as \"PY990004\"",
+          "exec html ... end-exec",
+          "copy PCW900.CPY, PCW0007.CPY, PCWY90001.cpy, PCW902.CPY, PCW990.CPY, PCPY8000.CPY, PCP9000.CPY"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Brazilian financial/sales reporting system - AcompTTC (TTC tracking/accompaniment) Dispersão (Dispersion) report for sales structure analysis",
+        "summary": "This program generates a web-based report screen (AcompTTC - Dispersão) for analyzing sales dispersion across a sales structure hierarchy. It renders an HTML form with filters for sales team structure, management products, date range, dispersion variation, ordering options, and view type (analytic/synthetic), then injects JavaScript for interactivity. It is part of a CGI/web framework using GnuCOBOL with an HTML preprocessor.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC HTML preprocessor blocks (htmlpp) for embedded HTML generation",
+        "OO COBOL INVOKE statement and REPOSITORY CLASS declarations",
+        "$set compiler directives for free format and preprocessor",
+        "CGI/web framework with external-form linkage section",
+        "Multiple COPY statements for framework copybooks (PCW900, PCW0007, PCWY90001, PCW902, PCW990, PCPY8000, PCP9000)",
+        "Session validation via 9000-validar-sessao",
+        "Dynamic call via f-call-retorno pattern",
+        "Portuguese-language comments and HTML content indicating Brazilian origin"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program uses a Brazilian GnuCOBOL web framework with an HTML preprocessor (htmlpp). EXEC HTML blocks are not standard COBOL but a preprocessor extension. The program_type is mapped to online-cics as the closest enum for an interactive web/CGI program. OPC comments in identification division suggest an operational process catalog numbering system. The file uses free source format despite being archived as .cbl."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5195,
+      "completion_tokens": 654,
+      "total_tokens": 5849,
+      "cost": 0.025395,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025395,
+        "upstream_inference_prompt_cost": 0.015585,
+        "upstream_inference_completions_cost": 0.00981
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 22.38,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:50:31Z"
+}

@@ -49,55 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (likely running under ORCA/JMA open-source medical system on Linux)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY-based screen/SPA architecture typical of ORCA",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
-          "END-EVALUATE, END-IF, END-PERFORM terminators",
-          "INITIALIZE statement",
-          "SELECT with FILE STATUS clause",
-          "COPY statements with quoted and unquoted copybook names",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "Fixed-format source (columns 7-72)",
-          "No EXEC SQL or EXEC CICS"
+          "PROGRAM-ID ORCGM01N",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "SELECT RESTARTMSG-FILE ASSIGN \"/tmp/jma-receipt/...\"",
+          "CALL \"ORCSLOCK\"",
+          "CALL \"ORCSJOB\"",
+          "COPY \"MCPAREA\"",
+          "COPY \"ORCA-SPA\"",
+          "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA",
+          "no EXEC CICS / no EXEC SQL / no COMP-3"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is the main menu/navigation program (ORCGM01N) for the ORCA JMA standard medical receipt software system. It handles screen initialization, screen transitions (PUTG/CLICKED events), user input, and dispatches to subsystems such as master maintenance, job management, and print deletion. It acts as the top-level menu controller for a Japanese medical billing/receipt application.",
-        "domain": "healthcare/medical billing (Japanese medical receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software — business-selection menu screen (業務選択 M01N component)",
+        "summary": "This program is the business-selection menu screen (component ORCGM01N / M01N) of the JMA ORCA standard medical receipt system. It handles screen initialization, navigation events (LINK/PUTG/CLICKED/entry), master-update job management, print-delete processing, and exclusive-lock control via sub-program calls. It acts as the main menu dispatcher routing users to various subsystems (patient management, billing, statistics, etc.).",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded, showing mojibake)",
-        "JMA ORCA open-source medical receipt system (Japan Medical Association)",
-        "LINKAGE SECTION with multiple COPY-based screen areas (M00, M01, M01N, M02, M95, MERR, MID1, MVER, M98, MUID, M99, MID2, MDAS, MLOG, MINF, MPRT)",
-        "EVALUATE ALSO construct for MCP-STATUS/MCP-EVENT dispatch (MCP = Message Control Program, likely a proprietary middleware)",
-        "CALL to ORCSLOCK (exclusive lock management), ORCSJOB (job management), and other ORCS* subprograms",
-        "SPA (Scratchpad Area) pattern for inter-screen state management",
-        "SELECT for a flat file (/tmp/jma-receipt/patch-restart-message)",
-        "17 CALL statements, 57 PERFORMs, 10 GOTOs",
-        "No EXEC SQL or EXEC CICS — uses proprietary DB access layer (MCPDATA.INC)",
-        "Extensive revision history in comments spanning 2000–2015"
+        "Heavy use of COPY books (37 COPY statements) for SPA/screen/master areas",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "CALL to ORCSLOCK (exclusive lock), ORCSJOB (job management), ORCSMCNDATE, etc.",
+        "File SELECT for /tmp/jma-receipt/patch-restart-message (Linux path)",
+        "Japanese comments encoded in EUC-JP (latin-1 decoded as mojibake)",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT dispatch pattern",
+        "No EXEC SQL, no EXEC CICS, no COMP-3",
+        "SPA (Scratch Pad Area) architecture typical of ORCA/MCP framework",
+        "CONST-AREA with ORCA URLs (www.orca.med.or.jp)",
+        "Revision history spanning 2000–2015"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in mojibake in comments. The program is clearly production-grade, part of the well-known open-source Japanese medical receipt system ORCA. The MCP middleware pattern (MCP-STATUS, MCP-EVENT, MCP-WINDOW, MCP-PUTTYPE) is characteristic of the ORCA/Panda system's screen management framework, not CICS, but the program_type is classified as online-cics as the closest analogue for an event-driven screen program. Source is truncated at 16000 chars out of 67550 bytes total."
+      "notes": "File is encoded in EUC-JP; decoded as latin-1 causing Japanese comment text to appear as mojibake. The program_type is listed as online-cics but actually uses the ORCA MCP (Medical Care Platform) screen framework, not CICS — closest enum match is online-cics. All four COBOL divisions are present. Source is fixed-format with max line length 80."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8027,
-      "completion_tokens": 857,
-      "total_tokens": 8884,
-      "cost": 0.036936,
+      "prompt_tokens": 9405,
+      "completion_tokens": 725,
+      "total_tokens": 10130,
+      "cost": 0.03909,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.036936,
-        "upstream_inference_prompt_cost": 0.024081,
-        "upstream_inference_completions_cost": 0.012855
+        "upstream_inference_cost": 0.03909,
+        "upstream_inference_prompt_cost": 0.028215,
+        "upstream_inference_completions_cost": 0.010875
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +120,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 22.72,
+    "provider": "Anthropic",
+    "latency_s": 19.15,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:16:58Z"
 }

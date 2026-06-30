@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1eb9dec4778770ef6910eb88f2dcb8270270e6b2",
+    "sha1_git": "1eb9dec4778770ef6910eb88f2dcb8270270e6b2",
+    "filename": "/crp058.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 30956,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1eb9dec4778770ef6910eb88f2dcb8270270e6b2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1eb9dec4778770ef6910eb88f2dcb8270270e6b2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 30956,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 708,
+    "blank_lines": 47,
+    "comment_lines": 12,
+    "code_lines": 649,
+    "comment_ratio": 0.018,
+    "max_line_length": 72,
+    "avg_line_length": 41.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CRP058"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 25,
+    "call_count": 17,
+    "perform_count": 64,
+    "goto_count": 0,
+    "pic_count": 62,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with OO extensions (class-control, invoke, object reference), COMP-X, COMP-5, DS-CONTROL-BLOCK, dialog system (CALL-DIALOG-SYSTEM), screenset (LOAD-SCREENSET), and REFRESH-OBJECT macros. Brazilian Portuguese application (Kello ERP system).",
+        "evidence": [
+          "class-control. Window is class \"wclass\"",
+          "invoke Window \"fromHandleWithClass\"",
+          "invoke janelaPrincipal \"CentralizarNoDesktop\"",
+          "pic 9(08) comp-x",
+          "pic 9(09) comp-5",
+          "COPY \"DS-CNTRL.MF\"",
+          "PERFORM CALL-DIALOG-SYSTEM",
+          "REFRESH-OBJECT PRINCIPAL",
+          "LOAD-SCREENSET",
+          "move-object-handle principal handle8"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian ERP system (Kello) - scheduled annotations/notes report for a CRM or purchasing module (CRP/CGP modules, buyer records)",
+        "summary": "CRP058 is a batch/interactive report program that generates a listing of scheduled annotations (anotações agendadas). It reads from CRD200 (annotations), CRD201, CGD010 (buyers/suppliers), and CAD004 files, filters by date range and status (pending/checked), and prints or displays results in a list. It also logs user access via a LOGACESS file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Micro Focus OO COBOL extensions (class-control, invoke, object reference)",
+        "Dialog System screenset integration (CALL-DIALOG-SYSTEM, REFRESH-OBJECT, LOAD-SCREENSET)",
+        "COMP-X and COMP-5 usage",
+        "25 COPY statements referencing both .CPY and .CPB copybooks",
+        "Access logging (LOGACESS file with user, date, time, program)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "PRINTER IS LPRINTER special name",
+        "FUNCTION CURRENT-DATE usage",
+        "ACCEPT FROM COMMAND-LINE for parameters",
+        "Brazilian Portuguese comments and variable names"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (708 lines total, ~649 code lines). The program is clearly part of a larger Brazilian ERP suite (Kello) with many copybooks. No EXEC SQL or EXEC CICS. The OO extensions and dialog system macros are characteristic of Micro Focus COBOL for Windows desktop applications."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7343,
+      "completion_tokens": 637,
+      "total_tokens": 7980,
+      "cost": 0.031584,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031584,
+        "upstream_inference_prompt_cost": 0.022029,
+        "upstream_inference_completions_cost": 0.009555
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.84,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:53:40Z"
+}

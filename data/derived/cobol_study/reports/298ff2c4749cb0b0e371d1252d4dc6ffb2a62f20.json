@@ -49,45 +49,46 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "unknown (likely GnuCOBOL or IBM Enterprise COBOL)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Minimal hello-world program; no vendor-specific extensions visible. GOBACK is common across IBM, GnuCOBOL, and Micro Focus.",
         "evidence": [
           "IDENTIFICATION DIVISION",
           "PROGRAM-ID. HELLOWORLD",
           "PROCEDURE DIVISION",
-          "DISPLAY \"HELLO\"",
-          "GOBACK (common in IBM and GnuCOBOL)"
+          "DISPLAY",
+          "GOBACK"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal Hello World program that displays the string 'HELLO' and returns control to the caller/OS. It is a classic introductory demonstration program.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Classic hello-world demonstration program",
+        "summary": "A minimal COBOL program that displays the string 'HELLO' and returns control to the caller/OS via GOBACK. It has no data division and no logic beyond the single DISPLAY statement.",
         "program_type": "demo"
       },
       "notable_features": [
-        "GOBACK instead of STOP RUN (common in IBM-style COBOL)",
-        "No DATA DIVISION or ENVIRONMENT DIVISION",
-        "Minimal structure — only IDENTIFICATION and PROCEDURE divisions"
+        "GOBACK used instead of STOP RUN"
       ],
       "maturity": "toy-or-hello-world",
       "overall_confidence": "high",
-      "notes": "Extremely minimal program; only 6 lines. GOBACK is slightly more IBM-flavored than STOP RUN but is also valid in GnuCOBOL and Micro Focus. No dialect-specific features beyond GOBACK to narrow it further."
+      "notes": "Only 6 lines; no DATA DIVISION, no ENVIRONMENT DIVISION. Dialect cannot be determined from this minimal snippet. GOBACK is slightly more idiomatic to IBM/mainframe style but is widely supported."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 876,
-      "completion_tokens": 384,
-      "total_tokens": 1260,
-      "cost": 0.008388,
+      "prompt_tokens": 2254,
+      "completion_tokens": 273,
+      "total_tokens": 2527,
+      "cost": 0.010857,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +97,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.008388,
-        "upstream_inference_prompt_cost": 0.002628,
-        "upstream_inference_completions_cost": 0.00576
+        "upstream_inference_cost": 0.010857,
+        "upstream_inference_prompt_cost": 0.006762,
+        "upstream_inference_completions_cost": 0.004095
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +107,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 7.54,
+    "provider": "Anthropic",
+    "latency_s": 6.92,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:14:35Z"
 }

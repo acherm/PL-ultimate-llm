@@ -49,57 +49,60 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "ACUCOBOL-GT (AcuCOBOL / Micro Focus ACUCOBOL)",
+        "family": "acucobol",
         "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT / Micro Focus ACUCOBOL dialect; uses DISPLAY MESSAGE with TITLE/ICON syntax, ACUGUI copybooks (Acugui.def), 78-level constants, SET condition-name TO FALSE, CANCEL verb, and Italian-language business application typical of Italian ACUCOBOL shops",
         "evidence": [
-          "DISPLAY MESSAGE ... TITLE ... ICON syntax (ACUCOBOL-GT GUI extensions)",
-          "CALL 'geslock' / CANCEL 'geslock' pattern",
-          "78 level constant (ACUCOBOL/COBOL-85)",
-          "88-level with WHEN SET TO FALSE clause",
-          "copy 'Acugui.def' (AcuCOBOL GUI definitions)",
-          "ACCEPT ... FROM CENTURY-DATE / FROM TIME",
-          "SPECIAL-NAMES decimal-point is comma (Italian locale)",
-          "OCCURS with INDEXED BY without DEPENDING ON",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+          "copy \"Acugui.def\"",
+          "display message ... title titolo icon 2",
+          "78 titolo value ...",
+          "cancel \"geslock\"",
+          "SPECIAL-NAMES. decimal-point is comma",
+          "SET TrattamentoGDO to false (88-level with WHEN SET TO FALSE)",
+          "copy \"link-geslock.def\"",
+          "copy \"common-excel.def\""
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch report program that produces a CSV file ('stsottoc_<user>.csv') analysing sales movement margins per product and customer. It reads warehouse movement headers and lines, looks up articles, customers, price lists, taxes, and other reference tables, then calls an Excel-output routine.",
-        "domain": "wholesale/distribution (warehouse management, sales margin analysis)",
+        "domain": "retail-commerce",
+        "domain_detail": "Warehouse/inventory management system - prints margin analysis (marginalità) for individual product movements per customer, likely for a wholesale/distribution company in Italy",
+        "summary": "This program generates a CSV report of product margin analysis for individual warehouse movements per customer (Stampa Marginalità prodotti singoli movimenti Clienti). It reads movement headers and lines, looks up articles, customers, price lists, taxes, and supplier costs, then outputs a CSV file for Excel. It handles GDO (large-scale retail) customer type differentiation and price/margin calculations.",
         "program_type": "batch"
       },
       "notable_features": [
-        "ACUCOBOL-GT GUI DISPLAY MESSAGE / TITLE / ICON extensions",
-        "Italian locale: SPECIAL-NAMES decimal-point is comma, Italian file/variable names",
-        "78-level figurative constants (COBOL-85 extension)",
-        "88-level conditions with WHEN SET TO FALSE",
-        "DECLARATIVES section with USE AFTER ERROR for every file",
-        "Large number of COPY statements for both SELECT and FD entries (modular file definitions)",
-        "OCCURS 99999 table for article price-list cache",
-        "LINKAGE SECTION driven subprogram (GOBACK used)",
-        "CALL 'geslock' / CANCEL 'geslock' for file-lock handling",
-        "ACCEPT FROM CENTURY-DATE / FROM TIME / FROM ENVIRONMENT",
-        "No EXEC SQL, no EXEC CICS, no COMP-3"
+        "Extensive COPY statements (56 copybooks) for file control and FD entries",
+        "DECLARATIVES with USE AFTER ERROR for multiple files",
+        "DISPLAY MESSAGE with TITLE/ICON (ACUCOBOL GUI extensions)",
+        "78-level constants (ACUCOBOL extension)",
+        "88-level condition with WHEN SET TO FALSE clause",
+        "decimal-point is comma (European locale)",
+        "CALL to 'geslock' with CANCEL (lock management subprogram)",
+        "Excel output via common-excel.def copybook",
+        "LINKAGE SECTION with link-stsottoc.def",
+        "Italian-language variable names and messages",
+        "LUBEXX prefix on some lines suggesting code tagging/modification markers",
+        "Large in-memory table: tab-art-listini OCCURS 99999"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File is truncated at 16 000 chars (~half the full 32 617 bytes); the PROCEDURE DIVISION body is only partially visible. All COPY statements reference external copybooks that are not included, so full data-structure details are inferred. The 'LUBEXX' sequence tag on two lines (columns 1-6) is a non-standard label/marker, possibly a change-tracking prefix used in the shop. The Italian naming convention and ACUCOBOL GUI calls are consistent with an Italian SME ERP system."
+      "notes": "Source truncated to first 16000 chars; full PROCEDURE DIVISION not visible but enough structure is present for confident classification. The LUBEXX prefix on some data lines appears to be a programmer tag or modification marker. The program is clearly part of a larger Italian business application suite (warehouse/ERP) built with ACUCOBOL-GT."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5079,
-      "completion_tokens": 756,
-      "total_tokens": 5835,
-      "cost": 0.026577,
+      "prompt_tokens": 6457,
+      "completion_tokens": 627,
+      "total_tokens": 7084,
+      "cost": 0.028776,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -108,9 +111,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.026577,
-        "upstream_inference_prompt_cost": 0.015237,
-        "upstream_inference_completions_cost": 0.01134
+        "upstream_inference_cost": 0.028776,
+        "upstream_inference_prompt_cost": 0.019371,
+        "upstream_inference_completions_cost": 0.009405
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -119,8 +122,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.97,
+    "latency_s": 19.8,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:48:10Z"
 }

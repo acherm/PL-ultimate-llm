@@ -49,51 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (or compatible, likely used with ORCA/JMA medical system framework)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based system used in Japanese medical clinics",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
-          "INITIALIZE statement usage",
-          "OCCURS clauses with PIC definitions",
-          "PROCEDURE DIVISION USING with multiple linkage parameters",
-          "Fixed-format source with COPY statements and REPLACING",
-          "MCP-STATUS / MCP-EVENT event-driven framework typical of Micro Focus or similar"
+          "PROGRAM-ID ORCGS03N",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "COPY MCPDATA.INC / CPORCMCP.INC",
+          "MCP-STATUS / MCP-EVENT usage",
+          "Copyright JMA (Japan Medical Association) 2002",
+          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system, specifically handling payment/receipt confirmation processing (component S03N - 請求確認). It manages screen navigation, data entry, and processing for patient billing/payment workflows in a Japanese medical billing system.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical clinic receipt/billing system - payment confirmation screen (収納確認 S03N component)",
+        "summary": "This program implements the payment confirmation screen (S03N) for the JMA ORCA standard medical receipt software. It handles patient payment entry, receipt processing, and billing confirmation including insurance fees, self-pay amounts, and payment methods. It interacts with a GUI front-end via MCP (message-passing) events and manages screen transitions between billing-related screens.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese-language comments (Shift-JIS/EUC-JP encoded, decoded as latin-1 producing mojibake)",
-        "Event-driven screen handling via MCP-STATUS/MCP-EVENT (PUTG/CLICKED/LINK events)",
-        "Extensive use of COPY statements for modular file layouts (CPSYUNOU.INC, CPSYUMEI.INC, etc.)",
-        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA",
-        "Multiple OCCURS clauses for list/table structures",
-        "BINARY usage (WRK-SMEILIST1-ROW PIC S9(9) BINARY)",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP database access layer (MCPDATA.INC, CPORCMCP.INC)",
-        "Open source JMA medical software copyright header"
+        "MCP event-driven GUI framework (MCP-STATUS/MCP-EVENT)",
+        "34 COPY statements for modular include files",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA",
+        "OCCURS clauses for insurance fee arrays",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT pattern",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP DB access",
+        "BINARY usage for row index",
+        "Screen area copybooks (S02.INC through SERR.INC)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS, which appears as mojibake when decoded as latin-1. The program is part of the well-known open-source ORCA (JMA standard receipt software) project used in Japanese medical clinics. The framework uses MCP (likely a proprietary middleware) for screen and database handling rather than CICS or SQL directly. Source is truncated at 16000 chars out of 113162 bytes total."
+      "notes": "File is encoded in EUC-JP Japanese but decoded as latin-1, causing mojibake in comments. The ORCA system is a well-known open-source Japanese medical billing system. Program is a substantial 2952-line production component. The 'online-cics' program_type is used loosely - this is actually an MCP-based GUI event-driven program, not CICS, but it is the closest analog."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7414,
-      "completion_tokens": 677,
-      "total_tokens": 8091,
-      "cost": 0.032397,
+      "prompt_tokens": 8792,
+      "completion_tokens": 574,
+      "total_tokens": 9366,
+      "cost": 0.034986,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032397,
-        "upstream_inference_prompt_cost": 0.022242,
-        "upstream_inference_completions_cost": 0.010155
+        "upstream_inference_cost": 0.034986,
+        "upstream_inference_prompt_cost": 0.026376,
+        "upstream_inference_completions_cost": 0.00861
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.29,
+    "latency_s": 15.51,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:21:26Z"
 }

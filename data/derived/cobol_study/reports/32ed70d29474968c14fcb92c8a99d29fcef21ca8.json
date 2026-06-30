@@ -49,51 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or IBM Enterprise COBOL (standard-compatible)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 style, likely compiled with GnuCOBOL or similar open-source compiler; uses LINE SEQUENTIAL organization and relative file paths typical of student/academic environments",
         "evidence": [
-          "PERFORM UNTIL / END-PERFORM structured syntax",
-          "GOBACK statement",
-          "ACCEPT ws-date FROM DATE / ACCEPT ws-time FROM TIME",
-          "END PROGRAM terminator",
-          "ORGANIZATION IS LINE SEQUENTIAL",
+          "organization is line sequential",
+          "GOBACK",
           "COMPUTE ... ROUNDED",
-          "VALUE SPACES on group/elementary items"
+          "ACCEPT ws-date FROM DATE",
+          "ACCEPT ws-time FROM TIME",
+          "END-PERFORM",
+          "no COMP-3, no EXEC SQL/CICS"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads a returns transaction file and produces a formatted report listing each return's transaction code, amount, payment type, store number, invoice number, SKU code, and calculated tax owed (13%). Writes totals for record count, total transaction amount, and total tax owed at the end.",
-        "domain": "retail/point-of-sale reporting",
+        "domain": "education-tutorial",
+        "domain_detail": "Group project for course MAFD-4202, processing retail return transactions and generating a formatted report",
+        "summary": "This program reads a returns transaction file (project1Return.out), processes each record to calculate tax owed at 13%, and writes a formatted report (project1R-Report.out) with transaction details, totals for records, transaction amounts, and tax owed. It is a student group project dated April 2018.",
         "program_type": "batch"
       },
       "notable_features": [
-        "ACCEPT FROM DATE and ACCEPT FROM TIME for report header timestamp",
-        "COMPUTE with ROUNDED for tax calculation at 13% rate",
-        "PERFORM VARYING with dual exit conditions (line count or EOF)",
-        "Pagination logic with ws-lines-per-page constant (20 lines)",
-        "Edited PIC clauses: $$,$$9.99, $z,zz9.99, 99/99/99, 99b99b99b99",
-        "No COPY statements, no EXEC SQL, no EXEC CICS",
-        "Relative file paths used for input/output files"
+        "ACCEPT FROM DATE / ACCEPT FROM TIME for timestamp in report header",
+        "COMPUTE with ROUNDED for tax calculation",
+        "PERFORM VARYING with dual UNTIL conditions (line count and EOF)",
+        "Formatted output using editing PIC clauses ($$,$$9.99, z9, 99b99b99b99)",
+        "Page break logic with line counter and page counter",
+        "WRITE ... AFTER ADVANCING PAGE for pagination",
+        "No COPY statements, no CALL statements, self-contained program"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Author line names three individuals and references course MAFD-4202 with a date of April 2018, confirming this is a student group project. The logic is straightforward and correct for its stated purpose. The page-count increment happens after writing the header rather than before moving to ws-rh-current-page, which is a minor sequencing quirk but not a fatal error. No truncation or encoding issues observed."
+      "notes": "Program is clearly a student group project (authors named, course code MAFD-4202 referenced in comments, dated 2018). Logic is straightforward and well-structured for a student exercise. Dialect is ambiguous between GnuCOBOL and other standard COBOL-85 compilers; LINE SEQUENTIAL and relative paths suggest a PC/GnuCOBOL environment."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3409,
-      "completion_tokens": 569,
-      "total_tokens": 3978,
-      "cost": 0.018762,
+      "prompt_tokens": 4787,
+      "completion_tokens": 478,
+      "total_tokens": 5265,
+      "cost": 0.021531,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.018762,
-        "upstream_inference_prompt_cost": 0.010227,
-        "upstream_inference_completions_cost": 0.008535
+        "upstream_inference_cost": 0.021531,
+        "upstream_inference_prompt_cost": 0.014361,
+        "upstream_inference_completions_cost": 0.00717
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 13.01,
+    "latency_s": 13.06,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:41:27Z"
 }

@@ -49,45 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL (possibly Micro Focus)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple student exercise; LINE SEQUENTIAL organization suggests GnuCOBOL or similar open-source/PC COBOL environment",
         "evidence": [
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "GOBACK statement",
-          "All four DIVISIONS present",
-          "PIC X(8) and PIC 9(2)V9(2) usage"
+          "GOBACK",
+          "SELECT SCORE-FILE ASSIGN TO \"score.dat\""
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Writes student score records to a sequential file named 'score.dat'. Each record contains a student ID, midterm score, final score, and project score. Five student records are written (though record 39030004 is missing its WRITE statement, likely a bug).",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Student grade/score recording exercise writing student exam scores to a sequential file",
+        "summary": "This program opens a sequential file 'score.dat' for output and writes hardcoded student score records (student ID, midterm, final, and project scores) for five students. It appears to be a student exercise demonstrating file I/O in COBOL.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Missing WRITE statement for student 39030004 (apparent bug or intentional omission)",
-        "ORGANIZATION IS LINE SEQUENTIAL for flat file output",
-        "GOBACK used instead of STOP RUN",
-        "Numeric scores moved as string literals to numeric PIC fields"
+        "LINE SEQUENTIAL file organization",
+        "Hardcoded MOVE literals to numeric PIC fields (potential type mismatch)",
+        "Missing WRITE for student 39030004 (apparent bug)",
+        "GOBACK used as program terminator",
+        "Typo in record name: SCORE-DETIAL instead of SCORE-DETAIL"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program has a clear bug: student 39030004's data is MOVEd but never WRITEn to the file. The author name 'NUTHJAREE' suggests a Thai student, consistent with an academic exercise. The typo 'SCORE-DETIAL' (should be SCORE-DETAIL) further supports student authorship."
+      "notes": "The program has a notable bug: student 39030004 has its fields populated but no WRITE statement. The record name 'SCORE-DETIAL' is a typo. AUTHOR field 'NUTHJAREE' suggests a Thai student. Moving string literals to numeric PIC fields may cause runtime issues depending on compiler."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1418,
-      "completion_tokens": 441,
-      "total_tokens": 1859,
-      "cost": 0.010869,
+      "prompt_tokens": 2796,
+      "completion_tokens": 366,
+      "total_tokens": 3162,
+      "cost": 0.013878,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010869,
-        "upstream_inference_prompt_cost": 0.004254,
-        "upstream_inference_completions_cost": 0.006615
+        "upstream_inference_cost": 0.013878,
+        "upstream_inference_prompt_cost": 0.008388,
+        "upstream_inference_completions_cost": 0.00549
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.63,
+    "provider": "Anthropic",
+    "latency_s": 8.57,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:28:01Z"
 }

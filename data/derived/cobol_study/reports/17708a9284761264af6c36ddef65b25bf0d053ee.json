@@ -49,52 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus / ORCA (JMA medical software platform, likely OpenCOBOL/GnuCOBOL compatible)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); uses GnuCOBOL/OpenCOBOL with MCP (Medical Care Platform) linkage area conventions",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax",
-          "PERFORM UNTIL with inline END-PERFORM",
-          "INITIALIZE statement",
-          "PROCEDURE DIVISION USING with multiple linkage items",
-          "COPY statements with REPLACING",
-          "EXIT PROGRAM",
-          "fixed-format source with 72-char lines"
+          "PROGRAM-ID ORCGM96",
+          "COPY MCPAREA",
+          "COPY ORCA-SPA",
+          "COPY LINKAREA",
+          "MCP-STATUS MCP-EVENT MCP-RC MCP-TABLE MCP-PATHNAME",
+          "EXEC SQL absent, EXEC CICS absent",
+          "scripts/allways/master_upgrade.sh shell reference",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program (ORCGM96) is a job-management search/display component of the ORCA JMA standard medical receipt software system. It handles screen initialization, database lookups for DB management (tbl_dbkanri), master management (tbl_mstkanri), and job management records, then formats and displays results on screen M96. It supports group/multi-facility configurations (SPA-HOSPNUM > 1).",
-        "domain": "healthcare / medical billing (Japanese medical receipt software)",
-        "program_type": "online-cics"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software – job management search screen (ジョブ管理検索 M96)",
+        "summary": "This program implements the job management search screen (M96) of the JMA ORCA medical receipt system. It handles initialization, screen transitions, database lookups for DB management (tbl_dbkanri) and master management (tbl_mstkanri) records, and job management (JOBKANRI) status display. It is a subprogram called via the MCP linkage mechanism, managing SPA (scratchpad area) state across screen interactions.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
-        "LINKAGE SECTION with multiple COPY-based screen and area definitions (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
-        "MCP (Message Control Program) interface pattern: MCP-STATUS, MCP-EVENT, MCP-RC, MCP-TABLE, MCP-PATHNAME",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP database access subroutines (PERFORM 910-DBSELECT-SEC, 900-DBKANRI-READ-SEC, etc.)",
-        "Multiple COPY includes for screen layouts (M96.INC, M97.INC, M95.INC, etc.) and data structures",
-        "CALL count of 16 suggesting external subprogram invocations",
-        "Group/multi-facility (grpsys) logic branching on SPA-HOSPNUM",
-        "Shell script invocation area (master_upgrade.sh) defined in WORKING-STORAGE"
+        "28 COPY statements (heavy use of copybooks for MCP/SPA/screen areas)",
+        "LINKAGE SECTION with MCPAREA, ORCA-SPA, LINKAREA, SCRAREA",
+        "MCP-STATUS/MCP-EVENT EVALUATE for LINK/PUTG/CLICKED events",
+        "Database access via MCP subroutine calls (910-DBSELECT-SEC, 900-DBKANRI-READ-SEC, 990-DBCLOSE-SEC)",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "Shell script invocation reference (master_upgrade.sh)",
+        "No EXEC SQL or EXEC CICS",
+        "PERFORM-heavy structured programming, no GOTO"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine COBOL source from the open-source JMA ORCA medical receipt system (Japan Medical Association). Comments are in Japanese (EUC-JP or Shift-JIS) and appear garbled due to latin-1 decoding. The MCP interface is a proprietary middleware layer specific to ORCA, not standard CICS or DB2. The program follows a screen-management pattern (LINK/PUTG events, window management) typical of the ORCA platform's online transaction style. Source is truncated at 16000 chars; full file is 52676 bytes / 1279 lines."
+      "notes": "File decoded with latin-1 but comments are actually EUC-JP encoded Japanese, appearing garbled. Source is truncated at 16000 chars out of 52676 bytes (1279 lines total). The ORCGM96 program ID and JMA ORCA naming conventions are well-known identifiers for this open-source Japanese medical billing system running on GnuCOBOL."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7236,
-      "completion_tokens": 777,
-      "total_tokens": 8013,
-      "cost": 0.033363,
+      "prompt_tokens": 8614,
+      "completion_tokens": 640,
+      "total_tokens": 9254,
+      "cost": 0.035442,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033363,
-        "upstream_inference_prompt_cost": 0.021708,
-        "upstream_inference_completions_cost": 0.011655
+        "upstream_inference_cost": 0.035442,
+        "upstream_inference_prompt_cost": 0.025842,
+        "upstream_inference_completions_cost": 0.0096
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.08,
+    "provider": "Anthropic",
+    "latency_s": 23.4,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:39:53Z"
 }

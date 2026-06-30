@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d307ef153e0e3310cb138df9bc5e4aea5cb73c26",
+    "sha1_git": "d307ef153e0e3310cb138df9bc5e4aea5cb73c26",
+    "filename": "/genrep.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6488,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d307ef153e0e3310cb138df9bc5e4aea5cb73c26/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d307ef153e0e3310cb138df9bc5e4aea5cb73c26/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6488,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 175,
+    "blank_lines": 16,
+    "comment_lines": 3,
+    "code_lines": 156,
+    "comment_ratio": 0.019,
+    "max_line_length": 73,
+    "avg_line_length": 36.1,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "GENREP"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 21,
+    "goto_count": 0,
+    "pic_count": 30,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL based on LINE SEQUENTIAL organization, GOBACK, and file assignment to quoted filenames (product.csv, transac.csv). No mainframe-specific features present.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO \"product.csv\"",
+          "ASSIGN TO \"transac.csv\"",
+          "GOBACK",
+          "SORT on table array"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Product and transaction reporting; reads product and transaction CSV files, loads them into arrays, sorts transactions by product ID, and generates a simple report of transactions with quantity totals per product.",
+        "summary": "GENREP reads product and transaction data from CSV files into in-memory arrays, sorts transactions by product ID, then iterates through transactions displaying each transaction line and accumulating quantity totals per product group. It outputs a simple console report.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OCCURS arrays with INDEXED BY for products and transactions",
+        "SORT verb used on an in-memory table (SORT WS-ARRAY-TRAN)",
+        "LINE SEQUENTIAL file organization",
+        "88-level condition names for file status",
+        "Commented-out debug PERFORM paragraphs",
+        "THRU pattern for paragraph ranges",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The typo 'WS-CALCULAITON' (should be WS-CALCULATION) and the overall simplicity (fixed small arrays, console DISPLAY output, no error handling beyond file status) suggest a student or learning exercise. The SORT on an in-memory table is a notable feature. Dialect is inferred as GnuCOBOL due to file assignment style and LINE SEQUENTIAL, but could be another PC COBOL compiler."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4606,
+      "completion_tokens": 454,
+      "total_tokens": 5060,
+      "cost": 0.020628,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020628,
+        "upstream_inference_prompt_cost": 0.013818,
+        "upstream_inference_completions_cost": 0.00681
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.53,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:45:35Z"
+}

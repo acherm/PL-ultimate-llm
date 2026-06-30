@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:73f3e2fff3b54c8e0981baf61b1a8ce373d51228",
+    "sha1_git": "73f3e2fff3b54c8e0981baf61b1a8ce373d51228",
+    "filename": "/EIRemarksRemoveLevel01.rdz.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 400,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:73f3e2fff3b54c8e0981baf61b1a8ce373d51228/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:73f3e2fff3b54c8e0981baf61b1a8ce373d51228/raw/"
+  },
+  "indicators": {
+    "bytes_len": 400,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 13,
+    "blank_lines": 0,
+    "comment_lines": 2,
+    "code_lines": 11,
+    "comment_ratio": 0.154,
+    "max_line_length": 41,
+    "avg_line_length": 29.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "MyPGM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Likely IBM mainframe COBOL; REMARKS paragraph commented out (old COBOL-68/74 style), COPY members referenced inline at 01 level. File appears to be a Rational Developer for z/OS (.rdz.cbl) source.",
+        "evidence": [
+          "PROGRAM-ID. MyPGM",
+          "REMARKS. COPY= pattern (commented out, IBM legacy)",
+          "COPY YXXXFAL inline at 01 level",
+          "sequence numbers in columns 1-6 (fixed format)",
+          "*.rdz.cbl filename extension (Rational Developer for z/OS)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Appears to be a minimal test or example program demonstrating removal of REMARKS/COPY directives at the 01 level, possibly an IDE refactoring test case.",
+        "summary": "A minimal COBOL program (MyPGM) that declares four 01-level data items each populated via COPY statements. The REMARKS paragraph is commented out. The PROCEDURE DIVISION is essentially empty. This looks like a snippet or test case for an IDE refactoring feature (EI Remarks Remove Level 01).",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "REMARKS paragraph commented out (legacy COBOL-68/74 feature)",
+        "COPY statements embedded inline at 01 level",
+        "Empty PROCEDURE DIVISION",
+        "Rational Developer for z/OS (.rdz.cbl) file naming convention",
+        "BOM (UTF-8 BOM) present at start of file"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "File is extremely short (13 lines) and appears to be a test fixture or example for an IDE tool (EI = Eclipse/RDz refactoring action 'EIRemarksRemoveLevel01'). No PIC clauses present; COPY members not expanded. UTF-8 BOM present. Sequence numbers are non-standard (000000 repeated)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2395,
+      "completion_tokens": 488,
+      "total_tokens": 2883,
+      "cost": 0.014505,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014505,
+        "upstream_inference_prompt_cost": 0.007185,
+        "upstream_inference_completions_cost": 0.00732
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.16,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:54:54Z"
+}

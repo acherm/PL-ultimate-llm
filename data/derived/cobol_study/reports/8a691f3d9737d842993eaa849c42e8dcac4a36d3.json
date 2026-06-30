@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (mainframe)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM mainframe IMS/DLI batch subprogram; uses PCB (Program Communication Block) structure typical of IMS DL/I, SET ADDRESS OF, GOBACK, and sequence numbers in linkage section",
         "evidence": [
-          "PROGRAM-ID. NOME-RTE with mainframe-style comments",
-          "COMP (binary) fields in PCB-AREA (S9(5) COMP)",
-          "SET ADDRESS OF PCB-AREA TO LNKDB-PTRPCB — pointer manipulation typical of IBM mainframe",
-          "GOBACK used as return statement",
-          "IMS/DLI PCB structure (DBD-NAME, SEG-LEVEL, ST-CODE, PROC-OPT, KEFEDBAK)",
-          "COPY ERRVSMRT and COPY LNKDBRT — mainframe copybook conventions",
-          "Fixed format, columns 1-80, sequence numbers in rightmost columns (e.g. 00000700)",
-          "END-IF used (COBOL-85+)",
-          "DATE-WRITTEN/DATE-COMPILED clauses"
+          "PCB-AREA with DBD-NAME, SEG-LEVEL, ST-CODE, PROC-OPT, KEFEDBAK",
+          "SET ADDRESS OF PCB-AREA TO LNKDB-PTRPCB",
+          "COMP fields S9(5) in PCB",
+          "sequence numbers on linkage section lines (00000700 etc.)",
+          "GOBACK",
+          "DLI VERSION comment",
+          "ISRT, DLET and REPL commands reference"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A batch IMS/DLI subprogram (routing routine) that handles ISRT, DLET, and REPL DLI commands. It initialises working areas, sets up the IMS PCB pointer, dispatches to the appropriate DLI operation based on an operation code, and manages error/abend handling. The program is a template/skeleton with the actual command dispatch replaced by a placeholder (#OPE#).",
-        "domain": "database (IMS/DLI mainframe)",
+        "domain": "other",
+        "domain_detail": "IMS/DLI database access middleware; batch routine template for DL/I ISRT, DLET and REPL operations",
+        "summary": "This is a batch subprogram (routine) that serves as a template/skeleton for IMS DL/I database operations (ISRT, DLET, REPL). It initializes working areas, sets up PCB addressing, handles error routing with action codes, and returns to the caller. The actual command recognition logic is marked as a placeholder (#OPE#) to be filled in.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "IMS/DLI PCB structure in LINKAGE SECTION (DBD-NAME, SEG-LEVEL, ST-CODE, PROC-OPT, KEFEDBAK, etc.)",
-        "SET ADDRESS OF for pointer-based PCB linkage — classic IMS COBOL pattern",
-        "COPY statements for ERRVSMRT and LNKDBRT copybooks (not expanded here)",
-        "GOBACK used for return to caller",
-        "Placeholder tokens (#OPE#, #CODE#) suggesting a code-generation or template pattern",
-        "Large working-storage data areas (5 × 12000-byte + 5 × 400-byte SSA areas) for DLI segment I/O",
-        "Error routing section with named error codes (NOOP, DLSA) and abend return codes (ADL0, ADL1)"
+        "IMS DL/I PCB structure in LINKAGE SECTION",
+        "SET ADDRESS OF for PCB pointer",
+        "COPY ERRVSMRT and COPY LNKDBRT copybooks",
+        "Large working storage areas (5x 12000-byte data areas + 400-byte SSA areas)",
+        "Error routing section with action codes (ACTION-NOOP, ACTION-DLSA)",
+        "Abend return code handling (ADL0, ADL1)",
+        "Placeholder markers #CODE# and #OPE# suggesting template/generated skeleton",
+        "Sequence numbers on linkage section lines"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains placeholder tokens (#OPE#, #CODE#) indicating this is likely a code-generation template or skeleton that gets populated before compilation. The COPY statements reference external copybooks (ERRVSMRT, LNKDBRT) not shown here. Sequence numbers visible in the rightmost columns of the LINKAGE SECTION confirm IBM mainframe fixed-format source. The comment block references 'Mainframe Affinity' development group and a 2005 release date."
+      "notes": "The program appears to be a skeleton/template with placeholder markers (#OPE#, #CODE#) indicating that the actual DL/I command dispatch logic has been removed or is to be inserted. The CALL 'NOOP' and immediate GO TO 3000-MAIN-END confirm this is a stub. Italian-language field names (DATA-CREAZ, ACTION-ERRORE, CODDB-NOER) suggest Italian development team. Last modification date 06 04 2005, Release 2.1."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2670,
-      "completion_tokens": 803,
-      "total_tokens": 3473,
-      "cost": 0.020055,
+      "prompt_tokens": 4048,
+      "completion_tokens": 618,
+      "total_tokens": 4666,
+      "cost": 0.021414,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.020055,
-        "upstream_inference_prompt_cost": 0.00801,
-        "upstream_inference_completions_cost": 0.012045
+        "upstream_inference_cost": 0.021414,
+        "upstream_inference_prompt_cost": 0.012144,
+        "upstream_inference_completions_cost": 0.00927
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.3,
+    "latency_s": 13.82,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:37:42Z"
 }

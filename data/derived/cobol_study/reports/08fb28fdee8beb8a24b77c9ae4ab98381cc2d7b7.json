@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible (likely GnuCOBOL/OpenCOBOL given JMA ORCA open-source context)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING, INDEXED files, no EXEC SQL/CICS",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED ... ACCESS MODE IS DYNAMIC ... RECORD KEY ... FILE STATUS",
-          "COPY with REPLACING using // delimiters",
-          "OCCURS clauses, REDEFINES, PIC X/9 with VALUE literals",
-          "Fixed-format source (columns 7-72), comment lines with * in col 7",
-          "PROGRAM-ID ORCBG017S"
+          "PROGRAM-ID ORCBG017S",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'COMMON-SPA'",
+          "COPY 'CPSRYACCT.INC' REPLACING",
+          "SELECT ... ASSIGN BG0171 ORGANIZATION IS INDEXED",
+          "FILE STATUS IS STS-IN01",
+          "no EXEC SQL, no EXEC CICS, no COMP-3"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA (Japan Medical Association) ORCA open-source medical receipt (claims) software. It generates a monthly statistical report (CSV output) of medical procedures by category (診療行為別集計表 – medical-act-by-category aggregation table), reading indexed files of procedure activity and accounting data and writing CSV output.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - monthly medical act aggregation by treatment category (診療行為別集計表)",
+        "summary": "This program is part of the JMA ORCA medical receipt system. It reads indexed files containing medical treatment act aggregation data (診療行為別集計) and accounting data, then produces a CSV report summarising treatment acts by category (診療区分), including point values, quantities, counts and totals. It handles both inpatient and outpatient distinctions.",
         "program_type": "batch"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS – pure file-based batch processing",
-        "Multiple COPY statements with REPLACING (copybook-driven data structures)",
-        "Indexed sequential file I/O with DYNAMIC access mode",
-        "Japanese Shift-JIS / EUC-JP encoded comments and data literals (decoded as latin-1, causing mojibake in display)",
-        "CSV output generation with Japanese column headers embedded as VALUE literals",
-        "OCCURS tables for procedure category codes and patient information",
-        "REDEFINES used to overlay table structure over flat value area",
-        "21 CALL statements indicating modular subprogram architecture",
-        "137 PERFORM statements indicating structured procedural decomposition",
-        "Error file (RECEERR-FILE) for logging processing errors"
+        "35 COPY statements with REPLACING clauses",
+        "INDEXED file organisation with DYNAMIC access",
+        "CSV output generation with Japanese header literals",
+        "OCCURS tables for treatment category codes",
+        "Encoded Japanese text (EUC-JP/latin-1 decoded) in comments and literals",
+        "No COMP-3 usage despite financial calculations",
+        "Revision history embedded in comments (versions 04.06.01 through 05.00.00)",
+        "Large working storage with 20000-byte WRK-REC field"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS), causing garbled display of comments and string literals. The program is clearly part of the well-known JMA ORCA open-source medical receipt system, a production-grade Japanese healthcare application. The COPY statements reference external copybooks (CPSRYACCT.INC, COMMON-SPA, CPCOMMONDAT2.INC, CPRECEERR.INC, HCG017.INC, CPPTINF.INC) that are not included in this file. Version history comments indicate active maintenance from 2006 through 2019."
+      "notes": "Source file is encoded in EUC-JP (decoded as latin-1), causing mojibake in Japanese comments and literals. This is standard for JMA ORCA codebase. File is truncated at 16000 chars but structure is clear. The ORCBG017S program ID and file naming convention (BG017x) are consistent with the known ORCA batch reporting subsystem."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7570,
-      "completion_tokens": 744,
-      "total_tokens": 8314,
-      "cost": 0.03387,
+      "prompt_tokens": 8948,
+      "completion_tokens": 572,
+      "total_tokens": 9520,
+      "cost": 0.035424,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.03387,
-        "upstream_inference_prompt_cost": 0.02271,
-        "upstream_inference_completions_cost": 0.01116
+        "upstream_inference_cost": 0.035424,
+        "upstream_inference_prompt_cost": 0.026844,
+        "upstream_inference_completions_cost": 0.00858
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.3,
+    "latency_s": 16.28,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:01:19Z"
 }

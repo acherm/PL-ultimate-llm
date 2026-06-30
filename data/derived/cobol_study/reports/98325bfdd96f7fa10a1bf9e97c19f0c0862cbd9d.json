@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:98325bfdd96f7fa10a1bf9e97c19f0c0862cbd9d",
+    "sha1_git": "98325bfdd96f7fa10a1bf9e97c19f0c0862cbd9d",
+    "filename": "/PGMOD4.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 18511,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:98325bfdd96f7fa10a1bf9e97c19f0c0862cbd9d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:98325bfdd96f7fa10a1bf9e97c19f0c0862cbd9d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 18511,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 534,
+    "blank_lines": 95,
+    "comment_lines": 86,
+    "code_lines": 353,
+    "comment_ratio": 0.196,
+    "max_line_length": 80,
+    "avg_line_length": 33.7,
+    "long_lines_over_72": 38,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PGMOD4"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 4,
+    "perform_count": 25,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) with ESQL/PostgreSQL via ecpg or ocesql; part of 'DBsample' project by Laszlo Erdos; uses *> comment style and COMP-5",
+        "evidence": [
+          "*> comment style (GnuCOBOL free-form comments in fixed format)",
+          "COMP-5 usage",
+          "COPY 'sqlca.cbl' (GnuCOBOL ESQL copybook)",
+          "GNU Lesser General Public License header",
+          "CALL 'PGSQLMSG'",
+          "EXEC SQL CONNECT :HV-USERID IDENTIFIED BY :HV-PSWD USING :HV-DBNAME"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "PostgreSQL database access module for a book management sample application",
+        "summary": "PGMOD4 is a callable subprogram that provides PostgreSQL database operations (connect, disconnect, select, insert, update) for a BOOK table. It is part of the 'DBsample' project demonstrating GnuCOBOL with embedded SQL. It implements optimistic locking via LUPD_TIMESTAMP and LUPD_COUNTER fields.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC SQL embedded SQL (PostgreSQL via ESQL)",
+        "EXEC SQL CONNECT/DISCONNECT/COMMIT/ROLLBACK",
+        "COMP-5 for SQL status",
+        "*> comment style",
+        "COPY copybooks: LNSQLMSG.cpy, sqlca.cbl, LNMOD4.cpy",
+        "Optimistic locking with LUPD_TIMESTAMP and LUPD_COUNTER",
+        "EXIT SECTION used for early exit",
+        "EVALUATE TRUE with 88-level condition names for SQL status",
+        "GOBACK",
+        "GNU LGPL licensed open-source"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated before end of SQL-SELECT-BOOK section but all major logic is visible. The program is clearly GnuCOBOL with PostgreSQL ESQL. Fixed format with *> comments is standard GnuCOBOL practice."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6734,
+      "completion_tokens": 549,
+      "total_tokens": 7283,
+      "cost": 0.028437,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028437,
+        "upstream_inference_prompt_cost": 0.020202,
+        "upstream_inference_completions_cost": 0.008235
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.49,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:53:05Z"
+}

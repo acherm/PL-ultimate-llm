@@ -49,51 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) or Micro Focus COBOL on Linux/Unix, likely targeting the ORCA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); uses GnuCOBOL/OpenCOBOL conventions with COPY/REPLACING using // delimiters, LINKAGE SECTION with COMMAND-PARAM, EXIT PROGRAM, and MCP-style subprogram calls",
         "evidence": [
-          "PERFORM ... UNTIL with END-IF / END-UNSTRING / END-IF scope terminators (COBOL-85)",
-          "INITIALIZE verb used on multiple data areas",
-          "OPEN I-O and OPEN INPUT/OUTPUT with indexed files using DYNAMIC access",
-          "COPY ... REPLACING //token// BY //token// syntax (double-slash delimiters typical of GnuCOBOL/OpenCOBOL)",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "EXIT PROGRAM vs STOP RUN conditional branch",
-          "No EXEC SQL or EXEC CICS"
+          "PROGRAM-ID ORCR0655",
+          "COPY with // REPLACING delimiters",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "PERFORM ... UNTIL pattern",
+          "EXIT PROGRAM vs STOP RUN conditional",
+          "COPY MCPAREA, COMMON-SPA, CPORCSJOBKANRI.INC",
+          "JMA copyright header 2002"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This batch program (ORCR0655) is part of the ORCA Japan Medical Association standard receipt (medical billing) software. It consolidates/aggregates same-item receipt line entries (同一剤のまとめ) across indexed files (RECE62, RECE64, RECE65, RECE642, RECE64W) for medical claim processing. It reads receipt detail records, groups them by treatment category, and rewrites the consolidated results to working/output files.",
-        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) processing system - JMA ORCA standard receipt software; this program consolidates/aggregates same-item receipt entries (同一剤のまとめ) across RECE62/RECE64/RECE65 indexed files",
+        "summary": "ORCR0655 is a batch program in the JMA ORCA medical receipt system that consolidates duplicate or same-item (同一剤) receipt line entries. It reads from indexed receipt files (RECE62, RECE64, RECE65), aggregates matching records into a work file (RECE642), then outputs the reorganized data to RECE64W. It supports realtime preview, cancellation handling, and public-expense separation (公費単独レセ分離).",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
-        "COPY ... REPLACING with double-slash delimiter syntax",
-        "Multiple indexed files with DYNAMIC and SEQUENTIAL access modes opened on the same physical file via different SELECT aliases (RECE642-FILE / RECE642X-FILE)",
-        "Job management sub-call (ORCSJOB) for step/cancel control",
-        "UNSTRING used to parse comma-delimited COMMAND-PARAM from LINKAGE SECTION",
-        "No COMP-3, no EXEC SQL, no EXEC CICS",
-        "STOP RUN vs EXIT PROGRAM conditional on shell ID (RECEPTX)"
+        "19 COPY statements with REPLACING using // delimiter syntax",
+        "Multiple indexed files with DYNAMIC and SEQUENTIAL access modes on same physical file (RECE642/RECE642X, RECE64W/RECE64WX)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "Conditional EXIT PROGRAM vs STOP RUN based on SHELLID",
+        "UNSTRING for parsing comma-delimited command parameters",
+        "Job management subprogram calls (ORCSJOBKANRI)",
+        "Japanese EUC-encoded comments (latin-1 decoded with mojibake)",
+        "No EXEC SQL or EXEC CICS - file-based indexed I/O only",
+        "OCCURS clauses for comment and index work areas"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in garbled multi-byte characters in comments. The program is clearly part of the open-source ORCA medical receipt system (JMA, Japan). The COPY statements reference external copybooks (.INC files) that are not shown, so full data layout cannot be verified. The double-slash REPLACING syntax and overall structure are consistent with GnuCOBOL/OpenCOBOL as used in the ORCA project."
+      "notes": "Comments are in Japanese EUC encoding, decoded as latin-1 producing mojibake. File is part of the open-source JMA ORCA medical receipt system, a well-known Japanese healthcare IT platform. Source truncated at 16000 chars out of 39162 bytes; full procedure division not visible but structure is clear. Long lines slightly over 72 chars (8 lines) consistent with fixed format with minor overrun."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7103,
-      "completion_tokens": 757,
-      "total_tokens": 7860,
-      "cost": 0.032664,
+      "prompt_tokens": 8481,
+      "completion_tokens": 700,
+      "total_tokens": 9181,
+      "cost": 0.035943,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032664,
-        "upstream_inference_prompt_cost": 0.021309,
-        "upstream_inference_completions_cost": 0.011355
+        "upstream_inference_cost": 0.035943,
+        "upstream_inference_prompt_cost": 0.025443,
+        "upstream_inference_completions_cost": 0.0105
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 20.27,
+    "provider": "Anthropic",
+    "latency_s": 19.38,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:36:57Z"
 }

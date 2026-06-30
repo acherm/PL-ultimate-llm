@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d5c6b9f7793bab7197aedd16f98c1f0fc6f4f1f6",
+    "sha1_git": "d5c6b9f7793bab7197aedd16f98c1f0fc6f4f1f6",
+    "filename": "/SAM1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 20266,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d5c6b9f7793bab7197aedd16f98c1f0fc6f4f1f6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d5c6b9f7793bab7197aedd16f98c1f0fc6f4f1f6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 20266,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 484,
+    "blank_lines": 39,
+    "comment_lines": 56,
+    "code_lines": 389,
+    "comment_ratio": 0.126,
+    "max_line_length": 72,
+    "avg_line_length": 40.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SAM1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 1,
+    "perform_count": 31,
+    "goto_count": 0,
+    "pic_count": 87,
+    "comp3_count": 15,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL; licensed IBM sample program (copyright IBM 2018-2019); uses RECORDING MODE IS V/F, BLOCK CONTAINS 0 RECORDS, RETURN-CODE special register, GOBACK, COMP-3, ACCEPT FROM DATE/TIME — all characteristic of IBM Enterprise COBOL for z/OS",
+        "evidence": [
+          "RECORDING MODE IS V",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-3",
+          "GOBACK",
+          "MOVE 16 TO RETURN-CODE",
+          "ACCEPT CURRENT-DATE FROM DATE",
+          "ACCEPT CURRENT-TIME FROM TIME",
+          "COPY CUSTCOPY REPLACING ==:TAG:== BY ==CUST==",
+          "(C) COPYRIGHT IBM CORPORATION 2018, 2019"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "IBM-supplied sample/lab program for COBOL debugging and fault analysis training; processes a sequential customer file with transaction-driven updates",
+        "summary": "SAM1 reads a sequential transaction file and applies ADD, UPDATE, and DELETE operations to a sorted sequential customer file, writing results to an output customer file and a report. It is explicitly described as a debugging lab and fault-analysis sample. It calls subroutine SAM2 to apply field-level updates to customer records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY with REPLACING using ==:TAG:== pseudo-text replacement",
+        "RECORDING MODE IS V (variable-length records)",
+        "COMP-3 packed-decimal counters",
+        "CALL SAM2 USING dynamic subprogram call",
+        "EVALUATE for transaction code dispatch",
+        "PERFORM TEST AFTER VARYING loop",
+        "RETURN-CODE special register",
+        "GOBACK statement",
+        "File status checking on all four files",
+        "TODO comment tag in source"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (484 lines total per indicators); the visible portion covers all four divisions and most of the procedure division. No ambiguity about dialect or purpose. The program is a well-structured IBM training/lab sample, not a toy, but not production business code either — classified production-like due to its structured error handling, reporting, and file I/O patterns."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7431,
+      "completion_tokens": 544,
+      "total_tokens": 7975,
+      "cost": 0.030453,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030453,
+        "upstream_inference_prompt_cost": 0.022293,
+        "upstream_inference_completions_cost": 0.00816
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.68,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:44:18Z"
+}

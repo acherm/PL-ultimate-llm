@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with SCREEN SECTION, UNSIGNED-INT, FOREGROUND-COLOR, REVERSE-VIDEO, BLINK — typical GnuCOBOL terminal/screen application. Uses FUNCTION in REPOSITORY clause and 88-level condition names extensively.",
         "evidence": [
-          "UNSIGNED-INT data type (GnuCOBOL extension)",
-          "FUNCTION declarations in REPOSITORY (GnuCOBOL user-defined functions)",
-          "FOREGROUND-COLOR / BACKGROUND-COLOR in SCREEN SECTION",
-          "LINE SEQUENTIAL organization",
-          "88-level condition names with multiple VALUES",
-          "OCCURS ... DEPENDING ON (ODO table)",
-          "comment syntax *> (GnuCOBOL/COBOL-2002 style inline comments)"
+          "SCREEN SECTION with FOREGROUND-COLOR, REVERSE-VIDEO, BLINK, HIGHLIGHT",
+          "UNSIGNED-INT PIC type",
+          "FUNCTION declarations in REPOSITORY",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "88-level condition names for game state"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A multi-feature interactive terminal application ('Vault' server) that provides user authentication (login/register), a library/e-book reader, a message board, arcade games (Hangman, Tic-Tac-Toe, random number guessing), a credit/payment system, and an about page. It reads and writes several flat data files for users, books, high scores, game words, and about content.",
-        "domain": "demo",
-        "program_type": "online-cics"
+        "domain": "demo-example",
+        "domain_detail": "Multi-feature terminal application called 'Vault' with login/registration, library, arcade games (Hangman, Tic-Tac-Toe, random number guessing), message board, credits/banking system, and about pages — themed after Fallout's Pip-Boy",
+        "summary": "A large GnuCOBOL terminal application named 'server' that implements a multi-menu system with user authentication, a virtual library, arcade games (Hangman, Tic-Tac-Toe), a message board, a credit/currency system, and an about section. The UI is styled after the Fallout video game Pip-Boy device with ASCII art. It reads/writes multiple flat files for persistence.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "Extensive SCREEN SECTION with FOREGROUND-COLOR, BLINK, UNDERLINE, REVERSE-VIDEO, HIGHLIGHT attributes",
-        "REPOSITORY clause declaring multiple user-defined FUNCTION names",
-        "UNSIGNED-INT (GnuCOBOL extension) used for index/counter variables",
-        "OCCURS ... ASCENDING KEY ... INDEXED BY for sorted in-memory tables (users, books, scores, about)",
-        "OCCURS ... DEPENDING ON (ODO) for variable-length message board table",
-        "Multiple SELECT/FD pairs for flat LINE SEQUENTIAL files (users, library, high scores, hangman words, about, tic-tac-toe masks)",
-        "Pip-Boy ASCII art rendered entirely in SCREEN SECTION VALUE clauses",
-        "88-level condition names used extensively for game state (GAME-OVER, WIN-DETECTED, EOF, etc.)",
-        "No EXEC SQL, no EXEC CICS, no COMP-3"
+        "SCREEN SECTION with full-screen TUI layout",
+        "REPOSITORY clause with user-defined FUNCTION declarations",
+        "OCCURS DEPENDING ON for variable-length tables",
+        "ASCENDING KEY with INDEXED BY for sorted tables",
+        "88-level condition names for game state management",
+        "Multiple SELECT/FD file definitions (LINE SEQUENTIAL)",
+        "ASCII art Pip-Boy display in SCREEN SECTION",
+        "LINKAGE SECTION present (subprogram interface)",
+        "No EXEC SQL or EXEC CICS",
+        "15 CALL statements to external functions"
       ],
-      "maturity": "student-exercise",
+      "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source was truncated to the first 16,000 characters; the PROCEDURE DIVISION is not shown but is confirmed present by mechanical indicators (162 PERFORMs, 6 GOTOs, 15 CALLs). The program is clearly a student/hobbyist project themed around Fallout's Pip-Boy, implementing a text-based multi-menu application in GnuCOBOL with user-defined functions called via REPOSITORY."
+      "notes": "Source truncated to first 16000 chars; full program is 2410 lines. The program appears to be a student or hobbyist project of substantial size, well-structured with multiple divisions and features. The Pip-Boy theming and game features suggest a creative/portfolio project rather than commercial production code, but it is complex enough to be classified as production-like in terms of COBOL craftsmanship."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6421,
-      "completion_tokens": 721,
-      "total_tokens": 7142,
-      "cost": 0.030078,
+      "prompt_tokens": 7799,
+      "completion_tokens": 582,
+      "total_tokens": 8381,
+      "cost": 0.032127,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.030078,
-        "upstream_inference_prompt_cost": 0.019263,
-        "upstream_inference_completions_cost": 0.010815
+        "upstream_inference_cost": 0.032127,
+        "upstream_inference_prompt_cost": 0.023397,
+        "upstream_inference_completions_cost": 0.00873
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.07,
+    "provider": "Anthropic",
+    "latency_s": 15.06,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:09:22Z"
 }

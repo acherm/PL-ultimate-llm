@@ -49,55 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL / OpenCOBOL (ORCA project, Linux-based medical system)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL for Linux; uses MCPAREA/SPAAREA/LINKAREA linkage pattern typical of JMA ORCA",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
-          "INITIALIZE statements",
-          "PROCEDURE DIVISION USING with multiple areas",
-          "Fixed-format source with standard divisions",
-          "COPY statements with REPLACING clause",
-          "No EXEC SQL or EXEC CICS",
-          "ORCA-specific copybooks (MCPAREA, ORCA-SPA, LINKAREA)",
-          "Linux shell script reference 'scripts/claim/HL01.sh'"
+          "PROGRAM-ID ORCGP02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
+          "COPY CPORCMCP.INC / ORCA-DBPATH",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed format max 74 cols"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is the main patient registration program (P02) for the ORCA JMA standard medical receipt software system used in Japanese medical clinics. It handles patient information entry, insurance combination management, hospitalization records, and claim processing. It coordinates multiple screens (P02, P02A, P02D-F, P014, P015, etc.) for patient registration workflows.",
-        "domain": "healthcare/medical billing (Japanese medical receipt system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) system — patient registration subsystem (患者登録 P02 main program)",
+        "summary": "ORCGP02 is the main controller program for the patient registration screen group (P02) in the JMA ORCA medical receipt system. It handles screen navigation (PUTG/CLICKED events), patient master data entry/update, insurance combination management, hospitalization records, and CLAIM processing via shell script invocation. It coordinates numerous subprograms and copybooks covering patient info, insurance, appointments, receipts, and billing.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese medical association (JMA) ORCA open-source receipt software",
-        "Extensive use of COPY statements for modular copybook-based architecture (30+ COPY statements)",
-        "MCP (Message Control Program) event-driven screen handling pattern",
-        "EVALUATE MCP-STATUS ALSO MCP-EVENT for event dispatch",
-        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA",
-        "SPA (Scratch Pad Area) pattern for screen state management",
-        "Japanese comments encoded in latin-1 (actually EUC-JP or Shift-JIS)",
-        "CLAIM processing via shell script invocation",
-        "111 CALL statements indicating heavy use of subroutines",
-        "No COMP-3, no EXEC SQL, no EXEC CICS"
+        "Heavy use of COPY statements (81 copybooks) for JMA ORCA framework",
+        "CALL-heavy architecture (111 CALLs) to subprograms for DB access and screen editing",
+        "MCP (Message Control Program) event-driven screen framework (MCP-STATUS / MCP-EVENT EVALUATE)",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA — JMA ORCA standard linkage pattern",
+        "Shell script invocation for CLAIM processing (scripts/claim/HL01.sh)",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP DB access layer",
+        "No COMP-3 usage despite financial/medical domain",
+        "Extensive SPA (Scratch Pad Area) pattern for screen state management"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text comments encoded as latin-1 (likely EUC-JP or Shift-JIS misidentified). This is part of the well-known ORCA (Open Receipt Computer Advantage) system developed by JMA (Japan Medical Association), an open-source medical billing/receipt system for Japanese clinics. The program uses an event-driven MCP framework typical of the ORCA architecture rather than CICS, but the pattern is similar to online transaction processing. Version history in comments spans 2000-2004. The 'online-cics' program_type label is approximate; ORCA uses its own MCP framework, not CICS."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese, appearing garbled. Source is truncated to first 16000 chars; full file is 4459 lines / 186KB. Program type classified as online-cics by analogy — JMA ORCA uses its own MCP event-driven framework (not CICS) but the pattern is equivalent to an online transaction program. The program_type 'online-cics' is the closest available enum value."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9771,
-      "completion_tokens": 744,
-      "total_tokens": 10515,
-      "cost": 0.040473,
+      "prompt_tokens": 11149,
+      "completion_tokens": 705,
+      "total_tokens": 11854,
+      "cost": 0.044022,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.040473,
-        "upstream_inference_prompt_cost": 0.029313,
-        "upstream_inference_completions_cost": 0.01116
+        "upstream_inference_cost": 0.044022,
+        "upstream_inference_prompt_cost": 0.033447,
+        "upstream_inference_completions_cost": 0.010575
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.05,
+    "latency_s": 18.61,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:25:00Z"
 }

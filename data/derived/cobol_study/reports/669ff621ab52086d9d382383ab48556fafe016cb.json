@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:669ff621ab52086d9d382383ab48556fafe016cb",
+    "sha1_git": "669ff621ab52086d9d382383ab48556fafe016cb",
+    "filename": "/TSQL006A.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3122,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:669ff621ab52086d9d382383ab48556fafe016cb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:669ff621ab52086d9d382383ab48556fafe016cb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3122,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 110,
+    "blank_lines": 30,
+    "comment_lines": 0,
+    "code_lines": 80,
+    "comment_ratio": 0.0,
+    "max_line_length": 62,
+    "avg_line_length": 27.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "TSQL006A"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 2,
+    "pic_count": 9,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) with embedded SQL via ESQL preprocessor; uses DYNSTMT1-ARR/DYNSTMT1-LEN pattern typical of GnuCOBOL ESQL, CONNECT TO/CONNECT RESET syntax, SQLERRMC/SQLERRML fields",
+        "evidence": [
+          "EXEC SQL CONNECT TO :DATASRC USER :DBUSR",
+          "EXEC SQL CONNECT RESET",
+          "DYNSTMT1-ARR / DYNSTMT1-LEN pattern",
+          "SQLERRMC(1:SQLERRML)",
+          "SOURCE-COMPUTER. IBM-AT / OBJECT-COMPUTER. IBM-AT"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "SQL dynamic statement execution test: PREPARE/EXECUTE, EXECUTE IMMEDIATE, and SELECT INTO against a test table TAB1",
+        "summary": "This program is a test case (TSQL006A) for embedded SQL functionality. It connects to a database using environment variables, prepares and executes dynamic INSERT statements, runs EXECUTE IMMEDIATE UPDATE statements, performs a SELECT SUM query, then commits and disconnects. It validates PREPARE, EXECUTE, and EXECUTE IMMEDIATE SQL features.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "EXEC SQL embedded SQL (ESQL)",
+        "Dynamic SQL: PREPARE and EXECUTE",
+        "EXECUTE IMMEDIATE",
+        "CONNECT TO / CONNECT RESET",
+        "DYNSTMT1-ARR/DYNSTMT1-LEN dynamic statement buffer",
+        "SQLCODE/SQLERRM/SQLERRMC/SQLERRML status fields",
+        "DISPLAY UPON ENVIRONMENT-NAME / ACCEPT FROM ENVIRONMENT-VALUE for config",
+        "No COPY statements, no PERFORM, minimal structure"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "BOM (UTF-8 BOM) present at start of file. IDENTIFICATION DIVISION keyword present but 'identification' division not flagged in mechanical indicators (likely a parser quirk). DYNSTMT1 variable is referenced but not declared in the visible WORKING-STORAGE — it is likely defined in an ESQL-generated copybook or implicit host variable structure injected by the preprocessor. Program name TSQL006A suggests it is part of a numbered test suite for SQL features."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3363,
+      "completion_tokens": 578,
+      "total_tokens": 3941,
+      "cost": 0.018759,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018759,
+        "upstream_inference_prompt_cost": 0.010089,
+        "upstream_inference_completions_cost": 0.00867
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.16,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:52:05Z"
+}

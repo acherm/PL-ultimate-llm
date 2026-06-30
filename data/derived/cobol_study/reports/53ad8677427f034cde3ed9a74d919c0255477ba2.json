@@ -49,49 +49,54 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
-        "standard": "COBOL-2002",
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source using >>SOURCE FORMAT FREE directive; part of a 'vplus' screen/key-label library, likely GnuCOBOL-based vplus terminal interface",
         "evidence": [
-          ">>source format free. (GnuCOBOL compiler directive)",
-          "*> comment style (GnuCOBOL/modern COBOL)",
-          "COMP-5 usage (common in GnuCOBOL/Micro Focus)",
-          "USAGE POINTER",
-          "GOBACK statement",
-          "free-format source with >> directive"
+          ">>source format free.",
+          "COMP-5 usage",
+          "COPY \"vplus/COMAREA\"",
+          "COPY \"vplus/VPLUSMEM\"",
+          "CALL \"GetPtrVplusBlock1\"",
+          "GOBACK"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "A subprogram that retrieves key labels from a VPLUS (HP terminal/forms system) memory block and copies them into a linkage section labels structure. It accepts a form organization ID, a count of labels, and a labels buffer, then populates the caller's labels array from the HOT-KEY-LABEL table in the VPLUS memory block.",
-        "domain": "terminal/forms management (HP VPLUS system)",
+        "domain": "utility-tooling",
+        "domain_detail": "Terminal/screen handling utility — retrieves key labels from a vplus screen block and returns them to the caller",
+        "summary": "VGETKEYLABELS is a subprogram that retrieves function-key labels from a vplus terminal memory block. It accepts an organization code, a count of labels, and a label array via the LINKAGE SECTION, then copies up to 8 hot-key labels from the VPLUSMEM structure into the caller-supplied labels array.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "GnuCOBOL free-format compiler directive (>>source format free.)",
-        "USAGE POINTER with SET ADDRESS OF for dynamic memory addressing",
-        "COPY of vplus/COMAREA and vplus/VPLUSMEM copybooks (HP VPLUS forms system)",
-        "COMP-5 binary items",
-        "HOT-KEY-LABEL table reference from VPLUSMEM copybook",
-        "CALL to 'GetPtrVplusBlock1' to obtain pointer to VPLUS memory block"
+        ">>SOURCE FORMAT FREE compiler directive",
+        "COMP-5 binary usage",
+        "USAGE POINTER for dynamic address resolution",
+        "SET ADDRESS OF ... TO ... (pointer manipulation)",
+        "COPY of vplus-specific copybooks (COMAREA, VPLUSMEM)",
+        "CALL to GetPtrVplusBlock1 for pointer retrieval",
+        "OCCURS 8 for key label array",
+        "STRING ... DELIMITED BY"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "This program is part of an HP VPLUS terminal forms system interface, likely ported to GnuCOBOL. The COPY statements reference vplus/ prefixed copybooks that are not shown. The program is small but follows production patterns (pointer manipulation, structured linkage, bounds checking on numoflabels)."
+      "overall_confidence": "medium",
+      "notes": "The vplus library references suggest this is part of a larger terminal-handling framework (possibly GnuCOBOL vplus). Dialect is inferred from free-format directive and COMP-5; no explicit GnuCOBOL-specific extensions beyond these. Author identified as Michael Anderson."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1421,
-      "completion_tokens": 558,
-      "total_tokens": 1979,
-      "cost": 0.012633,
+      "prompt_tokens": 2799,
+      "completion_tokens": 464,
+      "total_tokens": 3263,
+      "cost": 0.015357,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.012633,
-        "upstream_inference_prompt_cost": 0.004263,
-        "upstream_inference_completions_cost": 0.00837
+        "upstream_inference_cost": 0.015357,
+        "upstream_inference_prompt_cost": 0.008397,
+        "upstream_inference_completions_cost": 0.00696
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -111,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 11.21,
+    "latency_s": 11.09,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:20:02Z"
 }

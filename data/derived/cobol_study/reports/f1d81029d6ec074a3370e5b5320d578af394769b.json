@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f1d81029d6ec074a3370e5b5320d578af394769b",
+    "sha1_git": "f1d81029d6ec074a3370e5b5320d578af394769b",
+    "filename": "/STU-BUILDER.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4465,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f1d81029d6ec074a3370e5b5320d578af394769b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f1d81029d6ec074a3370e5b5320d578af394769b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4465,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 123,
+    "blank_lines": 23,
+    "comment_lines": 6,
+    "code_lines": 94,
+    "comment_ratio": 0.06,
+    "max_line_length": 72,
+    "avg_line_length": 34.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "STU-BUILDER"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses LINE SEQUENTIAL organization and relative file paths typical of GnuCOBOL student environments",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO '../FILES/STUDENT-STARTER.TXT'",
+          "SORT with INPUT PROCEDURE / OUTPUT PROCEDURE",
+          "RELEASE/RETURN verbs",
+          "88-level condition name"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student record management exercise; reads a flat student starter file, sorts by last/first name, assigns sequential IDs, and writes to an indexed master file",
+        "summary": "STU-BUILDER reads student records from a flat text file, sorts them by last name then first name using a sort work file, assigns sequential student IDs starting from 0, and writes the results to an indexed output master file. It is a student programming exercise authored by Montana Ruth in 2015.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
+        "RELEASE and RETURN verbs for sort work file",
+        "INDEXED file with RECORD KEY (OUT-STU-ID)",
+        "LINE SEQUENTIAL organization",
+        "88-level EOF condition",
+        "Sequential ID generation via ADD 1 TO WS-CURR-ID",
+        "DISPLAY of output record"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author and date are present in header comments (Montana Ruth, Feb 26 2015). No COPY statements, no COMP-3, no EXEC SQL/CICS. The abstract field in the header is blank. File paths use relative Unix-style paths suggesting a PC/Linux GnuCOBOL environment. The OPEN INPUT/OUTPUT before SORT is unusual since SORT manages file open/close internally, but this is a common student mistake."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3456,
+      "completion_tokens": 459,
+      "total_tokens": 3915,
+      "cost": 0.017253,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017253,
+        "upstream_inference_prompt_cost": 0.010368,
+        "upstream_inference_completions_cost": 0.006885
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.84,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:35:54Z"
+}

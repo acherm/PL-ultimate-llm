@@ -49,52 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL for Linux. Uses MCP (Message Control Program) linkage area pattern typical of ORCA subsystems.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "COPY statements for .INC files (MCPAREA, ORCA-SPA, LINKAREA, Q01.INC etc.)",
-          "PIC 9(01), PIC X(64), BINARY usage",
-          "OCCURS clauses, REDEFINES, INITIALIZE",
-          "Fixed-format source, max line length 74",
-          "Project 'ORCA' is the well-known JMA open-source medical receipt system built with GnuCOBOL/OpenCOBOL"
+          "PROGRAM-ID ORCGQ01",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY Q01.INC / Q02.INC etc. screen copybooks",
+          "no EXEC CICS / no EXEC SQL",
+          "BINARY usage (S9(9) BINARY)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a patient inquiry/search screen component (Q01 – basic patient information, P01) of the ORCA JMA Standard Receipt Software, a Japanese medical billing system. It handles patient master lookup, display, and related data (insurance numbers, diagnoses, addresses, etc.) for a clinic/hospital front-end.",
-        "domain": "healthcare / medical billing (Japanese medical receipt system)",
-        "program_type": "online-cics"
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (shinryo-hoshuu) system - patient inquiry/search screen (Q01: patient basic information lookup). Part of the JMA ORCA open-source medical billing system used by Japanese clinics.",
+        "summary": "This program implements the patient inquiry screen (ORCGQ01) for the JMA ORCA medical receipt system. It handles patient search and display of basic patient information including patient number, name, sex, date of birth, address, insurance number, diagnosis (byomei), and medical treatment history. It is a screen-driven subprogram called via the ORCA MCP framework.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS – uses proprietary MCP (Message Control Program) DB access layer via COPY 'MCPDATA.INC'",
-        "Extensive use of COPY statements for screen layouts (Q01.INC–Q100.INC) and data structures",
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
-        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "MCP (Message Control Program) linkage pattern with MCPAREA/SPAAREA/LINKAREA/SCRAREA",
+        "Extensive use of COPY statements (36 copybooks) for screen layouts and data structures",
+        "BINARY (S9(9) BINARY) usage",
+        "REDEFINES for widget area parsing",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCA DB access layer (MCPDATA.INC)",
         "Large program: 7536 lines, 499 PERFORMs, 155 GOTOs",
-        "BINARY (S9(9) BINARY) usage for state variable",
-        "REDEFINES used extensively for widget parsing",
-        "No COMP-3 usage"
+        "Screen section via copybooks (Q01.INC through Q100.INC)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the open-source ORCA (JMA Standard Receipt Software) project, a well-known Japanese medical billing system. Comments are in Japanese EUC encoding but were decoded as latin-1, producing garbled characters. The program is a screen handler (not CICS) using the ORCA MCP framework. Source is truncated at 16000 chars out of ~290KB; the full file is 7536 lines."
+      "notes": "Comments are encoded in Japanese EUC-JP but decoded as latin-1, producing mojibake in the displayed text. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. File size (290KB, 7536 lines) and structure indicate a substantial production program. No COMP-3 usage is notable for a financial/medical system - likely uses BINARY or display numerics throughout."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7885,
-      "completion_tokens": 731,
-      "total_tokens": 8616,
-      "cost": 0.03462,
+      "prompt_tokens": 9263,
+      "completion_tokens": 654,
+      "total_tokens": 9917,
+      "cost": 0.037599,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.03462,
-        "upstream_inference_prompt_cost": 0.023655,
-        "upstream_inference_completions_cost": 0.010965
+        "upstream_inference_cost": 0.037599,
+        "upstream_inference_prompt_cost": 0.027789,
+        "upstream_inference_completions_cost": 0.00981
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Anthropic",
-    "latency_s": 17.73,
+    "provider": "Amazon Bedrock",
+    "latency_s": 36.89,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:54:24Z"
 }

@@ -49,53 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA dialect",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA (Japan Medical Association standard receipt software) - uses GnuCOBOL/OpenCOBOL with 'grpsys' tagged lines for conditional compilation, CALL to ORCDBMAIN for database operations",
         "evidence": [
-          "PROGRAM-ID ORCSODRS01 matches filename",
-          "All four DIVISIONS present in standard fixed format",
-          "PERFORM UNTIL with END-PERFORM, END-IF inline scope terminators (COBOL-85)",
-          "COPY with REPLACING clause",
-          "CALL 'ORCDBMAIN' USING pattern repeated for DB operations",
-          "grpsys prefix on conditional COPY/CALL lines suggesting conditional compilation or source-level tagging used by ORCA/JMA system",
-          "No EXEC SQL or EXEC CICS — DB access via CALL to ORCDBMAIN",
-          "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled), consistent with Japanese medical software"
+          "PROGRAM-ID ORCSODRS01",
+          "COPY COMMON-SPA / MCPDATA.INC / MCPAREA",
+          "grpsys CALL \"ORCDBMAIN\" USING MCPAREA",
+          "grpsys COPY \"COMMON-SPA\"",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This subprogram is part of the ORCA JMA standard medical receipt software. It deletes an order record and its associated order-item records from the database, first fetching existing order items via a cursor (KEY3 select/fetch loop) and then performing DELETE operations on tbl_order and tbl_odritem tables via calls to ORCDBMAIN.",
-        "domain": "healthcare / medical billing (Japanese medical receipt system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt (claims) processing system - order editing subprogram",
+        "summary": "This subprogram handles deletion of order records and order item records in the ORCA medical receipt system. It fetches order items by key, rebuilds the item list into a linkage section array, then deletes both the order and order-item records from the database via ORCDBMAIN calls.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "grpsys-prefixed lines used as conditional source-level tags (likely processed by a preprocessor or build tool)",
-        "Database access via CALL 'ORCDBMAIN' with MCP-FUNC set to DBSELECT/DBFETCH/DBDELETE/DBINSERT/DBUPDATE/DBCLOSECURSOR",
-        "COPY statements with REPLACING for reusable record layouts (CPODRITEM.INC, CPORDER.INC, etc.)",
-        "OCCURS 30 in LINKAGE SECTION for order item array",
-        "Japanese comments (Shift-JIS or EUC-JP, rendered as garbled latin-1)",
-        "No EXEC SQL or EXEC CICS — proprietary DB middleware abstraction",
-        "COMPUTE used for index increment",
-        "EXIT PROGRAM as subprogram terminator"
+        "grpsys conditional-compilation tag pattern used throughout",
+        "CALL to ORCDBMAIN for all DB operations (SELECT, FETCH, CLOSECURSOR, INSERT, UPDATE, DELETE)",
+        "Heavy use of COPY statements for record layouts (CPORDER.INC, CPODRITEM.INC, MCPDATA.INC, MCPAREA, CPORCSODR.INC, CPORCSODRS01.INC)",
+        "LINKAGE SECTION with OCCURS for order item array",
+        "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCDBMAIN abstraction layer",
+        "PERFORM UNTIL loop for cursor fetch pattern"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file uses Japanese comments encoded in a multibyte encoding (likely EUC-JP or Shift-JIS) that was decoded as latin-1, causing garbled display. The 'grpsys' prefix on certain lines appears to be a source-level conditional compilation or group-system tagging mechanism specific to the ORCA build environment. The duplicate paragraph label '910-DB-SELECT-EXT' (appears twice) is a minor anomaly but does not affect COBOL classification. The program is clearly a production subprogram from the JMA ORCA open-source medical receipt system."
+      "notes": "Comments contain Japanese text that appears garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The 'grpsys' prefix on certain lines appears to be a conditional compilation or source-tagging mechanism specific to the ORCA build system. The file is part of the well-known open-source JMA ORCA medical receipt software project."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 5361,
-      "completion_tokens": 796,
-      "total_tokens": 6157,
-      "cost": 0.028023,
+      "prompt_tokens": 6739,
+      "completion_tokens": 590,
+      "total_tokens": 7329,
+      "cost": 0.029067,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028023,
-        "upstream_inference_prompt_cost": 0.016083,
-        "upstream_inference_completions_cost": 0.01194
+        "upstream_inference_cost": 0.029067,
+        "upstream_inference_prompt_cost": 0.020217,
+        "upstream_inference_completions_cost": 0.00885
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +114,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.3,
+    "provider": "Anthropic",
+    "latency_s": 14.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:26:00Z"
 }

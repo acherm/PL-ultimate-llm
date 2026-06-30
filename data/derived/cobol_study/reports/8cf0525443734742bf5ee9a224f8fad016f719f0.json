@@ -49,48 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely Visual COBOL or COBOL for .NET)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL; uses IS EXTERNAL clause on FD, COPY with REPLACING using == delimiters, and 'AS' alias in PROGRAM-ID",
         "evidence": [
-          "PROGRAM-ID with AS string literal (\"CreateDataFile\") — Micro Focus extension",
-          "IS EXTERNAL on FD — Micro Focus/COBOL-2002 style",
-          "COPY with REPLACING ==(PREFIX)== BY ==...== token replacement syntax",
-          "END PROGRAM marker present",
-          "COPY directives referencing .cpy files"
+          "program-id. CreateDataFile as \"CreateDataFile\"",
+          "FD discFile IS EXTERNAL",
+          "copy \"SDDiscRate.cpy\"",
+          "REPLACING ==(PREFIX)== BY ==FILE=="
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Creates and populates a discount-rate data file with five predefined discount records (codes S10, B10, S05, B05, XCO) including rate and expiry date. It is a simple batch utility to seed or initialise a discount file used by a larger application.",
-        "domain": "retail/discount management, likely part of a student or demo project",
+        "domain": "retail-commerce",
+        "domain_detail": "Discount rate data file creation, likely for a retail or point-of-sale system managing discount codes and rates",
+        "summary": "This program creates and populates a sequential data file with discount rate records. It writes five discount records (S10, B10, S05, B05, XCO) with associated rates and expiry dates to an external file named discFile.",
         "program_type": "batch"
       },
       "notable_features": [
-        "PROGRAM-ID AS string literal (Micro Focus extension)",
-        "FD with IS EXTERNAL clause",
-        "COPY with REPLACING using == == token delimiters",
-        "No PERFORM or GOTO — purely sequential inline writes",
-        "Only one PIC clause visible (WS-FILE-STATUS), rest in copybooks",
-        "END PROGRAM terminator"
+        "IS EXTERNAL on FD clause",
+        "COPY with REPLACING using == delimiters",
+        "PROGRAM-ID AS alias string",
+        "Three COPY statements for shared record definitions",
+        "No PERFORM or CALL statements - purely sequential inline logic"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "medium",
-      "notes": "The ENVIRONMENT DIVISION is absent (no SELECT/ASSIGN), which is unusual; file assignment is likely handled externally or in the copied SDDiscRate.cpy. The AS string on PROGRAM-ID and IS EXTERNAL strongly suggest Micro Focus dialect. The program appears to be part of a small student or tutorial project dealing with discount rates. WS-FILE-STATUS is declared but never used in the visible code."
+      "notes": "No ENVIRONMENT DIVISION present despite file I/O, which is unusual; the IS EXTERNAL clause suggests the file descriptor is shared across programs. The program is small and straightforward, consistent with a student exercise or demo. Dialect is uncertain but the AS alias in PROGRAM-ID and IS EXTERNAL suggest GnuCOBOL or Micro Focus."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1267,
-      "completion_tokens": 522,
-      "total_tokens": 1789,
-      "cost": 0.011631,
+      "prompt_tokens": 2645,
+      "completion_tokens": 399,
+      "total_tokens": 3044,
+      "cost": 0.01392,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011631,
-        "upstream_inference_prompt_cost": 0.003801,
-        "upstream_inference_completions_cost": 0.00783
+        "upstream_inference_cost": 0.01392,
+        "upstream_inference_prompt_cost": 0.007935,
+        "upstream_inference_completions_cost": 0.005985
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -110,8 +111,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 11.54,
+    "latency_s": 9.69,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:42:53Z"
 }

@@ -49,45 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Simple file-writing program, likely compiled with GnuCOBOL; LINE SEQUENTIAL organization and GOBACK usage are consistent with GnuCOBOL/open-source COBOL environments",
         "evidence": [
-          "LINE SEQUENTIAL organization",
-          "HIGH-VALUE used in level-88 condition",
-          "GOBACK statement",
-          "IDENTIFICATION DIVISION present with AUTHOR paragraph"
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "SELECT EMP-FILE ASSIGN TO \"emp1.dat\""
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Creates and writes three employee records to a sequential flat file named 'emp1.dat'. Each record contains SSN, name (surname and forename), date of birth, and gender. This appears to be a data-seeding or initialization program.",
-        "domain": "education/tutorial",
-        "program_type": "batch"
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise writing employee records to a sequential file",
+        "summary": "This program opens a sequential output file (emp1.dat) and writes three hardcoded employee records containing SSN, name, date of birth, and gender. It then closes the file and exits. The author name 'KITTIPOS' and Thai-sounding names suggest a student exercise.",
+        "program_type": "demo"
       },
       "notable_features": [
         "LINE SEQUENTIAL file organization",
-        "Level-88 END-OF-EMP-FILE condition on FD record (unusual placement)",
-        "GOBACK used instead of STOP RUN",
-        "Thai-origin author name (KITTIPOS TEPPANA) suggesting student exercise"
+        "88-level condition name END-OF-EMP-FILE with HIGH-VALUE",
+        "GOBACK statement",
+        "Hardcoded data records (no input)",
+        "No PERFORM or CALL statements"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The IDENTIFICATION DIVISION is detected in the source despite the mechanical indicator showing false — it is present on line 1. The level-88 END-OF-EMP-FILE is defined on the FD record rather than a working-storage flag, which is an unusual but valid pattern. No PERFORM or CALL statements; logic is entirely inline. Likely a student exercise for learning sequential file I/O."
+      "notes": "IDENTIFICATION DIVISION is present in source but not detected by mechanical indicators (likely a parsing issue with trailing space). The program is a straightforward student exercise with Thai names (KITTIPOS TEPPANA, WORRAWIT WERAPAN, SATID MEBUN). No error handling or dynamic data input."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1424,
-      "completion_tokens": 430,
-      "total_tokens": 1854,
-      "cost": 0.010722,
+      "prompt_tokens": 2802,
+      "completion_tokens": 363,
+      "total_tokens": 3165,
+      "cost": 0.013851,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010722,
-        "upstream_inference_prompt_cost": 0.004272,
-        "upstream_inference_completions_cost": 0.00645
+        "upstream_inference_cost": 0.013851,
+        "upstream_inference_prompt_cost": 0.008406,
+        "upstream_inference_completions_cost": 0.005445
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,8 +110,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 8.79,
+    "latency_s": 8.26,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:25:35Z"
 }

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1e27cbadb7be3a0f376c2629692df3aa23fc0b10",
+    "sha1_git": "1e27cbadb7be3a0f376c2629692df3aa23fc0b10",
+    "filename": "/ofldBread.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16749,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1e27cbadb7be3a0f376c2629692df3aa23fc0b10/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1e27cbadb7be3a0f376c2629692df3aa23fc0b10/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16749,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 413,
+    "blank_lines": 34,
+    "comment_lines": 41,
+    "code_lines": 338,
+    "comment_ratio": 0.108,
+    "max_line_length": 72,
+    "avg_line_length": 39.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ofldBread"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 76,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Compiled with 'cob -x' (GnuCOBOL/OpenCOBOL compiler), runs on AIX 6.1 per change log. Uses COMP-X for ls-status, LOCK MODE IS MANUAL, and ENTRY statements typical of GnuCOBOL/Micro Focus style. Path '/home/oasis/include/' suggests Unix/Linux environment.",
+        "evidence": [
+          "compile: cob -x ofldBread.cbl",
+          "ls-status pic x(0004) comp-x",
+          "lock mode is manual with lock on record",
+          "entry 'refreshoffloadfile'",
+          "entry 'processrequest'",
+          "copy \"/home/oasis/include/cobWFscanfiledesc\"",
+          "AIX 6.1 in change log"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "FedEx SmartPost parcel sorting/offload scan file processing",
+        "summary": "This is a subprogram library for FedEx SmartPost that provides routines to open, read, and refresh an indexed scan offload file (SCANFILE). It exposes multiple ENTRY points ('refreshoffloadfile', 'processrequest') to look up scan records by barcode and return detailed parcel routing and sorting data to the caller.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Multiple ENTRY points (refreshoffloadfile, processrequest)",
+        "Indexed file with multiple alternate keys and LOCK MODE IS MANUAL",
+        "COMP-X usage in linkage section",
+        "COPY of external copybook from filesystem path",
+        "Large linkage section with 50+ parameters",
+        "ACCEPT from DATE YYYYMMDD (COBOL-85 extension)",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; the file-error paragraph is cut off mid-STRING statement. Program is clearly production FedEx SmartPost logistics code with change history spanning 2007-2012. The 'cob -x' compile hint and COMP-X usage strongly indicate GnuCOBOL (OpenCOBOL) on Unix/AIX."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6723,
+      "completion_tokens": 548,
+      "total_tokens": 7271,
+      "cost": 0.028389,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028389,
+        "upstream_inference_prompt_cost": 0.020169,
+        "upstream_inference_completions_cost": 0.00822
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.8,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:36:48Z"
+}

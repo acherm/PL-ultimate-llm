@@ -49,56 +49,59 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
-        "standard": "COBOL-2002",
+        "family": "gnucobol",
+        "standard": "COBOL-2014",
+        "detail": "GnuCOBOL free-format source using JC preSQL MySQL interface; part of Applewood Computers Accounting System (ACAS) v3.02+, authored by Vincent B Coen",
         "evidence": [
-          ">>source free (GnuCOBOL compiler directive)",
-          "*> comment style (GnuCOBOL/COBOL-2002+)",
-          "BINARY-CHAR UNSIGNED, BINARY-LONG UNSIGNED (GnuCOBOL extensions)",
-          "COMP-5 usage (GnuCOBOL/Micro Focus)",
-          "SET ENVIRONMENT ... TO ... syntax",
-          "USAGE POINTER",
-          "EXEC SQL via JC pre-SQL preprocessor (not native DB2/CICS)",
-          "CALL to MySQL_errno, MySQL_sqlstate, MySQL_error (GnuCOBOL MySQL C-library bindings)"
+          ">>source free directive",
+          "BINARY-CHAR UNSIGNED / BINARY-LONG UNSIGNED usage",
+          "COMP-5 subscripts",
+          "EXEC SQL absent but MySQL CALLs via JC preSQL (MySQL_errno, MySQL_sqlstate, MySQL_error)",
+          "88-level condition names with VALUE",
+          "COPY directives for .cob/.cpy files",
+          "GNU GPL v2/v3 copyright notice"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This program is a MySQL relational database handler (DAL – Data Access Layer) for an IRS (Internal Revenue/Reporting System) postings table within the ACAS (Applewood Computers Accounting System). It handles open, close, read-next, read-indexed, write, rewrite, delete, delete-all, and start operations against the IRSPOSTING-REC MySQL table, translating COBOL file-function codes into SQL commands via a JC pre-SQL preprocessor and direct MySQL C-library CALLs.",
-        "domain": "accounting/finance",
+        "domain": "accounting-erp",
+        "domain_detail": "IRS (Internal Revenue/Accounting) Postings table RDB handler for the Applewood Computers Accounting System (ACAS); manages MySQL IRSPOSTING-REC table for accounting journal postings",
+        "summary": "This program is a MySQL database handler (DAL) for the IRSPOSTING-REC table within the ACAS accounting system. It processes open, close, read-next, read-indexed, write, rewrite, delete, and delete-all operations on IRS posting records via a JC preSQL MySQL interface. It is called by the acasirsub4 module as a replacement for the flat-file irsub4 handler.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        ">>source free GnuCOBOL compiler directive",
-        "EXEC SQL via JC pre-SQL preprocessor (inline SQL comments rather than true EXEC SQL blocks)",
-        "Direct CALL to MySQL C-library functions: MySQL_errno, MySQL_sqlstate, MySQL_error",
-        "BINARY-CHAR UNSIGNED and BINARY-LONG UNSIGNED GnuCOBOL data types",
-        "USAGE POINTER for MySQL result set handle",
-        "COPY statements for shared copybooks (mysql-variables.cpy, wsfnctn.cob, irswspost.cob, etc.)",
-        "SCREEN SECTION with foreground-color for error display",
-        "Cursor management via 88-level condition names (Cursor-Active / Cursor-Not-Active)",
-        "GO TO used extensively for function dispatch (EVALUATE ... GO TO pattern)",
-        "GNU GPL v2/v3 dual-licensed with commercial restriction notice",
-        "No COMP-3 usage despite accounting domain"
+        ">>source free compiler directive",
+        "JC preSQL MySQL interface (MYSQL-1000-OPEN, MYSQL-1210-COMMAND, etc.)",
+        "CALL to MySQL_errno, MySQL_sqlstate, MySQL_error C-library functions",
+        "BINARY-CHAR UNSIGNED and BINARY-LONG UNSIGNED data types",
+        "COMP-5 subscripts",
+        "Screen Section with foreground-color",
+        "EVALUATE for function dispatch",
+        "GOTO-heavy control flow (34 GOTOs)",
+        "6 COPY statements including mysql-variables.cpy",
+        "Cursor management via 88-level flags (Cursor-Active/Cursor-Not-Active)",
+        "SQL-State and SQL-Err error handling",
+        "Free-format source with *> comments"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file uses a JC pre-SQL preprocessor whose directives appear as COBOL comments (lines starting with *> /MYSQL ...\\), so has_exec_sql in the mechanical indicators likely refers to these pseudo-SQL comment blocks rather than true EXEC SQL ... END-EXEC syntax. The program is part of a larger multi-module accounting system (ACAS v3.02+) with a clear versioning history and copyright lineage from 1976–2024, strongly indicating production-grade software. Author is Vincent B Coen of Applewood Computers."
+      "notes": "Source is truncated to first 16000 chars of a 52895-byte file (1388 lines total). The program uses a custom JC preSQL preprocessor rather than standard EXEC SQL, so has_exec_sql in mechanical indicators may reflect preprocessed or commented SQL stubs. No COMP-3 usage detected. Copyright 1976-2024 Vincent B Coen / Applewood Computers."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5840,
-      "completion_tokens": 831,
-      "total_tokens": 6671,
-      "cost": 0.029985,
+      "prompt_tokens": 7218,
+      "completion_tokens": 647,
+      "total_tokens": 7865,
+      "cost": 0.031359,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.029985,
-        "upstream_inference_prompt_cost": 0.01752,
-        "upstream_inference_completions_cost": 0.012465
+        "upstream_inference_cost": 0.031359,
+        "upstream_inference_prompt_cost": 0.021654,
+        "upstream_inference_completions_cost": 0.009705
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +120,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.56,
+    "provider": "Anthropic",
+    "latency_s": 21.31,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:45:39Z"
 }

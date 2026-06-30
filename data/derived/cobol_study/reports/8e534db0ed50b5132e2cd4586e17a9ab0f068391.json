@@ -49,52 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (or Micro Focus compatible)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Uses '$ SET SOURCEFORMAT\"FREE\"' compiler directive typical of Micro Focus / GnuCOBOL; authored by Michael Coughlan (well-known COBOL educator), likely compiled with GnuCOBOL or Micro Focus for academic use",
         "evidence": [
-          "$ SET SOURCEFORMAT\"FREE\" compiler directive at top",
-          "SORT ... INPUT PROCEDURE ... GIVING construct",
-          "SEARCH ALL with ASCENDING KEY table",
-          "END-READ, END-PERFORM, END-EVALUATE scope terminators",
-          "88-level condition names with VALUE HIGH-VALUES",
+          "$ SET SOURCEFORMAT\"FREE\" directive",
           "LINE SEQUENTIAL organization",
-          "PERFORM VARYING with INDEXED BY"
+          "SEARCH ALL with INDEXED BY",
+          "SORT with INPUT PROCEDURE / GIVING",
+          "88-level condition names on file records"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "Produces a 'Due Subscriptions Report' for a NetNews subscription system. It reads subscriber records, looks up country names via a binary search table, sorts records by country and customer name, then prints a formatted report showing subscription amounts (in local and foreign currency) grouped by country with subtotals by payment method (Visa, Access, AmExpress, Cheque) and final grand totals.",
-        "domain": "publishing/subscription management",
+        "domain": "education-tutorial",
+        "domain_detail": "University COBOL exam exercise (CS4321-96-COBOL-EXAM) producing a due subscriptions report for a fictional NETNEWS service",
+        "summary": "Reads a due-subscriptions data file and a country reference file, sorts records by country and customer name, looks up country names and exchange rates via a binary search table, then produces a formatted report showing subscription amounts in local and foreign currency with subtotals by payment method (Visa, Access, AmExpress, Cheque) per country and grand totals.",
         "program_type": "batch"
       },
       "notable_features": [
-        "$ SET SOURCEFORMAT\"FREE\" compiler directive indicating free-format source despite fixed-format column layout",
-        "SORT verb with INPUT PROCEDURE and GIVING (using a work file)",
-        "SEARCH ALL (binary search) on a table with ASCENDING KEY and INDEXED BY",
-        "Country lookup table loaded at runtime from a flat file (up to 242 entries)",
-        "EVALUATE TRUE with 88-level condition names for payment method dispatch",
-        "Currency editing pictures with floating $ sign (e.g. $$$,$$9, $$,$$$,$$9)",
-        "Exchange rate computation for local currency subscription amounts",
-        "No EXEC SQL, no EXEC CICS, no COPY statements, no COMP-3 usage"
+        "$ SET SOURCEFORMAT FREE compiler directive",
+        "SORT verb with INPUT PROCEDURE and GIVING",
+        "SEARCH ALL (binary search) on an OCCURS table with ASCENDING KEY",
+        "Multiple output report lines with editing PIC clauses ($$,$$$,$$9, BBZZ,ZZZ,ZZ9)",
+        "EVALUATE TRUE with 88-level condition names",
+        "Table of 242 country entries loaded from file",
+        "Exchange rate computation with COMPUTE ROUNDED",
+        "Multiple SELECT files including a sort work file"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The AUTHOR field 'Michael Coughlan' and the comment 'CS4321-96-COBOL-EXAM' strongly suggest this is a student exam or coursework solution from 1996, likely for a university COBOL course. The program is well-structured and demonstrates solid COBOL knowledge but is clearly an academic exercise rather than production code. The $ SET SOURCEFORMAT directive is characteristic of Micro Focus or GnuCOBOL environments."
+      "notes": "The comment '*CS4321-96-COBOL-EXAM' confirms this is a university exam program by Michael Coughlan. The $ SET SOURCEFORMAT directive makes the file technically free-format despite the mechanical indicator guessing fixed. Dialect is likely Micro Focus or GnuCOBOL; no COMP-3 or IBM-specific extensions are present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4225,
-      "completion_tokens": 637,
-      "total_tokens": 4862,
-      "cost": 0.02223,
+      "prompt_tokens": 5603,
+      "completion_tokens": 509,
+      "total_tokens": 6112,
+      "cost": 0.024444,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.02223,
-        "upstream_inference_prompt_cost": 0.012675,
-        "upstream_inference_completions_cost": 0.009555
+        "upstream_inference_cost": 0.024444,
+        "upstream_inference_prompt_cost": 0.016809,
+        "upstream_inference_completions_cost": 0.007635
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +114,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 15.53,
+    "provider": "Anthropic",
+    "latency_s": 14.48,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:49:24Z"
 }

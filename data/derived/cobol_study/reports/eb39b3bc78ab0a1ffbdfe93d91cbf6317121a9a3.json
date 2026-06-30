@@ -49,58 +49,60 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "ACUCOBOL-GT (AcuCOBOL / Micro Focus ACUCOBOL)",
+        "family": "acucobol",
         "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT / Micro Focus ACUCOBOL environment; uses ACUCOBOL-specific extensions such as SIGNED-SHORT usage, acugui.def, acucobol.def copybooks, ACCEPT FROM System-Info/Terminal-Info, EXIT PARAGRAPH, and DECIMAL-POINT IS COMMA. Generated from a .Psf (Pseudo-source file) by a tool called 'Bench/kobalt'.",
         "evidence": [
-          "COPY 'acugui.def' and COPY 'acucobol.def' — ACUCOBOL-specific copybooks",
-          "USAGE IS SIGNED-SHORT — ACUCOBOL extension",
-          "ACCEPT ... FROM System-Info / Terminal-Info — ACUCOBOL runtime intrinsics",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "EXIT PARAGRAPH — COBOL-2002/ACUCOBOL extension",
-          "UNLOCK ALL / UNLOCK mxart — ACUCOBOL file-locking extension",
-          "READ ... WITH LOCK — ACUCOBOL/Micro Focus extension",
-          "CALL 'mis-handler$custom' — dollar-sign in program name typical of ACUCOBOL",
-          "{Bench} comment tags suggest generated from a Bench (kobalt) CASE tool",
-          "DISPLAY ... UPON SYSERR — standard but common in ACUCOBOL environments"
+          "COPY \"acugui.def\"",
+          "COPY \"acucobol.def\"",
+          "USAGE IS SIGNED-SHORT",
+          "ACCEPT System-Information FROM System-Info",
+          "ACCEPT Terminal-Abilities FROM Terminal-Info",
+          "EXIT PARAGRAPH",
+          "DECIMAL-POINT IS COMMA",
+          "program generated from .Psf file",
+          "CALL \"mis-handler$custom\"",
+          "UNLOCK ALL / UNLOCK mxmarque"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A test/handler program for indexed and relative file I/O operations, exercising ACUCOBOL file-handling features such as record locking, sequential/relative access, read-next/previous, delete, rewrite, and custom event handlers. It appears to be a generated test harness (from a 'Bench' CASE tool by kobalt) for validating file-handler behavior against multiple ISAM files (MXMARQUE, MXART, MXCATFOU, etc.).",
-        "domain": "utility",
-        "program_type": "batch"
+        "domain": "other",
+        "domain_detail": "File/record handler testing and validation for a retail/wholesale merchandise management system (MX product line - MARQUE, ART, MXLDIS, MXCATFOU files suggest brand/article/supplier catalog management)",
+        "summary": "A test and validation program for a custom file handler (mar-handler) in an ACUCOBOL-based merchandise management system. It exercises sequential, relative, and indexed file I/O operations including locking, unlocking, read-next/previous, delete, rewrite, and start operations across multiple ISAM files (MXMARQUE, MXART, MXLDIS, MXCATFOU). The program appears to be a developer test harness for verifying correct behavior of a custom file I/O handler.",
+        "program_type": "test"
       },
       "notable_features": [
         "ACUCOBOL SIGNED-SHORT usage",
-        "READ ... WITH LOCK and UNLOCK ALL file-locking extensions",
-        "EXIT PARAGRAPH (COBOL-2002/ACUCOBOL)",
-        "ACCEPT FROM System-Info / Terminal-Info (ACUCOBOL runtime)",
-        "CALL 'mis-handler$custom' with dollar-sign in name (ACUCOBOL convention)",
-        "Generated code with {Bench} comment markers from kobalt CASE tool",
-        "DECIMAL-POINT IS COMMA (European locale)",
+        "EXIT PARAGRAPH (ACUCOBOL extension)",
+        "DECIMAL-POINT IS COMMA",
+        "UNLOCK ALL / UNLOCK file-name (record locking)",
+        "READ ... WITH LOCK",
+        "ACCEPT FROM System-Info / Terminal-Info",
+        "29 COPY statements for file control and FD sections",
+        "Generated from .Psf pseudo-source file by 'Bench/kobalt' tool",
         "DECLARATIVES section with USE AFTER STANDARD ERROR",
-        "Multiple COPY statements for both .sl (SELECT) and .fd (FD) file definitions",
-        "READ PREVIOUS (ACUCOBOL/Micro Focus extension)",
-        "DISPLAY ... UPON SYSERR"
+        "CALL \"mis-handler$custom\" with string argument"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File is truncated at 16000 chars; the full 29543-byte source was not shown. The mechanical indicator shows copy_count=0 but the source clearly contains many COPY statements — this discrepancy suggests the mechanical parser may not have counted them. The program was generated on 2020-11-03 by the 'kobalt' Bench CASE tool and targets an ACUCOBOL-GT runtime environment. French-language comments confirm a French-speaking development context."
+      "notes": "Source is truncated at 16000 chars out of 29543 bytes; the visible portion is sufficient to classify. The program is clearly generated code (noted in comments: 'generated from W:\\mx\\spro\\mar-handler.Psf') by a proprietary COBOL scaffolding tool called Bench/kobalt. The MX file naming convention (MXMARQUE, MXART, MXLDIS, MXCATFOU) suggests a French-language merchandise/retail back-office system. Comments are in French."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5946,
-      "completion_tokens": 846,
-      "total_tokens": 6792,
-      "cost": 0.030528,
+      "prompt_tokens": 7324,
+      "completion_tokens": 710,
+      "total_tokens": 8034,
+      "cost": 0.032622,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -109,9 +111,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.030528,
-        "upstream_inference_prompt_cost": 0.017838,
-        "upstream_inference_completions_cost": 0.01269
+        "upstream_inference_cost": 0.032622,
+        "upstream_inference_prompt_cost": 0.021972,
+        "upstream_inference_completions_cost": 0.01065
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -120,8 +122,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.19,
+    "latency_s": 20.29,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:42:38Z"
 }

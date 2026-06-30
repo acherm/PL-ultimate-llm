@@ -49,53 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) or similar open-source COBOL for Linux/Unix",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING, file paths under /var/tmp/, no COMP-3, no EXEC CICS/SQL",
         "evidence": [
-          "PROGRAM-ID. ORCGP02W2",
-          "All four DIVISIONS present (IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE)",
-          "COPY directives with REPLACING clause (CPHKNCOMBI.INC, CPHKNNUM.INC, CPPTHKNINF.INC)",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL or EXEC CICS",
-          "File paths reference /var/tmp/ (Unix/Linux environment)",
-          "JMA (Japan Medical Association) ORCA open-source medical software project",
-          "OCCURS clauses, PIC X/9 data items consistent with COBOL-85"
+          "PROGRAM-ID ORCGP02W2",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'CPHKNCOMBI.INC' REPLACING",
+          "file paths /var/tmp/",
+          "no EXEC CICS, no EXEC SQL",
+          "fixed format, max line 76"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA Standard Receipt Software) system, specifically handling patient insurance information combination processing (component P02). It builds and validates combinations of health insurance (hoken) and public expense (kouhi) coverage records for Japanese medical billing/receipt (rezept) generation.",
-        "domain": "healthcare/medical billing (Japanese national health insurance)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical insurance receipt (shinryo-hoshu) combination processing - patient insurance registration and combination creation for health insurance and public expense (kouhi) coverage",
+        "summary": "This program (ORCGP02W2) is part of the JMA ORCA standard medical receipt system. It handles patient insurance registration and the creation/validation of insurance combination records (hoken kumiai-se), including national health insurance, public expense subsidies, and long-term care combinations. It is a batch/subprogram component called by higher-level ORCA screens.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
-        "COPY directives with REPLACING for reusable insurance combination record layouts (.INC copybooks)",
-        "Extensive revision history in comments spanning 2000-2006",
-        "Large OCCURS tables (up to 100 entries) for insurance and public expense records",
-        "No EXEC SQL or EXEC CICS — uses file I/O (commented-out INDEXED file SELECT entries suggest migration to DB)",
-        "12 CALL statements and 230 PERFORM statements indicating modular structure",
-        "Open-source JMA ORCA project (Japan Medical Association)",
-        "Fixed-format with max line length 76, consistent with traditional COBOL column discipline"
+        "14 COPY statements with REPLACING clauses (copybook-heavy modular design)",
+        "12 CALL statements to other ORCA subprograms",
+        "230 PERFORM statements indicating structured procedural logic",
+        "No EXEC SQL or EXEC CICS (flat-file / DB access via CALLed modules)",
+        "Extensive Japanese comments in EUC-JP encoding (decoded as latin-1)",
+        "Revision history spanning 2000-2006 with named developers (MCC, NACL)",
+        "OCCURS 99 tables for insurance and public expense combinations",
+        "No COMP-3 usage (unusual for financial/insurance COBOL)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded with latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS), causing mojibake in the comments. The FILE-CONTROL SELECT statements are all commented out, suggesting the program was refactored to use database calls instead of direct file I/O. The COPY statements reference .INC copybook files that are not shown. The program is clearly production-grade medical billing software from the Japanese ORCA open-source project."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese, appearing as mojibake in the snippet. This is standard for JMA ORCA source files. The program is clearly production-grade healthcare software with a detailed revision history. Truncated at 16000 chars; full file is 242KB / 5084 lines."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10036,
-      "completion_tokens": 720,
-      "total_tokens": 10756,
-      "cost": 0.040908,
+      "prompt_tokens": 11414,
+      "completion_tokens": 585,
+      "total_tokens": 11999,
+      "cost": 0.043017,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.040908,
-        "upstream_inference_prompt_cost": 0.030108,
-        "upstream_inference_completions_cost": 0.0108
+        "upstream_inference_cost": 0.043017,
+        "upstream_inference_prompt_cost": 0.034242,
+        "upstream_inference_completions_cost": 0.008775
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.0,
+    "provider": "Anthropic",
+    "latency_s": 16.56,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:41:11Z"
 }

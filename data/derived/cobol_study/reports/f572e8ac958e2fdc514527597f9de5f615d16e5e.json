@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f572e8ac958e2fdc514527597f9de5f615d16e5e",
+    "sha1_git": "f572e8ac958e2fdc514527597f9de5f615d16e5e",
+    "filename": "/relcli.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16170,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f572e8ac958e2fdc514527597f9de5f615d16e5e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f572e8ac958e2fdc514527597f9de5f615d16e5e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16170,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 458,
+    "blank_lines": 54,
+    "comment_lines": 4,
+    "code_lines": 400,
+    "comment_ratio": 0.01,
+    "max_line_length": 72,
+    "avg_line_length": 34.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "RELCLI"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 0,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 44,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) targeting PC environment; Portuguese-language Brazilian business application with DECIMAL-POINT IS COMMA, SCREEN SECTION, COPY copybooks, and FUNCTION SQRT usage consistent with GnuCOBOL on Linux/Windows PC",
+        "evidence": [
+          "SOURCE-COMPUTER. PC",
+          "OBJECT-COMPUTER. PC",
+          "DECIMAL-POINT IS COMMA",
+          "SCREEN SECTION with COPY relcli.scr",
+          "FUNCTION SQRT",
+          "ACCEPT ... FROM ESCAPE KEY",
+          "DISPLAY ... AT nnnn WITH BEEP",
+          "NO LOCK on READ"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian customer report generation with vendor (salesperson) assignment by geographic proximity (latitude/longitude distance calculation)",
+        "summary": "RELCLI is a batch report program that prints a formatted customer list (Relatório de Clientes) filtered by code range, company name range, and salesperson. It reads customer and vendor files, calculates the nearest vendor to each customer using a Euclidean distance approximation on lat/lon coordinates, and prints paginated output to a printer file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "SCREEN SECTION with external copybook (relcli.scr)",
+        "FUNCTION SQRT for geographic distance calculation",
+        "ACCEPT ... FROM ESCAPE KEY for screen navigation",
+        "GO TO used for screen field back-navigation",
+        "START with NOT LESS / NOT GREATER for ISAM positioning",
+        "Multiple COPY directives for file SELECT, FD, and working-storage",
+        "Portuguese-language identifiers and messages",
+        "WRITE ... AFTER PAGE for printer pagination",
+        "88-level condition names with FALSE clause"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source is truncated at 16000 chars; the last visible line is incomplete (MOVE 05 cut off). The program appears to be part of a larger Brazilian small-business ERP suite given the copybook naming conventions (arqcli, arqven, comum.wrk). There is a likely syntax error in the source at line with 'WS-CLASSIFICACAO NOT EQUAL \"C AND \"c\"' (missing closing quote), which may be a transcription artifact. Dialect assigned as GnuCOBOL based on PC target and feature set, but could be another PC COBOL (e.g. Micro Focus Personal COBOL); confidence is medium."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7133,
+      "completion_tokens": 606,
+      "total_tokens": 7739,
+      "cost": 0.030489,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030489,
+        "upstream_inference_prompt_cost": 0.021399,
+        "upstream_inference_completions_cost": 0.00909
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 23.26,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:39:45Z"
+}

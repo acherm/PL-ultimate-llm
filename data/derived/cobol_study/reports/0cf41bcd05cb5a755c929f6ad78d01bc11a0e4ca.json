@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0cf41bcd05cb5a755c929f6ad78d01bc11a0e4ca",
+    "sha1_git": "0cf41bcd05cb5a755c929f6ad78d01bc11a0e4ca",
+    "filename": "/lbp201.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 23189,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0cf41bcd05cb5a755c929f6ad78d01bc11a0e4ca/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0cf41bcd05cb5a755c929f6ad78d01bc11a0e4ca/raw/"
+  },
+  "indicators": {
+    "bytes_len": 23189,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 542,
+    "blank_lines": 32,
+    "comment_lines": 12,
+    "code_lines": 498,
+    "comment_ratio": 0.024,
+    "max_line_length": 72,
+    "avg_line_length": 40.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LBP201"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 22,
+    "call_count": 6,
+    "perform_count": 64,
+    "goto_count": 0,
+    "pic_count": 77,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with OO extensions (class-control, invoke, object reference), Dialog System (DS-CONTROL-BLOCK, CALL-DIALOG-SYSTEM), and Micro Focus copybook conventions (.MF extension). Brazilian Portuguese application.",
+        "evidence": [
+          "class-control. Window is class \"wclass\"",
+          "invoke Window \"fromHandleWithClass\"",
+          "77 janelaPrincipal object reference",
+          "COPY \"DS-CNTRL.MF\"",
+          "move-object-handle principal handle8",
+          "pic 9(08) comp-x",
+          "pic 9(09) comp-5",
+          "COPY IMPRESSORA.CHAMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Laboratory/photo film analysis system (LBP prefix suggests laboratorio de processamento de filmes - revealed/developed film analysis). Tracks film processing by employee, shift, film type, and interruption type within a date range.",
+        "summary": "Program LBP201 lists analyses of developed/revealed films within a user-specified date range. It loads data from indexed files (LBD021, LBD023, LBD029, LBD101) into a work file, then displays results in a list sorted by various criteria (date, employee, shift, film type). It calculates elapsed processing time accounting for interruptions.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Micro Focus OO COBOL extensions (class-control, invoke, object reference)",
+        "Dialog System integration (DS-CONTROL-BLOCK, CALL-DIALOG-SYSTEM)",
+        "22 COPY statements for modular file/record definitions",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "PRINTER IS LPRINTER with named printer",
+        "Multiple ALTERNATE RECORD KEYs on WORK file",
+        "Time calculation using GRTIME external subprogram",
+        "GRIDAT2 date conversion subprogram calls",
+        "Brazilian Portuguese comments and variable names",
+        "78-level constant (REFRESH-TEXT-AND-DATA-PROC)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 due to Brazilian Portuguese accented characters (e.g., ANÁLISE, FUNÇÃO, AMÂNCIO). The program_type is set to online-cics as a proxy for Micro Focus Dialog System GUI application (no CICS present). Source truncated at 16000 chars; ORDEM SECTION and subsequent sections not fully visible but structure is clear."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7748,
+      "completion_tokens": 604,
+      "total_tokens": 8352,
+      "cost": 0.032304,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032304,
+        "upstream_inference_prompt_cost": 0.023244,
+        "upstream_inference_completions_cost": 0.00906
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.78,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:54:07Z"
+}

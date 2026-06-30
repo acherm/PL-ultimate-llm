@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with REPLACING using // delimiters, INDEXED files, and Japanese EUC-encoded comments.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
-          "COPY with REPLACING using // delimiters (OpenCOBOL/GnuCOBOL style)",
-          "OCCURS clauses, REDEFINES, PIC X/9 definitions",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL or EXEC CICS — standalone batch COBOL",
-          "PROGRAM-ID ORCR0910 matches ORCA open-source medical receipt software by JMA (Japan Medical Association)"
+          "PROGRAM-ID ORCR0910",
+          "COPY with // REPLACING delimiter syntax",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED",
+          "Copyright JMA (Japan Medical Association) ORCA project",
+          "No EXEC CICS or EXEC SQL",
+          "File extensions .CBL and .INC copybooks"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA Standard Receipt Software) system used by Japanese medical institutions. It generates monthly billing/receipt detail files for hospitalization and self-pay (jibai) claims, editing point-score tables and compiling claim line items. It reads indexed files (RECE82, RECE84, RECE85, RECE86) and produces formatted receipt output including procedure codes, quantities, comments, and diagnostic category breakdowns.",
-        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - monthly billing detail file creation for hospitalization and self-pay receipts",
+        "summary": "ORCR0910 is a batch program in the JMA ORCA medical receipt software system. It reads indexed receipt files (RECE82, RECE84, RECE85, RECE86) and generates monthly billing detail files for hospitalization and self-pay (自費) receipts, including point-count editing and diagnosis-code-based record assembly.",
         "program_type": "batch"
       },
       "notable_features": [
-        "COPY statements with REPLACING using // delimiter syntax (GnuCOBOL/OpenCOBOL convention)",
-        "Multiple indexed VSAM-style files with DYNAMIC and SEQUENTIAL access modes",
-        "Extensive Japanese-language comments (EUC-JP or Shift-JIS encoded, rendered as latin-1 mojibake)",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage despite being a financial/billing application",
-        "176 PERFORM statements indicating structured procedural decomposition",
-        "REDEFINES used for numeric field overlays (WRK-SURYO / WRK-SURYO-R)",
-        "Long revision history spanning 2003–2012 with named maintainers (NACL team)",
-        "Open-source JMA license header"
+        "INDEXED file organization with DYNAMIC and SEQUENTIAL access modes",
+        "COPY ... REPLACING with // delimiter (GnuCOBOL style)",
+        "18 COPY statements referencing .INC copybooks",
+        "Japanese EUC/latin-1 encoded comments throughout",
+        "REDEFINES clause usage",
+        "OCCURS clauses for table handling",
+        "No COMP-3 usage despite numeric processing",
+        "Error file (RECEERR-FILE) for batch error reporting",
+        "Extensive revision history in comments spanning 2003-2012"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in latin-1 but the Japanese comments are actually EUC-JP or Shift-JIS, causing mojibake in the displayed text. The COPY statements reference external copybooks (.INC files) that are not included in this file, so full data structure analysis is incomplete. The program is clearly production-grade medical billing software from the well-known Japanese open-source ORCA project. The absence of COMP-3 is somewhat unusual for a billing system but consistent with the observed pic_count and the GnuCOBOL target platform."
+      "notes": "Source file is encoded in latin-1 but contains Japanese EUC-encoded text in comments (garbled when decoded as latin-1). This is the JMA ORCA open-source medical receipt system. The truncated source shows only the first ~16KB of a 170KB file (3627 lines total). Dialect is GnuCOBOL/OpenCOBOL based on project context and COPY REPLACING syntax with // delimiters."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10441,
-      "completion_tokens": 788,
-      "total_tokens": 11229,
-      "cost": 0.043143,
+      "prompt_tokens": 11819,
+      "completion_tokens": 556,
+      "total_tokens": 12375,
+      "cost": 0.043797,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.043143,
-        "upstream_inference_prompt_cost": 0.031323,
-        "upstream_inference_completions_cost": 0.01182
+        "upstream_inference_cost": 0.043797,
+        "upstream_inference_prompt_cost": 0.035457,
+        "upstream_inference_completions_cost": 0.00834
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.86,
+    "latency_s": 16.68,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:43:06Z"
 }

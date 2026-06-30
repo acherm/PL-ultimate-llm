@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ba85b0648955d9b46f837be5609fd355ce0f6f89",
+    "sha1_git": "ba85b0648955d9b46f837be5609fd355ce0f6f89",
+    "filename": "/CWSPID.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5367,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ba85b0648955d9b46f837be5609fd355ce0f6f89/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ba85b0648955d9b46f837be5609fd355ce0f6f89/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5367,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 158,
+    "blank_lines": 23,
+    "comment_lines": 5,
+    "code_lines": 130,
+    "comment_ratio": 0.037,
+    "max_line_length": 72,
+    "avg_line_length": 33.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CWSPID"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 2,
+    "pic_count": 13,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with $Set directives (IdxFormat, DataCompress, KeyCompress, Remove), COMP-5, LOCK MODE IS EXCLUSIVE, VALUE OF FILE-ID, and ON 1 declarative-style usage. Authored by COBOLware Services Ltda (Brazilian vendor). Portuguese variable names and DECIMAL-POINT IS COMMA confirm Brazilian Portuguese locale.",
+        "evidence": [
+          "$Set Remove\"OBJECT\" Remove\"OBJECT-ID\"",
+          "$Set IdxFormat\"14\" DataCompress\"1\" KeyCompress\"7\"",
+          "COMP-5",
+          "LOCK MODE IS EXCLUSIVE",
+          "VALUE OF FILE-ID",
+          "ON 1",
+          "DECIMAL-POINT IS COMMA",
+          "AUTHOR. COBOLware Services Ltda."
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Object ID management utility — allocates and recycles unique numeric identifiers for typed objects, using indexed files as a free-list and object registry. Likely part of a larger application framework by COBOLware Services Ltda.",
+        "summary": "CWSPID is a subprogram that manages unique object identifiers. It supports two modes: sequential (SEQ) using a free-list indexed file, and multi-type (MULTI) using an object registry indexed file. Callers pass a type and option (Insert/Release) to obtain or return an ID.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "$Set compiler directives (Micro Focus specific)",
+        "COMP-5 binary usage",
+        "LOCK MODE IS EXCLUSIVE on indexed files",
+        "VALUE OF FILE-ID for dynamic file assignment",
+        "ON 1 conditional (Micro Focus extension)",
+        "ALTERNATE KEY with composite key (OBJECT-FREE = OBJECT-FLAG OBJECT-CHAVE)",
+        "PROCEDURE DIVISION USING (subprogram interface)",
+        "INSPECT CONVERTING for case normalization",
+        "Portuguese variable names and comments",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The $Set Remove directives suppress reserved-word conflicts for OBJECT and OBJECT-ID, which are COBOL-2002 reserved words, indicating awareness of standard conflicts. The program is a utility subprogram from a Brazilian software house (COBOLware Services Ltda), dated 2004. No SQL or CICS. All four divisions present, well-structured."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3776,
+      "completion_tokens": 591,
+      "total_tokens": 4367,
+      "cost": 0.020193,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020193,
+        "upstream_inference_prompt_cost": 0.011328,
+        "upstream_inference_completions_cost": 0.008865
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 22.0,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:35:17Z"
+}

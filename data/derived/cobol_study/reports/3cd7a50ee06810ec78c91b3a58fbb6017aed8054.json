@@ -49,57 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible (likely running on a Linux/Unix system given ORCA/JMA medical software context)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); uses ORCDBMAIN DB call pattern, COPY copybooks with .INC extension, LINKAGE SECTION with COMMAND-PARAM, typical GnuCOBOL/OpenCOBOL deployment",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "COPY statements with REPLACING clause",
-          "PERFORM ... UNTIL / PERFORM VARYING ... BY ... UNTIL",
-          "OPEN I-O, OPEN INPUT, OPEN OUTPUT",
-          "INDEXED file organization with DYNAMIC access and RECORD KEY",
-          "INITIALIZE verb",
-          "END-IF, END-PERFORM inline scope terminators (COBOL-85+)",
-          "CALL 'ORCDBMAIN' USING ... with multiple parameters",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED ... ACCESS MODE IS DYNAMIC"
+          "PROGRAM-ID. ORCR0670",
+          "COPY \"CPRCF062.INC\"",
+          "CALL \"ORCDBMAIN\" USING MCPAREA",
+          "CALL \"ORCSJOB\"",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"MCPDATA.INC\"",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This batch program (ORCR0670) is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It performs disease-name (byomei) editing/compilation for inpatient receipt processing, reading receipt detail files (RECE62, RECE63), checking and updating patient disease name records (tbl_ptbyomei) via a database call, and writing results to output files including an error file.",
-        "domain": "healthcare / medical billing (Japanese medical insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) processing system - inpatient disease name (傷病名) editing/maintenance module",
+        "summary": "ORCR0670 is a batch/subprogram component of the JMA ORCA standard medical receipt software. It reads receipt detail files (RECE62, RECE63), processes patient disease name (傷病名) records, performs editing and validation checks, and writes updated records. It handles disease name editing flags, insurance period checks, and inpatient/outpatient classification.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese comments encoded in latin-1 (Shift-JIS or EUC-JP garbled as latin-1)",
-        "CALL 'ORCDBMAIN' for database access (custom DB abstraction layer, not EXEC SQL)",
-        "CALL 'ORCSJOB' for job management/step control",
-        "COPY statements referencing .INC copybooks (CPRCF062.INC, CPRCF063.INC, CPJOBKANRI.INC, etc.)",
-        "COPY with REPLACING for file record aliases (RECE63W)",
-        "Multiple indexed files with DYNAMIC access mode",
-        "LINKAGE SECTION with COMMAND-PARAM for shell/program invocation",
-        "Conditional STOP RUN vs EXIT PROGRAM based on SHELLID parameter",
-        "grpsys-prefixed comment/code lines indicating group system integration points",
-        "No EXEC SQL or EXEC CICS — uses proprietary ORCDBMAIN call interface"
+        "17 COPY statements with .INC copybooks",
+        "16 CALL statements including ORCDBMAIN and ORCSJOB",
+        "LINKAGE SECTION with COMMAND-PARAM (called as subprogram or standalone)",
+        "INDEXED file I-O with DYNAMIC access mode",
+        "Japanese Shift-JIS encoded comments (decoded as latin-1)",
+        "PERFORM VARYING with inline END-PERFORM",
+        "GO TO used for early exit from validation sections",
+        "REPLACING clause in COPY statements",
+        "grpsys-prefixed lines suggesting conditional compilation or group system markers"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is clearly production COBOL from the open-source ORCA medical receipt system developed by JMA (Japan Medical Association). Japanese text in comments is garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The 'grpsys' prefix on some lines appears to be a conditional compilation or group-system marker. The program uses 16 CALLs to external subprograms for DB access, job management, date conversion, and disease-name construction. Source is truncated at 16000 chars but the structure is clear."
+      "notes": "Source comments are in Japanese Shift-JIS encoding, decoded as latin-1 causing mojibake in the archived text. The 'grpsys' prefix on some lines appears to be a source-level conditional marker used in the JMA ORCA build system. File is truncated at 16000 chars out of ~32000 bytes total; the full PROCEDURE DIVISION logic is only partially visible."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7482,
-      "completion_tokens": 841,
-      "total_tokens": 8323,
-      "cost": 0.035061,
+      "prompt_tokens": 8860,
+      "completion_tokens": 590,
+      "total_tokens": 9450,
+      "cost": 0.03543,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -108,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035061,
-        "upstream_inference_prompt_cost": 0.022446,
-        "upstream_inference_completions_cost": 0.012615
+        "upstream_inference_cost": 0.03543,
+        "upstream_inference_prompt_cost": 0.02658,
+        "upstream_inference_completions_cost": 0.00885
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 20.71,
+    "provider": "Anthropic",
+    "latency_s": 15.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:51:36Z"
 }

@@ -50,50 +50,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (CICS application)",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "Micro Focus demonstration program, part of an ATM/banking demo application (BankDemo or similar). Uses DFHCOMMAREA and CICS-style copybooks (CENTRY, CRETURN) but compiled under Micro Focus runtime rather than IBM CICS directly.",
         "evidence": [
-          "Copyright notice explicitly states 'Micro Focus'",
-          "DFHCOMMAREA in LINKAGE SECTION (CICS convention)",
-          "COPY CENTRY / COPY CRETURN (Micro Focus CICS entry/return copybooks)",
-          "END-PERFORM (COBOL-85)",
-          "Reference modification: DFHCOMMAREA (1:LENGTH OF WS-CASH-DATA)",
-          "PERFORM 5 TIMES with inline body"
+          "Copyright (C) 1998-2010 Micro Focus. All Rights Reserved.",
+          "COPY CENTRY",
+          "COPY CRETURN",
+          "COPY CABENDD",
+          "Version 5.99c sequenced on Wednesday 3 Mar 2011"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "ATM business-logic program that retrieves a list of enabled/accessible accounts for a given user. It moves the passed COMMAREA into working storage, calls a data-access routine (via COPY CCASHX02) to fetch up to 5 accounts, then maps account number, description, balance, daily limit, date used, and date amount back into the communication area before returning.",
-        "domain": "banking",
-        "program_type": "online-cics"
+        "domain": "banking-finance",
+        "domain_detail": "ATM banking demonstration application - retrieves list of enabled accounts for a user",
+        "summary": "BCASH01P is a business-logic subprogram in a Micro Focus ATM demo application. It receives a COMMAREA, retrieves account data (account number, description, balance, daily limit, date used, date amount) for up to 5 accounts associated with a user ID, and returns the populated COMMAREA to the caller.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "DFHCOMMAREA linkage (CICS program structure)",
-        "COPY CENTRY / COPY CRETURN (Micro Focus CICS boilerplate copybooks)",
-        "Multiple COPY statements for data structures (CCASHDAT, CCASHD02, CABENDD, CCASHX02)",
-        "Reference modification on DFHCOMMAREA",
-        "PERFORM 5 TIMES loop iterating over account array",
-        "No EXEC CICS or EXEC SQL — CICS calls abstracted through copybooks",
-        "Sequence numbers in columns 1-6 with program-id tag in columns 73-80"
+        "DFHCOMMAREA linkage (CICS-style communication area)",
+        "Reference modification: DFHCOMMAREA (1:LENGTH OF WS-CASH-DATA)",
+        "Multiple COPY statements for data structures and entry/return boilerplate (CCASHDAT, CCASHD02, CABENDD, CCASHX02, CENTRY, CRETURN)",
+        "PERFORM n TIMES loop iterating over 5 accounts",
+        "No PROCEDURE DIVISION header detected (likely inside COPY CENTRY)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The PROCEDURE DIVISION header is absent as a literal keyword — the procedure code begins inline after the LINKAGE SECTION via the COPY CENTRY copybook, which is why 'divisions_present.procedure' is false in the mechanical scan. The program_ids list shows 'PIC' as a spurious match from the PIC clause parsing. All 90 lines are padded to exactly 80 characters (avg_line_length 80.0), consistent with Micro Focus fixed-format source. The version comment at line 9000 ('Version 5.99c … 2011') confirms Micro Focus tooling."
+      "notes": "The PROCEDURE DIVISION header is absent from the visible source because it is contained within the COPY CENTRY copybook. The mechanical indicator shows divisions_present.procedure=false for this reason. The program_ids array incorrectly includes 'PIC' due to parser confusion with the inline PIC clause on the same line as PROGRAM-ID area. This is a well-structured Micro Focus BankDemo component."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2545,
-      "completion_tokens": 667,
-      "total_tokens": 3212,
-      "cost": 0.01764,
+      "prompt_tokens": 3923,
+      "completion_tokens": 519,
+      "total_tokens": 4442,
+      "cost": 0.019554,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.01764,
-        "upstream_inference_prompt_cost": 0.007635,
-        "upstream_inference_completions_cost": 0.010005
+        "upstream_inference_cost": 0.019554,
+        "upstream_inference_prompt_cost": 0.011769,
+        "upstream_inference_completions_cost": 0.007785
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +113,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.77,
+    "latency_s": 12.64,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:55:31Z"
 }

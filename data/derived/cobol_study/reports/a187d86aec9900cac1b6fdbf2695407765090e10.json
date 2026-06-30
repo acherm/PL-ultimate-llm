@@ -49,49 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL subprogram; compile comment references 'cobc -x principal.cbl estclientes.cbl -o estadisticas.exe'",
         "evidence": [
-          "comment line 'cobc -x principal.cbl estclientes.cbl -o estadisticas.exe' indicates GnuCOBOL compiler",
-          "GOBACK used as return from subprogram",
-          "PROCEDURE DIVISION USING with LINKAGE SECTION parameters",
-          "EVALUATE/END-EVALUATE, END-READ, END-WRITE, END-REWRITE, END-DELETE, END-START (COBOL-85 scope terminators)",
-          "ORGANIZATION IS INDEXED with ACCESS IS DYNAMIC and FILE STATUS"
+          "cobc -x compile comment",
+          "GOBACK used throughout",
+          "ORGANIZATION IS INDEXED with DYNAMIC access",
+          "PROCEDURE DIVISION USING with LINKAGE SECTION"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A subprogram (file manager) that provides a generic interface for CRUD operations on an indexed ISAM file (ESTCLI.BIN) containing client statistics records. It accepts an operation code ('O','A','C','S','R','N','W','U','D') via LINKAGE SECTION and dispatches to open, close, start, read, read-next, write, rewrite, or delete routines accordingly.",
-        "domain": "unknown (likely business/client management)",
+        "domain": "other",
+        "domain_detail": "File management subprogram for an indexed customer statistics file (ESTCLI.BIN), likely part of a larger client statistics application",
+        "summary": "This is a subprogram that acts as a generic file manager for an indexed ISAM file (ESTCLI.BIN). It accepts an operation code via LINKAGE SECTION and dispatches to open, close, read, read-next, write, rewrite, delete, and start operations on the file, returning file status to the caller.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "LINKAGE SECTION with operacion, registro, fs-clientes parameters — called as a subprogram",
-        "ORGANIZATION IS INDEXED with ACCESS IS DYNAMIC and composite RECORD KEY (COD-CLI + NRO-SEC)",
-        "FILE STATUS IS FS-ESTCLI propagated back to caller via fs-clientes",
-        "EVALUATE on operation code dispatching to multiple file I/O paragraphs",
+        "ORGANIZATION IS INDEXED with DYNAMIC ACCESS",
+        "PROCEDURE DIVISION USING (LINKAGE SECTION parameters)",
+        "EVALUATE on operation code for dispatch",
         "START with KEY IS GREATER for sequential positioning",
-        "Tab characters used for indentation (mixed with spaces — visible in source)",
-        "Commented-out DISPLAY debug statements in read-next-clientes"
+        "GOBACK in each paragraph (not STOP RUN)",
+        "Composite key (COD-CLI + NRO-SEC)",
+        "Commented-out DISPLAY debug statements",
+        "Mixed indentation with tabs and spaces"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The file uses tab characters for some indentation (visible in the source), which is non-standard for fixed-format COBOL but tolerated by GnuCOBOL. The program is clearly a subprogram component of a larger system (referenced alongside principal.cbl and estclientes.cbl in the build comment). The composite key structure and file-status handling suggest a student or academic project rather than production code."
+      "notes": "Source uses mixed tabs and spaces for indentation (visible in NRO-SEC lines), which is unusual for strict fixed-format COBOL but accepted by GnuCOBOL. The program is clearly a student or educational project given the Spanish naming, compile comment at top, and overall structure. No COMP-3, no SQL, no CICS."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2946,
-      "completion_tokens": 647,
-      "total_tokens": 3593,
-      "cost": 0.018543,
+      "prompt_tokens": 4324,
+      "completion_tokens": 449,
+      "total_tokens": 4773,
+      "cost": 0.019707,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.018543,
-        "upstream_inference_prompt_cost": 0.008838,
-        "upstream_inference_completions_cost": 0.009705
+        "upstream_inference_cost": 0.019707,
+        "upstream_inference_prompt_cost": 0.012972,
+        "upstream_inference_completions_cost": 0.006735
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -110,9 +113,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 15.04,
+    "provider": "Anthropic",
+    "latency_s": 11.66,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:06:08Z"
 }

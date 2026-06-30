@@ -49,52 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Japan Medical Association open-source receipt system); uses ORCMCPSUB/ORCSDAY call conventions typical of GnuCOBOL-based ORCA",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
-          "PERFORM UNTIL with inline END-PERFORM",
-          "COPY directives for copybooks (.INC files)",
-          "CALL 'ORCMCPSUB' / CALL 'ORCSDAY' style subprogram calls",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "Fixed-format source, max line length 74"
+          "PROGRAM-ID ORCGZ07",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "CALL ORCMCPSUB",
+          "CALL ORCSDAY",
+          "Copyright JMA 2002",
+          "filename ORCGZ07.CBL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It handles the 'self-clinic code expiry date change' (自院コード期限切れ変更) screen (Z07), managing point/fee master (tensu master) records whose validity periods have expired. It initialises screen areas, retrieves tensu master records from a database via MCP calls, and drives screen navigation and data entry for updating expiry dates.",
-        "domain": "healthcare / medical billing (Japanese medical receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-hoshu) system — point-score master (tensu master) validity-date change management screen Z07",
+        "summary": "This program implements screen Z07 of the JMA ORCA medical receipt system, handling the expiry/change of validity dates on the point-score (tensu) master table. It initialises the screen, retrieves tensu master records filtered by validity date via a database call, and manages screen navigation and SPA (scratchpad area) state for the operator.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP (Message Control Program) database access via CALL 'ORCMCPSUB'",
-        "Heavy use of COPY copybooks (.INC files) for screen layouts, file records, and subroutine parameter areas",
-        "Japanese text in comments (encoded as latin-1/EUC-JP mixed, explaining the garbled characters)",
-        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
-        "24 CALL statements to various ORCA utility subprograms (ORCSDAY, ORCMCPSUB, etc.)",
-        "EVALUATE with ALSO clause for multi-condition dispatch",
-        "SPA (Screen Parameter Area) pattern typical of ORCA/OpenCOBOL screen management",
-        "No COMP-3 usage despite being a production system"
+        "31 COPY statements (heavy use of copybooks for screen areas, DB areas, sub-parameter areas)",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA passed via USING",
+        "CALL to ORCMCPSUB (MCP database middleware)",
+        "CALL to ORCSDAY (date calculation sub)",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen dispatch",
+        "Japanese EUC-JP encoded comments (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP DB layer",
+        "OCCURS 200 for tensu list in SPA area"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in EUC-JP (Japanese) but was decoded as latin-1, causing the Japanese comment text to appear as garbled latin-1 characters. The program is clearly part of the well-known open-source ORCA medical receipt system developed by JMA Japan. The 'online-cics' program_type label is used loosely — ORCA uses its own MCP windowing/screen framework rather than CICS, but the pattern (screen-driven, linkage-based, SPA state management) is functionally equivalent to an online transaction program."
+      "notes": "Comments are encoded in EUC-JP Japanese but the file was decoded as latin-1, producing mojibake. Content is clearly readable as COBOL. Source is truncated at 16000 chars (~23% of total 70845 bytes); the procedure division logic continues beyond the shown portion. No COMP-3 usage despite being a numeric-heavy medical billing program — likely uses display numerics throughout."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6860,
-      "completion_tokens": 783,
-      "total_tokens": 7643,
-      "cost": 0.032325,
+      "prompt_tokens": 8238,
+      "completion_tokens": 573,
+      "total_tokens": 8811,
+      "cost": 0.033309,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032325,
-        "upstream_inference_prompt_cost": 0.02058,
-        "upstream_inference_completions_cost": 0.011745
+        "upstream_inference_cost": 0.033309,
+        "upstream_inference_prompt_cost": 0.024714,
+        "upstream_inference_completions_cost": 0.008595
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.67,
+    "latency_s": 15.96,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:44:07Z"
 }

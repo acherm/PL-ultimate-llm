@@ -49,48 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus or similar (JMA ORCA project, likely GnuCOBOL/OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Japan Medical Association open-source system); likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN ... END-EVALUATE (COBOL-85 structured construct)",
-          "EXIT PROGRAM",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "COPY directives with quoted filenames (.INC, .CBL style)",
-          "Fixed-format source layout"
+          "PROGRAM-ID ORCGLERR",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA / CPORCMCP.INC",
+          "CALL ORCMCPSUB",
+          "Copyright 2002 JMA (Japan Medical Association)",
+          "JMA Open Source License"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is an error-message screen handler subprogram (ORCGLERR) in the JMA ORCA medical receipt software system. It handles screen navigation for an error display screen (LERR), primarily routing back to the originating page via a window PUT operation. On LINK event it performs initialization; on any other event it navigates back.",
-        "domain": "healthcare/medical billing (Japanese medical receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) processing system — error message/screen handling subprogram",
+        "summary": "This is a subprogram (ORCGLERR) within the JMA ORCA medical receipt software that handles error message screen navigation. It evaluates MCP-STATUS/MCP-EVENT and on non-LINK events performs a back/return operation by setting screen page pointers and calling the ORCMCPSUB window-management routine.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
-        "Multiple COPY statements for screen layout (.INC files: L01, L02, L03, L04, L99, LERR, LID1, LID2)",
-        "CALL to 'ORCMCPSUB' for window/MCP management",
-        "LINKAGE SECTION with multiple copybook-defined areas (MCPAREA, ORCA-SPA, LINKAREA)",
-        "EVALUATE with ALSO clause (COBOL-85)",
-        "JMA Open Source License header"
+        "LINKAGE SECTION with multiple COPY-based parameter areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "14 COPY statements for screen layout and shared data areas",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT pattern typical of ORCA MCP framework",
+        "CALL ORCMCPSUB USING for window management",
+        "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP middleware"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS, decoded here as latin-1 resulting in mojibake in comments. The program is part of the well-known open-source JMA ORCA medical billing system used in Japan. The COPY count shown as 0 in mechanical indicators appears to be an undercount — the source clearly contains multiple COPY statements. The program is a thin screen-routing subprogram with minimal logic."
+      "notes": "Comments contain Japanese text that was decoded as latin-1, resulting in garbled multi-byte characters; original encoding is likely EUC-JP or Shift-JIS. The program is a small but real production subprogram in the well-known JMA ORCA open-source medical billing system."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2649,
-      "completion_tokens": 611,
-      "total_tokens": 3260,
-      "cost": 0.017112,
+      "prompt_tokens": 4027,
+      "completion_tokens": 499,
+      "total_tokens": 4526,
+      "cost": 0.019566,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.017112,
-        "upstream_inference_prompt_cost": 0.007947,
-        "upstream_inference_completions_cost": 0.009165
+        "upstream_inference_cost": 0.019566,
+        "upstream_inference_prompt_cost": 0.012081,
+        "upstream_inference_completions_cost": 0.007485
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -110,8 +113,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.21,
+    "latency_s": 12.24,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:38:16Z"
 }

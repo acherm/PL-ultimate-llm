@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日本医師会標準レセプトソフト); likely compiled with GnuCOBOL/OpenCOBOL on Linux given ORCA project conventions",
         "evidence": [
-          "PROGRAM-ID. SOKATU1515",
-          "PERFORM ... UNTIL with END-UNSTRING (COBOL-85 scope terminators)",
-          "UNSTRING ... INTO ... END-UNSTRING",
-          "OCCURS clauses, REDEFINES, VALUE LOW-VALUE",
-          "COPY with REPLACING syntax",
-          "SELECT ... ORGANIZATION IS LINE SEQUENTIAL",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "No EXEC SQL / EXEC CICS",
-          "JMA ORCA open-source medical receipt software project header comment"
+          "Project code name ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY copybooks with .INC extension typical of ORCA",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "SELECT ... ASSIGN RECEUPD with LINE SEQUENTIAL",
+          "No EXEC CICS or EXEC SQL",
+          "PERFORM ... UNTIL / END-UNSTRING syntax (COBOL-85)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch program that generates a medical insurance claim (receipt) billing request document for the Japanese JMA ORCA standard receipt software system, specifically handling new/wide-area combined and diagnosis-treatment billing requests (Shinkyu/Kouiki-Rengou/Shinryo Hoshuu Seikyusho). It reads claim DB update files, accumulates summary totals by public expense (Kouhi) category, and produces formatted output.",
-        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) processing — specifically a monthly billing summary for Niigata wide-area combined diagnosis claim (新潟・広域連合・診療報酬請求書)",
+        "summary": "SOKATU1515 is a batch program in the JMA ORCA medical receipt system that generates a monthly insurance claim summary report. It reads receipt update files, aggregates claim counts, days, points and amounts by insurer/public-expense payer category, and writes formatted output for submission to insurers. It handles multiple public-expense payer (公費) combinations and high-cost medical expense delegation billing.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Part of JMA ORCA open-source Japanese medical receipt software",
-        "Heavy use of COPY statements for shared record layouts (CPRCF010.INC, CPPTINF.INC, CPHKNNUM.INC, etc.)",
-        "UNSTRING of comma-delimited COMMAND-PARAM for parameter passing",
-        "Multi-level OCCURS tables for public expense (Kouhi) billing aggregation",
-        "Japanese Shift-JIS / EUC-JP encoded comments (decoded as latin-1, hence garbled)",
-        "No EXEC SQL or EXEC CICS — file-based DB update pattern",
-        "LINKAGE SECTION with COMMAND-PARAM PIC X(256) for shell invocation",
+        "28 COPY statements referencing ORCA-specific .INC copybooks",
+        "UNSTRING COMMAND-PARAM DELIMITED BY comma for parameter parsing",
+        "LINKAGE SECTION with COMMAND-PARAM (called as subprogram or via shell)",
+        "LINE SEQUENTIAL file organization",
+        "OCCURS tables for insurer/public-expense aggregation (up to 100 entries)",
+        "REDEFINES on hospital name/address fields",
+        "No COMP-3 usage despite numeric accumulation",
+        "High comment ratio (~30%) with Japanese (EUC-JP encoded) comments",
         "Revision history embedded in comments (2008–2010)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP or Shift-JIS, causing garbled display. The program is clearly production-grade medical billing software from the JMA ORCA project (circa 2008–2010). All four COBOL divisions are present. The truncated source shows only the first ~16 KB of an ~88 KB file; the PROCEDURE DIVISION body is largely unseen but the structure is unambiguous."
+      "notes": "Source is encoded in EUC-JP (displayed as latin-1 mojibake in the snippet); Japanese comments are readable in context. File is part of the well-known open-source JMA ORCA project. Truncated at 16000 chars; full file is 2209 lines. No COMP-3 is unusual for numeric aggregation but consistent with ORCA style."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8227,
-      "completion_tokens": 729,
-      "total_tokens": 8956,
-      "cost": 0.035616,
+      "prompt_tokens": 9605,
+      "completion_tokens": 615,
+      "total_tokens": 10220,
+      "cost": 0.03804,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035616,
-        "upstream_inference_prompt_cost": 0.024681,
-        "upstream_inference_completions_cost": 0.010935
+        "upstream_inference_cost": 0.03804,
+        "upstream_inference_prompt_cost": 0.028815,
+        "upstream_inference_completions_cost": 0.009225
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.05,
+    "provider": "Anthropic",
+    "latency_s": 17.32,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:39:54Z"
 }

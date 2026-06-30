@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fd4771e946c80035d2ce80dd4d8f115fd2f2f006",
+    "sha1_git": "fd4771e946c80035d2ce80dd4d8f115fd2f2f006",
+    "filename": "/UPDATE_EMP.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1036,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fd4771e946c80035d2ce80dd4d8f115fd2f2f006/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fd4771e946c80035d2ce80dd4d8f115fd2f2f006/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1036,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 36,
+    "blank_lines": 4,
+    "comment_lines": 6,
+    "code_lines": 26,
+    "comment_ratio": 0.188,
+    "max_line_length": 67,
+    "avg_line_length": 26.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "UPDATE_EMP"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) free-format source; uses *> comment style and COPY with pseudo-text replacement",
+        "evidence": [
+          "*> comment style",
+          "Tectonics: cobc",
+          "COPY EMP_DEF REPLACING ==:TAG:== BY ==IDX==",
+          "free-format layout, no column restrictions"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Employee record management using an indexed sequential file (EMPLOYEE.IDX)",
+        "summary": "This subprogram opens an indexed employee file and writes a single employee record passed via the LINKAGE SECTION. It is designed to be called by another program to update (insert/overwrite) an employee entry in the indexed file.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "INDEXED organization with ALTERNATE RECORD KEY WITH DUPLICATES",
+        "COPY with pseudo-text replacement (==:TAG:== pattern)",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING",
+        "Free-format COBOL with *> comments",
+        "No PERFORM or CALL statements; single-purpose write routine"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program uses OPEN OUTPUT which would truncate/recreate the file rather than truly updating a record; this is likely a student exercise or early draft. The COPY copybook EMP_DEF is not shown but defines IDX-EMPLOYEE, IDX-empID, IDX-LNAME, and LS-EMPLOYEE structures."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2532,
+      "completion_tokens": 383,
+      "total_tokens": 2915,
+      "cost": 0.013341,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013341,
+        "upstream_inference_prompt_cost": 0.007596,
+        "upstream_inference_completions_cost": 0.005745
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.16,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:43:12Z"
+}

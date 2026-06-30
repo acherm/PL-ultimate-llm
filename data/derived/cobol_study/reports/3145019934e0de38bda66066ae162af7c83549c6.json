@@ -49,53 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (or compatible mainframe COBOL, likely ANSI COBOL validation suite)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "NIST CCVS (COBOL Compiler Validation System) test suite, version 4.2. Uses placeholder computer names (XXXXX082, XXXXX083) and file assign names (XXXXX001, XXXXX014, XXXXX055) typical of NIST CCVS portability conventions. Program SQ205A tests USE statement with sequential files (XFILE-NA series).",
         "evidence": [
-          "PROGRAM-ID SQ205A / SQ2054 sequence numbers in columns 73-80",
-          "ORGANIZATION IS SEQUENTIAL / ACCESS SEQUENTIAL / FILE STATUS clauses",
-          "LABEL RECORD IS STANDARD / BLOCK CONTAINS clauses",
-          "PICTURE keyword used alongside PIC abbreviation",
-          "XXXXX082/XXXXX083/XXXXX055 placeholder computer/file names typical of NIST CCVS test suite",
-          "Comment header '*HEADER,COBOL,SQ205A' and version marker '4.2' consistent with NIST CCVS",
-          "USE statement testing mentioned in comments",
-          "Fixed-format with sequence numbers in cols 73-80"
+          "PROGRAM-ID SQ2054",
+          "SOURCE-COMPUTER XXXXX082",
+          "OBJECT-COMPUTER XXXXX083",
+          "ASSIGN TO XXXXX001",
+          "ASSIGN TO XXXXX014",
+          "ASSIGN TO XXXXX055",
+          "CCVS-C-1, CCVS-C-2 working storage items",
+          "*HEADER,COBOL,SQ205A comment line",
+          "VERSION 4.2 reference in comments",
+          "LABEL RECORDS XXXXX084 placeholder"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a NIST COBOL Compiler Validation System (CCVS) test program (SQ205A) that tests the USE statement with sequential files (mass storage and tape). It creates two sequential files (SQ-FS1 and SQ-FS2) with FILE STATUS clauses, writes records, reads them back, and verifies AT END conditions trigger the USE procedure, reporting pass/fail results.",
-        "domain": "education/tutorial",
+        "domain": "test-suite",
+        "domain_detail": "NIST COBOL Compiler Validation System (CCVS) - sequential file USE statement testing",
+        "summary": "This is a NIST CCVS test program (SQ205A) that validates the USE statement with sequential files. It creates and reads two sequential files (a mass storage file and a tape file), tests AT END conditions to trigger USE procedures, and verifies FILE STATUS clause behavior in the SELECT statement. Results are written to a print file with pass/fail reporting.",
         "program_type": "test"
       },
       "notable_features": [
-        "NIST CCVS test suite boilerplate (XXXXX placeholder names, sequence numbers in cols 73-80)",
+        "NIST CCVS test harness boilerplate (CCVS-C-1, CCVS-C-2, TEST-RESULTS, TEST-COMPUTED, TEST-CORRECT)",
         "FILE STATUS clause on both sequential files (GRP-STATUS-KEY-1, GRP-STATUS-KEY-2)",
         "BLOCK CONTAINS 5 RECORDS on sequential FDs",
-        "LABEL RECORD IS STANDARD with 'C' continuation marker in column 7",
-        "Extensive REDEFINES for numeric/alphanumeric computed/correct result fields",
-        "OCCURS 10 TIMES for FILE-RECORD-INFORMATION table",
-        "USE statement / declaratives testing (AT END condition)",
-        "No EXEC SQL, no EXEC CICS, no COMP-3"
+        "LABEL RECORDS with placeholder XXXXX084",
+        "OCCURS 10 TIMES in FILE-RECORD-INFORMATION-REC",
+        "REDEFINES used for numeric picture variants in test output records",
+        "High GOTO count (41) typical of CCVS test flow",
+        "Commented-out RAW-DATA indexed file section"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly part of the NIST COBOL Compiler Validation System (CCVS) test suite, version 4.2, program SQ205A. The 'C' in column 7 on some FD clauses indicates conditional compilation lines. The XXXXX placeholders are environment-specific substitutions. Source is truncated at ~16000 chars but the structure is unambiguous."
+      "notes": "File is truncated at 16000 chars out of 46425 bytes (573 lines total shown partially). All evidence strongly points to NIST CCVS test suite. The sequence numbers in columns 73-80 (SQ2054.2) confirm this is revision 2 of the SQ2054 test module. No COMP-3, no EXEC SQL, no EXEC CICS."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5833,
-      "completion_tokens": 717,
-      "total_tokens": 6550,
-      "cost": 0.028254,
+      "prompt_tokens": 7211,
+      "completion_tokens": 657,
+      "total_tokens": 7868,
+      "cost": 0.031488,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028254,
-        "upstream_inference_prompt_cost": 0.017499,
-        "upstream_inference_completions_cost": 0.010755
+        "upstream_inference_cost": 0.031488,
+        "upstream_inference_prompt_cost": 0.021633,
+        "upstream_inference_completions_cost": 0.009855
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.57,
+    "latency_s": 16.2,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:22:21Z"
 }

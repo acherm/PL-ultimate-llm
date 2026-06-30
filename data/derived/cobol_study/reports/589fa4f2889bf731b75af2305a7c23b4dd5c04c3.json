@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "ACUCOBOL-GT (AcuCOBOL / Micro Focus AcuCOBOL)",
+        "family": "acucobol",
         "standard": "COBOL-85",
+        "detail": "AcuCOBOL-GT / Micro Focus ACUCOBOL environment: uses ACUGUI copybooks (Acugui.def), DISPLAY MESSAGE with TITLE/ICON syntax, CANCEL verb, fixed-format source, Italian-language business application",
         "evidence": [
-          "copy 'Acugui.def' — AcuCOBOL GUI library",
-          "display message ... title ... icon — AcuCOBOL GUI DISPLAY MESSAGE syntax",
-          "copy 'lineseq.sl' / 'clienti.sl' — .sl SELECT copy files typical of AcuCOBOL",
-          "copy 'lineseq.fd' / 'clienti.fd' — .fd FD copy files typical of AcuCOBOL",
-          "78 level constants (78 titolo value ...)",
+          "copy \"Acugui.def\"",
+          "display message ... title titolo icon 2",
+          "cancel \"geslock\"",
           "SPECIAL-NAMES. decimal-point is comma",
-          "call 'geslock' ... cancel 'geslock' — dynamic CALL/CANCEL pattern",
-          "accept ... from century-date / from time — standard COBOL-85 extensions",
-          "delete file lineseq — AcuCOBOL file deletion verb"
+          "copy \"lineseq.sl\"",
+          "copy \"clienti.sl\""
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program prints a customer list ('Stampa Clienti') by reading a CLIENTI indexed file, optionally filtering by customer type, GDO code, and agent, sorting results via a temporary file (TMP-CLIENTI) by company name, and producing either a formatted TXT report or a CSV file for Excel export.",
-        "domain": "business/ERP — customer management (Italian small business context)",
-        "program_type": "subprogram"
+        "domain": "accounting-erp",
+        "domain_detail": "Customer list printing utility for an Italian small-business ERP/CRM system; prints customer code, company name, address, phone, email, VAT number etc.",
+        "summary": "This program reads a customer master file (clienti), optionally filters by customer type, GDO code, and agent, sorts results via a temporary file (tmp-clienti) by company name, and outputs either a formatted TXT report or a CSV file for Excel. It handles file locking via a 'geslock' subprogram and supports pagination.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "AcuCOBOL GUI DISPLAY MESSAGE with title and icon parameters",
-        "78-level figurative constants for titles and page size",
-        "DECLARATIVES with USE AFTER ERROR for three files (lineseq, tmp-clienti, clienti)",
-        "Dynamic CALL/CANCEL of 'geslock' lock-management subprogram",
-        "Dual output mode: formatted TXT report vs. CSV/Excel via separatore",
+        "ACUGUI display message/title/icon GUI dialogs",
+        "CANCEL verb for dynamic program unloading",
+        "DECLARATIVES with USE AFTER ERROR for file error handling",
         "SPECIAL-NAMES decimal-point is comma (Italian locale)",
-        "LINKAGE SECTION with stampa-linkage copybook (subprogram interface)",
-        "File sort via intermediate sequential tmp-clienti file keyed on ragsoc",
-        "Italian-language identifiers and string literals throughout",
-        "No EXEC SQL or EXEC CICS; no COMP-3 usage"
+        "Dynamic path construction using ACCEPT FROM ENVIRONMENT",
+        "Dual output mode: formatted TXT or CSV/Excel",
+        "File locking subprogram (geslock) with retry/ignore/terminate logic",
+        "11 COPY statements for modular file definitions",
+        "Italian-language literals and comments",
+        "88-level condition names used extensively"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded as latin-1, consistent with Italian accented characters (e.g., 'Città', 'già'). The source is truncated at 16000 chars but enough structure is visible to classify confidently. The .sl/.fd/.def copy file extensions and GUI DISPLAY MESSAGE syntax are strong AcuCOBOL indicators. The program is a subprogram called with a LINKAGE SECTION parameter block (stampa-linkage), not a standalone batch program."
+      "notes": "Source is Latin-1 encoded with Italian characters (e.g., 'Città', 'già'). Truncated at 16000 chars; GENERA-FILE-EXCEL and CALL-EXCEL paragraphs are partially visible. The .sl copybook extension and Acugui.def are characteristic of AcuCOBOL environments. No EXEC SQL or EXEC CICS present."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4928,
-      "completion_tokens": 803,
-      "total_tokens": 5731,
-      "cost": 0.026829,
+      "prompt_tokens": 6306,
+      "completion_tokens": 542,
+      "total_tokens": 6848,
+      "cost": 0.027048,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.026829,
-        "upstream_inference_prompt_cost": 0.014784,
-        "upstream_inference_completions_cost": 0.012045
+        "upstream_inference_cost": 0.027048,
+        "upstream_inference_prompt_cost": 0.018918,
+        "upstream_inference_completions_cost": 0.00813
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.36,
+    "provider": "Anthropic",
+    "latency_s": 17.72,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:35:08Z"
 }

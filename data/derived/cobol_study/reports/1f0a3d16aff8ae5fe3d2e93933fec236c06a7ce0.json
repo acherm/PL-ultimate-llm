@@ -49,53 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCGI01 handles hospital admission/discharge registration (入退院登録).",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "COPY statements referencing copybooks like 'ENUM-VALUE', 'COMMON-SPA', 'I0COMMON-SPA', 'I0SCR-SPA'",
-          "PIC 9(01), PIC 9(05) style picture clauses",
-          "Fixed-format source layout (columns 7-72)",
-          "PROGRAM-ID ORCGI01 — part of JMA ORCA open-source medical receipt software, known to use GnuCOBOL",
-          "No EXEC SQL or EXEC CICS, no COMP-3 — consistent with GnuCOBOL batch/subprogram style",
-          "108 CALL statements, 1559 PERFORM, 247 GOTO — large production program"
+          "PROGRAM-ID. ORCGI01",
+          "COPY \"ENUM-VALUE\"",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"I0COMMON-SPA\"",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "no EXEC CICS/SQL",
+          "fixed format with Japanese EUC comments"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a hospital admission/discharge registration component (入退院登録, I01) of the JMA ORCA standard medical receipt (billing) software system. It handles patient admission and discharge recording, insurance combination checks, ward/room fee calculations, and related medical administration workflows for Japanese healthcare facilities.",
-        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) system - hospital admission and discharge registration module for JMA ORCA standard receipt software",
+        "summary": "ORCGI01 is the admission/discharge registration component (入退院登録 I01) of the JMA ORCA medical receipt system. It handles patient admission and discharge processing including fee calculation, insurance combination checks, ward/room management, and various special admission fee types under Japanese national health insurance rules. The program has been extensively revised from 2002 through 2014 to accommodate Japanese health insurance regulation changes.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Part of JMA ORCA open-source Japanese medical receipt software (Copyright JMA 2002)",
-        "Extensive Japanese-language comments encoded in EUC-JP / latin-1 decoded (mojibake visible)",
-        "Very large program: ~21,000 lines, 930 KB",
-        "108 CALL statements indicating heavy use of subprogram architecture",
-        "1559 PERFORM statements and 247 GOTO statements",
-        "COPY statements for shared copybooks (COMMON-SPA, I0COMMON-SPA, I0SCR-SPA, ENUM-VALUE)",
-        "No EXEC SQL, no EXEC CICS, no COMP-3",
-        "Detailed revision history spanning 2002–2014 with named developers",
-        "Handles Japanese insurance system specifics: elderly patient flags, specific admission fee codes, disaster/emergency admissions"
+        "106 COPY statements indicating heavy use of copybooks",
+        "108 CALL statements to subprograms",
+        "1559 PERFORM statements indicating complex procedural logic",
+        "247 GOTO statements",
+        "No EXEC SQL or EXEC CICS",
+        "Japanese EUC-encoded comments throughout",
+        "Large program: ~930KB, 21396 lines",
+        "Extensive revision history spanning 2002-2014",
+        "No COMP-3 usage despite financial calculations"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but contains EUC-JP encoded Japanese text, resulting in mojibake in comment lines. The program is clearly part of the well-known JMA ORCA open-source medical receipt system. The COPY count shown as 0 in mechanical indicators appears inconsistent with the visible COPY statements in the source snippet — likely the mechanical parser missed them. The program is a large, mature production component with a long documented change history."
+      "notes": "File decoded with latin-1 but contains Japanese EUC (Extended Unix Code) encoded text in comments - the garbled characters are Japanese. This is clearly part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese medical clinics. The program is very large and production-quality with a detailed change log. Source was truncated to 16000 chars but the structure and purpose are clear from the header and data division."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 12093,
-      "completion_tokens": 775,
-      "total_tokens": 12868,
-      "cost": 0.047904,
+      "prompt_tokens": 13471,
+      "completion_tokens": 544,
+      "total_tokens": 14015,
+      "cost": 0.048573,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.047904,
-        "upstream_inference_prompt_cost": 0.036279,
-        "upstream_inference_completions_cost": 0.011625
+        "upstream_inference_cost": 0.048573,
+        "upstream_inference_prompt_cost": 0.040413,
+        "upstream_inference_completions_cost": 0.00816
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.27,
+    "latency_s": 17.51,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:56:18Z"
 }

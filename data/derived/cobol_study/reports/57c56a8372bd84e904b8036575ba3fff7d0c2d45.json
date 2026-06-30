@@ -49,52 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / Micro Focus – likely GnuCOBOL given ORCA project context",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "EVALUATE … WHEN … END-EVALUATE (COBOL-85)",
-          "PERFORM VARYING … UNTIL … END-PERFORM (COBOL-85 inline PERFORM)",
-          "COPY directives for .INC files (ORCA project copybooks)",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "Fixed-format source, columns 7-72",
-          "ORCA project (JMA Japan Medical Association open-source medical billing system) – known to use GnuCOBOL"
+          "PROGRAM-ID ORCSCKNKCHK",
+          "COPY CPSRYACT.INC / CPINTERACT.INC / MCPDATA.INC etc. (ORCA-specific copybooks)",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "MCP-TABLE / MCP-PATHNAME / MCP-RC pattern (ORCA MCP DB interface)",
+          "No EXEC SQL / EXEC CICS",
+          "Fixed format, max line 74"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a subprogram within the ORCA JMA standard medical receipt (billing) software system. It performs contraindicated-drug combination checks (禁忌薬剤チェック) for medical treatments, validating drug interactions and checking against master tables (tbl_interact, tbl_chk) for prohibited drug combinations. It supports multiple check modes (individual entry check and full/all check) driven by a function-code parameter.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (shinryo-koui) processing system - prohibited drug combination check (kinki-yakuzai check) and editing logic for medical act entries",
+        "summary": "This program (ORCSCKNKCHK) is a subprogram in the JMA ORCA medical receipt system that performs prohibited drug combination checks and editing for medical treatment act entries. It checks drug interactions via the tbl_interact table and validates against a check master (tbl_chk), building SPA parameter areas for downstream processing. It handles both outpatient and inpatient scenarios.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS – database access via proprietary MCP (Message Control Program) interface using MCPDATA-REC, MCP-TABLE, MCP-PATHNAME fields",
-        "Heavy use of COPY for copybooks (.INC files) – CPSRYACT.INC, CPINTERACT.INC, CPCHK.INC, MCPDATA.INC, MCPAREA, etc.",
-        "Japanese EUC-JP encoded comments (latin-1 decoded, hence garbled) describing system name, component, author, revision history",
-        "OCCURS clauses for drug-check tables (up to 100 and 30 entries)",
-        "LINKAGE SECTION with multiple SPA (scratchpad area) parameters – typical ORCA subprogram calling convention",
-        "EVALUATE used for dispatch on function code (KBN)",
-        "122 PERFORM statements indicating complex procedural logic",
-        "No COMP-3 usage despite being a production financial/medical system"
+        "16 COPY statements referencing ORCA-specific include files",
+        "MCP (Message Control Program) database access pattern (ORCA-specific)",
+        "LINKAGE SECTION with multiple SPA (Screen Parameter Area) parameters",
+        "OCCURS tables for drug combination check data (up to 100/30 entries)",
+        "Japanese EUC-encoded comments (latin-1 decoded, garbled)",
+        "No COMP-3 usage",
+        "EVALUATE for dispatch on function code (KBN)",
+        "PERFORM VARYING loops for drug interaction checking"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP encoded, causing mojibake in the displayed text. The program is clearly part of the well-known open-source ORCA medical billing system developed by JMA (Japan Medical Association). Copyright notice confirms 2002 JMA. Source is truncated at 16000 chars out of 58716 bytes total, but enough is visible to make confident assessments. The COPY statements reference zero-byte copybooks in this view (copy count=0 in mechanical indicators may mean the copybooks were not resolved/inlined)."
+      "notes": "Source comments are in Japanese EUC encoding, decoded as latin-1 resulting in garbled characters. The file is part of the well-known open-source JMA ORCA medical receipt system. Source is truncated at 16000 chars out of 58716 bytes total. Program is a called subprogram (EXIT PROGRAM) with USING clause parameters."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7562,
-      "completion_tokens": 833,
-      "total_tokens": 8395,
-      "cost": 0.035181,
+      "prompt_tokens": 8940,
+      "completion_tokens": 568,
+      "total_tokens": 9508,
+      "cost": 0.03534,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035181,
-        "upstream_inference_prompt_cost": 0.022686,
-        "upstream_inference_completions_cost": 0.012495
+        "upstream_inference_cost": 0.03534,
+        "upstream_inference_prompt_cost": 0.02682,
+        "upstream_inference_completions_cost": 0.00852
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 20.89,
+    "provider": "Anthropic",
+    "latency_s": 15.78,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:03:22Z"
 }

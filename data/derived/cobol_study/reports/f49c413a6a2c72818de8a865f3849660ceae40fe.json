@@ -49,50 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus or similar PC-based COBOL (possibly ACUCOBOL-GT or Micro Focus Personal COBOL)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar PC/workstation COBOL; French-language application with multilingual (French, German, English) function-key label tables. No IBM mainframe or Micro Focus specific syntax visible. Fixed format, no EXEC CICS/SQL.",
         "evidence": [
-          "IDENTIFICATION DIVISION / PROGRAM-ID. 0-FKEYS",
-          "WORKING-STORAGE SECTION with 01/03 level items",
-          "PIC X(7) VALUE clauses throughout",
-          "Fixed-format source, no EXEC SQL/CICS",
-          "French/German/English label strings suggest multilingual PC application",
-          "Box-drawing characters in comments (IBM PC code page 437/850)",
-          "No COMP-3, no file I/O sections visible — data-only structure typical of Micro Focus PC COBOL"
+          "PROGRAM-ID. 0-FKEYS",
+          "PIC X(7) VALUE strings in French/German/English",
+          "fixed source format, max line length <=72",
+          "no COMP-3, no EXEC CICS, no EXEC SQL",
+          "comment box-drawing characters suggest PC-era tooling"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program defines a large table of function-key labels in three languages (French, German, English) for up to 100 function-key slots. It appears to be a data-definition module (or shared working-storage segment) that supplies multilingual key-label strings to a larger interactive application. The PROCEDURE DIVISION is minimal (only 1 PERFORM), suggesting the real work is done by callers referencing these data structures.",
-        "domain": "payroll / HR (labels like CONGE, PRIME, CONTRAT, URLAUB, PRMIE, VACATI suggest a human-resources or payroll system)",
+        "domain": "payroll-hr",
+        "domain_detail": "Multilingual HR/payroll or ERP application; this module defines function-key label constants in French, German, and English for a screen-based interactive system. Labels include CONGE (vacation), PRIME (bonus), CONTRAT (contract), MISSION, HOSPIT(al), ACCID(ent), suggesting HR/social insurance domain.",
+        "summary": "This program defines a large working-storage table of 7-character function-key label strings in three languages (French, German, English), covering ~100 function-key assignments each. It appears to be a shared data/constant module used by a multilingual interactive HR or payroll application to display labelled function keys on screen.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Multilingual function-key label table (French, German, English) with 100 entries per language",
-        "IBM PC box-drawing characters in comments (code page 437/850), decoded as latin-1",
-        "Inline annotation markers (<--, !) on data items indicating special/disabled entries",
-        "308 PIC clauses, all PIC X(7) — purely alphanumeric data definitions",
-        "No COMP-3, no file I/O, no EXEC SQL/CICS",
-        "Only 1 PERFORM in the entire program — nearly all logic is data declaration"
+        "Multilingual function-key label tables (French, German, English)",
+        "300+ PIC X(7) VALUE constants",
+        "Box-drawing characters in comments (CP437/latin-1 encoding)",
+        "Inline annotation markers (<-- and !) on some data items indicating disabled/special entries",
+        "No PROCEDURE DIVISION logic beyond a single PERFORM",
+        "No file I/O, no SQL, no CICS"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "File was decoded with latin-1; box-drawing characters in comments are consistent with IBM PC code page 437/850 used in DOS-era Micro Focus or similar PC COBOL environments. The source is truncated at 16000 chars so the PROCEDURE DIVISION content is not visible, but the single PERFORM count and the nature of the file strongly suggest this is a data-definition/initialization module for a larger multilingual interactive (screen-based) application, likely HR/payroll. The '!' and '<--' annotations on some data items appear to be developer notes marking disabled or special-purpose keys."
+      "overall_confidence": "medium",
+      "notes": "Source truncated at 16000 chars; PROCEDURE DIVISION not visible in excerpt. File decoded as latin-1; box-drawing characters in comments confirm CP437 or latin-1 encoding. The '!' and '<--' markers in columns 1-6 of some lines are unusual and may be non-standard annotations or editor artifacts rather than valid COBOL syntax — they appear in the sequence area or indicator column and could cause compile warnings. Dialect cannot be determined with high confidence from data-only content."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8409,
-      "completion_tokens": 733,
-      "total_tokens": 9142,
-      "cost": 0.036222,
+      "prompt_tokens": 9787,
+      "completion_tokens": 579,
+      "total_tokens": 10366,
+      "cost": 0.038046,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.036222,
-        "upstream_inference_prompt_cost": 0.025227,
-        "upstream_inference_completions_cost": 0.010995
+        "upstream_inference_cost": 0.038046,
+        "upstream_inference_prompt_cost": 0.029361,
+        "upstream_inference_completions_cost": 0.008685
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +113,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.48,
+    "latency_s": 16.61,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:53:10Z"
 }

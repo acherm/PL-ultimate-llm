@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL as part of the JMA ORCA project. Uses MCP-based screen handling (MCPAREA, MCPDATA) typical of ORCA's GUI framework.",
         "evidence": [
-          "PROGRAM-ID. ORCGW122",
-          "EVALUATE ... ALSO ... WHEN syntax",
-          "END-EVALUATE, END-IF terminators",
-          "COPY directives with quoted filenames (.INC, .CBL pattern)",
-          "PROCEDURE DIVISION USING with multiple linkage areas",
-          "EXIT PROGRAM",
-          "Fixed-format source layout (columns 7-72)",
-          "JMA ORCA open-source medical receipt software project header comment"
+          "PROGRAM-ID ORCGW122",
+          "COPY \"MCPAREA\"",
+          "COPY \"ORCA-SPA\"",
+          "COPY \"MCPDATA.INC\"",
+          "MCP-STATUS / MCP-EVENT / MCP-WINDOW",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"W01COMMON-SPA\""
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard medical receipt software system. It handles screen management and data entry for a receipt printing / public expense (Kouhi) entry order configuration screen (W122). It manages list display, selection, validation, and update of public expense entry order settings within the system administration subsystem.",
-        "domain": "healthcare / medical billing (Japanese medical receipt software)",
-        "program_type": "online-cics"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software – system management information setting screen for receipt printing / public expense entry order configuration (W122 screen)",
+        "summary": "This program implements the W122 screen of the JMA ORCA medical receipt system, handling the configuration of public-expense (公費) entry order settings for receipt printing. It manages screen initialization, SPA (screen parameter area) setup, list display of head/body items, and transitions to confirmation dialogs (WID1). It is a subprogram called via the ORCA MCP framework with LINK/PUTG events.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS mojibake)",
-        "Extensive use of COPY statements for screen layouts (W01.INC through WERR.INC, WID1.INC, WID2.INC) and data structures",
-        "MCP (Message Control Program) style screen handling via MCP-STATUS / MCP-EVENT EVALUATE dispatch — typical of ORCA/GnuCOBOL GUI framework",
-        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA — multi-area linkage pattern",
-        "SPA (Screen Parameter Area) pattern for inter-screen state passing",
+        "Heavy use of COPY statements (70 copybooks) for screen layouts and data structures",
+        "MCP-based GUI framework (MCPAREA, MCP-STATUS, MCP-EVENT, MCP-WINDOW)",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA",
         "OCCURS tables for head/body list management",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP DB access layer (MCPDATA.INC)",
-        "No COMP-3 usage despite production-level complexity",
-        "13 CALL statements, 110 PERFORMs, 28 GOTOs — structured but with legacy goto usage"
+        "Japanese text in comments (EUC-JP encoded, displayed as latin-1 mojibake)",
+        "No EXEC SQL or EXEC CICS – uses proprietary MCPDATA DB access",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen control",
+        "SPA (Screen Parameter Area) pattern for state persistence across calls"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded as latin-1 but the Japanese comments are actually multi-byte encoded (likely EUC-JP), causing mojibake in the latin-1 rendering. This is a production module from the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. The MCP framework is specific to ORCA/GnuCOBOL on Linux. Source is truncated at 16000 chars out of 84327 bytes (2090 lines total), but enough is visible to classify with high confidence."
+      "notes": "Comments contain Japanese text encoded in EUC-JP, decoded here as latin-1 resulting in mojibake. File is part of the open-source JMA ORCA project. Source is truncated at 16000 chars out of 84327 bytes (2090 lines total); full procedure division not visible but structure is clear. No COMP-3 usage despite being a production medical system – likely uses character-based arithmetic or relies on copybook definitions."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7024,
-      "completion_tokens": 775,
-      "total_tokens": 7799,
-      "cost": 0.032697,
+      "prompt_tokens": 8402,
+      "completion_tokens": 667,
+      "total_tokens": 9069,
+      "cost": 0.035211,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032697,
-        "upstream_inference_prompt_cost": 0.021072,
-        "upstream_inference_completions_cost": 0.011625
+        "upstream_inference_cost": 0.035211,
+        "upstream_inference_prompt_cost": 0.025206,
+        "upstream_inference_completions_cost": 0.010005
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.53,
+    "latency_s": 17.8,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:27:43Z"
 }

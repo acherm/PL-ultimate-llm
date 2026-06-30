@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) program; compiler options in comments reference 'cobc -x' with -fbinary-size, -fnotrunc, -fbinary-byteorder flags typical of GnuCOBOL. LGPL license by Sauro Menna, 2016.",
         "evidence": [
-          "cobc -x compiler invocation in comments with GnuCOBOL flags (-fbinary-size, -fnotrunc, -fbinary-byteorder)",
+          "cobc -x -t .\\listing\\%1.lst -I .\\copy -Wall -fbinary-size=1--8 -fnotrunc -fbinary-byteorder=big-endian",
+          "GNU Lesser General Public License, LGPL, 3.0",
           "function all intrinsic in REPOSITORY",
-          "GOBACK used as main program terminator",
-          "END-READ, END-IF, END-RETURN inline terminators (COBOL-85 style)",
-          "COMP-1, COMP-2, COMP-3 usage",
-          "SORT verb with INPUT PROCEDURE / OUTPUT PROCEDURE",
-          "ACCEPT ... FROM ENVIRONMENT"
+          "COMP-1, COMP-2 usage",
+          "SD file-sort construct"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A batch COBOL sort program that reads sequential input records, sorts them on an ascending character key field, and writes summarised/aggregated output records by summing numeric fields within each key group. It validates required environment variables (dd_infile, dd_outfile, dd_sortwork) before processing.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "COBOL sort utility that reads an input file, sorts records by a character key field, accumulates/sums numeric fields per key group, and writes summarized output records.",
+        "summary": "This program sorts an input sequential file by srt-ch-field (ascending), groups records by that key, and sums all numeric fields (binary, float, packed-decimal, zoned-decimal, etc.) within each group. It writes one summarized output record per key group. It is part of a suite of COBOL sort/sum demonstration modules by Sauro Menna.",
         "program_type": "batch"
       },
       "notable_features": [
         "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
-        "SD (sort description) file section entry",
+        "SD (sort description) file",
         "COMP-1 (single-precision float) and COMP-2 (double-precision float) fields",
-        "COMP-3 (packed decimal) fields",
-        "REDEFINES clauses on sort record fields",
-        "ACCEPT ... FROM ENVIRONMENT for environment variable validation",
-        "COPY directive referencing wktotsum01 copybook",
-        "Inline debug display statements commented out with 'test00**' prefix",
+        "COMP-3 (packed-decimal) fields",
+        "SIGN IS LEADING / TRAILING SEPARATE clauses",
+        "REDEFINES clause on sort record fields",
+        "COPY wktotsum01 for totalizer working storage",
         "FUNCTION ALL INTRINSIC in REPOSITORY",
-        "Multiple sign representations: LEADING, TRAILING SEPARATE, LEADING SEPARATE"
+        "Environment variable checking via ACCEPT FROM ENVIRONMENT",
+        "test00** comment-coded debug DISPLAY statements",
+        "GOBACK with RETURN-CODE for error handling"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file references a COPY statement for 'wktotsum01' copybook (not shown) which defines Tot-* fields used throughout. Debug lines are conditionally commented with 'test00**' prefix rather than a standard debug mechanism. The program is authored by Sauro Menna (2016) under LGPL 3.0. The 'test00**' prefix lines are treated as comments by the fixed-format COBOL compiler since they start in column 7 with non-standard indicator characters."
+      "notes": "The file contains commented-out debug lines prefixed with 'test00**' which are treated as comments in fixed-format COBOL (columns 1-6 area). The program references a COPY member 'wktotsum01' for totalizer fields. Part of a larger suite of sort/sum demonstration programs by Sauro Menna released under LGPL 3.0."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4665,
-      "completion_tokens": 653,
-      "total_tokens": 5318,
-      "cost": 0.02379,
+      "prompt_tokens": 6043,
+      "completion_tokens": 615,
+      "total_tokens": 6658,
+      "cost": 0.027354,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.02379,
-        "upstream_inference_prompt_cost": 0.013995,
-        "upstream_inference_completions_cost": 0.009795
+        "upstream_inference_cost": 0.027354,
+        "upstream_inference_prompt_cost": 0.018129,
+        "upstream_inference_completions_cost": 0.009225
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.91,
+    "latency_s": 16.22,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:38:32Z"
 }

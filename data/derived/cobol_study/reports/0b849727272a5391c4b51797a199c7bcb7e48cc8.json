@@ -49,45 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL (possibly Micro Focus or ACUCOBOL-GT)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple interactive program with no vendor-specific extensions; ACCEPT OMITTED suggests possible Micro Focus or GnuCOBOL compatibility but no definitive evidence",
         "evidence": [
-          "ACCEPT OMITTED (common in GnuCOBOL/Micro Focus for pause-before-exit)",
-          "All four divisions present",
-          "PERFORM with paragraph names, IF without END-IF (COBOL-85 style)",
-          "Fixed-format with sequence numbers in columns 1-6"
+          "ACCEPT OMITTED",
+          "STOP RUN",
+          "PIC X",
+          "PERFORM paragraphs",
+          "sequential line numbering 000100-005500"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A simple interactive program that prompts the user to enter Y or N, normalises lowercase input to uppercase, and then displays whether the user answered Yes, No, or an invalid entry.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Introductory COBOL programming exercise demonstrating user input, conditional logic, and case normalization",
+        "summary": "Prompts the user to enter Y or N, normalizes lowercase input to uppercase, then displays whether the user answered Yes, No, or entered an invalid value. A simple interactive demonstration program.",
         "program_type": "demo"
       },
       "notable_features": [
-        "ACCEPT OMITTED used to pause before STOP RUN",
-        "Case normalisation via IF/MOVE (y→Y, n→N)",
-        "No COPY statements, no SQL, no CICS",
-        "Only one PIC clause (single working-storage field)"
+        "ACCEPT OMITTED before STOP RUN (interactive pause)",
+        "Case normalization via IF/MOVE pattern",
+        "No COPY statements or subprogram calls",
+        "Minimal data division with single PIC X field"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program is clearly a beginner tutorial exercise (series name YESNO05 suggests it is the fifth in a sequence). ACCEPT OMITTED is a GnuCOBOL/Micro Focus extension; the rest of the syntax is standard COBOL-85. No ambiguity about it being genuine COBOL."
+      "notes": "Classic numbered-line fixed-format COBOL tutorial program. The ACCEPT OMITTED idiom is sometimes associated with Micro Focus or GnuCOBOL on PC platforms but is not conclusive. No dialect-specific extensions visible."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1365,
-      "completion_tokens": 448,
-      "total_tokens": 1813,
-      "cost": 0.010815,
+      "prompt_tokens": 2743,
+      "completion_tokens": 326,
+      "total_tokens": 3069,
+      "cost": 0.013119,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010815,
-        "upstream_inference_prompt_cost": 0.004095,
-        "upstream_inference_completions_cost": 0.00672
+        "upstream_inference_cost": 0.013119,
+        "upstream_inference_prompt_cost": 0.008229,
+        "upstream_inference_completions_cost": 0.00489
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.61,
+    "provider": "Anthropic",
+    "latency_s": 8.24,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:32:42Z"
 }

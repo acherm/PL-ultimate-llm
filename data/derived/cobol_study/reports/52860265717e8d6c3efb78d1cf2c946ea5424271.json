@@ -49,54 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA standard receipt software for Linux)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses /var/tmp/ paths, COPY includes with .INC extension, LINE SEQUENTIAL files, INDEXED files with DYNAMIC access",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / LINE SEQUENTIAL",
-          "FD records with PIC clauses",
-          "COPY directives referencing .INC files (CPCOMMONDAT2.INC, HCMSL55.INC, CPORCSPRTLNK.INC)",
-          "Fixed-format source layout",
-          "OCCURS clause, FILE STATUS, DYNAMIC access mode",
-          "No EXEC SQL / EXEC CICS — pure batch COBOL",
-          "File paths like /var/tmp/ indicate Linux/Unix environment consistent with GnuCOBOL/OpenCOBOL"
+          "PROGRAM-ID. ORCBG014",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "SELECT RECECSV-FILE ASSIGN RECECSV ORGANIZATION IS LINE SEQUENTIAL",
+          "COPY \"CPCOMMONDAT2.INC\"",
+          "COPY \"HCMSL55.INC\"",
+          "COPY \"CPORCSPRTLNK.INC\"",
+          "/var/tmp/ path in working storage",
+          "INDEXED file with DYNAMIC access mode"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system used by Japanese medical institutions. It generates an insurance-claim confirmation list (保険請求確認リスト), reading from an indexed statistics file and producing CSV and error output files. It handles various insurance categories (社保, 国保, 公費, 広域連合, etc.) and processing classifications for monthly claim submissions.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/seikyu) confirmation list generation for JMA ORCA medical practice management system",
+        "summary": "This program generates a monthly insurance claim confirmation list (hoken seikyu kakunin list) for the JMA ORCA medical receipt system. It reads from an indexed statistics file (TOKEI-FILE), processes insurance claim records by various classification keys (insurance type, submission destination, patient number, etc.), and outputs results to a CSV file and error file. It handles multiple insurance types including shakai hoken, kokuho, and kohi (public expense).",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-language comments and data names encoded in latin-1 (EUC-JP or Shift-JIS bytes interpreted as latin-1)",
-        "COPY directives referencing project-specific .INC copybooks (CPCOMMONDAT2.INC, HCMSL55.INC, CPORCSPRTLNK.INC)",
-        "Indexed file (TOKEI-FILE) with a complex composite key spanning insurance type, submission destination, insurer number, processing classification, etc.",
-        "CSV output file generation (/var/tmp/ path, LINE SEQUENTIAL)",
-        "Error file output (RECEERR-FILE)",
-        "Large program: 5565 lines, 47 CALLs, 260 PERFORMs, 47 GOTOs",
-        "No COMP-3 usage despite numeric fields (uses PIC 9 display format)",
-        "Version history embedded in comments spanning 2005–2011",
-        "Open-source JMA license header"
+        "INDEXED file with DYNAMIC access and composite key (TOKEI-KEY)",
+        "LINE SEQUENTIAL CSV output file",
+        "30 COPY statements referencing .INC copybooks",
+        "47 CALL statements",
+        "260 PERFORM statements",
+        "Japanese EUC-JP encoded comments and data names (latin-1 decoded)",
+        "Multi-level key structure for insurance claim classification",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "File status checking (STS-TOKEI, STS-RECEERR, STS-RECECSV)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but the Japanese text is almost certainly EUC-JP or Shift-JIS; the garbled characters in comments are a decoding artifact and do not affect the COBOL structure assessment. The source is clearly genuine production COBOL from the well-known open-source ORCA medical receipt system maintained by the Japan Medical Association."
+      "notes": "Source is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments and string literals. The program is part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese medical clinics. The file is large (5565 lines, ~239KB) and shows production-quality structure with revision history dating from 2005 to 2011."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 11812,
-      "completion_tokens": 785,
-      "total_tokens": 12597,
-      "cost": 0.047211,
+      "prompt_tokens": 13190,
+      "completion_tokens": 616,
+      "total_tokens": 13806,
+      "cost": 0.04881,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.047211,
-        "upstream_inference_prompt_cost": 0.035436,
-        "upstream_inference_completions_cost": 0.011775
+        "upstream_inference_cost": 0.04881,
+        "upstream_inference_prompt_cost": 0.03957,
+        "upstream_inference_completions_cost": 0.00924
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.68,
+    "latency_s": 17.96,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:26:30Z"
 }

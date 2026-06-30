@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:091aab254a586d6aa258275654317361dce45a4b",
+    "sha1_git": "091aab254a586d6aa258275654317361dce45a4b",
+    "filename": "/pwpe0401.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 98184,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:091aab254a586d6aa258275654317361dce45a4b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:091aab254a586d6aa258275654317361dce45a4b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 98184,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2009,
+    "blank_lines": 174,
+    "comment_lines": 69,
+    "code_lines": 1766,
+    "comment_ratio": 0.038,
+    "max_line_length": 230,
+    "avg_line_length": 47.9,
+    "long_lines_over_72": 397,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PWPE0401"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 51,
+    "call_count": 4,
+    "perform_count": 206,
+    "goto_count": 0,
+    "pic_count": 114,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with Micro Focus-style compiler directives ($set preprocess, $set sourceformat, $set constant); free-format source with htmlpp preprocessor; Brazilian Portuguese business application using decimal-point is comma",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "$set constant processo-reorganizacao",
+          "external-form (CGI/web form handling)",
+          "decimal-point is comma",
+          "copy PCW902.CPY",
+          "identified by clauses in FD"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Automatic batch cancellation of CA (Crédito Antecipado - Anticipated Credit) billing charges; Brazilian financial/retail credit management system",
+        "summary": "PWPE0401 performs automatic batch cancellation of CA (Crédito Antecipado) billing charges (Cancelamento Automático de Cobrança de CA em Lote). It processes boletos (Brazilian bank payment slips), manages credit negotiations, and generates CSV output files for billing and boleto records. It interacts with multiple indexed files and calls subprograms for negotiation cancellation.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$set compiler directives (GnuCOBOL/Micro Focus style)",
+        "htmlpp preprocessor directive",
+        "external-form CGI input section",
+        "decimal-point is comma (Brazilian locale)",
+        "51 COPY statements for modular copybook structure",
+        "indexed file with alternate keys and lock mode manual",
+        "CSV output files (line sequential)",
+        "COMP-3 packed decimal fields",
+        "88-level condition names extensively used",
+        "Portuguese-language identifiers and comments",
+        "REPLACING clauses in COPY statements"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is ~2009 lines. The $set sourceformat\"free\" directive means this is free-format despite the mechanical indicator suggesting fixed. The program is part of a larger Brazilian retail/financial system (likely Totvs/RM or similar ERP). The 'external-form' and 'identified by' clauses suggest a web CGI interface component despite being classified as batch."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6941,
+      "completion_tokens": 543,
+      "total_tokens": 7484,
+      "cost": 0.028968,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028968,
+        "upstream_inference_prompt_cost": 0.020823,
+        "upstream_inference_completions_cost": 0.008145
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.31,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:42:12Z"
+}

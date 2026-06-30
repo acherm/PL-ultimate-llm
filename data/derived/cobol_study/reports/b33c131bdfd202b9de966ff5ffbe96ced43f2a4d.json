@@ -49,54 +49,60 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (z/OS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM DB2 mainframe COBOL with EXEC SQL, DCLGEN copybook (DCLEMP), SQLCA include, and CHAMP link control statements. Uses DSN8110.EMP sample DB2 table. Fixed format with sequence numbers in columns 73-80.",
         "evidence": [
           "EXEC SQL INCLUDE SQLCA END-EXEC",
           "EXEC SQL INCLUDE DCLEMP END-EXEC",
-          "EXEC SQL DECLARE EMP_RECORD CURSOR FOR ... END-EXEC",
-          "LABEL RECORDS ARE STANDARD / RECORDING MODE IS F / BLOCK CONTAINS 0 RECORDS",
-          "PIC S9(04) COMP VALUE 0",
-          "COMP-3 usage",
-          "CHAMP LINK CONTROL STATEMENTS header typical of IBM mainframe shop",
-          "DSN8110.EMP table reference (IBM DB2 sample schema)",
-          "Fixed format with sequence numbers in columns 73-80"
+          "DECLARE EMP_RECORD CURSOR FOR",
+          "FROM DSN8110.EMP",
+          "CHAMP LINK CONTROL STATEMENTS",
+          "DB2OEXP: YES",
+          "DB2OISO: UR",
+          "LABEL RECORDS ARE STANDARD",
+          "RECORDING MODE IS F",
+          "sequence numbers in columns 73-80"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A batch DB2 program that opens a cursor against the IBM sample EMP table (DSN8110.EMP), fetches employee records (EMPNO, FIRSTNME, LASTNAME, WORKDEPT, SALARY) ordered by EMPNO, and writes them to a report output file. The change log shows repeated ORDER BY column experiments over 2017-2018.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "IBM DB2 sample employee table (DSN8110.EMP) used in training/tutorial context; program fetches and reports employee records",
+        "summary": "A batch COBOL-DB2 program that opens a cursor on the IBM sample EMP table (DSN8110.EMP), fetches all employee records ordered by EMPNO, and writes them to a report file. The program was iteratively modified by a single developer ('LOUIS') over 2017-2018, primarily changing the ORDER BY clause repeatedly, suggesting a learning/tutorial exercise.",
         "program_type": "batch"
       },
       "notable_features": [
-        "EXEC SQL (DB2) cursor declaration against DSN8110.EMP (IBM DB2 sample table)",
-        "EXEC SQL INCLUDE SQLCA and EXEC SQL INCLUDE DCLEMP (DCLGEN copybook)",
-        "COPY REPORT (external copybook for report layout)",
-        "COMP-3 (packed decimal) usage",
-        "Fixed-format with sequence numbers in columns 73-80",
-        "CHAMP LINK CONTROL STATEMENTS (shop-specific pre-processor directives)",
-        "DB2OEXP/DB2OISO optimizer hints in header comments",
-        "Extensive change log showing iterative ORDER BY column changes"
+        "EXEC SQL cursor (DECLARE, OPEN, FETCH pattern)",
+        "EXEC SQL INCLUDE SQLCA",
+        "EXEC SQL INCLUDE DCLEMP (DCLGEN copybook)",
+        "DB2 isolation level UR (Uncommitted Read) via CHAMP directives",
+        "DSN8110.EMP IBM sample DB2 table",
+        "COMP-3 field (WS-CURR-JULIAN7)",
+        "COPY REPORT copybook",
+        "ABEND program call (WAASABND)",
+        "Fixed format with sequence numbers",
+        "NULL indicator array"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program uses IBM's well-known DB2 sample table DSN8110.EMP and the change log documents many trivial ORDER BY column changes over roughly a year, strongly suggesting this is a student or training exercise rather than production code. The CHAMP LINK CONTROL STATEMENTS header indicates an IBM mainframe shop environment. Source was truncated at 16000 chars but all four COBOL divisions are present and the structure is clear."
+      "notes": "The extremely frequent ORDER BY changes in the change log (same developer changing ORDER BY column repeatedly over 2017-2018) strongly suggests this is a student or training exercise rather than production code. The DSN8110.EMP table is IBM's classic DB2 sample table used in education. Sequence numbers present in columns 73-80 confirm mainframe fixed format. Source was truncated at 16000 chars but all four divisions are present."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4113,
-      "completion_tokens": 672,
-      "total_tokens": 4785,
-      "cost": 0.022419,
+      "prompt_tokens": 5491,
+      "completion_tokens": 602,
+      "total_tokens": 6093,
+      "cost": 0.025503,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +111,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.022419,
-        "upstream_inference_prompt_cost": 0.012339,
-        "upstream_inference_completions_cost": 0.01008
+        "upstream_inference_cost": 0.025503,
+        "upstream_inference_prompt_cost": 0.016473,
+        "upstream_inference_completions_cost": 0.00903
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +121,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 14.54,
+    "provider": "Anthropic",
+    "latency_s": 17.94,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:00:13Z"
 }

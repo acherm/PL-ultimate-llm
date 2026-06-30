@@ -49,45 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "unknown (likely GnuCOBOL or IBM Enterprise COBOL)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple hello-world program with sequence numbers; no vendor-specific extensions visible",
         "evidence": [
           "IDENTIFICATION DIVISION",
-          "PROGRAM-ID. HELLOWORLD",
           "PROCEDURE DIVISION",
-          "DISPLAY \"Hello world\"",
-          "STOP RUN"
+          "DISPLAY",
+          "STOP RUN",
+          "sequence numbers in columns 1-6"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal Hello World program that displays the string 'Hello world' and stops. It has no data division and no logic beyond the single display statement.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Minimal hello-world demonstration program",
+        "summary": "A minimal COBOL program that displays 'Hello world' and stops. It has no DATA DIVISION or ENVIRONMENT DIVISION, suggesting it is a trivial example or test case.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Interleaved line numbers with gaps (e.g. 000201, 000301, 000501) suggesting manual editing or empty-line insertion experiments, consistent with the filename 'EmptyLines.cbl'",
-        "No DATA DIVISION or ENVIRONMENT DIVISION",
-        "PROGRAM-ID split across two lines with an empty numbered line in between"
+        "Sequence numbers in columns 1-6",
+        "Empty/blank lines represented as lines with only sequence numbers (000201, 000301, 000501)",
+        "No DATA DIVISION",
+        "PROGRAM-ID split across lines with blank sequence-number-only line"
       ],
       "maturity": "toy-or-hello-world",
       "overall_confidence": "high",
-      "notes": "The filename 'EmptyLines.cbl' and the unusual interleaved line numbers (000201, 000301, 000501 inserted between sequential hundreds) suggest this file was created specifically to test or demonstrate how a COBOL compiler or tool handles empty/blank lines within source code. The program itself is a trivial Hello World."
+      "notes": "The file is only 9 lines and 475 bytes. The filename 'EmptyLines.cbl' and the presence of lines containing only sequence numbers (000201, 000301, 000501) suggest this is a test case specifically for handling empty/blank lines in fixed-format COBOL source. The PROGRAM-ID value '000201' in the mechanical indicators is actually the sequence number of a blank line, not the real program name; the actual PROGRAM-ID is HELLOWORLD on line 000300."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 915,
-      "completion_tokens": 419,
-      "total_tokens": 1334,
-      "cost": 0.00903,
+      "prompt_tokens": 2293,
+      "completion_tokens": 361,
+      "total_tokens": 2654,
+      "cost": 0.012294,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.00903,
-        "upstream_inference_prompt_cost": 0.002745,
-        "upstream_inference_completions_cost": 0.006285
+        "upstream_inference_cost": 0.012294,
+        "upstream_inference_prompt_cost": 0.006879,
+        "upstream_inference_completions_cost": 0.005415
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 9.29,
+    "provider": "Anthropic",
+    "latency_s": 8.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:40:55Z"
 }

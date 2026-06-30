@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4e839bd595369bbd2f38c1c1749ec020fe07ac8b",
+    "sha1_git": "4e839bd595369bbd2f38c1c1749ec020fe07ac8b",
+    "filename": "/acas007.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28245,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4e839bd595369bbd2f38c1c1749ec020fe07ac8b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4e839bd595369bbd2f38c1c1749ec020fe07ac8b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28245,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 663,
+    "blank_lines": 3,
+    "comment_lines": 359,
+    "code_lines": 301,
+    "comment_ratio": 0.544,
+    "max_line_length": 121,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 138,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "acas007"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 8,
+    "call_count": 6,
+    "perform_count": 9,
+    "goto_count": 36,
+    "pic_count": 9,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source, part of the ACAS (Applewood Computers Accounting System) v3.02+, authored by Vincent B Coen. References GnuCOBOL v3.2 compatibility fixes in changelog.",
+        "evidence": [
+          ">>source free directive at top",
+          "*> comment style (GnuCOBOL free-format)",
+          "copy copybooks with .cob extension",
+          "changelog mentions 'GC v3.2' and 'GC warning msg'",
+          "GNU General Public License distribution",
+          "EXEC SQL present (RDB DAL support)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "General Ledger (GL) Batch file/table handler within the ACAS accounting system. Handles ISAM flat file and RDBMS (DB2, MySQL, Postgres, Oracle, MS SQL) I/O for the GL Batch file.",
+        "summary": "This is a COBOL File Handler (FH) subprogram for the GL Batch file in the ACAS accounting system. It processes open/close/read/write/delete/rewrite operations on either COBOL flat files or RDBMS tables depending on system configuration. It is called by application modules and dispatches to a DAL (Data Access Layer) module for RDBMS access.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>source free compiler directive",
+        "EXEC SQL (RDBMS DAL support for MySQL, DB2, Postgres, Oracle, MS SQL)",
+        "Linkage Section with multiple copybook-defined records",
+        "8 COPY statements for copybooks",
+        "Extensive inline documentation and changelog comments",
+        "Dual flat-file and RDBMS processing mode",
+        "EVALUATE for file function dispatch",
+        "GO TO used extensively (36 occurrences)",
+        "88-level condition names",
+        "Free-format GnuCOBOL style"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; full file is 28245 bytes / 663 lines. High comment ratio (54%) due to extensive header documentation. The program is clearly production-quality accounting software under active development (copyright 2016-2025). Dialect is definitively GnuCOBOL free-format based on >>source free directive and *> comments."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6538,
+      "completion_tokens": 580,
+      "total_tokens": 7118,
+      "cost": 0.028314,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028314,
+        "upstream_inference_prompt_cost": 0.019614,
+        "upstream_inference_completions_cost": 0.0087
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.51,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:42:53Z"
+}

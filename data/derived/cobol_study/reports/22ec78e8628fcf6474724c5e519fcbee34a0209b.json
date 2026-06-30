@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:22ec78e8628fcf6474724c5e519fcbee34a0209b",
+    "sha1_git": "22ec78e8628fcf6474724c5e519fcbee34a0209b",
+    "filename": "/ricalini-p.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16436,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:22ec78e8628fcf6474724c5e519fcbee34a0209b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:22ec78e8628fcf6474724c5e519fcbee34a0209b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16436,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 445,
+    "blank_lines": 42,
+    "comment_lines": 14,
+    "code_lines": 389,
+    "comment_ratio": 0.035,
+    "max_line_length": 73,
+    "avg_line_length": 35.9,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "ricalini-p"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 5,
+    "perform_count": 26,
+    "goto_count": 0,
+    "pic_count": 11,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Likely Micro Focus or ACU COBOL for Windows/Linux; uses DISPLAY MESSAGE BOX with TITLE/ICON syntax, ALLOWING READERS clause on OPEN, pipe-character comments (|), 78-level constants, SET condition-name TO FALSE, and CANCEL verb — all characteristic of Micro Focus Visual COBOL or similar PC-based dialect",
+        "evidence": [
+          "display message box ... title titolo icon 2",
+          "open i-o tmovmag allowing readers",
+          "78 titolo value ...",
+          "set RecLocked to false",
+          "| pipe-character inline comments",
+          "cancel \"geslock\"",
+          "SPECIAL-NAMES. decimal-point is comma"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Warehouse/inventory management system — recalculates initial stock values (KG, UDM, monetary) from start of year to consolidation date by reversing movement causals",
+        "summary": "This program recalculates initial inventory values (quantities, weights, monetary values) for a warehouse management system. It reads movement header records (TMOVMAG) and line records (RMOVMAG) from start of year to a consolidation date, applies inverse multipliers to causals, and updates progressive stock records (PROGMAG) via a called subprogram 'wprogmag'. It also handles file locking to prevent concurrent access during consolidation.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DISPLAY MESSAGE BOX with TITLE and ICON (GUI/Micro Focus extension)",
+        "OPEN I-O ... ALLOWING READERS (file locking extension)",
+        "Pipe character (|) used as inline comments",
+        "78-level constant (titolo)",
+        "88-level condition names with FALSE clause",
+        "CALL/CANCEL pattern for subprogram management",
+        "DECLARATIVES with USE AFTER ERROR for file status handling",
+        "9 COPY statements for file definitions and linkage",
+        "LINKAGE SECTION with agmag-linkage parameter",
+        "Italian-language identifiers and remarks"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source is truncated at 16000 chars; the VALORIZZA-INIZIALI paragraph is cut off. Italian-language program from what appears to be an Italian ERP/warehouse management system. The pipe character (|) comment style and ALLOWING READERS clause strongly suggest Micro Focus or a compatible dialect. No EXEC SQL or EXEC CICS present. Decoded as latin-1 due to Italian accented characters."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6393,
+      "completion_tokens": 598,
+      "total_tokens": 6991,
+      "cost": 0.028149,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028149,
+        "upstream_inference_prompt_cost": 0.019179,
+        "upstream_inference_completions_cost": 0.00897
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.18,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:00:34Z"
+}

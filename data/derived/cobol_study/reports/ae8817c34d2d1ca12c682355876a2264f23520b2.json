@@ -49,56 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (MVS/z/OS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM mainframe batch program, Brazilian banking/finance context (CPM Sistemas / BRQ IT Services), uses RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, COMP-3, EJECT, DECIMAL-POINT IS COMMA, and SORT work file (SD). Change history spans 1998-2014.",
         "evidence": [
-          "RECORDING MODE IS F / LABEL RECORD IS STANDARD / BLOCK CONTAINS 0 RECORDS — classic IBM mainframe FD clauses",
-          "ASSIGN TO UT-S-<ddname> — IBM JCL DD-name assignment convention",
-          "SD for sort work file (SORTWK01) — IBM DFSORT/SYNCSORT pattern",
-          "COMP-3 packed-decimal fields throughout",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "COPY 'I#CLLPPN' / COPY 'I#CLLPX0' — IBM-style copybook names with # character",
-          "EJECT compiler directive used as page-break",
-          "Sequence-number area used for change tags (e.g. VH0812 in columns 1-6)",
-          "FILE STATUS IS ... pattern",
-          "Max line length exactly 72 — fixed-format mainframe standard"
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-3 usage throughout",
+          "DECIMAL-POINT IS COMMA",
+          "SD SORTWK01 sort work file",
+          "ASSIGN TO UT-S-xxx DDNAMEs",
+          "EJECT directive",
+          "COPY 'I#CLLPPN'"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch report program (CLLPG637) that reads parameter and sequential input files containing letter-emission data (LADO107 and related files), sorts records via a SORT work file, and generates a client-level report (RELATO) plus an image file (IMAGAVIS). It was later adapted for Brazilian 'Lei da Transparência' compliance.",
-        "domain": "banking",
+        "domain": "banking-finance",
+        "domain_detail": "Brazilian bank letter/notification generation system (CLLP series), reads multiple LADO/LADA input files representing client debt records and generates a report by client. Includes barcode and transparency law adaptations.",
+        "summary": "Batch program that reads sequential input files containing client letter/notification data (LADO/LADA files), sorts records by client CGC/account key, and generates a report (RELATO) summarizing debt details per client including principal, IOF, interest, penalties, court costs, and totals. Also writes an image file (IMAGAVIS) of the report.",
         "program_type": "batch"
       },
       "notable_features": [
-        "COMP-3 packed-decimal fields (38 occurrences)",
-        "OCCURS 11 TIMES table within sort record for multiple debt/charge occurrences",
-        "SD sort-work file (DFSORT/SYNCSORT pattern)",
+        "COMP-3 packed decimal fields (38 occurrences)",
+        "SORT work file (SD SORTWK01)",
+        "OCCURS 11 TIMES table in sort record",
         "DECIMAL-POINT IS COMMA (Brazilian locale)",
-        "Multiple COPY statements referencing IBM-style copybooks (I#CLLPPN, I#CLLPX0)",
-        "Change-tag prefixes in sequence-number area (VH0812) for audit trail",
-        "EJECT directives for listing pagination",
-        "FILE STATUS fields for all files",
-        "S9(13)V99 COMP-3 signed monetary fields (IOF, interest, penalties, legal costs)"
+        "COPY books: I#CLLPPN, I#CLLPX0",
+        "Multiple file status fields (WRK-FS-xxx)",
+        "Change history with analyst/programmer annotations spanning 1998-2014",
+        "VH0812 prefixed change lines for image file addition",
+        "BRQ IT Services adaptation for Lei da Transparencia (2014)",
+        "EJECT directives"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated to the first ~16 KB of an 89 KB file (1239 lines total). All visible evidence is consistent with IBM mainframe COBOL production code from a Brazilian financial institution, dated 1998 with modifications through 2014. The # character in copybook names is standard for IBM z/OS PDS member naming. No EXEC SQL or EXEC CICS found; purely batch sequential processing."
+      "notes": "Source truncated to first 16000 chars; full program is 1239 lines. Program is clearly a production mainframe batch program from a Brazilian financial institution. The VH0812 prefix on some lines is a change-tracking convention. COPY books I#CLLPPN and I#CLLPX0 are not shown but referenced."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4322,
-      "completion_tokens": 762,
-      "total_tokens": 5084,
-      "cost": 0.024396,
+      "prompt_tokens": 5700,
+      "completion_tokens": 601,
+      "total_tokens": 6301,
+      "cost": 0.026115,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.024396,
-        "upstream_inference_prompt_cost": 0.012966,
-        "upstream_inference_completions_cost": 0.01143
+        "upstream_inference_cost": 0.026115,
+        "upstream_inference_prompt_cost": 0.0171,
+        "upstream_inference_completions_cost": 0.009015
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.7,
+    "latency_s": 15.85,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:39:20Z"
 }

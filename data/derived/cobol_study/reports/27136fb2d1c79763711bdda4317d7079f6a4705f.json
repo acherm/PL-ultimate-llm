@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (Windows path separators, ASSIGN TO PRINTER, LINE SEQUENTIAL)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Likely compiled with a PC-based COBOL compiler (GnuCOBOL or Micro Focus) given Windows-style relative paths and ASSIGN TO PRINTER; student assignment context. PROGRAM-ID and AUTHOR use quoted strings without period, which is non-standard syntax.",
         "evidence": [
+          "ASSIGN TO \"..\\\\..\\\\student.dat\" (Windows relative paths)",
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "OCCURS 1 TO 50 TIMES DEPENDING ON (ODO)",
-          "EVALUATE TRUE ... WHEN OTHER",
-          "END-READ, END-PERFORM, END-SEARCH scope terminators",
-          "Windows-style relative paths '..\\..\\student.dat'",
           "ASSIGN TO PRINTER",
-          "PROGRAM-ID with quoted string (non-standard syntax)"
+          "PROGRAM-ID \"Assignment No. 1\" (quoted, no period)",
+          "OCCURS 1 TO 50 TIMES DEPENDING ON (ODO - COBOL-85)",
+          "EVALUATE TRUE ... WHEN OTHER (COBOL-85)",
+          "END-READ, END-PERFORM, END-SEARCH (COBOL-85 scope terminators)"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A student assignment program that reads a subject file and a student test-score file, tallies letter-grade counts (A/B/C/D/F) per subject using an ODO table, and prints a summary report. It is a college testing centre results summary.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Student assignment for a college COBOL course; processes student test scores against a subject file and produces a grade tally report",
+        "summary": "This program reads a student data file and a subject file, populates an ODO table of subjects, then for each student record finds the matching subject and tallies grades (A through F) per subject. It prints a summary report of grade counts by subject plus totals.",
         "program_type": "batch"
       },
       "notable_features": [
-        "OCCURS DEPENDING ON (ODO) for variable-length subject table",
-        "SEARCH (linear) on indexed table",
-        "EVALUATE TRUE with range conditions for grade tallying",
-        "ASSIGN TO PRINTER for output",
-        "Windows-style relative file paths",
-        "PROGRAM-ID uses quoted string (non-standard)",
-        "Missing period after 01 W02-TOTALS and its subordinate 05 entries (syntax errors present)",
-        "W02-A-COUNT referenced but defined as W02-A-TOTAL (naming inconsistency/bug)",
-        "F01-SUBJECT-FILE opened but F02-SUBJECT-FILE used in code (naming bug in OPEN statement)"
+        "OCCURS DEPENDING ON (ODO table) for variable-length subject table",
+        "SEARCH statement on ODO table",
+        "EVALUATE TRUE with range conditions for grade classification",
+        "ASSIGN TO PRINTER for print output",
+        "Windows-style relative file paths in ASSIGN clauses",
+        "Non-standard PROGRAM-ID and AUTHOR syntax (quoted strings without period)",
+        "Missing OPEN of F02-SUBJECT-FILE under correct name (bug: opens F01-SUBJECT-FILE instead)",
+        "W02-TOTALS group item missing period after level-01 (syntax issue)"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The code contains several apparent bugs: the OPEN statement references F01-SUBJECT-FILE instead of F02-SUBJECT-FILE; W02-TOTALS group item is missing its period terminator; subordinate items under W02-TOTALS are missing periods; W02-A-COUNT etc. are referenced in 310-TALLY-SCORE but defined as W02-A-TOTAL etc. These are consistent with a student exercise submitted in draft/incomplete form. The PROGRAM-ID and AUTHOR clauses use quoted strings rather than the standard dot-terminated identifier syntax, suggesting a non-standard or lenient compiler."
+      "notes": "The code contains several apparent bugs/syntax issues consistent with a student exercise: PROGRAM-ID uses quoted string without period; W02-TOTALS 01-level entry is missing a period; the 100-OPEN-FILES paragraph opens F01-SUBJECT-FILE instead of F02-SUBJECT-FILE; W02-A-COUNT referenced but defined as W02-A-TOTAL in the group. The 'bbb' and 'yyyy/mm/dd' placeholders in DISPLAY statements confirm incomplete/draft status."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2567,
-      "completion_tokens": 656,
-      "total_tokens": 3223,
-      "cost": 0.017541,
+      "prompt_tokens": 3945,
+      "completion_tokens": 597,
+      "total_tokens": 4542,
+      "cost": 0.02079,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.017541,
-        "upstream_inference_prompt_cost": 0.007701,
-        "upstream_inference_completions_cost": 0.00984
+        "upstream_inference_cost": 0.02079,
+        "upstream_inference_prompt_cost": 0.011835,
+        "upstream_inference_completions_cost": 0.008955
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 15.68,
+    "provider": "Anthropic",
+    "latency_s": 14.87,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:47:37Z"
 }

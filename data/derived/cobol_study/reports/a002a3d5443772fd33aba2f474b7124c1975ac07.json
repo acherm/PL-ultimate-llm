@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a002a3d5443772fd33aba2f474b7124c1975ac07",
+    "sha1_git": "a002a3d5443772fd33aba2f474b7124c1975ac07",
+    "filename": "/EXPPROG4.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6197,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a002a3d5443772fd33aba2f474b7124c1975ac07/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a002a3d5443772fd33aba2f474b7124c1975ac07/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6197,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 191,
+    "blank_lines": 32,
+    "comment_lines": 20,
+    "code_lines": 139,
+    "comment_ratio": 0.126,
+    "max_line_length": 70,
+    "avg_line_length": 31.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "EXPPROG4"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 10,
+    "goto_count": 0,
+    "pic_count": 25,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style with RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, 88-level condition names, INDEXED BY clause, and PROCEDURE DIVISION USING linkage parm; likely compiled under IBM Enterprise COBOL",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "FILE STATUS IS WS-INPUT-STATUS",
+          "PROCEDURE DIVISION USING INPUT-PARM",
+          "LINKAGE SECTION with INPUT-PARM PIC X(4)",
+          "88-level condition names with VALUE clauses"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "government-public",
+        "domain_detail": "UK electoral vote counting — processes constituency voting records and tallies votes per political party",
+        "summary": "EXPPROG4 reads a binary vote input file record by record, validates each record against a given constituency ID, then iterates through up to 72 vote values per record tallying counts for named UK political parties (Conservative, Labour, Liberal, SNP, Plaid Cymru, etc.) and spoilt votes. It writes results to an output file and displays status messages throughout.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "PROCEDURE DIVISION USING INPUT-PARM (subprogram-style linkage)",
+        "OCCURS 72 TIMES INDEXED BY VOTE-IDX for vote array",
+        "88-level condition names used extensively for state flags",
+        "EVALUATE used for vote-party mapping",
+        "FILE STATUS checking with 88-level values",
+        "Incomplete program — W001-WRITE-WINNER section is empty/stub",
+        "SET REC-INVALID TO FALSE appears to be a bug (should be TRUE)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program appears to be a student exercise (author Hannah Jacob, dated July 2021, installation RSM likely a university). The W001-WRITE-WINNER section is completely empty and W000-WRITE-LOSER uses ENDIF instead of END-IF (non-standard). There is a likely logic bug: 'SET REC-INVALID TO FALSE' should probably be 'SET REC-INVALID TO TRUE'. The EVALUATE VOTE-VALUE references the group item rather than an indexed element, which may be another bug. No lines exceed 72 characters confirming fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4039,
+      "completion_tokens": 556,
+      "total_tokens": 4595,
+      "cost": 0.020457,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020457,
+        "upstream_inference_prompt_cost": 0.012117,
+        "upstream_inference_completions_cost": 0.00834
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:43:56Z"
+}

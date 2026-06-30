@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b64a755bfa24fae7a22468a30281887a3fb4ba12",
+    "sha1_git": "b64a755bfa24fae7a22468a30281887a3fb4ba12",
+    "filename": "/soutfsqf02b2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7522,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b64a755bfa24fae7a22468a30281887a3fb4ba12/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b64a755bfa24fae7a22468a30281887a3fb4ba12/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7522,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 205,
+    "blank_lines": 2,
+    "comment_lines": 73,
+    "code_lines": 130,
+    "comment_ratio": 0.36,
+    "max_line_length": 128,
+    "avg_line_length": 34.7,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "soutfsqf02b2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 12,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 13,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) project by Sauro Menna, 2016; compiler options visible in comments: cobc -x -fbinary-size=1--8 -fnotrunc -fbinary-byteorder=big-endian",
+        "evidence": [
+          "cobc -x -t .\\listing\\%1.lst -I .\\copy -Wall -fbinary-size=1--8",
+          "LGPL 3.0 license",
+          "function all intrinsic in REPOSITORY",
+          "GOBACK used",
+          "with duplicates in order"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Generic COBOL sort utility module; part of a sort/filter framework by Sauro Menna",
+        "summary": "This program sorts an input sequential file on an ascending key (srt-ch-field) using COBOL SORT with INPUT PROCEDURE and OUTPUT PROCEDURE. It filters input records based on field conditions, counts records in/out/skipped, and writes sorted output. It is a reusable sort module relying heavily on COPY statements for file definitions and environment setup.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (12 copies) for file control, FD, working-storage, and procedure sections",
+        "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
+        "WITH DUPLICATES IN ORDER clause",
+        "FUNCTION ALL INTRINSIC in REPOSITORY",
+        "Inline comments with ## markers indicating template placeholders for customization",
+        "RETURN statement for sort file",
+        "Totalizer paragraphs (add-totalizer, reset-totalizer) via copied code",
+        "No EXEC SQL or EXEC CICS",
+        "Fixed-format source with some lines over 72 chars"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The ## markers in comments and DISPLAY statements appear to be template customization hints rather than actual COBOL syntax. The program is part of a larger framework of sort utilities by Sauro Menna. Some lines exceed column 72 (up to 128), which is acceptable in GnuCOBOL with appropriate compiler settings."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4072,
+      "completion_tokens": 523,
+      "total_tokens": 4595,
+      "cost": 0.020061,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020061,
+        "upstream_inference_prompt_cost": 0.012216,
+        "upstream_inference_completions_cost": 0.007845
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.94,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:45:52Z"
+}

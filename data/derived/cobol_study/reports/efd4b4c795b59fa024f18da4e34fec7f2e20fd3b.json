@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:efd4b4c795b59fa024f18da4e34fec7f2e20fd3b",
+    "sha1_git": "efd4b4c795b59fa024f18da4e34fec7f2e20fd3b",
+    "filename": "/pfcaut7e.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 205721,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:efd4b4c795b59fa024f18da4e34fec7f2e20fd3b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:efd4b4c795b59fa024f18da4e34fec7f2e20fd3b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 205721,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6449,
+    "blank_lines": 731,
+    "comment_lines": 1786,
+    "code_lines": 3932,
+    "comment_ratio": 0.312,
+    "max_line_length": 88,
+    "avg_line_length": 30.9,
+    "long_lines_over_72": 30,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PFCAUT7"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 17,
+    "call_count": 17,
+    "perform_count": 274,
+    "goto_count": 0,
+    "pic_count": 249,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "Tandem/HPE NonStop COBOL (Guardian/OSS environment): ?CONSULT, ?SEARCH, ?NOLMAP, ?SAVE ALL, ?SAVEABEND, ?LINES, ?CHECK, ?SQL compiler directives are characteristic of Tandem NonStop COBOL (PATHWAY/ServerClass environment). Program uses PATHSEND, SERVERCLASS concepts.",
+        "evidence": [
+          "?CONSULT $SYSTEM.SYSTEM.COBOLEX0",
+          "?SEARCH $SYSTEM.SYSTEM.COBOLLIB",
+          "?NOLMAP, SYMBOLS, INSPECT",
+          "?SAVE ALL",
+          "?SAVEABEND",
+          "?LINES 66",
+          "?CHECK 3",
+          "?SQL",
+          "P100-PATHSEND section name",
+          "SERVERCLASS references in comments"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Fleet card (Flottenkarten) authorization processing system converting terminal protocol messages (type 200) to AS-IFSF protocol (type 1200) for multiple fleet card authorization systems including Avia, Shell, Total, DKV, Eurowag, Stiglechner, LogPay, BP, ENI, Orlen, UTA, TND",
+        "summary": "This program converts fleet card terminal authorization requests from terminal protocol to IFSF protocol for various fleet card authorization systems (AS). It handles MAC/PAC security processing, article mapping, chip card (EMV) processing, BIN blocking, and logging. It supports multiple routing targets (Avia, Shell, Total, DKV, Eurowag, etc.) identified by routing key (ROUTKZ).",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2-style embedded SQL via ?SQL directive)",
+        "Tandem NonStop COBOL compiler directives (?CONSULT, ?SEARCH, ?SAVE ALL, ?SAVEABEND)",
+        "PATHSEND for inter-process communication on NonStop",
+        "MAC/PAC cryptographic processing (DUKPT key management)",
+        "EMV/chip card processing",
+        "Multiple COPY modules (17 copybooks)",
+        "17 external CALL targets",
+        "274 PERFORM statements with structured section layout",
+        "Extensive version history in comments (G.00.00 through G.04.05, 2015-2019)",
+        "German-language comments and business domain",
+        "Fleet card multi-AS routing logic"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars but sufficient evidence present. Program is clearly a production Tandem NonStop COBOL application for a German/European fleet card payment processing system. The ?SEARCH directives reference named modules (=TALLIB, =ASC2EBC, etc.) typical of NonStop ENSCRIBE/Guardian library search paths. 'online-cics' program_type used as closest approximation to NonStop PATHWAY server class (no CICS, but server-based online transaction processing)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8322,
+      "completion_tokens": 718,
+      "total_tokens": 9040,
+      "cost": 0.035736,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035736,
+        "upstream_inference_prompt_cost": 0.024966,
+        "upstream_inference_completions_cost": 0.01077
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.79,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:37:55Z"
+}

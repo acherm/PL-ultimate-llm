@@ -49,56 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely RM/COBOL or Micro Focus with ACUCOBOL-GT screen handling)",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "Likely Micro Focus COBOL or compatible (e.g., AcuCOBOL/GnuCOBOL) given ACCEPT with LINE/POSITION/TAB/UPDATE/NO BEEP/CURSOR/CONTROL clauses, C$RERR call, USE AFTER ERROR DECLARATIVES, and screen-oriented DISPLAY with LINE/POSITION. French-language application (Belgian/Swiss HR system). DECIMAL-POINT IS COMMA suggests European locale.",
         "evidence": [
-          "ACCEPT ... LINE ... POSITION ... SIZE ... TAB UPDATE NO BEEP CURSOR ... ON EXCEPTION EXC-KEY (screen I/O syntax typical of Micro Focus / ACUCOBOL-GT)",
-          "DISPLAY ... LINE ... POSITION ... SIZE (screen DISPLAY syntax)",
-          "CALL 'C$RERR' (ACUCOBOL-GT runtime library call)",
-          "USE AFTER ERROR PROCEDURE ON CONTRAT (DECLARATIVES section)",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "READ CONTRAT PREVIOUS NO LOCK (ISAM-style file I/O with PREVIOUS and NO LOCK)",
-          "EXIT PROGRAM (COBOL-85 subprogram termination)",
-          "EVALUATE / END-EVALUATE, END-IF, END-READ (COBOL-85 scope terminators)",
-          "COPY statements for multiple copybooks (.CPY, .REC, .FC, .FDE, .NXX extensions)"
+          "ACCEPT ... LINE ... POSITION ... TAB UPDATE NO BEEP CURSOR ... CONTROL 'UPPER'",
+          "CALL 'C$RERR' USING EXTENDED-STATUS",
+          "USE AFTER ERROR PROCEDURE ON CONTRAT",
+          "DISPLAY ... LINE ... POSITION ... SIZE",
+          "DECIMAL-POINT IS COMMA",
+          "EXIT PROGRAM",
+          "READ CONTRAT PREVIOUS NO LOCK"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program handles the printing/generation of 'entrée' (entry/contract) documents for personnel records. It presents an interactive screen to the user to select parameters (person type, status, cost centre, re-edition flag, signatory), then iterates over contract and personnel records to produce output via a dynamically-called model program (e.g. 'DEF' or 'DESP').",
-        "domain": "HR / payroll / personnel management",
-        "program_type": "subprogram"
+        "domain": "payroll-hr",
+        "domain_detail": "HR/personnel management system - printing/processing employment contract entry forms for employees, handling career records, presence tracking, and contract notifications. French-language (Belgian or Swiss) enterprise HR application.",
+        "summary": "This program (3-ENTREE) handles the entry and printing of employment contracts ('ENTREE' = entry/contract). It reads employee registry records, career data, presence records, and contract records, then calls a configurable print model (MODELE) to produce contract documents. It supports filtering by status and cost center, and tracks notification dates on contracts.",
+        "program_type": "online-cics"
       },
       "notable_features": [
-        "ACUCOBOL-GT runtime call C$RERR for extended file error status",
-        "Screen I/O using ACCEPT/DISPLAY with LINE/POSITION/SIZE/TAB/UPDATE/NO BEEP/CURSOR clauses",
-        "ISAM-style sequential file navigation with READ PREVIOUS NO LOCK and START KEY <",
-        "Dynamic CALL using variable MODELE (set to 'DEF' or 'DESP') for pluggable report model",
-        "DECLARATIVES section with USE AFTER ERROR PROCEDURE",
+        "Screen-oriented ACCEPT/DISPLAY with LINE/POSITION/SIZE clauses",
         "DECIMAL-POINT IS COMMA (European locale)",
-        "Extensive use of COPY statements for copybooks (.REC, .CPY, .FC, .FDE, .NXX)",
-        "LINKAGE SECTION with PROCEDURE DIVISION USING (subprogram interface)",
-        "French-language identifiers and comments (ENTREE, CONTRAT, CARRIERE, PRESENCE, etc.)",
-        "GO TO used within named paragraphs for loop control (READ-PERSON, CONTRAT-1)"
+        "USE AFTER ERROR DECLARATIVES with C$RERR",
+        "Dynamic CALL using variable MODELE (configurable print model)",
+        "CANCEL MODELE after use",
+        "22 COPY statements for modular record/routine includes",
+        "READ PREVIOUS (ISAM backward read)",
+        "LINKAGE SECTION with LINK-V parameter block",
+        "French-language comments and variable names",
+        "EVALUATE used extensively for screen field dispatch"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "The file is clearly production COBOL from a French HR/payroll application. The screen handling syntax (ACCEPT ... TAB UPDATE NO BEEP CURSOR, CALL 'C$RERR') strongly suggests ACUCOBOL-GT or a compatible Micro Focus variant. The duplicate WHEN 4 clause in the EVALUATE block (lines ~155-165) appears to be a copy-paste bug in the source. Decoded with latin-1, consistent with French accented characters in box-drawing comment headers."
+      "overall_confidence": "medium",
+      "notes": "File decoded as latin-1 which explains the box-drawing characters in comments (CP850/latin-1 mixed). The program is part of a larger HR suite with many shared copybooks. The 'online-cics' program_type label is approximate - this is actually a screen-based interactive program using Micro Focus/AcuCOBOL screen I/O extensions, not CICS. No EXEC CICS found. The MODELE variable ('DEF' default) suggests pluggable report modules."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 5937,
-      "completion_tokens": 893,
-      "total_tokens": 6830,
-      "cost": 0.031206,
+      "prompt_tokens": 7315,
+      "completion_tokens": 654,
+      "total_tokens": 7969,
+      "cost": 0.031755,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.031206,
-        "upstream_inference_prompt_cost": 0.017811,
-        "upstream_inference_completions_cost": 0.013395
+        "upstream_inference_cost": 0.031755,
+        "upstream_inference_prompt_cost": 0.021945,
+        "upstream_inference_completions_cost": 0.00981
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +118,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 22.34,
+    "provider": "Anthropic",
+    "latency_s": 20.3,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:38:45Z"
 }

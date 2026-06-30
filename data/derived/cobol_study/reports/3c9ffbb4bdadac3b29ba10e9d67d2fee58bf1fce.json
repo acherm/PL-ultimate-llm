@@ -49,54 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (or compatible, likely used with htmlpp preprocessor for CGI/web generation)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor directives ($set preprocess(htmlpp)), free-format source, used in a Brazilian ERP/accounting web application (likely Totvs/RM or similar Brazilian system). Portuguese-language comments and identifiers.",
         "evidence": [
-          "$set preprocess (htmlpp) endp — Micro Focus-style compiler directive",
-          "$set sourceformat\"free\" — Micro Focus free-format directive",
-          "external-form clause for CGI input",
-          "identified by clauses on PIC fields (Micro Focus web/CGI extension)",
-          "exec html ... end-exec blocks for HTML generation",
-          "78 level constant (COBOL-85)",
-          "exit section statement",
-          "evaluate / end-evaluate, perform varying ... until (COBOL-85)"
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "external-form clause",
+          "identified by clauses in CGI input section",
+          "exec html blocks",
+          "copy PCW900.CPY, PCW902.CPY, PCW904.CPY, PCW990.CPY patterns",
+          "program-id PW06030C"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "A CGI/web COBOL program that manages the relationship between 'Contas Gerenciais' (Management Accounts) and 'Departamentos' (Departments) in what appears to be a Brazilian financial/accounting system. It supports loading, saving, and deleting account-department associations via an HTML form interface.",
-        "domain": "banking/finance (Brazilian management accounting system)",
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian ERP system - management account to department relationship maintenance (Conta Gerencial / Departamento). Likely part of a Brazilian OBZ (Orçamento Base Zero / Zero-Based Budgeting) module.",
+        "summary": "This program manages the relationship between management accounts (Contas Gerenciais) and departments (Departamentos) in a Brazilian ERP system. It provides a CGI/HTML web interface for loading, saving, and deleting these relationships, with frame-based navigation and list selection. It interacts with files PD60122 (departments), PD50601 (management accounts), and PD60137 (relationship table).",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Micro Focus $set compiler directives (htmlpp preprocessor, free sourceformat)",
-        "EXEC HTML blocks for server-side HTML/JavaScript generation",
-        "external-form and identified by clauses for CGI form field binding",
-        "Multiple COPY statements for file definitions and working storage",
-        "78-level constants",
-        "Portuguese-language comments and data names (Brazilian Portuguese)",
-        "Session validation and standard header performs (9000-validar-sessao, 8000-cabecalho-padrao)",
-        "REDEFINES with OCCURS for list item processing",
-        "No EXEC SQL or EXEC CICS — uses indexed/relative file I/O instead"
+        "$set preprocess(htmlpp) compiler directive",
+        "$set sourceformat free",
+        "external-form section with identified-by CGI field mapping",
+        "exec html blocks for embedded HTML/JavaScript generation",
+        "REDEFINES with OCCURS for list item packing",
+        "Portuguese-language identifiers and comments",
+        "88-level condition names",
+        "EXIT SECTION usage",
+        "15 COPY statements",
+        "OBZ (Zero-Based Budgeting) domain references"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file uses the Micro Focus htmlpp preprocessor to embed HTML and JavaScript within COBOL source, a pattern common in Brazilian ERP/web COBOL systems. The $set sourceformat\"free\" directive means the code is free-format despite the mechanical indicator suggesting fixed (the indicator may have been computed without accounting for the directive). The program is clearly production-grade with error handling, session management, and structured section layout. Annotation comments like *>AJ191006:59753 suggest a change-tracking system."
+      "notes": "Source is truncated at 16000 chars out of 31728 bytes (700 lines total). The program uses a Brazilian CGI-COBOL web framework with htmlpp preprocessor. The 'online-cics' program_type is used loosely here - this is actually a CGI web program, not CICS, but no better enum value exists. The file uses free-format COBOL despite the mechanical indicator suggesting fixed format; the $set sourceformat\"free\" directive confirms free format."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4997,
-      "completion_tokens": 664,
-      "total_tokens": 5661,
-      "cost": 0.024951,
+      "prompt_tokens": 6375,
+      "completion_tokens": 587,
+      "total_tokens": 6962,
+      "cost": 0.02793,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.024951,
-        "upstream_inference_prompt_cost": 0.014991,
-        "upstream_inference_completions_cost": 0.00996
+        "upstream_inference_cost": 0.02793,
+        "upstream_inference_prompt_cost": 0.019125,
+        "upstream_inference_completions_cost": 0.008805
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.87,
+    "latency_s": 16.26,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:18:10Z"
 }

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4b85a9886161cc66f98ea3e4d2753889d0d250b7",
+    "sha1_git": "4b85a9886161cc66f98ea3e4d2753889d0d250b7",
+    "filename": "/pw02175r.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 110250,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4b85a9886161cc66f98ea3e4d2753889d0d250b7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4b85a9886161cc66f98ea3e4d2753889d0d250b7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 110250,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2130,
+    "blank_lines": 93,
+    "comment_lines": 105,
+    "code_lines": 1932,
+    "comment_ratio": 0.052,
+    "max_line_length": 234,
+    "avg_line_length": 50.8,
+    "long_lines_over_72": 329,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW02175R"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 71,
+    "call_count": 14,
+    "perform_count": 122,
+    "goto_count": 14,
+    "pic_count": 299,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with Micro Focus-style compiler directives ($set sourceformat\"free\", $set preprocess, $set constant); Portuguese-language Brazilian business application, likely compiled with GnuCOBOL or compatible compiler",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "$set constant PadraoCSV",
+          "decimal-point is comma",
+          "copy PCW900.CPY",
+          "78 versao value \"u\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian beverage/distribution company returns-by-responsibility report (Devoluções por Responsabilidade); tracks product returns categorized by responsible party (sales, finance/admin, transport, market, process)",
+        "summary": "Batch report program PW02175R generates a 'Returns by Responsibility' report for a Brazilian distribution/beverage company. It reads indexed work files containing return and billing data, aggregates quantities by responsibility category (sales, transport, commercial, etc.), and produces formatted output with percentage breakdowns. The program supports multiple report layout options (general, commercial, sales manager, area/sector, supervisor/salesperson, map, carrier, district manager).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$set compiler directives (htmlpp preprocessor, free sourceformat, constant definition)",
+        "71 COPY statements indicating large copybook-driven architecture",
+        "decimal-point is comma (Brazilian locale)",
+        "Indexed file with dynamic access and manual lock mode",
+        "88-level condition names extensively used",
+        "REDEFINES for date field decomposition",
+        "Portuguese-language identifiers and comments",
+        "78-level constant (versao)",
+        "No EXEC SQL or EXEC CICS",
+        "Long lines (max 234) despite free format"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars out of 110250 bytes (2130 lines total). The $set sourceformat\"free\" directive means free-format despite the mechanical indicator guessing fixed. The program is clearly a production Brazilian ERP/distribution system report module with extensive copybook usage (71 copies) and business logic for returns analysis."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7068,
+      "completion_tokens": 534,
+      "total_tokens": 7602,
+      "cost": 0.029214,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029214,
+        "upstream_inference_prompt_cost": 0.021204,
+        "upstream_inference_completions_cost": 0.00801
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.87,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:41:34Z"
+}

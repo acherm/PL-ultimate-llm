@@ -49,52 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus or GnuCOBOL (Linux/ORCA project)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING and LINKAGE SECTION with multiple parameters",
         "evidence": [
-          "PERFORM VARYING ... UNTIL with END-PERFORM",
-          "EVALUATE ... WHEN ... END-EVALUATE",
-          "IF ... END-IF inline conditionals",
-          "EXIT PROGRAM",
-          "COPY directives with REPLACING using // delimiters (Micro Focus style)",
-          "LINKAGE SECTION with multiple 01-level parameters in PROCEDURE DIVISION USING",
-          "Fixed-format source with comment lines in column 7 (*)"
+          "PROGRAM-ID. ORCSC93",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY \"MCPAREA\"",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"CPK02SPASCR.INC\" REPLACING",
+          "LINKAGE SECTION with USING clause",
+          "No EXEC CICS or EXEC SQL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program (ORCSC93) is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It performs medical procedure (shinryo koui) item splitting, editing, and validation — specifically separating and classifying medical procedure items by category, checking examination counts, and validating set codes and hospitalization flags.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt billing system - diagnostic procedure (Shinryo Koi) input processing, specifically handling splitting/editing/calculation of medical procedures",
+        "summary": "This program (ORCSC93) is part of the JMA ORCA standard medical receipt software system. It processes medical procedure (Shinryo Koi) input data, performing splitting, editing, and validation of procedure classifications. It validates procedure counts, set codes, hospitalization flags, and examination groupings.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, misidentified by decoder)",
-        "COPY directives with REPLACING using // delimiter syntax (Micro Focus style)",
-        "LINKAGE SECTION with multiple copybook-defined parameter areas",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage",
-        "Multiple named SECTIONs in PROCEDURE DIVISION",
+        "LINKAGE SECTION with multiple COPY-based parameter areas",
+        "COPY with REPLACING (//SPA-// BY //WRK-//)",
+        "Japanese comments encoded in EUC-JP/latin-1",
+        "PERFORM VARYING loops up to 200 iterations",
+        "EVALUATE for multi-page/program-type dispatch",
         "GO TO used for early exit from sections",
-        "Part of the open-source ORCA medical receipt system (JMA Open Source License)"
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "Structured as named SECTIONs with EXIT paragraphs"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded as latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing mojibake in the displayed text. The COPY statements reference external copybooks (CPK02SPASCR.INC, MCPAREA, COMMON-SPA, CPORCSC93.INC, CPORCSSRYSYU.INC) that are not included in this file. The source is truncated at 16000 chars out of 65749 bytes total. The program is a well-structured production subprogram from the ORCA open-source Japanese medical billing system, circa 2001-2003."
+      "notes": "Source file is encoded in EUC-JP (decoded as latin-1), causing Japanese characters to appear garbled in the snippet. The program is clearly part of the well-known open-source JMA ORCA medical billing system. Source is truncated at 16000 chars out of 65749 bytes total (1401 lines). Fixed format with a few lines slightly over 72 chars (5 long lines noted)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7965,
-      "completion_tokens": 668,
-      "total_tokens": 8633,
-      "cost": 0.033915,
+      "prompt_tokens": 9343,
+      "completion_tokens": 549,
+      "total_tokens": 9892,
+      "cost": 0.036264,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033915,
-        "upstream_inference_prompt_cost": 0.023895,
-        "upstream_inference_completions_cost": 0.01002
+        "upstream_inference_cost": 0.036264,
+        "upstream_inference_prompt_cost": 0.028029,
+        "upstream_inference_completions_cost": 0.008235
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.98,
+    "latency_s": 15.37,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:08:06Z"
 }

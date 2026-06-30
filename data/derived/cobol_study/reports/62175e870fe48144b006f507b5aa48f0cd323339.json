@@ -49,53 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely running on Unix/Linux, given socket program context and .slr copybook extensions)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Likely compiled with a Unix/Linux COBOL compiler (possibly MicroFocus or similar); references to .slr copybooks, socket program interface (cpi5.c), and 78-level constants suggest COBOL-85 or later. Developed by 'dyad infoSys' for a medical practice management system.",
         "evidence": [
-          "78 level constants (VALUE clauses on 78 items)",
+          "78-level constants (REQUEST-LENGTH, MAX-PATS-RECS-IN-BUFFER etc.)",
           "88-level condition names throughout",
-          "COPY statements with quoted filenames (.slr extension)",
-          "PIC 9(4) COMP for binary status field",
-          "date-written/date-compiled in identification division",
-          "select ... assign to printer with file-status",
-          "no EXEC SQL or EXEC CICS"
+          "copy statements with .slr extension",
+          "program-id cpirma5",
+          "author dyad infoSys",
+          "installation regional medical associates",
+          "called from cpi5.c socket program"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A batch COBOL program (cpirma5) for a Regional Medical Associates system that processes patient master records, supporting lookup, add, and update operations on patient demographic data including health numbers, chart numbers, birth dates, and version codes. It is called from a C socket program (cpi5.c) and writes audit and error reports.",
-        "domain": "healthcare/medical records",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "Patient master file management for a regional medical associates practice management system; handles patient lookup, add, and update operations including MRN, OHIP numbers, chart numbers, and eligibility history.",
+        "summary": "This program (cpirma5) is a COBOL batch/subprogram called from a C socket program (cpi5.c) that manages patient master records for a medical practice. It supports lookup, add, and update of patient demographics including health card numbers, chart numbers, birth dates, and eligibility history across multiple indexed files. It also produces audit and error reports.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "78-level constants used for buffer sizes and error codes",
-        "Multiple COPY statements referencing external .slr and .ws copybooks (none expanded in this excerpt)",
-        "Called from a C socket program (cpi5.c) — inter-language integration",
-        "Province lookup table with old/new province code mapping",
-        "MRN dummy-key detection logic (ikey-based MRN suppression)",
-        "Multiple audit/error report files (cpirma5_a/b/c/e.log)",
-        "Redefines used for binary status field (COMP)",
-        "Detailed modification history spanning 2002–2003",
-        "No EXEC SQL, no EXEC CICS, no COMP-3"
+        "78-level figurative constants (COBOL-85+)",
+        "21 COPY statements for file control and data definitions (.slr/.fd/.ws extensions)",
+        "Multiple indexed file access with alternate keys (surname+givenname index)",
+        "Called from C socket program (cpi5.c) via linkage section buffer",
+        "Province table with Canadian provinces (OHIP/Ontario health context)",
+        "Audit and error report files",
+        "Y2K fix noted in comments (4-digit birth year)",
+        "MRN dummy-key detection logic",
+        "No COMP-3 usage despite financial/medical context",
+        "GOTO usage (19 occurrences)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated to first 16000 characters; the PROCEDURE DIVISION is not visible in this excerpt. The .slr copybook extension and socket-program integration suggest a Micro Focus or similar Unix-targeted COBOL environment. The 78-level items are a COBOL-85 feature. The program appears to be a real production system for a Canadian medical practice (province codes include ON, QC, BC, etc.)."
+      "notes": "Source truncated to first 16000 chars; full program is 1677 lines. Canadian medical practice management system (OHIP = Ontario Health Insurance Plan). Developed by 'dyad infoSys', written 2002-2003. The .slr copybook extension and socket interface suggest a Unix/Linux environment. No EXEC CICS or EXEC SQL. Dialect family is uncertain between MicroFocus and other Unix COBOL compilers."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7460,
-      "completion_tokens": 631,
-      "total_tokens": 8091,
-      "cost": 0.031845,
+      "prompt_tokens": 8838,
+      "completion_tokens": 609,
+      "total_tokens": 9447,
+      "cost": 0.035649,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.031845,
-        "upstream_inference_prompt_cost": 0.02238,
-        "upstream_inference_completions_cost": 0.009465
+        "upstream_inference_cost": 0.035649,
+        "upstream_inference_prompt_cost": 0.026514,
+        "upstream_inference_completions_cost": 0.009135
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.46,
+    "latency_s": 17.72,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:51:36Z"
 }

@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:414e4e187bcecedee61b96e41292a5f6eaca10ad",
+    "sha1_git": "414e4e187bcecedee61b96e41292a5f6eaca10ad",
+    "filename": "/CIB007.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 62791,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:414e4e187bcecedee61b96e41292a5f6eaca10ad/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:414e4e187bcecedee61b96e41292a5f6eaca10ad/raw/"
+  },
+  "indicators": {
+    "bytes_len": 62791,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1253,
+    "blank_lines": 155,
+    "comment_lines": 151,
+    "code_lines": 947,
+    "comment_ratio": 0.138,
+    "max_line_length": 83,
+    "avg_line_length": 49.1,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CIB007"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 3,
+    "perform_count": 49,
+    "goto_count": 10,
+    "pic_count": 151,
+    "comp3_count": 7,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL with CBL compiler option (NOADV), COMP-3, RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, indexed VSAM files with FILE STATUS, and COPY statements. Change log dates from 2000-2018. Likely compiled with IBM Enterprise COBOL on z/OS.",
+        "evidence": [
+          "CBL NOADV compiler directive",
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-3 usage",
+          "ORGANIZATION IS INDEXED / ACCESS IS DYNAMIC / RECORD KEY",
+          "FILE STATUS IS ...",
+          "COPY ERCCOMP / COPY ELCDTEFD",
+          "SYS018-FBA1-ERCOMP assign name pattern",
+          "S0C7 / FORCE-DUMP REDEFINES pattern"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Compensation/billing statement processing for insurance carriers; handles billing statements, refund vouchers, barcodes, and remittance for accounts with various bill/remit codes (B, S, T, E, R). References compensation master, CID, mail room, and financial responsibility numbers.",
+        "summary": "CIB007 reads billing statement print lines created by program EL562 and routes them to multiple output files based on bill/remit code (B, S, T, E, R). It adds barcodes and cover letters to statements destined for mailing, and generates cash disbursement vouchers for refund accounts. It also produces extract files for CSR reporting and downstream processing.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "CBL NOADV compiler option",
+        "Multiple output files (9+ SELECT entries) for different statement types",
+        "VSAM indexed file access (ERCOMP, FORMDEFS) with DYNAMIC access",
+        "COMP-3 packed decimal fields",
+        "COPY statements (ERCCOMP, ELCDTEFD, ctypes.cpy)",
+        "Barcode generation logic (SAVE-BARCODE1/2)",
+        "Extensive change log spanning 2000-2018 with change request numbers",
+        "88-level condition names",
+        "REDEFINES for S0C7/FORCE-DUMP abend pattern",
+        "LINE SEQUENTIAL organization for KEYS-EXT extract file"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full PROCEDURE DIVISION not visible but mechanical indicators show 49 PERFORMs, 10 GOTOs, 3 CALLs, and 151 PIC clauses confirming substantial production code. Change log spans nearly 20 years of maintenance."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6837,
+      "completion_tokens": 646,
+      "total_tokens": 7483,
+      "cost": 0.030201,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030201,
+        "upstream_inference_prompt_cost": 0.020511,
+        "upstream_inference_completions_cost": 0.00969
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 26.94,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:41:01Z"
+}

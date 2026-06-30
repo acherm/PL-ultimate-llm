@@ -49,47 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (RDz/IDz)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM RDz (Rational Developer for z) based on filename suffix .rdz.cbl; EXEC SQL embedded DB2 syntax in WORKING-STORAGE",
         "evidence": [
-          "PROGRAM-ID. DVZZMFT3 (IBM naming convention)",
-          "EXEC SQL ... END-EXEC in WORKING-STORAGE (DB2 embedded SQL)",
-          "filename contains .rdz.cbl (IBM Rational Developer for z/OS extension)",
-          "GOBACK statement (IBM dialect)",
-          "END PROGRAM terminator"
+          "PROGRAM-ID. DVZZMFT3",
+          "EXEC SQL ... END-EXEC in WORKING-STORAGE",
+          "GOBACK statement",
+          "END PROGRAM DVZZMFT3",
+          ".rdz.cbl filename extension"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal test or demo program that embeds an EXEC SQL SELECT statement with a FROM clause using aliases and column lists in WORKING-STORAGE. It appears to be a test case for SQL parsing with a FROM clause, likely used to validate RDz tooling or a SQL parser feature.",
-        "domain": "education/tutorial",
+        "domain": "test-suite",
+        "domain_detail": "Appears to be a test case for an SQL parser or COBOL preprocessor, specifically testing EXEC SQL with a FROM clause containing aliases and column lists",
+        "summary": "A minimal COBOL program containing an EXEC SQL SELECT statement with a complex FROM clause (table aliases with column lists). The program does nothing at runtime (GOBACK immediately). It appears to be a test case for SQL parsing within COBOL, likely for IBM RDz tooling.",
         "program_type": "test"
       },
       "notable_features": [
-        "EXEC SQL SELECT with FROM clause using table aliases and column lists",
-        "SQL embedded in WORKING-STORAGE SECTION (unusual placement)",
-        "IBM RDz file extension in filename",
-        "GOBACK instead of STOP RUN",
-        "No PIC clauses or host variables — purely structural skeleton"
+        "EXEC SQL embedded in WORKING-STORAGE SECTION",
+        "SQL FROM clause with table aliases and column renaming syntax",
+        "GOBACK statement",
+        "END PROGRAM explicit terminator",
+        "No PIC clauses or actual data items",
+        "Filename suggests IBM Rational Developer for z/OS (RDz)"
       ],
       "maturity": "snippet",
-      "overall_confidence": "high",
-      "notes": "The SQL in WORKING-STORAGE is syntactically unusual and likely a parser/tooling test case rather than functional code. The SQL itself (SELECT i.i.d.* FROM iid.rr as new (h,k), uma as ka(l,u)) uses non-standard alias syntax with column lists, suggesting it is specifically crafted to test FROM-clause parsing in the RDz IDE. The program has no real logic beyond GOBACK."
+      "overall_confidence": "medium",
+      "notes": "The SQL syntax 'iid.rr as new (h,k)' with column alias lists is unusual and may be intentionally testing edge-case SQL parsing. The file is extremely short (14 lines) and appears to be a test fixture rather than a functional program. The .rdz.cbl extension strongly suggests IBM Rational Developer for z/OS tooling context."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 962,
-      "completion_tokens": 495,
-      "total_tokens": 1457,
-      "cost": 0.010311,
+      "prompt_tokens": 2340,
+      "completion_tokens": 426,
+      "total_tokens": 2766,
+      "cost": 0.01341,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010311,
-        "upstream_inference_prompt_cost": 0.002886,
-        "upstream_inference_completions_cost": 0.007425
+        "upstream_inference_cost": 0.01341,
+        "upstream_inference_prompt_cost": 0.00702,
+        "upstream_inference_completions_cost": 0.00639
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,9 +112,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 11.11,
+    "provider": "Anthropic",
+    "latency_s": 9.46,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:32:50Z"
 }

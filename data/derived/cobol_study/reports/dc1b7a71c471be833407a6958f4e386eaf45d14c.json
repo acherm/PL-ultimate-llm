@@ -49,55 +49,58 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (with JC preSQL for MySQL)",
-        "standard": "COBOL-2002",
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source for the ACAS (Applewood Computers Accounting System) v3.02, using JC preSQL MySQL preprocessor for embedded SQL. Author: Vincent B Coen. GPL v2.",
         "evidence": [
-          ">>source free (GnuCOBOL compiler directive)",
-          "*> comment style (GnuCOBOL/COBOL-2002 inline comments)",
-          "EXEC SQL present (via JC preSQL preprocessor for MySQL)",
-          "PIC S9(4) COMP usage",
-          "copy \"envdiv.cob\" with quoted literal",
-          "Program-Id. plinvoiceMT",
-          "Author references GNU General Public License v2.0",
-          "References to GnuCOBOL-compatible free-format source"
+          ">>source free directive at top",
+          "*> comment style (GnuCOBOL)",
+          "EXEC SQL with JC preSQL MySQL preprocessor mentioned",
+          "copy 'envdiv.cob'",
+          "PIC S9(4) COMP",
+          "prog-name value 'invoiceMT (3.02.11)'",
+          "GNU GPL v2 copyright notice referencing GnuCOBOL-style distribution"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This is a Data Access Layer (DAL) module for the Applewood Computers Accounting System (ACAS) that handles Purchase Invoice relational database operations using MySQL via a JC preSQL preprocessor. It manages two database tables (PUINVOICE-REC for invoice headers and PUINV-LINES-REC for up to 40 line items per invoice), providing CRUD operations (read, write, rewrite, delete, seek/start) and translating between COBOL flat-file semantics and relational database rows. It is called by the COBOL flat-file handler module acas026.",
-        "domain": "accounting/ERP (purchase invoicing)",
+        "domain": "accounting-erp",
+        "domain_detail": "ACAS (Applewood Computers Accounting System) Purchase Invoice RDB Data Access Layer handler; manages two MySQL tables (PUINVOICE-REC header and PUINV-LINES-REC line items) on behalf of the flat-file handler module acas026.",
+        "summary": "This program is a MySQL RDB Data Access Layer (DAL) module for the ACAS accounting system, handling purchase invoice records across two relational tables (header and line items). It is called by the COBOL flat-file handler acas026 and translates file-style operations (open, close, read, write, rewrite, delete, start) into embedded SQL statements via a JC preSQL preprocessor. It manages cursor-based sequential reads, indexed reads, inserts, updates, and deletes for both the primary invoice header table and the invoice line-item table.",
         "program_type": "subprogram"
       },
       "notable_features": [
         "EXEC SQL (MySQL via JC preSQL preprocessor)",
-        ">>source free GnuCOBOL compiler directive",
-        "Dual-table handling (header + line-item rows) with key suffix logic (00=header, 01-40=line items)",
-        "COMP-3 usage (comp3_count=3)",
-        "Extensive inline *> comments including version history and module usage documentation",
-        "OCCURS/INDEXED table for key metadata (Table-Of-KeyNames)",
-        "49 CALL statements and 43 GOTO statements indicating complex procedural flow",
-        "GPL v2 licensed open-source accounting system",
-        "No COPY books used (copy_count=0 except envdiv.cob in ENVIRONMENT DIVISION)",
-        "Cursor-based fetch with EOF/read-next state tracking via WS-Last-Read-Key"
+        ">>source free compiler directive",
+        "Free-format COBOL",
+        "COMP-3 (COMP-3 count=3)",
+        "49 CALL statements indicating heavy modular design",
+        "43 GOTO statements",
+        "Cursor-based sequential read logic tracking previous key",
+        "Two-table RDB handler (header + line items)",
+        "COPY statements (6 copybooks)",
+        "Detailed inline documentation and change log",
+        "GPL v2 licensed open-source accounting system"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated to first 16000 chars of a 134688-byte file (3338 lines total). The dialect is clearly GnuCOBOL free-format with MySQL embedded SQL via a custom 'JC preSQL' preprocessor. The program is part of a larger accounting system (ACAS v3.02+) with a well-documented version history spanning 2016-2018. The copy_count=0 in mechanical indicators but 'copy \"envdiv.cob\"' appears in the visible source, suggesting the counter may not have detected quoted COPY statements."
+      "notes": "Source truncated to first 16000 chars; full program is 3338 lines. The file is clearly production-quality ACAS accounting system code by a named professional author. GnuCOBOL dialect is confirmed by >>source free directive and *> comment style. MySQL-specific SQL via JC preSQL preprocessor. COBOL-85 baseline with some later extensions."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5196,
-      "completion_tokens": 806,
-      "total_tokens": 6002,
-      "cost": 0.027678,
+      "prompt_tokens": 6574,
+      "completion_tokens": 641,
+      "total_tokens": 7215,
+      "cost": 0.029337,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.027678,
-        "upstream_inference_prompt_cost": 0.015588,
-        "upstream_inference_completions_cost": 0.01209
+        "upstream_inference_cost": 0.029337,
+        "upstream_inference_prompt_cost": 0.019722,
+        "upstream_inference_completions_cost": 0.009615
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +119,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.87,
+    "provider": "Anthropic",
+    "latency_s": 16.21,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:47:51Z"
 }

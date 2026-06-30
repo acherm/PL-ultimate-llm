@@ -49,54 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCGZ03 is the point-score master setting screen (Z03).",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "COPY statements for copybooks (COMMON-SPA, Z01COMMON-SPA, Z01SCR-SPA, Z03SCR-SPA, CPORCSSRYSYU.INC)",
-          "REDEFINES clause usage",
-          "OCCURS clause on PIC X(01)",
-          "Fixed-format source with columns respected",
-          "No EXEC SQL or EXEC CICS",
-          "CALL count 30, PERFORM count 286 consistent with COBOL-85 batch program"
+          "PROGRAM-ID ORCGZ03",
+          "COPY 'COMMON-SPA'",
+          "COPY 'Z01COMMON-SPA'",
+          "COPY 'Z03SCR-SPA'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "no EXEC CICS/SQL",
+          "no COMP-3",
+          "fixed format with Japanese EUC comments"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical billing. It implements a screen-based master settings program (ORCGZ03) for managing point/score (Tensu) master data used in medical fee calculation, including validity dates, treatment classification codes, calculation rules, age-based adjustments, and facility standard settings. It is a batch/online screen program for configuring medical procedure master records.",
-        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/shinryo) point-score master maintenance screen for the JMA ORCA system",
+        "summary": "This program implements the point-score (tensu) master setting screen (Z03) for the JMA ORCA medical receipt software system. It handles display and input of medical procedure point-score master data including validity dates, treatment classification codes, score values, age calculation rules, and facility standard flags. It is a screen-based batch/online maintenance program with extensive table-driven field ordering.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, showing mojibake)",
-        "Multiple COPY statements referencing domain-specific copybooks (SPA areas, screen areas)",
-        "Large table of screen field order definitions (TBL-GMN-JUN) with FILLER VALUE entries",
-        "REDEFINES on the screen order table",
-        "No COMP-3 usage despite being a production system",
-        "No EXEC SQL or EXEC CICS — likely uses CALL-based middleware for DB access",
-        "30 CALL statements suggesting modular architecture with subprogram calls",
-        "286 PERFORM statements indicating structured procedural logic",
-        "Open Source license header (JMA Open Source License)"
+        "41 COPY statements for shared copybooks",
+        "30 CALL statements",
+        "286 PERFORM statements",
+        "Table-driven screen field ordering via TBL-GMN-JUN",
+        "Japanese EUC-encoded comments throughout",
+        "No COMP-3 usage",
+        "No EXEC SQL or EXEC CICS",
+        "Large working-storage with REDEFINES",
+        "Multi-page screen navigation logic"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in a Japanese character encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese comments to appear as mojibake. The program is clearly part of the well-known open-source ORCA medical receipt software project maintained by the Japan Medical Association (JMA). The source is truncated at 16000 chars out of ~228KB total; the PROCEDURE DIVISION is not visible in the excerpt but its presence is confirmed by mechanical indicators. The .CBL extension and fixed-format layout are consistent with GnuCOBOL/OpenCOBOL compilation."
+      "notes": "Source is encoded in EUC-JP (decoded as latin-1), causing garbled display of Japanese comments. File is 5054 lines and clearly production ORCA system code. Truncated at 16000 chars but structure is clear. No COMP-3 is unusual but consistent with GnuCOBOL/ORCA codebase style."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8879,
-      "completion_tokens": 775,
-      "total_tokens": 9654,
-      "cost": 0.038262,
+      "prompt_tokens": 10257,
+      "completion_tokens": 519,
+      "total_tokens": 10776,
+      "cost": 0.038556,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.038262,
-        "upstream_inference_prompt_cost": 0.026637,
-        "upstream_inference_completions_cost": 0.011625
+        "upstream_inference_cost": 0.038556,
+        "upstream_inference_prompt_cost": 0.030771,
+        "upstream_inference_completions_cost": 0.007785
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.24,
+    "latency_s": 20.26,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:49:38Z"
 }

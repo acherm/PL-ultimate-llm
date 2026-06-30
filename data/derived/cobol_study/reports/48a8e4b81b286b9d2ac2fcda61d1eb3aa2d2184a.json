@@ -49,55 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (or compatible mainframe COBOL, possibly Fujitsu/NEC for Japanese environment)",
+        "family": "fujitsu-nec",
         "standard": "COBOL-85",
+        "detail": "Japanese insurance system (INS-CALI) developed by SINOCOM for a Japanese insurance company; uses ENVIRONMENT-NAME/ENVIRONMENT-VALUE for environment variables, CSV ORGANIZATION clause, and RECORDING MODE F — patterns consistent with Fujitsu NetCOBOL or similar Japanese mainframe/midrange COBOL",
         "evidence": [
-          "RECORDING MODE F (IBM mainframe file descriptor clause)",
-          "BLOCK CONTAINS 0 RECORDS (IBM mainframe convention)",
-          "ORGANIZATION IS CSV (vendor extension)",
-          "ENVIRONMENT-NAME / ENVIRONMENT-VALUE SPECIAL-NAMES (IBM-style environment variable access)",
-          "COPY directives referencing .CPY files",
-          "EVALUATE ... WHEN construct (COBOL-85)",
-          "END-IF, END-EVALUATE structured terminators",
-          "RETURN-CODE special register (IBM)",
-          "Fixed format, max line length 72"
+          "ORGANIZATION IS CSV",
+          "RECORDING MODE F",
+          "ENVIRONMENT-NAME IS ENVNM / ENVIRONMENT-VALUE IS ENVVAL",
+          "DISPLAY ... UPON ENVNM / ACCEPT ... FROM ENVVAL",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COPY copybook references KE0014C.CPY, JS0031C.CPY, KY0005C.CPY"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This batch program (ICKE0270) is part of a Japanese insurance system (INS-CALI) and performs editing and output of a 'joint pool list' (共同プールリスト). It reads master and transaction files, merges/compares them by key, and writes results to multiple CSV and fixed-format output files, also calling a database handler subprogram to retrieve insurance company information.",
         "domain": "insurance",
+        "domain_detail": "Japanese non-life insurance joint pool (共同プール) reporting system; generates CSV list output for pool risk data",
+        "summary": "This program is part of the INS-CALI insurance system and edits/outputs a joint pool list (共同プールリスト). It reads master and transaction files, merges them by key comparison, and writes results to multiple CSV output files. It also retrieves environment variables for Oracle DB credentials and run parameters, and calls a handler routine to look up the insurance company name.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese comments and system names (INS-CALIシステム, 共同プールリスト編集)",
-        "ORGANIZATION IS CSV (non-standard vendor extension for CSV file handling)",
-        "ENVIRONMENT-NAME / ENVIRONMENT-VALUE for environment variable access",
-        "CALL to subprogram KY0011S (database handler routine)",
-        "COPY directives for record layouts (KE0014C.CPY, JS0031C.CPY, KY0005C.CPY)",
-        "Debugging lines prefixed with 'D' (COBOL-85 debugging lines)",
-        "RETURN-CODE special register usage",
-        "Multiple output files including CSV outputs",
-        "Extensive change history spanning 2011-2023"
+        "ORGANIZATION IS CSV on output files",
+        "ENVIRONMENT-NAME/ENVIRONMENT-VALUE special names for environment variable access",
+        "Multiple COPY directives for copybooks (KE0014C, JS0031C, KY0005C)",
+        "CALL to KY0011S subprogram for DB handler",
+        "EVALUATE on return codes",
+        "Debugging lines prefixed with D (conditional debug display)",
+        "Japanese-language comments and change history spanning 2011-2023",
+        "RECORD CONTAINS size changes documented in comments (AS migration, UAT defect fixes)",
+        "COMPUTE for fiscal year (年度) calculation"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "The file is clearly production COBOL from a Japanese insurance system maintained over more than a decade. The ORGANIZATION IS CSV clause is a vendor extension (likely Fujitsu NetCOBOL or similar Japanese mainframe/open COBOL environment). COPY statements reference external copybooks not shown here. The 'D' prefix on DISPLAY statements indicates COBOL-85 debugging lines. Some working-storage and linkage section details are in the copybooks and not visible in this excerpt."
+      "overall_confidence": "medium",
+      "notes": "File contains extensive Japanese-language comments and a detailed change history from 2011 to 2023, indicating a long-lived production system. The CSV ORGANIZATION clause and environment variable pattern are characteristic of Fujitsu NetCOBOL or a similar Japanese vendor COBOL runtime. The DATA DIVISION working-storage section is not shown (likely in copybooks), so PIC count is low. Dialect confidence is medium because Fujitsu vs. NEC vs. Hitachi cannot be definitively distinguished without more context."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4748,
-      "completion_tokens": 700,
-      "total_tokens": 5448,
-      "cost": 0.024744,
+      "prompt_tokens": 6126,
+      "completion_tokens": 613,
+      "total_tokens": 6739,
+      "cost": 0.027573,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.024744,
-        "upstream_inference_prompt_cost": 0.014244,
-        "upstream_inference_completions_cost": 0.0105
+        "upstream_inference_cost": 0.027573,
+        "upstream_inference_prompt_cost": 0.018378,
+        "upstream_inference_completions_cost": 0.009195
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.36,
+    "provider": "Anthropic",
+    "latency_s": 16.87,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:46:28Z"
 }

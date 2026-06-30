@@ -49,55 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (or compatible, with htmlpp preprocessor)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and free-format source; part of a Brazilian web-based ERP/retail system (PROMAX/ECT). Uses $set preprocess(htmlpp) and EXEC HTML blocks for CGI-style HTML generation.",
         "evidence": [
-          "$set preprocess (htmlpp) endp — Micro Focus-style compiler directive",
-          "$set sourceformat\"free\" — Micro Focus free-format directive",
-          "exec html ... — htmlpp preprocessor extension for HTML generation",
-          "identified by — Micro Focus CGI/HTML form field binding syntax",
-          "is external-form — Micro Focus CGI extension",
-          "local-storage section — Micro Focus extension",
-          "78 level constant (versao value \"d\")",
-          "evaluate / end-evaluate, perform until, end-perform — COBOL-85 constructs"
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "exec html",
+          "external-form",
+          "identified by",
+          "local-storage section",
+          "copy PCW902.CPY",
+          "cancel carrega-combo"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "A web-based COBOL CGI program that generates a report of neighborhoods (Bairros) sorted either alphabetically or numerically by municipality. It reads from two indexed files (PD14800 municipalities, PD14900 neighborhoods), sorts the data, and outputs an HTML report with a parameter-selection screen.",
-        "domain": "government/municipal administration (Brazilian postal/address data, likely ECT-related)",
-        "program_type": "online-cics"
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian retail/ERP system (PROMAX) - neighborhood/district (Bairros) report generation with municipality filtering by state (UF)",
+        "summary": "This program generates a report of neighborhoods (Bairros) and their associated municipalities, with options for alphabetical or numeric sorting. It reads from files PD14800 (municipalities) and PD14900 (neighborhoods), sorts the data, and outputs an HTML-formatted report via a CGI-style web interface. It also renders an HTML parameter form for user input including state (UF) and sort order selection.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "Micro Focus $set compiler directives (htmlpp preprocessor, free sourceformat)",
-        "EXEC HTML blocks for inline HTML generation via htmlpp preprocessor",
-        "external-form and identified by clauses for CGI form field binding",
-        "local-storage section (Micro Focus extension)",
-        "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
-        "78-level constant definition",
-        "decimal-point is comma (Brazilian locale)",
-        "Multiple COPY statements for copybooks (PCS/PCF/PCW series)",
-        "CALL to external subprograms: carrega-combo, cabecalho_padrao, write_cabecalho, write_linha",
-        "No EXEC SQL or EXEC CICS"
+        "$set preprocess(htmlpp) compiler directive",
+        "EXEC HTML blocks for inline HTML generation",
+        "external-form (CGI input)",
+        "identified by clause for form field binding",
+        "local-storage section",
+        "SORT with INPUT/OUTPUT PROCEDURE",
+        "COPY with REPLACING",
+        "16 COPY statements",
+        "CALLs to cabecalho_padrao, write_cabecalho, write_linha, carrega-combo",
+        "decimal-point is comma (Brazilian locale)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file uses the Micro Focus htmlpp preprocessor to embed HTML directly in COBOL source, a pattern used for CGI-based web applications. The program appears to be part of a Brazilian municipal/postal address management system (ECT = Empresa Brasileira de Correios e Telégrafos). The $set sourceformat\"free\" directive explains the free-format layout despite the fixed-format mechanical guess. Source was truncated at 16000 chars but enough is visible to classify confidently."
+      "notes": "Source is truncated at 16000 chars (full file is 17666 bytes). The program uses a Brazilian Portuguese naming convention throughout. The htmlpp preprocessor is specific to GnuCOBOL-based web CGI frameworks used in Brazilian ERP systems. Program-id is PW01062R but wl-linha-1 references 'PW01162R-' which may be a minor copy-paste discrepancy."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4964,
-      "completion_tokens": 689,
-      "total_tokens": 5653,
-      "cost": 0.025227,
+      "prompt_tokens": 6342,
+      "completion_tokens": 532,
+      "total_tokens": 6874,
+      "cost": 0.027006,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.025227,
-        "upstream_inference_prompt_cost": 0.014892,
-        "upstream_inference_completions_cost": 0.010335
+        "upstream_inference_cost": 0.027006,
+        "upstream_inference_prompt_cost": 0.019026,
+        "upstream_inference_completions_cost": 0.00798
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.54,
+    "latency_s": 15.1,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:55:01Z"
 }

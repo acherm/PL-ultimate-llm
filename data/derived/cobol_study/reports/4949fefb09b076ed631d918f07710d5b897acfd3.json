@@ -49,51 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (MVS/OS/390)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL; SOURCE-COMPUTER IBM-370, OBJECT-COMPUTER IBM-370; RECORDING MODE IS F; GOBACK; part of Benchmark Technologies ISPW training suite",
         "evidence": [
-          "SOURCE-COMPUTER. IBM-370 / OBJECT-COMPUTER. IBM-370",
-          "ASSIGN UT-S-INPUT (IBM JCL-style DD name convention)",
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
           "RECORDING MODE IS F",
           "LABEL RECORDS OMITTED",
           "BLOCK CONTAINS 0 RECORDS",
-          "GOBACK statement",
-          "COPY TCPYB47 (external copybook reference)",
-          "PROCEDURE DIVISION USING PASS-ME-AROUND"
+          "GOBACK",
+          "ASSIGN UT-S-INPUT"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A training subprogram called from TPROG47 that reads sequential file records on demand. It accepts a linkage area (PASS-ME-AROUND) and performs open, read, or close operations on an input file based on action flags passed by the caller.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Benchmark Technologies ISPW training system; subprogram called from TPROG47 with copybook TCPYB47 as linkage area",
+        "summary": "A training subprogram (TSUBR47) called from TPROG47 that reads sequential input records and returns them to the caller via a linkage section defined in copybook TCPYB47. It supports open, read, and close actions controlled by flags passed through the linkage area.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "GOBACK instead of STOP RUN (subprogram pattern)",
-        "PROCEDURE DIVISION USING linkage parameter",
-        "COPY TCPYB47 for linkage section definition",
+        "LINKAGE SECTION with COPY member (TCPYB47)",
+        "PROCEDURE DIVISION USING PASS-ME-AROUND",
         "88-level condition names for flags (INFILE-OPEN, ACTION-READ, ACTION-CLOSE, INFILE-EOF, KEEPER)",
-        "PERFORM THRU pattern with EXIT paragraph",
-        "IBM-style ASSIGN UT-S-INPUT DD name"
+        "PERFORM THRU pattern",
+        "GOBACK statement",
+        "RECORDING MODE IS F"
       ],
-      "maturity": "student-exercise",
+      "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The COPY TCPYB47 statement is present but the copybook content is not shown; the linkage data names (PASS-ME-AROUND, INFILE-EOF-FLAG, ACTION-READ, ACTION-CLOSE, INCOMING-DATA, KEEPER) are defined there. The program is explicitly a Benchmark ISPW training artifact dated 1996. No SQL or CICS constructs are present."
+      "notes": "The copybook TCPYB47 is not shown; linkage area fields (PASS-ME-AROUND, INFILE-EOF-FLAG, ACTION-READ, ACTION-CLOSE, INCOMING-DATA, KEEPER) are defined there. Program is a well-structured training example from 1996 Benchmark Technologies ISPW course material."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1791,
-      "completion_tokens": 564,
-      "total_tokens": 2355,
-      "cost": 0.013833,
+      "prompt_tokens": 3169,
+      "completion_tokens": 467,
+      "total_tokens": 3636,
+      "cost": 0.016512,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.013833,
-        "upstream_inference_prompt_cost": 0.005373,
-        "upstream_inference_completions_cost": 0.00846
+        "upstream_inference_cost": 0.016512,
+        "upstream_inference_prompt_cost": 0.009507,
+        "upstream_inference_completions_cost": 0.007005
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.04,
+    "latency_s": 9.25,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:10:24Z"
 }

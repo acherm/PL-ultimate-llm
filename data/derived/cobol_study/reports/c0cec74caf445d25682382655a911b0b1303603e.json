@@ -49,52 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) or Micro Focus COBOL — JMA ORCA project (Japanese Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); uses GnuCOBOL/OpenCOBOL conventions with COPY/REPLACING using // delimiters, LINKAGE SECTION with COMMAND-PARAM, and MCPAREA/MCPDATA copybooks typical of the ORCA system",
         "evidence": [
-          "PROGRAM-ID. ORCR0435",
-          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
-          "COPY ... REPLACING //token// BY //token// (double-slash delimiter style)",
-          "PROCEDURE DIVISION USING COMMAND-PARAM",
-          "PERFORM ... UNTIL construct",
-          "SELECT ... ASSIGN ... FILE STATUS IS",
-          "No EXEC SQL / EXEC CICS — pure file-based batch"
+          "PROGRAM-ID ORCR0435",
+          "COPY with // REPLACING delimiters",
+          "COPY \"MCPAREA\"",
+          "COPY \"MCPDATA.INC\"",
+          "COPY \"CPORCMCP.INC\"",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "CALL \"ORCSJOB\"",
+          "JMA copyright header"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch program that creates monthly insurance-claim detail files for 'Rousai' (workers' accident) and 'Jibaiseki' (compulsory automobile liability) insurance categories. It reads indexed RECE41/RECE44/RECE45 claim files, processes and filters records (including cancellation handling), and writes output to RECE441/RECE451 indexed files, with error logging to RECEERR. It is part of the JMA ORCA open-source medical receipt (claims) software system.",
-        "domain": "healthcare / medical insurance claims (Japanese national health insurance billing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - monthly billing comment editing for transferred/self-pay receipts (転帰・自費請求)",
+        "summary": "This program (ORCR0435) is part of the JMA ORCA medical receipt system. It processes monthly billing receipt files (RECE41, RECE44, RECE45 indexed files) to create comment-edited output files for transferred/self-pay receipt claims. It manages job control via ORCSJOB, handles cancellation processing, and reads/writes multiple indexed receipt data files.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
-        "COPY ... REPLACING with double-slash delimiters (OpenCOBOL/GnuCOBOL style)",
-        "Multiple FD entries sharing the same physical file via ASSIGN aliases (RECE4441-FILE and RECE441-FILE both assign RECE441PARA)",
-        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
-        "Job management sub-program calls (ORCSJOB, ORCSJOBKANRI pattern)",
-        "No COMP-3, no EXEC SQL, no EXEC CICS — pure sequential/indexed file processing",
-        "Full-width Japanese numeral tables (TBL-TUKI-AREA, TBL-DAY-AREA) for date display conversion",
-        "Cancellation processing section (500-CANCEL-HENSYU-SEC)"
+        "Multiple indexed file I/O with DYNAMIC and SEQUENTIAL access modes",
+        "COPY/REPLACING with // delimiter syntax (GnuCOBOL style)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "CALL to ORCSJOB job management subprogram",
+        "CALL to ORCSJOBKANRI DB control subprogram",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "REDEFINES with OCCURS for month/day lookup tables",
+        "20 COPY statements for modular copybook inclusion",
+        "No EXEC SQL or EXEC CICS (flat file based)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Comments are in Japanese (EUC-JP or Shift-JIS) but the file was decoded as latin-1, producing mojibake. The program is clearly part of the well-known JMA ORCA open-source medical receipt system. COPY statements reference external copybooks (.INC files) that are not shown, so full data layout cannot be verified, but all structural indicators confirm genuine production COBOL."
+      "notes": "Source is encoded in Japanese EUC (decoded as latin-1), causing mojibake in comments. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Truncated at 16000 chars but sufficient structure visible for confident classification."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7046,
-      "completion_tokens": 753,
-      "total_tokens": 7799,
-      "cost": 0.032433,
+      "prompt_tokens": 8424,
+      "completion_tokens": 599,
+      "total_tokens": 9023,
+      "cost": 0.034257,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032433,
-        "upstream_inference_prompt_cost": 0.021138,
-        "upstream_inference_completions_cost": 0.011295
+        "upstream_inference_cost": 0.034257,
+        "upstream_inference_prompt_cost": 0.025272,
+        "upstream_inference_completions_cost": 0.008985
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +118,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.4,
+    "provider": "Anthropic",
+    "latency_s": 14.6,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:37:28Z"
 }

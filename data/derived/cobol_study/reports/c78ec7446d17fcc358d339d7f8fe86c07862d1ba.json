@@ -49,53 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (open-cobol)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (open-cobol/GnuCOBOL target); explicit 'open-cobol1.0' compatibility notes in revision history",
         "evidence": [
-          "PROGRAM-ID. SEIKYU1805",
-          "All four DIVISIONS present",
-          "COPY statements with REPLACING",
-          "SELECT ... ORGANIZATION IS INDEXED ... ACCESS MODE IS DYNAMIC",
-          "Comments explicitly mention 'open-cobol1.0' compatibility fixes",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "PIC clauses, PERFORM, CALL usage consistent with COBOL-85"
+          "PROGRAM-ID SEIKYU1805",
+          "open-cobol1.0ÂÐ±þ comments",
+          "COPY directives with REPLACING",
+          "no EXEC SQL/CICS",
+          "fixed format max 79 cols"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch report/print program for a Japanese medical billing system (JMA ORCA). It generates a list of patients eligible for a local public expense subsidy (Fukui/medical expense assistance program), covering receipt types 191, 193, 194, 196, and 198. It reads indexed billing files, aggregates claim data, and produces formatted printed output.",
-        "domain": "healthcare/medical billing",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt billing system – Fukui prefecture public expense medical assistance target patient list (receipt types 191,193,194,196,198)",
+        "summary": "Batch program that reads an indexed billing file (MF110) and produces a printed list of patients eligible for Fukui prefecture public medical expense assistance. It processes receipt data, calculates patient burden amounts, and outputs a formatted report with totals per insurance combination.",
         "program_type": "batch"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — database access via CALL to external subprograms",
-        "Heavy use of COPY statements for record layouts and common areas (CPCOMMONPRT.INC, CPCOMMONSHELL.INC, CPSK1001.INC, etc.)",
-        "Japanese-language comments encoded in latin-1 (actually Shift-JIS/EUC-JP rendered as latin-1)",
-        "Extensive revision history in comments spanning 2007–2013",
-        "REDEFINES used for address/name fields",
-        "OCCURS table for parameter handling (TBL-PARA-OCC OCCURS 100)",
-        "60 CALL statements indicating heavy use of external subprogram library",
-        "open-cobol 1.0 compatibility notes in comments",
-        "Fixed-format with long_lines_over_72 = 24 (minor overrun)"
+        "34 COPY statements referencing JMA ORCA copybooks (CPCOMMONPRT.INC, CPSK1001.INC, SC1805.INC, etc.)",
+        "60 CALL statements indicating heavy use of shared subroutines",
+        "INDEXED file with DYNAMIC access (MF110-FILE)",
+        "Error file output (RECEERR-FILE)",
+        "REDEFINES usage",
+        "OCCURS table (TBL-PARA-OCC OCCURS 100)",
+        "High comment ratio (~45%) with Japanese EUC-JP encoded comments",
+        "Revision history spanning 2007-2013",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded as latin-1 but the Japanese comments are almost certainly Shift-JIS or EUC-JP; the garbled characters are an artifact of the encoding mismatch. The program is part of the open-source JMA ORCA medical receipt software suite. Source is truncated at 16000 chars but the structure and purpose are clear from what is visible. No COMP-3 usage detected despite being a financial/billing program — arithmetic fields use plain PIC 9."
+      "notes": "File decoded as latin-1 but contains EUC-JP encoded Japanese text (garbled in latin-1 view). Part of the open-source JMA ORCA medical receipt system. Source is truncated at 16000 chars; full file is 115385 bytes / 2662 lines."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9608,
-      "completion_tokens": 695,
-      "total_tokens": 10303,
-      "cost": 0.039249,
+      "prompt_tokens": 10986,
+      "completion_tokens": 504,
+      "total_tokens": 11490,
+      "cost": 0.040518,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.039249,
-        "upstream_inference_prompt_cost": 0.028824,
-        "upstream_inference_completions_cost": 0.010425
+        "upstream_inference_cost": 0.040518,
+        "upstream_inference_prompt_cost": 0.032958,
+        "upstream_inference_completions_cost": 0.00756
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.62,
+    "provider": "Anthropic",
+    "latency_s": 14.23,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:05:11Z"
 }

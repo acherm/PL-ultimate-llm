@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0639f12478bf08bc019a360a008dfe31f44c0240",
+    "sha1_git": "0639f12478bf08bc019a360a008dfe31f44c0240",
+    "filename": "/desconto05.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12673,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0639f12478bf08bc019a360a008dfe31f44c0240/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0639f12478bf08bc019a360a008dfe31f44c0240/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12673,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 390,
+    "blank_lines": 71,
+    "comment_lines": 0,
+    "code_lines": 319,
+    "comment_ratio": 0.0,
+    "max_line_length": 82,
+    "avg_line_length": 31.5,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DESCONTO05"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 10,
+    "perform_count": 20,
+    "goto_count": 0,
+    "pic_count": 28,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT / AcuCOBOL dialect evidenced by ACUGUI.DEF copybook, HANDLE data type, GRAPHICAL WINDOW, FLOATING WINDOW, PUSH-BUTTON/ENTRY-FIELD/LABEL screen controls, EVENT PROCEDURE, SIGNED-SHORT/SIGNED-LONG, COMP-X, C$RERR, C$RERRNAME runtime calls, and LOCK MODE AUTOMATIC on indexed file",
+        "evidence": [
+          "COPY \"ACUGUI.DEF\"",
+          "HANDLE data type (SMALL-FONT HANDLE)",
+          "DISPLAY FLOATING GRAPHICAL WINDOW",
+          "PUSH-BUTTON TITLE ... EVENT PROCEDURE",
+          "ENTRY-FIELD USING ... 3-D BOXED",
+          "SIGNED-SHORT / SIGNED-LONG",
+          "COMP-X",
+          "CALL \"C$RERR\"",
+          "CALL \"C$RERRNAME\"",
+          "LOCK MODE AUTOMATIC"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Discount table maintenance – calculates discount value, net price, and commission based on a configurable discount/commission percentage table",
+        "summary": "DESCONTO05 is a GUI-based maintenance program for a discount/commission table (TABDESC). It allows the user to enter a table code and price, then calculates the discount amount, net price, and commission. It supports creating, rewriting, and deleting records in an indexed file.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "ACUCOBOL-GT graphical windowing (DISPLAY FLOATING GRAPHICAL WINDOW)",
+        "SCREEN SECTION with PUSH-BUTTON, ENTRY-FIELD, LABEL controls",
+        "EVENT PROCEDURE callbacks for button events",
+        "HANDLE data type for window/font handles",
+        "COMP-X and SIGNED-SHORT/SIGNED-LONG numeric types",
+        "DECIMAL-POINT IS COMMA (Brazilian Portuguese locale)",
+        "COPY ACUGUI.DEF and MAINRTN.MSG",
+        "C$RERR / C$RERRNAME runtime error intrinsics",
+        "CALL 'CAMESSAG' message dialog subprogram",
+        "LOCK MODE AUTOMATIC on indexed file"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is written in Brazilian Portuguese (field names, messages). The EVENT-TYPE comparison 'CMD-GOTO AND CMD-CLICKED' on line in EVENTO-BTN-CALCULAR looks syntactically unusual but is consistent with ACUCOBOL event constants from ACUGUI.DEF. No SQL or CICS; program_type set to online-cics as closest match for interactive GUI program (no better enum exists for ACUCOBOL GUI)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6173,
+      "completion_tokens": 664,
+      "total_tokens": 6837,
+      "cost": 0.028479,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028479,
+        "upstream_inference_prompt_cost": 0.018519,
+        "upstream_inference_completions_cost": 0.00996
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 23.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:41:35Z"
+}

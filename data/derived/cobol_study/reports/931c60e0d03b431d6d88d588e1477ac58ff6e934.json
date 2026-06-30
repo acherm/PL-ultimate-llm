@@ -49,51 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM Z13 mainframe environment, student exercise written Aug 2017 at CSU (likely Charles Sturt University or similar). Uses GOBACK, IBM-Z13 OBJECT-COMPUTER, WITH DEBUGGING MODE.",
         "evidence": [
-          "PROGRAM-ID. CBLDB21",
-          "SOURCE-COMPUTER. Z13 WITH DEBUGGING MODE",
           "OBJECT-COMPUTER. IBM-Z13",
-          "GOBACK statement",
-          "END-IF scope terminator",
-          "ACCEPT WS-DATE FROM DATE / ACCEPT WS-TIME FROM TIME",
-          "Sequence numbers in columns 1-6 and 73-80 (IBM mainframe style)"
+          "SOURCE-COMPUTER. Z13 WITH DEBUGGING MODE",
+          "GOBACK",
+          "sequence numbers in columns 1-6 and 73-80 (fixed format)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A simple student exercise program that displays 'HELLO WORLD' along with a formatted heading line containing date, time, and page number. It demonstrates basic COBOL structure including date/time acceptance, heading generation, and line printing via DISPLAY.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "University COBOL programming assignment (CSU0127 Adam Davies, Aug 2017) demonstrating basic record creation, display, and heading output",
+        "summary": "A simple student exercise program (CBLDB21) that displays a 'HELLO WORLD' message along with a formatted heading line containing date, time, and page number. The program was originally scaffolded for file I/O (PRINT-FILE) but all file operations are commented out and replaced with DISPLAY statements.",
         "program_type": "batch"
       },
       "notable_features": [
         "WITH DEBUGGING MODE in SOURCE-COMPUTER",
-        "IBM Z13 mainframe target (SOURCE-COMPUTER and OBJECT-COMPUTER)",
-        "Heavy use of commented-out file I/O (WRITE/OPEN/CLOSE) replaced with DISPLAY",
+        "All file I/O commented out, replaced with DISPLAY",
         "ACCEPT FROM DATE and ACCEPT FROM TIME for system date/time",
+        "Heading structure with date/time/page formatting",
         "GOBACK instead of STOP RUN",
-        "Sequence numbers in columns 73-80 indicating mainframe editing history",
-        "No EXEC SQL, no EXEC CICS, no COMP-3"
+        "Sequence numbers in both columns 1-6 and 73-80"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program is clearly a student assignment (author field 'CSU0127 ADAM DAVIES', dated AUG 25 2017, labeled 'PROGRAM 1, (27) ADAM DAVIES'). Much of the file I/O infrastructure is commented out and replaced with DISPLAY statements, suggesting iterative development or a simplified submission. The sequence numbers in columns 73-80 are consistent with IBM mainframe TSO/ISPF editing."
+      "notes": "All file-related code (SELECT, FD, WRITE) is commented out; the program uses DISPLAY as a substitute. Sequence numbers in columns 73-80 show edit history (revision numbers up to 41). The program is clearly a university assignment skeleton with minimal business logic."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3527,
-      "completion_tokens": 562,
-      "total_tokens": 4089,
-      "cost": 0.019011,
+      "prompt_tokens": 4905,
+      "completion_tokens": 439,
+      "total_tokens": 5344,
+      "cost": 0.0213,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.019011,
-        "upstream_inference_prompt_cost": 0.010581,
-        "upstream_inference_completions_cost": 0.00843
+        "upstream_inference_cost": 0.0213,
+        "upstream_inference_prompt_cost": 0.014715,
+        "upstream_inference_completions_cost": 0.006585
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.59,
+    "provider": "Anthropic",
+    "latency_s": 23.37,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:35:34Z"
 }

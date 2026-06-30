@@ -49,47 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": null,
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL student exercise; 'Tectonics: cobc' comment confirms GnuCOBOL compiler (cobc)",
         "evidence": [
-          "PROGRAM-ID. ECERCICIO_01 with END PROGRAM ECERCICIO_01",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "INITIALISE (GnuCOBOL/Micro Focus spelling vs IBM INITIALIZE)",
-          "Tectonics: cobc in header comment",
-          "COMPUTE, END-IF, nested IF structure consistent with COBOL-85"
+          "Tectonics: cobc",
+          "INITIALISE (British spelling, GnuCOBOL/Micro-Focus style)",
+          "DECIMAL-POINT IS COMMA",
+          "END PROGRAM ECERCICIO_01"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Calculates BMI (Body Mass Index) from user-entered weight and height. Validates inputs, computes the result, and displays a classification (underweight, adequate, pre-obese, obesity grades I/II).",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian Portuguese COBOL student exercise calculating BMI (Índice de Massa Corporal)",
+        "summary": "A simple interactive program that accepts a person's weight and height, computes their BMI (peso/altura²), and displays a classification (underweight, adequate, pre-obese, obesity grades I/II). Written as a student exercise dated 18/09/2021.",
         "program_type": "demo"
       },
       "notable_features": [
-        "DECIMAL-POINT IS COMMA (Brazilian Portuguese locale convention)",
-        "INITIALISE (GnuCOBOL/Micro Focus spelling)",
-        "GO TO used for flow control (GOTO count: 2)",
-        "Deeply nested IF/ELSE without matching END-IF for each level",
-        "Comma used as decimal separator in numeric literals (e.g. 18,5; 24,9)"
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "INITIALISE instead of INITIALIZE (GnuCOBOL/Micro-Focus spelling)",
+        "Nested IF without proper END-IF closure (incomplete nesting)",
+        "GO TO used for flow control",
+        "Numeric literals with commas as decimal separator (18,5; 24,9; 29,9; 34,9; 39,9)",
+        "PROGRAM-ID has typo: ECERCICIO vs EXERCICIO in filename"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1, consistent with Portuguese author name containing accented characters (Júlia). The program-id in the source is 'ECERCICIO_01' (typo for 'EXERCICIO_01'), while the filename is EXERCICIO_01.cbl. The nested IF structure lacks proper END-IF pairing for inner levels, which may cause compiler warnings or errors. Clearly a student exercise for a Brazilian COBOL course."
+      "notes": "Program-ID is 'ECERCICIO_01' (typo) while filename is 'EXERCICIO_01.cbl'. The nested IF structure near the end appears to have mismatched END-IF closures, suggesting a bug. Decoded with latin-1 due to accented characters in author name (Júlia). Brazilian Portuguese UI strings throughout."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1608,
-      "completion_tokens": 523,
-      "total_tokens": 2131,
-      "cost": 0.012669,
+      "prompt_tokens": 2986,
+      "completion_tokens": 461,
+      "total_tokens": 3447,
+      "cost": 0.015873,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.012669,
-        "upstream_inference_prompt_cost": 0.004824,
-        "upstream_inference_completions_cost": 0.007845
+        "upstream_inference_cost": 0.015873,
+        "upstream_inference_prompt_cost": 0.008958,
+        "upstream_inference_completions_cost": 0.006915
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 1303.45,
+    "provider": "Anthropic",
+    "latency_s": 9.75,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:53:02Z"
 }

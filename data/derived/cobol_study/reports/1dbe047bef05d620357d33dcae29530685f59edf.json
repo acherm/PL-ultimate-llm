@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1dbe047bef05d620357d33dcae29530685f59edf",
+    "sha1_git": "1dbe047bef05d620357d33dcae29530685f59edf",
+    "filename": "/MARBLE18.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 37422,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1dbe047bef05d620357d33dcae29530685f59edf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1dbe047bef05d620357d33dcae29530685f59edf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 37422,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 462,
+    "blank_lines": 0,
+    "comment_lines": 176,
+    "code_lines": 286,
+    "comment_ratio": 0.381,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 462,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MARBLE18"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 21,
+    "goto_count": 0,
+    "pic_count": 35,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/DB2 online transaction program; uses EXEC CICS and EXEC SQL with DB2 table declarations and SQLCA; fixed-format 80-column layout typical of IBM mainframe COBOL",
+        "evidence": [
+          "EXEC SQL DECLARE EVENT.MARBLE TABLE",
+          "EXEC SQL DECLARE EVENT.COLOR TABLE",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC CICS (has_exec_cics=true)",
+          "COMP-3 usage",
+          "S9(4) COMP",
+          "fixed 80-column lines",
+          "PROGRAM-ID. MARBLE18"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Marble inventory management demo application (likely IBM Marbles demo used in CICS/DB2 education/training contexts); manages marble color inventory via CRE/UPD/DEL CICS transactions",
+        "summary": "MARBLE18 is a CICS online transaction (MB18) that allows users to create, update, or delete marble color records in a DB2 database (EVENT.MARBLE and EVENT.COLOR tables). It parses user input from the CICS terminal, validates the verb and color, and performs the appropriate SQL operation, returning success or error codes.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL with DB2 table declarations (EVENT.MARBLE, EVENT.COLOR)",
+        "EXEC CICS for terminal I/O",
+        "SQLCA included via EXEC SQL INCLUDE",
+        "COMP-3 for row count",
+        "88-level condition names for result flags",
+        "REDEFINES for output area (success vs error)",
+        "No COPY statements or external CALLs",
+        "EVALUATE TRUE for verb routing",
+        "Fixed 80-column format with comment-heavy header"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; the PROCEDURE DIVISION logic appears complete enough to classify. This is the IBM Marbles demo application commonly used in IBM Z mainframe workshops. All 462 lines are exactly 80 characters wide (avg_line_length=80.0), consistent with IBM mainframe fixed format. High comment ratio (38%) due to extensive header documentation."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5266,
+      "completion_tokens": 545,
+      "total_tokens": 5811,
+      "cost": 0.023973,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023973,
+        "upstream_inference_prompt_cost": 0.015798,
+        "upstream_inference_completions_cost": 0.008175
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.66,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:36:40Z"
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:adb1fdf9f9c6126f39c0db9d87a01d6b99099166",
+    "sha1_git": "adb1fdf9f9c6126f39c0db9d87a01d6b99099166",
+    "filename": "/cllp7659.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 74083,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:adb1fdf9f9c6126f39c0db9d87a01d6b99099166/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:adb1fdf9f9c6126f39c0db9d87a01d6b99099166/raw/"
+  },
+  "indicators": {
+    "bytes_len": 74083,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1016,
+    "blank_lines": 199,
+    "comment_lines": 164,
+    "code_lines": 653,
+    "comment_ratio": 0.201,
+    "max_line_length": 72,
+    "avg_line_length": 71.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CLLP7659"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 2,
+    "perform_count": 33,
+    "goto_count": 3,
+    "pic_count": 248,
+    "comp3_count": 28,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Brazilian IBM mainframe COBOL, developed by INFOSERVER for a financial/banking institution. Uses RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, COMP-3, DECIMAL-POINT IS COMMA, and UT-S- ASSIGN clauses typical of IBM z/OS batch programs.",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "ASSIGN TO UT-S-CONTMIGR",
+          "COMP-3 usage throughout",
+          "DECIMAL-POINT IS COMMA",
+          "LABEL RECORD IS STANDARD",
+          "COPY 'I#CLLPFD'"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Brazilian banking/financial system - processing and filtering migrated notice/warning records (avisos) from a contract migration file. Likely part of a data migration project for a financial institution.",
+        "summary": "Batch program CLLP7659 reads a migration control file (CONTMIGR) and a notice/warning file (ARQAVISO), separates migrated records from non-migrated ones, writing them to AVINMIGR and AVIMIGR respectively, and produces two reports (RELCONS and RELINCON) for accepted and inconsistent records. The objective stated in comments is to remove migrated records from the notice movement file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal fields (28 occurrences)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "RECORDING MODE IS F with BLOCK CONTAINS 0 RECORDS (IBM z/OS style)",
+        "COPY statement referencing 'I#CLLPFD' copybook",
+        "CALL to POOL7100 error handling module",
+        "Multiple sequential file processing with FILE STATUS checks",
+        "REDEFINES clause usage",
+        "Z.ZZZ.ZZZ.ZZ9 numeric edit masks with period separators"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 1016 lines. Program is clearly production-grade Brazilian mainframe COBOL from 2013, developed by INFOSERVER consultancy for a financial institution. Portuguese-language comments and variable names confirm Brazilian origin."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6011,
+      "completion_tokens": 563,
+      "total_tokens": 6574,
+      "cost": 0.026478,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026478,
+        "upstream_inference_prompt_cost": 0.018033,
+        "upstream_inference_completions_cost": 0.008445
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.07,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:44:32Z"
+}

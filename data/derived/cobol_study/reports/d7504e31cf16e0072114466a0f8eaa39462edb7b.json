@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA platform",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA (Japan Medical Association standard receipt software) – GnuCOBOL/OpenCOBOL based medical billing system, program ORAPI023R1V2 (API linkage module for medical fee simulation)",
         "evidence": [
           "PROGRAM-ID. ORAPI023R1V2",
-          "SELECT ... ASSIGN FILE-NAME2 ORGANIZATION IS SEQUENTIAL FILE STATUS IS ...",
-          "COPY directives with REPLACING clauses throughout",
-          "OCCURS clauses without INDEXED BY (COBOL-85 style)",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "File paths like /var/tmp/ indicating Unix/Linux environment typical of GnuCOBOL/OpenCOBOL",
-          "LINKAGE SECTION with COPY 'MCPAREA', 'ORCA-SPA', 'LINKAREA' — JMA ORCA framework"
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name 'ORCA'",
+          "file paths /var/tmp/K01PARA",
+          "COPY 'COMMON-SPA', 'MCPAREA', 'ORCA-SPA', 'ORCA-BLOB'",
+          "no EXEC CICS/SQL, uses sequential files with Linux-style paths"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software system. It implements a claim/medical-act simulation (ÀÁµá³Û¥·¥å¥ß¥ì¡¼¥·¥ç¥ó — 'claim simulation') for the API linkage module, processing insurance billing and medical procedure data. It reads parameter files, processes patient and medical-act master data, and produces XML-based API responses for insurance claim calculation.",
-        "domain": "healthcare/medical billing (Japanese national health insurance)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims billing) software – API module for medical fee/claim simulation (shinryou koui simulation)",
+        "summary": "This program is part of the JMA ORCA medical receipt software system. It implements an API-linked module (ORAPI023R1V2) for simulating medical fee calculations (shinryou koui simulation), reading parameter files, processing insurance combinations, and producing XML-based API responses for medical billing claims. It coordinates with numerous copybooks covering patient master, fee master, work treatment action records, and collection calculation.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — uses file I/O instead",
-        "Extensive use of COPY statements (copybooks) for JMA ORCA framework structures",
-        "Japanese text in comments (EUC-JP or Shift-JIS encoded, decoded as latin-1 producing mojibake)",
-        "XML API request/response structures via copybooks (CPACSIMULATEV2REQ.INC, CPACSIMULATEV2RES.INC)",
-        "Unix file paths (/var/tmp/) indicating Linux deployment",
-        "LINKAGE SECTION with MCP (Message Control Program) area — ORCA middleware pattern",
-        "Large program: ~2900 lines, 35 CALLs, 134 PERFORMs",
-        "REDEFINES used for table access (TBL-HKNTEN-MEI-RES REDEFINES TBL-HKNTEN-MEI-AREA)",
-        "No COMP-3 usage despite numeric processing — unusual for billing software",
-        "OCCURS up to 600 entries for medical act work table"
+        "63 COPY statements referencing ORCA-specific copybooks",
+        "35 CALL statements for subprogram linkage",
+        "134 PERFORM statements",
+        "Japanese comments encoded in latin-1 (EUC-JP/Shift-JIS garbled)",
+        "Linux-style file paths (/var/tmp/)",
+        "XML API request/response structures (CPACSIMULATEV2REQ.INC, CPACSIMULATEV2RES.INC)",
+        "LINKAGE SECTION with MCP area and ORCA-SPA",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "Sequential file I/O for parameter files",
+        "OCCURS tables for insurance combinations and treatment actions"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but the Japanese comments are encoded in EUC-JP or Shift-JIS, resulting in mojibake in the displayed text. The program is clearly part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. The COPY statements reference many proprietary JMA copybooks not shown here. The 'V2' suffix in the program name suggests this is version 2 of the API simulation module. Source is truncated at 16000 chars out of ~122KB total."
+      "notes": "File is encoded in latin-1 but contains Japanese text (EUC-JP or Shift-JIS) that appears garbled under latin-1 decoding. This is characteristic of JMA ORCA source files. The program is clearly production-grade medical billing software, not a demo or student exercise. Source is truncated at 16000 chars but sufficient evidence is present for classification."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9116,
-      "completion_tokens": 865,
-      "total_tokens": 9981,
-      "cost": 0.040323,
+      "prompt_tokens": 10494,
+      "completion_tokens": 627,
+      "total_tokens": 11121,
+      "cost": 0.040887,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.040323,
-        "upstream_inference_prompt_cost": 0.027348,
-        "upstream_inference_completions_cost": 0.012975
+        "upstream_inference_cost": 0.040887,
+        "upstream_inference_prompt_cost": 0.031482,
+        "upstream_inference_completions_cost": 0.009405
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 23.16,
+    "provider": "Anthropic",
+    "latency_s": 16.67,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:34:49Z"
 }

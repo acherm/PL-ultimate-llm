@@ -49,52 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL student project; uses inline comments with *>, EVALUATE/END-EVALUATE, PERFORM WITH TEST AFTER, ACCEPT FROM DATE YYYYMMDD, and free-form paragraph names typical of GnuCOBOL usage. French-language identifiers and menus suggest a French academic environment.",
         "evidence": [
-          "PERFORM WITH TEST AFTER UNTIL",
-          "EVALUATE ... WHEN ... END-EVALUATE",
+          "*> inline comment style",
           "ACCEPT dateAjd FROM DATE YYYYMMDD",
-          "inline comments with *>",
-          "ORGANIZATION INDEXED with ALTERNATE RECORD KEY ... WITH DUPLICATES",
-          "READ ... NOT INVALID KEY ... END-READ",
-          "French-language identifiers and display strings",
-          "No EXEC SQL / EXEC CICS / COMP-3 usage"
+          "PERFORM WITH TEST AFTER UNTIL",
+          "EVALUATE ... END-EVALUATE",
+          "ORGANIZATION INDEXED with ALTERNATE RECORD KEY",
+          "No COMP-3, no EXEC SQL, no EXEC CICS"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A tribunal (court) management system ('ProjetGesTrib') that handles jurors, hearings (séances), convocations, cases (affaires), and courtrooms (salles). It provides menu-driven CRUD operations for an administrator and a juror login to view upcoming hearings.",
-        "domain": "legal/justice administration",
+        "domain": "government-public",
+        "domain_detail": "Tribunal/court management system (GésTrib = Gestion Tribunal): manages jurors, hearings (séances), convocations, courtrooms (salles), and legal cases (affaires) for a French court.",
+        "summary": "A menu-driven batch COBOL application for managing a French tribunal. It handles CRUD operations for jurors, convocations, hearings, courtrooms, and legal cases, with business rules such as minimum 7-day notice for hearings and minimum juror age of 21. It also provides utility functions like finding non-compliant hearings.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Multiple indexed and sequential files with alternate record keys",
-        "PERFORM WITH TEST AFTER UNTIL loops for menu navigation",
-        "ACCEPT ... FROM DATE YYYYMMDD for current date retrieval",
-        "Inline *> comments (GnuCOBOL style)",
-        "French-language identifiers and UI strings throughout",
-        "No EXEC SQL, EXEC CICS, or COMP-3 usage",
-        "154 PERFORM statements indicating substantial procedural decomposition"
+        "Multiple indexed files with alternate record keys and duplicates",
+        "Sequential temp files for update-in-place pattern",
+        "ACCEPT FROM DATE YYYYMMDD for current date",
+        "French-language identifiers and UI strings",
+        "PERFORM WITH TEST AFTER loops (do-while style)",
+        "No GOTO usage despite complex flow (154 PERFORMs)",
+        "Age validation logic for juror eligibility",
+        "START with KEY EQUALS for alternate key navigation"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program is clearly a student project (French academic context, 'Projet' prefix, tutorial-level structure). Dialect is most likely GnuCOBOL given the *> inline comments and lack of IBM/Micro Focus-specific extensions. The source was truncated at 16000 chars out of ~59KB, so later procedures are not visible, but the overall structure is clear. The 'OPEN OUTPUT FSeances' in ConsulterProchainesSeances appears to be a bug (should be INPUT), suggesting student-level code."
+      "notes": "Source truncated to first 16000 chars; full program is 1823 lines. Program name 'ProjetGesTrib' strongly suggests a student project (Projet = Project in French). Logic appears reasonably complete for a student exercise but has some inconsistencies (e.g., OPEN OUTPUT FSeances in ConsulterProchainesSeances instead of OPEN INPUT). No COPY statements or subprogram CALLs used."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6603,
-      "completion_tokens": 592,
-      "total_tokens": 7195,
-      "cost": 0.028689,
+      "prompt_tokens": 7981,
+      "completion_tokens": 560,
+      "total_tokens": 8541,
+      "cost": 0.032343,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028689,
-        "upstream_inference_prompt_cost": 0.019809,
-        "upstream_inference_completions_cost": 0.00888
+        "upstream_inference_cost": 0.032343,
+        "upstream_inference_prompt_cost": 0.023943,
+        "upstream_inference_completions_cost": 0.0084
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.05,
+    "latency_s": 15.04,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:29:16Z"
 }

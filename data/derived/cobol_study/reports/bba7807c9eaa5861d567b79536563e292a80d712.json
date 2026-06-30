@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bba7807c9eaa5861d567b79536563e292a80d712",
+    "sha1_git": "bba7807c9eaa5861d567b79536563e292a80d712",
+    "filename": "/UVSON.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15940,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bba7807c9eaa5861d567b79536563e292a80d712/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bba7807c9eaa5861d567b79536563e292a80d712/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15940,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 494,
+    "blank_lines": 44,
+    "comment_lines": 17,
+    "code_lines": 433,
+    "comment_ratio": 0.038,
+    "max_line_length": 68,
+    "avg_line_length": 31.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "UVSON"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 3,
+    "perform_count": 22,
+    "goto_count": 45,
+    "pic_count": 32,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "AcuCOBOL/ACUCOBOL-GT style: ASSIGN TO RANDOM with quoted filename, LINE/POSITION screen I/O, FUNC-KEY/FUNC-01/FUNC-02 condition names, TAB OFF/PROMPT TAB ECHO ACCEPT clauses, and ORGANIZATION IS LINE SEQUENTIAL with semicolon separators. Likely part of a 'UV' (Universal) application suite.",
+        "evidence": [
+          "ASSIGN TO RANDOM, \"LGIN\"",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ACCEPT ... LINE nn POSITION nn PROMPT TAB ECHO",
+          "ON EXCEPTION FUNC-KEY",
+          "IF FUNC-02",
+          "DISPLAY ... LINE nn POSITION nn HIGH",
+          "COPY \"uv/cpy/...\" copybook paths"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Universal application suite sign-on/authentication module; likely a multi-company business application (retail/accounting ERP style) with user ID, password, company, and station management",
+        "summary": "This program implements a terminal sign-on screen for a 'Universal' application suite (UVSON). It accepts a user ID and password, validates them against a system master file, optionally allows password change, records the sign-on date and station record, and sets a login switch environment variable. It enforces a 5-attempt security lockout.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "AcuCOBOL-style screen I/O with LINE/POSITION/HIGH/PROMPT TAB ECHO",
+        "FUNC-KEY ON EXCEPTION handling (FUNC-01, FUNC-02)",
+        "SWITCH-1 hardware switch for bypassing date edit",
+        "21 COPY statements referencing uv/cpy/ copybook library",
+        "CALL to external subprograms UVACDT and UVDTCV",
+        "DECLARATIVES section with USE AFTER STANDARD ERROR",
+        "Century-year windowing logic (>70 = 19xx, else 20xx)",
+        "LGIN-FILE used to write environment variable setenv LGINSW",
+        "RECORD-LOCKED handling with retry loops",
+        "REDEFINES for date/time field decomposition"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is part of a larger 'UV' (Universal) application suite with a consistent copybook naming convention. The online-cics program_type is used loosely here — this is actually an AcuCOBOL terminal-based online program, not CICS. Century windowing via year>70 heuristic is present. No COMP-3 usage detected. Semicolons used as statement separators in SELECT clause (AcuCOBOL style)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 8017,
+      "completion_tokens": 661,
+      "total_tokens": 8678,
+      "cost": 0.033966,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033966,
+        "upstream_inference_prompt_cost": 0.024051,
+        "upstream_inference_completions_cost": 0.009915
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.77,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:56:43Z"
+}

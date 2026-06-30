@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA (Japan Medical Association standard receipt software) - GnuCOBOL/OpenCOBOL based medical billing system, program ORCSCNYUIN handles inpatient admission master update (K08 usage)",
         "evidence": [
           "PROGRAM-ID. ORCSCNYUIN",
-          "ORGANIZATION IS LINE SEQUENTIAL",
-          "OCCURS clauses with PIC definitions",
-          "COPY with REPLACING syntax",
-          "PROCEDURE DIVISION USING SPA-AREA ORCSCNYUINAREA",
-          "Fixed-format source, divisions all present",
-          "No EXEC SQL or EXEC CICS",
-          "File uses /var/tmp/ path suggesting Linux/Unix environment typical of GnuCOBOL/OpenCOBOL"
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "SELECT PARA-FILE ASSIGN FILE-NAME2 ORGANIZATION IS LINE SEQUENTIAL",
+          "/var/tmp/ path prefix",
+          "COPY directives with .INC files typical of JMA ORCA",
+          "LINKAGE SECTION with SPA-AREA and ORCSCNYUINAREA",
+          "PROCEDURE DIVISION USING SPA-AREA ORCSCNYUINAREA"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical billing. It handles inpatient (nyuin) master update processing, specifically managing hospitalization-related medical act records, insurance combinations, and billing calculations. It is invoked from screen K08 and processes admission/discharge medical procedure data.",
-        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-hoshuu) billing system - inpatient admission master update subprogram used by screen K08",
+        "summary": "This program is a subprogram within the JMA ORCA medical receipt software system that handles inpatient admission (nyuuin) master record updates. It processes medical treatment act data, insurance combination records, patient information, and calculates hospitalization fees including examination charges. It is called from screen K08 and manages creation, modification, and deletion of inpatient treatment records.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1 causing mojibake)",
-        "Extensive use of COPY statements for copybooks (CPSYSKANRI.INC, CPPTINF.INC, CPSRYACT.INC, etc.)",
-        "COPY with REPLACING for record renaming",
-        "OCCURS tables for medical procedure tracking (up to 300 entries)",
-        "No EXEC SQL or EXEC CICS — likely uses file-based or custom DB access via CALL",
-        "41 CALL statements suggesting heavy use of subprogram architecture",
-        "LINE SEQUENTIAL file for parameter passing via /var/tmp/",
-        "LINKAGE SECTION with SPA (scratchpad area) pattern typical of ORCA system",
-        "Large file (155KB, 3662 lines) indicating production-grade complexity"
+        "39 COPY statements referencing JMA ORCA .INC copybooks",
+        "41 CALL statements to subprograms",
+        "253 PERFORM statements",
+        "LINKAGE SECTION with SPA (Scratch Pad Area) pattern typical of JMA ORCA",
+        "LINE SEQUENTIAL file organization",
+        "Japanese EUC-JP encoded comments (latin-1 decoded)",
+        "OCCURS tables for treatment act data",
+        "No EXEC SQL or EXEC CICS - uses proprietary DB access layer (MCPDATA.INC)",
+        "File path /var/tmp/ indicating Linux/Unix runtime environment"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text comments encoded in a multi-byte encoding (likely EUC-JP) that was decoded as latin-1, resulting in mojibake in the displayed text. The program is clearly part of the well-known open-source Japanese medical receipt (rezept) software ORCA developed by JMA. Copyright notice confirms 2002 JMA origin. The COPY statements reference many domain-specific copybooks not shown in the truncated source."
+      "notes": "Source file contains Japanese EUC-JP encoded comments decoded as latin-1, resulting in mojibake in the visible text. The program is part of the well-known open-source JMA ORCA medical receipt system for Japanese clinics. File is 3662 lines, truncated at 16000 chars for analysis but structural indicators confirm full COBOL program. No COMP-3 usage despite financial calculations - uses display numerics with implied decimal (V notation)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9137,
-      "completion_tokens": 714,
-      "total_tokens": 9851,
-      "cost": 0.038121,
+      "prompt_tokens": 10515,
+      "completion_tokens": 617,
+      "total_tokens": 11132,
+      "cost": 0.0408,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.038121,
-        "upstream_inference_prompt_cost": 0.027411,
-        "upstream_inference_completions_cost": 0.01071
+        "upstream_inference_cost": 0.0408,
+        "upstream_inference_prompt_cost": 0.031545,
+        "upstream_inference_completions_cost": 0.009255
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 22.84,
+    "latency_s": 16.35,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:06:20Z"
 }

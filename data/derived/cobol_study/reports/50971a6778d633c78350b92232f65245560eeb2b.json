@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:50971a6778d633c78350b92232f65245560eeb2b",
+    "sha1_git": "50971a6778d633c78350b92232f65245560eeb2b",
+    "filename": "/ph070058.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11005,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:50971a6778d633c78350b92232f65245560eeb2b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:50971a6778d633c78350b92232f65245560eeb2b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11005,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 240,
+    "blank_lines": 29,
+    "comment_lines": 33,
+    "code_lines": 178,
+    "comment_ratio": 0.156,
+    "max_line_length": 215,
+    "avg_line_length": 44.9,
+    "long_lines_over_72": 55,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PH070058"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 11,
+    "call_count": 1,
+    "perform_count": 17,
+    "goto_count": 0,
+    "pic_count": 2,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with OO extensions (INVOKE, class/repository), htmlpp preprocessor, $set directives, free source format. Likely part of a Brazilian retail/ERP web application framework using HTML embedded in COBOL via EXEC HTML blocks.",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "repository. class EscreveJson as \"PY990002\"",
+          "invoke utils \"converteUTF8\"",
+          "exec html ... end-exec",
+          "is external-form"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian retail ERP system - product assortment group (Grupo Desafio/Sortimento) management screen for a purchase suggestion algorithm (GVP - Algoritmo de Sugestão de Pedidos)",
+        "summary": "This program renders a web-based UI screen (via embedded HTML) for managing product assortment groups related to a purchase suggestion algorithm. It loads combo box options from a file (WD06900 - Grupo Sortimento), validates a project flag (project 172), and handles form submission by delegating to a callback program. It is part of a larger Brazilian retail ERP web framework.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC HTML blocks (htmlpp preprocessor for web UI generation)",
+        "OO COBOL: REPOSITORY clause with CLASS definitions, INVOKE statement",
+        "$set compiler directives (Micro Focus style)",
+        "external-form data item (CGI input)",
+        "COPY statements for modular copybooks (11 copies)",
+        "UTF-8 conversion via OO utility class",
+        "decimal-point is comma (Brazilian locale)",
+        "Free source format declared via $set"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The file uses a Brazilian Portuguese ERP web framework with an htmlpp preprocessor that embeds HTML inside COBOL EXEC HTML blocks. The program is part of a larger system (PH070058 series). Source format is declared as free via $set directive despite mechanical indicator showing fixed (the $set overrides). The EXEC HTML blocks contain extensive inline HTML/JavaScript which inflates line lengths beyond 72 characters. Domain is retail/commerce based on 'Produto Desafio' and sortiment group context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4898,
+      "completion_tokens": 560,
+      "total_tokens": 5458,
+      "cost": 0.023094,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023094,
+        "upstream_inference_prompt_cost": 0.014694,
+        "upstream_inference_completions_cost": 0.0084
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.02,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:44:01Z"
+}

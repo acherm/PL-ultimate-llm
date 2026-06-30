@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c8b4e3746bfc64c055c6c327e0fa8696126174d3",
+    "sha1_git": "c8b4e3746bfc64c055c6c327e0fa8696126174d3",
+    "filename": "/CI0226P.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 186649,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c8b4e3746bfc64c055c6c327e0fa8696126174d3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c8b4e3746bfc64c055c6c327e0fa8696126174d3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 186649,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 2675,
+    "blank_lines": 4,
+    "comment_lines": 466,
+    "code_lines": 2205,
+    "comment_ratio": 0.174,
+    "max_line_length": 78,
+    "avg_line_length": 67.8,
+    "long_lines_over_72": 2035,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CI0226P"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 1,
+    "call_count": 9,
+    "perform_count": 28,
+    "goto_count": 76,
+    "pic_count": 924,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL with EXEC CICS and EXEC SQL (DB2); SOURCE-COMPUTER IBM-370; uses COMPUTATIONAL-3 and BINARY; sequence numbers in columns 73-80 suggest standard IBM fixed-format mainframe source",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
+          "EXEC CICS",
+          "EXEC SQL",
+          "COMPUTATIONAL-3",
+          "BINARY",
+          "sequence numbers CI0226/AM0060 in cols 73-80"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "ACH (Automated Clearing House) payment validation; program validates ACH incoming payment amounts against arrangement and client bank data structures",
+        "summary": "CI0226P validates ACH incoming payment amounts for a banking/financial system. It retrieves arrangement details (AR61) and client bank records (CB60) via EXEC CICS and EXEC SQL calls, then performs validation logic on payment amounts. The program is a subprogram or online CICS transaction component in a larger financial processing suite.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (online CICS transaction)",
+        "EXEC SQL (DB2 embedded SQL)",
+        "COMPUTATIONAL-3 packed decimal fields",
+        "BINARY fields",
+        "Large REDEFINES structures for data layout (AR61, CB60)",
+        "OCCURS clauses for repeating groups",
+        "76 GOTO statements indicating older structured style",
+        "9 CALL statements",
+        "Sequence numbers in columns 73-80 (CI0226, AM0060)",
+        "Large working-storage data structures with financial fields (APMTL, APMTLA, DNPMT)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 2675 lines. The sequence numbers in columns 73-80 (CI0226, AM0060) indicate this is part of a larger IBM mainframe financial application suite. The comment 'VALIDATE ACH IN AMOUNT' in the AUTHOR field confirms the ACH payment validation purpose. High goto count (76) is typical of older mainframe production COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6299,
+      "completion_tokens": 539,
+      "total_tokens": 6838,
+      "cost": 0.026982,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026982,
+        "upstream_inference_prompt_cost": 0.018897,
+        "upstream_inference_completions_cost": 0.008085
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.93,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:54:10Z"
+}

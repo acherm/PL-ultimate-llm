@@ -49,51 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-2002",
+        "detail": "Likely GnuCOBOL demo testing floating-point data types including FLOAT-EXTENDED (128-bit), COMP-1, COMP-2, COMP-5, and PIC P scaling. FLOAT-EXTENDED is a COBOL-2002+ feature well-supported by GnuCOBOL.",
         "evidence": [
-          "FLOAT-EXTENDED data type (GnuCOBOL / COBOL-2002+ extension)",
-          "COMP-1 and COMP-2 floating-point usage",
-          "COMP-5 binary usage",
+          "FLOAT-EXTENDED data type",
+          "COMP-1 and COMP-2 floating point",
+          "PIC 999PPPPPP COMP-5",
           "GOBACK statement",
           "END PROGRAM float-demo",
-          "PIC 999PPPPPP scaling picture",
-          "program-id uses hyphen: float-demo (common in GnuCOBOL test suites)"
+          "program-id with hyphen: float-demo"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A demonstration/test program that exercises COBOL floating-point data types: COMP-1 (single-precision), COMP-2 (double-precision), and FLOAT-EXTENDED (extended precision). It initialises variables with various exponent values, then MOVEs and DISPLAYs them to show how each type represents numbers across a range of magnitudes.",
-        "domain": "education/tutorial, demo",
+        "domain": "demo-example",
+        "domain_detail": "Floating-point numeric type demonstration and testing",
+        "summary": "This program demonstrates and tests COBOL floating-point data types (COMP-1, COMP-2, FLOAT-EXTENDED) by initializing variables with various exponent values and displaying them. It also tests MOVE of floating-point literals with different exponents to verify correct handling across a range of magnitudes.",
         "program_type": "demo"
       },
       "notable_features": [
-        "COMP-1 (single-precision float) with multiple exponent variations",
-        "COMP-2 (double-precision float) with multiple exponent variations",
-        "FLOAT-EXTENDED (extended-precision float, COBOL-2002+)",
-        "COMP-5 binary item with PPPPPP scaling picture",
-        "GOBACK instead of STOP RUN",
-        "END PROGRAM terminator",
-        "Paragraph names used as PERFORM targets without SECTION structure"
+        "FLOAT-EXTENDED (128-bit extended precision float, COBOL-2002+)",
+        "COMP-1 (single-precision float)",
+        "COMP-2 (double-precision float)",
+        "COMP-5 (native binary)",
+        "PIC P scaling (999PPPPPP)",
+        "Floating-point literal syntax with E notation (12.E-7, 12.3456E10, etc.)",
+        "GOBACK statement",
+        "END PROGRAM terminator"
       ],
-      "maturity": "toy-or-hello-world",
+      "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The mechanical indicators show 0 divisions detected, but the source clearly contains IDENTIFICATION, DATA, and PROCEDURE DIVISIONS — the parser likely missed them due to the indented (non-column-7) format or hyphenated PROGRAM-ID. FLOAT-EXTENDED strongly suggests GnuCOBOL or a COBOL-2002/2014 compliant compiler. The program appears to be a compiler test or tutorial demonstrating floating-point literal handling."
+      "notes": "The mechanical indicators show 0 divisions detected, but the source clearly contains IDENTIFICATION DIVISION, DATA DIVISION, and PROCEDURE DIVISION — the parser likely missed them. The program is a focused demo/test of floating-point numeric handling, likely part of a compiler test suite or tutorial for GnuCOBOL or similar open-source COBOL."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3930,
-      "completion_tokens": 600,
-      "total_tokens": 4530,
-      "cost": 0.02079,
+      "prompt_tokens": 5308,
+      "completion_tokens": 499,
+      "total_tokens": 5807,
+      "cost": 0.023409,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.02079,
-        "upstream_inference_prompt_cost": 0.01179,
-        "upstream_inference_completions_cost": 0.009
+        "upstream_inference_cost": 0.023409,
+        "upstream_inference_prompt_cost": 0.015924,
+        "upstream_inference_completions_cost": 0.007485
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 13.97,
+    "latency_s": 12.2,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:44:17Z"
 }

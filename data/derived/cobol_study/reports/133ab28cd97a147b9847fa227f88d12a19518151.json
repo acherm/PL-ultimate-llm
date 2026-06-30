@@ -49,52 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / Linux-based COBOL, likely JMA ORCA project",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), running on Linux with GnuCOBOL. Program ORCSNYUFTN handles inpatient co-payment calculation (負担金額算定サブ).",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "OCCURS clauses, REDEFINES, fixed-format source",
-          "No EXEC SQL or EXEC CICS",
-          "Linux OS noted in comments; JMA Open Source License header",
-          "Program-ID ORCSNYUFTN matches filename"
+          "Project code name ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "OS LINUX in header comment",
+          "PROGRAM-ID ORCSNYUFTN",
+          "COPY count 34, CALL count 57 typical of ORCA subsystem",
+          "No EXEC CICS / EXEC SQL",
+          "PIC clauses without COMP-3, consistent with GnuCOBOL ORCA style"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a subroutine ('FTN' suffix suggests 'function') for calculating patient co-payment amounts for hospital admissions (nyuin) in the JMA ORCA medical receipt software system. It handles complex Japanese health insurance billing calculations including various insurance combinations, room charges, high-cost medical expense thresholds, and special cases such as disaster/self-pay admissions.",
-        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/レセプト) system — inpatient co-payment and room-charge calculation subroutine for the JMA ORCA standard receipt software",
+        "summary": "ORCSNYUFTN is a subprogram within the JMA ORCA medical receipt system that calculates patient co-payment amounts (負担金額算定) for inpatient (入院) claims. It handles various insurance combinations, room-charge differentials, elderly patient rules, and special local government supplements across multiple revision levels dating from 2002 to 2007.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
-        "JMA ORCA open-source medical receipt software project",
-        "Extensive OCCURS tables for insurance combination handling",
-        "57 CALL statements indicating heavy use of subroutine architecture",
-        "312 PERFORM statements indicating structured procedural decomposition",
-        "No COMP-3 packed decimal despite financial calculations (uses PIC 9 display)",
-        "REDEFINES usage for index area",
-        "Large file: 5399 lines, 267KB — production-scale program",
-        "Detailed revision history spanning 2002–2007 with named developers"
+        "Large working-storage with OCCURS tables for insurance combination handling",
+        "REDEFINES usage (KIRIKAE-IDXX REDEFINES KIRIKAE-IDX)",
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "34 COPY statements indicating heavy use of shared copybooks",
+        "57 CALL statements to other ORCA subsystem programs",
+        "312 PERFORM statements with only 1 GOTO — structured programming style",
+        "No COMP-3 packed decimal despite financial calculations",
+        "No EXEC SQL or EXEC CICS — file-less batch subprogram",
+        "Revision history spanning 2002–2007 with named developers (NACL team)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded with latin-1 but the Japanese comments are likely EUC-JP or Shift-JIS, causing mojibake in the displayed text. The program is clearly part of the well-known JMA ORCA (Open Receipt Computer by Association) system, a real-world Japanese medical billing platform. The absence of COMP-3 is notable for financial code but consistent with some GnuCOBOL/OpenCOBOL practices. Only the first 16000 characters were shown; the PROCEDURE DIVISION content is not visible but inferred from mechanical indicators."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP (Japanese) encoded, causing mojibake in the displayed text. Source is truncated to first 16000 chars; full file is 267KB / 5399 lines. Dialect identified as GnuCOBOL based on Linux target and JMA ORCA project context. Standard is effectively COBOL-85 with no observed 2002+ features."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10045,
-      "completion_tokens": 683,
-      "total_tokens": 10728,
-      "cost": 0.04038,
+      "prompt_tokens": 11423,
+      "completion_tokens": 638,
+      "total_tokens": 12061,
+      "cost": 0.043839,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.04038,
-        "upstream_inference_prompt_cost": 0.030135,
-        "upstream_inference_completions_cost": 0.010245
+        "upstream_inference_cost": 0.043839,
+        "upstream_inference_prompt_cost": 0.034269,
+        "upstream_inference_completions_cost": 0.00957
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.38,
+    "provider": "Anthropic",
+    "latency_s": 19.32,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:34:11Z"
 }

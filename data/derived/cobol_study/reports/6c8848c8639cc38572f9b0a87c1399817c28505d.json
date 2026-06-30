@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / Micro Focus COBOL on Linux",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses /var/tmp/ file paths and LINE SEQUENTIAL files typical of GnuCOBOL on Unix",
         "evidence": [
-          "ORGANIZATION IS LINE SEQUENTIAL (common in GnuCOBOL/Micro Focus)",
-          "FILE-STATUS clause usage",
-          "Fixed-format source with standard DIVISIONS",
-          "COPY directives referencing .INC files",
-          "File paths using /var/tmp/ (Linux environment)",
-          "PROGRAM-ID ORCGK02 matching filename ORCGK02.CBL",
-          "No EXEC SQL or EXEC CICS",
-          "PIC clauses without COMP-3 (standard alphanumeric/numeric)"
+          "PROGRAM-ID ORCGK02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "FILE paths /var/tmp/K02SPASCR and /var/tmp/K01PARA",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "COPY directives for ENUM-VALUE, CPK02SPASCR.INC, COMMON-SPA, K01COMMON-SPA, K02SCR-SPA"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a medical receipt (claims) input processing program for the ORCA (JMA standard receipt software) system used by Japanese medical associations. It handles medical treatment act (診療行為) data entry, including insurance combinations, prescription sets, patient hospitalization records, and fee calculation. It is part of the JMA Open Source medical billing software suite.",
-        "domain": "healthcare/medical billing",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-koui) input processing subsystem - outpatient medical procedure entry",
+        "summary": "ORCGK02 is a large batch/interactive program in the JMA ORCA medical receipt system that handles medical procedure (shinryo-koui) input for outpatient billing. It reads SPA (screen parameter area) and parameter files, manages extensive flag and index working storage, and calls numerous subprograms to perform medical fee calculation, insurance combination checks, prescription handling, and related processing.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Large file (~625KB, ~14678 lines) indicating a complex production program",
-        "154 CALL statements indicating heavy use of subprogram architecture",
-        "727 PERFORM statements and 215 GOTO statements",
-        "COPY directives referencing domain-specific copybooks (CPK02SPASCR.INC, COMMON-SPA, K01COMMON-SPA, K02SCR-SPA, ENUM-VALUE)",
-        "Japanese comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
-        "LINE SEQUENTIAL file organization for SPA (screen parameter area) files in /var/tmp/",
-        "No EXEC SQL or EXEC CICS — file-based IPC via flat files",
-        "Extensive flag and index working-storage areas typical of large interactive COBOL programs",
-        "Version history spanning 2000–2003 with many named contributors"
+        "82 COPY statements referencing domain-specific copybooks",
+        "154 CALL statements to subprograms",
+        "727 PERFORM statements",
+        "215 GOTO statements",
+        "Large PIC X fields (30000, 60000 bytes) for SPA/parameter data",
+        "LINE SEQUENTIAL file organization",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "Extensive revision history in comments dating 2000-2003"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded with latin-1 but the Japanese comments are likely EUC-JP or Shift-JIS, causing mojibake in the displayed text. The program is clearly part of the open-source ORCA medical receipt system developed by JMA (Japan Medical Association). The COPY statements reference copybooks not shown in this excerpt. The source is truncated at 16000 chars out of ~625KB, so only the DATA DIVISION header is visible, but all structural indicators confirm genuine production COBOL."
+      "notes": "File is ~625KB, 14678 lines; source truncated to first 16000 chars for analysis. Comments contain Japanese text encoded in EUC-JP, decoded here as latin-1 producing mojibake. The program is part of the well-known open-source JMA ORCA medical receipt system. No COMP-3 is unusual for a financial/medical calculation program but consistent with GnuCOBOL ORCA codebase style."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9497,
-      "completion_tokens": 731,
-      "total_tokens": 10228,
-      "cost": 0.039456,
+      "prompt_tokens": 10875,
+      "completion_tokens": 594,
+      "total_tokens": 11469,
+      "cost": 0.041535,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.039456,
-        "upstream_inference_prompt_cost": 0.028491,
-        "upstream_inference_completions_cost": 0.010965
+        "upstream_inference_cost": 0.041535,
+        "upstream_inference_prompt_cost": 0.032625,
+        "upstream_inference_completions_cost": 0.00891
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.64,
+    "latency_s": 17.31,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:58:46Z"
 }

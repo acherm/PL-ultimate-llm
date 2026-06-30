@@ -49,52 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL (ORCA/JMA project)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), GnuCOBOL/OpenCOBOL dialect used in Japanese medical billing system",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "PIC clauses, WORKING-STORAGE SECTION, OCCURS, REDEFINES — standard COBOL-85 constructs",
-          "COPY with REPLACING directive",
-          "No EXEC SQL or EXEC CICS — batch-style program",
-          "Fixed format, max line length 78, comment lines with * in column 7",
-          "PROGRAM-ID ORCSC80201204 matches JMA ORCA open-source medical receipt software project"
+          "PROGRAM-ID ORCSC80201204",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY CPK02SPASCR.INC with REPLACING",
+          "no COMP-3 usage, no EXEC SQL/CICS",
+          "fixed format, max line 78"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system for Japanese medical billing. It performs calculation and validation checks for medical treatment (診療行為) entries, including rehabilitation, psychiatric care, oxygen therapy, and various April revision compliance checks. It is a batch subprogram called by the larger ORCA billing subsystem.",
-        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (shinryo-koui / medical procedure calculation and checking) - specifically rehabilitation and psychiatric care calculation checks for the JMA ORCA receipt system",
+        "summary": "This program is a component of the JMA ORCA medical receipt software system that performs medical procedure (shinryo-koui) checking and calculation for rehabilitation, psychiatric care, and related billing categories. It validates treatment dates, counts, and billing rules including early rehabilitation, psychiatric hospitalization periods, and various H24.4 (Heisei 24 April) revision compliance checks. It is called as a subprogram within the larger ORCA billing system.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, appearing garbled)",
-        "COPY with REPLACING directive (CPK02SPASCR.INC)",
+        "23 COPY statements for shared copybooks",
+        "19 CALL statements to other subprograms",
+        "211 PERFORM statements indicating complex procedural logic",
+        "Japanese EUC-JP encoded comments (latin-1 decoded with mojibake)",
+        "REDEFINES usage",
+        "OCCURS tables for daily rehabilitation counts",
         "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage despite being a calculation-heavy program",
-        "Extensive use of OCCURS for date/count arrays",
-        "REDEFINES used for numeric/character overlay of work fields",
-        "19 CALL statements, 211 PERFORM statements — complex procedural logic",
-        "Long revision history spanning 2002–2012 in comments",
-        "Open-source JMA ORCA project (Japan Medical Association)"
+        "Extensive flag area (FLG-AREA) with many condition flags",
+        "Version history spanning 2000-2012 with multiple revision entries"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in a Japanese character encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese comments to appear as garbled latin-1 sequences. The COBOL structure is unambiguous. The program is clearly production medical billing software from the JMA ORCA project, with a detailed change history from 2000 to 2012. No copybook-only or JCL indicators; this is a full program unit."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text, appearing as mojibake. Program name ORCSC80201204 follows JMA ORCA naming convention. The '1204' suffix likely indicates H24.4 (April 2012) revision. Source is truncated at 16000 chars out of 173936 bytes total; full program likely contains substantial procedure division logic not visible here."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9196,
-      "completion_tokens": 677,
-      "total_tokens": 9873,
-      "cost": 0.037743,
+      "prompt_tokens": 10574,
+      "completion_tokens": 551,
+      "total_tokens": 11125,
+      "cost": 0.039987,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037743,
-        "upstream_inference_prompt_cost": 0.027588,
-        "upstream_inference_completions_cost": 0.010155
+        "upstream_inference_cost": 0.039987,
+        "upstream_inference_prompt_cost": 0.031722,
+        "upstream_inference_completions_cost": 0.008265
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 16.23,
+    "provider": "Anthropic",
+    "latency_s": 15.39,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:52:26Z"
 }

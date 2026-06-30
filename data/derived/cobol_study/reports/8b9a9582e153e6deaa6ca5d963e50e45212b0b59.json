@@ -49,51 +49,54 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
-        "standard": "COBOL-2002",
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source for the ACAS (Applewood Computers Accounting System) v3.02, authored by Vincent Bryan Coen. Uses >>source free directive and GnuCOBOL-style *> comments.",
         "evidence": [
-          ">>source free (GnuCOBOL compiler directive)",
-          "*> style comments throughout",
-          "binary-char data type (GnuCOBOL extension)",
+          ">>source free",
+          "*> comment style throughout",
+          "binary-char data type",
+          "GOBACK statement",
           "perform forever construct",
-          "goback statement",
-          "COPY statements referencing .cob files typical of GnuCOBOL projects"
+          "copy directives with .cob extensions"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This program restores a Purchase ledger file by reading records from a sequential backup file (.seq) and writing them back to an ISAM Purchase file. It is part of the ACAS (Applewood Computers Accounting System) v3.02 and later. It logs output via a called module ACAS-Sysout.",
-        "domain": "accounting/ERP",
+        "domain": "accounting-erp",
+        "domain_detail": "ACAS (Applewood Computers Accounting System) Purchase Ledger restore utility - reads purchase records from a sequential backup file and restores them to an ISAM file.",
+        "summary": "This program restores the Purchase Ledger file from a sequential backup (.seq file). It opens the sequential file as input and the ISAM Purchase file as output, reads all records and writes them back, logging counts and errors via the ACAS-Sysout module.",
         "program_type": "batch"
       },
       "notable_features": [
-        "GnuCOBOL compiler directive >>source free",
+        ">>source free compiler directive",
+        "GnuCOBOL binary-char data type",
         "PERFORM FOREVER loop construct",
-        "CALL to external module ACAS-Sysout for logging",
-        "Multiple COPY statements for environment, file definitions, and working storage",
-        "GNU GPL licensed source with detailed copyright header",
-        "BINARY-CHAR data type (GnuCOBOL extension)",
-        "Environment variable handling (ACAS_BIN, ACAS_LEDGERS)",
-        "Return-Code manipulation before GOBACK"
+        "Multiple COPY statements for shared environment/file definitions (envdiv.cob, selpl.cob, fdpl.cob, wspl.cob, wsfnctn.cob, wsnames.cob, wscall.cob, Test-Data-Flags.cob, Proc-Get-Env-Set-Files.cob)",
+        "GOBACK instead of STOP RUN",
+        "External CALL to ACAS-Sysout logging module",
+        "Environment variable usage (ACAS_BIN, ACAS_LEDGERS)",
+        "High comment ratio (53%) with extensive copyright and documentation headers"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is clearly part of a larger accounting system (ACAS) with multiple COPY dependencies (envdiv.cob, selpl.cob, fdpl.cob, wspl.cob, wsfnctn.cob, wsnames.cob, wscall.cob, Test-Data-Flags.cob, Proc-Get-Env-Set-Files.cob) that are not shown. The high comment ratio (53%) is largely due to the extensive copyright and documentation header. The program is well-structured and production-quality. Author is identified as Vincent Bryan Coen, copyright 2016-2024."
+      "notes": "High comment ratio (53%) is due to extensive copyright/license header and documentation. The program is part of a larger accounting system (ACAS) with well-structured modular design using copybooks. The 9 COPY statements indicate significant shared infrastructure. Program version is 3.02.00 dated June 2023."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3201,
-      "completion_tokens": 604,
-      "total_tokens": 3805,
-      "cost": 0.018663,
+      "prompt_tokens": 4579,
+      "completion_tokens": 533,
+      "total_tokens": 5112,
+      "cost": 0.021732,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.018663,
-        "upstream_inference_prompt_cost": 0.009603,
-        "upstream_inference_completions_cost": 0.00906
+        "upstream_inference_cost": 0.021732,
+        "upstream_inference_prompt_cost": 0.013737,
+        "upstream_inference_completions_cost": 0.007995
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 13.2,
+    "provider": "Anthropic",
+    "latency_s": 13.27,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:01:06Z"
 }

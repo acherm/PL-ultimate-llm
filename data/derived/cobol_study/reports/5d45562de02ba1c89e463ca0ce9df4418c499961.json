@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5d45562de02ba1c89e463ca0ce9df4418c499961",
+    "sha1_git": "5d45562de02ba1c89e463ca0ce9df4418c499961",
+    "filename": "/pw01452c.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 20605,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5d45562de02ba1c89e463ca0ce9df4418c499961/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5d45562de02ba1c89e463ca0ce9df4418c499961/raw/"
+  },
+  "indicators": {
+    "bytes_len": 20605,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 433,
+    "blank_lines": 32,
+    "comment_lines": 32,
+    "code_lines": 369,
+    "comment_ratio": 0.08,
+    "max_line_length": 238,
+    "avg_line_length": 46.6,
+    "long_lines_over_72": 90,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW01452C"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 1,
+    "perform_count": 37,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor extension; uses $set preprocess(htmlpp), $set sourceformat\"free\", EXEC HTML blocks, and external-form clause — consistent with Brazilian web-COBOL CGI framework (likely Prowork/PCS system)",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "exec html ... end-exec",
+          "is external-form",
+          "identified by",
+          "copy PCW900.CPY / PCW902.CPY / PCW990.CPY",
+          "cancel controle-projeto"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian ERP/retail system — daily update parameters configuration screen (Parâmetros da Atualização Diária), managing parallel programs, screen refresh frequency, and credit policy adjustment flags",
+        "summary": "This program manages configuration parameters for a daily update process in a Brazilian ERP system. It reads and writes records from a parameter file (EFDPAR.CAD / pd99800), handles a CGI web form interface for configuring parallel program counts, screen refresh intervals, and credit policy settings. It is a web-based CGI subprogram using the htmlpp preprocessor to generate HTML output.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "$set preprocess(htmlpp) compiler directive",
+        "EXEC HTML blocks for CGI web output",
+        "external-form clause with 'identified by' for HTML form field binding",
+        "Free-format source with $set sourceformat directive",
+        "9 COPY statements for modular copybook inclusion",
+        "CALL/CANCEL pattern for dynamic subprogram invocation",
+        "decimal-point is comma (Brazilian locale)",
+        "78-level constant (versao)",
+        "Hardcoded date check for 28112015/29112015 (Sunday logic)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars; the HTML tela section is cut off mid-line. The program uses a Brazilian Portuguese CGI/web COBOL framework with htmlpp preprocessor, common in Brazilian ERP products. program_type set to online-cics as closest enum match for an interactive web CGI program (no actual CICS present). Domain is accounting-erp as it appears to be part of a retail/distribution ERP suite."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6266,
+      "completion_tokens": 569,
+      "total_tokens": 6835,
+      "cost": 0.027333,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027333,
+        "upstream_inference_prompt_cost": 0.018798,
+        "upstream_inference_completions_cost": 0.008535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.41,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T22:01:28Z"
+}

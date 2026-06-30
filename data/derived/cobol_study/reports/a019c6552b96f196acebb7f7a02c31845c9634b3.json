@@ -49,53 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (RDz/IDz extension) or Micro Focus — specifically a dialect supporting DECLARE FUNCTION/PROCEDURE syntax (TypeCobol or IBM COBOL for z/OS with function declarations)",
+        "family": "micro-focus",
         "standard": "COBOL-2014",
+        "detail": "Appears to be Micro Focus or IBM Enterprise COBOL with function/procedure declaration extensions (DECLARE FUNCTION/PROCEDURE, SERVICE IS YFUNCOPY, INOUT/INPUT/OUTPUT parameter syntax, TYPE BOOL). The .rdz.cbl extension suggests IBM Rational Developer for z/OS (RDz) tooling, but the DECLARE FUNCTION syntax is more consistent with Micro Focus or a COBOL-2014+ extension.",
         "evidence": [
-          "DECLARE FUNCTION ... PUBLIC/PRIVATE ... END-DECLARE syntax",
-          "DECLARE PROCEDURE ... INOUT parameter syntax",
-          "SERVICE IS YFUNCOPY clause",
-          "INPUT/OUTPUT/INOUT/RETURNING parameter clauses in DECLARE",
-          "TYPE BOOL / type BOOL parameter type",
-          "Filename suffix .rdz.cbl indicating IBM Rational Developer for z/OS",
-          "PROGRAM-ID. FunDeclare",
-          "END PROGRAM FunDeclare"
+          "DECLARE FUNCTION ... PUBLIC/PRIVATE",
+          "DECLARE PROCEDURE ... PRIVATE",
+          "SERVICE IS YFUNCOPY",
+          "RETURNING result PIC 9(04)",
+          "INOUT x PIC 9(04)",
+          "INPUT x type BOOL / RETURNING y TYPE bool",
+          "END-DECLARE",
+          "END PROGRAM FunDeclare",
+          ".rdz.cbl filename extension"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A test/demo program exercising the DECLARE FUNCTION and DECLARE PROCEDURE syntax of a COBOL dialect extension (likely TypeCobol or IBM RDz). It declares multiple functions and procedures with various parameter profiles, intentionally including both valid and erroneous declarations (annotated with '* ERROR' comments) to validate compiler diagnostics.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates and tests COBOL function/procedure declaration syntax including error cases",
+        "summary": "This program is a test/demonstration of COBOL DECLARE FUNCTION and DECLARE PROCEDURE syntax. It defines multiple functions and procedures with various parameter modes (INPUT, OUTPUT, INOUT, RETURNING), intentionally including error cases (illegal FILE SECTION, mismatched parameter types, illegal GLOBAL/EXTERNAL clauses, malformed level-88 items) to exercise a compiler or static analysis tool. It appears to be a test fixture for a COBOL language tooling project.",
         "program_type": "test"
       },
       "notable_features": [
-        "DECLARE FUNCTION / DECLARE PROCEDURE with END-DECLARE blocks",
-        "INPUT, OUTPUT, INOUT, RETURNING parameter clauses",
-        "SERVICE IS YFUNCOPY clause (IBM RDz/TypeCobol extension)",
-        "TYPE BOOL / type BOOL parameter type",
-        "Intentional error cases annotated with '* ERROR' comments",
-        "Level-88 condition items as function parameters",
+        "DECLARE FUNCTION / DECLARE PROCEDURE syntax (non-standard extension)",
+        "SERVICE IS YFUNCOPY clause",
+        "INOUT parameter mode",
+        "INPUT/OUTPUT parameter modes",
+        "TYPE BOOL / type BOOL usage",
+        "END-DECLARE block structure",
+        "Intentional error cases documented in comments",
         "LOCAL-STORAGE SECTION present",
+        "No PERFORM, CALL, GOTO, or COMP-3 usage",
         "BOM (UTF-8 BOM) at start of file"
       ],
-      "maturity": "student-exercise",
-      "overall_confidence": "high",
-      "notes": "The file begins with a UTF-8 BOM (﻿). The .rdz.cbl extension strongly suggests IBM Rational Developer for z/OS tooling. The DECLARE FUNCTION/PROCEDURE syntax is a TypeCobol or experimental IBM COBOL extension not part of standard COBOL; this appears to be a compiler test suite file exercising both valid and invalid constructs. The identification division is present (IDENTIFICATION DIVISION + PROGRAM-ID) but the mechanical indicator reports it as absent, likely because the BOM or spacing confused the parser."
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "The file has a UTF-8 BOM. The DECLARE FUNCTION/PROCEDURE syntax with PUBLIC/PRIVATE visibility and typed parameters is not standard COBOL but an extension. The .rdz.cbl extension suggests IBM Rational Developer for z/OS, but the syntax resembles Micro Focus OO/extended COBOL or a research/tooling dialect. The program intentionally contains error cases for testing a parser or compiler. Only DATA and PROCEDURE divisions are detected by the mechanical scanner because IDENTIFICATION DIVISION is present but the scanner may have missed it (it is present in source)."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2094,
-      "completion_tokens": 660,
-      "total_tokens": 2754,
-      "cost": 0.016182,
+      "prompt_tokens": 3472,
+      "completion_tokens": 634,
+      "total_tokens": 4106,
+      "cost": 0.019926,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.016182,
-        "upstream_inference_prompt_cost": 0.006282,
-        "upstream_inference_completions_cost": 0.0099
+        "upstream_inference_cost": 0.019926,
+        "upstream_inference_prompt_cost": 0.010416,
+        "upstream_inference_completions_cost": 0.00951
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +121,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.62,
+    "latency_s": 14.63,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:13:57Z"
 }

@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1c47cd8ade332fda5f6ffafe6e3ecb44856ba422",
+    "sha1_git": "1c47cd8ade332fda5f6ffafe6e3ecb44856ba422",
+    "filename": "/StoprunGobackLastStatement.rdz.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 815,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1c47cd8ade332fda5f6ffafe6e3ecb44856ba422/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1c47cd8ade332fda5f6ffafe6e3ecb44856ba422/raw/"
+  },
+  "indicators": {
+    "bytes_len": 815,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 44,
+    "blank_lines": 3,
+    "comment_lines": 0,
+    "code_lines": 41,
+    "comment_ratio": 0.0,
+    "max_line_length": 32,
+    "avg_line_length": 17.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 1,
+    "program_ids": [
+      "Pgm"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Likely IBM RDz (Rational Developer for z) test/demo file based on .rdz.cbl extension; tests STOP RUN and GOBACK as last-statement semantics",
+        "evidence": [
+          "PROGRAM-ID. Pgm",
+          "GOBACK",
+          "STOP RUN",
+          "END PROGRAM Pgm",
+          ".rdz.cbl filename extension"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Tests compiler/linter behavior around STOP RUN and GOBACK as last statements in paragraphs and sections",
+        "summary": "A small test program that exercises STOP RUN and GOBACK placement as the last statement in various paragraphs and sections. It appears to be a test case for an IDE or static analysis tool (RDz) verifying dead-code detection after STOP RUN/GOBACK. No real business logic is present.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "Multiple GOBACK statements in different paragraphs",
+        "STOP RUN followed by unreachable DISPLAY",
+        "Dead code after GOBACK/STOP RUN in several paragraphs",
+        "SECTION definitions mixed with paragraphs",
+        "BOM (UTF-8 BOM) present at start of file",
+        "Only PROCEDURE DIVISION present (no DATA or ENVIRONMENT divisions)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "File has a UTF-8 BOM. The .rdz.cbl extension strongly suggests IBM Rational Developer for z/OS. The program is clearly a test/demo for static analysis of unreachable code after STOP RUN and GOBACK statements. No DATA DIVISION or ENVIRONMENT DIVISION present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2440,
+      "completion_tokens": 417,
+      "total_tokens": 2857,
+      "cost": 0.013575,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013575,
+        "upstream_inference_prompt_cost": 0.00732,
+        "upstream_inference_completions_cost": 0.006255
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.31,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:48:12Z"
+}

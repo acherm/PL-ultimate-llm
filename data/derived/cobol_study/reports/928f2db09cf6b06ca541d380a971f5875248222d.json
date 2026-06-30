@@ -49,50 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Japan Medical Association open-source receipt system), compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax",
-          "EXIT PROGRAM",
-          "PROCEDURE DIVISION USING with multiple areas",
-          "COPY statements for screen/linkage includes",
-          "CALL 'ORCDBMAIN' USING",
-          "Fixed-format source layout"
+          "PROGRAM-ID ORCGKID2",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "CALL ORCDBMAIN",
+          "Copyright JMA 2002",
+          "MCP-FUNC / MCP-PUTTYPE / MCP-WINDOW pattern typical of ORCA MCP framework"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a screen navigation/confirmation subprogram (screen 2, KID2) within the ORCA JMA standard medical receipt software system. It handles button-click events on a confirmation screen, setting flags (SPA-KID2-FLG) to indicate which print/action option was selected (e.g., prescription info, medicine info, all, register), then navigates back to the originating screen via a PUT-WINDOW call.",
-        "domain": "healthcare/medical (Japanese medical association receipt processing system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryou koui) software – confirmation screen 2 (KID2) for medical treatment act input",
+        "summary": "This program is a screen-navigation subprogram within the JMA ORCA medical receipt system. It handles button-click events on a confirmation screen (KID2), sets a flag (SPA-KID2-FLG) indicating which print/action option was chosen (e.g. prescription, medicine info, all), and then calls ORCDBMAIN to transition to the appropriate window via PUTWINDOW.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
-        "ORCA JMA open-source medical receipt software project",
-        "Heavy use of COPY statements for screen layout includes (K01.INC through KERR2.INC, KID1.INC, KID2.INC, etc.)",
-        "EVALUATE ALSO construct for multi-condition branching on MCP-STATUS/MCP-EVENT/MCP-WIDGET",
-        "CALL 'ORCDBMAIN' for MCP (Message Control Program) window management",
-        "No EXEC SQL or EXEC CICS",
-        "Only 1 PIC clause in working storage (rest via COPY)"
+        "Heavy use of COPY statements (31 copybooks) for screen layout and shared areas",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "EVALUATE ALSO construct for multi-condition dispatch",
+        "MCP framework calls (ORCDBMAIN) for window management",
+        "Japanese comments encoded in EUC-JP/latin-1",
+        "No EXEC SQL or EXEC CICS – uses proprietary MCP database interface",
+        "EXIT PROGRAM as main exit"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in a Japanese encoding (likely EUC-JP or Shift-JIS) but decoded as latin-1, causing the Japanese comments to appear as mojibake. The label 'grpsys' appearing inline before the CALL statement at column 1 is unusual and may be a label or artifact. The program is clearly part of the well-known ORCA (JMA standard receipt software) open-source medical system used in Japan."
+      "notes": "Comments are in Japanese encoded as EUC-JP, decoded here as latin-1 causing mojibake in the display. The file is part of the well-known open-source JMA ORCA project. The label 'grpsys' appearing before the CALL statement on column 1 appears to be a label or tag artifact in the source."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3839,
-      "completion_tokens": 646,
-      "total_tokens": 4485,
-      "cost": 0.021207,
+      "prompt_tokens": 5217,
+      "completion_tokens": 531,
+      "total_tokens": 5748,
+      "cost": 0.023616,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.021207,
-        "upstream_inference_prompt_cost": 0.011517,
-        "upstream_inference_completions_cost": 0.00969
+        "upstream_inference_cost": 0.023616,
+        "upstream_inference_prompt_cost": 0.015651,
+        "upstream_inference_completions_cost": 0.007965
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +114,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.75,
+    "latency_s": 14.43,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:21:51Z"
 }

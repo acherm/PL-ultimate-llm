@@ -49,50 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) — JMA ORCA project",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses .INC copybooks with REPLACING, INDEXED files with DYNAMIC/SEQUENTIAL access, fixed format.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
-          "COPY ... REPLACING //token// BY //token// (OpenCOBOL/GnuCOBOL pseudo-text delimiter style)",
-          "Fixed-format source, columns 7-72, comment lines with * in column 7",
-          "No EXEC SQL / EXEC CICS — consistent with GnuCOBOL batch program",
-          "Copyright header explicitly names JMA (Japan Medical Association) ORCA open-source project, known to use GnuCOBOL/OpenCOBOL"
+          "PROGRAM-ID ORCR0420",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with REPLACING //token// BY //token// syntax",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED ACCESS MODE IS DYNAMIC",
+          "COPY 'CPRCF041.INC', 'CPRECEDAT1.INC', 'CPERRFL.INC'",
+          "no EXEC CICS / EXEC SQL",
+          "no COMP-3 usage"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch COBOL program (ORCR0420) belonging to the JMA ORCA medical receipt software system. It creates monthly business receipt detail files for insurance/self-pay billing and aggregates point scores by medical-care category. The program reads and writes multiple indexed ISAM files (RECE41, RECE44, RECE45, RECE4A, RECE4B) and produces an error output file.",
-        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - monthly billing detail file creation for outpatient/self-pay receipts, point aggregation by medical category",
+        "summary": "ORCR0420 is a batch program in the JMA ORCA medical receipt system that creates monthly business detail files for outpatient and self-pay receipts. It reads and writes multiple indexed ISAM files (RECE41, RECE44, RECE45, RECE4A, RECE4B) and aggregates medical procedure points by diagnostic category. The program has an extensive revision history spanning 2002-2007 covering Japanese medical fee schedule revisions.",
         "program_type": "batch"
       },
       "notable_features": [
-        "COPY ... REPLACING with OpenCOBOL-style //pseudo-text// delimiters",
-        "Multiple indexed ISAM files with DYNAMIC and SEQUENTIAL access modes on the same physical file (dual SELECT entries)",
-        "Large program: ~7000 lines, 179 PERFORMs, 352 PIC clauses",
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1 in archive)",
+        "35 COPY statements with REPLACING using // delimiter syntax (GnuCOBOL style)",
+        "Multiple INDEXED files with both DYNAMIC and SEQUENTIAL access modes via separate SELECT entries for same physical file",
+        "Large program: ~7000 lines, 179 PERFORMs, extensive working-storage",
+        "Japanese EUC-JP encoded comments (latin-1 decoded, garbled)",
         "No COMP-3, no EXEC SQL, no EXEC CICS",
-        "Extensive revision history spanning 2002–2007 in comment header",
-        "Error file (RECEERR) for output of processing errors"
+        "Error file (RECEERR) for sequential error output",
+        "Extensive version history in comments (01.00.01 through 04.01.01)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but the Japanese comments are actually EUC-JP or Shift-JIS encoded, causing mojibake in the displayed text. This does not affect the COBOL classification. The COPY statements reference external copybooks (.INC files) that are not included in this file, so full semantic analysis is not possible from this excerpt alone. The program is part of the well-known open-source JMA ORCA medical receipt system used in Japanese clinics."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text, appearing garbled. This is the JMA ORCA open-source medical receipt software widely used in Japanese clinics. The // REPLACING // syntax and .INC copybook naming are characteristic of GnuCOBOL/OpenCOBOL builds of ORCA. Source truncated to first 16000 chars; full file is ~350KB / 6993 lines."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 11111,
-      "completion_tokens": 741,
-      "total_tokens": 11852,
-      "cost": 0.044448,
+      "prompt_tokens": 12489,
+      "completion_tokens": 664,
+      "total_tokens": 13153,
+      "cost": 0.047427,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.044448,
-        "upstream_inference_prompt_cost": 0.033333,
-        "upstream_inference_completions_cost": 0.011115
+        "upstream_inference_cost": 0.047427,
+        "upstream_inference_prompt_cost": 0.037467,
+        "upstream_inference_completions_cost": 0.00996
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.75,
+    "latency_s": 17.06,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:48:59Z"
 }

@@ -49,49 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM-compatible / NIST CCVS85 validation suite (likely GnuCOBOL or similar open-source compiler target)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "NIST CCVS85 Version 4.2 (April 1993) validation suite, compiled/run on Linux (GnuCOBOL implied by SOURCE-COMPUTER/OBJECT-COMPUTER set to 'Linux')",
         "evidence": [
-          "PROGRAM-ID NC237A with sequence numbers referencing NC2374.2",
-          "Comment block: 'COBOL 85 VERSION 4.2, Apr 1993 SSVG'",
-          "OCCURS ... ASCENDING KEY / DESCENDING KEY with INDEXED BY (COBOL-85 SEARCH ALL syntax)",
-          "COMPUTATIONAL (not COMP-3) usage for numeric fields",
-          "SOURCE-COMPUTER / OBJECT-COMPUTER set to 'Linux' (modern open-source target)",
-          "NIST CCVS85 boilerplate headers (CCVS-H-1, CCVS-E-1, etc.)"
+          "PROGRAM-ID NC237A",
+          "COBOL 85 VERSION 4.2, Apr 1993 SSVG",
+          "ON-SITE VALIDATION, NATIONAL INSTITUTE OF STD & TECH",
+          "SOURCE-COMPUTER Linux",
+          "OBJECT-COMPUTER Linux",
+          "CCVS85 4.2"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a NIST CCVS85 (COBOL Compiler Validation System) test program that validates Format 2 of the SEARCH statement (SEARCH ALL / binary search) against a three-dimensional table with ascending and descending keys. It writes pass/fail results to a print file (report.log).",
-        "domain": "education/tutorial",
+        "domain": "test-suite",
+        "domain_detail": "NIST COBOL Compiler Validation System (CCVS85) - tests SEARCH ALL (Format 2) with a three-dimensional table containing ascending and descending keys",
+        "summary": "This is a NIST CCVS85 compiler validation test program (NC237A). It tests Format 2 of the SEARCH statement (SEARCH ALL / binary search) using a three-dimensional table with mixed ascending and descending keys. It writes pass/fail results to a report log file.",
         "program_type": "test"
       },
       "notable_features": [
-        "Three-dimensional OCCURS table with multiple ASCENDING/DESCENDING KEY clauses and multiple INDEXED BY indices",
-        "SEARCH ALL (Format 2) validation — the primary test subject",
-        "NIST CCVS85 standard test harness boilerplate (CCVS-H-*, CCVS-E-*, TEST-RESULTS, PASS-COUNTER, ERROR-COUNTER)",
-        "REDEFINES used extensively for numeric display formatting",
-        "COMPUTATIONAL (binary) fields for identifiers and counters",
-        "No EXEC SQL, no EXEC CICS, no COPY statements, no external CALLs"
+        "SEARCH ALL (Format 2) with multi-dimensional table",
+        "Three-level nested OCCURS with ASCENDING/DESCENDING KEY clauses",
+        "Multiple INDEXED BY clauses (IDX-1, IDX-2, IDX-3)",
+        "REDEFINES used extensively for test result formatting",
+        "COMPUTATIONAL (BINARY) data items",
+        "No EXEC SQL or EXEC CICS",
+        "No COPY statements",
+        "High PERFORM count (83) and GOTO count (48) typical of CCVS harness"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is a well-known NIST COBOL 85 validation suite program (NC237A). The sequence numbers in columns 73-80 (NC2374.2) are standard CCVS identifiers. The source is truncated at 16000 chars but the structure is unambiguous. The 'Linux' SOURCE/OBJECT-COMPUTER entries suggest this copy was adapted for a Linux-hosted open-source COBOL compiler (e.g., GnuCOBOL). No COMP-3 usage despite COMPUTATIONAL fields."
+      "notes": "File is truncated to first 16000 chars out of 53541 bytes (661 lines total). The visible portion is the standard NIST CCVS85 boilerplate plus the table definition and working-storage. The sequence numbers in columns 73-80 (NC2374.2) confirm this is the NIST test suite version 4.2. Linux as SOURCE/OBJECT computer suggests GnuCOBOL or similar open-source compiler."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5641,
-      "completion_tokens": 708,
-      "total_tokens": 6349,
-      "cost": 0.027543,
+      "prompt_tokens": 7019,
+      "completion_tokens": 554,
+      "total_tokens": 7573,
+      "cost": 0.029367,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.027543,
-        "upstream_inference_prompt_cost": 0.016923,
-        "upstream_inference_completions_cost": 0.01062
+        "upstream_inference_cost": 0.029367,
+        "upstream_inference_prompt_cost": 0.021057,
+        "upstream_inference_completions_cost": 0.00831
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -110,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 15.26,
+    "provider": "Anthropic",
+    "latency_s": 13.79,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:10:49Z"
 }

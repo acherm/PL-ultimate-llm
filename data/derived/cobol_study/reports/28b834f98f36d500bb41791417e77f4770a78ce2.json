@@ -49,52 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
-          "EXIT PROGRAM statement",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "CALL 'ORCDBMAIN' USING",
-          "Fixed-format source layout",
-          "COPY statements without REPLACING (typical GnuCOBOL/OpenCOBOL style)",
-          "Project name 'ORCA' - known Japanese open-source medical receipt system using GnuCOBOL"
+          "PROGRAM-ID ORCGPID1",
+          "CALL 'ORCDBMAIN'",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "LINKAGE SECTION with SCRAREA and multiple COPY .INC files"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a screen-handling subprogram (PID1 confirmation screen) within the ORCA JMA standard medical receipt software system. It handles screen navigation events (LINK, PUTG/CLICKED) and manages transitions between screens, setting SPA flags and calling ORCDBMAIN to put/display windows.",
-        "domain": "healthcare/medical billing (Japanese medical receipt system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - patient registration confirmation screen (PID1)",
+        "summary": "This program is a screen-handling subprogram for the JMA ORCA medical receipt system, specifically handling the patient ID confirmation screen (PID1). It processes MCP events (LINK, PUTG/CLICKED) to navigate between screens, handling back and register button actions by setting SPA flags and calling ORCDBMAIN to put windows.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Part of the ORCA (JMA standard receipt software) open-source Japanese medical system",
-        "Heavy use of COPY statements for screen and data area definitions",
-        "EVALUATE with ALSO for multi-condition branching",
-        "LINKAGE SECTION used for inter-program communication via MCP (Message Control Program) areas",
-        "Japanese comments encoded in latin-1 (originally Shift-JIS or EUC-JP, garbled in latin-1 decoding)",
-        "MCP-STATUS/MCP-EVENT/MCP-WIDGET pattern typical of ORCA GUI framework",
-        "No EXEC SQL or EXEC CICS",
-        "Single PIC clause (FLG-END PIC 9(01))"
+        "Heavy use of COPY statements (22 copybooks) for screen and data areas",
+        "LINKAGE SECTION with multiple screen area copybooks",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen navigation",
+        "CALL 'ORCDBMAIN' for MCP window management",
+        "Japanese comments encoded in EUC-JP/latin-1",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP middleware",
+        "EXIT PROGRAM as main exit"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The Japanese comments are garbled due to latin-1 decoding of what was originally EUC-JP or Shift-JIS encoded text. The program is clearly part of the well-known ORCA open-source Japanese medical receipt system, which runs on GnuCOBOL/OpenCOBOL. The high comment ratio (52%) is due to the extensive Japanese comment blocks and commented-out COPY statements."
+      "notes": "Japanese text in comments is encoded in EUC-JP but decoded as latin-1, resulting in mojibake. File is part of the well-known open-source JMA ORCA medical receipt system. High comment ratio (52%) is typical for this codebase. The 22 COPY statements reference screen layout and parameter copybooks specific to the ORCA framework."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3097,
-      "completion_tokens": 664,
-      "total_tokens": 3761,
-      "cost": 0.019251,
+      "prompt_tokens": 4475,
+      "completion_tokens": 512,
+      "total_tokens": 4987,
+      "cost": 0.021105,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.019251,
-        "upstream_inference_prompt_cost": 0.009291,
-        "upstream_inference_completions_cost": 0.00996
+        "upstream_inference_cost": 0.021105,
+        "upstream_inference_prompt_cost": 0.013425,
+        "upstream_inference_completions_cost": 0.00768
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +114,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 14.35,
+    "provider": "Anthropic",
+    "latency_s": 13.22,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:18:40Z"
 }

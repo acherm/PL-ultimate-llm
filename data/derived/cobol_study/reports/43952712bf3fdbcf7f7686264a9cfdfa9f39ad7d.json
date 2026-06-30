@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Fujitsu/NEC COBOL (Japanese mainframe/open systems)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING, LINKAGE SECTION with multiple parameters, no EXEC SQL/CICS",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "EVALUATE ... WHEN ... END-EVALUATE (COBOL-85)",
-          "PERFORM VARYING ... UNTIL with END-PERFORM",
-          "COPY statements with REPLACING clause",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "PIC 9(nn) and PIC X(nn) data definitions",
-          "EXIT PROGRAM",
-          "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled), typical of Japanese COBOL systems (ORCA/JMA medical software)"
+          "PROGRAM-ID ORCSC54201004",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'MCPAREA'",
+          "COPY 'CPK02SPASCR.INC' REPLACING",
+          "LINKAGE SECTION with MCPAREA ORCSC00AREA WRK-SCR-REC SPA-AREA",
+          "no COMP-3, no EXEC SQL, no EXEC CICS"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA Standard Receipt Software) medical billing system for Japan. It performs checking, editing, and automatic calculation (santei) of medical procedure (shinryo koi) line items, including anesthesia checks, oxygen supplement ratio auto-addition, time-based surcharge calculations, and waste disposal processing. It is a subprogram called with a linkage area containing shared parameters.",
-        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software — diagnosis/treatment act (診療行為) check and calculation subprogram",
+        "summary": "This subprogram performs validation and automatic calculation for medical treatment acts (診療行為) in the JMA ORCA receipt system. It checks individual line items (procedures, drugs, materials), handles oxygen supplement auto-addition, anesthesia quantity checks, and computes point totals. It is called with a classification code (LNK-ORCSC-KBN) to perform per-item checks, full checks, or automatic calculation.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
-        "COPY statements referencing multiple domain-specific copybooks (CPTENSU.INC, CPSANTEI.INC, CPORCSC00.INC, MCPAREA, etc.)",
-        "LINKAGE SECTION with multiple passed areas (MCPAREA, ORCSC00AREA, WRK-SCR-REC, SPA-AREA)",
-        "OCCURS clause for table handling (TBL-MASUICHK-OCC OCCURS 400, TBL-CHK-OCC OCCURS 31)",
-        "REDEFINES clause usage",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage",
-        "Open source medical billing software (JMA Open Source License)",
-        "Version history spanning 2000-2010 in comments"
+        "14 COPY statements including copybooks for screen, linkage, and parameter areas",
+        "LINKAGE SECTION with 4 parameters (MCPAREA, ORCSC00AREA, WRK-SCR-REC, SPA-AREA)",
+        "EVALUATE/WHEN constructs throughout",
+        "OCCURS table for anesthesia check (TBL-MASUICHK-OCC OCCURS 400)",
+        "OCCURS table for nerve block trigger point check (TBL-CHK-OCC OCCURS 31)",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "80 PERFORM statements indicating structured procedural decomposition",
+        "Fixed-format source with max line length 74"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but Japanese comments are almost certainly Shift-JIS or EUC-JP, causing mojibake in the comment display. The program is clearly production medical billing software from the ORCA project (Japan Medical Association). The COPY statements reference many external copybooks not shown in the truncated source. The 16000-char truncation covers roughly the first 400 lines of 1709 total, but the structure and purpose are clear from what is visible."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese, appearing garbled. This is part of the well-known open-source JMA ORCA medical receipt system. The program is a subprogram (called via CALL/LINKAGE) for treatment-act checking and point calculation. Version history in comments shows revisions from 2000 through 2010."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8198,
-      "completion_tokens": 778,
-      "total_tokens": 8976,
-      "cost": 0.036264,
+      "prompt_tokens": 9576,
+      "completion_tokens": 669,
+      "total_tokens": 10245,
+      "cost": 0.038763,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.036264,
-        "upstream_inference_prompt_cost": 0.024594,
-        "upstream_inference_completions_cost": 0.01167
+        "upstream_inference_cost": 0.038763,
+        "upstream_inference_prompt_cost": 0.028728,
+        "upstream_inference_completions_cost": 0.010035
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.95,
+    "latency_s": 18.62,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:02:03Z"
 }

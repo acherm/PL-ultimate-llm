@@ -49,48 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (generic COBOL-85 compatible)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses LINE SEQUENTIAL, GOBACK, and 88-level condition with HIGH-VALUE typical of GnuCOBOL student exercises",
         "evidence": [
-          "ORGANIZATION IS LINE SEQUENTIAL (common in GnuCOBOL/Micro Focus)",
-          "88-level condition on FD record (END-OF-MEMBER-FILE VALUE HIGH-VALUE)",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "88 END-OF-MEMBER-FILE VALUE HIGH-VALUE",
           "SET END-OF-MEMBER-FILE TO TRUE",
-          "END-READ scope terminator",
-          "GOBACK statement",
-          "VALUE 40 THRU 99 on 88-level"
+          "END-READ"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads a sequential member data file and produces a formatted membership report with page headers, column headings, detail lines, and page footers. It handles pagination by tracking line count and advancing to a new page every 40 lines.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Golf club membership report generation",
+        "summary": "Reads member records from a sequential file (member.dat) and produces a formatted membership report (member.rpt) for a golf club. The report includes page headers, column headings, member detail lines, and page footers with page numbers, paginating every 40 lines.",
         "program_type": "batch"
       },
       "notable_features": [
-        "LINE SEQUENTIAL organization for input file",
-        "88-level condition on FD record item for EOF detection",
-        "AFTER ADVANCING PAGE for page breaks",
-        "Page and line count management with 88-level NEW-PAGE-REQUIRE",
-        "No COMP-3, no EXEC SQL, no EXEC CICS"
+        "LINE SEQUENTIAL file organization",
+        "88-level condition on record for EOF detection (HIGH-VALUE)",
+        "Page break logic using 88-level condition NEW-PAGE-REQUIRE with THRU range",
+        "AFTER ADVANCING PAGE for page eject",
+        "GOBACK instead of STOP RUN"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program is a straightforward student-level report-writing exercise for a golf club membership system. The AUTHOR field 'KITTIKUN' and the simple structure strongly suggest an academic context. No truncation or encoding issues observed."
+      "notes": "No COPY statements, no COMP-3, no SQL or CICS. Simple structure consistent with a student assignment. Author name 'KITTIKUN' suggests academic context. All lines within 72 characters confirming fixed format."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1897,
-      "completion_tokens": 464,
-      "total_tokens": 2361,
-      "cost": 0.012651,
+      "prompt_tokens": 3275,
+      "completion_tokens": 373,
+      "total_tokens": 3648,
+      "cost": 0.01542,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.012651,
-        "upstream_inference_prompt_cost": 0.005691,
-        "upstream_inference_completions_cost": 0.00696
+        "upstream_inference_cost": 0.01542,
+        "upstream_inference_prompt_cost": 0.009825,
+        "upstream_inference_completions_cost": 0.005595
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 10.35,
+    "provider": "Anthropic",
+    "latency_s": 8.43,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:43:59Z"
 }

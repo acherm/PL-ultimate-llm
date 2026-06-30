@@ -49,54 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), developed by NACL for Japan Medical Association. Uses GnuCOBOL/OpenCOBOL conventions with Unix-style file paths (/var/tmp/), COPY statements with .INC files, and no COMP-3 usage.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN FILE-NAME ... ORGANIZATION IS SEQUENTIAL / FILE STATUS IS",
-          "PIC X(nn), PIC 9(nn) field definitions throughout",
-          "COPY directives referencing named copybooks (K02SCR-SPA, COMMON-SPA, etc.)",
-          "File paths use /var/tmp/ Unix-style paths, consistent with GnuCOBOL/Linux deployment",
-          "PROGRAM-ID ORCGK02NYU matches ORCA (JMA Open Source medical receipt software)",
-          "No EXEC SQL or EXEC CICS; no COMP-3; fixed-format source"
+          "PROGRAM-ID ORCGK02NYU",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "file paths /var/tmp/K02SPASCR",
+          "COPY 'CPK02SPASCR.INC'",
+          "COPY 'COMMON-SPA'",
+          "no EXEC CICS/SQL",
+          "no COMP-3",
+          "ORGANIZATION IS SEQUENTIAL with FILE STATUS"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch/interactive COBOL program that handles hospital admission (入院) data entry for the ORCA JMA standard medical receipt (billing) software system. It manages patient admission records, insurance combinations, medical procedure input, and related validations for Japanese medical billing. The program is part of the 'ORCGK02NYU' component dealing with inpatient admission entry.",
-        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt system - hospital admission (nyuin) medical procedure entry/registration subsystem for Japanese national health insurance billing",
+        "summary": "This program is the hospital admission (nyuin) medical procedure input component of the JMA ORCA standard receipt software system. It handles entry and registration of medical procedures for inpatient care, including insurance combination checks, prescription checks, and various medical billing validations. It is a large, production-grade batch/interactive program with extensive revision history from 2002 to 2014.",
         "program_type": "batch"
       },
       "notable_features": [
+        "64 COPY statements referencing external copybooks (.INC files)",
+        "90 CALL statements indicating heavy subprogram architecture",
+        "597 PERFORM statements",
+        "128 GOTO statements",
+        "Unix file paths in WORKING-STORAGE (/var/tmp/)",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "Extensive revision history spanning 2002-2014",
+        "Large program: 11526 lines, ~479KB",
         "No EXEC SQL or EXEC CICS",
         "No COMP-3 usage",
-        "Heavy use of COPY directives for screen SPA areas and common parameters",
-        "Unix file paths (/var/tmp/) indicating Linux/GnuCOBOL environment",
-        "Japanese comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1)",
-        "Large program: 11526 lines, 597 PERFORMs, 90 CALLs, 128 GOTOs",
-        "Extensive revision history in comments spanning 2002–2014",
-        "Fixed-format source with max line length 74",
-        "Screen SPA (Scratch Pad Area) parameter files for terminal-based UI",
-        "Multiple flag and index working-storage areas typical of production ORCA modules"
+        "Multiple SPA (scratchpad area) data structures for screen management"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known open-source ORCA (JMA standard receipt software) project for Japanese medical billing. Japanese comments are stored in EUC-JP or Shift-JIS encoding but were decoded as latin-1, resulting in garbled multi-byte characters in the comment display. The program is clearly production-grade with a long revision history (2002–2014). No COPY statements resolved in the truncated view but COPY directives are present (copy_count reported as 0 by mechanical scan, possibly because the COPY keyword appears inside FD/WS sections and was not counted, or copybooks are inlined). The 'copy_count: 0' mechanical indicator appears to be an undercount given visible COPY statements in the source."
+      "notes": "Comments are encoded in Japanese EUC-JP but decoded as latin-1, resulting in mojibake in the visible text. The program is clearly part of the well-known JMA ORCA open-source medical receipt system used widely in Japanese clinics. Source is truncated at 16000 chars but sufficient evidence exists for classification. The ORCGK02NYU program ID corresponds to the K02 (shinryo koui nyuryoku - medical procedure input) hospitalization entry screen component."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9718,
-      "completion_tokens": 830,
-      "total_tokens": 10548,
-      "cost": 0.041604,
+      "prompt_tokens": 11096,
+      "completion_tokens": 618,
+      "total_tokens": 11714,
+      "cost": 0.042558,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.041604,
-        "upstream_inference_prompt_cost": 0.029154,
-        "upstream_inference_completions_cost": 0.01245
+        "upstream_inference_cost": 0.042558,
+        "upstream_inference_prompt_cost": 0.033288,
+        "upstream_inference_completions_cost": 0.00927
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +121,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.81,
+    "latency_s": 18.48,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:49:16Z"
 }

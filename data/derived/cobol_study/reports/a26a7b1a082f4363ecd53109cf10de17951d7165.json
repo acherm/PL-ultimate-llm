@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a26a7b1a082f4363ecd53109cf10de17951d7165",
+    "sha1_git": "a26a7b1a082f4363ecd53109cf10de17951d7165",
+    "filename": "/fdsjsc.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7412,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a26a7b1a082f4363ecd53109cf10de17951d7165/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a26a7b1a082f4363ecd53109cf10de17951d7165/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7412,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 169,
+    "blank_lines": 24,
+    "comment_lines": 7,
+    "code_lines": 138,
+    "comment_ratio": 0.048,
+    "max_line_length": 121,
+    "avg_line_length": 41.9,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FDSJSC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 11,
+    "call_count": 0,
+    "perform_count": 10,
+    "goto_count": 1,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-2002",
+        "detail": "Micro Focus Object COBOL / NetExpress or similar OO COBOL with Java interop via REPOSITORY CLASS declarations and :> method invocation syntax. Likely part of the PRAGMA [FM] framework interfacing with a Jasper Reports web service client (FdsJSClient).",
+        "evidence": [
+          "REPOSITORY. CLASS FdsJSClient AS \"jswsc.FdsJSClient\"",
+          "CLASS Jstring AS \"java.lang.String\"",
+          "set FDSCLI to FdsJSClient:>new()",
+          "FDSCLI:>setWebServiceUrl",
+          "try/catch exception",
+          "EXCEPTION-OBJECT:>getMessage()",
+          "OBJECT REFERENCE",
+          "Event Status Is Event-Status",
+          "CRT Status Is CRT-Status"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Jasper Reports web service client wrapper — sends report parameters (strings, numbers, dates, collections) to a Jasper Server via a Java-based web service client class (FdsJSClient/jswsc).",
+        "summary": "This subprogram (FDSJSC) acts as a COBOL wrapper around a Java-based Jasper Reports web service client. It accepts report parameters of various types (single values and collections of strings, numbers, dates, decimals) via a linkage section, packages them into a Java Vector, and invokes the FdsJSClient to run the report. It returns a status code indicating success or failure.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "OO COBOL with REPOSITORY CLASS declarations mapping to Java classes",
+        "Java method invocation via :> syntax",
+        "try/catch/end-try exception handling",
+        "OBJECT REFERENCE data items",
+        "Interop with java.util.Vector, java.lang.String, java.text.SimpleDateFormat, java.lang.Long",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "Heavy use of COPY statements (11 copybooks)",
+        "LINKAGE SECTION with returning RS",
+        "EVALUATE TRUE with OO condition names"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly Micro Focus OO COBOL (likely NetExpress or later) with Java interoperability. The PRAGMA [FM] author tag and Italian-style naming (tabelle, stampa, fdtb) suggest an Italian software house. The program is a production-quality subprogram within a larger framework. Date written 1997 but OO features suggest a later revision or a late-1990s Micro Focus product."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4205,
+      "completion_tokens": 614,
+      "total_tokens": 4819,
+      "cost": 0.021825,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021825,
+        "upstream_inference_prompt_cost": 0.012615,
+        "upstream_inference_completions_cost": 0.00921
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.88,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:58:01Z"
+}

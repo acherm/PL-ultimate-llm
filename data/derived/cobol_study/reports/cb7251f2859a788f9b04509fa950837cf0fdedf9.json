@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cb7251f2859a788f9b04509fa950837cf0fdedf9",
+    "sha1_git": "cb7251f2859a788f9b04509fa950837cf0fdedf9",
+    "filename": "/assign_var.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5045,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cb7251f2859a788f9b04509fa950837cf0fdedf9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cb7251f2859a788f9b04509fa950837cf0fdedf9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5045,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 147,
+    "blank_lines": 38,
+    "comment_lines": 13,
+    "code_lines": 96,
+    "comment_ratio": 0.119,
+    "max_line_length": 77,
+    "avg_line_length": 33.3,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "assign-var"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 5,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 11,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2014",
+        "detail": "GnuCOBOL with modern extensions: OCCURS UNBOUNDED, inline intrinsic functions via REPOSITORY, EXIT PERFORM, EXIT PARAGRAPH, inline CONCATENATE as function argument",
+        "evidence": [
+          "function all intrinsic",
+          "occurs 0 to unbounded times depending on",
+          "exit perform",
+          "exit paragraph",
+          "call using concatenate(...)",
+          "test-numval intrinsic function"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Part of a COBOL-based interpreter or scripting engine that manages variables; assigns values to named variables in a variable table",
+        "summary": "This subprogram parses an assignment statement (e.g. VAR=VALUE), looks up or allocates a variable in a linkage-section variable table, and assigns the parsed value. It handles both integer and string types, stripping quotes from strings, and delegates logging and allocation to called subprograms.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "OCCURS 0 TO UNBOUNDED TIMES DEPENDING ON (ODO unbounded)",
+        "FUNCTION ALL INTRINSIC via REPOSITORY",
+        "EXIT PERFORM and EXIT PARAGRAPH",
+        "Inline intrinsic function calls as CALL arguments (CONCATENATE, TRIM, UPPER-CASE)",
+        "REDEFINES with numeric PIC on variable-value",
+        "COPY copybook reference",
+        "CALL to external subprograms: logger, allocate-var",
+        "TEST-NUMVAL intrinsic function"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This appears to be part of a larger COBOL interpreter/scripting project by Erik Eriksen (circa 2021). The code is well-structured and uses advanced GnuCOBOL features. One line slightly exceeds column 72 (long_lines_over_72=1). No SQL or CICS usage."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3551,
+      "completion_tokens": 464,
+      "total_tokens": 4015,
+      "cost": 0.017613,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017613,
+        "upstream_inference_prompt_cost": 0.010653,
+        "upstream_inference_completions_cost": 0.00696
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.82,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:52:55Z"
+}

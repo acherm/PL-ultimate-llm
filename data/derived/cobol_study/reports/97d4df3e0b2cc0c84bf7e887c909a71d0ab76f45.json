@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:97d4df3e0b2cc0c84bf7e887c909a71d0ab76f45",
+    "sha1_git": "97d4df3e0b2cc0c84bf7e887c909a71d0ab76f45",
+    "filename": "/lgicus01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7014,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:97d4df3e0b2cc0c84bf7e887c909a71d0ab76f45/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:97d4df3e0b2cc0c84bf7e887c909a71d0ab76f45/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7014,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 166,
+    "blank_lines": 21,
+    "comment_lines": 49,
+    "code_lines": 96,
+    "comment_ratio": 0.338,
+    "max_line_length": 72,
+    "avg_line_length": 41.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LGICUS01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/TS mainframe program, part of the IBM CICS Insurance Application (LGICUS01 - Inquire Customer). Copyright IBM Corp. 2011-2020.",
+        "evidence": [
+          "EXEC CICS LINK",
+          "EXEC CICS ABEND ABCODE",
+          "EXEC CICS ASKTIME",
+          "EXEC CICS FORMATTIME",
+          "DFHCOMMAREA",
+          "EIBTRNID/EIBTRMID/EIBTASKN/EIBCALEN",
+          "COPY LGPOLICY / COPY LGCMAREA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "IBM CICS Insurance Application sample - customer inquiry business logic layer",
+        "summary": "This CICS online program (LGICUS01) handles customer inquiry requests by validating the COMMAREA, then linking to a database program (LGICDB01) to retrieve customer details. It also includes error handling that writes messages to a TDQ via LGSTSQ.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS LINK to LGICDB01 and LGSTSQ",
+        "EXEC CICS ABEND with ABCODE",
+        "EXEC CICS ASKTIME/FORMATTIME for timestamp",
+        "DFHCOMMAREA with COPY LGCMAREA",
+        "COPY LGPOLICY copybook",
+        "EIB fields usage (EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN)",
+        "COMMAREA length validation logic",
+        "TDQ error logging pattern"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is part of the well-known IBM CICS Insurance Application sample (LEGI* program family). All four COBOL divisions present, fixed format, no lines exceed 72 characters. High comment ratio (34%) consistent with IBM sample/tutorial code but structured as production-like CICS application."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3985,
+      "completion_tokens": 494,
+      "total_tokens": 4479,
+      "cost": 0.019365,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019365,
+        "upstream_inference_prompt_cost": 0.011955,
+        "upstream_inference_completions_cost": 0.00741
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.15,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:59:32Z"
+}

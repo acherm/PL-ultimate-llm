@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b84ee0fabd85dae3810f450ce4530beb45bd93fb",
+    "sha1_git": "b84ee0fabd85dae3810f450ce4530beb45bd93fb",
+    "filename": "/MyGrade.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4667,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b84ee0fabd85dae3810f450ce4530beb45bd93fb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b84ee0fabd85dae3810f450ce4530beb45bd93fb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4667,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 129,
+    "blank_lines": 16,
+    "comment_lines": 26,
+    "code_lines": 87,
+    "comment_ratio": 0.23,
+    "max_line_length": 73,
+    "avg_line_length": 35.2,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MYGRADE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 22,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used; no vendor-specific extensions visible. Likely compiled with GnuCOBOL or similar open-source compiler given student context and LINE SEQUENTIAL usage.",
+        "evidence": [
+          "EVALUATE TRUE ... END-EVALUATE",
+          "PERFORM UNTIL ... END-PERFORM",
+          "END-READ",
+          "88-level condition name with HIGH-VALUE",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student grade calculation program, likely a university COBOL programming exercise. Reads subject records with grades and attempts to compute GPA averages.",
+        "summary": "Reads a student grade file (mygrade.txt) containing subject IDs, names, units, and letter grades. Translates letter grades (A, B+, B, etc.) to numeric grade points using EVALUATE. Intended to compute average GPA scores overall and by faculty (science vs computer science), though the averaging logic is commented out and the program is incomplete.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "REDEFINES clause used for ID-SCI and ID-COM-SCI to inspect subject ID prefix",
+        "88-level condition name on file record for EOF detection",
+        "EVALUATE TRUE with multiple WHEN clauses for grade translation",
+        "Large block of commented-out averaging/output logic (002-AVG paragraph)",
+        "Incomplete IF statements with no body (ID-SCI, ID-COM-SCI checks)",
+        "LINE SEQUENTIAL file organization",
+        "GOBACK used instead of STOP RUN"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is clearly incomplete: the 001-PROCESS paragraph has two IF statements with no body and no END-IF, and the entire averaging/output section (002-AVG) is commented out. The REDEFINES for ID-SCI uses PIC A (single char) and ID-COM-SCI uses PIC AA (two chars) to check subject ID prefixes, but the comparison values (3 and 31) appear incorrect for alphabetic fields. Author name 'WATCHARAPHON' suggests a Thai student. One line slightly exceeds 72 characters per mechanical indicators."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3911,
+      "completion_tokens": 530,
+      "total_tokens": 4441,
+      "cost": 0.019683,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019683,
+        "upstream_inference_prompt_cost": 0.011733,
+        "upstream_inference_completions_cost": 0.00795
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.57,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:38:01Z"
+}

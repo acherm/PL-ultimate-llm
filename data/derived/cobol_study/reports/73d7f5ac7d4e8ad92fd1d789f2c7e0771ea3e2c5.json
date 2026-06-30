@@ -49,46 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Simple interactive BMI calculator, likely compiled with GnuCOBOL; no vendor-specific extensions",
         "evidence": [
-          "END-IF terminators (COBOL-85+)",
-          "COMPUTE with arithmetic expression",
-          "IF ... AND < (abbreviated condition, COBOL-85)",
-          "ACCEPT/DISPLAY for interactive I/O typical of GnuCOBOL/Micro Focus",
-          "No ENVIRONMENT DIVISION present"
+          "IDENTIFICATION DIVISION",
+          "PROGRAM-ID. BMI",
+          "COMPUTE BMI = WEIGHT / ((HEIGHT/100) * 2)",
+          "END-IF",
+          "ACCEPT/DISPLAY pattern"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Calculates Body Mass Index (BMI) from user-entered height (cm) and weight (kg), then displays the BMI value and a classification (Underweight, Normal weight, Overweight, Obesity).",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Health/fitness BMI calculation used as a programming exercise",
+        "summary": "Prompts the user to enter height in centimeters and weight in kilograms, computes BMI, and displays a weight category (Underweight, Normal weight, Overweight, or Obesity).",
         "program_type": "demo"
       },
       "notable_features": [
-        "Interactive ACCEPT/DISPLAY for console I/O",
-        "Abbreviated combined conditions (IF BMI >= 18.5 AND < 24.9)",
-        "COMPUTE with inline arithmetic expression",
-        "Note: BMI formula appears incorrect — divides by (HEIGHT/100)*2 instead of (HEIGHT/100)^2"
+        "Interactive ACCEPT/DISPLAY I/O",
+        "COMPUTE with arithmetic expression",
+        "Abbreviated combined condition (AND <)",
+        "No FILE or ENVIRONMENT DIVISION"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The BMI formula has a bug: it computes WEIGHT / ((HEIGHT/100) * 2) instead of WEIGHT / ((HEIGHT/100) ** 2). This is consistent with a student exercise. The AUTHOR field names an individual (Ananchai Muensai), further supporting a student/tutorial origin. No ENVIRONMENT DIVISION is present, which is valid but minimal."
+      "notes": "BMI formula appears slightly incorrect (divides by (HEIGHT/100)*2 instead of (HEIGHT/100)^2), which is typical of a student exercise. Author name suggests Thai origin. No vendor-specific features visible; dialect assignment is uncertain."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1113,
-      "completion_tokens": 471,
-      "total_tokens": 1584,
-      "cost": 0.010404,
+      "prompt_tokens": 2491,
+      "completion_tokens": 309,
+      "total_tokens": 2800,
+      "cost": 0.012108,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -97,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010404,
-        "upstream_inference_prompt_cost": 0.003339,
-        "upstream_inference_completions_cost": 0.007065
+        "upstream_inference_cost": 0.012108,
+        "upstream_inference_prompt_cost": 0.007473,
+        "upstream_inference_completions_cost": 0.004635
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 9.04,
+    "provider": "Anthropic",
+    "latency_s": 8.48,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:53:29Z"
 }

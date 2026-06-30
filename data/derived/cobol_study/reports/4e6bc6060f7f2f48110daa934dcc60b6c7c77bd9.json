@@ -49,52 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY-based screen/linkage layout typical of ORCA subsystems.",
         "evidence": [
-          "PROGRAM-ID. ORCGW13",
-          "COPY directives with quoted filenames (e.g. COPY \"COMMON-SPA\")",
-          "OCCURS clauses, PIC X/9 definitions consistent with COBOL-85",
-          "BINARY usage (PIC S9(9) BINARY)",
-          "Fixed-format source with standard division structure",
-          "No EXEC SQL or EXEC CICS — standalone batch/subprogram style",
-          "LINKAGE SECTION with SCRAREA and multiple COPY includes typical of ORCA/OpenCOBOL GUI framework"
+          "PROGRAM-ID ORCGW13",
+          "COPY 'COMMON-SPA'",
+          "COPY 'ORCA-SPA'",
+          "COPY 'ORCA-DBPATH'",
+          "COPY 'MCPAREA'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "no EXEC CICS/SQL",
+          "PIC S9(9) BINARY (not COMP-3)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system used in Japanese medical billing. It handles system management information settings for a medical institution (specifically disaster/casualty medical facility information, W13 screen). It manages screen state, table data for medical fee classifications, tax categories, equipment codes, and damage classification lists.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical insurance receipt billing system - system management information settings for medical institution/disaster injury classification and special device consumption tax handling",
+        "summary": "ORCGW13 is a screen-handling subprogram within the JMA ORCA medical receipt software system. It manages system administration settings related to medical institution information (W13 screen), including injury/disaster classification, point calculation categories, tax classifications, and special device lists. It is called as a linked subprogram receiving screen areas and SPA (Scratchpad Area) via LINKAGE SECTION.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS rendered as latin-1 mojibake)",
-        "Extensive use of COPY statements for screen layouts (W01.INC through W99.INC) and data structures",
-        "LINKAGE SECTION with MCP (Message Control Program) area — typical of ORCA's OpenCOBOL/GnuCOBOL GUI framework",
-        "OCCURS clauses for list/table management (up to 50 entries for equipment codes, 40 for damage classifications)",
-        "PIC S9(9) BINARY for row indices",
-        "No COMP-3, no EXEC SQL, no EXEC CICS",
-        "28 CALL statements, 170 PERFORMs, 32 GOTOs — substantial procedural logic",
-        "Open Source license header (JMA Open Source License)"
+        "54 COPY statements for screen layouts and shared data structures",
+        "LINKAGE SECTION with SCRAREA covering W01-W30 and other screen copybooks",
+        "SPA (Scratchpad Area) pattern typical of ORCA online screen programs",
+        "PIC S9(9) BINARY for row indices (no COMP-3 usage)",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "OCCURS tables for classification lists (RSIIRYOKBN, TENKBN, TAXKBN, SKJKBN, KIZAITAXKBN, KOTEIKBN)",
+        "28 CALL statements, 170 PERFORM, 32 GOTO",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in latin-1 but contains Japanese text (EUC-JP or Shift-JIS) that appears as mojibake. The source is truncated at 16000 chars out of ~110KB total. The program is part of the well-known open-source ORCA medical receipt software project maintained by the Japan Medical Association. The COPY statements reference many external copybooks that are not shown. The W01.INC–W30.INC etc. includes suggest a screen-based subprogram driven by an MCP (screen/widget) framework typical of ORCA's GnuCOBOL/OpenCOBOL architecture."
+      "notes": "File is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments. Source is truncated at 16000 chars out of 110711 bytes (2737 lines). The ORCA system is a well-known open-source Japanese medical receipt software maintained by JMA. Program follows ORCA conventions with MCP (Message Control Program) linkage pattern."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7383,
-      "completion_tokens": 784,
-      "total_tokens": 8167,
-      "cost": 0.033909,
+      "prompt_tokens": 8761,
+      "completion_tokens": 629,
+      "total_tokens": 9390,
+      "cost": 0.035718,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033909,
-        "upstream_inference_prompt_cost": 0.022149,
-        "upstream_inference_completions_cost": 0.01176
+        "upstream_inference_cost": 0.035718,
+        "upstream_inference_prompt_cost": 0.026283,
+        "upstream_inference_completions_cost": 0.009435
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.78,
+    "latency_s": 16.53,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:30:54Z"
 }

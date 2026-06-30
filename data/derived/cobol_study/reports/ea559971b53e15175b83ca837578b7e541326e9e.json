@@ -49,52 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / Micro Focus COBOL on Linux",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), running on Linux, developed by NACL. Typical GnuCOBOL/OpenCOBOL target for the ORCA project.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "Fixed-format source layout",
-          "Comment header states 'OS LINUX'",
-          "Project 'ORCA' is the well-known JMA open-source medical receipt software running on Linux with GnuCOBOL/OpenCOBOL",
-          "No EXEC SQL or EXEC CICS blocks",
-          "PERFORM count 472, CALL count 68 consistent with large production COBOL"
+          "PROGRAM-ID. ORCS02",
+          "OS LINUX in comments",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "no EXEC CICS/SQL",
+          "COPY count 35, CALL count 68 consistent with GnuCOBOL batch subprogram"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "ORCS02 is a subprogram within the JMA ORCA medical receipt software system, responsible for calculating patient co-payment amounts (負担金計算) for inpatient (入院) billing. It handles complex Japanese national health insurance co-payment rules including elderly patient limits, income-based caps, regional public expense subsidies, and various special insurance combinations.",
-        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/claim calculation) — specifically inpatient co-payment and public expense burden calculation (負担金額算定サブ for 入院用)",
+        "summary": "ORCS02 is a subprogram in the JMA ORCA medical receipt system that calculates patient co-payment amounts for inpatient claims under Japanese national health insurance rules. It handles numerous regional public expense subsidy schemes, elderly patient thresholds, income-based limits, and special calculation rules for various prefectures and insurance combinations. The program has an extensive revision history spanning 2002–2008 covering successive regulatory changes.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — pure batch computation subprogram",
-        "Extensive Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake)",
-        "Very large file: ~1 MB, 20,000+ lines, 472 PERFORMs — clearly production-grade",
-        "68 CALL statements indicating heavy use of sub-module architecture",
-        "Detailed revision history spanning 2002–2008 with 100+ named patches",
-        "PIC 9(n)V9(m) decimal arithmetic for monetary calculations",
-        "No COMP-3 usage despite financial domain (unusual)",
-        "Fixed-format COBOL with occasional long lines (120 over 72 chars)"
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "Very large single program (~20k lines, ~1MB) with 472 PERFORMs and 68 CALLs",
+        "35 COPY statements indicating heavy use of shared copybooks",
+        "No EXEC SQL or EXEC CICS — pure batch subprogram",
+        "Detailed multi-year revision history in comments (01.00.01 through 04.03.01)",
+        "No COMP-3 usage despite financial calculations",
+        "Fixed-format source with occasional long lines (120 over 72 cols)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the open-source JMA ORCA (Japan Medical Association standard receipt software) project. Japanese text in comments is EUC-JP encoded but was decoded as latin-1, producing mojibake. The program is a co-payment calculation subprogram for inpatient claims. The dialect is most likely GnuCOBOL/OpenCOBOL as ORCA is known to use that compiler on Linux. No COMP-3 is present despite financial calculations, which may reflect a deliberate style choice or compiler default. Source was truncated at 16,000 chars; the full file is ~1 MB."
+      "notes": "File decoded with latin-1 but comments are actually EUC-JP (Japanese) encoded, causing mojibake in the displayed text. Content is clearly the JMA ORCA open-source medical receipt system well-known in Japanese healthcare IT. Source truncated to first 16000 chars but structural indicators confirm a very large, mature production program."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 15162,
-      "completion_tokens": 741,
-      "total_tokens": 15903,
-      "cost": 0.056601,
+      "prompt_tokens": 16540,
+      "completion_tokens": 573,
+      "total_tokens": 17113,
+      "cost": 0.058215,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.056601,
-        "upstream_inference_prompt_cost": 0.045486,
-        "upstream_inference_completions_cost": 0.011115
+        "upstream_inference_cost": 0.058215,
+        "upstream_inference_prompt_cost": 0.04962,
+        "upstream_inference_completions_cost": 0.008595
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +114,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.26,
+    "provider": "Anthropic",
+    "latency_s": 16.06,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:49:58Z"
 }

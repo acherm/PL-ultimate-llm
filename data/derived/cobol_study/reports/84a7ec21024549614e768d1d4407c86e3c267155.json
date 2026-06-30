@@ -49,56 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (Japanese medical open-source)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); GnuCOBOL/OpenCOBOL dialect used in the ORCA project, program ORCBMRCSV09 for generating medical information CSV data",
         "evidence": [
-          "PERFORM ... UNTIL with END-PERFORM style",
-          "UNSTRING ... END-UNSTRING",
-          "INITIALIZE verb used extensively",
-          "OCCURS ... INDEXED BY clause",
-          "LINKAGE SECTION with USING on PROCEDURE DIVISION",
-          "LINE SEQUENTIAL file organization",
-          "COPY statements with REPLACING using // delimiters (GnuCOBOL style)",
-          "CALL to external subprograms like 'ORCSGETTEMP'",
-          "Fixed-format source, max line length 74"
+          "PROGRAM-ID. ORCBMRCSV09",
+          "COPY 'CPASGNPARA.INC'",
+          "COPY 'MCPDATA.INC'",
+          "COPY 'MCPAREA'",
+          "COPY 'COMMON-SPA'",
+          "CALL 'ORCSGETTEMP'",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "JMA Open Source License comment header"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This batch program generates medical care information CSV data files for the ORCA (JMA standard receipt software) system. It reads patient, insurance, diagnosis, and medical-act records from a database and writes formatted CSV output representing clinical/receipt data. It is part of the Japanese Medical Association's open-source electronic medical record and billing system.",
-        "domain": "healthcare / medical billing (Japanese receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) processing system - JMA ORCA project; this program creates medical information CSV data (診療情報データ作成) for outpatient/inpatient medical billing",
+        "summary": "This program generates medical information CSV data (診療情報データ) as part of the JMA ORCA standard receipt software system. It reads patient information, insurance data, medical procedure records, and diagnosis data from the ORCA database and writes formatted CSV output records. It handles various record types including patient info, insurance combinations, medical procedures, and diagnoses.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese comments and variable names (UTF-8 encoded)",
-        "Extensive use of COPY statements for record layouts (copybooks)",
-        "UNSTRING used to parse comma-delimited command parameters",
-        "OCCURS with INDEXED BY for table handling",
-        "LINE SEQUENTIAL file organization for CSV output",
-        "No EXEC SQL or EXEC CICS — DB access via CALL to subprograms",
-        "REDEFINES used for numeric/character dual-view of fields",
-        "14 external CALL targets (subprograms for DB, utilities)",
-        "199 PERFORM statements indicating complex procedural logic",
-        "Open-source JMA ORCA project license header"
+        "32 COPY statements referencing ORCA-specific copybooks",
+        "UNSTRING for command-line parameter parsing",
+        "OCCURS with INDEXED clause",
+        "REDEFINES clause",
+        "LINE SEQUENTIAL file organization",
+        "LINKAGE SECTION with COMMAND-PARAM",
+        "Japanese comments and data names (UTF-8 encoded)",
+        "Large internal tables (TBL-NAIYOU-DATA OCCURS 20, TBL-NAIYOU-TBL OCCURS 400)",
+        "No EXEC SQL or EXEC CICS (uses ORCA's own DB abstraction layer via CALL)",
+        "14 CALL statements to ORCA subprograms"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated to first 16000 characters; the full program is 2729 lines. The file is genuine production COBOL from the Japanese open-source ORCA medical receipt system. UTF-8 encoding is confirmed and Japanese text is present in comments and data names. The COPY statement delimiter style (//) is characteristic of GnuCOBOL. No embedded SQL or CICS; database interaction is abstracted through CALL subprograms."
+      "notes": "Source is UTF-8 encoded with Japanese comments and some Japanese field name components. File is truncated at 16000 chars out of ~117KB total (2729 lines). The program is part of the well-known open-source JMA ORCA medical receipt system used in Japanese medical practices. No COMP-3 usage detected despite being a financial/medical billing system, which is consistent with GnuCOBOL ORCA style."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6872,
-      "completion_tokens": 667,
-      "total_tokens": 7539,
-      "cost": 0.030621,
+      "prompt_tokens": 8250,
+      "completion_tokens": 634,
+      "total_tokens": 8884,
+      "cost": 0.03426,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.030621,
-        "upstream_inference_prompt_cost": 0.020616,
-        "upstream_inference_completions_cost": 0.010005
+        "upstream_inference_cost": 0.03426,
+        "upstream_inference_prompt_cost": 0.02475,
+        "upstream_inference_completions_cost": 0.00951
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +120,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 16.17,
+    "provider": "Anthropic",
+    "latency_s": 19.51,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:30:11Z"
 }

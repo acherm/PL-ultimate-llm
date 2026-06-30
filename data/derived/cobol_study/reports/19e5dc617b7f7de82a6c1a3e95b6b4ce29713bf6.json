@@ -49,53 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM CICS/BMS online program; part of the AWS CardDemo sample application. Uses DFHCOMMAREA, DFHBMSCA, DFHAID copybooks and EXEC CICS commands typical of IBM mainframe CICS environment.",
         "evidence": [
-          "EXEC CICS HANDLE ABEND LABEL(...) END-EXEC",
-          "EXEC CICS usage throughout (has_exec_cics: true)",
-          "DFHCOMMAREA, EIBCALEN, DFHBMSCA, DFHAID copybooks",
-          "COPY DFHBMSCA / COPY DFHAID (IBM-supplied BMS copybooks)",
-          "PIC S9(09) COMP (binary computational fields)",
-          "Fixed format, max line length 72, no long lines",
-          "88-level condition names with VALUE clauses",
-          "OCCURS 1 TO 32767 TIMES DEPENDING ON EIBCALEN in LINKAGE SECTION"
+          "EXEC CICS HANDLE ABEND",
+          "COPY DFHBMSCA",
+          "COPY DFHAID",
+          "DFHCOMMAREA",
+          "EIBCALEN",
+          "LIT-THISTRANID VALUE 'ALS9'",
+          "EXEC CICS present (has_exec_cics=true)",
+          "max_line_length=72 fixed format"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "COACTVWS is a CICS presentation-layer program for an Account View screen (transaction ALS9). It accepts an account ID from the user, calls the RPC program COACTVWL to retrieve account and customer data, and displays the results on a BMS map (COACTVW/CACTVWA). It handles navigation to/from menu, card list, card detail, and card update screens.",
-        "domain": "banking",
+        "domain": "banking-finance",
+        "domain_detail": "Credit card account management system (AWS CardDemo). This is the presentation layer for viewing account details.",
+        "summary": "COACTVWS is a CICS online presentation program (transaction ALS9) that displays credit card account details. It accepts an account ID from the user, calls the RPC program COACTVWL to retrieve account and customer data, and renders the results on a BMS map screen. It handles navigation to/from menu, card list, and card update screens.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS (BMS map send/receive, HANDLE ABEND, program LINK/XCTL)",
-        "RPC pattern: calls COACTVWL via CICS LINK passing WS-RPC-COMMAREA",
-        "BMS copybooks: DFHBMSCA, DFHAID, COACTVW mapset",
-        "Multiple COPY statements for common copybooks (COCOM01Y, CSDAT01Y, CSMSG01Y, CSMSG02Y, CSUSR01Y, COTTL01Y, CVCRD01Y)",
-        "88-level condition names used extensively for flags and return codes",
-        "LINKAGE SECTION with DFHCOMMAREA using DEPENDING ON EIBCALEN",
-        "No EXEC SQL (pure CICS, no DB2 direct access in this program)",
-        "Amazon/AWS Apache 2.0 licensed (CardDemo open-source sample application)"
+        "EXEC CICS (BMS map-based online transaction)",
+        "COPY DFHBMSCA and DFHAID (IBM-supplied CICS copybooks)",
+        "DFHCOMMAREA with EIBCALEN for commarea handling",
+        "RPC-style CALL to COACTVWL for data retrieval",
+        "11 COPY statements including BMS map copybook",
+        "88-level condition names extensively used",
+        "HANDLE ABEND routine",
+        "Fixed-format source, max line length 72",
+        "AWS CardDemo open-source sample application (Apache 2.0 license)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is part of the AWS CardDemo open-source COBOL sample application (Apache 2.0 license, copyright Amazon.com). The source is truncated at 16000 chars but the structure is clear. All four COBOL divisions are present. The program follows standard IBM CICS/BMS patterns consistent with IBM Enterprise COBOL targeting z/OS. No COMP-3 fields are used in the visible portion, though the copybooks (not shown) may contain them."
+      "notes": "Source is truncated to first 16000 chars; the PROCEDURE DIVISION is only partially visible. The program is from the publicly available AWS CardDemo COBOL modernization reference application on GitHub. No COMP-3 usage detected despite financial data fields (monetary amounts use S9(10)V99 without COMP-3)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5281,
-      "completion_tokens": 777,
-      "total_tokens": 6058,
-      "cost": 0.027498,
+      "prompt_tokens": 6659,
+      "completion_tokens": 546,
+      "total_tokens": 7205,
+      "cost": 0.028167,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.027498,
-        "upstream_inference_prompt_cost": 0.015843,
-        "upstream_inference_completions_cost": 0.011655
+        "upstream_inference_cost": 0.028167,
+        "upstream_inference_prompt_cost": 0.019977,
+        "upstream_inference_completions_cost": 0.00819
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +118,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.61,
+    "provider": "Anthropic",
+    "latency_s": 14.48,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:59:03Z"
 }

@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6922b6b11f4ac66db9a2383e056ae4599dd3bc4a",
+    "sha1_git": "6922b6b11f4ac66db9a2383e056ae4599dd3bc4a",
+    "filename": "/PW03017R.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 42852,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6922b6b11f4ac66db9a2383e056ae4599dd3bc4a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6922b6b11f4ac66db9a2383e056ae4599dd3bc4a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 42852,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 899,
+    "blank_lines": 81,
+    "comment_lines": 39,
+    "code_lines": 779,
+    "comment_ratio": 0.048,
+    "max_line_length": 210,
+    "avg_line_length": 46.7,
+    "long_lines_over_72": 94,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW03017R"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 8,
+    "perform_count": 78,
+    "goto_count": 0,
+    "pic_count": 117,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus/GnuCOBOL with htmlpp preprocessor and $set directives; free-format source with $if/$end conditional compilation; uses external-form and local-storage section typical of Micro Focus or GnuCOBOL web/CGI extensions. Portuguese-language Brazilian business system (PW prefix naming convention).",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "$set constant PadraoCSV",
+          "$if PadraoCSV defined / $end",
+          "local-storage section",
+          "cgi-input is external-form",
+          "identified by \"cdArmazem\"",
+          "copy PCW902.CPY",
+          "decimal-point is comma"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Warehouse/stock validity report for a Brazilian distribution or retail system; tracks product expiry dates by deposit/warehouse and packaging unit",
+        "summary": "PW03017R is a batch report program that generates a stock validity (expiry date) report. It reads sorted stock records by deposit, product, and expiry date, and produces both a formatted print report and a CSV output listing quantities by pallet, layer, sales unit, and loose units per product validity date. The program is part of a larger Brazilian retail/distribution ERP system.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "htmlpp preprocessor directives ($set preprocess)",
+        "$set sourceformat free",
+        "Conditional CSV output via $if PadraoCSV defined",
+        "external-form CGI input section (web integration)",
+        "local-storage section",
+        "28 COPY statements for modular copybook structure",
+        "Indexed file with dynamic access (arqsor sort file)",
+        "Portuguese-language identifiers and report text",
+        "decimal-point is comma (Brazilian locale)",
+        "CSV report generation alongside traditional print report"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; procedure division body not fully visible. The $set directives and htmlpp preprocessor strongly indicate Micro Focus COBOL or a compatible dialect (possibly GnuCOBOL with Micro Focus extensions). The PW prefix and Portuguese identifiers suggest a Brazilian ERP/WMS product. No COMP-3 usage visible in truncated portion despite being a numeric-heavy report program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6715,
+      "completion_tokens": 564,
+      "total_tokens": 7279,
+      "cost": 0.028605,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028605,
+        "upstream_inference_prompt_cost": 0.020145,
+        "upstream_inference_completions_cost": 0.00846
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.29,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:45:52Z"
+}

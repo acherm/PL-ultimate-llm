@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bee92b584936a2dec1f5fb5b3b0155534db2ed83",
+    "sha1_git": "bee92b584936a2dec1f5fb5b3b0155534db2ed83",
+    "filename": "/acasirsub1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 31603,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bee92b584936a2dec1f5fb5b3b0155534db2ed83/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bee92b584936a2dec1f5fb5b3b0155534db2ed83/raw/"
+  },
+  "indicators": {
+    "bytes_len": 31603,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 774,
+    "blank_lines": 3,
+    "comment_lines": 343,
+    "code_lines": 428,
+    "comment_ratio": 0.445,
+    "max_line_length": 121,
+    "avg_line_length": 39.8,
+    "long_lines_over_72": 108,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "acasirsub1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 5,
+    "perform_count": 11,
+    "goto_count": 50,
+    "pic_count": 14,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2014",
+        "detail": "GnuCOBOL free-format source, part of the ACAS (Applewood Computers Accounting System) v3.02+ IRS Nominal Ledger file handler. References to GC v3.2 in changelog comments confirm GnuCOBOL compiler.",
+        "evidence": [
+          ">>source free directive",
+          "*> comment style throughout",
+          "copy \"envdiv.cob\"",
+          "copy \"irswsnl.cob\"",
+          "vbc changelog: 'Chgd Vars A & B to pic 999 to keep GC v3.2 happy'",
+          "vbc changelog: 'chg to perform ba-Process-RDBMS 2 remove GC warning msg from latest v3.2 code'"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "IRS (Internal Revenue/Reporting System?) Nominal Ledger file/table handler within the ACAS (Applewood Computers Accounting System) package. Handles both flat COBOL files and RDBMS (DAL) access for the Nominal Ledger.",
+        "summary": "This is a subprogram (file handler) for the ACAS accounting system that manages read, write, rewrite, delete, open, close, and start operations on the IRS Nominal Ledger file. It supports both traditional COBOL indexed flat files and an RDBMS Data Access Layer (DAL), dispatching based on a File-Function parameter passed via linkage section.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>source free compiler directive",
+        "Dual-mode processing: COBOL indexed files and RDBMS/DAL",
+        "COPY statements for copybooks (envdiv.cob, irswsnl.cob, wssystem.cob, wsfnctn.cob, wsnames.cob, Test-Data-Flags.cob, irsfdwsnl.cob)",
+        "Linkage Section with multiple data structures passed by caller",
+        "High GOTO count (50) for procedural dispatch pattern",
+        "Detailed error code scheme (WE-Error, FS-Reply, SQL-Err, SQL-Msg)",
+        "Logging/testing flag support via Test-Data-Flags copybook",
+        "GNU GPL licensed open-source accounting software"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; full file is 31603 bytes / 774 lines. The program is clearly production-quality with extensive changelog history (2012-2024), detailed error handling, dual flat-file/RDBMS support, and GPL licensing. Domain classified as accounting-erp based on Nominal Ledger context within ACAS."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6836,
+      "completion_tokens": 667,
+      "total_tokens": 7503,
+      "cost": 0.030513,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030513,
+        "upstream_inference_prompt_cost": 0.020508,
+        "upstream_inference_completions_cost": 0.010005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.08,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:39:36Z"
+}

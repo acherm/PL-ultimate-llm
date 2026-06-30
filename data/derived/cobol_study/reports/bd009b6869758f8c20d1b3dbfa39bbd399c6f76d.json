@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project COBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based Japanese medical billing system",
         "evidence": [
-          "IDENTIFICATION DIVISION / PROGRAM-ID ORCGW20",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "OCCURS clauses, REDEFINES, BINARY usage",
-          "S9(9) BINARY (not COMP-3, consistent with GnuCOBOL/OpenCOBOL)",
-          "COPY statements referencing copybooks like 'COMMON-SPA', 'W01COMMON-SPA', 'ENUM-VALUE'",
-          "Japanese comments and UTF-8 encoding typical of ORCA (JMA open-source medical software)",
-          "No EXEC SQL or EXEC CICS blocks",
-          "Fixed-format source with max line length 74"
+          "PROGRAM-ID ORCGW20",
+          "COPY directives for COMMON-SPA, W01COMMON-SPA, ENUM-VALUE, W20SCR-SPA",
+          "Japanese comments and variable names",
+          "Copyright JMA (Japan Medical Association) 2002",
+          "No EXEC CICS or EXEC SQL",
+          "S9(9) BINARY usage typical of GnuCOBOL ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA Standard Receipt Software) system, specifically handling ward management (病棟管理) within the system administration information settings subsystem. It manages hospital ward configuration data including nursing unit definitions, validity periods, and related medical fee calculation parameters.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) billing system - hospital ward management (病棟管理) subsystem within system administration information settings (システム管理情報設定)",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It handles hospital ward management (病棟管理) configuration within the system administration information settings subsystem. It manages ward lists, nursing care codes, hospitalization classifications, and related medical fee calculation settings including H28/H30 (Heisei 28/30 year) medical fee revision codes.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese UTF-8 comments and variable names (mixed Japanese/ASCII identifiers)",
-        "No COMP-3 usage despite being a financial/medical system",
-        "S9(9) BINARY for state/index fields",
-        "Large number of PERFORM statements (1014) indicating structured procedural decomposition",
-        "OCCURS with REDEFINES for packed constant tables of medical procedure codes",
-        "COPY statements for shared SPA (Scratch Pad Area) copybooks typical of ORCA architecture",
-        "19 CALL statements suggesting modular design with external subprograms",
-        "47 GOTO statements indicating some legacy or complex flow control",
-        "No EXEC SQL or EXEC CICS — likely uses file I/O or CALL-based database access"
+        "Large program (~580KB, 13686 lines)",
+        "35 COPY statements for modular copybook inclusion",
+        "Japanese UTF-8 comments and data names",
+        "REDEFINES used extensively for code table overlays",
+        "OCCURS tables for medical procedure codes",
+        "S9(9) BINARY fields for state management",
+        "No COMP-3 usage",
+        "No EXEC SQL or EXEC CICS",
+        "High PERFORM count (1014) indicating structured procedural logic",
+        "Medical fee revision constants for H28/H30 (2016/2018 reforms)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly part of the well-known open-source Japanese medical receipt software ORCA (日医標準レセプトソフト) developed by JMA. The file is large (579KB, 13686 lines) and exhibits production-quality structure. The absence of COMP-3 and presence of BINARY suggests GnuCOBOL/OpenCOBOL as the target compiler. The COPY count of 0 in mechanical indicators may be because the COPY statements reference external files not counted, but they are visible in the source. The program handles H28 (2016) and H30 (2018) Japanese medical fee revision codes, confirming it is a real production system updated over time."
+      "notes": "Source is truncated to first 16000 chars of a ~580KB file. The program is clearly part of the well-known JMA ORCA open-source medical receipt system used widely in Japanese clinics. GnuCOBOL dialect confirmed by ORCA project context. Fixed format with max line length 74 consistent with standard COBOL column layout."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6600,
-      "completion_tokens": 773,
-      "total_tokens": 7373,
-      "cost": 0.031395,
+      "prompt_tokens": 7978,
+      "completion_tokens": 561,
+      "total_tokens": 8539,
+      "cost": 0.032349,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.031395,
-        "upstream_inference_prompt_cost": 0.0198,
-        "upstream_inference_completions_cost": 0.011595
+        "upstream_inference_cost": 0.032349,
+        "upstream_inference_prompt_cost": 0.023934,
+        "upstream_inference_completions_cost": 0.008415
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.43,
+    "provider": "Anthropic",
+    "latency_s": 15.64,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:35:57Z"
 }

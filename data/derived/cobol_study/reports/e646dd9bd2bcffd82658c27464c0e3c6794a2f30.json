@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e646dd9bd2bcffd82658c27464c0e3c6794a2f30",
+    "sha1_git": "e646dd9bd2bcffd82658c27464c0e3c6794a2f30",
+    "filename": "/COCRDUPS.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 60142,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e646dd9bd2bcffd82658c27464c0e3c6794a2f30/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e646dd9bd2bcffd82658c27464c0e3c6794a2f30/raw/"
+  },
+  "indicators": {
+    "bytes_len": 60142,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1462,
+    "blank_lines": 152,
+    "comment_lines": 153,
+    "code_lines": 1157,
+    "comment_ratio": 0.117,
+    "max_line_length": 72,
+    "avg_line_length": 40.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COCRDUPS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 12,
+    "call_count": 0,
+    "perform_count": 25,
+    "goto_count": 18,
+    "pic_count": 96,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS online program, part of Amazon AWS CardDemo sample application. Uses EXEC CICS commands, BMS maps, COPY books, and COMMAREA-based communication typical of IBM mainframe CICS development.",
+        "evidence": [
+          "EXEC CICS (has_exec_cics=true)",
+          "COPY CVCRD01Y, COPY COCOM01Y",
+          "LIT-THISTRANID PIC X(4) VALUE 'ALS7'",
+          "WS-RESP-CD PIC S9(09) COMP",
+          "COMMAREA pattern WS-COMMAREA PIC X(2000)",
+          "BMS mapset references COCRDUP/CCRDUPA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Credit card management system - screen/UI logic for updating credit card details (card name, expiry, status) in a CICS online transaction environment",
+        "summary": "COCRDUPS is a CICS online program that handles the screen/UI layer for credit card detail update requests. It accepts user input for account and card number, validates fields (card name, expiry month/year, card status), and coordinates with a backend RPC program (COCRDUPL) to commit changes. It is part of the AWS CardDemo mainframe modernization sample application.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (BMS map send/receive, COMMAREA)",
+        "Multiple COPY books (CVCRD01Y, COCOM01Y)",
+        "88-level condition names extensively used for flags and messages",
+        "REDEFINES for numeric/alphanumeric dual-use fields",
+        "RPC-style CALL to backend program COCRDUPL",
+        "Fixed-format source with max line length 72",
+        "No EXEC SQL - pure CICS/BMS",
+        "GOTO usage (18 occurrences) alongside PERFORM",
+        "Program-to-program communication via COMMAREA",
+        "Apache License 2.0 header - AWS CardDemo open source project"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars but sufficient structure is visible. This is the AWS CardDemo open-source mainframe modernization reference application (github.com/aws-samples/aws-mainframe-modernization-carddemo). The program is a screen-handling layer only with no direct file I/O; file access is delegated to COCRDUPL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6609,
+      "completion_tokens": 601,
+      "total_tokens": 7210,
+      "cost": 0.028842,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028842,
+        "upstream_inference_prompt_cost": 0.019827,
+        "upstream_inference_completions_cost": 0.009015
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.3,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:34:41Z"
+}

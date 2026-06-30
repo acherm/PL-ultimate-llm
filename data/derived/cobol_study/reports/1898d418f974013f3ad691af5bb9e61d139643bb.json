@@ -49,48 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL based on free-standing test program style, COPY with REPLACING using == delimiters, and END PROGRAM marker",
         "evidence": [
-          "END-CALL terminator",
-          "END-IF terminator",
-          "GOBACK statement",
           "end program getonestore_test",
-          "COPY with REPLACING using == == delimiters",
-          "BY REFERENCE in CALL"
+          "COPY replacing ==:Prefix-:== by ==ws-==",
+          "goback",
+          "call 'getonestore'"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A test program that calls the 'getonestore' subprogram with a hardcoded store name ('Newcastle') and displays the returned store record fields. It serves as a unit/integration test harness for the getonestore subprogram.",
-        "domain": "retail/store management, demo/test",
+        "domain": "retail-commerce",
+        "domain_detail": "Store information lookup - retrieves a single store record by name (e.g. 'Newcastle') and displays its details",
+        "summary": "A test program that calls a subprogram 'getonestore' with a store name and a working-storage record, then displays the returned store details including id, name, province, county, postcode, email, coordinates, telephone, and geohash. It checks the return code to detect a not-found condition.",
         "program_type": "test"
       },
       "notable_features": [
-        "COPY with REPLACING using pseudo-text delimiters (== ==) for prefix substitution",
-        "CALL BY REFERENCE to external subprogram 'getonestore'",
-        "RETURN-CODE special register used for error checking",
-        "GOBACK instead of STOP RUN",
-        "No IDENTIFICATION DIVISION header (program-id only)"
+        "COPY with REPLACING using == delimiters for prefix substitution",
+        "END PROGRAM marker",
+        "GOBACK statement",
+        "call by reference with multiple parameters",
+        "display of geolocation fields (latitude, longitude, geohash)"
       ],
       "maturity": "snippet",
-      "overall_confidence": "high",
-      "notes": "The IDENTIFICATION DIVISION keyword is absent; only PROGRAM-ID is present, which is valid in modern COBOL dialects. The COPY statement references an external copybook 'stores.cpy' which is not shown. The program is clearly a test driver for a store-lookup subprogram, likely part of a small tutorial or personal project."
+      "overall_confidence": "medium",
+      "notes": "No IDENTIFICATION DIVISION header present (missing IDENTIFICATION keyword though PROGRAM-ID is present). The program is clearly a unit/integration test for a 'getonestore' subprogram. Dialect is uncertain but GnuCOBOL is plausible given the style."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1150,
-      "completion_tokens": 454,
-      "total_tokens": 1604,
-      "cost": 0.01026,
+      "prompt_tokens": 2528,
+      "completion_tokens": 373,
+      "total_tokens": 2901,
+      "cost": 0.013179,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.01026,
-        "upstream_inference_prompt_cost": 0.00345,
-        "upstream_inference_completions_cost": 0.00681
+        "upstream_inference_cost": 0.013179,
+        "upstream_inference_prompt_cost": 0.007584,
+        "upstream_inference_completions_cost": 0.005595
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 9.89,
+    "provider": "Anthropic",
+    "latency_s": 9.46,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:42:28Z"
 }

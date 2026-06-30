@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fdd46b6310e25ee588bf85a094e41f74b3ab2d9a",
+    "sha1_git": "fdd46b6310e25ee588bf85a094e41f74b3ab2d9a",
+    "filename": "/HCMADB02.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12466,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fdd46b6310e25ee588bf85a094e41f74b3ab2d9a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fdd46b6310e25ee588bf85a094e41f74b3ab2d9a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12466,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 280,
+    "blank_lines": 29,
+    "comment_lines": 86,
+    "code_lines": 165,
+    "comment_ratio": 0.343,
+    "max_line_length": 72,
+    "avg_line_length": 42.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "HCMADB02"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 34,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/DB2 online program; uses EXEC CICS and EXEC SQL with SQLCA, EIB fields (EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN), DFHCOMMAREA, and ABEND command — classic IBM mainframe CICS/DB2 pattern",
+        "evidence": [
+          "EXEC CICS ABEND ABCODE('HCCA') NODUMP",
+          "EXEC CICS RETURN",
+          "EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN",
+          "EXEC SQL INCLUDE SQLCA",
+          "EXEC SQL INSERT INTO PRESCRIPTION",
+          "DFHCOMMAREA",
+          "COPY HCERRSWS, COPY HCERRSPD"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Hospital/clinic prescription management system — inserts prescription schedule rows into a DB2 PRESCRIPTION table for a given patient, based on start/end dates and dosage frequency",
+        "summary": "HCMADB02 is a CICS online subprogram that receives a commarea containing patient ID, prescription ID, start/end dates, and frequency. It iterates day-by-day over the date range and inserts one or more timed prescription records per day into the DB2 PRESCRIPTION table according to the specified frequency (1–4 times daily).",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL INSERT with DB2 host variables",
+        "EXEC CICS ABEND / RETURN",
+        "SQLCA included via EXEC SQL INCLUDE",
+        "DFHCOMMAREA with EXEC SQL INCLUDE HCCMAREA",
+        "Date arithmetic using FUNCTION INTEGER-OF-DATE and FUNCTION DATE-OF-INTEGER",
+        "EVALUATE on CA-FREQUENCY for 1–4 times daily scheduling",
+        "COPY HCERRSWS and COPY HCERRSPD for error handling",
+        "EIB fields usage (EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN)",
+        "Commented-out date validation code with %regi fix markers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is part of a healthcare (HCM) application suite, likely the IBM Z Explorers / zHealthcare demo or similar IBM-provided sample. Comment references 'DEMO' and a fix date of June 22 2020 by 'Regi'. No lines exceed 72 characters confirming fixed format. The LINKAGE SECTION uses EXEC SQL INCLUDE HCCMAREA to define DFHCOMMAREA fields, which is an unusual but valid IBM pattern."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5648,
+      "completion_tokens": 663,
+      "total_tokens": 6311,
+      "cost": 0.026889,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026889,
+        "upstream_inference_prompt_cost": 0.016944,
+        "upstream_inference_completions_cost": 0.009945
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.17,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:49:20Z"
+}

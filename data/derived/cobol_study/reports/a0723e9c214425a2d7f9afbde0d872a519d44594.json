@@ -49,47 +49,47 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or GnuCOBOL (generic standard COBOL, no vendor-specific extensions visible)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple sandbox program with no vendor-specific extensions; GOBACK suggests IBM-style but is widely supported",
         "evidence": [
-          "GOBACK statement (common in IBM/Micro Focus environments)",
-          "77-level items in WORKING-STORAGE",
-          "PIC 9(5)v99 numeric picture",
-          "PIC $zz,zz9.99 edited picture clause",
-          "fixed-format source layout"
+          "GOBACK",
+          "PIC $zz,zz9.99 edited picture",
+          "77 level items"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal sandbox/demo program that moves a numeric value (12345.6) into a numeric field and then into an edited picture field for formatted display. It demonstrates numeric editing with currency symbol and comma insertion.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Minimal demonstration of numeric editing with a currency picture clause",
+        "summary": "A tiny sandbox program that moves a numeric value into an edited picture field and displays it. It demonstrates COBOL numeric editing with a dollar-sign and comma-formatted picture clause.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Edited picture clause with currency symbol ($zz,zz9.99)",
-        "Implicit decimal point (v99) in numeric field",
-        "GOBACK instead of STOP RUN",
-        "No ENVIRONMENT DIVISION present",
-        "Very small program — 11 lines total"
+        "Edited picture clause with currency symbol: PIC $zz,zz9.99",
+        "GOBACK statement",
+        "77-level working-storage items",
+        "No ENVIRONMENT DIVISION"
       ],
       "maturity": "toy-or-hello-world",
       "overall_confidence": "high",
-      "notes": "The program is clearly genuine COBOL and syntactically complete despite its tiny size. PROGRAM-ID is 'SANDBOX', reinforcing its experimental/tutorial nature. The filename JOJO.cbl is informal, consistent with a personal learning exercise. GOBACK is slightly more IBM-flavored but is widely supported. No ambiguity about it being real COBOL source."
+      "notes": "Only 11 lines; clearly a minimal sandbox/demo snippet. No vendor-specific features visible; dialect cannot be determined with confidence. GOBACK is common across IBM, GnuCOBOL, and Micro Focus."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 958,
-      "completion_tokens": 465,
-      "total_tokens": 1423,
-      "cost": 0.009849,
+      "prompt_tokens": 2336,
+      "completion_tokens": 285,
+      "total_tokens": 2621,
+      "cost": 0.011283,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +98,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009849,
-        "upstream_inference_prompt_cost": 0.002874,
-        "upstream_inference_completions_cost": 0.006975
+        "upstream_inference_cost": 0.011283,
+        "upstream_inference_prompt_cost": 0.007008,
+        "upstream_inference_completions_cost": 0.004275
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,9 +108,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 9.45,
+    "provider": "Anthropic",
+    "latency_s": 7.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:14:12Z"
 }

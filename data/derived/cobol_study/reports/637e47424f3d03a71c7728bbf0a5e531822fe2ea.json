@@ -49,55 +49,59 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (Open COBOL) free-format source, part of the Applewood Computers Accounting System (ACAS) by Vincent B Coen. Version comment references 'Open Cobol v3.00.00' and later GnuCOBOL 3.2. Uses >>source free directive and *> comments.",
         "evidence": [
-          ">>source free compiler directive at top",
+          ">>source free",
           "*> comment style throughout",
+          "copy \"envdiv.cob\"",
           "program-id. sl910",
-          "copy statements with replacing clause",
-          "88-level condition names",
-          "redefines clauses",
-          "comment references to 'Open Cobol v3.00.00' and 'GC 3.2'",
-          "free-format source layout"
+          "prog-name pic x(15) value \"SL910 (3.02.27)\"",
+          "Migration to Open Cobol v3.00.00 in change log",
+          "GC 3.2 warning msgs in .27 change note"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "Invoice Data Entry and Maintenance program for the Applewood Computers Accounting System (ACAS). Handles both batch and immediate invoice printing, credit notes, stock updates, and audit trail writing. Calls multiple sub-modules for stock, sales, delivery, analysis, and open-item file processing.",
-        "domain": "accounting/ERP (sales ledger, stock control)",
+        "domain": "accounting-erp",
+        "domain_detail": "Sales ledger invoice data entry and maintenance for the Applewood Computers Accounting System (ACAS). Handles invoice creation, credit notes, pro-formas, stock updates, VAT, and open-item file posting.",
+        "summary": "This program is the invoice data entry and maintenance module (SL910) of the ACAS sales ledger system. It supports batch and immediate invoice printing, credit note processing, stock control integration, VAT handling, and posting to open-item and analysis files. It calls numerous sub-modules for stock audit, stock, sales, delivery, analysis, deleted invoice numbers, invoices, and OTM3 open-item file.",
         "program_type": "batch"
       },
       "notable_features": [
-        ">>source free compiler directive (GnuCOBOL)",
-        "Extensive change history spanning 1983–2022",
-        "GNU GPL v2 licensed",
-        "19 CALL statements to external sub-modules (acas010–acas019, sl070, sl930, sl960, etc.)",
+        ">>source free directive (GnuCOBOL free format)",
+        "19 COPY statements referencing external copybooks",
+        "19 CALL statements to sub-modules (acas010-acas019, sl070, sl930, sl960 etc.)",
         "107 PERFORM and 107 GOTO statements indicating complex procedural flow",
-        "COPY statements for environment, FD, and WS sections (copybook-heavy architecture)",
-        "Support for VAT codes (Standard/Reduced/Zero), credit notes, pro-formas",
-        "RDB/FH (FileHandler/DAL) migration noted in comments from v3.02 onward",
-        "Screen-based data entry with function key handling (F1, F2, etc.)",
-        "No EXEC SQL or EXEC CICS"
+        "Compiler directives present",
+        "REDEFINES used extensively for screen accept/display fields",
+        "88-level condition names",
+        "VAT code handling (S/R/Z = Standard/Reduced/Zero)",
+        "Stock control integration with audit trail",
+        "Support for deleted invoice number reuse",
+        "GNU GPL v2 licensed open-source accounting system",
+        "Long change history from 1983 to 2022"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly a long-lived production COBOL program (1976–2023) for a sales ledger/invoice entry system. The >>source free directive and *> comments confirm GnuCOBOL (OpenCOBOL). All four COBOL divisions are present. The file uses extensive copybooks (all commented out in the visible section, replaced by inline WS definitions), suggesting a modular architecture. The truncation at 16000 chars covers roughly the first 18% of the file; the remainder likely contains the PROCEDURE DIVISION with the bulk of the logic."
+      "notes": "Source truncated to first 16000 chars; full program is 2341 lines. All four COBOL divisions present. The program is a long-lived (1976-2023) production accounting system module with extensive change history. No EXEC SQL or EXEC CICS found; uses ISAM/FH file access via DAL calls. No COMP-3 usage detected despite financial calculations."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6316,
-      "completion_tokens": 681,
-      "total_tokens": 6997,
-      "cost": 0.029163,
+      "prompt_tokens": 7694,
+      "completion_tokens": 657,
+      "total_tokens": 8351,
+      "cost": 0.032937,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.029163,
-        "upstream_inference_prompt_cost": 0.018948,
-        "upstream_inference_completions_cost": 0.010215
+        "upstream_inference_cost": 0.032937,
+        "upstream_inference_prompt_cost": 0.023082,
+        "upstream_inference_completions_cost": 0.009855
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +120,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.33,
+    "provider": "Anthropic",
+    "latency_s": 18.81,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:04:11Z"
 }

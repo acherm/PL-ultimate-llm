@@ -49,45 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (PC-based COBOL, likely a tutorial environment)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple portable COBOL, no vendor-specific extensions visible; uses COPY for date routines (WSDATE.CBL, PLDATE.CBL)",
         "evidence": [
-          "EXIT PROGRAM and STOP RUN both present",
-          "COPY with quoted filenames (\"WSDATE.CBL\", \"PLDATE.CBL\") typical of PC COBOL",
-          "UNTIL clause on PERFORM",
-          "Fixed-format line numbering (000100, 000200, ...)"
+          "EXIT PROGRAM",
+          "STOP RUN",
+          "PERFORM ... UNTIL",
+          "COPY \"WSDATE.CBL\"",
+          "COPY \"PLDATE.CBL\""
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A demonstration program for date entry and validation. It repeatedly prompts the user to enter a date and displays it in multiple formats (MMDDCCYY and CCYYMMDD) until a zero value is entered.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Date entry and validation demonstration program",
+        "summary": "A demonstration program that prompts the user to enter a date, validates it, and displays the formatted date in multiple formats (MMDDCCYY and CCYYMMDD). It loops until a zero date is entered.",
         "program_type": "demo"
       },
       "notable_features": [
-        "COPY of external COBOL source files by quoted filename (\"WSDATE.CBL\", \"PLDATE.CBL\")",
+        "COPY of external date copybooks (WSDATE.CBL, PLDATE.CBL)",
         "Date format conversion between MMDDCCYY and CCYYMMDD",
-        "No PIC clauses in visible source (all data definitions in copied files)",
-        "PERFORM ... UNTIL loop for date entry"
+        "UNTIL DATE-MMDDCCYY = ZEROES loop termination",
+        "No PIC clauses in main source (all in copybooks)",
+        "PERFORM-based structured programming with no GOTO"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program relies heavily on two COPY files (WSDATE.CBL for working-storage date fields and PLDATE.CBL for date processing logic) which are not shown. The pic_count of 0 is explained by all data definitions being in the copied files. The quoted COPY filenames suggest a PC-based COBOL environment (GnuCOBOL, Micro Focus, or similar). This appears to be part of a tutorial series on date handling."
+      "notes": "All data definitions are in copybooks (WSDATE.CBL, PLDATE.CBL), so pic_count=0 is expected. The program is clearly a teaching/demo example for date handling. No vendor-specific features detected; dialect is generic COBOL-85."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1306,
-      "completion_tokens": 501,
-      "total_tokens": 1807,
-      "cost": 0.011433,
+      "prompt_tokens": 2684,
+      "completion_tokens": 369,
+      "total_tokens": 3053,
+      "cost": 0.013587,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011433,
-        "upstream_inference_prompt_cost": 0.003918,
-        "upstream_inference_completions_cost": 0.007515
+        "upstream_inference_cost": 0.013587,
+        "upstream_inference_prompt_cost": 0.008052,
+        "upstream_inference_completions_cost": 0.005535
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,8 +112,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 1073.21,
+    "latency_s": 8.22,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:07:27Z"
 }

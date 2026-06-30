@@ -49,47 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (generic COBOL-85 compatible)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with LINE SEQUENTIAL file organization; likely compiled with GnuCOBOL given the file assignment style and no vendor-specific extensions",
         "evidence": [
-          "END-READ, END-PERFORM structured delimiters",
-          "88-level condition with SET ... TO TRUE",
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "HIGH-VALUES figurative constant",
-          "OCCURS 50 TIMES table without INDEXED BY (subscript-based)"
+          "ASSIGN TO string literal",
+          "88 END-OF-SALES-FILE VALUE HIGH-VALUES",
+          "SET END-OF-SALES-FILE TO TRUE",
+          "END-READ, END-PERFORM scope terminators"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads a sequential file of branch candy sales records and accumulates totals by US state (up to 50 states) and nationwide. Produces a report showing per-state branch count, total sales, and average sales, plus US-wide totals.",
-        "domain": "education/tutorial",
+        "domain": "retail-commerce",
+        "domain_detail": "Candy shop branch sales reporting; aggregates sales data by US state from a flat file",
+        "summary": "Reads a branch sales data file and accumulates candy sales totals and branch counts by US state (up to 50 states). Prints a formatted report showing per-state sales, branch counts, average sales, and US-wide totals.",
         "program_type": "batch"
       },
       "notable_features": [
-        "OCCURS 50 TIMES table for state-level aggregation",
-        "Edited PIC clauses with currency symbols and comma insertion for formatted output",
-        "DISPLAY used for report output (no printer/file output)",
-        "88-level END-OF-SALES-FILE sentinel on record group",
-        "Comma used as statement separator in ADD statement (non-standard style)"
+        "OCCURS 50 TIMES table for state totals",
+        "88-level condition name for EOF detection",
+        "Edited PIC clauses with currency symbols and comma insertion",
+        "PERFORM VARYING loop over table",
+        "COMPUTE for average sales calculation",
+        "LINE SEQUENTIAL file organization",
+        "No COMP-3, no SQL, no CICS"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program is clearly a student exercise for a fictional company 'YoreCandyshoppe'. Division by STATE-BRANCH-COUNT without a zero-check could cause a runtime error for states with no branches. The comma-as-separator style in the ADD statement is unusual. No COMP-3 or EXEC SQL/CICS usage. Author field 'THUN' suggests individual student work."
+      "notes": "Program is straightforward and educational in nature; the business name 'YoreCandyshoppe' and simple structure suggest a student exercise. Division by STATE-BRANCH-COUNT without zero-check could cause runtime error for states with no branches. No error handling present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2045,
-      "completion_tokens": 486,
-      "total_tokens": 2531,
-      "cost": 0.013425,
+      "prompt_tokens": 3423,
+      "completion_tokens": 387,
+      "total_tokens": 3810,
+      "cost": 0.016074,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.013425,
-        "upstream_inference_prompt_cost": 0.006135,
-        "upstream_inference_completions_cost": 0.00729
+        "upstream_inference_cost": 0.016074,
+        "upstream_inference_prompt_cost": 0.010269,
+        "upstream_inference_completions_cost": 0.005805
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,9 +113,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 11.39,
+    "provider": "Anthropic",
+    "latency_s": 9.6,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:29:32Z"
 }

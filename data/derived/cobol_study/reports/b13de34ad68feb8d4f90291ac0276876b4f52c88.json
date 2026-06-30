@@ -49,54 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); GnuCOBOL-based open-source Japanese medical billing platform",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "PERFORM ... VARYING ... UNTIL construct",
-          "INITIALIZE statement",
-          "COPY statements for include files (.INC)",
-          "CALL 'ORCSDAY' USING linkage areas",
-          "EXIT PROGRAM",
-          "PIC 9(nn) and PIC X(nn) data definitions",
-          "OCCURS clauses without INDEXED BY (COBOL-85 style)"
+          "PROGRAM-ID ORCSSKJKEEP",
+          "COPY CPSYSKANRI.INC / CPSK1001.INC / MCPDATA.INC / MCPAREA etc.",
+          "CALL ORCSDAY USING STS-AREA-DAY LNK-DAY7-AREA",
+          "COPY COMMON-SPA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "LINKAGE SECTION with ORCSSKJKEEP-AREA / SPA-AREA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles hospitalization fee calculation data maintenance, specifically determining targets for meal/food expense replacement processing related to psychiatric ward long-term hospitalization (a 2016 Japanese medical fee revision). It reads and validates patient master, hospitalization accounting, and insurance combination records to produce output flags and dates for downstream processing.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical inpatient billing/receipt processing; specifically handles food-service charge assignment target acquisition for psychiatric long-term hospitalization (Heisei 28 revision)",
+        "summary": "This subprogram (ORCSSKJKEEP) is part of the JMA ORCA standard medical receipt software. It retrieves and evaluates inpatient accounting records to determine applicable food/nutrition charge targets for psychiatric ward long-term hospitalization cases, including checks for rare disease (nanbyo) and pediatric specific disease public expense codes, and handles the Heisei 28 (2016) revision logic.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS garbled as latin-1)",
-        "Extensive use of COPY statements for modular record layouts (.INC files)",
-        "CALL to external subprograms: ORCSDAY (date utility), ORCSLNK, etc.",
-        "LINKAGE SECTION with SPA-AREA (common SPA pattern typical of ORCA/OpenCOBOL batch subprograms)",
-        "OCCURS tables for hospitalization history and insurance combination tracking",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP (middleware control parameter) table/pathname pattern for DB access",
-        "DISPLAY statements left in production code (debug traces)",
-        "163 PERFORM statements indicating complex procedural logic",
-        "Copyright notice: JMA Open Source License, 2002"
+        "21 COPY statements for shared record layouts (CPNYUINACCT, CPPTINF, CPHKNCOMBI, etc.)",
+        "LINKAGE SECTION with SPA (scratchpad area) pattern typical of ORCA",
+        "CALL to ORCSDAY date utility subprogram",
+        "PERFORM VARYING loops over 31-day arrays for daily hospitalization accounting",
+        "REDEFINES clauses for date field decomposition",
+        "OCCURS tables for insurance combination and rare-disease exclusion lists",
+        "Japanese EUC-JP encoded comments (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS; uses MCP (middleware) table access pattern"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded as latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing mojibake in the display. The MCP-TABLE/MCP-PATHNAME pattern is characteristic of the ORCA open-source medical claims system used widely in Japan. DISPLAY debug statements suggest this may be a development/test build of an otherwise production module. No embedded SQL; database access is abstracted through the MCP copybook mechanism. Source is truncated at 16000 chars out of 78211 bytes, so later sections (including most of PROCEDURE DIVISION) are not visible, but the structure is unambiguous."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP Japanese text, appearing as mojibake. Source is truncated at 16000 chars out of 78211 bytes (1719 lines total). The MCP-TABLE/MCP-PATHNAME pattern is the ORCA middleware database access mechanism, not standard COBOL file I/O. Program is a subprogram called by the inpatient receipt calculation subsystem."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8609,
-      "completion_tokens": 757,
-      "total_tokens": 9366,
-      "cost": 0.037182,
+      "prompt_tokens": 9987,
+      "completion_tokens": 642,
+      "total_tokens": 10629,
+      "cost": 0.039591,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037182,
-        "upstream_inference_prompt_cost": 0.025827,
-        "upstream_inference_completions_cost": 0.011355
+        "upstream_inference_cost": 0.039591,
+        "upstream_inference_prompt_cost": 0.029961,
+        "upstream_inference_completions_cost": 0.00963
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 20.96,
+    "provider": "Anthropic",
+    "latency_s": 18.16,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:15:51Z"
 }

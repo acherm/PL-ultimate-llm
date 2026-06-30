@@ -49,49 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses CALL 'system' and CALL 'MONFUNC' patterns typical of ORCA",
         "evidence": [
-          "END-STRING, END-READ, END-IF structured delimiters (COBOL-85)",
-          "CALL 'system' USING ... RETURNING RESULT (C runtime interop typical of GnuCOBOL)",
-          "COPY directives with .INC extension common in GnuCOBOL/ORCA",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "Fixed-format source, columns 7-72"
+          "CALL \"system\" USING COMMAND RETURNING RESULT",
+          "CALL \"MONFUNC\" USING MCPAREA MCPREC SPA-AREA",
+          "COPY \"MCPAREA\"",
+          "COPY \"MCPDATA.INC\"",
+          "COPY \"CPORCSMIAREA.INC\"",
+          "COPY \"COMMON-SPA\"",
+          "Project code name ORCA, Copyright JMA 2002"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This subprogram saves a medical image for the ORCA (JMA standard receipt software) system. It base64-encodes an image file from a temporary directory, reads the encoded data, then inserts or updates a record in the 'tbl_med_image' database table via the MONFUNC database interface. After processing, it deletes the temporary file.",
-        "domain": "healthcare / medical records (Japanese medical association receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt system - medical image data save subprogram for medication/treatment image registration (tbl_med_image)",
+        "summary": "This subprogram saves a medical image file to the database. It base64-encodes an image file from a temporary directory, reads the encoded data, then performs a DB SELECT/FETCH to check existence and either inserts or updates the record in tbl_med_image via the MONFUNC database interface. It cleans up the temporary file on exit.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "CALL 'system' to invoke shell commands (base64 encoding and rm -f) from COBOL",
-        "CALL 'MONFUNC' for database operations (DBSELECT, DBFETCH, DBINSERT, DBUPDATE, DBCLOSECURSOR) — ORCA-specific DB middleware",
-        "COPY of .INC and named copybooks (CPMEDIMAGE.INC, MCPAREA, MCPDATA.INC, CPORCSMIAREA.INC, COMMON-SPA)",
-        "Large PIC X(500000) image record and PIC X(510000) MCPREC field",
-        "Japanese comments encoded in EUC-JP (decoded as latin-1 artifacts)",
-        "LINKAGE SECTION with two parameters: ORCSMIAREA and SPA-AREA",
-        "No EXEC SQL or EXEC CICS — database access abstracted through MONFUNC calls"
+        "CALL 'system' to execute shell commands (base64 encoding, rm -f)",
+        "CALL 'MONFUNC' for database operations (DBSELECT, DBFETCH, DBINSERT, DBUPDATE, DBCLOSECURSOR)",
+        "LINKAGE SECTION with USING clause (subprogram interface)",
+        "Large PIC X(500000) image record and PIC X(510000) MCPREC",
+        "STRING verb for path construction",
+        "Japanese comments encoded in EUC-JP/Shift-JIS (latin-1 decoded as garbled)",
+        "COPY of multiple ORCA-specific copybooks"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The source file contains Japanese EUC-JP encoded comments that appear garbled because the file was decoded as latin-1. The program is clearly part of the open-source ORCA JMA medical receipt system (Japan Medical Association). The dialect is most likely GnuCOBOL given the CALL 'system' pattern and .INC copybook conventions used throughout the ORCA project."
+      "notes": "Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. Program is part of the well-known open-source JMA ORCA medical receipt system. No EXEC SQL or EXEC CICS; database access is via proprietary MONFUNC call interface."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 5074,
-      "completion_tokens": 706,
-      "total_tokens": 5780,
-      "cost": 0.025812,
+      "prompt_tokens": 6452,
+      "completion_tokens": 586,
+      "total_tokens": 7038,
+      "cost": 0.028146,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.025812,
-        "upstream_inference_prompt_cost": 0.015222,
-        "upstream_inference_completions_cost": 0.01059
+        "upstream_inference_cost": 0.028146,
+        "upstream_inference_prompt_cost": 0.019356,
+        "upstream_inference_completions_cost": 0.00879
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -111,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.36,
+    "latency_s": 16.34,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:48:25Z"
 }

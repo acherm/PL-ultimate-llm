@@ -49,51 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日本医師会標準レセプトソフト); uses GnuCOBOL/OpenCOBOL with ORCDBMAIN runtime and MCP framework typical of ORCA system",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN ... ALSO syntax (COBOL-85)",
-          "EXIT PROGRAM statement",
-          "PERFORM with section names",
-          "CALL 'ORCDBMAIN' USING",
-          "LINKAGE SECTION with USING clause in PROCEDURE DIVISION",
-          "Fixed-format source layout",
-          "JMA ORCA open-source medical software project headers"
+          "PROGRAM-ID ORCGKID2",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "CALL ORCDBMAIN",
+          "MCP-STATUS / MCP-EVENT / MCP-FUNC / MCP-PUTTYPE",
+          "Copyright JMA 2002"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a screen-handling subprogram (component ORCGKID2) within the JMA ORCA standard medical receipt software system. It handles a confirmation screen (screen 2 / KID2) for medical treatment input, processing button-click events to navigate back or trigger printing of prescriptions and medication information. It sets flags and calls ORCDBMAIN to perform window transitions.",
-        "domain": "healthcare / medical billing (Japanese medical receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-koui) input system - confirmation screen 2 (KID2) for medical treatment act entry",
+        "summary": "This program is a screen-navigation subprogram within the JMA ORCA medical receipt software. It handles button-click events on a confirmation screen (KID2), sets flags for printing prescriptions/medication information, and transitions to the appropriate next window via the ORCDBMAIN MCP framework.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Heavy use of COPY statements for screen layout and shared areas (MCPAREA, ORCA-SPA, LINKAREA, K01.INC through KERR2.INC, KID1.INC, KID2.INC, etc.)",
-        "Japanese text in comments (Shift-JIS / EUC-JP encoded, rendered as Latin-1 mojibake)",
-        "EVALUATE ALSO (multi-subject EVALUATE) for event/widget dispatch",
-        "CALL to 'ORCDBMAIN' for window/database operations",
-        "MCP (Message Control Program) interface pattern typical of ORCA system",
-        "No EXEC SQL or EXEC CICS",
-        "Only 1 PIC clause in working storage (rest via COPY)"
+        "Heavy use of COPY statements (32 copybooks) for screen layout and shared areas",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "MCP event-driven screen navigation pattern (EVALUATE MCP-STATUS ALSO MCP-EVENT)",
+        "CALL to ORCDBMAIN runtime",
+        "Japanese comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
+        "No FILE SECTION, no EXEC SQL, no EXEC CICS",
+        "Only 1 PIC clause in WORKING-STORAGE (rest in copybooks)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known Japanese open-source JMA ORCA medical receipt system. Comments are in Japanese (EUC-JP or Shift-JIS) but decoded as Latin-1, causing mojibake. The 'grpsys' tokens appearing before the CALL statement are likely label prefixes or source-control markers specific to the ORCA build system. The high comment ratio (48%) is due to the extensive Japanese comment blocks."
+      "notes": "Japanese text in comments is garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The file is part of the well-known open-source JMA ORCA project. The 'grpsys' tokens appearing inline before CALL appear to be label-like artifacts or group system markers specific to the ORCA build system."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3573,
-      "completion_tokens": 667,
-      "total_tokens": 4240,
-      "cost": 0.020724,
+      "prompt_tokens": 4951,
+      "completion_tokens": 557,
+      "total_tokens": 5508,
+      "cost": 0.023208,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.020724,
-        "upstream_inference_prompt_cost": 0.010719,
-        "upstream_inference_completions_cost": 0.010005
+        "upstream_inference_cost": 0.023208,
+        "upstream_inference_prompt_cost": 0.014853,
+        "upstream_inference_completions_cost": 0.008355
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +113,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 15.86,
+    "provider": "Anthropic",
+    "latency_s": 15.23,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:10:09Z"
 }

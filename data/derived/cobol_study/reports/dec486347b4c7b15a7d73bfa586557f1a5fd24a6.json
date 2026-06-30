@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dec486347b4c7b15a7d73bfa586557f1a5fd24a6",
+    "sha1_git": "dec486347b4c7b15a7d73bfa586557f1a5fd24a6",
+    "filename": "/CallPublicProcFromPrivateProc.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5687,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dec486347b4c7b15a7d73bfa586557f1a5fd24a6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dec486347b4c7b15a7d73bfa586557f1a5fd24a6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5687,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 198,
+    "blank_lines": 34,
+    "comment_lines": 58,
+    "code_lines": 106,
+    "comment_ratio": 0.354,
+    "max_line_length": 79,
+    "avg_line_length": 27.7,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "PGM1",
+      "PersonService",
+      "a02a7aa5",
+      "a0508f35",
+      "cd991005",
+      "f6b6da00"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 9,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "TypeCobol generated code (Bull/Sopra TypeCobol transpiler output). The file header explicitly states 'Simplified Codegen for reference only' and references TypeCobol_Version. Uses TypeCobol-specific patterns: procedure declarations in comments, UUID-like program IDs (a0508f35, cd991005, etc.), IS COMMON nested programs, and zcallpgm dispatch pattern.",
+        "evidence": [
+          "TypeCobol_Version:[[ParserVersion]] in header",
+          "IS COMMON nested programs with UUID-style PROGRAM-IDs",
+          "CALL 'zcallpgm' dispatch pattern",
+          "TC-FunctionCode / FctList-Process-Mode pattern",
+          "declare procedure comments",
+          "TypeCobol-Generated working-storage group"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "TypeCobol transpiler reference output demonstrating calling a public procedure from a private procedure across nested programs (PGM1 and PersonService)",
+        "summary": "This is a TypeCobol-generated reference/example program showing how public and private procedure calls are transpiled into nested COBOL programs with UUID-based PROGRAM-IDs. PGM1 contains a public 'check' procedure and a private 'checkName' procedure; PersonService contains 'GetPersonById' and 'GetPersonByName'. The dispatch mechanism uses a function-code evaluate pattern and a 'zcallpgm' call for cross-program procedure invocation.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "TypeCobol transpiler output with UUID-style nested program IDs",
+        "IS COMMON nested programs for procedure simulation",
+        "FctList dispatch pattern using 88-level condition names on TC-FunctionCode",
+        "CALL 'zcallpgm' for cross-program procedure dispatch",
+        "Commented-out TYPE Date custom type references",
+        "Multiple nested IDENTIFICATION DIVISION blocks",
+        "Explicit 'DO NOT ATTEMPT TO BUILD, DO NOT DEPLOY' warning in header"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The first line is a plain-text warning/comment not prefixed with '*' in column 7, which is technically non-standard but the rest of the file is valid fixed-format COBOL. The [[ParserVersion]] placeholder indicates this is a template or reference output, not a fully instantiated generated file. Program is not intended to be compiled or deployed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3933,
+      "completion_tokens": 575,
+      "total_tokens": 4508,
+      "cost": 0.020424,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020424,
+        "upstream_inference_prompt_cost": 0.011799,
+        "upstream_inference_completions_cost": 0.008625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 22.46,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:39:56Z"
+}

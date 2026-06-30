@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:348ca0fa762af5c1dead3d057e0cff2c5742e776",
+    "sha1_git": "348ca0fa762af5c1dead3d057e0cff2c5742e776",
+    "filename": "/BANK2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5614,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:348ca0fa762af5c1dead3d057e0cff2c5742e776/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:348ca0fa762af5c1dead3d057e0cff2c5742e776/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5614,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 175,
+    "blank_lines": 37,
+    "comment_lines": 0,
+    "code_lines": 138,
+    "comment_ratio": 0.0,
+    "max_line_length": 68,
+    "avg_line_length": 31.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BANK2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 6,
+    "pic_count": 28,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) with screen section, CRT STATUS, SET ENVIRONMENT for COB_SCREEN_EXCEPTIONS, and VALUE OF FILE-ID syntax typical of GnuCOBOL on Linux/Unix",
+        "evidence": [
+          "SET ENVIRONMENT 'COB_SCREEN_EXCEPTIONS' TO 'Y'",
+          "CRT STATUS IS KEYBOARD-STATUS",
+          "VALUE OF FILE-ID IS \"./../movimientos.ubd\"",
+          "SCREEN SECTION with BACKGROUND-COLOR BLACK",
+          "78 level constants for colors",
+          "ASSIGN TO DISK with ORGANIZATION IS INDEXED"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "ATM (cajero automatico) balance inquiry module for a fictional UnizarBank, reading from an indexed movements file",
+        "summary": "This program is a balance inquiry subprogram for a simple ATM simulation called UnizarBank. It accepts a card number (TNUM) via LINKAGE SECTION, reads an indexed file of transactions to find the most recent movement for that card, and displays the current balance on a terminal screen. It handles the case of no movements and system errors with appropriate screen messages.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "SCREEN SECTION with color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR)",
+        "CRT STATUS for keyboard input handling",
+        "78-level color constants",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING",
+        "SET ENVIRONMENT for GnuCOBOL screen exceptions",
+        "Indexed file with DYNAMIC access mode",
+        "FUNCTION CURRENT-DATE usage",
+        "Spanish-language display text (Cajero Automatico, Consulta de saldo)",
+        "GO TO used extensively for flow control"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is clearly a student project (UnizarBank likely references Universidad de Zaragoza). Spanish language UI text. Uses GO TO heavily for control flow. No COMP-3, no SQL, no CICS. The file path './../movimientos.ubd' is relative, consistent with a local development/student environment."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4135,
+      "completion_tokens": 519,
+      "total_tokens": 4654,
+      "cost": 0.02019,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02019,
+        "upstream_inference_prompt_cost": 0.012405,
+        "upstream_inference_completions_cost": 0.007785
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.8,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:39:56Z"
+}

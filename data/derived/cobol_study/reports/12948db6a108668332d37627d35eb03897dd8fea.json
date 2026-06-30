@@ -49,51 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) targeting Linux",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), running on Linux with GnuCOBOL. Program ORCS02 is a patient co-payment calculation subprogram for inpatient use.",
         "evidence": [
-          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCS02",
-          "Fixed-format source with comment lines starting in column 7 (*)",
-          "Linux OS noted in header comments",
-          "No EXEC SQL or EXEC CICS; no COMP-3; 92 CALLs, 685 PERFORMs consistent with GnuCOBOL batch style",
-          "Copyright 2002 JMA (Japan Medical Association) ORCA project — known GnuCOBOL-based open-source medical system"
+          "PROGRAM-ID. ORCS02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "OS LINUX in comments",
+          "no EXEC CICS/SQL",
+          "COPY count 38, CALL count 92 typical of ORCA suite",
+          "fixed format, no COMP-3 consistent with GnuCOBOL/OpenCOBOL ORCA codebase"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a patient co-payment (patient burden amount) calculation subroutine for inpatient (hospital admission) billing, part of the JMA ORCA open-source medical receipt software system. It computes the patient's share of medical costs under various Japanese health insurance schemes, handling numerous regional and special-case rules. It is called by higher-level billing programs to determine how much the patient owes.",
-        "domain": "healthcare / medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance co-payment calculation for inpatient billing (JMA ORCA receipt system). Handles patient burden amount computation covering various insurance types, regional public expense subsidies, elderly patient rules, income-based limits, and meal/living expense charges.",
+        "summary": "ORCS02 is a subprogram within the JMA ORCA open-source medical receipt software suite. It calculates patient co-payment (負担金算定) amounts for inpatient claims, handling a wide variety of Japanese health insurance rules including elderly patient thresholds, regional public expense subsidies, low-income exemptions, and meal/living expense charges. The extensive revision history (2002–2009) reflects ongoing adaptation to Japanese medical insurance law changes.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Extremely large single COBOL source file (~1.4 MB, 28,257 lines)",
-        "Extensive Japanese-language comments (EUC-JP encoded, rendered as Latin-1 mojibake)",
-        "Very long revision history spanning 2002–2009 with 100+ named revisions",
-        "92 CALL statements (calls to external subroutines for insurance rule lookups)",
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "Very large single file: 28,257 lines, ~1.4 MB",
+        "92 CALL statements indicating heavy use of subprogram architecture",
+        "38 COPY statements for shared copybooks",
         "685 PERFORM statements indicating complex procedural logic",
-        "No EXEC SQL, no EXEC CICS, no COMP-3",
-        "No COPY statements (copy_count=0) — all data definitions inline",
-        "13 GO TO statements",
-        "Part of the open-source JMA ORCA medical receipt software project for Linux"
+        "13 GOTO statements",
+        "No EXEC SQL or EXEC CICS — batch subprogram",
+        "No COMP-3 usage (unusual for financial calculations, may use DISPLAY numerics)",
+        "Detailed revision history spanning 2002–2009 with 100+ named patches",
+        "Targets Linux OS explicitly"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded as Latin-1 but the Japanese comments are actually EUC-JP encoded, causing mojibake in the displayed text. The program is clearly production-grade medical billing software from the well-known Japanese ORCA project. The large size (1.4 MB) and extensive revision history confirm long-term production use. The dialect is almost certainly GnuCOBOL/OpenCOBOL given the Linux target and ORCA project context."
+      "notes": "File is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comment text. The COBOL structure and English portions are fully legible. This is clearly part of the well-known JMA ORCA open-source medical receipt system. Source is truncated at 16000 chars but the structure is unambiguous from the header and mechanical indicators."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 15617,
-      "completion_tokens": 695,
-      "total_tokens": 16312,
-      "cost": 0.057276,
+      "prompt_tokens": 16995,
+      "completion_tokens": 631,
+      "total_tokens": 17626,
+      "cost": 0.06045,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.057276,
-        "upstream_inference_prompt_cost": 0.046851,
-        "upstream_inference_completions_cost": 0.010425
+        "upstream_inference_cost": 0.06045,
+        "upstream_inference_prompt_cost": 0.050985,
+        "upstream_inference_completions_cost": 0.009465
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 16.53,
+    "provider": "Anthropic",
+    "latency_s": 17.64,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:43:41Z"
 }

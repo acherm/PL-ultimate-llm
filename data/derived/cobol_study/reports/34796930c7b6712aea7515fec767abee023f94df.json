@@ -49,56 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt printing system (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY-heavy structure with .INC copybooks and file-based IPC typical of ORCA",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "ORGANIZATION IS LINE SEQUENTIAL",
-          "END-UNSTRING terminator (COBOL-85 scope terminators)",
-          "COPY statements with REPLACING clause",
-          "PERFORM ... UNTIL construct",
-          "ACCEPT ... FROM TIME",
-          "UNSTRING ... DELIMITED BY ... INTO",
-          "No EXEC SQL or EXEC CICS",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+          "PROGRAM-ID ORCR0500",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY COMMON-SPA, CPCOMMONPRT.INC, MCPAREA, CPORCMCP.INC",
+          "SELECT PRT-FILE ASSIGN HC01PARA ORGANIZATION IS LINE SEQUENTIAL",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(2000)",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "grpsys prefix on COPY line"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It handles printing of monthly receipt (Rezept) data, specifically managing print jobs for medical insurance claim forms (both inpatient and outpatient variants). It reads print parameters, manages job control via a database, and outputs formatted print data to a print file.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) printing subsystem for the JMA ORCA standard receipt software; handles monthly receipt form printing including hospitalization and outpatient receipts",
+        "summary": "ORCR0500 is a batch program in the JMA ORCA medical receipt system that prints monthly insurance claim receipts (レセプト). It reads print-control data from a file, dispatches to various receipt format copybooks (HCM/HCN series), and writes formatted print data records. It also manages job-control DB updates and error file output.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Extensive use of COPY statements for Japanese medical receipt form layouts (HCM/HCN series .INC files)",
-        "UNSTRING used to parse comma-delimited command parameters from LINKAGE SECTION",
-        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, showing mojibake)",
-        "Large PRT-PRTDATA field of 20000 bytes",
-        "No COMP-3 usage despite being a production financial/billing system",
-        "Multiple versioned copybooks (V01-V04 variants) for different form layouts",
-        "File STATUS fields for error handling",
-        "ORGANIZATION IS LINE SEQUENTIAL for print output file"
+        "75 COPY statements referencing versioned receipt-layout copybooks (HCM18–HCM49, HCN21–HCN51)",
+        "LINKAGE SECTION with COMMAND-PARAM passed via shell/subprocess invocation",
+        "UNSTRING of comma-delimited COMMAND-PARAM for parameter parsing",
+        "LINE SEQUENTIAL file organisation for print output",
+        "No EXEC SQL or EXEC CICS — DB access via subprogram calls (MCP pattern)",
+        "REDEFINES used for serial-number formatting",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in mojibake in comments and string literals. The program is clearly production medical billing software from the Japanese ORCA project (JMA Open Source medical receipt system), with a detailed revision history dating from 2000 to 2006. The source is truncated at 16000 chars but the structure is clear. The 'grpsys' prefix on some lines before COPY statements appears to be a group/section tag used by the build system."
+      "notes": "File is encoded in EUC-JP; decoded as latin-1 so Japanese comments appear as mojibake. Source is truncated at 16000 chars (~26% of 61229 bytes); PROCEDURE DIVISION logic is only partially visible. Dialect identified as GnuCOBOL/OpenCOBOL based on ORCA project context and Linux-style file assignments."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8311,
-      "completion_tokens": 721,
-      "total_tokens": 9032,
-      "cost": 0.035748,
+      "prompt_tokens": 9689,
+      "completion_tokens": 627,
+      "total_tokens": 10316,
+      "cost": 0.038472,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035748,
-        "upstream_inference_prompt_cost": 0.024933,
-        "upstream_inference_completions_cost": 0.010815
+        "upstream_inference_cost": 0.038472,
+        "upstream_inference_prompt_cost": 0.029067,
+        "upstream_inference_completions_cost": 0.009405
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.54,
+    "latency_s": 18.29,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:49:05Z"
 }

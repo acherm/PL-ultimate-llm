@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:157243cd7daccab851528c5014e5cee9330aecff",
+    "sha1_git": "157243cd7daccab851528c5014e5cee9330aecff",
+    "filename": "/tictactoe.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12118,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:157243cd7daccab851528c5014e5cee9330aecff/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:157243cd7daccab851528c5014e5cee9330aecff/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12118,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 279,
+    "blank_lines": 16,
+    "comment_lines": 16,
+    "code_lines": 247,
+    "comment_ratio": 0.061,
+    "max_line_length": 70,
+    "avg_line_length": 42.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TIC-TAC-TOBOL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 43,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (OpenCOBOL) given SCREEN SECTION with BACKGROUND-COLOR/FOREGROUND-COLOR, LINE SEQUENTIAL file, and FUNCTION RANDOM/UPPER-CASE usage; no IBM-specific extensions",
+        "evidence": [
+          "SCREEN SECTION with BACKGROUND-COLOR/FOREGROUND-COLOR",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "FUNCTION RANDOM",
+          "FUNCTION UPPER-CASE",
+          "END-ADD, END-COMPUTE inline scope terminators",
+          "88-level condition names with SET"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Interactive terminal-based Tic-Tac-Toe game (human vs computer)",
+        "summary": "A terminal-based Tic-Tac-Toe game where a human player competes against a computer opponent. The computer makes random moves, win conditions are checked against masks stored in an external file (SMACK.DAT), and the screen is rendered using the SCREEN SECTION. Tracks wins and games played across multiple rounds.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "SCREEN SECTION with BACKGROUND-COLOR and FOREGROUND-COLOR",
+        "88-level condition names used extensively for game state",
+        "FUNCTION RANDOM for computer move generation",
+        "FUNCTION UPPER-CASE for input parsing",
+        "Win condition detection via external flat file (SMACK.DAT) with INSPECT/string comparison",
+        "OCCURS clause for 2D game grid",
+        "LINE SEQUENTIAL file organization",
+        "No GOTO usage; structured with PERFORM loops"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program name TIC-TAC-TOBOL is a pun on COBOL. The win-detection algorithm reads a flat file of win masks and compares them character-by-character, which is an unusual but functional approach. The computer AI is purely random. The stalemate detection checks WS-MOVES = 8 (9th move is the last). Overall a well-structured student/hobbyist project."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6314,
+      "completion_tokens": 498,
+      "total_tokens": 6812,
+      "cost": 0.026412,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026412,
+        "upstream_inference_prompt_cost": 0.018942,
+        "upstream_inference_completions_cost": 0.00747
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.82,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:49:42Z"
+}

@@ -49,53 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (DB2 embedded SQL, mainframe conventions)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL with DB2 embedded SQL (EXEC SQL), DSNTIAR error handling, IBM-370 source/object computer, RECORDING MODE IS F, COMP and COMP usage - consistent with IBM Enterprise COBOL for z/OS. Program appears to be part of a BNSF (Burlington Northern Santa Fe railroad) customer/location master data system.",
         "evidence": [
-          "PROGRAM-ID. CLADRILD",
-          "SOURCE-COMPUTER. IBM-370 / OBJECT-COMPUTER. IBM-370",
-          "RECORDING MODE IS F / BLOCK CONTAINS 0 RECORDS",
-          "EXEC SQL (has_exec_sql: true)",
-          "DSNTIAR reference (IBM DB2 SQL error handler)",
-          "PIC S9(04) COMP / PIC S9(09) COMP (binary COMP usage typical of IBM)",
-          "COPY CLFM060B inline expansion visible",
-          "Fixed-format with sequence numbers in columns 1-6 (e.g. 000100, 011500)"
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
+          "EXEC SQL present",
+          "DSNTIAR referenced for DB2 error handling",
+          "RECORDING MODE IS F",
+          "COMP usage (S9(04) COMP, S9(09) COMP)",
+          "LABEL RECORDS ARE STANDARD",
+          "BLOCK CONTAINS 0 RECORDS"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch program that retrieves address records merged into the BNSF master and passes them to subprogram CLCSLALM to search for matching/mergeable locations. It produces an output report with counts and results of the address-merge lookup process.",
-        "domain": "transportation/logistics (BNSF railroad customer/location master data)",
+        "domain": "manufacturing-logistics",
+        "domain_detail": "BNSF (Burlington Northern Santa Fe) railroad freight/logistics - customer location master data management. The program processes address records merged into the BNSF master and calls subprogram CLCSLALM to find existing locations for potential merges.",
+        "summary": "Batch program CLADRILD pulls all address records merged into the BNSF master and sends them to subprogram CLCSLALM to look for existing locations to merge with. It runs regularly to identify potential location merges as new addresses are created, and produces an output report with counts and results.",
         "program_type": "batch"
       },
       "notable_features": [
         "EXEC SQL (DB2 embedded SQL)",
-        "DSNTIAR IBM DB2 error message handler",
-        "CALL to subprogram CLCSLALM for location merge logic",
-        "Inline COPY expansion of CLFM060B (copybook with CLF0060M-PARMS structure)",
-        "Extensive working-storage counters for processing metrics",
-        "Fixed-format with 6-digit sequence numbers",
-        "RECORDING MODE IS F with BLOCK CONTAINS 0 RECORDS (mainframe file handling)",
-        "88-level condition names for DB2 return codes and function codes"
+        "DSNTIAR DB2 error message handler",
+        "COPY CLFM060B copybook inclusion",
+        "CALL to subprogram CLCSLALM",
+        "Output report file (UT-S-REPORT)",
+        "88-level condition names for DB2 return codes",
+        "REDEFINES clause on WD-RETURN-CODE",
+        "Large working-storage with detailed counters",
+        "CIF (Customer Information File) data structures",
+        "Physical and mailing address fields in copybook"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated at 16000 chars out of 74148 bytes (1002 lines total), so the PROCEDURE DIVISION and full SQL statements are not visible. The inline COPY expansion of CLFM060B is unusual — it appears the copybook was physically inlined into the source rather than left as a COPY directive, possibly an artifact of archiving. The program name in the comment block reads 'CLCSLALD' but PROGRAM-ID is 'CLADRILD', suggesting a copy-paste discrepancy in the header comments. Domain is clearly BNSF (Burlington Northern Santa Fe) railroad customer/location master data management."
+      "notes": "Source truncated to first 16000 chars; the copybook CLFM060B is inlined in the listing (expanded by preprocessor or included literally). The program name in the comment block says CLCSLALD but PROGRAM-ID is CLADRILD - minor discrepancy likely a copy-paste artifact in comments. No COMP-3 usage detected despite being IBM mainframe, which is unusual but not disqualifying. Latin-1 decoding used."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5357,
-      "completion_tokens": 698,
-      "total_tokens": 6055,
-      "cost": 0.026541,
+      "prompt_tokens": 6735,
+      "completion_tokens": 605,
+      "total_tokens": 7340,
+      "cost": 0.02928,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.026541,
-        "upstream_inference_prompt_cost": 0.016071,
-        "upstream_inference_completions_cost": 0.01047
+        "upstream_inference_cost": 0.02928,
+        "upstream_inference_prompt_cost": 0.020205,
+        "upstream_inference_completions_cost": 0.009075
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.71,
+    "latency_s": 17.27,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:53:46Z"
 }

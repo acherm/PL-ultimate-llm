@@ -49,54 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL for z/OS",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM CICS/COBOL for z/OS; part of IBM's CICS sample application 'General Insurance' (CB12 product code). Uses EXEC CICS LINK, HANDLE AID, HANDLE CONDITION, SEND MAP, RECEIVE MAP, RETURN TRANSID patterns typical of IBM CICS BMS applications.",
         "evidence": [
-          "EXEC CICS SEND MAP / RECEIVE MAP / LINK / RETURN / HANDLE AID / HANDLE CONDITION",
-          "EIBCALEN (CICS EIB field)",
-          "COPY SSMAP / COPY LGCMAREA (IBM-style copybooks)",
-          "TRANSID('SSP1') in EXEC CICS RETURN",
-          "EXEC CICS Syncpoint Rollback",
-          "Fixed format, max line length 72, IBM copyright header CB12",
-          "EVALUATE / END-EVALUATE (COBOL-85)",
-          "Initialize statement"
+          "EXEC CICS SEND MAP / RECEIVE MAP",
+          "EXEC CICS LINK PROGRAM(...)",
+          "EXEC CICS HANDLE AID / HANDLE CONDITION",
+          "EXEC CICS RETURN TRANSID('SSP1')",
+          "EIBCALEN",
+          "COPY SSMAP / COPY LGCMAREA",
+          "IBM copyright CB12 2011-2013"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a CICS online transaction program implementing a Motor Policy menu for an insurance application. It supports four operations—Inquire, Add, Delete, and Update—on motor insurance policies by linking to backend programs (LGIPOL01, LGAPOL01, LGDPOL01, LGUPOL01) via a communication area. It is part of the IBM CICS sample application (CB12/LGSE).",
         "domain": "insurance",
+        "domain_detail": "Motor (automobile) insurance policy management menu — part of IBM's General Insurance CICS sample application",
+        "summary": "This program implements a CICS BMS menu screen (SSMAPP1) for motor insurance policy transactions. It supports four operations: inquire (option 1), add (option 2), delete (option 3), and update (option 4) motor policies by linking to backend programs LGIPOL01, LGAPOL01, LGDPOL01, and LGUPOL01 respectively. It manages screen flow, error handling, and COMMAREA passing between transactions.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS SEND MAP / RECEIVE MAP (BMS map handling)",
+        "EXEC CICS SEND MAP / RECEIVE MAP (BMS)",
         "EXEC CICS LINK to backend policy programs",
-        "EXEC CICS HANDLE AID and HANDLE CONDITION",
-        "EXEC CICS Syncpoint Rollback on error paths",
-        "EXEC CICS RETURN with TRANSID for pseudo-conversational design",
-        "COPY SSMAP and COPY LGCMAREA copybooks",
+        "EXEC CICS HANDLE AID / HANDLE CONDITION",
+        "EXEC CICS RETURN TRANSID with COMMAREA",
+        "EXEC CICS Syncpoint Rollback on error",
         "EIBCALEN check for first-time entry",
-        "17 GO TO statements (structured around CICS pseudo-conversational pattern)",
-        "IBM licensed materials copyright header (CB12 sample application)"
+        "COPY SSMAP and COPY LGCMAREA copybooks",
+        "EVALUATE on menu option",
+        "17 GO TO statements for flow control",
+        "No COMP-3 or SQL usage"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly part of the IBM CICS TS sample application 'General Insurance' (CB12), widely distributed as a learning/demo application but written to production-like standards. The COPY statements reference external copybooks (SSMAP, LGCMAREA) not shown here. No SQL is present. The duplicate EXEC CICS SEND MAP in the WHEN '3' branch appears to be a minor code defect."
+      "notes": "This is a well-known IBM sample CICS application (General Insurance, product code CB12). The code is production-quality in structure though it is a demonstration/sample application. Fixed format confirmed by max line length of 72 and no lines over 72."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4443,
-      "completion_tokens": 672,
-      "total_tokens": 5115,
-      "cost": 0.023409,
+      "prompt_tokens": 5821,
+      "completion_tokens": 576,
+      "total_tokens": 6397,
+      "cost": 0.026103,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.023409,
-        "upstream_inference_prompt_cost": 0.013329,
-        "upstream_inference_completions_cost": 0.01008
+        "upstream_inference_cost": 0.026103,
+        "upstream_inference_prompt_cost": 0.017463,
+        "upstream_inference_completions_cost": 0.00864
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.53,
+    "latency_s": 15.45,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:12:21Z"
 }

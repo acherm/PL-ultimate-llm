@@ -50,51 +50,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible mainframe COBOL",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Spanish-language COBOL subprogram, likely from a Latin American mainframe or mid-range environment. Part of an ASDA (static analysis / standards checker) toolset. No vendor-specific extensions visible beyond GOBACK and COPY with .CPY extension.",
         "evidence": [
           "PROGRAM-ID. RASDA010 IS INITIAL",
-          "GOBACK verb",
-          "PERFORM ... VARYING ... FROM ... BY ... UNTIL",
-          "END-IF scope terminators",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "COPY with .CPY extension",
-          "Fixed-format source layout"
+          "GOBACK",
+          "COPY CASDACOM.CPY",
+          "PROCEDURE DIVISION USING ASDA-AREA",
+          "END-IF used (COBOL-85+)"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a COBOL source code analysis utility (part of an ASDA/standards-checking suite) that scans lines of text looking for the reserved word ' TO ' and verifies it appears at the correct column position (column 48) according to coding standards. It reports errors when ' TO ' is found at an incorrect position.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "COBOL source code static analysis / standards checker. This subprogram scans lines of COBOL text looking for the reserved word ' TO ' and verifies it appears at the correct column position (column 48) per coding standards.",
+        "summary": "This subprogram (RASDA010) is part of a COBOL static analysis tool (ASDA). It iterates over lines of COBOL source text passed via a linkage area, searches for the reserved word ' TO ', and flags occurrences where ' TO ' does not appear at the expected column position (48), recording error details (line, column, error number) in the shared communication area.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "IS INITIAL clause on PROGRAM-ID",
-        "GOBACK instead of STOP RUN",
+        "PROCEDURE DIVISION USING (subprogram interface)",
+        "OCCURS 80 for character-level text scanning",
         "Reference modification: REGISTRO(ASDA-WSI-IND:4)",
-        "OCCURS clause on subordinate group item (TXT-CAR)",
-        "LINKAGE SECTION with external COPY (CASDACOM.CPY) for shared data area",
-        "High comment ratio (48%) with Spanish-language comments",
-        "No EXEC SQL, no EXEC CICS, no COMP-3"
+        "COPY CASDACOM.CPY for shared communication area",
+        "IS INITIAL clause on PROGRAM-ID",
+        "GOBACK",
+        "High comment ratio (48%) with Spanish-language comments"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "The program is part of a larger ASDA (automated source/standards analysis) framework, evidenced by the ASDA- prefixed data names in the linkage area and the program naming convention RASDA010. The COPY CASDACOM.CPY is not expanded here so the full data structure of ASDA-AREA is not visible. The program name appearing in program_ids as 'PIC' is a mechanical parsing artifact from the line '01 HP-PROGRAM-ID PIC X(10) VALUE \"RASDA010\"'. One line slightly exceeds 72 characters (column 73+), which is minor. Written in Spanish (Argentina, given 'MAYO' date format and author name)."
+      "overall_confidence": "medium",
+      "notes": "Program is part of a larger ASDA (Analizador de Sintaxis / static analysis) suite. The COPY member CASDACOM.CPY defines ASDA-AREA and related fields not visible here. Spanish-language comments and author name suggest Latin American origin (Argentina likely given 'MATIAS CARBONEL'). Dialect family is uncertain as no IBM-specific or GnuCOBOL-specific extensions are visible."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1753,
-      "completion_tokens": 622,
-      "total_tokens": 2375,
-      "cost": 0.014589,
+      "prompt_tokens": 3131,
+      "completion_tokens": 538,
+      "total_tokens": 3669,
+      "cost": 0.017463,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.014589,
-        "upstream_inference_prompt_cost": 0.005259,
-        "upstream_inference_completions_cost": 0.00933
+        "upstream_inference_cost": 0.017463,
+        "upstream_inference_prompt_cost": 0.009393,
+        "upstream_inference_completions_cost": 0.00807
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +114,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 13.77,
+    "provider": "Anthropic",
+    "latency_s": 12.76,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:21:13Z"
 }

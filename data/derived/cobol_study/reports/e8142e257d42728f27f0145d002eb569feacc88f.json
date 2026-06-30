@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) test runner for GCSort utility; compile command explicitly uses 'cobc -x -std=default'; uses BINARY-LONG and SYSTEM call typical of GnuCOBOL",
         "evidence": [
-          "compile command in header: 'cobc -x -std=default -debug -Wall -o gctestrun5 gctestrun5.cbl'",
-          "BINARY-LONG data type (GnuCOBOL extension)",
-          "RETURN-CODE special register usage",
-          "call 'SYSTEM' using cmd-go (GnuCOBOL system call convention)",
-          "D-level debug lines ('D    display')",
-          "END-IF, END-PERFORM (COBOL-85 scope terminators)",
-          "GOBACK statement"
+          "cobc -x -std=default -debug -Wall in comment",
+          "BINARY-LONG pic clause",
+          "call 'SYSTEM' using cmd-go",
+          "RETURN-CODE special register",
+          "call 'gctestgetop'"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A test runner program for GCSort (a COBOL sort utility), specifically for Group 5 'Sum Fields' tests. It iterates over 9 named test cases, generates input files by calling external programs via SYSTEM, runs GCSort with take-file parameters, and reports pass/fail results in a formatted epilog.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "Test runner for GCSort (a COBOL sort utility), specifically testing sum-fields functionality (Group 5)",
+        "summary": "This program is a test harness for the GCSort sort utility. It iterates over 9 named test cases involving sum-field operations (binary, float, packed-decimal, zoned-decimal), runs input file generation programs and GCSort take-file commands via SYSTEM calls, then prints a pass/fail epilog table.",
         "program_type": "test"
       },
       "notable_features": [
-        "BINARY-LONG data type (GnuCOBOL extension)",
+        "BINARY-LONG data item",
         "CALL 'SYSTEM' for OS command execution",
-        "CALL 'gctestgetop' to detect OS environment type (Windows=1, Linux=2/3)",
-        "Platform-conditional path handling: replacing forward slashes with backslashes for Windows",
-        "INSPECT ... REPLACING for path separator conversion",
-        "D-level debug lines (D in column 7)",
+        "RETURN-CODE special register usage",
+        "Platform detection (Windows ntype=1, Linux ntype=2/3) with path separator substitution",
+        "INSPECT REPLACING for slash/backslash conversion",
+        "STRING verb for command construction",
         "Inline comments with platform labels (Win, Linux, TEST00***)",
-        "REDEFINES used to create array overlay over flat data structure",
-        "RETURN-CODE special register checked after SYSTEM calls",
-        "ENVIRONMENT-NAME / ENVIRONMENT-VALUE for setting environment variables"
+        "'D' debug lines (D display)",
+        "REDEFINES on array structure for table access",
+        "GOBACK statement"
       ],
-      "maturity": "student-exercise",
+      "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file has a tab character in the source (mixed indentation visible in the identification division line and cmd-string declaration), though the format is predominantly fixed. The program is part of a larger GCSort test suite (series gctestrun1-N). Platform detection logic (ntype 1=Windows, 2/3=Linux) is present but somewhat rudimentary. The copyright is 2016/2017 by Sauro Menna under LGPL 3.0."
+      "notes": "The file has a tab character before 'identification division' and some inline section labels (Win, Linux) that appear in the indicator area as informal labels rather than standard COBOL. The 'D' prefix on some DISPLAY lines is a GnuCOBOL debug-line convention. Author and license (LGPL 3.0) are clearly stated. Part of the GCSort open-source project by Sauro Menna."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4762,
-      "completion_tokens": 669,
-      "total_tokens": 5431,
-      "cost": 0.024321,
+      "prompt_tokens": 6140,
+      "completion_tokens": 515,
+      "total_tokens": 6655,
+      "cost": 0.026145,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.024321,
-        "upstream_inference_prompt_cost": 0.014286,
-        "upstream_inference_completions_cost": 0.010035
+        "upstream_inference_cost": 0.026145,
+        "upstream_inference_prompt_cost": 0.01842,
+        "upstream_inference_completions_cost": 0.007725
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 21.23,
+    "provider": "Anthropic",
+    "latency_s": 14.58,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:59:58Z"
 }

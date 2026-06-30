@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or OpenCOBOL (ORCA project, likely compiled with open-source COBOL runtime on Linux)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based open source Japanese medical billing software",
         "evidence": [
-          "EVALUATE ... WHEN ... END-EVALUATE",
-          "PERFORM VARYING ... UNTIL ... END-PERFORM",
-          "IF ... END-IF",
-          "INITIALIZE statement",
-          "COPY with REPLACING",
-          "EXIT PROGRAM",
-          "PROCEDURE DIVISION USING with multiple parameters",
-          "Fixed-format source layout"
+          "PROGRAM-ID ORCSC40200203",
+          "COPY 'MCPAREA'",
+          "COPY 'COMMON-SPA'",
+          "COPY 'CPORCSC00.INC'",
+          "Japanese comments throughout",
+          "JMA Open Source License header",
+          "LINKAGE SECTION with MCPAREA pattern typical of ORCA"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) medical billing system for Japan. It performs medical procedure (診療行為) checking and calculation for treatment acts (処置), including automatic addition of time-based surcharges, age-based surcharges, oxygen correction rates, and narcotic/biological preparation flags. It is a subprogram called with a mode flag (KBN) to perform per-item checks, whole-claim checks, or automatic calculation.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (診療行為チェック・算定 - medical procedure check and calculation for treatment acts, specifically procedures/処置, up to H14.4 revision)",
+        "summary": "This program is a subprogram in the JMA ORCA medical receipt software system. It performs medical procedure (診療行為) checking and calculation for treatment acts (処置), including automatic addition of time-based surcharges (時間加算), age-based surcharges (年齢加算), oxygen correction rates (酸素補正率), and narcotic/biological preparation flags. It is called with a mode flag (KBN) to perform per-item checks, whole-claim checks, or automatic calculation.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese comments and variable names (Shift-JIS/UTF-8 mixed with ASCII code)",
-        "COPY statements referencing multiple include files (CPK02SPASCR.INC, CPTENSU.INC, CPSANTEI.INC, CPORCSC90.INC, CPORCSC91.INC, CPORCSC92.INC, MCPDATA.INC, MCPAREA, CPORCSC00.INC, COMMON-SPA)",
-        "LINKAGE SECTION with multiple passed areas (MCPAREA, ORCSC00AREA, WRK-SCR-REC, SPA-AREA)",
-        "EVALUATE used for dispatch on LNK-ORCSC-KBN (mode 1/2/3)",
+        "LINKAGE SECTION with multiple COPY-based parameter areas (MCPAREA, ORCSC00AREA, COMMON-SPA)",
+        "11 COPY statements for shared copybooks",
+        "Japanese comments and variable names (mixed Japanese/romaji)",
+        "EVALUATE-based dispatch on LNK-ORCSC-KBN",
+        "Automatic surcharge insertion logic (時間加算, 年齢加算, 酸素補正率)",
         "No EXEC SQL or EXEC CICS",
         "No COMP-3 usage",
-        "Open Source medical billing software (JMA ORCA project, copyright 2002)",
-        "GO TO used sparingly (3 occurrences) for section exits",
-        "High comment ratio (38.6%) with structured section headers"
+        "Fixed format source with max line length ~74"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is clearly production COBOL from the JMA ORCA open-source medical receipt software project (Japan, circa 2002). The COPY statements reference many external copybooks that are not shown. The dialect is most likely GnuCOBOL or a compatible open-source COBOL compiler used in the ORCA project on Linux. The source is truncated at 16000 chars out of 33249 bytes, so the full PROCEDURE DIVISION is not visible, but enough is present to confirm purpose and structure."
+      "notes": "Source truncated to first 16000 chars; full program is 824 lines. Program is part of the well-known JMA ORCA open-source Japanese medical billing system, likely compiled with GnuCOBOL/OpenCOBOL. The filename prefix ORCSC402 and program ID ORCSC40200203 follow ORCA naming conventions for medical procedure calculation subprograms."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6083,
-      "completion_tokens": 782,
-      "total_tokens": 6865,
-      "cost": 0.029979,
+      "prompt_tokens": 7461,
+      "completion_tokens": 606,
+      "total_tokens": 8067,
+      "cost": 0.031473,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.029979,
-        "upstream_inference_prompt_cost": 0.018249,
-        "upstream_inference_completions_cost": 0.01173
+        "upstream_inference_cost": 0.031473,
+        "upstream_inference_prompt_cost": 0.022383,
+        "upstream_inference_completions_cost": 0.00909
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.72,
+    "provider": "Anthropic",
+    "latency_s": 15.95,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:45:38Z"
 }

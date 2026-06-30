@@ -49,53 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL / ORCA project)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); GnuCOBOL/OpenCOBOL-based, uses COPY copybooks like COMMON-SPA, W01COMMON-SPA, ENUM-VALUE typical of ORCA",
         "evidence": [
-          "PROGRAM-ID. ORCGW06",
-          "COPY directives for COMMON-SPA, W01COMMON-SPA, ENUM-VALUE",
-          "OCCURS clauses, PIC X/9 definitions consistent with COBOL-85",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "ORCA project header: 'JMA standard receipt software', Japan Medical Association copyright 2002",
-          "No EXEC SQL or EXEC CICS blocks",
-          "24 CALL statements, 267 PERFORM statements typical of GnuCOBOL batch programs"
+          "PROGRAM-ID ORCGW06",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"W01COMMON-SPA\"",
+          "COPY \"ENUM-VALUE\"",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system and handles staff/employee information management (職員情報 - W06 component) within the system administration subsystem. It manages user registration, authority settings, specialty department codes, and various flag configurations for medical staff in a Japanese medical billing system.",
-        "domain": "healthcare/medical billing (Japanese medical association receipt software)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - staff/employee information management screen (職員情報 W06)",
+        "summary": "This program implements the staff/employee information management screen (component W06) of the JMA ORCA medical receipt system. It handles registration, update, and deletion of staff records including occupation codes, user IDs, authority flags, and various system settings. It is a multi-page screen program managing system administration information for a Japanese medical clinic management system.",
+        "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
-        "Large SPA (Scratch Pad Area) working storage structure with multiple nested OCCURS tables",
-        "COPY statements for shared SPA definitions (COMMON-SPA, W01COMMON-SPA, ENUM-VALUE)",
-        "No EXEC SQL or EXEC CICS — likely uses CALL-based database access",
-        "Extensive version history in comments spanning 2000-2010",
-        "24 CALL statements suggesting modular subprogram architecture",
+        "73 COPY statements indicating heavy use of shared copybooks",
+        "24 CALL statements to external subprograms",
         "267 PERFORM statements indicating complex procedural logic",
-        "Only 3 GOTO statements (minimal use)",
-        "No COMP-3 usage despite being a production financial/medical system"
+        "Multi-page screen handling (SPA-GMN-PAGE, SPA-GMN-LINE)",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded with mojibake)",
+        "SPA (Screen Parameter Area) pattern typical of ORCA",
+        "OCCURS clauses for list/table management",
+        "No EXEC SQL or EXEC CICS - uses ORCA middleware abstraction layer",
+        "Extensive authority/permission flag management (KANRIAUTH, USER-KANRI)",
+        "Version history spanning 2000-2010 with multiple contributors"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was archived with latin-1 decoding but the comments contain Japanese text encoded in EUC-JP or Shift-JIS, resulting in mojibake. The source is clearly genuine production COBOL from the open-source ORCA medical receipt software project by the Japan Medical Association. The truncated portion shows only the WORKING-STORAGE SECTION; the PROCEDURE DIVISION with the actual logic is not visible but inferred from the mechanical indicators (267 PERFORMs, 24 CALLs). The 6 lines over 72 characters are minor and likely within the 80-column tolerance of the compiler used."
+      "notes": "File decoded as latin-1 but comments are Japanese EUC or Shift-JIS encoded, appearing as mojibake. This is the JMA ORCA open-source medical receipt software, widely deployed in Japanese clinics. The program is a screen handler for staff information settings, part of the system management subsystem. Fixed format with max line length 74, consistent with ORCA codebase conventions."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8687,
-      "completion_tokens": 736,
-      "total_tokens": 9423,
-      "cost": 0.037101,
+      "prompt_tokens": 10065,
+      "completion_tokens": 591,
+      "total_tokens": 10656,
+      "cost": 0.03906,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037101,
-        "upstream_inference_prompt_cost": 0.026061,
-        "upstream_inference_completions_cost": 0.01104
+        "upstream_inference_cost": 0.03906,
+        "upstream_inference_prompt_cost": 0.030195,
+        "upstream_inference_completions_cost": 0.008865
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.25,
+    "latency_s": 16.05,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:51:20Z"
 }

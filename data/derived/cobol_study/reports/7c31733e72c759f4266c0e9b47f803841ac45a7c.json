@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7c31733e72c759f4266c0e9b47f803841ac45a7c",
+    "sha1_git": "7c31733e72c759f4266c0e9b47f803841ac45a7c",
+    "filename": "/CIRE010.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 40706,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7c31733e72c759f4266c0e9b47f803841ac45a7c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7c31733e72c759f4266c0e9b47f803841ac45a7c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 40706,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 612,
+    "blank_lines": 16,
+    "comment_lines": 104,
+    "code_lines": 492,
+    "comment_ratio": 0.174,
+    "max_line_length": 80,
+    "avg_line_length": 65.5,
+    "long_lines_over_72": 375,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CIRE010"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 19,
+    "goto_count": 7,
+    "pic_count": 181,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe batch COBOL; uses RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, COMP-3, INDEXED file with FILE STATUS, COPY statements for copybooks (ELCDTEFD, ERCREIN), sequence numbers in columns 1-6 and 73-80, fixed format. Likely compiled under IBM VS COBOL II or COBOL for MVS/OS.",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-3",
+          "ORGANIZATION IS INDEXED / FILE STATUS / RECORD KEY",
+          "COPY ELCDTEFD / COPY ERCREIN",
+          "sequence numbers in columns 73-80 (e.g. 00000100)",
+          "ASSIGN TO SYS010 / SYS015 / ERREIN style DDNAMEs",
+          "EJECT directive"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Reinsurance reporting — selects and prints lines from ECS-045 microfiche reports for specific reinsurance company codes; program CIRE010 is part of an insurance reinsurance reporting system with a year-end variant CIRE010Y",
+        "summary": "Batch program that reads an ECS-045 microfiche input file and a reinsurance indexed file, selects print lines for specific reinsurance company codes (maintained in an internal table of ~104 entries), and writes output to one or two report files. The program has been actively maintained since 1991 with a detailed change log tracking additions and removals of company codes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Large internal company-code table (OCCURS 104 TIMES) with HIGH-VALUES sentinel",
+        "INDEXED file with FILE STATUS and RECORD KEY (REINSURANCE-FILE)",
+        "COMP-3 field (S0C7 — likely used for numeric trap)",
+        "Multiple COPY statements (ELCDTEFD, ERCREIN)",
+        "Dual output report files (REPORT-FILE, REPORT-FILE2)",
+        "Extensive change log with dated change markers in sequence-number area",
+        "EJECT directive",
+        "88-level condition name (EOF)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full PROCEDURE DIVISION not visible but mechanical indicators show 19 PERFORMs, 7 GOTOs, 181 PIC clauses — consistent with a substantial production batch program. The sequence numbers in columns 73-80 and the change-log markers in columns 1-6 are characteristic of IBM mainframe source management (e.g. PANVALET or LIBRARIAN)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7417,
+      "completion_tokens": 653,
+      "total_tokens": 8070,
+      "cost": 0.032046,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032046,
+        "upstream_inference_prompt_cost": 0.022251,
+        "upstream_inference_completions_cost": 0.009795
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.12,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:44:10Z"
+}

@@ -49,54 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL for Windows/DOS environment; uses quoted COPY filenames with extensions (.CPB, .MF, .CPY), PRINTER IS LPRINTER, DECIMAL-POINT IS COMMA, 78-level constants, and BLANK WHEN ZEROS — all characteristic of Micro Focus dialect",
         "evidence": [
-          "COPY with quoted filenames: COPY \"COP100.CPB\", COPY \"DS-CNTRL.MF\", COPY \"CBPRINT.CPY\"",
-          "78 level constant: 78 REFRESH-TEXT-AND-DATA-PROC VALUE 255",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "PRINTER IS LPRINTER in SPECIAL-NAMES",
-          "BLANK WHEN ZEROS clause usage",
-          "Fixed format, max line length 72"
+          "COPY \"COP100.CPB\"",
+          "COPY \"DS-CNTRL.MF\"",
+          "COPY \"CBPRINT.CPY\"",
+          "PRINTER IS LPRINTER",
+          "DECIMAL-POINT IS COMMA",
+          "78 REFRESH-TEXT-AND-DATA-PROC VALUE 255",
+          "BLANK WHEN ZEROS",
+          "max_line_length=72 fixed format"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a contract consultation/reporting program (COP100) for a photography and video studio ('Kello Foto & Video'). It reads multiple indexed files covering contracts, events, brides/gifts (brinde), financial data, and contacts, then produces a detailed printed report covering contract data, financial scheduling, event details, credit data, and contact information.",
-        "domain": "photography/video studio business management (contracts, billing, events)",
+        "domain": "retail-commerce",
+        "domain_detail": "Photography and video studio contract management system (Kello Foto & Video); handles contracts, brides/gifts, events, financial scheduling, contacts, and course/class data",
+        "summary": "COP100 is a contract inquiry/report program for a photography and video studio (Kello Foto & Video). It reads multiple indexed files covering contracts, accounts payable, events, credits, reportage, and prints a detailed contract report including financial scheduling, gift/brinde data, event data, credit data, contacts, and course/class information.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Extensive use of COPY statements for both SELECT and FD sections (40+ copybooks)",
-        "78-level constant (Micro Focus extension)",
-        "DECIMAL-POINT IS COMMA (European/Brazilian locale)",
-        "PRINTER IS LPRINTER special-names clause",
-        "Quoted copybook filenames (Micro Focus style)",
+        "79 COPY statements for file-control and file-section copybooks",
+        "33 CALL statements",
+        "238 PERFORM statements",
+        "No GOTO usage",
+        "DECIMAL-POINT IS COMMA (Brazilian Portuguese locale)",
+        "PRINTER IS LPRINTER for report output",
+        "78-level constant (REFRESH-TEXT-AND-DATA-PROC)",
         "OCCURS clause for arrays (COMISSAO, FONE)",
-        "Large number of PERFORM statements (238) indicating structured procedural logic",
-        "33 CALL statements suggesting modular design with subprograms",
-        "Portuguese-language comments and data names (Brazilian Portuguese)",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage despite financial calculations"
+        "Portuguese-language comments and variable names",
+        "Multiple report header records with continuation lines",
+        "LOGACESS copybook suggesting access logging"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File is clearly production COBOL from a Brazilian photography/video business system, circa 1999. The extensive copybook usage means much of the actual file/record definitions are not visible in the truncated source. The 78-level item and quoted COPY filenames are strong Micro Focus indicators. No COMP-3 is unusual for financial data but consistent with what is shown. Portuguese comments confirm Brazilian origin."
+      "notes": "Source truncated to first 16000 chars; full program is 2879 lines. Brazilian Portuguese business application (comments and identifiers in Portuguese). Authored by Mareli Amancio Volpato, dated 06/08/1999. No COMP-3 usage despite financial calculations — values stored as DISPLAY numeric. File naming conventions (COPx, CAPx, CGPx, etc.) suggest a modular multi-program system."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6532,
-      "completion_tokens": 651,
-      "total_tokens": 7183,
-      "cost": 0.029361,
+      "prompt_tokens": 7910,
+      "completion_tokens": 589,
+      "total_tokens": 8499,
+      "cost": 0.032565,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.029361,
-        "upstream_inference_prompt_cost": 0.019596,
-        "upstream_inference_completions_cost": 0.009765
+        "upstream_inference_cost": 0.032565,
+        "upstream_inference_prompt_cost": 0.02373,
+        "upstream_inference_completions_cost": 0.008835
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +121,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 25.65,
+    "latency_s": 21.43,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:33:39Z"
 }

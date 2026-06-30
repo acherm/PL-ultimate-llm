@@ -51,52 +51,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) - uses SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR, LOCAL-STORAGE SECTION, RECURSIVE program attribute, inline comments with *>, and GOBACK; consistent with GnuCOBOL dialect",
         "evidence": [
-          "RECURSIVE clause on PROGRAM-ID (GnuCOBOL extension)",
-          "LOCAL-STORAGE SECTION (supported in GnuCOBOL)",
-          "*> inline comments (GnuCOBOL/COBOL-2002 style)",
-          "SCREEN SECTION with BLANK SCREEN, FOREGROUND-COLOR, BACKGROUND-COLOR, AUTO clauses",
-          "GOBACK used in nested/recursive subprograms",
-          "END PROGRAM statement",
-          "BLANK WHEN ZERO in SCREEN SECTION"
+          "SCREEN SECTION with foreground-color/background-color clauses",
+          "LOCAL-STORAGE SECTION",
+          "PROGRAM-ID ... RECURSIVE",
+          "*> inline comment style",
+          "GOBACK in subprogram",
+          "END PROGRAM Sudoku followed by nested Program-Id"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "An interactive terminal-based Sudoku solver. The main program displays a screen-based UI allowing the user to enter known values, then calls a recursive subprogram (TABLE-ANALYSIS) that uses backtracking to find all solutions, and a display subprogram (SHOW-SUDOKU-BOARD) to present each solution found.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Sudoku puzzle solver with interactive screen-based input and recursive backtracking algorithm",
+        "summary": "An interactive Sudoku solver that displays a 9x9 grid on screen, accepts known values from the user, then uses a recursive backtracking algorithm (TABLE-ANALYSIS) to find all solutions. Results are displayed via a separate SHOW-SUDOKU-BOARD subprogram. The program uses COBOL SCREEN SECTION for terminal UI.",
         "program_type": "demo"
       },
       "notable_features": [
-        "SCREEN SECTION with full-screen TUI layout (LINE/COL positioning, BLANK WHEN ZERO, UNDERLINE, AUTO)",
-        "RECURSIVE PROGRAM-ID for backtracking algorithm",
-        "LOCAL-STORAGE SECTION for recursive-safe local variables",
-        "Three nested programs: Sudoku (main), TABLE-ANALYSIS (recursive solver), SHOW-SUDOKU-BOARD (display)",
-        "FOREGROUND-COLOR / BACKGROUND-COLOR on BLANK-SCREEN",
-        "*> style inline comments",
+        "SCREEN SECTION with interactive ACCEPT/DISPLAY",
+        "LOCAL-STORAGE SECTION for recursion-safe variables",
+        "RECURSIVE program attribute enabling recursive CALL",
+        "Multiple PROGRAM-IDs in single source file (nested/sequential programs)",
+        "Backtracking algorithm implemented via recursive CALL",
         "88-level condition names for menu response handling",
-        "No COMP-3, no EXEC SQL, no EXEC CICS"
+        "BLANK WHEN ZERO in screen fields",
+        "foreground-color/background-color screen attributes",
+        "GOBACK statement",
+        "No COMP-3, no SQL, no CICS"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Source is truncated at 16000 chars; the SHOW-SUDOKU-BOARD subprogram and the remainder of TABLE-ANALYSIS are not shown, but the structure is clear. The use of RECURSIVE, LOCAL-STORAGE, and *> comments strongly indicates GnuCOBOL. The program is a well-structured puzzle solver, consistent with a student or hobbyist project."
+      "notes": "Source is truncated at 16000 chars but enough is visible to classify confidently. The program contains three program units: Sudoku (main), TABLE-ANALYSIS (recursive solver), and SHOW-SUDOKU-BOARD (display). The recursive backtracking approach and screen UI are well-structured for a demo/educational program. GnuCOBOL dialect is strongly indicated by the combination of features used."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6469,
-      "completion_tokens": 634,
-      "total_tokens": 7103,
-      "cost": 0.028917,
+      "prompt_tokens": 7847,
+      "completion_tokens": 525,
+      "total_tokens": 8372,
+      "cost": 0.031416,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028917,
-        "upstream_inference_prompt_cost": 0.019407,
-        "upstream_inference_completions_cost": 0.00951
+        "upstream_inference_cost": 0.031416,
+        "upstream_inference_prompt_cost": 0.023541,
+        "upstream_inference_completions_cost": 0.007875
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.17,
+    "latency_s": 14.19,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:03:08Z"
 }

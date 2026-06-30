@@ -49,46 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or GnuCOBOL",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Generic COBOL subprogram demonstrating static and dynamic CALL patterns; no vendor-specific extensions visible. GOBACK and inline comments (*>) are COBOL-85 features.",
         "evidence": [
           "GOBACK statement",
-          "inline comments with *> syntax",
-          "PROCEDURE DIVISION USING with linkage section parameters",
-          "fixed-format source layout"
+          "inline comments with *>",
+          "PROCEDURE DIVISION USING",
+          "LINKAGE SECTION"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "SUB01 is a called subprogram that receives four parameters via the LINKAGE SECTION from a main program (MAINPGM). It moves the literal 'SUB01' into all linkage and working-storage fields, then returns control to the caller. Commented-out code illustrates both static and dynamic CALL patterns to further subprograms (SUB02, SUB03).",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates subprogram calling conventions including static CALL, dynamic CALL via variable, and LINKAGE SECTION parameter passing",
+        "summary": "SUB01 is a subprogram called from a MAINPGM that receives four parameters via LINKAGE SECTION. It moves 'SUB01' into all passed and working-storage fields, and includes commented-out examples of both static (CALL 'SUB02') and dynamic (CALL G-PROG) call patterns before returning control with GOBACK.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "LINKAGE SECTION with four parameters passed from MAINPGM",
-        "Commented-out static CALL to SUB02 and dynamic CALL via variable G-PROG to SUB03",
-        "Inline *> comments used for documentation",
-        "GOBACK for returning control to caller",
-        "Demonstrates both static and dynamic CALL patterns as teaching examples"
+        "LINKAGE SECTION with four parameters",
+        "GOBACK for return to caller",
+        "Inline *> comments (COBOL-85)",
+        "Commented-out static CALL to SUB02",
+        "Commented-out dynamic CALL via variable G-PROG",
+        "High comment ratio (0.32) with instructional annotations"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The file is clearly a tutorial or educational example demonstrating subprogram linkage, parameter passing, and static vs. dynamic CALL techniques in COBOL. The commented-out CALL statements are intentional teaching artifacts. No dialect-specific extensions are visible beyond standard COBOL-85 features."
+      "notes": "Very short program (25 lines) clearly written as a teaching example illustrating COBOL subprogram mechanics. No vendor-specific directives or extensions present, making dialect family uncertain beyond COBOL-85 standard features."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1269,
-      "completion_tokens": 462,
-      "total_tokens": 1731,
-      "cost": 0.010737,
+      "prompt_tokens": 2647,
+      "completion_tokens": 391,
+      "total_tokens": 3038,
+      "cost": 0.013806,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -97,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010737,
-        "upstream_inference_prompt_cost": 0.003807,
-        "upstream_inference_completions_cost": 0.00693
+        "upstream_inference_cost": 0.013806,
+        "upstream_inference_prompt_cost": 0.007941,
+        "upstream_inference_completions_cost": 0.005865
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.51,
+    "provider": "Anthropic",
+    "latency_s": 8.48,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:30:30Z"
 }

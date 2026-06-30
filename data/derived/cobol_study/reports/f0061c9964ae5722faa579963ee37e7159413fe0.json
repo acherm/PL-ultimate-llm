@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f0061c9964ae5722faa579963ee37e7159413fe0",
+    "sha1_git": "f0061c9964ae5722faa579963ee37e7159413fe0",
+    "filename": "/fr-date.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1010,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f0061c9964ae5722faa579963ee37e7159413fe0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f0061c9964ae5722faa579963ee37e7159413fe0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1010,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 32,
+    "blank_lines": 7,
+    "comment_lines": 5,
+    "code_lines": 20,
+    "comment_ratio": 0.2,
+    "max_line_length": 82,
+    "avg_line_length": 30.6,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FR-DATE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 1,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Part of 'The Strange Date and Time Files (COBOL for fun)' project, likely GnuCOBOL based on free-style COPY usage and project context",
+        "evidence": [
+          "COPY \"SysDate.cpy\"",
+          "COPY FRDate",
+          "COPY FR-LINE",
+          "END PROGRAM FR-DATE",
+          "CALL \"GETSDATE\""
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Fun/hobby project for date and time formatting in French",
+        "summary": "A subprogram (FR-DATE) that retrieves the system date and time via a CALL to GETSDATE, then maps weekday and month names to their French equivalents and populates a FRENCH-LINE linkage record.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with COPY copybook (FR-LINE)",
+        "CALL to external GETSDATE routine",
+        "Table-driven French weekday and month name lookup via subscripted data names",
+        "Three COPY statements for shared data structures",
+        "No PIC clauses directly (all in copybooks)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "No PIC clauses visible in source (all in copybooks). Tab character appears before COPY FR-LINE in LINKAGE SECTION (mixed indentation). Dialect is uncertain; GnuCOBOL is a reasonable guess given the open-source hobby project description. The file is very short and relies heavily on external copybooks."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2515,
+      "completion_tokens": 381,
+      "total_tokens": 2896,
+      "cost": 0.01326,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01326,
+        "upstream_inference_prompt_cost": 0.007545,
+        "upstream_inference_completions_cost": 0.005715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 8.79,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:48:21Z"
+}

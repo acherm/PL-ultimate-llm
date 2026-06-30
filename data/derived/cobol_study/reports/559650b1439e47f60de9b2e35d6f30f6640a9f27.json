@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA medical software)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Japan Medical Association open-source clinic system), compiled with GnuCOBOL; uses 'coblog' call and '.so' shared-library file access pattern typical of ORCA/GnuCOBOL",
         "evidence": [
-          "PROGRAM-ID. ORCSPRTNM",
-          "EVALUATE ... WHEN ... END-EVALUATE",
-          "END-IF, END-STRING constructs",
-          "CALL 'coblog' USING (GnuCOBOL-style runtime call)",
-          "FUNCTION NUMVAL(...) intrinsic function",
-          "D prefix debug lines (D    DISPLAY ...)",
-          "EXIT PROGRAM",
-          "COPY directives with .INC files",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+          "PROGRAM-ID ORCSPRTNM",
+          "CALL \"coblog\"",
+          "STRING WRK-PRTPG DELIMITED BY SPACE \".so\" DELIMITED BY SIZE",
+          "COPY \"MCPAREA\"",
+          "COPY \"COMMON-SPA\"",
+          "D DISPLAY debug lines",
+          "JMA (Japan Medical Association) copyright header"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This subprogram retrieves the online receipt print program name and output destination printer name for the ORCA (JMA standard medical receipt) system. Given a classification code and inpatient/outpatient flag, it resolves the appropriate print program name (e.g., ORCHC01, ORCHCN01) either from system management master data or defaults. It is part of the Japan Medical Association open-source medical billing software.",
-        "domain": "healthcare / medical billing (Japanese medical receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - retrieves online receipt form name and output destination printer name for inpatient/outpatient processing",
+        "summary": "This subprogram (ORCSPRTNM) retrieves the online receipt form program name and output printer name for the JMA ORCA medical billing system. Given a classification code and inpatient/outpatient flag, it looks up the appropriate print program name from system management tables or falls back to defaults. It supports both API and interactive modes.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
-        "D-level debug DISPLAY lines (conditional debug output)",
-        "COPY directives for multiple .INC copybooks (CPSK1031, CPSK1032, CPSK1034, CPSK1035, CPORCSPRTNM, etc.)",
-        "CALL to 'coblog' for error logging (GnuCOBOL runtime convention)",
-        "CALL to 'ORCSORCAPG' and 'ORCSACCESS' internal subprograms",
-        "FUNCTION NUMVAL intrinsic function usage",
-        "STRING ... DELIMITED BY SIZE/SPACE ... INTO ... END-STRING",
-        "LINKAGE SECTION with three passed areas (parameter, SPA, SYSKANRI)",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage"
+        "LINKAGE SECTION with USING clause (called subprogram)",
+        "Multiple COPY statements (12) for JMA ORCA copybooks",
+        "CALL to 'ORCSORCAPG', 'ORCSACCESS', 'coblog' (GnuCOBOL logging)",
+        "STRING with DELIMITED BY SIZE/SPACE for .so filename construction",
+        "FUNCTION NUMVAL usage",
+        "Debug lines prefixed with 'D' (conditional compile)",
+        "Japanese comments encoded in EUC-JP/latin-1",
+        "SPA (Scratch Pad Area) pattern typical of ORCA online programs",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The source file is genuine COBOL from the ORCA (JMA standard receipt software) open-source project, a well-known Japanese medical billing system. Comments are in Japanese encoded in EUC-JP or Shift-JIS, which appear garbled when decoded as latin-1. The program is a subprogram (called via CALL/USING) that maps classification codes to print program names for both inpatient and outpatient contexts. The 'D' prefix on DISPLAY lines is a standard GnuCOBOL/OpenCOBOL debug-line convention. Source was truncated at 16000 chars but enough is visible to classify confidently."
+      "notes": "Source comments are in Japanese encoded as EUC-JP but decoded as latin-1, causing mojibake in the displayed text. The program is part of the well-known JMA ORCA open-source medical receipt system. Source is truncated at 16000 chars but enough structure is visible for confident classification. Revision history shows versions from 2003 through 2009."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7250,
-      "completion_tokens": 804,
-      "total_tokens": 8054,
-      "cost": 0.03381,
+      "prompt_tokens": 8628,
+      "completion_tokens": 583,
+      "total_tokens": 9211,
+      "cost": 0.034629,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.03381,
-        "upstream_inference_prompt_cost": 0.02175,
-        "upstream_inference_completions_cost": 0.01206
+        "upstream_inference_cost": 0.034629,
+        "upstream_inference_prompt_cost": 0.025884,
+        "upstream_inference_completions_cost": 0.008745
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.74,
+    "provider": "Anthropic",
+    "latency_s": 16.21,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:46:27Z"
 }

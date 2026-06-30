@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "ACUCOBOL-GT or Micro Focus (likely ACUCOBOL-GT based on ACCEPT/DISPLAY syntax and C$RERR call)",
+        "family": "acucobol",
         "standard": "COBOL-85",
+        "detail": "AcuCOBOL-GT / ACUCOBOL environment inferred from ASSIGN TO DISK, C$RERR call, ACCEPT with TAB/UPDATE/NO BEEP/CURSOR/CONTROL clauses, and LINE SEQUENTIAL organization; French-language payroll application",
         "evidence": [
-          "CALL \"C$RERR\" USING EXTENDED-STATUS — ACUCOBOL-GT runtime library call",
-          "ACCEPT ... LINE ... POSITION ... TAB UPDATE NO BEEP CURSOR ... ON EXCEPTION EXC-KEY — ACUCOBOL-GT screen I/O syntax",
-          "CONTROL \"UPPER\" clause on ACCEPT",
+          "ASSIGN TO DISK PARMOD-PATH5",
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "EVALUATE/END-EVALUATE, END-READ, END-IF — COBOL-85 constructs",
-          "PROCEDURE DIVISION USING LINK-V with LINKAGE SECTION",
-          "COPY statements referencing .FC, .FDE, .CPY, .REC files"
+          "CALL \"C$RERR\" USING EXTENDED-STATUS",
+          "ACCEPT ... TAB UPDATE NO BEEP CURSOR 1 CONTROL \"UPPER\"",
+          "DECIMAL-POINT IS COMMA",
+          "COPY copybook references like CODPAIE.FC, V-VAR.CPY, V-LINK.CPY"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program generates a periodic summary/control report of salary codes (codes salaire) for employees. It reads payroll data from a CODPAIE indexed file, filters by firm, employee, and month range, matches against configured salary code parameters, and writes results to a CSV-like sequential output file (TF-CSM) for export or further processing.",
-        "domain": "payroll/HR",
-        "program_type": "online-cics"
+        "domain": "payroll-hr",
+        "domain_detail": "French payroll system - periodic recapitulation of salary codes (codes salaire) per employee, generating a CSV/delimited export file",
+        "summary": "Program 8-CSMUL produces a periodic summary report of salary codes (codes salaire) for employees. It reads a payroll file (CODPAIE), filters by firm, employee, and month range, matches against configured salary code parameters, and writes a delimited output file (TF-CSM) with employee details and salary code values. It supports multilingual output (French, German, English) for column headers.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "ACUCOBOL-GT screen I/O: ACCEPT with LINE/POSITION/TAB/UPDATE/NO BEEP/CURSOR/CONTROL clauses",
-        "CALL 'C$RERR' for extended file error handling — ACUCOBOL-GT runtime",
-        "DECLARATIVES with USE AFTER ERROR PROCEDURE",
-        "LINKAGE SECTION with PROCEDURE DIVISION USING — subprogram/called module pattern",
         "DECIMAL-POINT IS COMMA (European locale)",
-        "Multiple COPY statements for shared record layouts (.REC, .CPY, .FC, .FDE)",
-        "REDEFINES used extensively for dual numeric/text field access",
-        "OCCURS clause on TF-DONNEES for multi-value output fields",
-        "LINE SEQUENTIAL file organization for CSV-style export",
-        "French-language comments and variable names (AVANT, APRES, AFFICHAGE, etc.)",
-        "Function key control via EXC-KFR array (ACUCOBOL-GT key management)"
+        "CALL \"C$RERR\" for AcuCOBOL extended file error handling",
+        "ACCEPT with TAB UPDATE NO BEEP CURSOR CONTROL clauses (AcuCOBOL screen I/O)",
+        "LINKAGE SECTION with LINK-V parameter passing",
+        "21 COPY statements for modular copybook structure",
+        "LINE SEQUENTIAL file organization for CSV-style output",
+        "Multilingual output support (French/German/English) via LNK-LANGUAGE",
+        "REDEFINES used extensively for display/text dual-use fields",
+        "OCCURS 6 for multi-value salary data columns in output record",
+        "USE AFTER ERROR PROCEDURE declarative"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The program is clearly part of a larger French-language payroll application suite (module names like 6-CODSAL, 6-REGIS, 6-CARRI, 4-CSTAB suggest a numbered module architecture). The box-drawing characters in comments (Ú, Ä, ¿, À, ³) are CP850/latin-1 encoded, consistent with the latin-1 decoding reported. The source was truncated at 16000 chars out of 22578 bytes, so the latter portion of the PROCEDURE DIVISION is not visible, but the overall structure is clear."
+      "notes": "Source truncated at 16000 chars; full file is 22578 bytes / 668 lines. Program name and comments are in French. The AcuCOBOL dialect is strongly indicated by C$RERR and screen ACCEPT syntax. No COMP-3 usage despite being a payroll program, possibly because numeric display fields are used for the output file formatting."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6625,
-      "completion_tokens": 854,
-      "total_tokens": 7479,
-      "cost": 0.032685,
+      "prompt_tokens": 8003,
+      "completion_tokens": 631,
+      "total_tokens": 8634,
+      "cost": 0.033474,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032685,
-        "upstream_inference_prompt_cost": 0.019875,
-        "upstream_inference_completions_cost": 0.01281
+        "upstream_inference_cost": 0.033474,
+        "upstream_inference_prompt_cost": 0.024009,
+        "upstream_inference_completions_cost": 0.009465
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 20.47,
+    "latency_s": 17.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:37:56Z"
 }

@@ -49,54 +49,57 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) free-format source; ACAS Applewood Computers Accounting System v3.02.16 by Vincent B. Coen; uses >>source free directive, COB_SCREEN_EXCEPTIONS env vars, binary-char, and GnuCOBOL-style copy/replace syntax",
         "evidence": [
-          ">>source free  (GnuCOBOL compiler directive)",
-          "*> style comments throughout (GnuCOBOL/COBOL-2002 style but used here with GnuCOBOL)",
-          "set ENVIRONMENT ... to ... (GnuCOBOL intrinsic)",
-          "binary-char PIC clause",
-          "copy ... replacing ... (standard COBOL COPY with REPLACING)",
-          "function current-date",
-          "accept ... from lines / from columns (GnuCOBOL screen handling)"
+          ">>source free",
+          "binary-char",
+          "set ENVIRONMENT 'COB_SCREEN_EXCEPTIONS'",
+          "set ENVIRONMENT 'COB_SCREEN_ESC'",
+          "set ENVIRONMENT 'COB_EXIT_WAIT'",
+          "GNU General Public License v2.0 reference",
+          "compiled with -x and -m flags mentioned in comments"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This is the main menu/control program for the ACAS (Applewood Computers Accounting System), an open-source accounting package. It presents a top-level menu allowing users to navigate to sub-systems such as IRS (ledger), Sales, Purchase, Stock, General, and optionally Payroll, EPOS, and Order Entry. It also handles first-time system setup, terminal size validation, and environment variable configuration.",
-        "domain": "accounting/ERP",
+        "domain": "accounting-erp",
+        "domain_detail": "ACAS (Applewood Computers Accounting System) - a multi-module accounting system covering IRS (Integrated Revenue System/ledgers), Sales, Purchase, Stock, General, Payroll, EPOS, Order Entry",
+        "summary": "This is the main menu/control program for the ACAS accounting system. It initialises the environment, checks terminal dimensions, reads or creates the system parameter file, and dispatches to sub-systems (IRS, Sales, Purchase, Stock, General, etc.) via CALL statements. It also handles first-time setup of parameter files and data tables.",
         "program_type": "batch"
       },
       "notable_features": [
-        "GnuCOBOL >>source free compiler directive",
-        "Extensive use of COPY copybooks (wsnames.cob, wssystem.cob, wsmaps01.cob, etc.)",
-        "COPY ... REPLACING with many field renaming substitutions",
-        "SET ENVIRONMENT intrinsic for screen exception handling",
-        "Terminal size validation (lines >= 24, columns >= 80) with retry loop using GO TO",
-        "14 CALL statements to sub-programs (IRS, Sales, Purchase, Stock, General, sys002, Maps01, etc.)",
-        "GNU GPL v2 license header with commercial support pricing",
-        "Version history spanning 1976-2023 in comments",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage"
+        ">>source free compiler directive",
+        "COPY with REPLACING for wssystem.cob (extensive field renaming)",
+        "COB_SCREEN_EXCEPTIONS / COB_SCREEN_ESC environment variable setup",
+        "Terminal size validation (lines >= 24, columns >= 80)",
+        "14 COPY statements for modular copybook architecture",
+        "14 CALL statements to subsystem programs",
+        "GOTO used for terminal-size retry loops",
+        "GNU GPL v2 license header",
+        "Version history spanning 2011-2020 in comments",
+        "RDB/MySQL support mentioned for v3.02"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated at 16000 chars out of 26552 bytes; the procedure division is only partially visible. The program is clearly a real production accounting system (ACAS) with a long version history. The GnuCOBOL dialect is confirmed by the >>source free directive and GnuCOBOL-specific environment intrinsics. The high comment ratio (50%) is due to extensive copyright, change-log, and documentation comments."
+      "notes": "Source truncated at 16000 chars (full file is 26552 bytes, 757 lines). The program is clearly a real production accounting system with extensive version history, copyright notices, and modular architecture. No EXEC SQL or EXEC CICS present despite RDB mentions - uses COBOL file I/O. Comment ratio is very high (50%) due to extensive documentation headers."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5773,
-      "completion_tokens": 700,
-      "total_tokens": 6473,
-      "cost": 0.027819,
+      "prompt_tokens": 7151,
+      "completion_tokens": 596,
+      "total_tokens": 7747,
+      "cost": 0.030393,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.027819,
-        "upstream_inference_prompt_cost": 0.017319,
-        "upstream_inference_completions_cost": 0.0105
+        "upstream_inference_cost": 0.030393,
+        "upstream_inference_prompt_cost": 0.021453,
+        "upstream_inference_completions_cost": 0.00894
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.3,
+    "latency_s": 16.27,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:43:33Z"
 }

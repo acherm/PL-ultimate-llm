@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:464e1e9d73b109f0905a5d65f2a855834daa6956",
+    "sha1_git": "464e1e9d73b109f0905a5d65f2a855834daa6956",
+    "filename": "/pwpe0201.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13061,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:464e1e9d73b109f0905a5d65f2a855834daa6956/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:464e1e9d73b109f0905a5d65f2a855834daa6956/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13061,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 330,
+    "blank_lines": 40,
+    "comment_lines": 32,
+    "code_lines": 258,
+    "comment_ratio": 0.11,
+    "max_line_length": 169,
+    "avg_line_length": 38.6,
+    "long_lines_over_72": 35,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PWPE0201"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 11,
+    "call_count": 2,
+    "perform_count": 38,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with htmlpp preprocessor, free source format directive, EXEC HTML blocks, CBL_RENAME_FILE/CBL_DELETE_FILE runtime calls, and external-form linkage — consistent with Micro Focus NetExpress or similar web-enabled COBOL environment. Likely part of a Brazilian ERP/accounting system (OPC Rotinas Especiais).",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "exec html ... end-exec",
+          "call \"CBL_RENAME_FILE\"",
+          "call \"CBL_DELETE_FILE\"",
+          "cgi-input is external-form",
+          "identified by \"etapa\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian ERP system — restructuring/migration of a receivables/titles file (CRD001.CAD) used in accounts receivable. Program name prefix PWPE and copy file names (PCS50101, PCF50101) suggest OPC or similar Brazilian ERP package.",
+        "summary": "This program restructures the CRD001.CAD (Títulos/Bills) data file by reading the old indexed file, validating each record, writing valid records to a new file (CRX001.CAD), then renaming the old file to CRD001_old.CAD and the new file to CRD001.CAD. It is a web-based CGI program with an HTML interface showing progress via a display loop.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC HTML blocks (htmlpp preprocessor for CGI/web output)",
+        "$set sourceformat free and $set preprocess directives",
+        "external-form linkage section (CGI input)",
+        "CBL_RENAME_FILE and CBL_DELETE_FILE Micro Focus runtime calls",
+        "Heavy use of COPY with REPLACING for dual-file handling (f01/xf01)",
+        "Portuguese-language identifiers and comments",
+        "decimal-point is comma (Brazilian locale)",
+        "78-level constant (versao)",
+        "perform until with exit perform"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File uses Latin-1 encoding consistent with Portuguese/Brazilian text (accented characters in comments and string literals). The program is part of a larger Brazilian ERP framework (OPC) with standardized copy libraries. program_type set to online-cics as closest enum for a CGI/web online program (no CICS, but web-based interactive)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5383,
+      "completion_tokens": 606,
+      "total_tokens": 5989,
+      "cost": 0.025239,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025239,
+        "upstream_inference_prompt_cost": 0.016149,
+        "upstream_inference_completions_cost": 0.00909
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.11,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:45:23Z"
+}

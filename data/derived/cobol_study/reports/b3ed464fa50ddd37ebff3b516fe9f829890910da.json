@@ -49,47 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Student assignment using FUNCTION CONCATENATE and FUNCTION TRIM (COBOL-85 intrinsic functions), no vendor-specific extensions visible",
         "evidence": [
-          "FUNCTION CONCATENATE and FUNCTION TRIM (intrinsic functions, COBOL-85+)",
-          "END-READ scope terminator",
-          "NOT AT END clause",
-          "LINE SEQUENTIAL organization",
-          "fixed-format source with columns respected"
+          "function concatenate(...)",
+          "function trim(...)",
+          "line sequential",
+          "end-read",
+          "perform ... until"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads a fixed-format text file of fruit records (name, quantity, price) and generates an HTML table as CGI output, including image tags for each fruit. It is a CGI-style web page generator written in COBOL.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Student assignment (Assignment 8) generating an HTML table of fruit data from a fixed-format text file, likely for a CGI/web output exercise",
+        "summary": "Reads a fixed-format text file of fruit records (name, quantity, price) and generates an HTML page with a table, including image tags for each fruit. Designed as a CGI-style program outputting Content-type header followed by HTML.",
         "program_type": "batch"
       },
       "notable_features": [
-        "CGI-style HTML generation via DISPLAY statements",
+        "HTML generation via DISPLAY statements",
+        "CGI-style Content-type header output",
         "FUNCTION CONCATENATE and FUNCTION TRIM intrinsic functions",
-        "LINE SEQUENTIAL file organization",
-        "HTML table row construction using FILLER fields with literal HTML tags",
-        "Content-type header output suggesting CGI usage"
+        "Line sequential file organization",
+        "Hex literal for newline: x\"0a\"",
+        "Formatted output with PIC $9.99"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Program is clearly a student assignment (filename 'assignment8.cbl', author 'Anne', program-id 'Fruit-01'). It generates HTML for a fruit webpage via CGI. No SQL, CICS, or COMP-3 usage. The dialect is likely GnuCOBOL given the academic context and use of intrinsic functions without special compiler directives."
+      "notes": "Filename 'assignment8.cbl' and author 'Anne' confirm student exercise context. No vendor-specific directives; standard is inferred from intrinsic function usage (COBOL-85 or later). Program generates HTML table rows for a fruit inventory, likely intended as a CGI script."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1599,
-      "completion_tokens": 447,
-      "total_tokens": 2046,
-      "cost": 0.011502,
+      "prompt_tokens": 2977,
+      "completion_tokens": 363,
+      "total_tokens": 3340,
+      "cost": 0.014376,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011502,
-        "upstream_inference_prompt_cost": 0.004797,
-        "upstream_inference_completions_cost": 0.006705
+        "upstream_inference_cost": 0.014376,
+        "upstream_inference_prompt_cost": 0.008931,
+        "upstream_inference_completions_cost": 0.005445
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,8 +113,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 8.66,
+    "latency_s": 8.96,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:34:17Z"
 }

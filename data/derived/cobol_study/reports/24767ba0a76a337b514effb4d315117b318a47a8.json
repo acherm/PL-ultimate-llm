@@ -51,53 +51,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (CICS)",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL CICS demonstration program, copyright 1998-2006 Micro Focus. Part of an ATM/banking demo application suite.",
         "evidence": [
-          "Copyright notice explicitly states 'Micro Focus'",
-          "EXEC CICS RECEIVE / LINK / RETURN constructs",
-          "END-IF, END-EXEC structured delimiters (COBOL-85)",
+          "Copyright (C) 1998-2006 Micro Focus. All Rights Reserved.",
+          "COPY CCASHDAT, COPY CCASHEXT, COPY CABENDD, COPY CABENDPO",
+          "EXEC CICS RECEIVE / LINK / RETURN",
           "PIC 9(4) BINARY usage",
-          "DFHCOMMAREA in LINKAGE SECTION",
-          "EIBTRNID, EIBCALEN EIB references",
-          "COPY CABENDD / CABENDPO / CCASHDAT / CCASHEXT copybooks"
+          "DFHCOMMAREA linkage"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "CICS online screen-handling program for an ATM banking demonstration application. It receives input either from a terminal screen or from an ATM commarea, validates the user PIN by linking to business-logic program BCASH10P, retrieves ATM-enabled account data via BCASH20P, and returns formatted output.",
-        "domain": "banking",
+        "domain": "banking-finance",
+        "domain_detail": "ATM banking demonstration: displays ATM-enabled accounts, validates user PIN via business logic programs BCASH10P and BCASH20P",
+        "summary": "SCASH20P is the screen-handling layer of a CICS ATM demo application. It receives input either from a terminal screen or from an ATM channel (via COMMAREA), parses userid and PIN, calls business logic programs BCASH10P (PIN validation) and BCASH20P (account display), then returns results to the caller.",
         "program_type": "online-cics"
       },
       "notable_features": [
         "EXEC CICS RECEIVE for terminal input",
-        "EXEC CICS LINK to business-logic programs (BCASH10P, BCASH20P)",
-        "EXEC CICS RETURN for program termination",
-        "DFHCOMMAREA / EIBCALEN / EIBTRNID EIB usage",
-        "UNSTRING for parsing screen input",
-        "Multiple COPY statements (CCASHDAT, CCASHEXT, CABENDD, CABENDPO)",
+        "EXEC CICS LINK to business logic programs (BCASH10P, BCASH20P)",
+        "EXEC CICS RETURN",
+        "DFHCOMMAREA linkage section",
+        "UNSTRING for screen data parsing",
+        "COPY books: CCASHDAT, CCASHEXT, CABENDD, CABENDPO",
         "88-level condition names for input source and status flags",
-        "GO TO used for paragraph branching within READ-INPUT",
-        "Abend handling via CABENDPO copybook"
+        "GO TO used for branching within paragraphs",
+        "Dual input path: screen vs ATM COMMAREA"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated at 16000 chars (300 lines total per indicators). The COPY statements reference external copybooks not shown. program_ids list includes 'PIC' and 'TO' as false positives from mechanical parsing of PIC clauses. The file is clearly a Micro Focus demonstration/sample application for a CICS ATM banking scenario, but is structured and commented at a production-like level."
+      "notes": "Source truncated to 16000 of 24600 bytes; all four divisions present. Program is clearly a Micro Focus demonstration/sample rather than live production code, but it is well-structured and production-quality in style. The mechanical indicator lists 'PIC' and 'TO' as program-IDs, which is a parser artifact from the PROGRAM-ID paragraph layout."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4979,
-      "completion_tokens": 632,
-      "total_tokens": 5611,
-      "cost": 0.024417,
+      "prompt_tokens": 6357,
+      "completion_tokens": 531,
+      "total_tokens": 6888,
+      "cost": 0.027036,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.024417,
-        "upstream_inference_prompt_cost": 0.014937,
-        "upstream_inference_completions_cost": 0.00948
+        "upstream_inference_cost": 0.027036,
+        "upstream_inference_prompt_cost": 0.019071,
+        "upstream_inference_completions_cost": 0.007965
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.87,
+    "latency_s": 14.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:28:10Z"
 }

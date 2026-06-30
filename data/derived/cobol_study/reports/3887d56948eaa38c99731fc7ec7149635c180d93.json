@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3887d56948eaa38c99731fc7ec7149635c180d93",
+    "sha1_git": "3887d56948eaa38c99731fc7ec7149635c180d93",
+    "filename": "/crearIndexado.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2877,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3887d56948eaa38c99731fc7ec7149635c180d93/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3887d56948eaa38c99731fc7ec7149635c180d93/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2877,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 98,
+    "blank_lines": 24,
+    "comment_lines": 4,
+    "code_lines": 70,
+    "comment_ratio": 0.054,
+    "max_line_length": 120,
+    "avg_line_length": 27.4,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "crearIndexadoClientes"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 17,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (OpenCOBOL) based on LINE SEQUENTIAL organization, Spanish-language identifiers, and comment about Unix file handling; could also be Micro Focus",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ORGANIZATION IS INDEXED with ALTERNATE RECORD KEY",
+          "DECIMAL-POINT IS COMMA",
+          "FILE STATUS IS",
+          "LABEL RECORD IS STANDARD",
+          "comment referencing Unix file behavior"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer file management - creating an indexed ISAM file from a sequential input file of customer records",
+        "summary": "This program reads a sequential flat file of customer data (DatosCliente) and writes the records into an indexed VSAM-style file (CLIENTES.DAT) keyed on customer code with an alternate key on customer name. It includes a workaround counter to avoid writing a spurious last line caused by Unix line endings.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file organization with ALTERNATE RECORD KEY WITH DUPLICATES",
+        "LINE SEQUENTIAL organization for input file",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "FILE STATUS fields for both files",
+        "88-level condition names for EOF flags",
+        "Comment in Spanish noting Unix file line-ending issue",
+        "INVALID KEY clause on WRITE"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "All line sequence numbers are '000000', suggesting a student or tutorial environment. The program contains a Spanish-language comment acknowledging a workaround for a Unix file-reading bug, and the logic is straightforward with no error handling beyond INVALID KEY display. The counter-based workaround (CONT <= 6) is hardcoded and non-production quality."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3382,
+      "completion_tokens": 433,
+      "total_tokens": 3815,
+      "cost": 0.016641,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016641,
+        "upstream_inference_prompt_cost": 0.010146,
+        "upstream_inference_completions_cost": 0.006495
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.64,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:58:21Z"
+}

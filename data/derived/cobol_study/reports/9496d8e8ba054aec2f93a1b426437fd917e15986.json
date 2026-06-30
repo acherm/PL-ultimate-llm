@@ -49,55 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (Japanese medical software)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL as used in the ORCA project",
         "evidence": [
-          "PERFORM ... UNTIL with END-PERFORM",
-          "INITIALIZE statement",
-          "END-UNSTRING, END-IF terminators",
-          "OCCURS ... INDEXED BY clauses",
-          "COPY directives for .INC files",
-          "CALL 'ORCSMCNDATE' USING pattern",
-          "LINKAGE SECTION with USING COMMAND-PARAM",
-          "No EXEC SQL / EXEC CICS",
-          "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)"
+          "PROGRAM-ID ORCBINF1",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY CPJOBKANRI.INC / CPINFECTION.INC / CPINFJUDGMENT.INC etc.",
+          "CALL ORCSMCNDATE",
+          "MCP-TABLE / MCP-PATHNAME / MCP-RC pattern",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "EXEC SQL absent, EXEC CICS absent"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch program that creates infectious disease survey data (感染症データ作成) for the ORCA Japanese Medical Association standard receipt software system. It reads patient visit history (受診履歴), patient disease records, and treatment activity data, then generates an output file reporting infectious disease surveillance information. It also performs judgment/classification of diseases using lookup tables.",
-        "domain": "healthcare / medical records (Japanese national medical billing system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese Medical Association (JMA) ORCA standard medical receipt (shinryo-hoshu) system — infectious disease survey data creation module",
+        "summary": "ORCBINF1 is a batch program in the JMA ORCA medical receipt system that creates infectious disease (kansensho) survey data. It reads patient visit history (jyurrk), patient information, diagnoses (byomei), and treatment acts, then evaluates infection-disease judgment tables to produce an output data file and error file for infectious disease reporting.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese comments and string literals encoded in EUC-JP or Shift-JIS (rendered as latin-1 mojibake)",
-        "Multiple COPY directives for .INC copybooks (CPJOBKANRI, CPSYSKANRI, CPPTINF, CPJYURRK, CPSRYACCT, CPSRYACT, CPPTBYOMEI, CPINFECTION, CPINFJUDGMENT, etc.)",
-        "OCCURS ... INDEXED BY tables for disease and judgment lookups",
-        "UNSTRING of COMMAND-PARAM for argument parsing",
-        "CALL to external subprograms: ORCSMCNDATE, ORCSJOBKANRI",
-        "LINE SEQUENTIAL file organization for output",
-        "REDEFINES clause on date field",
-        "No COMP-3 packed decimal usage",
-        "Program version tracking via PRGSKBNO PIC X(08)"
+        "16 COPY statements referencing ORCA-specific copybooks (CPINFECTION.INC, CPINFJUDGMENT.INC, CPJOBKANRI.INC, etc.)",
+        "LINKAGE SECTION with COMMAND-PARAM parsed via UNSTRING",
+        "MCP (middleware control program) DB access pattern (MCP-TABLE, MCP-PATHNAME, MCP-RC)",
+        "OCCURS tables with INDEXED BY for infection and disease judgment",
+        "REDEFINES on date field (WRK-BIRTHDAY-R)",
+        "Japanese comments encoded in EUC-JP (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS — uses ORCA MCP abstraction layer",
+        "PERFORM UNTIL loop structure for patient-by-patient processing"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the open-source ORCA (JMA standard receipt software) project for Japanese medical institutions. Comments are in Japanese encoded as EUC-JP or Shift-JIS but decoded here as latin-1, causing mojibake. The source is clearly production-grade medical billing/surveillance software. COPY statements reference external copybooks not shown in the truncated source, so full data layout cannot be verified from this excerpt alone."
+      "notes": "Japanese comments are EUC-JP encoded, decoded as latin-1 resulting in mojibake. Program is clearly part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars out of 66547 bytes; full procedure division not visible but structure is clear from what is shown."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7435,
-      "completion_tokens": 728,
-      "total_tokens": 8163,
-      "cost": 0.033225,
+      "prompt_tokens": 8813,
+      "completion_tokens": 619,
+      "total_tokens": 9432,
+      "cost": 0.035724,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033225,
-        "upstream_inference_prompt_cost": 0.022305,
-        "upstream_inference_completions_cost": 0.01092
+        "upstream_inference_cost": 0.035724,
+        "upstream_inference_prompt_cost": 0.026439,
+        "upstream_inference_completions_cost": 0.009285
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.59,
+    "latency_s": 16.09,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:11:35Z"
 }

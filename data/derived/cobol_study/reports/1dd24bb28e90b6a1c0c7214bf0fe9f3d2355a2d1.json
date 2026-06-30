@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1dd24bb28e90b6a1c0c7214bf0fe9f3d2355a2d1",
+    "sha1_git": "1dd24bb28e90b6a1c0c7214bf0fe9f3d2355a2d1",
+    "filename": "/epsmlist.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7915,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1dd24bb28e90b6a1c0c7214bf0fe9f3d2355a2d1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1dd24bb28e90b6a1c0c7214bf0fe9f3d2355a2d1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7915,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 224,
+    "blank_lines": 28,
+    "comment_lines": 18,
+    "code_lines": 178,
+    "comment_ratio": 0.092,
+    "max_line_length": 70,
+    "avg_line_length": 34.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EPSMLIST"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 7,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS online program, references IBM-FLEX-ES (Flex-ES mainframe emulator), part of IBM EPSDEMOS 2008 sample application",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-FLEX-ES",
+          "OBJECT-COMPUTER. IBM-FLEX-ES",
+          "EXEC CICS STARTBR/READNEXT/SEND MAP/LINK",
+          "COPY DFHAID",
+          "EIBCALEN, EIBAID, DFHRESP",
+          "(C) 2008 IBM - JIM HILDNER"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Mortgage loan listing application; reads a mortgage file and displays matching lenders based on loan amount and interest rate criteria",
+        "summary": "EPSMLIST is a CICS online program that browses a VSAM mortgage file (EPSMORTF), filters records by loan amount and interest rate from the communication area, calculates monthly payments via a linked subprogram (EPSCSMRT), and sends a BMS map (EPSMLIS) displaying up to 8 matching mortgage companies with their rates and payment details.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS STARTBR/READNEXT/ENDBR for VSAM file browsing",
+        "EXEC CICS SEND MAP with BMS mapset EPSMLIS",
+        "EXEC CICS LINK to subprogram EPSCSMRT",
+        "DFHCOMMAREA linkage and SAVE-COMM-AREA pattern",
+        "Multiple COPY statements: EPSMTCOM, DFHAID, EPSMLIS, EPSNBRPM, EPSMORTF",
+        "REDEFINES for map output overlay (OUTMAP REDEFINES EPSMLISI)",
+        "OCCURS 8 TIMES for repeating map rows",
+        "EVALUATE TRUE on EIBAID/EIBCALEN for AID key handling"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Part of the IBM EPSDEMOS 2008 sample/tutorial application suite for CICS debugging education. While it is a demo/sample, the code is structured in a production-like manner with proper CICS patterns. The IBM-FLEX-ES computer name refers to the Flex-ES mainframe emulator product."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4752,
+      "completion_tokens": 577,
+      "total_tokens": 5329,
+      "cost": 0.022911,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022911,
+        "upstream_inference_prompt_cost": 0.014256,
+        "upstream_inference_completions_cost": 0.008655
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.56,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:58:33Z"
+}

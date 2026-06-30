@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6f2f49a756f25098aaec0408768c4b4ca68cc68e",
+    "sha1_git": "6f2f49a756f25098aaec0408768c4b4ca68cc68e",
+    "filename": "/utils.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1246,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6f2f49a756f25098aaec0408768c4b4ca68cc68e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6f2f49a756f25098aaec0408768c4b4ca68cc68e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1246,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 40,
+    "blank_lines": 8,
+    "comment_lines": 0,
+    "code_lines": 32,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 30.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "get-func"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 9,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Uses PROCEDURE-POINTER (COBOL-2002 feature) and modern structured syntax; likely GnuCOBOL given HTTP routing context and open-source style",
+        "evidence": [
+          "usage procedure-pointer",
+          "exit program",
+          "end-if",
+          "end-perform",
+          "end program get-func"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "HTTP request routing utility; matches incoming request path and method against a dispatch table of function pointers",
+        "summary": "This subprogram searches an HTTP routing table (array of path/method pairs with associated procedure-pointers) for a match against a given request path and method. It sets a status flag and index if a match is found, then exits. It appears to be part of a small HTTP server or web framework written in COBOL.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "USAGE PROCEDURE-POINTER for function dispatch table",
+        "LINKAGE SECTION with complex table structure",
+        "OCCURS 256 TIMES for routing table",
+        "Structured PERFORM VARYING with END-PERFORM",
+        "No EXEC SQL or EXEC CICS",
+        "HTTP routing context unusual for COBOL"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "The use of PROCEDURE-POINTER and HTTP routing table suggests a modern GnuCOBOL web framework or utility. Standard is likely COBOL-2002 or later due to PROCEDURE-POINTER, but classified as COBOL-85 as the syntax is largely compatible. No compiler directives present to confirm dialect definitively."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2558,
+      "completion_tokens": 394,
+      "total_tokens": 2952,
+      "cost": 0.013584,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013584,
+        "upstream_inference_prompt_cost": 0.007674,
+        "upstream_inference_completions_cost": 0.00591
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.68,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:56:58Z"
+}

@@ -49,55 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (open-cobol)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with open-cobol (GnuCOBOL); comment references 'open-cobol 0.23' migration in 2005",
         "evidence": [
-          "PROGRAM-ID. A00000D126",
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "Comment references 'open-cobol 0.23' adaptation (2005/03/02)",
-          "SELECT ... ORGANIZATION INDEXED ACCESS MODE DYNAMIC RECORD KEY",
-          "COPY directives with REPLACING clauses",
-          "PIC clauses, WORKING-STORAGE SECTION, FILE SECTION",
-          "Fixed-format source layout"
+          "COPY \"CPCOMMONSHELL.INC\"",
+          "COPY \"A00000D126.INC\"",
+          "comment: open-cobol 0.23への対応 (2005/03/02)",
+          "PROGRAM-ID A00000D126",
+          "SELECT ASSIGN without ORGANIZATION LINE SEQUENTIAL typical of GnuCOBOL/open-cobol",
+          "no COMP-3, no EXEC CICS/SQL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a monthly billing/receipt summary report program (月次台帳・月計表) for the ORCA Japanese Medical Association standard receipt software system. It processes inpatient/outpatient medical billing records, computes totals (insurance amounts, self-pay amounts, subsidies, reductions, deposits), and produces a monthly ledger printout. It handles multiple insurance combinations, doctor codes, ward categories, and various fee adjustments.",
-        "domain": "healthcare/medical billing",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software – monthly statement / inpatient billing summary report",
+        "summary": "This program (A00000D126) is part of the JMA ORCA medical receipt system. It generates a monthly inpatient/outpatient billing summary table (月次台帳・月計表), retrieving patient admission/discharge records and computing insurance charges, self-pay amounts, subsidies, and consumption tax. It reads patient files, insurance combination data, and system management tables, then produces a formatted report.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS bytes interpreted as latin-1)",
-        "COPY directives referencing external copybooks (CPCOMMONSHELL.INC, CPERRFL.INC, A00000D126.INC, A00000D1261.INC)",
-        "134 CALL statements indicating heavy use of subprogram calls",
+        "43 COPY statements referencing JMA ORCA-specific copybooks (CPCOMMONSHELL.INC, A00000D126.INC, CPERRFL.INC, etc.)",
+        "134 CALL statements indicating heavy use of shared subroutines",
         "153 PERFORM statements",
-        "Indexed file I/O with DYNAMIC access mode",
-        "Extensive revision history spanning 2004-2009",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage",
-        "OCCURS clauses for arrays (insurance combinations, self-pay items)",
-        "Signed numeric fields (S9) for financial calculations",
-        "Program option support via INI file (later removed per comments)"
+        "Indexed file (ORGANIZATION INDEXED, DYNAMIC access) for patient data",
+        "High comment ratio (43%) with Japanese-language change history",
+        "Latin-1 decoded but contains Shift-JIS/EUC-JP Japanese text in comments",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "Program option support via INI file (partially deleted in 2009 revision)",
+        "OCCURS clauses for insurance category arrays",
+        "Signed numeric fields with decimal positions (V9) for rate calculations"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded as latin-1 but the Japanese comments are multi-byte encoded (likely EUC-JP), causing mojibake in the displayed text. The program is clearly part of the open-source ORCA medical receipt system developed by the Japan Medical Association. The large size (4984 lines, ~217KB), extensive revision history, copyright header, and production-quality structure all indicate a mature production program. No truncation issues affect the classification."
+      "notes": "File is ~217KB, 4984 lines; truncated to 16000 chars for analysis but structure is clear. Japanese comments are encoded in EUC-JP or Shift-JIS but the file was decoded as latin-1, causing mojibake in displayed text. The program is clearly production-grade JMA ORCA healthcare software with a long revision history from 2004 to 2009."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9543,
-      "completion_tokens": 705,
-      "total_tokens": 10248,
-      "cost": 0.039204,
+      "prompt_tokens": 10921,
+      "completion_tokens": 645,
+      "total_tokens": 11566,
+      "cost": 0.042438,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.039204,
-        "upstream_inference_prompt_cost": 0.028629,
-        "upstream_inference_completions_cost": 0.010575
+        "upstream_inference_cost": 0.042438,
+        "upstream_inference_prompt_cost": 0.032763,
+        "upstream_inference_completions_cost": 0.009675
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 21.12,
+    "provider": "Anthropic",
+    "latency_s": 17.64,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:46:10Z"
 }

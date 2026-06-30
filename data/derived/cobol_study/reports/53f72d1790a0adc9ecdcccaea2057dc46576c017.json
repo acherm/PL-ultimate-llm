@@ -49,55 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or OpenCOBOL (JMA ORCA project, Linux-based medical system)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses ORCMCPSUB DB access pattern and COPY-based file layouts typical of ORCA system.",
         "evidence": [
-          "PROGRAM-ID. ORCR0600",
-          "PERFORM ... UNTIL with END-PERFORM",
-          "CALL 'ORCMCPSUB' USING ... (custom DB middleware)",
-          "COPY directives with REPLACING",
+          "PROGRAM-ID ORCR0600",
+          "COPY MCPAREA / CPORCMCP / ORCMCPSUB CALL pattern",
+          "CALL ORCSJOB / ORCMCPSUB",
+          "JMA Open Source License header",
+          "COPY .INC copybook naming convention",
           "LINKAGE SECTION with COMMAND-PARAM",
-          "EXIT PROGRAM / STOP RUN",
-          "SELECT ... ASSIGN ... FILE STATUS",
-          "INITIALIZE statement",
-          "END-IF, END-PERFORM inline scope terminators"
+          "EXIT PROGRAM / STOP RUN conditional on SHELLID"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software system. It creates provisional receipt/payment data (仮収納データ作成) for medical billing. It reads patient information, insurance combinations, treatment accounting records, and hospitalization data, then generates or updates receipt records for the Japanese national health insurance claims process.",
-        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-hoshuu) billing system - provisional receipt data creation component",
+        "summary": "ORCR0600 is a batch program in the JMA ORCA medical receipt system that creates provisional receipt (kari-shunyu) data. It reads patient information, insurance combination records, medical accounting records, and hospitalization accounting records, then generates receipt billing data for health insurance claims. It supports both regular and realtime-preview processing modes.",
         "program_type": "batch"
       },
       "notable_features": [
-        "No EXEC SQL — uses a custom MCP (middleware) DB abstraction layer via CALL 'ORCMCPSUB'",
-        "No EXEC CICS — standalone batch with STOP RUN / EXIT PROGRAM",
-        "Extensive use of COPY statements for record layouts (CPJOBKANRI.INC, CPSRYACCT.INC, CPPTINF.INC, etc.)",
-        "LINKAGE SECTION with COMMAND-PARAM for shell/program invocation",
-        "Japanese Shift-JIS/EUC encoded comments (medical domain terminology)",
-        "Job management sub-calls (ORCSJOB, ORCMCPSUB) indicating a framework-based batch system",
-        "OCCURS clauses for tables (insurance combinations, day-count tables)",
-        "63 CALL statements indicating heavy use of subprogram architecture",
-        "Error file (RECEERR-FILE) for logging processing errors"
+        "Heavy use of COPY statements (26 copybooks) for record layouts",
+        "63 CALL statements to ORCA subsystem routines (ORCMCPSUB, ORCSJOB, etc.)",
+        "144 PERFORM statements indicating structured procedural decomposition",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "Conditional STOP RUN vs EXIT PROGRAM based on SHELLID",
+        "Japanese-encoded comments (EUC-JP/latin-1 decoded) throughout",
+        "OCCURS clauses for table handling (insurance day tables, system master tables)",
+        "DB access via ORCMCPSUB with DBSELECT/DBCLOSECURSOR function codes",
+        "Job management/step control via ORCSJOB",
+        "No EXEC SQL or EXEC CICS - proprietary DB middleware used instead"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but contains Japanese EUC or Shift-JIS encoded comments, which appear garbled in the latin-1 rendering. This is a production program from the open-source JMA ORCA medical receipt system (circa 2002-2005). The program uses a proprietary DB middleware layer (ORCMCPSUB/MCP) rather than embedded SQL. Copyright notice confirms JMA authorship. The 'RECEPTX' shell ID check controls whether the program exits via STOP RUN or EXIT PROGRAM, suggesting it can run both standalone and as a called subprogram."
+      "notes": "File is encoded in EUC-JP decoded as latin-1, causing mojibake in Japanese comment text. Source is truncated to 16000 chars of 93428 bytes total (about 17%). Program is clearly part of the well-known JMA ORCA open-source medical receipt system used widely in Japanese clinics. Fixed format with a few lines slightly over 72 chars (7 long lines noted)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7688,
-      "completion_tokens": 759,
-      "total_tokens": 8447,
-      "cost": 0.034449,
+      "prompt_tokens": 9066,
+      "completion_tokens": 632,
+      "total_tokens": 9698,
+      "cost": 0.036678,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034449,
-        "upstream_inference_prompt_cost": 0.023064,
-        "upstream_inference_completions_cost": 0.011385
+        "upstream_inference_cost": 0.036678,
+        "upstream_inference_prompt_cost": 0.027198,
+        "upstream_inference_completions_cost": 0.00948
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.09,
+    "latency_s": 17.0,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:15:34Z"
 }

@@ -49,55 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus / AcuCOBOL-GT (likely Micro Focus with htmlpp preprocessor)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and external-form CGI extensions; Brazilian Portuguese application (comments and field names in PT-BR). Uses $set sourceformat\"free\" and $set preprocess(htmlpp) compiler directives typical of GnuCOBOL web/CGI frameworks.",
         "evidence": [
-          "$set preprocess (htmlpp) endp — Micro Focus/AcuCOBOL compiler directive",
-          "$set sourceformat\"free\" — Micro Focus-style compiler directive",
-          "external-form clause on cgi-input — AcuCOBOL/Micro Focus CGI extension",
-          "identified by \"fieldname\" — AcuCOBOL CGI form field syntax",
-          "exec html ... end-exec — htmlpp preprocessor for HTML generation",
-          "is external-form — AcuCOBOL CGI feature",
-          "lock mode is manual — Micro Focus/AcuCOBOL file locking syntax",
-          "78 level constant (versao) — COBOL-85 feature"
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "cgi-input is external-form",
+          "identified by \"nrSequencia\"",
+          "exec html",
+          "copy PCW900.CPY / PCW902.CPY / PCW904.CPY / PCW990.CPY"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This program manages a print queue ('Fila de Impressão') for a business application. It provides a web-based CGI interface to list, update, delete, and log print queue entries stored in indexed files. It also generates CSV log output for queue activity.",
-        "domain": "business/ERP (likely Brazilian retail or multi-branch enterprise system)",
+        "domain": "utility-tooling",
+        "domain_detail": "Print queue management web application for a Brazilian business system (likely retail/ERP). Manages a print queue (fila de impressão) with indexed files, logging, and CSV export.",
+        "summary": "PWPE0105 is a CGI/web program that maintains a print queue (Fila de Impressão). It reads and manages an indexed print-queue file (filaimp), supports listing, deleting queue entries, generating a log file, and exporting to CSV. It uses an htmlpp preprocessor to emit HTML/JavaScript for a browser-based UI.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "htmlpp preprocessor with EXEC HTML blocks for CGI/web output",
-        "external-form with identified-by clauses (AcuCOBOL CGI form handling)",
-        "$set compiler directives (Micro Focus / AcuCOBOL style)",
-        "Multiple indexed files with alternate keys and lock mode manual",
-        "Line sequential files for CSV and process output",
+        "$set preprocess(htmlpp) compiler directive for HTML generation",
+        "external-form CGI input section with 'identified by' clauses",
+        "EXEC HTML blocks embedding JavaScript",
+        "Indexed files with multiple alternate keys and lock mode manual",
+        "Brazilian Portuguese field names and comments",
+        "COPY-heavy structure (10 copybooks)",
+        "CSV and line-sequential file output",
         "88-level condition names for queue status and log actions",
-        "COPY statements for shared copybooks (PCF99800, PCW900, PCW904, etc.)",
-        "JavaScript embedded via EXEC HTML for dynamic HTML table generation",
-        "Brazilian Portuguese comments and field names (filial, rotina, fila de impressão)",
-        "decimal-point is comma (Brazilian locale)"
+        "No EXEC SQL or EXEC CICS",
+        "Free-format source with $set sourceformat directive"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file uses the AcuCOBOL-GT or Micro Focus htmlpp preprocessor to generate CGI web pages, which is a niche but legitimate COBOL web development pattern common in Brazilian ERP systems. The source is declared as free-format via $set directive despite the filename suggesting fixed format. Multiple COPY statements reference external copybooks not shown. The truncation at 16000 chars means the full procedure division is not visible, but enough is present to confirm purpose and dialect."
+      "notes": "Source truncated at 16000 chars; full file is 687 lines. The program_type is mapped to 'online-cics' as the closest enum for a CGI/web online program (no actual CICS). Domain mapped to 'utility-tooling' since it is infrastructure/queue management rather than a specific business domain. Decoded as latin-1 due to Portuguese accented characters."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5060,
-      "completion_tokens": 730,
-      "total_tokens": 5790,
-      "cost": 0.02613,
+      "prompt_tokens": 6438,
+      "completion_tokens": 563,
+      "total_tokens": 7001,
+      "cost": 0.027759,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.02613,
-        "upstream_inference_prompt_cost": 0.01518,
-        "upstream_inference_completions_cost": 0.01095
+        "upstream_inference_cost": 0.027759,
+        "upstream_inference_prompt_cost": 0.019314,
+        "upstream_inference_completions_cost": 0.008445
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.42,
+    "latency_s": 18.44,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:42:12Z"
 }

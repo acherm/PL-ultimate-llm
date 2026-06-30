@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5e0b82d46f96fae2221324ec7a3cb79c622c19cb",
+    "sha1_git": "5e0b82d46f96fae2221324ec7a3cb79c622c19cb",
+    "filename": "/ph050037.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9567,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5e0b82d46f96fae2221324ec7a3cb79c622c19cb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5e0b82d46f96fae2221324ec7a3cb79c622c19cb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9567,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 199,
+    "blank_lines": 23,
+    "comment_lines": 30,
+    "code_lines": 146,
+    "comment_ratio": 0.17,
+    "max_line_length": 193,
+    "avg_line_length": 47.1,
+    "long_lines_over_72": 54,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PH050037"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 1,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with OO class-control extensions and htmlpp preprocessor directives; part of the Promax WMS system (Brazilian logistics/retail). Uses $set preprocess(htmlpp) and EXEC HTML blocks typical of GnuCOBOL web CGI frameworks.",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "class-control. EscreveJson is class \"PY990002\"",
+          "exec html ... end-exec",
+          "copy PCW900.CPY",
+          "program-id. PH050037"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "WMS (Warehouse Management System) - Promax system, Brazilian logistics. Generates CSV log for PCF (Blitz de Carregamento - loading inspection) after reopening, with QlikView integration.",
+        "summary": "This program generates a CSV log for PCF (loading blitz/inspection) data after reopening in a WMS context. It renders an HTML form for date range input and provides buttons to generate CSV reports (standard and QlikView). It is part of the Promax system and is executed by a daily update routine.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "$set compiler directives (htmlpp preprocessor)",
+        "EXEC HTML blocks for web CGI output",
+        "OO class-control section with external Java/GnuCOBOL classes",
+        "external-form linkage for CGI input",
+        "Multiple COPY statements (7 copybooks)",
+        "Portuguese-language comments and identifiers",
+        "QlikView integration flag (PRJ-31614)",
+        "decimal-point is comma (Brazilian locale)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is decoded as latin-1 which is consistent with Brazilian Portuguese content. The EXEC HTML blocks are not EXEC CICS; they are part of a GnuCOBOL htmlpp web framework. program_type is mapped to online-cics as the closest enum for an interactive web/CGI program (no CICS is actually used). The file uses free-format source despite the mechanical indicator suggesting fixed, confirmed by $set sourceformat\"free\" directive."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4407,
+      "completion_tokens": 544,
+      "total_tokens": 4951,
+      "cost": 0.021381,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021381,
+        "upstream_inference_prompt_cost": 0.013221,
+        "upstream_inference_completions_cost": 0.00816
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.9,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:42:27Z"
+}

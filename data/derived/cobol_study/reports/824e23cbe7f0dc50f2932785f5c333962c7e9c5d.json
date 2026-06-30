@@ -49,52 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus / GnuCOBOL (PC-based, likely compiled with OpenCOBOL or similar)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Student exercise targeting GnuCOBOL or similar PC-based compiler (IBM-PC declared in SOURCE/OBJECT-COMPUTER). Portuguese-language identifiers and Brazilian context. Uses VALUE OF FILE-ID clause typical of older PC COBOL dialects.",
         "evidence": [
-          "ASSIGN TO DISK with ORGANIZATION IS LINE SEQUENTIAL",
-          "VALUE OF FILE-ID IS 'CADCLI.DAT'",
-          "LABEL RECORD IS OMMITED (non-standard spelling but COBOL-85 era)",
-          "SOURCE-COMPUTER / OBJECT-COMPUTER IBM-PC",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "88-level condition ESTADO-VALIDO with multiple VALUES",
-          "OCCURS 11 TIMES on elementary item within group"
+          "SOURCE-COMPUTER. IBM-PC",
+          "OBJECT-COMPUTER. IBM-PC",
+          "ASSIGN TO DISK",
+          "VALUE OF FILE-ID IS",
+          "DECIMAL-POINT IS COMMA",
+          "LABEL RECORD IS OMMITED (misspelling common in student code)",
+          "ORGANIZATION IS LINE SEQUENTIAL"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads customer registration records from CADCLI.DAT, validates each record (CPF digit check, name, Brazilian state code, city, email), writes valid records to CADOK.DAT, and prints a report of inconsistent/invalid records to RELOCOR with page headers.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "FATEC-SP (Faculdade de Tecnologia de São Paulo) student exercise for a tourism company (TURISMAR TURISMOS) customer registration validation system",
+        "summary": "Reads customer records from CADCLI.DAT, validates CPF (Brazilian tax ID using check-digit algorithm), name, Brazilian state code, city, and email fields. Valid records are written to CADOK.DAT; invalid records are printed to a report (RELOCOR) listing which fields failed validation.",
         "program_type": "batch"
       },
       "notable_features": [
-        "CPF (Brazilian tax ID) validation with two-digit check digit algorithm using COMPUTE, MULTIPLY, DIVIDE REMAINDER",
-        "88-level condition for all 27 Brazilian state codes",
-        "OCCURS on elementary PIC 9 for digit-by-digit CPF processing",
+        "CPF (Brazilian tax ID) check-digit validation algorithm using OCCURS and iterative COMPUTE",
+        "88-level condition for all 27 Brazilian state codes (ESTADO-VALIDO)",
         "DECIMAL-POINT IS COMMA (Brazilian locale)",
-        "VALUE OF FILE-ID for PC-style file assignment",
-        "Page-overflow logic using CT-LIN counter",
-        "WRITE ... AFTER ADVANCING PAGE / LINE for report formatting",
-        "No COMP-3, no EXEC SQL, no EXEC CICS"
+        "VALUE OF FILE-ID clause for file assignment",
+        "WRITE ... AFTER ADVANCING PAGE/LINE for report formatting",
+        "Multi-level header printing with page overflow control (CT-LIN)",
+        "Portuguese-language data names and messages"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Authored by 'FABIO COSTA' at FATEC-SP (a Brazilian technical college) in October 2015, clearly a student assignment. Minor typo: 'OMMITED' instead of 'OMITTED'. The CPF validation logic resets CTR1/CTR2 between the two passes but the SOMA1/SOMA2 paragraphs share the same counters, which may have a subtle bug (CTR2 starts at 10 for SOMA1 but should start at 10 for 9 iterations covering digits 1-9, then resets to 11 for SOMA2 covering digits 1-10 — logic appears intentional but unusual). Overall a well-structured student program."
+      "notes": "Author is Fabio Costa, institution FATEC-SP, dated 13/10/2015. The misspelling 'OMMITED' instead of 'OMITTED' in the RELOCOR FD is a common student error. No COPY statements or CALLs; self-contained single program. CPF validation logic resets CTR1/CTR2 between SOMA1 and SOMA2 loops but does not reinitialize CPF-SOMA1/CPF-SOMA2 between records, which is a likely bug in the student code."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3938,
-      "completion_tokens": 699,
-      "total_tokens": 4637,
-      "cost": 0.022299,
+      "prompt_tokens": 5316,
+      "completion_tokens": 564,
+      "total_tokens": 5880,
+      "cost": 0.024408,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.022299,
-        "upstream_inference_prompt_cost": 0.011814,
-        "upstream_inference_completions_cost": 0.010485
+        "upstream_inference_cost": 0.024408,
+        "upstream_inference_prompt_cost": 0.015948,
+        "upstream_inference_completions_cost": 0.00846
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 16.89,
+    "provider": "Anthropic",
+    "latency_s": 16.77,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:33:22Z"
 }

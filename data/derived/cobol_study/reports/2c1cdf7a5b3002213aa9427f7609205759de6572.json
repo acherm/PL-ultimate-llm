@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Nihon Ishi-kai standard receipt system); references to open-cobol 1.0 compatibility in changelog (01.00.17)",
         "evidence": [
           "PROGRAM-ID. SEIKYU1005",
-          "ORGANIZATION IS INDEXED / LINE SEQUENTIAL",
-          "COPY directives with REPLACING",
-          "comment references to 'open-cobol1.0' in revision history",
-          "fixed-format source with standard DIVISIONS",
-          "OCCURS clauses, REDEFINES, VALUE clauses consistent with COBOL-85"
+          "COPY directives with .INC files typical of ORCA",
+          "comment '01.00.17 open-cobol1.0ÂÐ±þ'",
+          "LINE SEQUENTIAL organization",
+          "no EXEC CICS/SQL",
+          "ORGANIZATION IS INDEXED with DYNAMIC access"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch COBOL program (SEIKYU1005) that generates group welfare/public expense medical fee claim summary forms (specifically forms 145, 245, 146, 246, 143, 243) for the Japanese ORCA medical receipt software system. It reads indexed claim files and town/insurer number data, performs billing amount calculations including high-cost medical expense limits, and produces printed output.",
-        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (chihou kouhi - local public expense medical assistance); generates group welfare medical fee claim summary forms (145,245,146,246,143,243 form types)",
+        "summary": "SEIKYU1005 is a batch program in the JMA ORCA medical receipt system that calculates and prints local public expense (chihou kouhi) medical fee claim summary forms. It processes indexed patient/claim files, applies co-payment limit calculations, handles special cases for elderly patients and high-cost medical expense thresholds, and outputs formatted claim documents. The program has an extensive revision history spanning 2005-2016 covering regulatory changes to Japanese medical insurance billing rules.",
         "program_type": "batch"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
-        "Heavy use of COPY statements with REPLACING for include files (.INC)",
-        "Japanese-language comments encoded in latin-1 (actually Shift-JIS/EUC-JP garbled)",
-        "79 CALL statements indicating extensive subprogram linkage",
-        "OCCURS tables for insurance code lookups",
-        "REDEFINES used for hospital name/address splitting",
-        "Detailed revision history spanning 2005–2016 with named authors",
-        "Part of JMA (Japan Medical Association) open-source ORCA project",
-        "SELECT with ORGANIZATION IS INDEXED and DYNAMIC access for claim file",
-        "SELECT with LINE SEQUENTIAL for town/insurer number flat file"
+        "37 COPY statements referencing .INC copybooks",
+        "79 CALL statements indicating heavy use of subprograms",
+        "ORGANIZATION IS INDEXED with DYNAMIC access mode",
+        "LINE SEQUENTIAL file for town/municipality data",
+        "REDEFINES usage",
+        "OCCURS tables for insurance fund data",
+        "Extensive Japanese-language comments (EUC-JP/latin-1 encoded)",
+        "No EXEC SQL or EXEC CICS",
+        "Detailed version history with 35 revisions from 2005-2016"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in latin-1 per the decoder, but the Japanese comments are actually Shift-JIS or EUC-JP bytes interpreted as latin-1, causing mojibake in the displayed text. The source is clearly genuine production COBOL from the ORCA medical receipt system maintained by JMA Japan. The high comment ratio (44.5%) is largely due to the extensive revision history block at the top. COPY statements reference external .INC copybooks not shown here."
+      "notes": "Source is encoded in EUC-JP decoded as latin-1, causing mojibake in Japanese text portions; content is clearly readable as COBOL. File truncated at 16000 chars out of 160272 bytes (3620 lines total). The program is part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese medical practices."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 11299,
-      "completion_tokens": 662,
-      "total_tokens": 11961,
-      "cost": 0.043827,
+      "prompt_tokens": 12677,
+      "completion_tokens": 558,
+      "total_tokens": 13235,
+      "cost": 0.046401,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.043827,
-        "upstream_inference_prompt_cost": 0.033897,
-        "upstream_inference_completions_cost": 0.00993
+        "upstream_inference_cost": 0.046401,
+        "upstream_inference_prompt_cost": 0.038031,
+        "upstream_inference_completions_cost": 0.00837
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.7,
+    "latency_s": 17.43,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:16:27Z"
 }

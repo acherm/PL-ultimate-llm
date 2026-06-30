@@ -49,45 +49,47 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; demonstrates string and numeric truncation behavior when MOVEing to shorter fields",
         "evidence": [
-          "ACCEPT OMITTED (GnuCOBOL extension)",
-          "numeric line numbers in columns 1-6 (fixed format)",
-          "standard WORKING-STORAGE with PIC X and PIC 9 items",
-          "MOVE with multiple receiving fields in one statement"
+          "ACCEPT OMITTED",
+          "sequence numbers in columns 1-6",
+          "no COMP-3 or vendor-specific extensions"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Demonstrates string and numeric truncation behavior in COBOL by moving a string ('Hello') and a number (2397) into fields of decreasing sizes and displaying the results. It is a tutorial/educational program illustrating how COBOL truncates data on the right for alphanumeric and on the left for numeric fields.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates COBOL truncation rules for alphanumeric and numeric fields of varying sizes",
+        "summary": "This program moves a string 'Hello' and a number 2397 into fields of decreasing sizes, then displays each field to illustrate how COBOL truncates values when the target field is smaller than the source. It is a teaching or demonstration example of truncation behavior.",
         "program_type": "demo"
       },
       "notable_features": [
-        "ACCEPT OMITTED (GnuCOBOL-specific syntax to pause before exit)",
-        "Data names starting with digits (e.g., 6-BYTES, 5-DIGITS) — unusual but valid in some dialects",
-        "MOVE to multiple receiving fields in a single statement",
-        "No PERFORM, CALL, or GOTO — purely sequential logic"
+        "ACCEPT OMITTED used to pause before STOP RUN",
+        "Multiple MOVE targets in a single statement",
+        "Demonstrates both alphanumeric and numeric truncation",
+        "No PERFORM, CALL, or GOTO usage"
       ],
-      "maturity": "toy-or-hello-world",
+      "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program name TRUNC03 and its structure strongly suggest it is part of a series of tutorial exercises on truncation. Data-names beginning with digits (e.g., '6-BYTES') are non-standard in strict COBOL-85 but accepted by GnuCOBOL. ACCEPT OMITTED is a GnuCOBOL extension. No FILE SECTION or SELECT clauses are present."
+      "notes": "The program is clearly a simple educational example illustrating COBOL truncation. The dialect cannot be determined with certainty from the code alone; GnuCOBOL is a reasonable guess given the open-source style and ACCEPT OMITTED usage, but it could compile under many COBOL compilers."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1388,
-      "completion_tokens": 508,
-      "total_tokens": 1896,
-      "cost": 0.011784,
+      "prompt_tokens": 2766,
+      "completion_tokens": 355,
+      "total_tokens": 3121,
+      "cost": 0.013623,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +98,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011784,
-        "upstream_inference_prompt_cost": 0.004164,
-        "upstream_inference_completions_cost": 0.00762
+        "upstream_inference_cost": 0.013623,
+        "upstream_inference_prompt_cost": 0.008298,
+        "upstream_inference_completions_cost": 0.005325
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +108,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 11.55,
+    "provider": "Anthropic",
+    "latency_s": 8.18,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:32:02Z"
 }

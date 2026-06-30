@@ -49,47 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or IBM Enterprise COBOL (likely GnuCOBOL given file path convention and CALL syntax with relative path)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL educational/training program; CALL uses relative path './bin/PGCALC01' typical of GnuCOBOL on Linux/Unix; written 2022",
         "evidence": [
-          "END PROGRAM PGMENULS terminator (COBOL-85+)",
-          "INITIALIZE statement",
-          "CALL './bin/PGCALC01' with relative file path suggests GnuCOBOL/open-source environment",
-          "DATE-WRITTEN, DATE-COMPILED, SECURITY paragraphs (classic COBOL-85 style)",
-          "PIC 99V99 numeric pictures"
+          "CALL './bin/PGCALC01'",
+          "DATE-WRITTEN. 06/06/2022",
+          "END PROGRAM PGMENULS",
+          "INSTALLATION. COBOL DEVELOPMENT CENTER"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A simple menu/driver program that accepts two numeric values from the user and calls an external subprogram (PGCALC01) to perform a calculation, then displays the result. It appears to be a tutorial demonstrating LINKAGE SECTION usage between programs.",
-        "domain": "education/tutorial",
-        "program_type": "batch"
+        "domain": "education-tutorial",
+        "domain_detail": "COBOL training exercise demonstrating LINKAGE SECTION usage; calls a subprogram to perform calculation",
+        "summary": "A menu/driver program that accepts two numeric values from the user and calls an external calculation subprogram (PGCALC01) passing a working-storage group item. It is explicitly described as a demonstration of LINKAGE SECTION. Displays the result after the call.",
+        "program_type": "demo"
       },
       "notable_features": [
-        "CALL with relative file path './bin/PGCALC01' (unusual, suggests GnuCOBOL)",
-        "INITIALIZE on a group item",
-        "Portuguese-language display strings and comments",
-        "END PROGRAM terminator",
-        "WS-RESULT is passed via USING WS-VAR but never explicitly populated in this program (result read from shared group item)"
+        "CALL with relative path './bin/PGCALC01' (Unix/GnuCOBOL style)",
+        "INITIALIZE on group item WS-VAR",
+        "PIC 99V99 numeric fields",
+        "Purpose comment: 'Apresentar a LINKAGE SECTION' (Portuguese)",
+        "ACCEPT for interactive input"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program is clearly a student exercise written in Portuguese (Brazilian), dated 2022, intended to demonstrate LINKAGE SECTION inter-program communication. The CALL uses a relative path which is characteristic of GnuCOBOL on Linux/Unix. WS-RESULT is part of the WS-VAR group passed to the called program, so the result is expected to be populated by PGCALC01 via LINKAGE SECTION."
+      "notes": "Source is in Portuguese (Brazilian), consistent with a student exercise from a COBOL training course. The CALL passes WS-VAR but WS-RESULT is displayed without being explicitly populated in this program — the subprogram presumably fills it via LINKAGE SECTION. No truncation issues; file is complete and small."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1227,
-      "completion_tokens": 550,
-      "total_tokens": 1777,
-      "cost": 0.011931,
+      "prompt_tokens": 2605,
+      "completion_tokens": 419,
+      "total_tokens": 3024,
+      "cost": 0.0141,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011931,
-        "upstream_inference_prompt_cost": 0.003681,
-        "upstream_inference_completions_cost": 0.00825
+        "upstream_inference_cost": 0.0141,
+        "upstream_inference_prompt_cost": 0.007815,
+        "upstream_inference_completions_cost": 0.006285
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 13.59,
+    "provider": "Anthropic",
+    "latency_s": 12.37,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:40:35Z"
 }

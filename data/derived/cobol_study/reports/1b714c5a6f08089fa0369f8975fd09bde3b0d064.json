@@ -49,45 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL (possibly Micro Focus)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 style; no vendor-specific extensions visible. Author name suggests possible Thai academic context.",
         "evidence": [
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "88 END-OF-PROVINCE-FILE VALUE HIGH-VALUE",
-          "PIC $999,999,999 (edited numeric picture)",
-          "IDENTIFICATION DIVISION with AUTHOR paragraph"
+          "HIGH-VALUE",
+          "PIC X(2)",
+          "88 END-OF-PROVINCE-FILE VALUE HIGH-VALUE"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is an incomplete COBOL program stub that defines a file (trader3.dat) containing province records with ID, income, and member count fields. The PROCEDURE DIVISION is absent, suggesting the file is a work-in-progress or truncated student exercise.",
-        "domain": "education/tutorial",
-        "program_type": "demo"
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise involving reading a province/trader data file with income and member count fields",
+        "summary": "Incomplete COBOL program that defines a file structure for province data (ID, income, member count) read from 'trader3.dat'. The PROCEDURE DIVISION is absent, suggesting this is an incomplete student assignment or snippet.",
+        "program_type": "unknown"
       },
       "notable_features": [
-        "LINE SEQUENTIAL organization for flat file input",
-        "88-level condition name for end-of-file detection using HIGH-VALUE",
-        "Edited numeric picture clause with currency symbol: PIC $999,999,999",
-        "No PROCEDURE DIVISION present — program is incomplete"
+        "No PROCEDURE DIVISION present",
+        "88-level condition name for end-of-file using HIGH-VALUE",
+        "LINE SEQUENTIAL file organization",
+        "Numeric edited PIC clause with currency symbol ($999,999,999)"
       ],
       "maturity": "student-exercise",
-      "overall_confidence": "high",
-      "notes": "The file is clearly genuine COBOL but is incomplete — the PROCEDURE DIVISION is entirely missing. The author name 'CHONCHANOK' and program name 'COBOLFINAL' suggest a student final project. The absence of any procedural logic means the program cannot compile or run as-is."
+      "overall_confidence": "medium",
+      "notes": "The file is truncated or incomplete — the PROCEDURE DIVISION is entirely missing. Only 20 lines total. The author name 'CHONCHANOK' is a Thai given name, suggesting a Thai university student exercise. The filename 'CobolFinal.cbl' implies a final project submission. Confidence is medium due to missing PROCEDURE DIVISION."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1012,
-      "completion_tokens": 430,
-      "total_tokens": 1442,
-      "cost": 0.009486,
+      "prompt_tokens": 2390,
+      "completion_tokens": 345,
+      "total_tokens": 2735,
+      "cost": 0.012345,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009486,
-        "upstream_inference_prompt_cost": 0.003036,
-        "upstream_inference_completions_cost": 0.00645
+        "upstream_inference_cost": 0.012345,
+        "upstream_inference_prompt_cost": 0.00717,
+        "upstream_inference_completions_cost": 0.005175
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.59,
+    "provider": "Anthropic",
+    "latency_s": 8.07,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:58:19Z"
 }

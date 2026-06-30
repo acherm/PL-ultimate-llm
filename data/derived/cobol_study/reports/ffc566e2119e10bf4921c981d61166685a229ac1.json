@@ -49,55 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely Micro Focus Personal COBOL or COBOL/2 for DOS/Windows)",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL (likely Personal COBOL or Net Express) indicated by $SET directive, COMP-X, COMP-5, CRT STATUS, CURSOR IS, SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR, and CONSOLE IS CRT. Author J W Lemmon (APAC) with GPL license. Version 8.15.00 November 2010.",
         "evidence": [
-          "$SET LINKCOUNT\"256\" compiler directive (Micro Focus syntax)",
-          "COMP-X and COMP-5 usage (Micro Focus extensions)",
-          "CRT STATUS IS KEY-STATUS (Micro Focus screen handling)",
-          "CURSOR IS CSTART in SPECIAL-NAMES (Micro Focus CRT feature)",
-          "SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR clauses",
-          "COPY ... .SL / .FDE / .WS / .LS / .CRT file extensions (Micro Focus copybook conventions)",
-          "LINAGE clause on FD",
-          "Box-drawing characters (IBM PC code page 437/850) in VALUE literals"
+          "$SET LINKCOUNT\"256\"",
+          "COMP-X",
+          "COMP-5",
+          "CRT STATUS IS KEY-STATUS",
+          "CURSOR IS CSTART",
+          "CONSOLE IS CRT",
+          "SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR",
+          "ORGANIZATION LINE SEQUENTIAL",
+          "LINAGE IS WS-PGE-LENGTH"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "PRINTUTL is a print utility subprogram that abstracts report output across multiple destinations: physical printer (LPT/COM ports), disk spool file, and screen display. Calling programs issue commands (Open, Close, Print, Skip, End-of-report) without needing to know the actual output destination. It handles page length, line advance, expanded/condensed print modes, and left/right screen scrolling for wide reports.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "Print/spool/display utility subprogram for a business application suite (APAC system by J W Lemmon). Supports printer output, spooling to disk, and screen display of reports.",
+        "summary": "PRINTUTL is a callable subprogram that provides unified print/spool/display services for reports. It handles opening/closing printers and spool files, printing lines with paper advance control, spooling lines, and displaying report output on screen with left/right scrolling. Calling programs treat all output as printer output and are unaware of the actual destination.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Micro Focus $SET compiler directive",
-        "SCREEN SECTION with CRT color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR)",
-        "COMP-X (Micro Focus unsigned binary) and COMP-5 data items",
-        "LINAGE clause for page-length control on printer FD",
-        "Box-drawing characters (PC code page) embedded in VALUE literals",
-        "Multiple COPY statements referencing .SL, .FDE, .WS, .LS, .CRT, .ID extensions",
-        "LINKAGE SECTION with chained parameter areas (CHAIN.LS)",
-        "Dual-file output: PRNREP (printer) and PRNSPL (spooler)",
-        "GPL open-source copyright notice embedded in SECURITY paragraph",
-        "Version 8.15.00 dated November 2010"
+        "$SET compiler directive (Micro Focus)",
+        "COMP-X and COMP-5 binary types",
+        "SCREEN SECTION with color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR)",
+        "CRT STATUS and CURSOR IS special-names",
+        "LINAGE clause on FD for page control",
+        "LINKAGE SECTION with multiple 01 parameters (CHAIN.LS, LS-SCREEN-PRINT, L02-PRINTER-DETAILS)",
+        "21 COPY statements referencing named copybooks (.SL, .FDE, .ID, .WS, .LS, .CRT)",
+        "Box-drawing characters (IBM PC line-draw) in VALUE literals",
+        "REDEFINES used extensively",
+        "OCCURS clauses for screen line arrays"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 which is consistent with IBM PC box-drawing characters in VALUE literals. The $SET directive and all dialect indicators point firmly to Micro Focus COBOL targeting a DOS/Windows environment. Source is truncated at 16000 chars (~36% of total); the PROCEDURE DIVISION is not shown but structural indicators (40 PERFORMs, 39 GOTOs, 7 CALLs) confirm a substantial procedural body. No EXEC SQL or EXEC CICS present."
+      "notes": "Source truncated to first 16000 chars; full procedure division not visible. Fixed format with sequence numbers in columns 1-6 on some lines but tab-indented on others — mixed numbering style typical of Micro Focus tools. GPL-licensed personal software by James William Lemmon, version 8.15.00 (2010). The APAC copybook references suggest a larger integrated business application suite."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7763,
-      "completion_tokens": 769,
-      "total_tokens": 8532,
-      "cost": 0.034824,
+      "prompt_tokens": 9141,
+      "completion_tokens": 649,
+      "total_tokens": 9790,
+      "cost": 0.037158,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034824,
-        "upstream_inference_prompt_cost": 0.023289,
-        "upstream_inference_completions_cost": 0.011535
+        "upstream_inference_cost": 0.037158,
+        "upstream_inference_prompt_cost": 0.027423,
+        "upstream_inference_completions_cost": 0.009735
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +121,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.65,
+    "latency_s": 17.99,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:39:36Z"
 }

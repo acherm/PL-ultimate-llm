@@ -52,55 +52,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL targeting IMS/DLI batch processing; part of Compuware GENAPP demonstration application. Uses COMP, COMP-3, BINARY, EJECT, and IMS DLI call conventions.",
         "evidence": [
-          "USAGE BINARY for numeric fields",
-          "COMP-3 packed decimal fields",
-          "EJECT directives",
-          "IMS DL/I call structures (GU, GHU, GHN, GN, ISRT, REPL, DLET)",
-          "RECORDING MODE IS F / BLOCK CONTAINS in FD",
-          "88-level condition names",
-          "REDEFINES clauses",
-          "Fixed-format source with sequence numbers in columns 73-80 (e.g. 00380000)"
+          "COMP-3 usage",
+          "USAGE BINARY",
+          "EJECT directive",
+          "IMS DLI SSA structures (CUSTOMER-SSA-QUAL, ICF-GU, ICF-GN etc.)",
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 27920 CHARACTERS",
+          "sequence numbers in columns 73-80 (e.g. 00380000)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "LGBAT003 is a GenApp demonstration batch program emphasizing IMS batch processing. It reads customer data from an IMS HIDAM database (CUSTMRDB) using DL/I calls, and demonstrates three IMS scenarios: abnormal termination via bad status code, S0C7 data exception abend, and a poor performance scenario. It also reads input parameters from a flat file to control which scenarios are executed.",
-        "domain": "insurance",
+        "domain": "demo-example",
+        "domain_detail": "Compuware GENAPP demonstration application showcasing IMS batch processing scenarios including abnormal termination, S0C7 data exception, and poor performance scenarios",
+        "summary": "LGBAT003 is a batch COBOL program from the Compuware GENAPP demonstration suite. It reads an input parameter file and processes an IMS HIDAM customer database (CUSTMRDB) using DLI calls. It demonstrates three IMS scenarios: abnormal termination via bad status code, S0C7 data exception abend, and poor performance.",
         "program_type": "batch"
       },
       "notable_features": [
-        "IMS DL/I calls with SSA (Segment Search Arguments) for qualified and unqualified retrieval",
-        "IMS call function definitions (GU, GHU, GHN, GN, ISRT, REPL, DLET)",
+        "IMS DLI calls (GU, GHU, GHN, GN, ISRT, REPL, DLET)",
+        "IMS Segment Search Arguments (SSA) - qualified and unqualified",
         "COMP-3 packed decimal fields",
         "USAGE BINARY fields",
-        "REDEFINES clauses used extensively",
-        "88-level condition names for switches",
-        "EJECT directives for listing control",
-        "Sequence numbers in columns 73-80 (IBM mainframe style)",
-        "Deliberate S0C7 abend scenario via numeric field manipulation",
-        "Input parameter file driving scenario selection"
+        "EJECT directives",
+        "88-level condition names",
+        "REDEFINES clauses",
+        "OCCURS 500 TIMES parameter array",
+        "Sequence numbers in columns 73-80",
+        "CURRENT-DATE intrinsic function usage implied by WS-CURRENT-DATE-TIME structure"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly part of the IBM GenApp (General Insurance Application) demonstration suite, originally developed by Compuware. The program is a well-structured mainframe batch COBOL program targeting IBM z/OS with IMS. Sequence numbers in columns 73-80 confirm IBM mainframe fixed-format source. No EXEC SQL or EXEC CICS blocks are present; IMS access is via native DL/I CALL statements."
+      "notes": "Source truncated to first 16000 chars; full program is 1511 lines. The program is clearly a well-structured demonstration/tutorial application from Compuware (now Broadcom) GENAPP suite, targeting IBM z/OS with IMS. Despite being a demo, it exhibits production-level coding conventions."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4871,
-      "completion_tokens": 655,
-      "total_tokens": 5526,
-      "cost": 0.024438,
+      "prompt_tokens": 6249,
+      "completion_tokens": 557,
+      "total_tokens": 6806,
+      "cost": 0.027102,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -109,9 +111,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.024438,
-        "upstream_inference_prompt_cost": 0.014613,
-        "upstream_inference_completions_cost": 0.009825
+        "upstream_inference_cost": 0.027102,
+        "upstream_inference_prompt_cost": 0.018747,
+        "upstream_inference_completions_cost": 0.008355
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -120,8 +122,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.65,
+    "latency_s": 13.86,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:55:29Z"
 }

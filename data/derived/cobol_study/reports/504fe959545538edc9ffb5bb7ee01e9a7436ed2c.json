@@ -49,51 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (PC/workstation COBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses LINE SEQUENTIAL, GOBACK, 88-level condition names with OF qualifier, and PERFORM THRU pattern typical of GnuCOBOL student exercises",
         "evidence": [
-          "GOBACK statement",
-          "ORGANIZATION IS LINE SEQUENTIAL (non-mainframe file org)",
-          "FILE STATUS condition-name usage with OF qualifier",
-          "END-IF scope terminators",
-          "88-level condition names with VALUES",
-          "PERFORM ... THRU ... UNTIL pattern",
-          "DISPLAY ... UPON CONSOLE"
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "FILE-OK OF WS-INPUT-FILE-STATUS",
+          "FILE-AT-END OF WS-INPUT-FILE-STATUS",
+          "BLOCK CONTAINS 0 RECORDS",
+          "END-IF used throughout"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads a sequential input file (DATA2.DAT) containing records with two ID fields (A-ID, B-ID) and a counter, performs a two-level control-break report, and writes totals by A-ID/B-ID group plus a grand total to an output report file (REPORT2.RPT).",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Control-break report generation exercise; reads a two-level keyed input file and produces a grouped summary report with subtotals and grand total",
+        "summary": "CONBRE2 reads a sequential input file (DATA2.DAT) with two-level keys (A-ID, B-ID) and a counter field. It performs a two-level control-break process, accumulating subtotals per B-ID group and totals per A-ID group, writing formatted detail and summary lines to REPORT2.RPT with a grand total footer.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Two-level control-break processing (A-ID outer, B-ID inner)",
+        "Two-level control-break logic (A-ID outer, B-ID inner)",
         "PERFORM THRU with EXIT paragraphs pattern",
-        "FILE STATUS condition-name qualification with OF",
-        "GOBACK instead of STOP RUN for program termination",
-        "ORGANIZATION IS LINE SEQUENTIAL (PC/workstation style)",
-        "No COMP-3, no EXEC SQL, no EXEC CICS",
-        "Commented-out DISPLAY and MOVE statements left in code"
+        "88-level condition names qualified with OF",
+        "LINE SEQUENTIAL file organization",
+        "GOBACK statement",
+        "Commented-out DISPLAY and MOVE statements suggesting iterative development",
+        "UPON CONSOLE for error messages",
+        "No COMP-3 or SQL usage"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Author name 'GluayHom' and the straightforward control-break structure suggest a student exercise or tutorial program. The program references 'CONBRE1' in error messages despite being CONBRE2, indicating copy-paste from a sibling program. No truncation issues; all four divisions present and complete."
+      "notes": "Author name 'GluayHom' and program naming convention (CONBRE2) suggest a student exercise series. Some commented-out lines indicate work-in-progress. Minor typo in error messages ('CONBRE1 ABEND' in a program named CONBRE2). No truncation issues observed."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3481,
-      "completion_tokens": 527,
-      "total_tokens": 4008,
-      "cost": 0.018348,
+      "prompt_tokens": 4859,
+      "completion_tokens": 481,
+      "total_tokens": 5340,
+      "cost": 0.021792,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.018348,
-        "upstream_inference_prompt_cost": 0.010443,
-        "upstream_inference_completions_cost": 0.007905
+        "upstream_inference_cost": 0.021792,
+        "upstream_inference_prompt_cost": 0.014577,
+        "upstream_inference_completions_cost": 0.007215
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 13.06,
+    "latency_s": 13.2,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:31:49Z"
 }

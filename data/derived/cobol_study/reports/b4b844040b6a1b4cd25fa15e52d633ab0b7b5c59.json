@@ -49,46 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or generic COBOL (tutorial style)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple tutorial/exercise program demonstrating MOVE statement variants; no vendor-specific extensions visible. Reference data substring notation WS-NUM1(3:6) is COBOL-85+.",
         "evidence": [
-          "IDENTIFICATION DIVISION / PROGRAM-ID structure",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "Reference modification WS-NUM1(3:6)",
-          "MOVE ... TO multiple targets",
-          "STOP RUN"
+          "MOVE WS-NUM1(3:6) TO WS-NUM4 — reference modification syntax (COBOL-85+)",
+          "STOP RUN",
+          "DISPLAY with string literals",
+          "No EXEC SQL/CICS, no COMP-3, no vendor directives"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Demonstrates various forms of the MOVE statement in COBOL, including moving literals, moving to multiple targets, reference modification, and moving group items. It displays the results of each MOVE operation.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates various forms of the MOVE statement including group moves, multiple targets, and reference modification",
+        "summary": "A minimal COBOL program that exercises the MOVE statement in several ways: moving literals, moving to multiple targets, reference modification, group-level moves, and displaying results. It is clearly a tutorial or learning exercise.",
         "program_type": "demo"
       },
       "notable_features": [
         "Reference modification: WS-NUM1(3:6)",
-        "Group-level MOVE: WS-ADDRESS TO WS-ADDRESS1",
-        "MOVE to multiple receiving fields in one statement",
-        "No FILE SECTION or ENVIRONMENT DIVISION"
+        "Group-level MOVE (WS-ADDRESS TO WS-ADDRESS1)",
+        "MOVE to multiple targets in one statement",
+        "No PERFORM, CALL, or GOTO — single flat paragraph"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "This is clearly a tutorial or student exercise focused on illustrating MOVE statement variants. No advanced features, no I/O, no error handling. The filename MOVE-01.cbl is consistent with a series of instructional programs."
+      "notes": "Very short program (37 lines) with no ENVIRONMENT DIVISION, no file I/O, no error handling. Naming convention (MOVE-01) suggests it is part of a numbered series of tutorial exercises. Dialect cannot be pinned beyond COBOL-85 standard features."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1325,
-      "completion_tokens": 394,
-      "total_tokens": 1719,
-      "cost": 0.009885,
+      "prompt_tokens": 2703,
+      "completion_tokens": 385,
+      "total_tokens": 3088,
+      "cost": 0.013884,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -97,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009885,
-        "upstream_inference_prompt_cost": 0.003975,
-        "upstream_inference_completions_cost": 0.00591
+        "upstream_inference_cost": 0.013884,
+        "upstream_inference_prompt_cost": 0.008109,
+        "upstream_inference_completions_cost": 0.005775
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.63,
+    "provider": "Anthropic",
+    "latency_s": 9.22,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:05:59Z"
 }

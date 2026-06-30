@@ -49,50 +49,54 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source; part of the ACAS (Applewood Computers Accounting System) by Vincent B. Coen. Uses >>source free directive and GnuCOBOL-style *> comments.",
         "evidence": [
-          ">>source free (GnuCOBOL compiler directive)",
-          "*> style comments (GnuCOBOL/COBOL-2002+ line comments)",
-          "COPY with REPLACING using == delimiters",
-          "GOBACK statement",
-          "Multiple ENTRY statements",
-          "RETURN-CODE special register"
+          ">>source free",
+          "*> comment style",
+          "copy \"envdiv.cob\"",
+          "copy \"wsfnctn.cob\"",
+          "copy \"Test-Data-Flags.cob\" with replacing",
+          "RETURN-CODE",
+          "goback"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "A stub/dummy module for the ACAS (Applewood Computers Accounting System) that provides no-op entry points for all RDBMS Data Access Layer (DAL) modules. When called, each entry point simply sets error/return codes (FS-Reply=99, WE-Error=999, RETURN-CODE=64) and returns, allowing the system to run using COBOL files instead of an RDBMS backend.",
-        "domain": "banking",
+        "domain": "accounting-erp",
+        "domain_detail": "ACAS (Applewood Computers Accounting System) - dummy RDBMS stub module providing no-op entry points for all DAL (Data Access Layer) units so the system can run using COBOL files instead of an RDBMS backend.",
+        "summary": "This module provides dummy entry points for all RDBMS Data Access Layer (DAL) units in the ACAS accounting system. When called, each entry point simply sets an error/return code (FS-Reply=99, WE-Error=999, RETURN-CODE=64) and returns. It allows ACAS to operate without an RDBMS client package installed.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        ">>source free GnuCOBOL compiler directive",
-        "Multiple ENTRY statements (28 named entry points) acting as dummy stubs",
-        "COPY statements with REPLACING for conditional test flags",
-        "GPL copyright notice embedded in comments",
-        "No PERFORM, CALL, or GOTO statements — purely stub logic",
-        "RETURN-CODE special register used for error signaling",
-        "Linkage Section with COPY-included data structures"
+        ">>source free compiler directive",
+        "Multiple ENTRY statements (28 named entry points)",
+        "COPY with REPLACING clause to override test flags",
+        "High comment ratio (~70%) including full GPL copyright notice",
+        "No EXEC SQL despite being an RDBMS stub",
+        "RETURN-CODE special register usage",
+        "Linkage Section with shared DAL data structures"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly a GnuCOBOL free-format source file. The extremely high comment ratio (0.696) is due to the extensive copyright/support notice block. The program-id 'dummmy' (triple 'm') appears to be a typo in the source. The file is part of the ACAS open-source accounting system by Vincent B. Coen, distributed under GPL v3. The domain is accounting/ERP rather than pure banking, but 'banking' was the closest available domain label given the GL, sales, purchase, and nominal ledger modules referenced."
+      "notes": "Program-id is 'dummmy' (triple-m typo). Version string in WS is '3.02.01'. The file is heavily commented with a full GPL v3 copyright notice and change log. Despite being a stub/dummy module, it is clearly part of a mature production accounting system."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3271,
-      "completion_tokens": 593,
-      "total_tokens": 3864,
-      "cost": 0.018708,
+      "prompt_tokens": 4649,
+      "completion_tokens": 494,
+      "total_tokens": 5143,
+      "cost": 0.021357,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.018708,
-        "upstream_inference_prompt_cost": 0.009813,
-        "upstream_inference_completions_cost": 0.008895
+        "upstream_inference_cost": 0.021357,
+        "upstream_inference_prompt_cost": 0.013947,
+        "upstream_inference_completions_cost": 0.00741
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.54,
+    "latency_s": 12.9,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:36:59Z"
 }

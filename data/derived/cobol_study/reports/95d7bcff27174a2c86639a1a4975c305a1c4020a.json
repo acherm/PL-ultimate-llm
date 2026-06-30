@@ -49,54 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus / GnuCOBOL (ORCA project, Linux-based medical system)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Nihon Igikai standard receipt system), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses ORCA-specific COPY libraries (MCPAREA, ORCA-SPA, ORCA-BLOB, CPSYSKANRI, etc.) and MONFUNC call pattern typical of JMA ORCA.",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax",
-          "END-EVALUATE, END-IF, END-PERFORM terminators",
-          "PERFORM VARYING ... UNTIL with inline body",
-          "CALL 'MONFUNC' USING MCPAREA (ORCA framework call)",
-          "COPY with REPLACING clause",
-          "LINKAGE SECTION with multiple COPY books for screen areas",
-          "No EXEC CICS / EXEC SQL",
-          "Fixed-format source with comment lines in column 7"
+          "PROGRAM-ID ORCGW62",
+          "COPY \"MCPAREA\"",
+          "COPY \"ORCA-SPA\"",
+          "COPY \"ORCA-BLOB\"",
+          "CALL \"MONFUNC\"",
+          "CALL \"ORCSMKPASS\"",
+          "CALL \"ORCSFILECHK\"",
+          "MCP-STATUS / MCP-EVENT / MCP-PUTTYPE / MCP-WINDOW",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system and handles a test-print screen (W62) for the system management subsystem. It initialises the screen, reads printer configuration from system management master tables (codes 1031, 2005), builds a printer list, and manages blob import of a test PostScript file for preview/print testing.",
-        "domain": "healthcare / medical billing (Japanese medical association receipt software)",
-        "program_type": "online-cics"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-hoshu) software — system management / test print screen (W62 window, test receipt print preview)",
+        "summary": "ORCGW62 is a screen-handling subprogram in the JMA ORCA medical receipt system that manages a test print screen (W62 window). It initialises the screen, reads printer configuration from system management DB tables (codes 1031, 2005), handles BLOB import of a test PostScript file, and dispatches user events (LINK, PUTG/CLICKED, entry) to appropriate processing sections.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Heavy use of COPY books (30+ copybooks) for screen areas, DB layouts, and subprogram interfaces",
-        "CALL to 'MONFUNC' with MCPAREA — ORCA framework MCP (Message Control Program) interface",
-        "CALL to 'ORCSMKPASS' and 'ORCSFILECHK' utility subprograms",
-        "BLOB import via MCP-FUNC 'BLOBIMPORT' for PostScript test file",
-        "LINKAGE SECTION receives MCPAREA, SPAAREA, LINKAREA, SCRAREA — typical ORCA screen program signature",
-        "Japanese text in comments (encoded as latin-1 / EUC-JP)",
-        "No COMP-3 usage despite being a production system",
-        "SELECT for TESTERR-FILE (error output file)",
-        "18 CALL statements, 57 PERFORMs — moderately complex control flow"
+        "Heavy use of COPY statements (63 copybooks) for screen areas and DB record layouts",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "CALL to MONFUNC with MCP-FUNC='BLOBIMPORT' for PostScript blob handling",
+        "EVALUATE on MCP-STATUS / MCP-EVENT for event-driven screen dispatch",
+        "Japanese comments encoded in EUC-JP (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS — uses proprietary MONFUNC DB interface",
+        "PERFORM UNTIL loop pattern for DB cursor iteration (SYSKANRI SELECT/READ/CLOSE)",
+        "File SELECT for TESTERR error file"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in EUC-JP decoded as latin-1, causing mojibake in the Japanese comment text. The program is clearly part of the open-source ORCA medical receipt system (JMA, Japan). The 'online-cics' program_type label is used loosely — this is actually an ORCA MCP-driven screen program, not CICS, but the pattern (LINKAGE SECTION, PUT-WINDOW, event-driven EVALUATE on MCP-STATUS/MCP-EVENT) is analogous to an online transaction program. Source is truncated at 16000 chars; the full file is 39246 bytes / 1018 lines."
+      "notes": "Source comments are in Japanese EUC-JP encoding, decoded here as latin-1 resulting in mojibake. Program is part of the well-known open-source JMA ORCA project. Truncated at 16000 chars; PROCEDURE DIVISION logic for 200-GMNSENI, 200-ENTRY, 500-SET-SCREEN etc. not visible but structure is clear from what is shown."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7258,
-      "completion_tokens": 783,
-      "total_tokens": 8041,
-      "cost": 0.033519,
+      "prompt_tokens": 8636,
+      "completion_tokens": 701,
+      "total_tokens": 9337,
+      "cost": 0.036423,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033519,
-        "upstream_inference_prompt_cost": 0.021774,
-        "upstream_inference_completions_cost": 0.011745
+        "upstream_inference_cost": 0.036423,
+        "upstream_inference_prompt_cost": 0.025908,
+        "upstream_inference_completions_cost": 0.010515
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 20.16,
+    "latency_s": 18.25,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:47:18Z"
 }

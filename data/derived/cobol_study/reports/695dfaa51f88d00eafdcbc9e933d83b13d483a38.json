@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:695dfaa51f88d00eafdcbc9e933d83b13d483a38",
+    "sha1_git": "695dfaa51f88d00eafdcbc9e933d83b13d483a38",
+    "filename": "/ProjectPart2(1).cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15315,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:695dfaa51f88d00eafdcbc9e933d83b13d483a38/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:695dfaa51f88d00eafdcbc9e933d83b13d483a38/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15315,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 364,
+    "blank_lines": 63,
+    "comment_lines": 57,
+    "code_lines": 244,
+    "comment_ratio": 0.189,
+    "max_line_length": 72,
+    "avg_line_length": 41.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PROJECT2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 105,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Student project likely compiled with GnuCOBOL or similar PC-based COBOL; uses Windows file paths (C:\\COBOL\\), ORGANIZATION IS LINE SEQUENTIAL, and FUNCTION CURRENT-DATE consistent with COBOL-85/2002 features available in GnuCOBOL",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "FUNCTION CURRENT-DATE",
+          "ASSIGN TO UT-SYS-INVFILE with WS-FILES PIC X(76) VALUE 'C:\\COBOL\\outDAT.txt'",
+          "SD SORT-X with SORT...USING...GIVING",
+          "PERFORM...THRU...EXIT pattern"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student project (university course) sorting a sales file by client number and producing a formatted report",
+        "summary": "Reads a sequential sales input file, sorts records by client number in ascending order using a SORT verb, then reads the sorted file and writes a formatted report with headings, detail lines, and a footer showing totals for sales tax and final sale. Handles pagination with a line counter.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with SD, USING, GIVING",
+        "FUNCTION CURRENT-DATE for dynamic date",
+        "ORGANIZATION IS LINE SEQUENTIAL",
+        "Pagination logic with LINE-COUNT and FULL-PAGE-COUNT",
+        "PERFORM...THRU...EXIT paragraph pattern",
+        "Formatted PICTURE clauses with currency symbols (-$,$$$.99, -$$,$$9.99)",
+        "File path literals stored in WORKING-STORAGE (WS-FILES)",
+        "No COMP-3 usage",
+        "No COPY statements",
+        "No CALL statements"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program authored by Derek R Schultz and Andre J Sandoval, dated April 2018, clearly a student project. Footer has typos ('TOAL SALES TAX' instead of 'TOTAL'). Windows-style file paths suggest PC-based GnuCOBOL or Micro Focus Personal COBOL environment. No lines exceed 72 characters confirming fixed format. The WS-CUR-DATE structure maps CURRENT-DATE in YYYYDDMM order which appears to swap day and month fields (CUR-DAY at positions 5-6, CUR-MONTH at 7-8) — a likely student bug."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6367,
+      "completion_tokens": 590,
+      "total_tokens": 6957,
+      "cost": 0.027951,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027951,
+        "upstream_inference_prompt_cost": 0.019101,
+        "upstream_inference_completions_cost": 0.00885
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.9,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:43:29Z"
+}

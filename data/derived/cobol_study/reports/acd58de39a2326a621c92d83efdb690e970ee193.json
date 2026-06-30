@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:acd58de39a2326a621c92d83efdb690e970ee193",
+    "sha1_git": "acd58de39a2326a621c92d83efdb690e970ee193",
+    "filename": "/bams.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15154,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:acd58de39a2326a621c92d83efdb690e970ee193/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:acd58de39a2326a621c92d83efdb690e970ee193/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15154,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 374,
+    "blank_lines": 36,
+    "comment_lines": 0,
+    "code_lines": 338,
+    "comment_ratio": 0.0,
+    "max_line_length": 139,
+    "avg_line_length": 39.5,
+    "long_lines_over_72": 32,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BAMS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 3,
+    "perform_count": 20,
+    "goto_count": 0,
+    "pic_count": 34,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) — uses GnuCOBOL-specific extensions: SET ENVIRONMENT for COB_SCREEN_EXCEPTIONS/COB_SCREEN_ESC, ACCEPT FROM ARGUMENT-NUMBER/ARGUMENT-VALUE, C$COPY intrinsic call, CRT STATUS, SCREEN SECTION with background-color/foreground-color, and 88-level WHEN SET TO FALSE syntax",
+        "evidence": [
+          "set environment 'COB_SCREEN_EXCEPTIONS' to 'Y'",
+          "set environment 'COB_SCREEN_ESC' to 'Y'",
+          "accept CommandLineArgumentCount from argument-number",
+          "accept AttendeesFileName from argument-value",
+          "call \"C$COPY\"",
+          "crt status is Operation",
+          "screen section with background-color/foreground-color",
+          "88 AddAttendeeFlagOn value 1 when set to false is 0",
+          "01 DefaultAmountToPay constant as 40"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "BarnCamp (outdoor camping/unconference event) attendee management system",
+        "summary": "BAMS (BarnCamp Attendee Management System) manages attendee records for a camping event. It provides a terminal-based UI with screens to view, add, and edit attendee records stored in an indexed file, tracking arrival status, payment, dietary requirements, and kids. It also computes and displays statistics about people on-site, arriving, and staying till Monday.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SCREEN SECTION with full TUI (background-color, foreground-color, highlight, reverse-video, underline)",
+        "CRT STATUS for function-key handling",
+        "Indexed file I/O with dynamic access mode",
+        "COPY statements for data definitions (DD-Attendee, DD-ScreenHeader, DD-Operation)",
+        "CALL to external subprograms: C$COPY (GnuCOBOL file copy), ListAttendeesScreen, createAuthCode",
+        "SET ENVIRONMENT for GnuCOBOL screen exception handling",
+        "ACCEPT FROM ARGUMENT-NUMBER / ARGUMENT-VALUE for CLI argument processing",
+        "88-level condition names with WHEN SET TO FALSE",
+        "CLASS condition HexNumber defined in SPECIAL-NAMES",
+        "CONSTANT AS clause for DefaultAmountToPay"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "No SQL or CICS. The program is a real-world event management tool for 'BarnCamp', likely an unconference. GnuCOBOL dialect is confirmed by multiple vendor-specific features. COBOL-85 base standard with GnuCOBOL extensions. Fixed format but some lines exceed column 72 (32 long lines), likely due to screen section value strings."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6916,
+      "completion_tokens": 687,
+      "total_tokens": 7603,
+      "cost": 0.031053,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031053,
+        "upstream_inference_prompt_cost": 0.020748,
+        "upstream_inference_completions_cost": 0.010305
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.23,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:55:30Z"
+}

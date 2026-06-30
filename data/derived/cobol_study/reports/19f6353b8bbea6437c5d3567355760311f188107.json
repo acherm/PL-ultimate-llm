@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:19f6353b8bbea6437c5d3567355760311f188107",
+    "sha1_git": "19f6353b8bbea6437c5d3567355760311f188107",
+    "filename": "/TypedefCyclic0.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1246,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:19f6353b8bbea6437c5d3567355760311f188107/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:19f6353b8bbea6437c5d3567355760311f188107/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1246,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 49,
+    "blank_lines": 11,
+    "comment_lines": 0,
+    "code_lines": 38,
+    "comment_ratio": 0.0,
+    "max_line_length": 39,
+    "avg_line_length": 24.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 1,
+    "program_ids": [
+      "TypedefCyclic0"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2014",
+        "detail": "Uses TYPEDEF STRICT and TYPE keywords which are GnuCOBOL 3.x / COBOL-2014 OO-style type definitions; likely a GnuCOBOL compiler test for cyclic typedef detection",
+        "evidence": [
+          "TYPEDEF STRICT",
+          "TYPE POINT",
+          "TYPE POINT-CYC0",
+          "COMP-5",
+          "END PROGRAM TypedefCyclic0"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Compiler test case for cyclic/recursive TYPEDEF STRICT definitions in COBOL-2014 style",
+        "summary": "This program defines several TYPEDEF STRICT data structures (POINT, POINT-CYC0 through POINT-CYC3) that reference each other cyclically. It appears to be a compiler test case specifically designed to exercise detection of cyclic type references in COBOL TYPEDEF constructs. There is no PROCEDURE DIVISION, confirming it is purely a data-definition test.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "TYPEDEF STRICT (COBOL-2014 / GnuCOBOL extension)",
+        "TYPE keyword for typed data items",
+        "COMP-5 binary items",
+        "Cyclic/recursive type references (POINT-CYC2 references POINT-CYC3 and vice versa)",
+        "OCCURS clause on typed items",
+        "No PROCEDURE DIVISION"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The filename 'TypedefCyclic0' and the deliberate construction of mutually-referencing TYPEDEFs strongly suggest this is a compiler regression or conformance test. The BOM (U+FEFF) at the start indicates UTF-8 with BOM encoding. No PROCEDURE DIVISION is present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2743,
+      "completion_tokens": 450,
+      "total_tokens": 3193,
+      "cost": 0.014979,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014979,
+        "upstream_inference_prompt_cost": 0.008229,
+        "upstream_inference_completions_cost": 0.00675
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.59,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:42:13Z"
+}

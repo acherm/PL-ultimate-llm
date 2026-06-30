@@ -49,60 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely RM/COBOL or Micro Focus with ISAM extensions, Italian locale)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Italian ERP/warehouse management system, likely compiled with GnuCOBOL (OpenCOBOL) on Linux/Unix. Uses .sl file extensions for SELECT copybooks and .fd for FD copybooks, COMP-1 for numeric, 78-level constants, and Italian-language identifiers/comments. Possibly Passepartout or similar Italian SME ERP.",
         "evidence": [
-          "SPECIAL-NAMES. decimal-point is comma",
-          "COMP-1 used for numeric (nargs pic 99 comp-1)",
-          "78 level constants (VALUE clauses at level 78)",
-          "ALTERNATE RECORD KEY with composite key syntax",
-          "COPY with REPLACING ... leading ... by ...",
-          "PROCEDURE DIVISION USING batch-linkage (linkage section)",
-          "DECLARATIVES with USE AFTER ERROR PROCEDURE",
-          "SET condition-name TO TRUE/FALSE pattern",
-          "Numerous .sl and .fd copybook extensions typical of Micro Focus/RM environments",
-          "EVALUATE with WHEN clauses, END-EVALUATE, END-STRING"
+          "PROGRAM-ID. ricaldin-bat",
+          "copy \"tsetinvio.sl\" / copy \"tsetinvio.fd\" pattern",
+          "78 user-codi value \"BATCH\"",
+          "COMP-1 used for nargs",
+          "decimal-point is comma",
+          "Italian comments and variable names (giacenza, impegnato, ordini, magazzino)",
+          "LINKAGE SECTION with batch-linkage",
+          "DECLARATIVES with USE AFTER ERROR sections"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A nightly batch program that recalculates dynamic warehouse/inventory progressive values (giacenza, impegnato, ordinato) by processing credit notes, unfilled orders, warehouse movements, supplier orders, and master orders. It resets dynamic values on a 'progmag' file and rebuilds them from transactional data since the last consolidation date. It also handles locking, logging, and email notification.",
-        "domain": "inventory/warehouse management (Italian ERP/distribution system)",
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Warehouse/inventory management: recalculates dynamic stock values (giacenza=stock, impegnato=committed, ordinato=ordered) from credit notes, unfulfilled orders, warehouse movements, supplier orders, and master orders. Runs nightly as a batch job after zeroing dynamic values on progmag (stock progress file).",
+        "summary": "Nightly batch program that recalculates dynamic inventory values (stock on hand, committed quantities, ordered quantities) from various transaction sources including credit notes, unfulfilled orders, warehouse movements, and supplier/master orders. It processes multiple indexed files and updates a stock progress file (progmag), with full error handling and email notification support.",
         "program_type": "batch"
       },
       "notable_features": [
-        "SPECIAL-NAMES decimal-point is comma (Italian locale)",
-        "Level 78 constants (VALUE clauses)",
-        "COMP-1 usage for a counter variable",
-        "Extensive DECLARATIVES with USE AFTER ERROR sections for each file",
-        "ALTERNATE RECORD KEY with composite multi-field key",
-        "Heavy use of COPY statements with .sl/.fd extensions (Micro Focus/RM style)",
-        "COPY with REPLACING ... leading ... by ... for file renaming",
-        "LINKAGE SECTION with batch-linkage copybook",
-        "Record locking handling (status 93/99)",
-        "Mail/email integration (lineseq-mail, mail.def)",
-        "Italian-language comments and variable names",
-        "No EXEC SQL or EXEC CICS",
-        "271 PERFORM statements, 11 CALL statements"
+        "72 COPY statements for modular file definitions (.sl/.fd pattern)",
+        "USE AFTER ERROR DECLARATIVES for each file",
+        "78-level figurative constants",
+        "COMP-1 usage",
+        "ALTERNATE RECORD KEY with multiple fields",
+        "LINKAGE SECTION receiving batch-linkage parameter",
+        "Email/mail support via copybooks (mail.def, lineseq-mail)",
+        "Italian-language source (comments and identifiers)",
+        "Lock handling via RecLocked 88-level condition",
+        "decimal-point is comma (European locale)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated to first 16000 characters; the full program is ~79KB/2054 lines. The dialect is most consistent with Micro Focus COBOL or RM/COBOL given the .sl/.fd copybook naming conventions, level-78 constants, and COMP-1 usage. The program is clearly a production Italian ERP batch job for warehouse/inventory recalculation. No ambiguity about it being genuine COBOL."
+      "notes": "Source truncated to first 16000 chars; full program is 2054 lines. No EXEC SQL or EXEC CICS. The .sl/.fd copybook naming convention and Italian business domain strongly suggest an Italian SME ERP system, possibly GnuCOBOL-based. COMP-3 count is 0 which is unusual for financial data but may be in copybooks. The program has extensive error handling and is clearly production code."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5183,
-      "completion_tokens": 762,
-      "total_tokens": 5945,
-      "cost": 0.026979,
+      "prompt_tokens": 6561,
+      "completion_tokens": 651,
+      "total_tokens": 7212,
+      "cost": 0.029448,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -111,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.026979,
-        "upstream_inference_prompt_cost": 0.015549,
-        "upstream_inference_completions_cost": 0.01143
+        "upstream_inference_cost": 0.029448,
+        "upstream_inference_prompt_cost": 0.019683,
+        "upstream_inference_completions_cost": 0.009765
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -122,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 2067.79,
+    "latency_s": 18.57,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:07:09Z"
 }

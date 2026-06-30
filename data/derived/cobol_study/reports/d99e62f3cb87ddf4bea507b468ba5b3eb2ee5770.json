@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d99e62f3cb87ddf4bea507b468ba5b3eb2ee5770",
+    "sha1_git": "d99e62f3cb87ddf4bea507b468ba5b3eb2ee5770",
+    "filename": "/car105.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2249,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d99e62f3cb87ddf4bea507b468ba5b3eb2ee5770/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d99e62f3cb87ddf4bea507b468ba5b3eb2ee5770/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2249,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 58,
+    "blank_lines": 0,
+    "comment_lines": 8,
+    "code_lines": 50,
+    "comment_ratio": 0.138,
+    "max_line_length": 71,
+    "avg_line_length": 37.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "car105"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 8,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Explicitly described as mainframe-to-Micro Focus COBOL conversion; uses 'assign external', 'organization line sequential', 'file status', and 'uvM' change markers typical of Micro Focus migration tooling",
+        "evidence": [
+          "assign external CUSTMAS",
+          "organization line sequential",
+          "file status custmas-fstatus",
+          "copy \"unixwork1.cpy\"",
+          "copy \"unixproc1.cpy\"",
+          "uvM change markers",
+          "comment: conversion to micro focus cobol"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Customer master file processing - name and address list generation; explicitly labeled as test/demo for mainframe-to-Micro Focus migration",
+        "summary": "Reads a customer master file (CUSTMAS) sequentially and writes a name and address listing (NALIST) with a page heading. Includes file status checking on open. This is a test/demo program for mainframe COBOL conversion to Micro Focus COBOL.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "file status checking on OPEN",
+        "assign external syntax (Micro Focus)",
+        "organization line sequential (Micro Focus)",
+        "uvM change markers indicating migration edits",
+        "COPY statements for copybooks (custmas.cpy, unixwork1.cpy, unixproc1.cpy)",
+        "stop run returning custmas-fstatus",
+        "before advancing N lines for report output"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The 'uvM' prefix on several lines appears to be a migration/diff marker used by a conversion tool or editor to flag lines changed during mainframe-to-Micro Focus migration. The program is explicitly labeled as a test/demo (car105 = same as car100 with file status test). Copybooks referenced but not shown."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2863,
+      "completion_tokens": 450,
+      "total_tokens": 3313,
+      "cost": 0.015339,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015339,
+        "upstream_inference_prompt_cost": 0.008589,
+        "upstream_inference_completions_cost": 0.00675
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.33,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:41:58Z"
+}

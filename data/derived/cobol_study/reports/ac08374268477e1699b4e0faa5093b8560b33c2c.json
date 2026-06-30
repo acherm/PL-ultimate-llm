@@ -49,52 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA (JMA medical software platform)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based, patient basic information retrieval API module",
         "evidence": [
-          "PROGRAM-ID. ORAPI012R1",
-          "PROCEDURE DIVISION USING with multiple areas",
-          "COPY statements with REPLACING clause",
-          "CALL 'ORCDBMAIN' / 'ORCSPTID' / 'ORCSMCNDATE' style runtime calls",
-          "END-IF, END-PERFORM inline scope terminators (COBOL-85+)",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL or EXEC CICS"
+          "PROGRAM-ID ORAPI012R1",
+          "COPY COMMON-SPA / ORCA-SPA / ORCA-BLOB",
+          "CALL ORCDBMAIN / ORCSMCNDATE / ORCSPTID / ORCSCOMMON",
+          "MCP-FUNC XMLOPEN/XMLWRITE pattern",
+          "Copyright JMA 2002",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA (Japan Medical Association) ORCA open-source medical receipt software. It retrieves basic patient information (name, kana name, birthday, sex, address, phone, insurance combinations, allergies, comments, etc.) given a patient number, and serialises the result as an XML response structure. It acts as an API response module for patient information queries.",
-        "domain": "healthcare / medical records",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt software - patient basic information retrieval API subprogram",
+        "summary": "This program is a subprogram in the JMA ORCA medical receipt system that retrieves and returns patient basic information (name, kana name, birthday, sex, address, phone, insurance combinations, allergies, infection diseases, comments) via an XML response structure. It validates the patient number, reads patient master records, and formats the result into an XML response area for the API caller.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 producing mojibake)",
-        "Heavy use of COPY statements for copybooks (.INC files) covering SPA areas, XML request/response layouts, file layouts",
-        "CALL to internal ORCA runtime modules: ORCDBMAIN (XML open/write), ORCSMCNDATE (system date), ORCSPTID (patient ID lookup), ORCSHOSPNUM, ORCSCOMMON",
-        "XML output via ORCDBMAIN with MCP-FUNC = 'XMLOPEN' / 'XMLWRITE'",
-        "LINKAGE SECTION with multiple COPY-based areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
-        "No EXEC SQL or EXEC CICS — database access abstracted through ORCDBMAIN",
-        "COPY with REPLACING to reuse CPAPILST.INC under multiple prefixes (APILST2- through APILST7-)",
-        "Open Source licence header (JMA Open Source License)"
+        "Heavy use of COPY statements (25 copybooks) for JMA ORCA framework structures",
+        "XML output via ORCDBMAIN with XMLOPEN/XMLWRITE MCP function calls",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA pattern typical of ORCA",
+        "CALL to ORCSMCNDATE for machine date retrieval",
+        "CALL to ORCSPTID for patient ID conversion",
+        "CALL to ORCSHOSPNUM for hospital number setup",
+        "CALL to ORCSCOMMON for SPA common settings",
+        "Multiple COPY REPLACING for APILST variants",
+        "Japanese-encoded comments (EUC-JP rendered as latin-1 mojibake)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCDBMAIN database interface"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine COBOL source from the JMA ORCA medical receipt system, an open-source Japanese healthcare platform. Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as Latin-1, producing garbled characters — this is a common encoding mismatch for Japanese COBOL sources archived in Software Heritage. The source is truncated at 16000 chars; the full file is 29804 bytes / 737 lines. No ambiguity about it being COBOL."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text appearing as mojibake. Source is truncated at 16000 chars (full file is 29804 bytes, 737 lines). The program follows the standard JMA ORCA subprogram calling convention with MCP/SPA areas. Version annotation shows 04.07.00 dated 12/09/28 (2012-09-28)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7075,
-      "completion_tokens": 791,
-      "total_tokens": 7866,
-      "cost": 0.03309,
+      "prompt_tokens": 8453,
+      "completion_tokens": 625,
+      "total_tokens": 9078,
+      "cost": 0.034734,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.03309,
-        "upstream_inference_prompt_cost": 0.021225,
-        "upstream_inference_completions_cost": 0.011865
+        "upstream_inference_cost": 0.034734,
+        "upstream_inference_prompt_cost": 0.025359,
+        "upstream_inference_completions_cost": 0.009375
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.11,
+    "latency_s": 16.55,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:49:56Z"
 }

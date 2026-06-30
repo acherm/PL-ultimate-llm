@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fc31f67252a8dbcc2e72ac56f7577b93f1abea20",
+    "sha1_git": "fc31f67252a8dbcc2e72ac56f7577b93f1abea20",
+    "filename": "/connecttoserver.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4956,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fc31f67252a8dbcc2e72ac56f7577b93f1abea20/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fc31f67252a8dbcc2e72ac56f7577b93f1abea20/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4956,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 144,
+    "blank_lines": 11,
+    "comment_lines": 23,
+    "code_lines": 110,
+    "comment_ratio": 0.173,
+    "max_line_length": 83,
+    "avg_line_length": 33.4,
+    "long_lines_over_72": 1,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "connecttoserver"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 12,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2002",
+        "detail": "GnuCOBOL (OpenCOBOL) free-format source using >>SOURCE FORMAT FREE and >>D debug directives; BINARY-INT and BASED clauses are GnuCOBOL extensions; GPL-licensed by Steve Williams",
+        "evidence": [
+          ">>SOURCE FORMAT FREE",
+          ">>D display (debug directive)",
+          "binary-int sync",
+          "based clause on group items",
+          "gai_strerror/getaddrinfo/socket/connect/close/freeaddrinfo POSIX calls",
+          "GPL v2 copyright header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Network socket utility subprogram for establishing a TCP/IP connection to a server using POSIX getaddrinfo/connect APIs",
+        "summary": "This is a COBOL subprogram that accepts an address family, socket type, hostname, and service/port, then uses POSIX getaddrinfo to resolve the host and iterates the resulting linked list to attempt a socket connection. It returns the connected socket descriptor to the caller, or 0 on failure.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>SOURCE FORMAT FREE compiler directive",
+        ">>D debug-line directives",
+        "BINARY-INT SYNC data items",
+        "BASED clause for pointer-based data access",
+        "POINTER data items for linked-list traversal",
+        "POSIX socket API calls: getaddrinfo, socket, connect, close, freeaddrinfo, gai_strerror",
+        "PROCEDURE DIVISION USING with LINKAGE SECTION",
+        "STRING with x'00' null terminator for C interop",
+        "GOBACK used for subprogram return"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Clean, well-structured subprogram with GPL license header. Uses C-interop patterns (null-terminated strings, pointer arithmetic on addrinfo linked list) typical of GnuCOBOL network programming. No ENVIRONMENT DIVISION present. Only one line exceeds 72 columns."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3569,
+      "completion_tokens": 495,
+      "total_tokens": 4064,
+      "cost": 0.018132,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018132,
+        "upstream_inference_prompt_cost": 0.010707,
+        "upstream_inference_completions_cost": 0.007425
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.0,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:44:42Z"
+}

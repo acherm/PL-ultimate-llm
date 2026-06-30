@@ -49,53 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (or compatible, likely GnuCOBOL/OpenCOBOL used in ORCA project)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses MCP (screen/widget) framework typical of ORCA system.",
         "evidence": [
-          "PROGRAM-ID. ORCGW20",
-          "All four DIVISIONS present (IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE)",
-          "PIC S9(9) BINARY usage",
-          "COPY statements with quoted filenames (e.g., COPY \"COMMON-SPA\")",
-          "OCCURS clauses, REDEFINES, VALUE clauses consistent with COBOL-85",
-          "Fixed format, max line length 74, comment lines with * in column 7"
+          "PROGRAM-ID ORCGW20",
+          "COPY MCPAREA / MCPDATA.INC / ORCA-SPA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "WRK-MCP-WIDGET PIC X(64)",
+          "COPY W01.INC through W09.INC screen area copybooks",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed format max line 74"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system, specifically handling ward/department management (病棟管理, byōtō kanri) for a Japanese medical institution. It manages inpatient ward configuration data including nursing ratios, room assignments, special hospitalization fees, and related master data. It appears to be a screen-driven batch/online program for system administration of hospital ward settings.",
-        "domain": "healthcare/medical (Japanese hospital billing and management system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical institution (hospital ward) management settings within the JMA ORCA medical receipt billing system. Handles ward/department management (byoto kanri), nursing configuration, inpatient fee calculation parameters.",
+        "summary": "ORCGW20 is a component of the JMA ORCA medical receipt software system responsible for hospital ward management information settings. It manages ward/room configuration, nursing ratios, inpatient fee calculation rules, and related master data for Japanese medical billing. The program uses an MCP-based screen framework with extensive COPY-based modular structure.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP (Message Control Program) linkage area instead",
-        "Extensive use of COPY statements for copybooks (file layouts, subprogram parameters, screen areas)",
-        "Japanese text in comments (Shift-JIS/EUC-JP encoded, decoded as latin-1 producing mojibake)",
-        "LINKAGE SECTION with MCPAREA, ORCA-SPA, LINKAREA — typical of ORCA/JMA GUI framework",
-        "BINARY (COMP) usage for index/state fields",
-        "Large CONST-AREA with hardcoded medical procedure codes (診療行為コード)",
-        "REDEFINES used extensively for code tables",
-        "432 PERFORM statements indicating structured procedural decomposition",
-        "13 CALL statements to external subprograms",
-        "Screen area copybooks (W01.INC through W09.INC) suggesting GUI screen management"
+        "79 COPY statements indicating heavy modular copybook use",
+        "MCP widget-based screen framework (ORCA-specific, not CICS)",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "LINKAGE SECTION with MCPAREA/ORCA-SPA/LINKAREA",
+        "REDEFINES used extensively for code table overlays",
+        "S9(9) BINARY fields for state/row tracking",
+        "432 PERFORM statements indicating structured procedural logic",
+        "56 GOTO statements",
+        "Hardcoded date constants for Japanese fiscal year reforms (H18=2006, H20=2008)",
+        "No COMP-3 usage despite financial domain"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the open-source ORCA (JMA standard receipt/medical billing) software from Japan Medical Association, copyright 2002. Japanese comments are encoded in EUC-JP or Shift-JIS but decoded as latin-1, producing garbled characters. The program uses a proprietary MCP (screen/message control) framework rather than CICS, so 'online-cics' is an approximation — it is an interactive screen program within the ORCA framework. The COPY count of 0 in mechanical indicators likely reflects that COPY statements use quoted filenames which may not have been counted by the parser."
+      "notes": "File is part of the well-known open-source JMA ORCA (日医標準レセプトソフト) system. Comments are in Japanese EUC-JP encoding, decoded as latin-1 causing mojibake in the visible text. Source truncated at 16000 chars out of 234175 bytes / 6062 lines; full program not visible but structure is clear. Program type classified as online-cics equivalent because ORCA uses its own MCP screen framework analogous to CICS for interactive screen handling."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7429,
-      "completion_tokens": 782,
-      "total_tokens": 8211,
-      "cost": 0.034017,
+      "prompt_tokens": 8807,
+      "completion_tokens": 646,
+      "total_tokens": 9453,
+      "cost": 0.036111,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034017,
-        "upstream_inference_prompt_cost": 0.022287,
-        "upstream_inference_completions_cost": 0.01173
+        "upstream_inference_cost": 0.036111,
+        "upstream_inference_prompt_cost": 0.026421,
+        "upstream_inference_completions_cost": 0.00969
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.36,
+    "latency_s": 17.41,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:55:43Z"
 }

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:049014181f277441ddf87ea5356dfd53b889137a",
+    "sha1_git": "049014181f277441ddf87ea5356dfd53b889137a",
+    "filename": "/EL341CI.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 37491,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:049014181f277441ddf87ea5356dfd53b889137a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:049014181f277441ddf87ea5356dfd53b889137a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 37491,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 664,
+    "blank_lines": 70,
+    "comment_lines": 13,
+    "code_lines": 581,
+    "comment_ratio": 0.022,
+    "max_line_length": 80,
+    "avg_line_length": 55.5,
+    "long_lines_over_72": 351,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EL341CI"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 42,
+    "goto_count": 6,
+    "pic_count": 144,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe batch COBOL; uses RECORDING MODE F, BLOCK CONTAINS 0 RECORDS, COMP/COMP-3, EJECT, level-12/16/20 group items, and SYS0xx device assignments typical of IBM OS/VS COBOL or VS COBOL II environment. Program belongs to CSO (likely an insurance/benefits company in Omaha, Nebraska).",
+        "evidence": [
+          "RECORDING MODE F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "ASSIGN TO SYS010/SYS008/SYS019/SYS020",
+          "COMP-3 group item",
+          "EJECT verb",
+          "ORGANIZATION IS INDEXED / ACCESS IS DYNAMIC / RECORD KEY / FILE STATUS",
+          "level numbers 12, 16, 20 (non-standard but IBM-tolerated)",
+          "COPY ELCTRLR / COPY ELCDTEFD / COPY ELCPRTFD / COPY ELCFCHFD"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Claims interest payment posting to CLAS-IC online indexed file; carrier-level claim interest records processed in batch with printed report",
+        "summary": "EL341CI reads a sequential file of claim interest payment records (carrier, claim number, cert number, check number, check date, check amount) and posts them to an indexed CLAS-IC online file (ELTRLR). It produces a printed report showing claims posted per carrier with totals and reinsurance subtotals, and tracks not-found errors.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file with DYNAMIC access and FILE STATUS",
+        "COPY statements for FD definitions (ELCTRLR, ELCDTEFD, ELCPRTFD, ELCFCHFD)",
+        "COMP-3 group-level aggregate area with multiple accumulators",
+        "EJECT verb for print formatting",
+        "Non-standard level numbers (12, 16, 20) in group items",
+        "Carrier-level and grand-total reinsurance reporting",
+        "ABEND-CODE / LCP-ABND-CODE error handling pattern",
+        "VMOD=2.001 version marker in working storage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; PROCEDURE DIVISION not visible but mechanical indicators show 42 PERFORMs, 6 GOTOs, 144 PIC clauses, consistent with a full production batch program. Date in IDENTIFICATION DIVISION header: 04/18/98."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6625,
+      "completion_tokens": 623,
+      "total_tokens": 7248,
+      "cost": 0.02922,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02922,
+        "upstream_inference_prompt_cost": 0.019875,
+        "upstream_inference_completions_cost": 0.009345
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.36,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T22:00:14Z"
+}

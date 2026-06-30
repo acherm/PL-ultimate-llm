@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3a02d3c8d268e720404314ab9aeb51e92f425b5f",
+    "sha1_git": "3a02d3c8d268e720404314ab9aeb51e92f425b5f",
+    "filename": "/SHI-expfornitori.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11256,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3a02d3c8d268e720404314ab9aeb51e92f425b5f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3a02d3c8d268e720404314ab9aeb51e92f425b5f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11256,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 315,
+    "blank_lines": 30,
+    "comment_lines": 15,
+    "code_lines": 270,
+    "comment_ratio": 0.053,
+    "max_line_length": 73,
+    "avg_line_length": 34.7,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "SHI-expfornitori"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 13,
+    "call_count": 2,
+    "perform_count": 33,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL / OpenCOBOL Italian business application; uses C$justify intrinsic call typical of GnuCOBOL/ACU; SPECIAL-NAMES decimal-point is comma; Italian-language identifiers and messages; part of a larger SHI (Sistema Hospitaliero/Informatico?) suite",
+        "evidence": [
+          "call \"C$justify\"",
+          "SPECIAL-NAMES. decimal-point is comma",
+          "copy \"lineseq.sl\"",
+          "copy \"exp-ws.def\"",
+          "COPY \"exp-procedure.cpy\"",
+          "PROGRAM-ID SHI-expfornitori",
+          "Italian variable names and error messages"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Supplier (fornitori) export module for an Italian ERP/management system called SHI; exports supplier master data with price list validation",
+        "summary": "This program exports supplier records from a CLIENTI file (used for both clients and suppliers, filtered by type 'F' for fornitore) to a sequential output file. It validates each supplier by checking for the existence of at least one price list entry in TLISTINI before exporting. It writes a summary of exported and non-exported records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECLARATIVES with USE AFTER ERROR for multiple files",
+        "LINKAGE SECTION with exp-linkage parameter (subprogram-style invocation)",
+        "call \"C$justify\" for string justification (GnuCOBOL/ACU extension)",
+        "Heavy use of COPY statements (13 copybooks)",
+        "Italian-language identifiers and error messages",
+        "SPECIAL-NAMES decimal-point is comma",
+        "STRING with LOW-VALUE delimiters",
+        "Sequential and indexed file I/O",
+        "78-level constant (titolo)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "No ENVIRONMENT DIVISION header present (only FILE-CONTROL via COPY); dialect is likely GnuCOBOL based on C$justify call and .sl/.fd copybook naming conventions common in Italian GnuCOBOL shops. Could also be ACU. The file is part of a larger application suite (SHI prefix throughout). Italian encoding (latin-1) consistent with Italian origin."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5219,
+      "completion_tokens": 559,
+      "total_tokens": 5778,
+      "cost": 0.024042,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024042,
+        "upstream_inference_prompt_cost": 0.015657,
+        "upstream_inference_completions_cost": 0.008385
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.57,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:55:50Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4c46e3c4bada106f14a873cb03bb84423ee6afaa",
+    "sha1_git": "4c46e3c4bada106f14a873cb03bb84423ee6afaa",
+    "filename": "/STUDENT-SCHEDULE.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4497,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4c46e3c4bada106f14a873cb03bb84423ee6afaa/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4c46e3c4bada106f14a873cb03bb84423ee6afaa/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4497,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 125,
+    "blank_lines": 1,
+    "comment_lines": 15,
+    "code_lines": 109,
+    "comment_ratio": 0.121,
+    "max_line_length": 79,
+    "avg_line_length": 35.0,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "STUDENT_SCHEDULE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Uses VALUE OF FILE-ID clause and PROGRAM-ID AS alias syntax typical of Micro Focus or ACUCOBOL; ASSIGN TO DISK with VALUE OF FILE-ID is a Micro Focus/ACUCOBOL idiom. GOBACK used as main program terminator.",
+        "evidence": [
+          "ASSIGN TO DISK",
+          "VALUE OF FILE-ID IS",
+          "PROGRAM-ID. STUDENT_SCHEDULE AS \"COBOL_UNIVERSITY.STUDENT_SCHEDULE\"",
+          "GOBACK",
+          "ORGANIZATION IS RELATIVE with RELATIVE KEY",
+          "ORGANIZATION IS INDEXED"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University student scheduling system - displays a student's class schedule from indexed/relative files",
+        "summary": "This program opens four indexed/relative files (course section, student master, course enrollment, course master) and prompts the user to enter a student ID. It then reads the student's enrollment chain and displays their class schedule including CRN, section, course code, title, and credit hours.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "VALUE OF FILE-ID clause for file assignment (Micro Focus/ACUCOBOL style)",
+        "PROGRAM-ID AS alias syntax",
+        "Linked-list style enrollment chain traversal via CE-STUDENT-NEXT pointer",
+        "ORGANIZATION IS RELATIVE file with RELATIVE KEY",
+        "Multiple COPY statements for file record layouts",
+        "GOBACK used as program terminator",
+        "Commented-out recursive paragraph (200-ERROR)",
+        "Condition CE-DROPPED NOT = \"D\" OR \"D\" (likely a logic bug)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is clearly a student exercise (filename STUDENT-SCHEDULE.cbl, programmer name in header, 'OBJECTIVE: 11' comment, university domain). The condition 'IF CE-DROPPED NOT = \"D\" OR \"D\"' is almost certainly a logic error (always true or always false). The IDENTIFICATION DIVISION header is missing (only PROGRAM-ID present). Dialect is likely Micro Focus or ACUCOBOL based on VALUE OF FILE-ID and ASSIGN TO DISK idioms."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3533,
+      "completion_tokens": 524,
+      "total_tokens": 4057,
+      "cost": 0.018459,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018459,
+        "upstream_inference_prompt_cost": 0.010599,
+        "upstream_inference_completions_cost": 0.00786
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.07,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:36:16Z"
+}

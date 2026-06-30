@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3c6dfaa10ca60c95d08306e2509cb92847cc113b",
+    "sha1_git": "3c6dfaa10ca60c95d08306e2509cb92847cc113b",
+    "filename": "/ph050027.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 18866,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3c6dfaa10ca60c95d08306e2509cb92847cc113b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3c6dfaa10ca60c95d08306e2509cb92847cc113b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 18866,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 348,
+    "blank_lines": 29,
+    "comment_lines": 30,
+    "code_lines": 289,
+    "comment_ratio": 0.094,
+    "max_line_length": 229,
+    "avg_line_length": 53.2,
+    "long_lines_over_72": 87,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PH050027"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 11,
+    "call_count": 1,
+    "perform_count": 23,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "Promax/Brazilian ERP system using htmlpp preprocessor with OO COBOL extensions (class-control, invoke), free-format source with $set directives. Likely GnuCOBOL or similar with htmlpp preprocessor for web/CGI output.",
+        "evidence": [
+          "$set preprocess(htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "class-control with 'is class' syntax",
+          "invoke utils \"converteUTF8\"",
+          "exec html ... end-exec",
+          "copy PCW900.CPY, PCW904.CPY, PCWY90001.cpy",
+          "lnk-par in procedure division using",
+          "program-id PH050027"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "WMS (Warehouse Management System) parameters configuration screen for Promax ERP - configures integration settings between Promax and WMS systems (HBSIS, HighJump), printer settings, and interface options",
+        "summary": "This program renders an HTML configuration screen for WMS (Warehouse Management System) parameters. It allows users to configure WMS system type, default printer for WMS returns, enabled interfaces (carregamento, conferencia OP, PCFisica, etc.), URL settings, and Pre-PCF options. It reads printer queue data from file PD99701 and populates a combo box.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC HTML ... END-EXEC (htmlpp preprocessor for web output)",
+        "OO COBOL class-control section with 'is class' syntax",
+        "invoke statement for OO method calls",
+        "$set compiler directives for preprocessor and source format",
+        "CGI/web form generation with HTML embedded in COBOL",
+        "external-form data item for CGI input",
+        "11 COPY statements",
+        "Unicode escape in string literal (\\u00e9)",
+        "HTML entities in embedded HTML (e.g. &eacute;, &ccedil;)",
+        "Session validation via 9000-validar-sessao"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source is truncated at 16000 chars (full file is 18866 bytes). The program uses a Brazilian Portuguese ERP system (Promax) with htmlpp preprocessor generating HTML output - this is a web/CGI-style online program rather than CICS. The 'online-cics' program_type is used as the closest match for an interactive screen program. Contains Portuguese text and Brazilian business domain context (WMS integration, PCF - Physical Count Form, Gestão de Vales)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5964,
+      "completion_tokens": 630,
+      "total_tokens": 6594,
+      "cost": 0.027342,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027342,
+        "upstream_inference_prompt_cost": 0.017892,
+        "upstream_inference_completions_cost": 0.00945
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.24,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:58:57Z"
+}

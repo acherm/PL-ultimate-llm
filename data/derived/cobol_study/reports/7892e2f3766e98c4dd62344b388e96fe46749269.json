@@ -49,48 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or similar mainframe COBOL",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "Mainframe-style COBOL, SOURCE-COMPUTER. MAINFRAME, commented-out COPY EPSMTCOM suggesting IBM CICS/batch environment; likely IBM Enterprise COBOL or similar",
         "evidence": [
-          "PROGRAM-ID. DBBTEST",
           "SOURCE-COMPUTER. MAINFRAME",
-          "PIC X(10)",
-          "WORKING-STORAGE SECTION",
-          "STOP RUN",
-          "fixed-format source layout"
+          "COPY EPSMTCOM (commented out)",
+          "PROGRAM-ID. DBBTEST",
+          "PIC X(10)"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal test/demo program that moves a date literal to a working-storage field and performs a simple date-display paragraph. The MOVE statement in the PROCEDURE DIVISION appears syntactically malformed (likely a placeholder or corrupted snippet), suggesting this is an experimental or tutorial file.",
-        "domain": "education/tutorial",
-        "program_type": "test"
+        "domain": "demo-example",
+        "domain_detail": "Simple test/demo program, possibly related to a GitLab/OCP/Wazi development environment test",
+        "summary": "A minimal test program named DBBTEST that moves a date literal to a working-storage field and stops. The MOVE statement appears malformed/truncated with a string referencing 'AXELTESTDBB7_GITLAB06_ocp_wazicode', suggesting it is a scratch test or demo snippet.",
+        "program_type": "demo"
       },
       "notable_features": [
-        "Malformed/incomplete MOVE statement: 'MOVE AXELTESTDBB7_GITLAB06_ocp_wazicode'.' — likely a corrupted or placeholder line",
-        "Commented-out COPY statement (EPSMTCOM) suggesting IBM CICS/MQ sample copybook",
-        "Author comment indicating personal/tutorial origin (Axel CHABAN)",
-        "Reference to 'wazicode' suggesting IBM Wazi (z/OS development environment)",
-        "No EXEC SQL, no EXEC CICS, no COPY statements active"
+        "Malformed/truncated MOVE statement referencing GitLab/OCP/Wazi string",
+        "Commented-out COPY EPSMTCOM and CUSTOMER-COPY group",
+        "No FILE-CONTROL entries despite INPUT-OUTPUT SECTION present",
+        "SOURCE-COMPUTER. MAINFRAME"
       ],
-      "maturity": "toy-or-hello-world",
+      "maturity": "snippet",
       "overall_confidence": "medium",
-      "notes": "The MOVE statement in the PROCEDURE DIVISION is syntactically invalid as written ('MOVE AXELTESTDBB7_GITLAB06_ocp_wazicode'.'), which suggests the file is a work-in-progress snippet, possibly auto-generated or manually edited test code for an IBM Wazi/OpenShift environment. The commented-out COPY EPSMTCOM is associated with IBM CICS sample programs. Overall confidence is medium due to the malformed code."
+      "notes": "The PROCEDURE DIVISION contains a syntactically invalid MOVE statement ('MOVE AXELTESTDBB7_GITLAB06_ocp_wazicode'.') that would not compile; this appears to be an incomplete or experimental test snippet. The file is very short (28 lines) and likely not production code. Dialect is inferred as IBM mainframe style based on SOURCE-COMPUTER and commented COPY reference."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1096,
-      "completion_tokens": 543,
-      "total_tokens": 1639,
-      "cost": 0.011433,
+      "prompt_tokens": 2474,
+      "completion_tokens": 432,
+      "total_tokens": 2906,
+      "cost": 0.013902,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011433,
-        "upstream_inference_prompt_cost": 0.003288,
-        "upstream_inference_completions_cost": 0.008145
+        "upstream_inference_cost": 0.013902,
+        "upstream_inference_prompt_cost": 0.007422,
+        "upstream_inference_completions_cost": 0.00648
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 10.85,
+    "provider": "Anthropic",
+    "latency_s": 13.46,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:51:10Z"
 }

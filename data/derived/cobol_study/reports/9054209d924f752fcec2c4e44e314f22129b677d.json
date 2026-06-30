@@ -49,59 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM CICS/VSAM online program, part of the IBM EPSDEMOS 2008 sample application (mortgage list). Uses IBM-FLEX-ES as SOURCE/OBJECT-COMPUTER, DFHAID, DFHCOMMAREA, DFHRESP, EXEC CICS commands.",
         "evidence": [
-          "EXEC CICS SEND MAP / MAPSET / FROM / ERASE",
-          "EXEC CICS STARTBR DATASET / RIDFLD / RBA / RESP",
-          "EXEC CICS READNEXT FILE / INTO / RIDFLD / RBA / RESP",
-          "EXEC CICS LINK PROGRAM / COMMAREA",
-          "EXEC CICS RETURN END-EXEC",
-          "DFHRESP(NORMAL), DFHRESP(ENDFILE), DFHRESP(ENDFILE)",
-          "EIBCALEN, EIBAID, DFHCLEAR, DFHPF3, DFHPF12, DFHENTER",
-          "COPY DFHAID, COPY DFHEIBLK (commented out)",
+          "EXEC CICS STARTBR DATASET",
+          "EXEC CICS READNEXT FILE",
+          "EXEC CICS LINK PROGRAM",
+          "DFHAID COPY",
+          "DFHRESP(NORMAL)",
+          "DFHRESP(ENDFILE)",
           "SOURCE-COMPUTER. IBM-FLEX-ES",
-          "EVALUATE TRUE ... END-EVALUATE",
-          "PROCEDURE DIVISION USING DFHCOMMAREA",
-          "LINKAGE SECTION with DFHCOMMAREA"
+          "COPY DFHAID",
+          "EIBCALEN",
+          "EIBAID"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "EPSMLIST is a CICS online program that displays a list of mortgage companies. It reads records from the EPSMORTF VSAM file sequentially, filters them based on loan amount and interest rate criteria passed via a communication area, calculates monthly mortgage payments by linking to EPSCSMRT, and sends the results to a BMS map (EPSMLIS) for display.",
-        "domain": "banking",
+        "domain": "banking-finance",
+        "domain_detail": "Mortgage loan comparison application; reads a VSAM file of mortgage companies and displays those matching user-supplied loan amount and interest rate criteria.",
+        "summary": "EPSMLIST is a CICS online program that reads a VSAM mortgage file (EPSMORTF) and displays up to 8 matching mortgage company records based on loan amount and interest rate criteria entered by the user. It sends and receives a BMS map (EPSMLIS) and links to EPSCSMRT to calculate monthly payments.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS (BMS map send with ERASE and DATAONLY variants)",
-        "EXEC CICS STARTBR / READNEXT / ENDBR for VSAM file browsing",
-        "EXEC CICS LINK to subprogram EPSCSMRT for mortgage calculation",
-        "DFHCOMMAREA / LINKAGE SECTION pattern for CICS communication area",
-        "COPY DFHAID for attention identifier constants",
-        "COPY EPSMTCOM, COPY EPSMLIS, COPY EPSNBRPM, COPY EPSMORTF (multiple copybooks)",
-        "REDEFINES used for map output area (OUTMAP REDEFINES EPSMLISI)",
+        "EXEC CICS (multiple: STARTBR, READNEXT, ENDBR, SEND MAP, LINK, RETURN)",
+        "BMS map handling (SEND MAP with ERASE and DATAONLY variants)",
+        "VSAM KSDS/ESDS browse via RBA",
+        "DFHCOMMAREA linkage for inter-program communication",
+        "Multiple COPY statements (EPSMTCOM, DFHAID, EPSMLIS, EPSNBRPM, EPSMORTF)",
+        "REDEFINES for map output overlay (OUTMAP REDEFINES EPSMLISI)",
         "OCCURS 8 TIMES for repeating map rows",
-        "EVALUATE TRUE for AID key dispatch",
-        "Mixed tab/space indentation in comments (tab characters visible in source)"
+        "EVALUATE TRUE on EIBAID/EIBCALEN"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file uses a mix of tab and space indentation in comment lines (visible in the raw source), which is slightly irregular but does not affect COBOL validity in fixed format. The program is part of the IBM CICS demo application 'EPSDEMOS 2008' (Jim Hildner). Several developer comments were added over time (Christine, Robin, SLC, Bill), suggesting it was used as a training/demo repository. The COPY DFHEIBLK is commented out, which is common when the EIB is implicitly provided by CICS. No COMP-3 usage despite numeric fields, which is unusual for production but consistent with a demo program."
+      "notes": "Part of the well-known IBM EPSDEMOS (Enterprise COBOL demo) sample application circa 2008. Comments indicate collaborative editing/version control testing (multiple named contributors). No SQL. Fixed format confirmed by max_line_length<=72 and no long lines."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3474,
-      "completion_tokens": 882,
-      "total_tokens": 4356,
-      "cost": 0.023652,
+      "prompt_tokens": 4852,
+      "completion_tokens": 597,
+      "total_tokens": 5449,
+      "cost": 0.023511,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -110,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.023652,
-        "upstream_inference_prompt_cost": 0.010422,
-        "upstream_inference_completions_cost": 0.01323
+        "upstream_inference_cost": 0.023511,
+        "upstream_inference_prompt_cost": 0.014556,
+        "upstream_inference_completions_cost": 0.008955
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -120,9 +119,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.42,
+    "provider": "Anthropic",
+    "latency_s": 15.34,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:07:51Z"
 }

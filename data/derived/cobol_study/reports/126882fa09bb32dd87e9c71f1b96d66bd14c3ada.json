@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:126882fa09bb32dd87e9c71f1b96d66bd14c3ada",
+    "sha1_git": "126882fa09bb32dd87e9c71f1b96d66bd14c3ada",
+    "filename": "/load_program.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13184,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:126882fa09bb32dd87e9c71f1b96d66bd14c3ada/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:126882fa09bb32dd87e9c71f1b96d66bd14c3ada/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13184,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 372,
+    "blank_lines": 98,
+    "comment_lines": 21,
+    "code_lines": 253,
+    "comment_ratio": 0.077,
+    "max_line_length": 84,
+    "avg_line_length": 34.4,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "load-program"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 14,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 26,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2014",
+        "detail": "GnuCOBOL; uses FUNCTION ALL INTRINSIC, ODO with UNBOUNDED, LOCAL-STORAGE SECTION, dynamic file assignment, and *> comments — all characteristic of GnuCOBOL/modern open-source COBOL",
+        "evidence": [
+          "function all intrinsic",
+          "occurs 0 to unbounded times depending on",
+          "local-storage section",
+          "assign to dynamic",
+          "*> comment style",
+          "pic x(1024) large strings"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "BASIC interpreter / runtime loader — part of a COBOL-implemented BASIC interpreter project by Erik Eriksen",
+        "summary": "This subprogram loads a BASIC source file from disk into an in-memory table, handling colon-separated multi-statement lines, single-line IF/THEN constructs, and quoted string detection. It also calls parse-loops, parse-subs, and parse-ifs to annotate boundary tables for the interpreter runtime.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "OCCURS 0 TO UNBOUNDED TIMES DEPENDING ON (COBOL-2014 ODO)",
+        "FUNCTION ALL INTRINSIC repository clause",
+        "LOCAL-STORAGE SECTION (re-entrant local variables)",
+        "ASSIGN TO DYNAMIC (runtime file name)",
+        "Multiple COPY copybooks including linkage section copybooks",
+        "14 CALL statements to external subprograms (logger, parse-loops, parse-subs, parse-ifs)",
+        "UNSTRING with pointer for colon-delimited line splitting",
+        "INSPECT TALLYING for quote and colon counting",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is part of a known open-source GnuCOBOL BASIC interpreter project (Erik Eriksen, 2021). The code is well-structured with clear separation of concerns. UNBOUNDED ODO requires GnuCOBOL 3.x. Fixed format with a few lines slightly over 72 columns (up to 84) which GnuCOBOL tolerates."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5658,
+      "completion_tokens": 537,
+      "total_tokens": 6195,
+      "cost": 0.025029,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025029,
+        "upstream_inference_prompt_cost": 0.016974,
+        "upstream_inference_completions_cost": 0.008055
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.84,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:59:44Z"
+}

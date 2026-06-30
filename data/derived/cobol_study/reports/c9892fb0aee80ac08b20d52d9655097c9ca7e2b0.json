@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (with HTMLpp preprocessor, likely Acu/MF web-enabled variant)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and free-format source; likely JMA ORCA or similar Brazilian ERP/retail web-CGI system using $set preprocess(htmlpp) and EXEC HTML directives",
         "evidence": [
-          "$set preprocess (htmlpp) endp — Micro Focus/HTMLpp preprocessor directive",
-          "$set sourceformat\"free\" — Micro Focus compiler directive for free-format source",
-          "exec html ... end-exec blocks for HTML generation",
-          "is external-form — Micro Focus CGI/web form extension",
-          "identified by \"fieldname\" — Micro Focus web form field binding syntax",
-          "78 level constant (COBOL-85)",
-          "EVALUATE / END-EVALUATE, PERFORM VARYING with EXIT PERFORM",
-          "cancel carrega-combo — dynamic program management"
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "exec html",
+          "copy PCW900.CPY / PCW902.CPY / PCW904.CPY / PCW990.CPY",
+          "identified by clauses in EXTERNAL-FORM",
+          "78 level constant (versao)"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "A web-based CGI program that implements a search/listing screen for minimum prices by retail network ('Pesquisa de Preço Mínimo por Rede'). It handles pagination (previous page, next page, go-to), reads from several indexed files (networks, commercial managers, products, minimum prices), and renders an HTML table with JavaScript navigation functions.",
-        "domain": "retail/commercial pricing",
+        "domain": "retail-commerce",
+        "domain_detail": "Minimum price search by retail network (Pesquisa de Preço Mínimo por Rede) - likely a Brazilian retail/distribution ERP system",
+        "summary": "This program implements a web-CGI search screen for minimum prices by retail network. It handles pagination (previous/next page, go-to), filters by commercial manager, network, and product, and renders an HTML table listing date, commercial manager, network, product, and minimum price. It uses the htmlpp preprocessor to embed HTML and JavaScript directly in COBOL.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Micro Focus HTMLpp preprocessor directives ($set preprocess (htmlpp))",
-        "$set sourceformat\"free\" compiler directive",
-        "EXEC HTML blocks for inline HTML/JavaScript generation",
-        "IS EXTERNAL-FORM clause for CGI web form input",
-        "IDENTIFIED BY clauses for HTML form field binding",
-        "78-level constants",
-        "Multiple COPY statements for file/record definitions",
-        "Dynamic CALL and CANCEL for combo-box loading",
-        "Portuguese-language comments and field names (Brazilian Portuguese)",
+        "$set preprocess(htmlpp) compiler directive",
+        "EXEC HTML blocks embedding JavaScript and HTML",
+        "EXTERNAL-FORM with IDENTIFIED BY clauses for CGI field mapping",
+        "78-level constant for version",
+        "19 COPY statements for modular copybook structure",
+        "Free-format source with $set sourceformat directive",
+        "Portuguese-language identifiers and comments (Brazilian Portuguese)",
+        "Pagination logic (previous/next page, go-to)",
         "No EXEC SQL or EXEC CICS",
-        "Decimal-point is comma (European/Brazilian numeric convention)"
+        "CANCEL after CALL (dynamic program loading)"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "Source is truncated at 16000 chars out of 28990 bytes; the visible portion is sufficient for confident classification. The program is a Micro Focus COBOL web CGI application using the HTMLpp preprocessor, targeting a Brazilian retail/commercial domain. The 'copy' statements reference external copybooks that are not shown. The EXEC HTML blocks embed JavaScript directly in COBOL source, which is characteristic of Micro Focus Net Express or similar web-enabled COBOL environments."
+      "overall_confidence": "medium",
+      "notes": "Source is truncated at 16000 chars out of 28990 bytes; full procedure division not visible. The htmlpp preprocessor and EXTERNAL-FORM/IDENTIFIED BY pattern is characteristic of GnuCOBOL-based Brazilian web-CGI ERP frameworks. Program type classified as online-cics as closest analog to interactive/online CGI processing, though it is actually HTTP/CGI-based rather than CICS. Dialect confidence is medium because no explicit GnuCOBOL version markers are visible."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5146,
-      "completion_tokens": 674,
-      "total_tokens": 5820,
-      "cost": 0.025548,
+      "prompt_tokens": 6524,
+      "completion_tokens": 573,
+      "total_tokens": 7097,
+      "cost": 0.028167,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.025548,
-        "upstream_inference_prompt_cost": 0.015438,
-        "upstream_inference_completions_cost": 0.01011
+        "upstream_inference_cost": 0.028167,
+        "upstream_inference_prompt_cost": 0.019572,
+        "upstream_inference_completions_cost": 0.008595
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.16,
+    "provider": "Anthropic",
+    "latency_s": 15.6,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:50:46Z"
 }

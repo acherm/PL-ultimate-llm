@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:793e317f96d95ba131898c964f994d2012e8039d",
+    "sha1_git": "793e317f96d95ba131898c964f994d2012e8039d",
+    "filename": "/CPRMAIN.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2117,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:793e317f96d95ba131898c964f994d2012e8039d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:793e317f96d95ba131898c964f994d2012e8039d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2117,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 68,
+    "blank_lines": 13,
+    "comment_lines": 8,
+    "code_lines": 47,
+    "comment_ratio": 0.145,
+    "max_line_length": 63,
+    "avg_line_length": 30.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CPRMAIN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 7,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL, authored by IBM's Flemming Petersen (2019). Uses BINARY (COMP) fields, GOBACK, EXIT PROGRAM, and SECTION-based procedure division typical of IBM Enterprise COBOL.",
+        "evidence": [
+          "PROGRAM-ID. CPRMAIN",
+          "PIC S9(4) BINARY",
+          "GOBACK",
+          "EXIT PROGRAM",
+          "EXIT SECTION",
+          "(C) 2019 IBM FLEMMING PETERSEN"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "government-public",
+        "domain_detail": "Danish CPR (Central Person Register) number validation — CPR numbers are Danish national identity numbers. The program tests a module called CPRCHECD (CPR Check) with various CPR number inputs.",
+        "summary": "Main driver/test program that calls a subprogram (CPRCHECD) with multiple Danish CPR (personal identification) numbers to validate them and display the resulting age, gender, and return code. It exercises several edge cases including invalid dates and leap-year dates.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "Dynamic CALL via WS-MODULE variable",
+        "PIC S9(4) BINARY (COMP) usage",
+        "GOBACK followed by EXIT PROGRAM",
+        "SECTION-based PROCEDURE DIVISION",
+        "Tests leap-year edge cases (2902) in CPR numbers",
+        "No COPY statements — self-contained driver"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program is a test harness for a CPR number validation subprogram. CPR numbers are Danish national identity numbers (DDMMYY + 4 digits). The copyright notice '(C) 2019 IBM FLEMMING PETERSEN' suggests IBM Denmark authorship. Dialect confidence is medium because no strictly IBM-only extensions are visible beyond common conventions."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3055,
+      "completion_tokens": 451,
+      "total_tokens": 3506,
+      "cost": 0.01593,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01593,
+        "upstream_inference_prompt_cost": 0.009165,
+        "upstream_inference_completions_cost": 0.006765
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.62,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:45:02Z"
+}

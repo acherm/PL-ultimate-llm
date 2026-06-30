@@ -49,45 +49,47 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "unknown (likely IBM Enterprise COBOL or GnuCOBOL)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Minimal skeleton program with GOBACK and END PROGRAM markers, consistent with COBOL-85 or later; no vendor-specific extensions visible",
         "evidence": [
-          "GOBACK verb (common in IBM/Micro Focus)",
-          "END PROGRAM terminator (COBOL-85+)",
-          "lowercase division/section keywords",
+          "GOBACK statement",
+          "END PROGRAM Program1",
           "SELECT ... ASSIGN syntax"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A skeletal/stub COBOL program that declares two file selects (infile and outfile) but contains no actual logic beyond a GOBACK. It is essentially an empty template or starting scaffold.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Bare skeleton/template with no actual logic",
+        "summary": "A minimal COBOL skeleton with all four divisions present but no data definitions or procedure logic beyond a GOBACK. It declares two file selects but has no FD entries or working-storage items. Likely a generated template or stub.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Two SELECT/ASSIGN entries with no FD or actual I/O logic",
-        "Empty WORKING-STORAGE SECTION (no PIC clauses)",
-        "PROCEDURE DIVISION contains only GOBACK",
-        "END PROGRAM terminator present"
+        "All four divisions present but empty",
+        "Two SELECT statements with no corresponding FD entries",
+        "No PIC clauses, no PERFORM, no CALL",
+        "GOBACK used instead of STOP RUN"
       ],
       "maturity": "toy-or-hello-world",
-      "overall_confidence": "high",
-      "notes": "This is clearly a minimal stub or template — all four COBOL divisions are present but the program does nothing. The CONFIGURATION SECTION appears after FILE-CONTROL which is unusual ordering (typically CONFIGURATION SECTION precedes INPUT-OUTPUT SECTION), suggesting a beginner or auto-generated skeleton. No PIC clauses, no FD entries, no PERFORM or CALL statements."
+      "overall_confidence": "medium",
+      "notes": "Extremely minimal code — only 13 code lines, no PIC clauses, no logic. Could be an IDE-generated skeleton (e.g. Visual COBOL or IBM Developer for z/OS). The file-control section references infile/outfile but there are no FD entries in the data division, suggesting the file is incomplete or purely a template stub."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 916,
-      "completion_tokens": 419,
-      "total_tokens": 1335,
-      "cost": 0.009033,
+      "prompt_tokens": 2294,
+      "completion_tokens": 331,
+      "total_tokens": 2625,
+      "cost": 0.011847,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +98,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009033,
-        "upstream_inference_prompt_cost": 0.002748,
-        "upstream_inference_completions_cost": 0.006285
+        "upstream_inference_cost": 0.011847,
+        "upstream_inference_prompt_cost": 0.006882,
+        "upstream_inference_completions_cost": 0.004965
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,8 +109,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 10.72,
+    "latency_s": 11.16,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:36:23Z"
 }

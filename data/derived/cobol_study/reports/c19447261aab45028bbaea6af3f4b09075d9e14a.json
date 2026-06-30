@@ -49,50 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (Linux/ORCA project)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY copybooks COMMON-SPA and CPORCSC96.INC, LINKAGE SECTION with SPA-AREA pattern typical of ORCA subsystem components.",
         "evidence": [
-          "EVALUATE ... WHEN ... END-EVALUATE structure (COBOL-85)",
-          "END-STRING, END-IF terminators",
-          "PERFORM without THRU (structured)",
-          "LINKAGE SECTION with COPY directives",
-          "EXIT PROGRAM",
-          "PROGRAM-ID. ORCSC96",
-          "Fixed-format source, columns 7-72"
+          "PROGRAM-ID ORCSC96",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"CPORCSC96.INC\"",
+          "PROCEDURE DIVISION USING SPA-AREA ORCSC96AREA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "JMA standard receipt software",
+          "JMA Open Source License"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is an error-message-setting component for the ORCA (JMA standard receipt/medical billing) system. It maps numeric/alphanumeric error codes (stored in SPA-ERRCD) to Japanese-language error message strings (stored in SPA-ERRMSG). It handles both common error messages and program-specific error messages via two PERFORM sections.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/rezept) processing system - ORCA (JMA standard receipt software). This component handles error message setting for medical treatment act input (診療行為入力).",
+        "summary": "ORCSC96 is an error message composition subprogram within the JMA ORCA medical receipt system. It receives an error code via the SPA shared parameter area and maps it to a Japanese-language error message string, covering common errors (K0xx, 00xx codes) related to medical treatment act input as well as program-specific messages. It is called as a subprogram and exits via EXIT PROGRAM.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Large EVALUATE block mapping error codes to Japanese EUC/Shift-JIS encoded error messages",
-        "LINKAGE SECTION using COPY for SPA-AREA and ORCSC96AREA parameters",
-        "STRING ... DELIMITED BY SIZE ... INTO ... END-STRING for multi-part messages",
-        "No FILE SECTION, no COMP-3, no EXEC SQL, no EXEC CICS",
-        "Japanese multi-byte character strings in MOVE/STRING literals (latin-1 decoded, likely EUC-JP or Shift-JIS)",
-        "Part of open-source JMA ORCA medical receipt software (copyright 2002)"
+        "LINKAGE SECTION with SPA-AREA and ORCSC96AREA parameters",
+        "COPY copybooks (COMMON-SPA, CPORCSC96.INC)",
+        "Large EVALUATE/WHEN block mapping error codes to Japanese EUC-encoded messages",
+        "STRING...DELIMITED BY SIZE for multi-part messages",
+        "EXIT PROGRAM (subprogram pattern)",
+        "No EXEC SQL or EXEC CICS",
+        "Japanese EUC encoding in comment and literal strings (latin-1 decoded)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded as latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS encoding), which appear garbled in the latin-1 rendering. The source is clearly genuine COBOL from the JMA ORCA open-source medical billing project. The truncated portion likely contains more WHEN clauses in the EVALUATE block and the 200-PG-ERRMSG-SEC section. Low pic_count and call_count are consistent with a pure error-message-dispatch subprogram."
+      "notes": "Source is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments and string literals. The program is part of the well-known open-source JMA ORCA medical receipt system. File truncated at 16000 chars out of 113569 bytes (2380 lines total); the visible portion covers the common error message section (100-KYOUTU-ERRMSG-SEC) with many WHEN clauses; the program-specific section (200-PG-ERRMSG-SEC) is not shown but referenced."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9705,
-      "completion_tokens": 642,
-      "total_tokens": 10347,
-      "cost": 0.038745,
+      "prompt_tokens": 11083,
+      "completion_tokens": 635,
+      "total_tokens": 11718,
+      "cost": 0.042774,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.038745,
-        "upstream_inference_prompt_cost": 0.029115,
-        "upstream_inference_completions_cost": 0.00963
+        "upstream_inference_cost": 0.042774,
+        "upstream_inference_prompt_cost": 0.033249,
+        "upstream_inference_completions_cost": 0.009525
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.78,
+    "latency_s": 17.3,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:14:42Z"
 }

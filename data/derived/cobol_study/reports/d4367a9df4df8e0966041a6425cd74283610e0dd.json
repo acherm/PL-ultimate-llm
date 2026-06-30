@@ -49,53 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA project",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCHCM34 is part of the ORCA online receipt accounting card subsystem.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS LINE SEQUENTIAL / INDEXED",
-          "COPY statements with REPLACING clauses",
-          "PIC clauses throughout WORKING-STORAGE",
-          "OCCURS clause usage",
-          "Fixed-format source, max line length 76",
-          "No EXEC SQL or EXEC CICS — batch file-based program",
-          "JMA ORCA open-source medical receipt software project, known to use GnuCOBOL"
+          "PROGRAM-ID. ORCHCM34",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY CPSRYACCT.INC, CPCOMMONPRT.INC, CPASGNPARA.INC etc. (ORCA-specific copybooks)",
+          "LINE SEQUENTIAL file organization",
+          "No EXEC CICS / EXEC SQL",
+          "Fixed format, max line 76"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard medical receipt software system. It processes medical accounting/billing card data (会計カード), reading indexed and sequential files of patient treatment records and producing printed output. It appears to handle inpatient/outpatient billing calculations, insurance combinations, and formatted report generation.",
-        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (shinryo-kaikei) processing — accounting card (kaikei card) generation for inpatient/outpatient billing under the JMA ORCA system",
+        "summary": "ORCHCM34 generates accounting card output (kaikei card) for the ORCA medical receipt system. It reads diagnosis-act accounting files and procedure-act files, processes insurance combination data, and produces printed output for medical billing. It handles inpatient/outpatient billing, rehabilitation, self-pay, and various insurance category distinctions.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
-        "COPY statements referencing multiple .INC copybooks (CPSRYACCT.INC, CPSRYACT.INC, CPCOMMONPRT.INC, CPASGNPARA.INC, HCM341V01.INC, HCM342V01.INC, etc.)",
-        "ORGANIZATION IS INDEXED with DYNAMIC access mode",
-        "ORGANIZATION IS LINE SEQUENTIAL for flat file input",
-        "Large number of flag fields (FLG-AREA) and index fields (IDX-AREA) indicating complex processing logic",
-        "28 CALL statements and 626 PERFORM statements indicating modular, production-grade structure",
-        "No COMP-3 usage despite being a financial/billing program",
-        "Large file (355 KB, 8472 lines) consistent with production system"
+        "64 COPY statements referencing ORCA-specific copybooks (CPSRYACCT.INC, CPSRYACT.INC, CPCOMMONPRT.INC, etc.)",
+        "INDEXED file with DYNAMIC access mode",
+        "LINE SEQUENTIAL file organization",
+        "Large working-storage with extensive flag, counter, and index areas",
+        "626 PERFORM statements indicating complex procedural logic",
+        "28 CALL statements to external subprograms",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "No COMP-3 usage despite financial calculations",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but was decoded as latin-1, resulting in garbled display of comments. The program is clearly part of the well-known open-source JMA ORCA medical receipt system used in Japanese clinics. The COPY count of 0 in mechanical indicators likely reflects that COPY statements reference external .INC files not counted by the tool, yet they are clearly present in the source. The program is a large, mature batch billing report generator."
+      "notes": "File is 355KB / 8472 lines — a large production program. Comments are in Japanese EUC-JP encoding, rendered as garbled latin-1 in this context. The program is part of the well-known open-source JMA ORCA medical receipt system. Truncated at 16000 chars but structural indicators confirm full COBOL program with all four divisions."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7200,
-      "completion_tokens": 743,
-      "total_tokens": 7943,
-      "cost": 0.032745,
+      "prompt_tokens": 8578,
+      "completion_tokens": 601,
+      "total_tokens": 9179,
+      "cost": 0.034749,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032745,
-        "upstream_inference_prompt_cost": 0.0216,
-        "upstream_inference_completions_cost": 0.011145
+        "upstream_inference_cost": 0.034749,
+        "upstream_inference_prompt_cost": 0.025734,
+        "upstream_inference_completions_cost": 0.009015
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.65,
+    "provider": "Anthropic",
+    "latency_s": 16.61,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:26:48Z"
 }

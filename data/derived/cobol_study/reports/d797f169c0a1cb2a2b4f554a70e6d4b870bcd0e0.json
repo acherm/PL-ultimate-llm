@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source with $set sourceformat\"free\" directive, screen section with SECURE clause, indexed file I/O; authored by Gabriel L. Borchardt, dated 2022, labeled TSBR COBOL 2022",
         "evidence": [
-          "$set sourceformat\"free\" compiler directive at top",
-          "SCREEN SECTION with LINE/COL/SECURE clauses",
-          "FUNCTION CURRENT-DATE usage",
-          "END-IF, END-STRING, END-PERFORM inline terminators",
-          "Comment style *> (GnuCOBOL/OpenCOBOL extension)",
-          "INDEXED file with DYNAMIC access and FILE STATUS",
-          "PERFORM UNTIL with inline body",
-          "program-id with quoted string \"P3SRSE21\""
+          "$set sourceformat\"free\"",
+          "screen section with SECURE",
+          "organization is indexed",
+          "access mode is dynamic",
+          "file status",
+          "PERFORM UNTIL",
+          "END-IF",
+          "function current-date"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This program implements a multi-language (Brazilian Portuguese, German, English) user registration screen for a system called TSBR/SRS. It manages an indexed file of user records (UserID, password) and supports operations to display, save, and delete user registrations via interactive terminal screens.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "User registration/management module (SRS - Sistema de Registro de Usuários) supporting multi-language screens (BR/DE/EN) for a COBOL learning/demo system called TSBR COBOL 2022",
+        "summary": "This program implements a user registration screen module (P3SRSE21) that handles CRUD operations on an indexed user file (ArqUsuario). It supports three language variants (Brazilian Portuguese, German, English) for screen display and validation messages, and performs read, save, and delete operations on user records containing UserID and password fields.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "SCREEN SECTION with multi-language screens (BR, DE, EN)",
-        "SECURE clause on password fields",
-        "Indexed sequential file (VSAM-style) with DYNAMIC access",
-        "Multi-language support (Portuguese, German, English) in a single program",
         "$set sourceformat\"free\" compiler directive",
-        "LINKAGE SECTION used (called as subprogram via PROCEDURE DIVISION USING)",
-        "SPECIAL-NAMES decimal-point is comma (Brazilian locale)",
-        "FUNCTION CURRENT-DATE for date retrieval",
-        "No EXEC SQL or EXEC CICS"
+        "SCREEN SECTION with SECURE password fields",
+        "Multi-language screen support (BR/DE/EN) via lk-idioma linkage parameter",
+        "Indexed sequential file with dynamic access mode",
+        "LINKAGE SECTION parameter passing (lk-P1SRSE21)",
+        "FUNCTION CURRENT-DATE usage",
+        "Structured sections with explicit exit paragraphs (a-inicializa-z, b-processa-z, etc.)"
       ],
-      "maturity": "student-exercise",
+      "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is truncated at 16000 chars; the procedure division is partially visible. The program appears to be a student or educational project by 'Gabriel L. Borchardt' dated 2022, referencing 'IVANBORC' and 'TSBR COBOL 2022'. The linkage section is declared but appears empty in the visible portion, yet PROCEDURE DIVISION USING lk-P1SRSE21 references a working-storage group item rather than a true linkage item — this is a GnuCOBOL-specific pattern. The source uses free format as declared by the $set directive."
+      "notes": "Source is truncated at 16000 chars (664 total lines); the be-delete-registro section appears cut off mid-logic. The program is clearly a subprogram called with a linkage area. No EXEC SQL or EXEC CICS. No COMP-3 usage. The naming convention (P3SRSE21) suggests a module within a larger application suite."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5539,
-      "completion_tokens": 660,
-      "total_tokens": 6199,
-      "cost": 0.026517,
+      "prompt_tokens": 6917,
+      "completion_tokens": 517,
+      "total_tokens": 7434,
+      "cost": 0.028506,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.026517,
-        "upstream_inference_prompt_cost": 0.016617,
-        "upstream_inference_completions_cost": 0.0099
+        "upstream_inference_cost": 0.028506,
+        "upstream_inference_prompt_cost": 0.020751,
+        "upstream_inference_completions_cost": 0.007755
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.08,
+    "provider": "Anthropic",
+    "latency_s": 13.52,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:18:26Z"
 }

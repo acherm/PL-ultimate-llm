@@ -49,52 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (Japanese Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "PROGRAM-ID. ORCGS10",
-          "EVALUATE ... ALSO ... WHEN ... END-EVALUATE",
-          "PERFORM VARYING ... UNTIL ... END-PERFORM",
-          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
-          "EXIT PROGRAM",
-          "COPY directives for MCPAREA, ORCA-SPA, LINKAREA, screen includes",
-          "Fixed-format source layout, max line length ~74"
+          "PROGRAM-ID ORCGS10",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "JMA (Japan Medical Association) copyright header",
+          "EXEC SQL absent, MCP-STATUS/MCP-EVENT/MCP-WIDGET pattern typical of ORCA",
+          "fixed format, max line 74"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a screen handler for the ORCA Japanese Medical Association standard receipt (claims) software system. It manages a patient list screen (screen S10) that displays patients with outstanding or pending receipt/payment records for a given billing month, including patient details such as name, sex, birthdate, age, and payment category. It handles screen initialization, navigation events, and entry/validation logic.",
-        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt billing system - patient list screen for monthly billing/collection (syunou = collection/receipt)",
+        "summary": "ORCGS10 is a screen program in the JMA ORCA medical receipt system that displays a patient list for a given billing month. It initialises the screen by querying the syunou (collection) and patient information tables, sorts the patient list, and handles user navigation events such as clicking buttons and selecting patients from the list.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese-language comments encoded in Latin-1 (actually Shift-JIS or EUC-JP stored as binary)",
-        "Multiple COPY statements for screen layouts (S02.INC through S10.INC, SERR.INC, SID*.INC) and data records",
-        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
-        "Bubble-sort implemented inline using PERFORM VARYING with index swapping",
-        "EVALUATE TRUE / WHEN conditions for multi-branch logic",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP (Message Control Program) table-access wrappers",
-        "OCCURS 101 table for patient list with composite sort key",
-        "BINARY (COMP) usage for row index (WRK-PTLIST-ROW PIC S9(9) BINARY)"
+        "Heavy use of COPY statements (28 copybooks) for screen layouts and DB access",
+        "MCP-STATUS/MCP-EVENT/MCP-WIDGET event-driven screen handling (ORCA MCP framework)",
+        "Bubble-sort implemented in COBOL for patient list ordering",
+        "Japanese text in comments and string literals (EUC-JP/Shift-JIS encoded)",
+        "LINKAGE SECTION with multiple screen area copybooks",
+        "BINARY PIC S9(9) for row index",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP DB access layer"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but the Japanese comments are almost certainly Shift-JIS or EUC-JP, causing mojibake in the displayed text. The program is part of the open-source ORCA medical receipt system developed by the Japan Medical Association (JMA), copyright 2002. The MCP-based DB access pattern (MCP-TABLE, MCP-PATHNAME, PERFORM 910-DBCLOSECURSOR-SEC) is characteristic of the ORCA/GnuCOBOL runtime environment rather than CICS or DB2, so 'online-cics' is used loosely to mean an event-driven screen program."
+      "notes": "Source is encoded in a Japanese encoding (likely EUC-JP decoded as latin-1), causing mojibake in comments and string literals. This is a production component of the open-source JMA ORCA medical receipt system. The 'online-cics' program_type is used loosely - ORCA uses its own MCP event framework rather than CICS, but the pattern is equivalent (event-driven screen program)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6924,
-      "completion_tokens": 766,
-      "total_tokens": 7690,
-      "cost": 0.032262,
+      "prompt_tokens": 8302,
+      "completion_tokens": 534,
+      "total_tokens": 8836,
+      "cost": 0.032916,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032262,
-        "upstream_inference_prompt_cost": 0.020772,
-        "upstream_inference_completions_cost": 0.01149
+        "upstream_inference_cost": 0.032916,
+        "upstream_inference_prompt_cost": 0.024906,
+        "upstream_inference_completions_cost": 0.00801
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +114,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.02,
+    "latency_s": 15.36,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:34:53Z"
 }

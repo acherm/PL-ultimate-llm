@@ -49,49 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (possibly Thai academic environment)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple educational program; uses GOBACK, PERFORM UNTIL, END-PERFORM, and inline string continuation — compatible with most COBOL-85 compilers",
         "evidence": [
-          "GOBACK statement",
-          "PERFORM UNTIL ... END-PERFORM (inline PERFORM, COBOL-85)",
-          "MOVE ALL \"*\" TO SCR-LINE(1:10) reference modification",
-          "PERFORM ... THRU ... TIMES construct",
-          "WITH NO ADVANCING on DISPLAY"
+          "GOBACK",
+          "PERFORM UNTIL ... END-PERFORM",
+          "WITH NO ADVANCING",
+          "MOVE ALL",
+          "string continuation with -"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A simple demonstration program that prompts the user to enter a positive number of stars, then prints a line of 10 asterisks 10 times. The input validation loop rejects zero or negative input.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Simple star-printing exercise, likely a student assignment",
+        "summary": "Prompts the user to enter a positive number, then prints a line of 10 asterisks 10 times. Includes basic input validation to ensure the number is positive.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Reference modification: SCR-LINE(1:10)",
-        "MOVE ALL literal construct",
-        "Inline PERFORM UNTIL with END-PERFORM",
-        "GOBACK instead of STOP RUN",
-        "Continuation line for long string literal (column 7 hyphen)",
-        "AUTHOR paragraph (obsolete in COBOL-2002+)",
-        "Hard-coded 10 TIMES loop regardless of STAR-NUM input (possible bug)"
+        "PERFORM THRU with EXIT paragraphs",
+        "MOVE ALL figurative constant",
+        "WITH NO ADVANCING on DISPLAY",
+        "String literal continuation across lines",
+        "GOBACK instead of STOP RUN"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program appears to be a student exercise, likely from a Thai academic context (AUTHOR: MUTITA). There is a likely bug: STAR-NUM is accepted but never actually used to control the number of lines printed (always 10 TIMES). The continuation line for the error message string uses the fixed-format column-7 hyphen convention correctly."
+      "notes": "The program hardcodes 10 repetitions regardless of the input STAR-NUM value, suggesting incomplete or buggy logic. Author name 'MUTITA' suggests a student exercise. No ENVIRONMENT DIVISION present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1148,
-      "completion_tokens": 489,
-      "total_tokens": 1637,
-      "cost": 0.010779,
+      "prompt_tokens": 2526,
+      "completion_tokens": 300,
+      "total_tokens": 2826,
+      "cost": 0.012078,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010779,
-        "upstream_inference_prompt_cost": 0.003444,
-        "upstream_inference_completions_cost": 0.007335
+        "upstream_inference_cost": 0.012078,
+        "upstream_inference_prompt_cost": 0.007578,
+        "upstream_inference_completions_cost": 0.0045
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -110,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 10.63,
+    "provider": "Anthropic",
+    "latency_s": 10.27,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:34:00Z"
 }

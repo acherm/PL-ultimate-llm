@@ -49,56 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible (likely NEC/Fujitsu mainframe or GnuCOBOL for Linux, given JMA ORCA project context)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL as part of the JMA ORCA project",
         "evidence": [
-          "EVALUATE/END-EVALUATE constructs",
-          "PERFORM VARYING ... UNTIL with inline END-PERFORM",
-          "SEARCH ... VARYING ... AT END ... WHEN",
-          "OCCURS ... INDEXED BY",
-          "INITIALIZE statement",
-          "COPY statements with REPLACING",
-          "EXIT PROGRAM",
-          "LINKAGE SECTION with USING clause",
-          "Fixed-format source (columns 7-72)"
+          "PROGRAM-ID ORCSC40200204",
+          "COPY directives with .INC files (CPORCSC90.INC, CPORCSC91.INC, MCPDATA.INC, CPORCMCP.INC, COMMON-SPA)",
+          "LINKAGE SECTION with MCPAREA",
+          "JMA Open Source License header",
+          "No EXEC CICS or EXEC SQL",
+          "EVALUATE/END-EVALUATE, PERFORM VARYING, INDEXED BY usage consistent with COBOL-85"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software. It performs checking, editing, and automatic calculation (santei) for medical treatment act (shinsatsu koi) entries, including handling of oxygen therapy codes, disaster/injury insurance (rousai) additions, and extinction/cauterization treatment processing. It is invoked with a mode flag (KBN) to perform per-item checks, whole-record checks, or fully automatic calculation.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) processing system — diagnosis act (診療行為) check and calculation subsystem",
+        "summary": "This program is a subprogram within the JMA ORCA standard medical receipt software. It performs checking, editing, and automatic calculation (算定) of medical procedure (診療行為) line items, including oxygen supplement handling, extinction/fire-extinguisher treatment checks, and workers' accident insurance (労災) additions. It is called with a mode flag (LNK-ORCSC-KBN) to select per-item check/edit, full-record check, or automatic calculation.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS (pure batch/subprogram logic)",
-        "Heavy use of COPY statements for shared record layouts (CPK02SPASCR.INC, CPTENSU.INC, CPSANTEI.INC, CPORCSC90/91/92.INC, MCPDATA.INC, etc.)",
-        "LINKAGE SECTION with multiple passed areas (MCPAREA, ORCSC00AREA, WRK-SCR-REC, SPA-AREA)",
-        "SEARCH with SET and INDEXED BY for table lookup (oxygen code table, treatment table)",
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, causing mojibake in display)",
-        "OCCURS with INDEXED for treatment disposition table (TBL-SYOCHI-AREA)",
-        "No COMP-3 usage despite numeric computation",
-        "19 GO TO statements alongside structured PERFORM loops",
-        "11 CALL statements to external subprograms",
-        "Program ID matches filename: ORCSC40200204"
+        "LINKAGE SECTION with multiple copybook-defined parameter areas (MCPAREA, ORCSC00AREA, SPA-AREA)",
+        "14 COPY statements referencing domain-specific include files (.INC)",
+        "EVALUATE/WHEN constructs for procedure-type dispatch",
+        "SEARCH with SET and INDEXED BY for table lookup (oxygen code table)",
+        "REDEFINES on inline VALUE table (TBL-SYOCHI-AREA)",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "No COMP-3, no SQL, no CICS",
+        "PERFORM VARYING with complex UNTIL conditions",
+        "19 GO TO statements"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but contains Japanese text encoded in EUC-JP or Shift-JIS, causing the comment lines to appear as mojibake. The program is clearly part of the open-source JMA ORCA medical receipt system (copyright 2002, Japan Medical Association). The source is truncated at 16000 chars out of 67294 bytes total; the full program contains 1615 lines. The fixed-format layout, division structure, and COBOL syntax are unambiguous."
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP encoding, appearing as mojibake. Content is clearly production COBOL from the well-known open-source JMA ORCA project (circa 2002). Truncated at 16000 chars; full file is 67294 bytes / 1615 lines."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7961,
-      "completion_tokens": 800,
-      "total_tokens": 8761,
-      "cost": 0.035883,
+      "prompt_tokens": 9339,
+      "completion_tokens": 635,
+      "total_tokens": 9974,
+      "cost": 0.037542,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035883,
-        "upstream_inference_prompt_cost": 0.023883,
-        "upstream_inference_completions_cost": 0.012
+        "upstream_inference_cost": 0.037542,
+        "upstream_inference_prompt_cost": 0.028017,
+        "upstream_inference_completions_cost": 0.009525
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 21.86,
+    "provider": "Anthropic",
+    "latency_s": 17.39,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:05:26Z"
 }

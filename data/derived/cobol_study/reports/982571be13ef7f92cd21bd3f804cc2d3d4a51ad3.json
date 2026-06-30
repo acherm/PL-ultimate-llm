@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:982571be13ef7f92cd21bd3f804cc2d3d4a51ad3",
+    "sha1_git": "982571be13ef7f92cd21bd3f804cc2d3d4a51ad3",
+    "filename": "/IEAS9800.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13036,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:982571be13ef7f92cd21bd3f804cc2d3d4a51ad3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:982571be13ef7f92cd21bd3f804cc2d3d4a51ad3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13036,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 285,
+    "blank_lines": 44,
+    "comment_lines": 98,
+    "code_lines": 143,
+    "comment_ratio": 0.407,
+    "max_line_length": 72,
+    "avg_line_length": 44.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "IEAS9800"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 14,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL subprogram, likely compiled with IBM Enterprise COBOL; Italian-language comments, authored by Accenture, references CICS COMMAREA pattern (AREA-IDSV0001), DECIMAL-POINT IS COMMA, commented-out IBM-370 compiler directives",
+        "evidence": [
+          "SPECIAL-NAMES. DECIMAL-POINT IS COMMA",
+          "*SOURCE-COMPUTER. IBM-370",
+          "*OBJECT-COMPUTER. IBM-370",
+          "PROCEDURE DIVISION USING ... GOBACK",
+          "COPY IDSV0001 / IEAI9801 / IEAO9801",
+          "EXEC CICS comment reference in COMMAREA naming"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Italian enterprise application error-message formatting utility; substitutes placeholder parameters (delimited by '$') in extended error description strings, used exclusively by routine IEAS9900",
+        "summary": "IEAS9800 is a COBOL subprogram that parses a semicolon-delimited parameter string and substitutes positional '$'-prefixed placeholders in an extended error description string. It is called by IEAS9900 and returns the formatted error description via an output linkage area. The program handles both sequential and indexed parameter substitution.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with COMMAREA pattern (AREA-IDSV0001) suggesting CICS context",
+        "COPY statements for IDSV0001, IEAI9801, IEAO9801",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "Reference-modification (substring) arithmetic throughout",
+        "OCCURS 10 TIMES table for parameter list",
+        "88-level condition names for SI-CORRETTO/NO-CORRETTO",
+        "Inline sequence-tag comments (SET06, OTT06) indicating change history",
+        "GOBACK after EXIT in main paragraph"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "All comments are in Italian; authored by Accenture, dated 2006. The COPY members (IDSV0001, IEAI9801, IEAO9801) are not expanded in the source so full data layout is not visible. The program appears to be part of a larger Italian enterprise system. No EXEC SQL or EXEC CICS statements despite being labeled 'ROUTINE COBOL-DB2' in comments."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5532,
+      "completion_tokens": 594,
+      "total_tokens": 6126,
+      "cost": 0.025506,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025506,
+        "upstream_inference_prompt_cost": 0.016596,
+        "upstream_inference_completions_cost": 0.00891
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.5,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:39:06Z"
+}

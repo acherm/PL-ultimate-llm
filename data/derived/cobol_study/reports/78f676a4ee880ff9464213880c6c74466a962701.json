@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:78f676a4ee880ff9464213880c6c74466a962701",
+    "sha1_git": "78f676a4ee880ff9464213880c6c74466a962701",
+    "filename": "/py030001.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14519,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:78f676a4ee880ff9464213880c6c74466a962701/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:78f676a4ee880ff9464213880c6c74466a962701/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14519,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 327,
+    "blank_lines": 41,
+    "comment_lines": 28,
+    "code_lines": 258,
+    "comment_ratio": 0.098,
+    "max_line_length": 92,
+    "avg_line_length": 43.4,
+    "long_lines_over_72": 74,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PY030001"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 18,
+    "call_count": 1,
+    "perform_count": 23,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2002",
+        "detail": "GnuCOBOL with OO extensions (INVOKE, class repository), htmlpp preprocessor, free-format source; likely part of a Brazilian ERP/commercial system (PC prefix copybooks, Portuguese identifiers)",
+        "evidence": [
+          "$set preprocess(htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "invoke EscreveJson / invoke Utils / invoke ws-obj-json",
+          "class EscreveJson as \"PY990002\" / class Utils as \"PY990004\" in REPOSITORY",
+          "external-form clause in cgi-input",
+          "identified by clauses for CGI form fields"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Order status inquiry for a Brazilian commercial/distribution system; queries order records (pedidos) by client, company and branch, returning JSON with order status (Faturado, Aprovado, Bloqueado, Rejeitado, etc.)",
+        "summary": "This program queries order (pedido) records for a given client across the current and previous month, formats each order's status and non-billing reason, and emits the results as a dynamic JSON response. It is invoked as a CGI-style subprogram, receiving parameters via a linkage section and CGI form fields.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "OO COBOL: INVOKE statements, REPOSITORY with CLASS declarations",
+        "htmlpp preprocessor directive ($set preprocess(htmlpp))",
+        "$set sourceformat\"free\" compiler directive",
+        "external-form section with 'identified by' CGI field mapping",
+        "18 COPY statements for modular copybook architecture",
+        "Dynamic JSON generation via EscreveJson object",
+        "Portuguese-language identifiers and business logic",
+        "decimal-point is comma (Brazilian locale)",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "File decoded as latin-1, consistent with Portuguese accented characters (e.g. 'Não', 'Órfão', 'Excluído'). Dialect is likely GnuCOBOL with OO extensions rather than IBM mainframe, given the $set directives and INVOKE/class syntax. The PC-prefixed copybooks and PY-prefixed program IDs suggest a proprietary Brazilian ERP framework. The htmlpp preprocessor is a GnuCOBOL-ecosystem tool."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5945,
+      "completion_tokens": 583,
+      "total_tokens": 6528,
+      "cost": 0.02658,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02658,
+        "upstream_inference_prompt_cost": 0.017835,
+        "upstream_inference_completions_cost": 0.008745
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.66,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:47:30Z"
+}

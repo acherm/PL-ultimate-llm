@@ -49,52 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible (likely OpenCOBOL/GnuCOBOL on Linux, given JMA ORCA project context)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY includes with .INC extension and MCP (message control protocol) DB access pattern typical of JMA ORCA",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "PERFORM ... UNTIL with inline END-PERFORM (COBOL-85)",
-          "EVALUATE-style structured code, INITIALIZE verb",
-          "OCCURS clause, COPY statements, LINKAGE SECTION with USING",
-          "EXIT PROGRAM",
-          "Fixed-format source (columns 7-72)",
-          "JMA ORCA project is known to use GnuCOBOL/OpenCOBOL on Linux"
+          "PROGRAM-ID ORCHCM31",
+          "COPY 'MCPAREA' / COPY 'MCPDATA.INC' (ORCA MCP DB access)",
+          "COPY 'COMMON-SPA' (ORCA SPA linkage pattern)",
+          "LINKAGE SECTION with USING SPA-AREA (ORCA subprogram convention)",
+          "Copyright 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program (ORCHCM31) is part of the JMA ORCA standard medical receipt software system. It appears to generate a daily payment/receipt certificate report (支払証明書・日別), processing patient insurance combination data and collection master records to produce printed output organized by inpatient/outpatient classification and date ranges.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - payment certificate / receipt printing for daily patient insurance billing",
+        "summary": "ORCHCM31 is a subprogram within the JMA ORCA medical receipt system that generates payment certificate documents (支払証明書・日別). It reads patient information, insurance combination records, and revenue/collection master data, compiles daily billing statistics, sorts them, and formats output for printing.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 causing mojibake)",
-        "COPY statements referencing many external copybooks (HCM31G.INC, HCM31N.INC, CPSYSKANRI.INC, CPSK1001.INC, etc.)",
-        "LINKAGE SECTION with multiple USING parameters (SPA-AREA, ORCSPRTAREA, ORCHCM31AREA)",
-        "Database cursor open/fetch/close pattern via MCP-TABLE/MCP-PATHNAME mechanism (custom DB abstraction, no EXEC SQL)",
-        "OCCURS 2001 for internal sort/edit table (WRK-HENSYU-OCC)",
-        "No EXEC SQL or EXEC CICS — uses proprietary DB access layer",
-        "6 CALL statements, 70 PERFORM statements",
-        "Copyright JMA (Japan Medical Association) 2002, open-source licensed"
+        "19 COPY statements for modular INC includes",
+        "LINKAGE SECTION with SPA-AREA, ORCSPRTAREA, ORCHCM31AREA parameters",
+        "MCP-based database access (ORCA proprietary DB layer, not EXEC SQL)",
+        "OCCURS 2001 table for daily billing entries",
+        "Shell table copy (CPSHELLTBL.INC) for print output",
+        "Japanese text in comments (EUC-JP encoding rendered as latin-1 mojibake)",
+        "EXIT PROGRAM as subprogram termination",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text comments that appear garbled because the file is EUC-JP or Shift-JIS encoded but was decoded as Latin-1. The program is part of the well-known open-source JMA ORCA medical receipt system. Source is truncated at 16000 chars out of ~49035 bytes total, but enough structure is visible to classify confidently."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (mojibake). Source is truncated at 16000 chars out of 49035 bytes. The program is part of the well-known open-source JMA ORCA medical receipt system, version history visible in comments (2002-2007). Fixed format with max line length 74."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7707,
-      "completion_tokens": 737,
-      "total_tokens": 8444,
-      "cost": 0.034176,
+      "prompt_tokens": 9085,
+      "completion_tokens": 589,
+      "total_tokens": 9674,
+      "cost": 0.03609,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034176,
-        "upstream_inference_prompt_cost": 0.023121,
-        "upstream_inference_completions_cost": 0.011055
+        "upstream_inference_cost": 0.03609,
+        "upstream_inference_prompt_cost": 0.027255,
+        "upstream_inference_completions_cost": 0.008835
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.11,
+    "provider": "Anthropic",
+    "latency_s": 16.22,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:57:22Z"
 }

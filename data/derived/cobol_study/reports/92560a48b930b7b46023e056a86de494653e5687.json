@@ -49,55 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM CICS/COBOL program using EXEC CICS commands, DFHRESP, EIBRESP, EIBDS, EIBTRNID, DFHCOMMAREA — classic IBM mainframe CICS online program. CBL CICS(SP) compiler option confirms IBM Enterprise COBOL.",
         "evidence": [
-          "CBL CICS(SP) compiler directive at top",
-          "EXEC CICS READ FILE(...) GTEQ NOHANDLE END-EXEC",
-          "EXEC CICS LINK PROGRAM(...) COMMAREA(...) NOHANDLE END-EXEC",
-          "DFHRESP(NOTFND), DFHRESP(NORMAL) special registers",
-          "EIB fields: EIBRESP, EIBRESP2, EIBTRNID, EIBDS, EIBFN",
-          "COMP-3 usage, USAGE POINTER, REDEFINES",
-          "PERFORM ... THRU ... WITH TEST AFTER",
-          "Fixed format, max line length 71"
+          "CBL CICS(SP)",
+          "EXEC CICS READ FILE(FK-FCT)",
+          "DFHRESP(NOTFND)",
+          "DFHRESP(NORMAL)",
+          "EIBRESP",
+          "EIBDS",
+          "EIBTRNID",
+          "DFHCOMMAREA",
+          "EXEC CICS LINK PROGRAM(ZFAM006)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "ZFAM004 is a CICS online program that handles HTTP GET requests for the z/OS File Access Manager (zFAM) framework. It processes GE (greater-than-or-equal) and GT (greater-than) browse operations against a zFAM key/file structure, as well as 'ex' (existence check) queries. It reads the KEY and FILE VSAM structures, stages the response data, and returns appropriate HTTP status codes (200, 204, 507) to the caller.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "zFAM (z/OS File Access Manager) — a CICS-based HTTP file access middleware layer providing REST-like GET operations (GE/GT/EX) over VSAM-backed tables",
+        "summary": "ZFAM004 is a CICS online program that handles HTTP GET requests with query string parameters GE (greater-than-or-equal), GT (greater-than), or EX (existence check) against a zFAM key-file structure. It reads a KEY file using GTEQ, then reads the corresponding FILE record, stages the response, and sends it back as an HTTP response with appropriate status codes (200, 204, 507).",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS (READ, LINK, and implied WEB commands)",
-        "CBL CICS(SP) compiler option directive",
-        "DFHCOMMAREA linkage for inter-program communication via XCTL/LINK",
-        "USAGE POINTER with REDEFINES for dynamic storage addressing",
-        "COMP-3 for packed-decimal fields",
+        "EXEC CICS READ with GTEQ option",
+        "EXEC CICS LINK to assembler program ZFAM006 for bit-level key augmentation",
         "HTTP status code management (200, 204, 503, 507)",
-        "COPY statements for ZFAMFKC and ZFAMFFC copybooks",
-        "GTEQ read option for VSAM browse-like access",
-        "EIB register usage (EIBRESP, EIBRESP2, EIBTRNID, EIBDS, EIBFN)",
-        "zFAM channel/container model (ZFAM_CONTAINER, ZFAM_CHANNEL)"
+        "CICS channels and containers (ZFAM_CONTAINER, ZFAM_CHANNEL)",
+        "COPY ZFAMFKC / COPY ZFAMFFC copybooks",
+        "COMP-3 usage for timestamps",
+        "USAGE POINTER / REDEFINES for address manipulation",
+        "Transient data queue (TDQ) logging via CSSL",
+        "CBL CICS(SP) compiler option"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source was truncated at 16000 chars (~55% of the 30785-byte file); the full PROCEDURE DIVISION including paragraphs 3300 onward, 4000-SEND-RESPONSE, 5000-EXISTENCE, and 9xxx error/utility paragraphs are not shown but are referenced in the visible code. All visible evidence is consistent with a production IBM Enterprise COBOL CICS program. The COPY statements for ZFAMFKC and ZFAMFFC are external copybooks not shown inline."
+      "notes": "Source truncated to first 16000 chars; full program likely contains 4000-9997 paragraph implementations. Program is part of the open-source zFAM project by Rich Jackson and Randy Frerking. No SQL. Fixed format confirmed by max line length 71 and zero lines over 72."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5379,
-      "completion_tokens": 809,
-      "total_tokens": 6188,
-      "cost": 0.028272,
+      "prompt_tokens": 6757,
+      "completion_tokens": 630,
+      "total_tokens": 7387,
+      "cost": 0.029721,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028272,
-        "upstream_inference_prompt_cost": 0.016137,
-        "upstream_inference_completions_cost": 0.012135
+        "upstream_inference_cost": 0.029721,
+        "upstream_inference_prompt_cost": 0.020271,
+        "upstream_inference_completions_cost": 0.00945
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.14,
+    "latency_s": 15.88,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:18:53Z"
 }

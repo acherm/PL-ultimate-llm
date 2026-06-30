@@ -49,51 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (mainframe)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "Compuware ISPW training program targeting IBM-370 mainframe; uses RECORDING MODE IS F, LABEL RECORDS OMITTED, BLOCK CONTAINS 0 RECORDS, and GOBACK — all typical IBM mainframe COBOL conventions",
         "evidence": [
-          "SOURCE-COMPUTER. IBM-370 / OBJECT-COMPUTER. IBM-370",
-          "ASSIGN UT-S-INPUT / UT-S-OUTPUT (IBM mainframe DD-name convention)",
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
           "RECORDING MODE IS F",
           "LABEL RECORDS OMITTED",
           "BLOCK CONTAINS 0 RECORDS",
-          "GOBACK statement",
-          "COPY TCPYA16 / COPY TCPYB16 (copybook references without REPLACING)",
-          "NOT INFILE-EOF condition name usage"
+          "GOBACK",
+          "ASSIGN UT-S-INPUT"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A training program that calls a subroutine TSUBR16 to open and read an input file, then formats and writes the retrieved text lines to an output file with decorative star-line borders. It uses two copybooks (TCPYA16 for header data and TCPYB16 for the linkage/pass-around area) and delegates file I/O to the called subprogram.",
-        "domain": "education/tutorial",
-        "program_type": "demo"
+        "domain": "education-tutorial",
+        "domain_detail": "Compuware ISPW training material demonstrating subprogram calls and copybook usage",
+        "summary": "A Compuware ISPW training program that calls subprogram TSUBR16 to open and read an input file, then formats and writes the retrieved text lines to an output file. It uses two copybooks (TCPYA16 for header data and TCPYB16 for the linkage area) and demonstrates CALL/USING, PERFORM THRU, and basic file I/O patterns.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "CALL 'TSUBR16' USING PASS-ME-AROUND (3 calls with action-flag protocol: R=read, C=close)",
-        "COPY TCPYA16 and COPY TCPYB16 copybook references (not expanded in this file)",
-        "PERFORM ... THRU paragraph-exit pattern (GET-MESSAGE THRU GET-MESSAGE-X)",
+        "CALL 'TSUBR16' USING PASS-ME-AROUND (subprogram linkage)",
+        "COPY TCPYA16 and COPY TCPYB16 (copybook inclusion)",
+        "PERFORM THRU pattern (GET-MESSAGE THRU GET-MESSAGE-X)",
         "GOBACK instead of STOP RUN",
-        "IBM mainframe file assignment syntax (UT-S-INPUT / UT-S-OUTPUT)",
-        "Compuware ISPW training material copyright notice"
+        "RECORDING MODE IS F (IBM mainframe FD clause)",
+        "ACTION-FLAG protocol to control subprogram behavior (R=read, C=close)"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The copybooks TCPYA16 and TCPYB16 are referenced but not expanded here, so data-names like PASS-ME-AROUND, ACTION-FLAG, INFILE-EOF, TEXT-PORTION, MESSANGER, STAR-LINE-1, FLASH-LINE, BODY-LINE, BODY-TEXT, MESSAGE-LINE are defined externally. The program is clearly a Compuware ISPW training artifact dated 1996. No SQL or CICS constructs present."
+      "notes": "Program dated 1996, copyright Compuware Corporation 1986-2016. All lines within 72 columns confirming fixed format. No SQL or CICS. The actual copybook contents are not shown so PIC counts are minimal (only 3 visible in the FD section)."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2401,
-      "completion_tokens": 658,
-      "total_tokens": 3059,
-      "cost": 0.017073,
+      "prompt_tokens": 3779,
+      "completion_tokens": 506,
+      "total_tokens": 4285,
+      "cost": 0.018927,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.017073,
-        "upstream_inference_prompt_cost": 0.007203,
-        "upstream_inference_completions_cost": 0.00987
+        "upstream_inference_cost": 0.018927,
+        "upstream_inference_prompt_cost": 0.011337,
+        "upstream_inference_completions_cost": 0.00759
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 11.72,
+    "latency_s": 10.35,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:40:11Z"
 }

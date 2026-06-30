@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) or Micro Focus COBOL on Linux/Unix",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL as used in the JMA ORCA project. Uses COPY with REPLACING using // delimiters typical of GnuCOBOL/OpenCOBOL.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
-          "COPY ... REPLACING //token// BY //token// syntax (double-slash delimiters typical of GnuCOBOL/Micro Focus)",
-          "FD records with COPY statements for include files (.INC extension)",
-          "PIC X(nn) and PIC 9(nn) data definitions throughout",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL or EXEC CICS blocks",
-          "Japanese medical association copyright header; ORCA project (JMA open-source medical software, known to use GnuCOBOL)"
+          "PROGRAM-ID ORCR1030",
+          "COPY with // REPLACING delimiter syntax",
+          "SELECT ... ASSIGN RECE100PARA (environment-name style)",
+          "No EXEC CICS/SQL",
+          "Copyright JMA (Japan Medical Association) ORCA project",
+          "File extensions .INC for copybooks"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program (ORCR1030) is part of the ORCA JMA standard medical receipt (claims) software system. It processes and edits receipt comment data for public-injury (Kouhai) receipts covering outpatient and inpatient cases. It reads, transforms, and writes indexed receipt data files (RECE100, RECE120, RECE130 series) and generates or updates comment records on medical claims.",
-        "domain": "healthcare / medical billing (Japanese medical insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - specifically public injury/illness receipt comment editing for outpatient claims (公害レセプト入院外・レセプトコメント編集)",
+        "summary": "ORCR1030 is a batch program in the JMA ORCA standard medical receipt software system. It processes medical insurance claim records (レセプト) for public hazard/injury cases (公害), editing and generating receipt comment data for outpatient claims. It reads indexed RECE100/RECE120/RECE130 files and writes to output and work files.",
         "program_type": "batch"
       },
       "notable_features": [
-        "COPY ... REPLACING with double-slash delimiter syntax (GnuCOBOL/Micro Focus style)",
-        "Multiple indexed VSAM-style files with DYNAMIC access mode",
-        "Large working-storage with many flag (FLG-*), counter (CNT-*), and index (IDX-*) areas",
-        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS rendered as Latin-1)",
-        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
-        "45 CALL statements and 799 PERFORM statements indicating a large, modular batch program",
-        "Error file (RECEERR-FILE) for logging processing errors",
-        "Extensive revision history in comments spanning 2007–2016"
+        "COPY with // REPLACING delimiter (GnuCOBOL style)",
+        "40 COPY statements for copybook-heavy modular design",
+        "45 CALL statements to subprograms",
+        "799 PERFORM statements (structured, no GOTO)",
+        "Multiple indexed file I/O with DYNAMIC access",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded)",
+        "Large program: ~9000 lines, 400KB",
+        "Extensive flag and index working-storage areas",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is decoded as Latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing mojibake in the displayed text. The COPY statements reference external .INC copybooks that are not shown. The double-slash REPLACING delimiter is characteristic of GnuCOBOL or Micro Focus rather than IBM Enterprise COBOL. The program is part of the well-known open-source ORCA medical claims system developed by JMA (Japan Medical Association). Source is truncated at 16000 chars out of ~402KB total."
+      "notes": "Source comments are encoded in Japanese (EUC-JP or Shift-JIS), decoded as latin-1 producing mojibake in the snippet. This is clearly production code from the well-known open-source JMA ORCA medical receipt system used widely in Japanese medical clinics. The file was truncated at 16000 chars but the structure is clear. Version history spans 2007-2016 (04.02.01 through 04.08.04)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8575,
-      "completion_tokens": 806,
-      "total_tokens": 9381,
-      "cost": 0.037815,
+      "prompt_tokens": 9953,
+      "completion_tokens": 614,
+      "total_tokens": 10567,
+      "cost": 0.039069,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037815,
-        "upstream_inference_prompt_cost": 0.025725,
-        "upstream_inference_completions_cost": 0.01209
+        "upstream_inference_cost": 0.039069,
+        "upstream_inference_prompt_cost": 0.029859,
+        "upstream_inference_completions_cost": 0.00921
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 20.69,
+    "provider": "Anthropic",
+    "latency_s": 16.62,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:43:17Z"
 }

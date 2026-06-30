@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:895e412e19ec422b48281676dfed990cec0eb3e5",
+    "sha1_git": "895e412e19ec422b48281676dfed990cec0eb3e5",
+    "filename": "/pw04262r.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 260291,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:895e412e19ec422b48281676dfed990cec0eb3e5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:895e412e19ec422b48281676dfed990cec0eb3e5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 260291,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5221,
+    "blank_lines": 363,
+    "comment_lines": 105,
+    "code_lines": 4753,
+    "comment_ratio": 0.022,
+    "max_line_length": 227,
+    "avg_line_length": 48.9,
+    "long_lines_over_72": 857,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW04262R"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 64,
+    "call_count": 27,
+    "perform_count": 375,
+    "goto_count": 37,
+    "pic_count": 581,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) with $set preprocess(htmlpp) and $set sourceformat\"free\" directives; Portuguese-language Brazilian business application, likely compiled with GnuCOBOL given the $set directives and free-format source",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "*> comment style (inline *>)",
+          "decimal-point is comma",
+          "copy PCW900.CPY / PCW904.CPY patterns",
+          "COMP-3 usage",
+          "Portuguese comments and variable names"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian financial/accounting system - Diário Auxiliar Revenda (Resale Auxiliary Journal), handling accounts receivable, accounts payable, bank/cash movements, fiscal notes, and financial ledger entries",
+        "summary": "This program generates a 'DiárioAxiliar Revenda' (Resale Auxiliary Journal) report for a Brazilian ERP/accounting system. It processes financial transactions including accounts receivable, accounts payable, cash/bank movements, and fiscal notes, sorting and aggregating them for journal output. It produces both analytical and synthetic views with contabil (accounting) export files.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$set compiler directives (htmlpp preprocessor, free sourceformat)",
+        "64 COPY statements for modular copybook inclusion",
+        "REPLACING clause on multiple COPY statements",
+        "Indexed file organization with alternate record keys",
+        "Sort file (SD) usage",
+        "COMP-3 packed decimal fields",
+        "Portuguese-language identifiers and comments",
+        "88-level condition names extensively used",
+        "REDEFINES clauses for date/key decomposition",
+        "decimal-point is comma (Brazilian locale)",
+        "Line sequential file organization for output",
+        "Large program: 5221 lines, 581 PIC clauses"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source truncated to first 16000 chars; full program is 260KB/5221 lines. The $set preprocess(htmlpp) directive is unusual and suggests a custom preprocessor. Dialect assigned as gnucobol based on $set directives, but could be another vendor supporting similar syntax. The program is clearly a production Brazilian ERP financial module with extensive copybook dependencies (PCS*/PCF*/PCW* naming convention)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7248,
+      "completion_tokens": 579,
+      "total_tokens": 7827,
+      "cost": 0.030429,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030429,
+        "upstream_inference_prompt_cost": 0.021744,
+        "upstream_inference_completions_cost": 0.008685
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.51,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:51:54Z"
+}

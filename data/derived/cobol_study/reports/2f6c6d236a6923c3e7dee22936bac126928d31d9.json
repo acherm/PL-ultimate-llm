@@ -49,55 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); uses MCP (Message Control Program) interface typical of JMA ORCA/GnuCOBOL environment",
         "evidence": [
-          "PROGRAM-ID. ORCGG03",
-          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
-          "EVALUATE ... ALSO ... WHEN ... ALSO",
-          "PERFORM VARYING ... FROM ... BY ... UNTIL",
-          "EXIT PROGRAM",
-          "COPY directives with REPLACING",
-          "BINARY usage (S9(9) BINARY)",
-          "No EXEC SQL / EXEC CICS",
-          "MCP-STATUS / MCP-EVENT / MCP-WIDGET pattern typical of ORCA/JMA OpenCOBOL framework"
+          "PROGRAM-ID ORCGG03",
+          "COPY MCPAREA",
+          "COPY ORCA-SPA",
+          "COPY LINKAREA",
+          "MCP-STATUS MCP-EVENT MCP-WIDGET MCP-PUTTYPE MCP-WINDOW",
+          "COPY MCPDATA.INC",
+          "tbl_toukeimemo DB table references",
+          "JMA Open Source License in header comment"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a screen-handling component (parameter explanation screen G03) within the ORCA JMA Standard Receipt Software system, specifically for monthly statistics (月次統計). It manages initialization, screen transitions, parameter display/editing, and database lookups against the tbl_toukeimemo table for statistical memo records.",
-        "domain": "healthcare / medical billing (Japanese medical association receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - monthly statistics parameter explanation screen (月次統計パラメータ説明画面)",
+        "summary": "This program (ORCGG03) is a screen handler for the monthly statistics parameter explanation screen within the JMA ORCA medical receipt system. It manages initialization, screen transitions, parameter display/update, and interaction with the toukeimemo (statistics memo) database table. It is part of the G01/G03 screen group handling statistical report configuration.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Part of the ORCA (JMA Standard Receipt Software) open-source Japanese medical billing system",
-        "Uses MCP (Message Control Program) framework for screen/window management instead of CICS",
-        "Japanese comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 causing mojibake)",
-        "Extensive use of COPY statements for modular file layouts and subprogram interfaces",
-        "LINKAGE SECTION with multiple copybooks (MCPAREA, ORCA-SPA, LINKAREA, screen areas)",
-        "EVALUATE ALSO construct for multi-condition dispatch on MCP-STATUS/MCP-EVENT/MCP-WIDGET",
-        "No COMP-3 usage; uses BINARY for pointer-like fields",
-        "16 CALL statements and 84 PERFORMs indicating complex control flow",
-        "Database access via MCP data interface (not embedded SQL)"
+        "Heavy use of COPY statements (33 copybooks) for JMA ORCA framework",
+        "MCP (Message Control Program) interface for screen/event handling",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen logic",
+        "Database access via MCPDATA.INC (PostgreSQL via MCP, not EXEC SQL)",
+        "Japanese text in comments (EUC-JP or Shift-JIS encoded, decoded as latin-1)",
+        "SPA (Scratch Pad Area) pattern for inter-program communication",
+        "No COMP-3 usage; uses BINARY for path fields"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine production COBOL from the ORCA JMA open-source medical receipt system (Japan). Japanese comments appear as mojibake because the file is EUC-JP or Shift-JIS encoded but was decoded as Latin-1. The MCP framework is ORCA-specific middleware replacing CICS for screen management. The program handles the G03 parameter explanation screen for monthly statistics reporting. Source is truncated at 16000 chars out of 56580 bytes total, but enough is visible to classify with high confidence."
+      "notes": "Source file contains Japanese comments encoded in EUC-JP or Shift-JIS, decoded here as latin-1 resulting in mojibake. This is a genuine production program from the open-source JMA ORCA medical receipt system. The MCP interface is ORCA-specific and resembles CICS in structure but runs under GnuCOBOL on Linux. Source is truncated at 16000 chars out of 56580 bytes total."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7045,
-      "completion_tokens": 756,
-      "total_tokens": 7801,
-      "cost": 0.032475,
+      "prompt_tokens": 8423,
+      "completion_tokens": 610,
+      "total_tokens": 9033,
+      "cost": 0.034419,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032475,
-        "upstream_inference_prompt_cost": 0.021135,
-        "upstream_inference_completions_cost": 0.01134
+        "upstream_inference_cost": 0.034419,
+        "upstream_inference_prompt_cost": 0.025269,
+        "upstream_inference_completions_cost": 0.00915
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.71,
+    "provider": "Anthropic",
+    "latency_s": 16.14,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:54:04Z"
 }

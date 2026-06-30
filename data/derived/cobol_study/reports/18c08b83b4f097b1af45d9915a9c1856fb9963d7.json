@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:18c08b83b4f097b1af45d9915a9c1856fb9963d7",
+    "sha1_git": "18c08b83b4f097b1af45d9915a9c1856fb9963d7",
+    "filename": "/lib-readfile.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1766,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:18c08b83b4f097b1af45d9915a9c1856fb9963d7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:18c08b83b4f097b1af45d9915a9c1856fb9963d7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1766,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 69,
+    "blank_lines": 12,
+    "comment_lines": 12,
+    "code_lines": 45,
+    "comment_ratio": 0.211,
+    "max_line_length": 96,
+    "avg_line_length": 24.6,
+    "long_lines_over_72": 1,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "lib-readfile"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2002",
+        "detail": "GnuCOBOL free-format source using ODO (OCCURS DEPENDING ON) with unbounded clause and compiler directive >>SOURCE FORMAT FREE; likely used for Advent of Code puzzle input reading",
+        "evidence": [
+          ">>source format free",
+          "occurs 0 to unbounded depending on line_cnt indexed by line_idx",
+          "function trim",
+          "function module-id",
+          "goback"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Reusable file-reading library subprogram, likely part of an Advent of Code solution framework",
+        "summary": "A subprogram that reads a line-sequential file into a dynamically-sized array passed via linkage section. It accepts a filename prefix, appends '.dat', opens the file, reads all lines into an ODO array, and returns the line count and contents to the caller.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>SOURCE FORMAT FREE compiler directive",
+        "OCCURS 0 TO UNBOUNDED DEPENDING ON (ODO with unbounded)",
+        "LINKAGE SECTION with ODO table passed by reference",
+        "FUNCTION TRIM usage",
+        "FUNCTION MODULE-ID referenced in commented code",
+        "LINE SEQUENTIAL organization",
+        "FILE STATUS checking for '35' (file not found)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program is a utility subprogram named 'lib-readfile', consistent with a personal COBOL library for Advent of Code puzzles. The ODO unbounded clause requires GnuCOBOL 3.x. Commented-out debug/test code is present. No COMP-3 or mainframe-specific features observed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2781,
+      "completion_tokens": 416,
+      "total_tokens": 3197,
+      "cost": 0.014583,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014583,
+        "upstream_inference_prompt_cost": 0.008343,
+        "upstream_inference_completions_cost": 0.00624
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.52,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:52:22Z"
+}

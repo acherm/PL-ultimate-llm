@@ -49,53 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA medical software)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL; uses // delimiters in COPY REPLACING, INDEXED files with DYNAMIC access, no EXEC SQL/CICS",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
-          "COPY ... REPLACING //token// BY //token// (OpenCOBOL/GnuCOBOL style delimiters)",
-          "FD records with COPY includes (.INC files)",
-          "PIC X(02), PIC 9(01) style picture clauses",
-          "Fixed-format source, max line 78",
-          "No EXEC SQL / EXEC CICS",
-          "Project is ORCA (JMA Open Source medical receipt software, known to use GnuCOBOL)"
+          "PROGRAM-ID ORCR0040",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with // REPLACING delimiters",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "no EXEC SQL, no EXEC CICS, no COMP-3"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program (ORCR0040) is part of the ORCA JMA standard medical receipt (claim) software system. It handles editing and automatic generation of comments on medical receipt (Rezept) records, processing receipt detail files (RECE02, RECE04, RECE05 and their work/output variants) to insert or update comment entries based on treatment type, rehabilitation, drug adjustments, and other clinical billing rules.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) comment editing subsystem within the JMA ORCA medical billing system",
+        "summary": "ORCR0040 is a batch program in the JMA ORCA medical receipt system that handles comment editing (コメント編集) for medical insurance receipts. It reads and writes multiple indexed receipt data files (RECE02, RECE04, RECE05 and work variants), processes various medical billing comment types (rehabilitation, oxygen therapy, drug reduction, etc.), and writes error records to an error file.",
         "program_type": "batch"
       },
       "notable_features": [
-        "COPY ... REPLACING with // delimiters (GnuCOBOL/OpenCOBOL convention)",
-        "Multiple indexed file selects with DYNAMIC and SEQUENTIAL access modes",
-        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "41 COPY statements with REPLACING using // delimiters (GnuCOBOL style)",
+        "Multiple INDEXED files with DYNAMIC and SEQUENTIAL access modes",
+        "577 PERFORM statements indicating complex structured logic",
+        "No GOTO usage — fully structured",
+        "No COMP-3 packed decimal",
         "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage",
-        "Large program: ~6700 lines, 577 PERFORM statements, 20 CALL statements",
-        "Revision history spanning 2002–2009 with named maintainers",
-        "Work file variants (RECE049, RECE059) alongside primary files"
+        "Japanese EUC-JP encoded comments (latin-1 decoded as mojibake)",
+        "Extensive revision history in comments spanning 2002–2009",
+        "Large program: ~6700 lines, ~300KB"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in EUC-JP (Japanese) but was decoded as latin-1, causing the Japanese characters to appear as mojibake in the comments. The program is clearly part of the well-known open-source ORCA medical receipt system maintained by JMA (Japan Medical Association). The COPY statements reference .INC copybooks that were not expanded in the truncated view, but the structure is unambiguously production COBOL."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (appears as mojibake). This is the JMA ORCA open-source medical receipt software, well-known in Japanese healthcare IT. The // COPY REPLACING delimiter style is characteristic of GnuCOBOL/OpenCOBOL. Source is truncated at 16000 chars but enough structure is visible for confident classification."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9901,
-      "completion_tokens": 723,
-      "total_tokens": 10624,
-      "cost": 0.040548,
+      "prompt_tokens": 11279,
+      "completion_tokens": 564,
+      "total_tokens": 11843,
+      "cost": 0.042297,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.040548,
-        "upstream_inference_prompt_cost": 0.029703,
-        "upstream_inference_completions_cost": 0.010845
+        "upstream_inference_cost": 0.042297,
+        "upstream_inference_prompt_cost": 0.033837,
+        "upstream_inference_completions_cost": 0.00846
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.48,
+    "latency_s": 15.01,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:30:39Z"
 }

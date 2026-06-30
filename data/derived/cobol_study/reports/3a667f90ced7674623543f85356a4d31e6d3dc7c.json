@@ -49,48 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (likely)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Student exercise likely compiled with GnuCOBOL on PC; uses SCREEN SECTION and decimal-point is comma (common in Brazilian Portuguese COBOL education)",
         "evidence": [
-          "PERFORM UNTIL ... END-PERFORM structured loop",
-          "PERFORM VARYING ... END-PERFORM",
-          "PERFORM n TIMES ... END-PERFORM",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "SCREEN SECTION present",
-          "program-id with quoted string literal"
+          "decimal-point is comma",
+          "screen section",
+          "program-id with quoted name",
+          "date-written 28/09/2022",
+          "installation PC"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A student exercise demonstrating three loop constructs in COBOL: PERFORM UNTIL (while/do-until), PERFORM VARYING (for loop), and PERFORM TIMES (repeat). Each loop counts from 5 to 12 and displays the values.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian Portuguese COBOL student exercise demonstrating loop constructs (PERFORM UNTIL, PERFORM VARYING, PERFORM TIMES)",
+        "summary": "A student exercise program (Lista 5, Exercise 1) that demonstrates three types of PERFORM loops in COBOL: PERFORM UNTIL, PERFORM VARYING, and PERFORM TIMES. Each loop counts from 5 to 12 and displays the values.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Three loop paradigms demonstrated: PERFORM UNTIL, PERFORM VARYING, PERFORM TIMES",
-        "DECIMAL-POINT IS COMMA (Brazilian Portuguese locale convention)",
+        "PERFORM UNTIL loop",
+        "PERFORM VARYING loop",
+        "PERFORM TIMES loop",
+        "decimal-point is comma (Brazilian locale)",
         "SCREEN SECTION declared but unused",
-        "Comments in Portuguese (Brazilian)",
-        "Tab character used for indentation in some lines (mixed indentation)"
+        "Portuguese comments"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Author name and date (28/09/2022) suggest a Brazilian student exercise. The file uses a mix of spaces and tab characters for indentation. The SCREEN SECTION, FILE SECTION, and I-O-CONTROL are declared but empty/unused. Only one PIC clause is present (wk-num PIC 9(02))."
+      "notes": "File is a small student exercise with Portuguese comments (Brazilian Portuguese). Author name and date (28/09/2022) are present. Tab character visible in special-names line and stop run line suggesting mixed indentation. Only one PIC clause used."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1276,
-      "completion_tokens": 464,
-      "total_tokens": 1740,
-      "cost": 0.010788,
+      "prompt_tokens": 2654,
+      "completion_tokens": 346,
+      "total_tokens": 3000,
+      "cost": 0.013152,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010788,
-        "upstream_inference_prompt_cost": 0.003828,
-        "upstream_inference_completions_cost": 0.00696
+        "upstream_inference_cost": 0.013152,
+        "upstream_inference_prompt_cost": 0.007962,
+        "upstream_inference_completions_cost": 0.00519
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,9 +112,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.56,
+    "provider": "Anthropic",
+    "latency_s": 8.17,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:11:02Z"
 }

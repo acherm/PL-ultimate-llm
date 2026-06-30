@@ -49,52 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (Linux/Unix variant, likely GnuCOBOL or similar open-source)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); uses GnuCOBOL/OpenCOBOL conventions with COPY includes (.INC files), ORCMCPSUB DB access pattern, and ORCSJOB job management calls typical of the ORCA system",
         "evidence": [
-          "PERFORM UNTIL / END-PERFORM structured constructs",
-          "EVALUATE / WHEN / END-EVALUATE",
-          "END-UNSTRING, END-IF used throughout",
-          "CALL 'ORCMCPSUB' / 'ORCSJOB' style subprogram calls",
-          "COPY statements with REPLACING clause",
-          "Fixed-format source layout (columns 7-72)",
-          "PROCEDURE DIVISION USING COMMAND-PARAM"
+          "PROGRAM-ID ORCBM510",
+          "COPY CPCOMMONDAT2.INC",
+          "COPY MCPAREA",
+          "COPY MCPDATA.INC",
+          "CALL ORCMCPSUB",
+          "CALL ORCSJOB",
+          "COPY ORCA-DBPATH",
+          "JMA Open Source License comment",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "ORCBM510 is a batch COBOL program that generates and prints detailed symptom/diagnosis receipt reports (レセプト明細 - medical receipt detail) for the ORCA Japan Medical Association standard receipt software system. It reads claim management data, patient information, and receipt calculation records, formats them into print layout structures (HCM37), and outputs paginated printed reports distinguishing between social insurance and national insurance submissions.",
-        "domain": "healthcare/medical billing (Japanese medical receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - specifically symptom detail (症状詳記) printing for social insurance and national insurance claims",
+        "summary": "ORCBM510 is a batch program in the JMA ORCA medical receipt system that reads receipt calculation data and generates symptom detail (症状詳記) print output. It processes claim management records, patient information, and insurance data to compose formatted print pages for medical insurance claim submissions.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-language comments encoded in Latin-1 (Shift-JIS or EUC-JP mojibake)",
-        "Extensive use of COPY statements for modular record layouts (CPRECEDEN.INC, CPPTINF.INC, CPPTKOHINF.INC, CPSYSKANRI.INC, etc.)",
-        "24 CALL statements to external subprograms (ORCMCPSUB, ORCSJOB, etc.)",
-        "Japanese era date conversion (Meiji/Taisho/Showa/Heisei) via 31012-SEIWA-HEN-SEC",
-        "UNSTRING used to parse comma-delimited command parameters",
-        "File status checking with STS-RECEERR",
-        "No EXEC SQL or EXEC CICS — DB access via custom MCP subprogram interface",
-        "JMA Open Source License header (Japan Medical Association ORCA project)"
+        "Heavy use of COPY includes (24 copybooks) for modular data definitions",
+        "UNSTRING of comma-delimited COMMAND-PARAM for parameter passing",
+        "CALL to ORCMCPSUB for database access (ORCA MCP pattern)",
+        "CALL to ORCSJOB for job management",
+        "Japanese text in comments and data values (Shift-JIS/EUC-JP encoded)",
+        "EVALUATE used extensively for insurance type classification",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCA DB abstraction",
+        "PERFORM VARYING with multiple UNTIL conditions",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded as Latin-1 (likely EUC-JP or Shift-JIS decoded as Latin-1), resulting in mojibake in the comments and string literals. This is a genuine production program from the well-known open-source ORCA medical receipt system developed by the Japan Medical Association. The source was truncated at 16000 chars out of 35252 bytes, but enough structure is visible to classify with high confidence."
+      "notes": "Source is encoded in EUC-JP or Shift-JIS (decoded as latin-1 causing mojibake in comments and string literals). This is clearly production code from the open-source JMA ORCA medical receipt system, a well-known Japanese healthcare IT platform. The 24 COPY statements and 24 CALLs indicate a large modular system. Truncated at 16000 chars but enough is visible to classify confidently."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7628,
-      "completion_tokens": 741,
-      "total_tokens": 8369,
-      "cost": 0.033999,
+      "prompt_tokens": 9006,
+      "completion_tokens": 601,
+      "total_tokens": 9607,
+      "cost": 0.036033,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033999,
-        "upstream_inference_prompt_cost": 0.022884,
-        "upstream_inference_completions_cost": 0.011115
+        "upstream_inference_cost": 0.036033,
+        "upstream_inference_prompt_cost": 0.027018,
+        "upstream_inference_completions_cost": 0.009015
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.46,
+    "latency_s": 16.9,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:37:41Z"
 }

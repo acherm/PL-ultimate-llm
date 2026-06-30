@@ -49,51 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses ORCDBMAIN call pattern and MCP framework typical of JMA ORCA system.",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN ... ALSO ... END-EVALUATE",
-          "EXIT PROGRAM",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "PERFORM with section names",
-          "Fixed-format source layout",
-          "COPY statements with quoted filenames (GnuCOBOL style)"
+          "PROGRAM-ID ORCGX100",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "CALL 'ORCDBMAIN' USING MCPAREA MCPDATA-REC SPA-AREA",
+          "MCP-STATUS / MCP-EVENT / MCP-FUNC / MCP-PUTTYPE",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles a disease/condition code list screen (component named ORCGX100), acting as a screen navigation controller. On LINK status it initializes, otherwise it navigates back to the previous screen using a PUT-WINDOW call to ORCDBMAIN.",
-        "domain": "healthcare/medical (Japanese medical billing/receipt system)",
-        "program_type": "subprogram"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - disease name code list screen handler (ORCGX100)",
+        "summary": "This program is a screen/window controller within the JMA ORCA medical receipt system. It handles the LINK event by calling an initialisation section, and for all other events navigates back to the previous page by setting MCP window routing fields and calling ORCDBMAIN with PUTWINDOW function. It manages SPA (scratchpad area) state across screen transitions.",
+        "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese-encoded comments (latin-1 decoded, originally likely EUC-JP or Shift-JIS)",
-        "ORCA JMA open-source medical system framework",
-        "Multiple COPY statements for screen area includes (X01.INC through X100.INC, XERR.INC, XID1.INC, XID2.INC)",
-        "CALL to ORCDBMAIN (ORCA database main routine)",
-        "MCP-STATUS/MCP-EVENT EVALUATE pattern typical of ORCA screen programs",
-        "LINKAGE SECTION with multiple copybook areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
-        "No EXEC SQL or EXEC CICS",
-        "High comment ratio (54%) due to Japanese documentation headers"
+        "Heavy use of COPY statements (18 copybooks) for screen layout and linkage areas",
+        "LINKAGE SECTION with multiple COPY-defined areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "MCP framework calls via CALL 'ORCDBMAIN'",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen navigation",
+        "Japanese comments encoded in EUC-JP (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCDBMAIN DB abstraction",
+        "grpsys label on CALL line (non-standard label in area A)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS but decoded as latin-1, resulting in garbled multi-byte characters in comments. The program follows the standard ORCA screen program pattern used throughout the JMA medical receipt software suite. The 'grpsys' label on the CALL line appears to be a continuation label artifact. COPY count shown as 0 in mechanical indicators but the source clearly contains many COPY statements — likely the mechanical parser did not count quoted-string COPY variants."
+      "notes": "Japanese comments are EUC-JP encoded, displayed as mojibake under latin-1 decoding. The file is part of the open-source JMA ORCA system. The 'grpsys' token on the CALL line appears to be a group/section label artifact in area A, not standard COBOL but common in this codebase. Only 1 PIC clause visible in source - most data definitions are in copybooks."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2599,
-      "completion_tokens": 667,
-      "total_tokens": 3266,
-      "cost": 0.017802,
+      "prompt_tokens": 3977,
+      "completion_tokens": 624,
+      "total_tokens": 4601,
+      "cost": 0.021291,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.017802,
-        "upstream_inference_prompt_cost": 0.007797,
-        "upstream_inference_completions_cost": 0.010005
+        "upstream_inference_cost": 0.021291,
+        "upstream_inference_prompt_cost": 0.011931,
+        "upstream_inference_completions_cost": 0.00936
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,8 +114,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.03,
+    "latency_s": 16.81,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:53:40Z"
 }

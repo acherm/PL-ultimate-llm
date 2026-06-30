@@ -49,45 +49,47 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (or compatible, targeting IBM Flex Enterprise Server)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM Flex Enterprise Server (IBM-FLEX-ES) target; source contains a Git merge conflict marker embedded in the code",
         "evidence": [
           "SOURCE-COMPUTER. IBM-FLEX-ES",
           "OBJECT-COMPUTER. IBM-FLEX-ES",
-          "ID DIVISION shorthand for IDENTIFICATION DIVISION",
-          "DISPLAY and STOP RUN syntax"
+          "DISPLAY 'HELLO WORLD'"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal 'Hello World' COBOL program that displays a greeting message and stops. It appears to be a trivial demo or tutorial program used to verify a build pipeline.",
-        "domain": "education/tutorial, demo",
+        "domain": "demo-example",
+        "domain_detail": "Hello World demonstration program, likely used for CI/CD or build pipeline testing",
+        "summary": "A minimal COBOL program that displays 'HELLO WORLD' (or 'HELLO' in the other branch) and stops. It appears to be used as a smoke test for an impact build system, as evidenced by the DISPLAY 'Test for Impact Build' message.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Git merge conflict markers present (<<<<<<< HEAD / ======= / >>>>>>>), indicating unresolved merge",
-        "Targets IBM Flex Enterprise Server (IBM-FLEX-ES)",
-        "No DATA items, no PERFORM, no CALL — extremely minimal structure",
-        "has_compiler_directives flagged true, possibly due to merge conflict markers being misidentified"
+        "Git merge conflict markers embedded in source (<<<<<<< HEAD / >>>>>>> cdd8775e2cbaec1fd36525fd384de26c1db3941b)",
+        "IBM-FLEX-ES compiler target",
+        "Has compiler directives flag set",
+        "All four COBOL divisions present despite trivial content"
       ],
       "maturity": "toy-or-hello-world",
-      "overall_confidence": "high",
-      "notes": "The file contains unresolved Git merge conflict markers, meaning it is not syntactically valid COBOL as-is. One branch displays 'HELLO WORLD' and 'Test for Impact Build', the other displays only 'HELLO'. The program is otherwise a trivial hello-world. The 'has_compiler_directives' flag may be a false positive triggered by the conflict markers."
+      "overall_confidence": "medium",
+      "notes": "The source file contains unresolved Git merge conflict markers, meaning it would not compile as-is. The two conflicting branches differ only in the DISPLAY statement text. The IBM-FLEX-ES designation points to IBM's Flex Enterprise Server (mainframe emulation) environment. No PIC clauses, PERFORM, CALL, or COPY statements present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 987,
-      "completion_tokens": 453,
-      "total_tokens": 1440,
-      "cost": 0.009756,
+      "prompt_tokens": 2365,
+      "completion_tokens": 390,
+      "total_tokens": 2755,
+      "cost": 0.012945,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +98,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009756,
-        "upstream_inference_prompt_cost": 0.002961,
-        "upstream_inference_completions_cost": 0.006795
+        "upstream_inference_cost": 0.012945,
+        "upstream_inference_prompt_cost": 0.007095,
+        "upstream_inference_completions_cost": 0.00585
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +108,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 10.5,
+    "provider": "Anthropic",
+    "latency_s": 8.94,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:42:44Z"
 }

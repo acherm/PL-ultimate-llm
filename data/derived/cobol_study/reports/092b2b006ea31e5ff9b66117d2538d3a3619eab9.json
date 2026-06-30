@@ -49,51 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible (likely running under ORCA/JMA open-source medical system on Linux/Unix with GnuCOBOL or similar)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax",
-          "END-EVALUATE, END-IF, END-PERFORM terminators",
-          "PERFORM VARYING ... UNTIL with structured body",
-          "INITIALIZE statement",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "Fixed-format source layout (columns 7-72)",
-          "COPY statements for copybooks (.INC files)"
+          "PROGRAM-ID ORCGP02X",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY MCPAREA, COPY ORCA-SPA, COPY LINKAREA",
+          "MCP-STATUS, MCP-EVENT, MCP-WIDGET usage pattern",
+          "COPY .INC copybooks typical of JMA ORCA",
+          "no EXEC CICS or EXEC SQL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles CLAIM connection settings (CLAIM接続設定, screen P02X), allowing users to configure and register connection parameters such as address, port, and memo for system management records. It reads system management table (tbl_syskanri) records, presents them on a screen, validates input, and registers/transmits settings.",
-        "domain": "healthcare/medical billing",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt system - CLAIM connection settings screen (CLAIM接続設定, P02X screen)",
+        "summary": "This program implements the CLAIM connection settings screen (P02X) within the JMA ORCA patient registration subsystem. It reads system management table (tbl_syskanri) records to populate connection settings (address, port, memo), handles screen initialization, input validation, and registration of CLAIM connection parameters. It supports EUC, S-ORCA, and FTE-8 send code options.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP (Message Control Program) database access layer (PERFORM 910-DBSELECT-SEC, 990-DBCLOSE-SEC)",
-        "Extensive use of COPY statements for copybooks (.INC files) in LINKAGE SECTION",
-        "Japanese text in comments (Shift-JIS/EUC-JP encoded, decoded as latin-1 producing mojibake)",
-        "EVALUATE with ALSO for multi-condition dispatch on MCP-STATUS/MCP-EVENT/MCP-WIDGET",
-        "SPA (Scratch Pad Area) pattern for inter-screen state management",
-        "REDEFINES used for combo-box table overlay",
-        "EXIT PROGRAM used for subprogram return"
+        "Heavy use of COPY statements (32 copybooks) for screen and data layouts",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA parameters",
+        "MCP-based window/event handling (MCP-STATUS, MCP-EVENT, MCP-WIDGET)",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for screen navigation",
+        "Japanese text in comments (EUC-JP encoding, decoded as latin-1)",
+        "REDEFINES used for combo table",
+        "DB access via PERFORM 910-DBSELECT-SEC pattern (MCP abstraction layer)",
+        "No EXEC SQL or EXEC CICS - uses MCP abstraction"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in a Japanese encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese comments to appear as mojibake. The program is clearly a production subprogram within the ORCA open-source Japanese medical receipt system. It uses a proprietary MCP middleware layer rather than EXEC SQL or EXEC CICS for database access. The 'online-cics' program_type label is approximate — it is actually an event-driven screen program using the ORCA MCP framework, not CICS proper."
+      "notes": "Source file is encoded in EUC-JP but was decoded as latin-1, causing mojibake in Japanese comment text. This is characteristic of JMA ORCA source files. The file was truncated at 16000 chars out of 25002 bytes. Program is a subprogram called via LINKAGE SECTION with multiple areas passed as parameters, functioning as an online screen handler within the ORCA MCP framework rather than traditional CICS."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6899,
-      "completion_tokens": 708,
-      "total_tokens": 7607,
-      "cost": 0.031317,
+      "prompt_tokens": 8277,
+      "completion_tokens": 602,
+      "total_tokens": 8879,
+      "cost": 0.033861,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.031317,
-        "upstream_inference_prompt_cost": 0.020697,
-        "upstream_inference_completions_cost": 0.01062
+        "upstream_inference_cost": 0.033861,
+        "upstream_inference_prompt_cost": 0.024831,
+        "upstream_inference_completions_cost": 0.00903
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.34,
+    "provider": "Anthropic",
+    "latency_s": 16.2,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:26:14Z"
 }

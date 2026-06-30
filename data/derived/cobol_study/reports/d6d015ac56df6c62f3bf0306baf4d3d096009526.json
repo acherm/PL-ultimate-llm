@@ -49,45 +49,46 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (RDz/IDz)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "Likely IBM RDz (Rational Developer for z) based on .rdz.cbl extension; test/example program for copybook inclusion",
         "evidence": [
-          "filename suffix .rdz.cbl indicating IBM Rational Developer for z/OS",
-          "COPY YTSTCPX referencing a test copybook",
-          "END PROGRAM Pgm terminator",
-          "PROGRAM-ID. Pgm"
+          "filename extension .rdz.cbl",
+          "COPY YTSTCPX",
+          "END PROGRAM Pgm"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal test program that copies in a working-storage copybook (YTSTCPX) and moves a literal 'A' into a field defined by that copybook. The comment indicates it is testing that level-01 items are not deleted for CPX/CPM copybook processing.",
-        "domain": "education/tutorial",
+        "domain": "test-suite",
+        "domain_detail": "Test case for copybook list/copy behavior, specifically verifying that level 01 items are not deleted for CPX/CPM copybooks",
+        "summary": "A minimal test program that copies in a copybook (YTSTCPX) and moves a value to a field defined within it. The comment indicates this is a test case verifying correct behavior of copybook inclusion (CPX/CPM level 01 handling).",
         "program_type": "test"
       },
       "notable_features": [
-        "COPY statement referencing YTSTCPX copybook",
+        "COPY statement (YTSTCPX copybook)",
         "Comment explaining test intent: level 01 not deleted for CPX/CPM",
-        "Part of a test suite (filename prefix EITestCpyList3A)",
-        "No PIC clauses in main source (all in copybook)"
+        "IBM RDz file extension (.rdz.cbl)"
       ],
       "maturity": "snippet",
-      "overall_confidence": "high",
-      "notes": "This is clearly a small test case in an IBM RDz/IDz test suite (indicated by the .rdz.cbl extension and the EITest prefix). The program itself is trivially simple; its purpose is to validate copybook handling behavior in the compiler or tooling. The mechanical indicator shows copy_count=0 but the source clearly contains a COPY statement — this may be a parsing artifact."
+      "overall_confidence": "medium",
+      "notes": "Very small file (11 lines, 308 bytes). The .rdz.cbl extension strongly suggests IBM Rational Developer for z/OS. The filename 'EITestCpyList3A' and the comment about CPX/CPM suggest this is part of a test suite for an IDE or compiler feature related to copybook handling. No PIC clauses present as all data definitions come from the copied copybook."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 947,
-      "completion_tokens": 462,
-      "total_tokens": 1409,
-      "cost": 0.009771,
+      "prompt_tokens": 2325,
+      "completion_tokens": 382,
+      "total_tokens": 2707,
+      "cost": 0.012705,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +97,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009771,
-        "upstream_inference_prompt_cost": 0.002841,
-        "upstream_inference_completions_cost": 0.00693
+        "upstream_inference_cost": 0.012705,
+        "upstream_inference_prompt_cost": 0.006975,
+        "upstream_inference_completions_cost": 0.00573
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,8 +108,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 12.45,
+    "latency_s": 8.73,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:11:26Z"
 }

@@ -49,47 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL; uses standard COBOL-85 features including PERFORM TIMES, SEARCH, UNSTRING, REDEFINES with OCCURS, and INDEXED BY. No vendor-specific extensions visible.",
         "evidence": [
-          "PERFORM ... TIMES with variable (WS-QUANTITY(CIX) TIMES)",
-          "END-PERFORM, END-UNSTRING, END-SEARCH inline scope terminators",
-          "INDEXED BY with SEARCH verb",
-          "ACCEPT from stdin (console-style, typical of GnuCOBOL puzzle solutions)",
-          "No EXEC SQL/CICS, no COMP-3, no vendor-specific extensions"
+          "PERFORM WS-QUANTITY(CIX) TIMES",
+          "SEARCH WS-WINNING-NUM",
+          "UNSTRING ... DELIMITED BY",
+          "REDEFINES with OCCURS",
+          "INDEXED BY IX-WIN"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Solves Advent of Code 2023 Day 4 Part 2 (scratchcard pile problem). It reads scratchcard records from stdin, counts matching numbers per card, then propagates card copies according to the AoC rules, and displays the total number of cards accumulated.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Advent of Code 2023 Day 4 Part 2 puzzle solution - scratchcard pile processing",
+        "summary": "This program solves Advent of Code Day 4 Part 2. It reads scratchcard records from stdin, parses winning numbers and owned numbers, counts matches per card, then propagates card copies according to the puzzle rules (winning cards generate copies of subsequent cards), and outputs the total number of scratchcards.",
         "program_type": "batch"
       },
       "notable_features": [
-        "UNSTRING with multiple delimiters (':' OR ' |') for parsing input",
+        "UNSTRING with multiple delimiters (':', ' |')",
         "SEARCH with INDEXED BY for linear table search",
-        "PERFORM <variable> TIMES construct for dynamic iteration count",
-        "REDEFINES used to overlay string storage with numeric array (PIC ZZZ OCCURS)",
-        "Hard-coded table size of 192 cards matching AoC puzzle input size"
+        "PERFORM ... TIMES construct",
+        "REDEFINES with OCCURS for dual-view table",
+        "OCCURS 192 for fixed card pile size",
+        "ACCEPT from stdin for input reading"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Filename 'day04p2.cbl' and program logic strongly indicate this is an Advent of Code 2023 Day 4 Part 2 solution written in COBOL, likely GnuCOBOL. The hard-coded OCCURS 192 matches the specific puzzle input size for that year. All four DIVISION headers are present despite the mechanical indicator showing none detected, likely a parsing artifact."
+      "notes": "Filename 'day04p2.cbl' strongly indicates Advent of Code Day 4 Part 2 solution. The program hardcodes 192 cards (OCCURS 192), matching the puzzle input size. No IDENTIFICATION/ENVIRONMENT/DATA division headers are detected by the mechanical parser despite being present in source - likely a parser quirk with indentation. All divisions are present in the actual source."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1766,
-      "completion_tokens": 530,
-      "total_tokens": 2296,
-      "cost": 0.013248,
+      "prompt_tokens": 3144,
+      "completion_tokens": 451,
+      "total_tokens": 3595,
+      "cost": 0.016197,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.013248,
-        "upstream_inference_prompt_cost": 0.005298,
-        "upstream_inference_completions_cost": 0.00795
+        "upstream_inference_cost": 0.016197,
+        "upstream_inference_prompt_cost": 0.009432,
+        "upstream_inference_completions_cost": 0.006765
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,8 +113,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 10.67,
+    "latency_s": 10.38,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:36:49Z"
 }

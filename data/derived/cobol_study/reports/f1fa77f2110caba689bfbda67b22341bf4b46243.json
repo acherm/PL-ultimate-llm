@@ -49,47 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or generic COBOL (possibly Micro Focus)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple educational example demonstrating nested IF statements; no vendor-specific extensions. COBOL-85 inferred from END-IF scope terminators and THEN keyword usage.",
         "evidence": [
-          "END-IF terminators (COBOL-85+)",
-          "THEN keyword on IF statement",
-          "COMPUTE with arithmetic expression",
-          "PIC Z(9) for formatted display",
-          "STOP RUN"
+          "END-IF scope terminator",
+          "IF ... THEN syntax",
+          "WORKING-STORAGE SECTION",
+          "PIC Z(9) edited picture"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A simple tutorial/demo program that accepts two numeric values from the user, computes their sum, and uses nested IF statements to display different messages based on conditions comparing the inputs and result.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates nested IF/ELSE logic with ACCEPT/DISPLAY and basic arithmetic",
+        "summary": "A small tutorial program that accepts two numeric values from the user, computes their sum, and uses nested IF statements to display different messages based on conditions. It is explicitly named 'NestedIFExample' and attributed to an author, suggesting a learning exercise.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Nested IF/END-IF structure (the program's stated purpose)",
-        "ACCEPT for interactive user input",
-        "PIC Z(9) edited picture for formatted numeric display",
-        "AUTHOR paragraph present (common in older/educational COBOL)",
-        "Tab-indented source rather than strict column-based fixed format"
+        "Nested IF with END-IF scope terminators",
+        "PIC Z(9) edited numeric picture for formatted display",
+        "ACCEPT/DISPLAY for interactive I/O",
+        "COMPUTE for arithmetic",
+        "No PERFORM, CALL, or GOTO usage"
       ],
-      "maturity": "toy-or-hello-world",
+      "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The file uses tab characters for indentation rather than the traditional fixed-column layout, which is atypical for strict fixed-format COBOL but accepted by modern compilers like GnuCOBOL. The AUTHOR paragraph is present, which was removed in COBOL-2002 but is still widely supported. The program is clearly a beginner/tutorial example demonstrating nested IF logic, consistent with the filename and AUTHOR attribution."
+      "notes": "Tab-indented source despite mechanical indicator saying 'fixed'; max line length is well under 72 so no fixed-format violations. Very small program (31 lines) with no file I/O, clearly a teaching example. Author name 'jiuweigui' suggests a student or hobbyist."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1116,
-      "completion_tokens": 452,
-      "total_tokens": 1568,
-      "cost": 0.010128,
+      "prompt_tokens": 2494,
+      "completion_tokens": 356,
+      "total_tokens": 2850,
+      "cost": 0.012822,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010128,
-        "upstream_inference_prompt_cost": 0.003348,
-        "upstream_inference_completions_cost": 0.00678
+        "upstream_inference_cost": 0.012822,
+        "upstream_inference_prompt_cost": 0.007482,
+        "upstream_inference_completions_cost": 0.00534
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,8 +111,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 9.9,
+    "latency_s": 9.44,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:21:41Z"
 }

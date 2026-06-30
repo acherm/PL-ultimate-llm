@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based system used in Japanese medical clinics",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
-          "COPY directives with REPLACING clauses",
-          "PERFORM ... UNTIL construct",
-          "INITIALIZE statements",
-          "UNSTRING ... DELIMITED BY",
-          "OCCURS clause in SUM-AREA",
-          "REDEFINES usage",
-          "Project header: 'ORCA' JMA (Japan Medical Association) open source medical receipt software"
+          "PROGRAM-ID ORCBD999",
+          "COPY CPCOMMONDAT2.INC / CPSYUNOU.INC / CPPTHKNINF.INC etc - ORCA-specific copybooks",
+          "COPY MCPAREA / MCPDATA.INC / COMMON-SPA - ORCA DB access pattern",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "No EXEC CICS or EXEC SQL - uses ORCA middleware calls",
+          "SELECT ... ASSIGN BD00801PARA ORGANIZATION IS INDEXED - ISAM file access typical of GnuCOBOL/ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA standard medical receipt (claims) software system. It generates a daily statistics CSV file ('nikkei_' + date + '.csv') containing patient visit and insurance billing data for a given treatment date. It reads from an indexed receipt/payment file (BD00801), processes insurance combination records, and outputs structured CSV data with patient and insurance point/amount summaries.",
-        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) statistics CSV generation - daily patient visit statistics (日計表) for medical billing",
+        "summary": "ORCBD999 is a batch program in the JMA ORCA medical receipt system that generates a daily statistics CSV file (nikkei_.csv) for patient visits and insurance billing data. It reads from an indexed receipt/payment file (BD00801), processes patient insurance information, and outputs a CSV with columns for patient name, insurance points, co-payments, and various insurance categories. The program is part of the CSVサンプル (CSV sample) statistics subsystem introduced for Heisei 20 (April 2008) onwards.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments (rendered as Latin-1 mojibake in the excerpt)",
-        "Multiple COPY statements referencing project-specific copybooks (CPSYUNOU.INC, CPPTINF.INC, CPHKNCOMBI.INC, etc.)",
-        "INDEXED file with DYNAMIC access and composite ISAM key with REDEFINES",
-        "CSV output generation with Japanese column headers defined as FILLER VALUE literals",
-        "OCCURS 11 for SUM-AREA accumulating insurance category counts and amounts",
-        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
-        "UNSTRING on COMMAND-PARAM for parsing comma-delimited arguments",
-        "No EXEC SQL or EXEC CICS — uses proprietary DB access via COPY-included subprogram linkage areas (MCPAREA, MCPDATA.INC)",
-        "Date constants for Japanese fiscal year boundaries (H190401=20070401, H200401=20080401)",
-        "WRK-KAIGYO PIC X(01) VALUE X'0D' — carriage return for CSV line endings"
+        "OCCURS 11 for SUM-AREA aggregation across insurance categories",
+        "REDEFINES on ISAM key for multiple access patterns",
+        "24 COPY statements using ORCA-specific copybooks (.INC files)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell/job invocation",
+        "UNSTRING on COMMAND-PARAM for parameter parsing",
+        "Japanese EUC-JP encoded comments (latin-1 decoded)",
+        "CSV output generation with Japanese column headers",
+        "CONST-AREA with date constants for insurance law revision dates (20070401, 20080401)",
+        "No COMP-3 usage despite financial calculations",
+        "WRK-NUM PIC -------------9.99999 for decimal formatting"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS) in comments and string literals, causing mojibake in the excerpt. This does not affect the COBOL structure assessment. The program is clearly part of the well-known open-source ORCA medical receipt system maintained by JMA (Japan Medical Association). The COPY statements reference many project-specific copybooks not shown here. No COMP-3 usage detected despite being a financial/billing program — amounts use plain PIC S9(08)."
+      "notes": "File is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments. The program logic is clearly readable. Source is truncated at 16000 chars out of 73064 bytes total (1831 lines). The ORCA system is a well-known open-source Japanese medical receipt software maintained by JMA, compiled with GnuCOBOL/OpenCOBOL on Linux."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7802,
-      "completion_tokens": 820,
-      "total_tokens": 8622,
-      "cost": 0.035706,
+      "prompt_tokens": 9180,
+      "completion_tokens": 701,
+      "total_tokens": 9881,
+      "cost": 0.038055,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035706,
-        "upstream_inference_prompt_cost": 0.023406,
-        "upstream_inference_completions_cost": 0.0123
+        "upstream_inference_cost": 0.038055,
+        "upstream_inference_prompt_cost": 0.02754,
+        "upstream_inference_completions_cost": 0.010515
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.41,
+    "latency_s": 18.53,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:51:02Z"
 }

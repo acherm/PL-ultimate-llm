@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bb01c5dc3c544c76e9640a841e784237cb0d9be6",
+    "sha1_git": "bb01c5dc3c544c76e9640a841e784237cb0d9be6",
+    "filename": "/comutfs.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14560,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bb01c5dc3c544c76e9640a841e784237cb0d9be6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bb01c5dc3c544c76e9640a841e784237cb0d9be6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14560,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 379,
+    "blank_lines": 36,
+    "comment_lines": 11,
+    "code_lines": 332,
+    "comment_ratio": 0.032,
+    "max_line_length": 72,
+    "avg_line_length": 37.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "comutfs"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 27,
+    "call_count": 1,
+    "perform_count": 37,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL/OpenCOBOL targeting a Linux/Unix environment; uses C$JUSTIFY intrinsic call typical of GnuCOBOL/ACUCOBOL compatibility layer; Italian-language business application with LINE SEQUENTIAL files and .sl/.fd copybook conventions common in Italian ERP/WMS systems",
+        "evidence": [
+          "call \"C$JUSTIFY\"",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "copy files with .sl and .fd extensions",
+          "decimal-point is comma",
+          "78 level constants",
+          "no EXEC CICS/SQL",
+          "fixed format max 72 cols"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Warehouse management / logistics: extraction and CSV summary of UTF (Unità di Trasporto Ferroviario or similar) outbound shipping notes (bolle di scarico) with LBX causale and negative stock movement",
+        "summary": "This program extracts and summarizes outbound shipping notes (bolle UTF scarico) from a warehouse management system into a CSV file. It reads movement and order files, filters records by causale LBX with negative stock movement, accumulates weights, and sends the result via email. It also updates a counter tracking the last processed shipping note number for three series (S1, S2, S3).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (27 copybooks) for file definitions",
+        "78-level figurative constants",
+        "DECLARATIVES section with USE AFTER ERROR for record locking",
+        "SET condition-name usage for flags (RecLocked, tutto-ok, trovato, aggiornaContatore)",
+        "ACCEPT from ENVIRONMENT for email parameters",
+        "call to C$JUSTIFY (GnuCOBOL/ACUCOBOL runtime)",
+        "INSPECT REPLACING for leading zero suppression",
+        "Three series of shipping note ranges (S1/S2/S3) processed sequentially",
+        "Italian-language comments and variable names",
+        "decimal-point is comma in SPECIAL-NAMES"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "No ENVIRONMENT DIVISION header is present (only SPECIAL-NAMES and INPUT-OUTPUT SECTION), which is unusual but valid. The file references many external copybooks (.sl, .fd, .cpy, .def) not shown, limiting full analysis. The C$JUSTIFY call and .sl file conventions suggest an Italian SME ERP/WMS system possibly built on GnuCOBOL or a compatible runtime. Could also be ACUCOBOL given C$JUSTIFY, but GnuCOBOL is more likely given open-source context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6089,
+      "completion_tokens": 636,
+      "total_tokens": 6725,
+      "cost": 0.027807,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027807,
+        "upstream_inference_prompt_cost": 0.018267,
+        "upstream_inference_completions_cost": 0.00954
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.55,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:39:37Z"
+}

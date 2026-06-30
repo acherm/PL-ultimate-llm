@@ -49,51 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software); compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY / FILE STATUS",
-          "Fixed-format source with columns 7-72 used for code",
-          "PROGRAM-ID ORCR0420 matches filename",
-          "No EXEC SQL or EXEC CICS — pure batch COBOL",
-          "Copyright JMA (Japan Medical Association) ORCA open-source medical receipt software"
+          "PROGRAM-ID ORCR0420",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "ASSIGN RECE41PARA style file assignment typical of GnuCOBOL/ORCA",
+          "no EXEC CICS/SQL, no COMP-3, consistent with GnuCOBOL usage"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA standard medical receipt (レセプト) software system. It creates monthly business receipt detail files for medical insurance claims (労災・自賠責 — workers' compensation and automobile liability insurance), and aggregates diagnosis-category point totals. It is a large batch program that builds and edits receipt data for submission to Japanese health insurance bodies.",
-        "domain": "healthcare / medical insurance billing (Japanese national health insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (Rezept) processing system — monthly billing, self-pay/insurance claim detail file creation and point aggregation for outpatient/inpatient claims",
+        "summary": "ORCR0420 is a large batch program in the JMA ORCA open-source medical receipt software suite. It creates monthly business detail files for insurance claims (Rousai/Jibaiseki — workers' compensation and automobile liability insurance), aggregating diagnosis-category point totals. It has an extensive revision history spanning 2002–2013 covering numerous Japanese medical fee revision cycles.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Indexed sequential file I/O with DYNAMIC access mode (multiple SELECT entries visible)",
-        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
-        "Very large program: ~9100 lines, 472 PIC clauses, 187 PERFORMs",
-        "Extensive Japanese-language comments (EUC-JP / latin-1 decoded, hence garbled in ASCII view)",
-        "Long revision history spanning 2002–2013 with many named contributors",
-        "Open-source JMA ORCA project (JMA Open Source License)",
-        "No COMP-3 usage detected despite financial calculations (unusual)",
-        "Only 2 CALL statements — mostly self-contained logic"
+        "36 COPY statements indicating heavy use of shared copybooks",
+        "187 PERFORM statements indicating structured procedural logic",
+        "INDEXED file organization with DYNAMIC access (multiple SELECT entries)",
+        "No EXEC SQL or EXEC CICS — pure file-based batch",
+        "Large program: ~9100 lines, 461 KB",
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "Long revision history with named maintainers (NACL team)",
+        "No COMP-3 usage despite financial calculations"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP or Shift-JIS, causing mojibake in the displayed text. The code itself is unambiguously COBOL. The program is part of the well-known open-source ORCA medical receipt system maintained by the Japan Medical Association. The absence of COMP-3 is notable for a financial application but not disqualifying. Truncation at 16000 chars means only the header, comments, and FILE-CONTROL section are visible, but the structural indicators confirm all four divisions and substantial procedure division content."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (garbled in latin-1 view). This is part of the well-known JMA ORCA open-source medical receipt system used by Japanese clinics. The filename pattern ORCR0420 is consistent with the ORCA receipt subsystem naming convention."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 14946,
-      "completion_tokens": 708,
-      "total_tokens": 15654,
-      "cost": 0.055458,
+      "prompt_tokens": 16324,
+      "completion_tokens": 540,
+      "total_tokens": 16864,
+      "cost": 0.057072,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.055458,
-        "upstream_inference_prompt_cost": 0.044838,
-        "upstream_inference_completions_cost": 0.01062
+        "upstream_inference_cost": 0.057072,
+        "upstream_inference_prompt_cost": 0.048972,
+        "upstream_inference_completions_cost": 0.0081
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +114,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.06,
+    "provider": "Anthropic",
+    "latency_s": 16.72,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:56:35Z"
 }

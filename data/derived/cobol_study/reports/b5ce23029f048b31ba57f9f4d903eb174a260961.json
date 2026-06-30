@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b5ce23029f048b31ba57f9f4d903eb174a260961",
+    "sha1_git": "b5ce23029f048b31ba57f9f4d903eb174a260961",
+    "filename": "/TSQL021C.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1677,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b5ce23029f048b31ba57f9f4d903eb174a260961/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b5ce23029f048b31ba57f9f4d903eb174a260961/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1677,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 72,
+    "blank_lines": 25,
+    "comment_lines": 1,
+    "code_lines": 46,
+    "comment_ratio": 0.021,
+    "max_line_length": 49,
+    "avg_line_length": 22.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "TSQL021C"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 1,
+    "pic_count": 5,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL/OpenCOBOL test program using EXEC SQL with ODBC/ESQL connectivity; IBM-AT as SOURCE/OBJECT-COMPUTER is common in GnuCOBOL test suites",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-AT",
+          "OBJECT-COMPUTER. IBM-AT",
+          "EXEC SQL INCLUDE EMPREC",
+          "EXEC SQL INCLUDE SQLCA",
+          "CONNECT TO :DBNAME USER :DBUSR USING :DATASRC IDENTIFIED BY :DBPWD",
+          "program name TSQL021C suggests a test suite numbering scheme"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "SQL connectivity test — verifies EXEC SQL CONNECT with environment-variable-supplied credentials",
+        "summary": "This program reads database connection parameters (datasource, user, password, database name) from environment variables and attempts an SQL CONNECT. It checks the SQLCODE and exits if the connection fails. It appears to be part of a numbered test suite (TSQL021C) for GnuCOBOL's embedded SQL support.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "EXEC SQL INCLUDE EMPREC",
+        "EXEC SQL INCLUDE SQLCA",
+        "EXEC SQL CONNECT with four-part credentials",
+        "DISPLAY/ACCEPT via ENVIRONMENT-NAME/ENVIRONMENT-VALUE for config",
+        "SQLCODE check with GO TO exit pattern",
+        "BOM (UTF-8 BOM present at file start)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "File starts with a UTF-8 BOM (﻿). No IDENTIFICATION DIVISION keyword detected by mechanical scan but it is present in source. The IBM-AT computer name is a GnuCOBOL convention rather than true IBM mainframe. Dialect confidence is medium because IBM-AT could also appear in other PC-COBOL environments (e.g., Micro Focus), but the test-suite naming pattern and ESQL style point to GnuCOBOL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2749,
+      "completion_tokens": 507,
+      "total_tokens": 3256,
+      "cost": 0.015852,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015852,
+        "upstream_inference_prompt_cost": 0.008247,
+        "upstream_inference_completions_cost": 0.007605
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.36,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:43:48Z"
+}

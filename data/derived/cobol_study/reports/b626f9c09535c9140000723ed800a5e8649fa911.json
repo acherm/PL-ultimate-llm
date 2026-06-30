@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b626f9c09535c9140000723ed800a5e8649fa911",
+    "sha1_git": "b626f9c09535c9140000723ed800a5e8649fa911",
+    "filename": "/samos1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 20142,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b626f9c09535c9140000723ed800a5e8649fa911/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b626f9c09535c9140000723ed800a5e8649fa911/raw/"
+  },
+  "indicators": {
+    "bytes_len": 20142,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 465,
+    "blank_lines": 30,
+    "comment_lines": 54,
+    "code_lines": 381,
+    "comment_ratio": 0.124,
+    "max_line_length": 73,
+    "avg_line_length": 42.3,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SAMOS1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 16,
+    "goto_count": 6,
+    "pic_count": 126,
+    "comp3_count": 31,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "OS/VS COBOL / IBM PD Tools workshop sample (SAMOS1); uses LABEL RECORDS, RECORDING MODE IS F, BLOCK CONTAINS 0, COMP-3, COMP, GOBACK — classic IBM mainframe conventions",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "LABEL RECORDS ARE STANDARD",
+          "BLOCK CONTAINS 0",
+          "COMP-3",
+          "COMP",
+          "GOBACK",
+          "CALL 'SAMOS2' / 'SAMOS3'",
+          "OS/VS COBOL Compiler mentioned in header comment",
+          "IBM PD TOOLS author attribution"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "IBM PD Tools workshop teaching aid for Debug Tool, Fault Analyzer, and Application Performance Analyzer",
+        "summary": "SAMOS1 reads a sequential customer file and a transaction file, then writes a formatted report. Transactions control whether a detail print report, a summary totals report, or a forced abend is produced. It is explicitly a teaching aid for IBM mainframe tool workshops.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed-decimal fields throughout",
+        "COMP binary fields",
+        "RECORDING MODE IS F / LABEL RECORDS ARE STANDARD",
+        "CALL to subprograms SAMOS2 and SAMOS3",
+        "REDEFINES clauses on report fields and transaction record",
+        "FILE STATUS checks on all three files",
+        "PERFORM THROUGH with EXIT paragraphs",
+        "GO TO used for EOF and conditional branching",
+        "Intentional bug: unreachable code after GO TO in 300-PROCESS-TOTALS-TRAN (teaching aid for debug workshop)",
+        "GOBACK instead of STOP RUN"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is truncated at 16000 chars (465 lines total, ~381 code lines); the truncation cuts off mid-procedure in 300-PROCESS-TOTALS-TRAN. The program is intentionally buggy in places (e.g., dead code after GO TO, incorrect MAX value) as a teaching aid. Two lines slightly exceed column 72 but the format is otherwise standard fixed-format."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7769,
+      "completion_tokens": 533,
+      "total_tokens": 8302,
+      "cost": 0.031302,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031302,
+        "upstream_inference_prompt_cost": 0.023307,
+        "upstream_inference_completions_cost": 0.007995
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.36,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:34:40Z"
+}

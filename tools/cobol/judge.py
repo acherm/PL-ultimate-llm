@@ -218,7 +218,8 @@ def judge(filename: str, indicators: dict, code: str, *,
     base = {
         "model": model,
         "temperature": temperature,
-        "max_tokens": 1500,
+        # Headroom so a verbose verdict (long detail/evidence) doesn't get
+        "max_tokens": 2048,  # truncated mid-JSON and fail to parse.
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": build_user_prompt(

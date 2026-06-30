@@ -49,56 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or GnuCOBOL (generic COBOL-85+)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL; uses GOBACK, LINE SEQUENTIAL, FUNCTION CURRENT-DATE, and EVALUATE TRUE constructs consistent with COBOL-85 extensions. No mainframe-specific features detected.",
         "evidence": [
           "GOBACK statement",
-          "EVALUATE TRUE ... END-EVALUATE",
-          "PERFORM WITH TEST BEFORE ... END-PERFORM",
-          "FUNCTION CURRENT-DATE",
-          "88-level condition names with VALUE SPACES",
-          "SET condition-name TO TRUE",
-          "STRING ... DELIMITED BY SIZE ... INTO",
           "ORGANIZATION LINE SEQUENTIAL",
-          "FILE STATUS clause",
-          "COMP-3 usage"
+          "FUNCTION CURRENT-DATE",
+          "EVALUATE TRUE ... END-EVALUATE",
+          "COMP-3 usage",
+          "88-level condition names with VALUE SPACES"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads raw employee records from a sequential input file, validates each record (SSN area code and hire date checks), and writes valid records to one output file and invalid records with an error message to a separate error file. Displays counts of valid and errored records at completion.",
-        "domain": "payroll",
+        "domain": "payroll-hr",
+        "domain_detail": "Employee data loading and validation for an HR or payroll system",
+        "summary": "Reads raw employee records from an input file, validates SSN (area codes) and hire date fields, then writes valid records to a validated output file and invalid records with error messages to an error file. Tracks counts of valid and errored records and displays them at completion.",
         "program_type": "batch"
       },
       "notable_features": [
-        "COMP-3 packed-decimal counters (WS-VALID-COUNT, WS-ERROR-COUNT)",
-        "COPY statements for EMPLREC record layout (copybook references)",
-        "Three-file architecture: input, validated output, error output",
+        "COMP-3 packed decimal counters",
         "FUNCTION CURRENT-DATE for date validation",
-        "88-level condition names used as flags (NO-ERRORS-FOUND, EMPL-IN-EOF, etc.)",
-        "GOBACK used instead of STOP RUN",
-        "Inline error handling with 9999-ABORT paragraph",
-        "SSN area code validation (666 and >740 rules)",
-        "Hire date range validation against company founding date and current date"
+        "EVALUATE TRUE with multiple WHEN conditions",
+        "LINE SEQUENTIAL file organization",
+        "88-level condition names for file status and error flags",
+        "STRING verb with DELIMITED BY SIZE for error message construction",
+        "COPY statements for employee record layout (EMPLREC copybook)",
+        "Structured paragraph naming convention (1000-, 5000-, 9999-)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The COPY statements (COPY EMPLREC) reference an external copybook not shown in this file; the copy_count indicator shows 0 which may be a mechanical counting artifact since COPY verbs are clearly present in the source. The SSN validation logic references 'TEST-SSN IN EMPL-IN' which implies a condition-name defined in the EMPLREC copybook. Minor anomaly: in 5600-WRITE-ERROR-REC, the STRING for the error file write status incorrectly references EMPL-VALIDATED-STATUS instead of EMPL-ERRORS-STATUS — likely a copy-paste bug. Overall the code is well-structured and production-quality in style."
+      "notes": "The program references a COPY EMPLREC copybook not shown; the FD for EMPL-ERRORS-REC appends an EMPL-ERROR-MESSAGE field after the COPY, which may cause layout issues depending on copybook content. The SSN validation logic references 'TEST-SSN IN EMPL-IN' suggesting a condition-name defined in the copybook. Overall structure is clean and production-quality for a batch ETL/validation program."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3129,
-      "completion_tokens": 676,
-      "total_tokens": 3805,
-      "cost": 0.019527,
+      "prompt_tokens": 4507,
+      "completion_tokens": 475,
+      "total_tokens": 4982,
+      "cost": 0.020646,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.019527,
-        "upstream_inference_prompt_cost": 0.009387,
-        "upstream_inference_completions_cost": 0.01014
+        "upstream_inference_cost": 0.020646,
+        "upstream_inference_prompt_cost": 0.013521,
+        "upstream_inference_completions_cost": 0.007125
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 14.15,
+    "provider": "Anthropic",
+    "latency_s": 13.36,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:37:17Z"
 }

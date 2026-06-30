@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (Japanese medical system, likely running on Linux/Unix with GnuCOBOL or Micro Focus)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with .INC files, COMMON-SPA, grpsys conditional compilation markers, and LINKAGE SECTION with COMMAND-PARAM pattern typical of ORCA system programs.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "PERFORM ... END-PERFORM style (COBOL-85)",
-          "END-IF, END-UNSTRING inline terminators",
-          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY",
-          "COPY statements with REPLACING clause",
-          "CALL 'ORCSJOB' USING",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "SELECT ... ASSIGN TO symbolic names (BG0161, BG0162)",
-          "grpsys conditional compilation-style comment markers suggesting platform-specific build"
+          "PROGRAM-ID ORCBG016",
+          "COPY 'COMMON-SPA'",
+          "grpsys conditional lines",
+          "COPY 'CPORCSPRTLNK.INC'",
+          "COPY 'MCPAREA'",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(400)",
+          "SELECT ASSIGN BG0161/BG0162 with ORGANIZATION IS INDEXED",
+          "JMA Open Source License header"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch reporting program (ORCBG016) that is part of the ORCA Japanese Medical Association standard receipt (claims) software. It queries and aggregates medical treatment act (診療行為) counts for a specified period, producing a report of designated medical procedure occurrence counts. It reads indexed files for treatment act usage and accounting data, processes parameters such as year-month, inpatient/outpatient classification, department code, and procedure codes, and outputs results.",
-        "domain": "healthcare / medical billing (Japanese medical insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo) system - monthly billing processing; specifically a batch report for counting specified medical treatment (shinryo koi) occurrences by patient",
+        "summary": "ORCBG016 is a batch program in the JMA ORCA medical receipt system that queries indexed files of medical treatment records and accounting data to produce a count report of specified medical treatment acts (shitei shinryo koi kensu-cho). It reads patient treatment history and accounting files, aggregates counts by treatment code and department, and outputs results via the ORCA print subsystem.",
         "program_type": "batch"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — uses indexed ISAM files (ORGANIZATION IS INDEXED) for data access",
-        "Extensive use of COPY statements with REPLACING for copybook inclusion (CPSRYACCT.INC, CPPTINF.INC, CPSYSKANRI.INC, etc.)",
-        "Japanese Shift-JIS / EUC-JP encoded comments (decoded as latin-1, hence garbled)",
-        "grpsys conditional comment markers for group/system-specific code variants",
-        "UNSTRING of COMMAND-PARAM for parameter parsing",
-        "CALL to external subprograms: ORCSJOB, ORCSPRT, etc. (19 CALLs total)",
-        "OCCURS clauses for arrays (days, procedure codes, patient info)",
-        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
-        "No COMP-3 packed decimal fields despite financial/medical domain",
-        "124 PERFORM statements indicating structured procedural decomposition"
+        "32 COPY statements referencing .INC copybooks",
+        "LINKAGE SECTION with COMMAND-PARAM parsed via UNSTRING",
+        "INDEXED file organization with DYNAMIC access",
+        "grpsys conditional compilation markers for group/system variants",
+        "OCCURS clauses for daily totals (31 days) and patient arrays (1000)",
+        "19 CALL statements to ORCA subsystem routines (ORCSJOB, etc.)",
+        "Japanese comments encoded in Latin-1 (actually EUC-JP or Shift-JIS)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCA DB access layer"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but contains Japanese EUC-JP or Shift-JIS encoded comments, causing garbled display. The program is clearly part of the open-source ORCA (JMA standard receipt software) project, a well-known Japanese medical billing system. The grpsys prefix on some lines suggests a conditional build system or group-system variant. Source is truncated at 16000 chars out of 74623 bytes total, but enough structure is visible to classify with high confidence."
+      "notes": "Source comments are Japanese encoded as Latin-1 in the archive but are likely EUC-JP or Shift-JIS; characters appear garbled in Latin-1 decoding. The 'grpsys' prefix on some lines appears to be a conditional compilation or variant-selection mechanism specific to the ORCA build system. File truncated at 16000 chars out of 74623 bytes total; procedure division logic not fully visible but structure is clear."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7454,
-      "completion_tokens": 823,
-      "total_tokens": 8277,
-      "cost": 0.034707,
+      "prompt_tokens": 8832,
+      "completion_tokens": 646,
+      "total_tokens": 9478,
+      "cost": 0.036186,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034707,
-        "upstream_inference_prompt_cost": 0.022362,
-        "upstream_inference_completions_cost": 0.012345
+        "upstream_inference_cost": 0.036186,
+        "upstream_inference_prompt_cost": 0.026496,
+        "upstream_inference_completions_cost": 0.00969
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.82,
+    "provider": "Anthropic",
+    "latency_s": 17.45,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:14:59Z"
 }

@@ -49,53 +49,60 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL CGI program using embedded SQL (likely MySQL/MariaDB via ESQL preprocessor), part of the 'openjensen' educational system. Uses *> comment style and GOBACK, typical of GnuCOBOL. Targets a web CGI context calling dynamic libraries like 'wui-print-header', 'wui-start-html'.",
         "evidence": [
-          "*> inline comments (GnuCOBOL style)",
-          "EXEC SQL ... END-EXEC with embedded SQL (DB2/ODBC style)",
-          "ORGANIZATION IS LINE SEQUENTIAL",
-          "FUNCTION NUMVAL() intrinsic function",
+          "*> comment style (GnuCOBOL free-form comments)",
           "GOBACK statement",
-          "88-level condition names with SET ... TO TRUE",
-          "COPY setupenv_openjensen and COPY z0100-error-routine (no REPLACING, GnuCOBOL convention)",
-          "EXEC SQL INCLUDE SQLCA END-EXEC"
+          "COPY setupenv_openjensen",
+          "CALL 'wui-print-header'",
+          "CALL 'wui-start-html'",
+          "EXEC SQL CONNECT :wc-username IDENTIFIED BY :wc-passwd USING :wc-database",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "FUNCTION NUMVAL"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A CGI program that queries a student database to retrieve a list of courses and grades for a given student (user_id) and program (program_id). It fetches completed grades via a JOIN on tbl_course and tbl_grade, then fetches all courses in the program, writing results (course name, dates, grade, comment) as comma-separated records to a text file (betyg-elev.txt) for consumption by a PHP front-end.",
-        "domain": "education/student management",
-        "program_type": "online-cics"
+        "domain": "education-tutorial",
+        "domain_detail": "Student grade/course management system ('betyg' is Swedish for grade, 'elev' is student). Part of a school/educational administration web application called 'openjensen'.",
+        "summary": "A CGI COBOL program that fetches a list of courses and grades for a specific student (identified by user_id and program_id) from SQL tables tbl_course and tbl_grade. It writes the results as comma-separated records to a text file (betyg-elev.txt) for consumption by a PHP front-end. Courses without grades are also listed with a placeholder value.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "EXEC SQL with cursor-based fetching (DECLARE, OPEN, FETCH, CLOSE)",
-        "EXEC SQL INCLUDE SQLCA END-EXEC",
-        "CGI-style program calling dynamic library routines (wui-print-header, wui-start-html, write-post-string, get-post-value, wui-end-html)",
-        "Output written to a LINE SEQUENTIAL flat file for PHP consumption",
-        "COPY directives for environment setup and error routine",
-        "Duplicate 01-level name 'wr-rec-vars' in DECLARE SECTION (potential compile issue)",
-        "In-memory array (OCCURS 25) used to track which courses have grades",
-        "Swedish-language identifiers and comments (betyg=grade, elev=student, kurs=course)"
+        "EXEC SQL embedded SQL with cursor declarations (cursgrade, cursprog)",
+        "EXEC SQL CONNECT with IDENTIFIED BY / USING syntax (MySQL-style)",
+        "EXEC SQL INCLUDE SQLCA",
+        "CGI web integration via dynamic library calls (wui-print-header, wui-start-html, wui-end-html)",
+        "POST parameter parsing via 'get-post-value' and 'write-post-string' calls",
+        "COPY copybooks: setupenv_openjensen, z0100-error-routine",
+        "Output written to flat file as CSV for PHP consumption",
+        "FUNCTION NUMVAL for string-to-numeric conversion",
+        "88-level condition names for switches",
+        "OCCURS table for tracking completed course IDs",
+        "Swedish language identifiers (betyg=grade, elev=student, kurs=course)"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "The program has a likely bug: two separate 01-level items named 'wr-rec-vars' appear within the same EXEC SQL DECLARE SECTION, which would cause a duplicate name error in most compilers. The comment 'never never use a dash in cursor names' is notable and suggests awareness of GnuCOBOL/MySQL ESQL quirks. The domain is Swedish educational software (betyg=grade, elev=student). The COPY of 'setupenv_openjensen' suggests a development/test environment setup copybook. The second FETCH in B0210 is missing the :tbl_grade-course_id host variable, which is another likely bug."
+      "overall_confidence": "medium",
+      "notes": "The program has two 01-level items both named 'wr-rec-vars' in the WORKING-STORAGE section which would be a compile error in strict COBOL; this may be a copy-paste artifact or the second is intended to shadow/replace the first. The SQL CONNECT syntax (IDENTIFIED BY ... USING) is MySQL-style. The file is part of a Swedish educational web application. One line exceeds 72 columns. Overall structure is well-organized and production-like despite the duplicate record name issue."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 5088,
-      "completion_tokens": 770,
-      "total_tokens": 5858,
-      "cost": 0.026814,
+      "prompt_tokens": 6466,
+      "completion_tokens": 727,
+      "total_tokens": 7193,
+      "cost": 0.030303,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +111,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.026814,
-        "upstream_inference_prompt_cost": 0.015264,
-        "upstream_inference_completions_cost": 0.01155
+        "upstream_inference_cost": 0.030303,
+        "upstream_inference_prompt_cost": 0.019398,
+        "upstream_inference_completions_cost": 0.010905
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +122,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.11,
+    "latency_s": 18.34,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:08:55Z"
 }

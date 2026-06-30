@@ -49,55 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL / OpenCOBOL (ORCA project – Japanese Medical Association open-source receipt software)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses CALL to external subprograms like ORCSGDAY, ORCSDAY, and COPY of .INC files typical of ORCA system",
         "evidence": [
-          "PROGRAM-ID. ORCGO01",
-          "EVALUATE … ALSO … WHEN … END-EVALUATE",
-          "END-IF, END-EVALUATE used throughout",
-          "CALL 'ORCSGDAY' USING … (external subprogram calls)",
-          "COPY directives with REPLACING clause",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "No EXEC SQL / EXEC CICS – pure COBOL-85 constructs",
-          "Copyright JMA (Japan Medical Association) ORCA project, 2002"
+          "PROGRAM-ID ORCGO01",
+          "COPY \"CPCOMMONDAT5.INC\"",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"O01COMMON-SPA\"",
+          "CALL \"ORCSGDAY\"",
+          "CALL \"ORCSDAY\"",
+          "COPY \"ORCA-DBPATH\"",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "scripts/monthly/ shell path reference",
+          "no EXEC CICS or EXEC SQL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is the main controller for the periodic (teiki) billing/claim creation screen (O01) in the ORCA Japanese medical receipt software system. It handles screen initialisation, screen transitions, SPA (scratchpad area) management, and invokes shell scripts and subprograms to generate monthly insurance claim data. It is part of the JMA Open Source receipt (rezept) processing subsystem.",
-        "domain": "healthcare / medical billing (Japanese insurance claim processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) processing system - periodic/regular billing (Teiki Seikyuu) subsystem for hospital/clinic administration",
+        "summary": "This program (ORCGO01) is part of the JMA ORCA medical receipt software system. It handles periodic billing (Teiki Seikyuu) screen processing, including initialization, screen transitions, date conversion, and job management for regular medical insurance claim submissions. It manages SPA (screen persistent area) data, calls date-conversion and job-management subprograms, and coordinates multi-screen navigation.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese EUC/Latin-1 encoded comments (Shift-JIS/EUC kanji in comment fields)",
-        "Extensive use of COPY statements for modular include files (CPCOMMONDAT5.INC, CPSYSKANRI.INC, CPSK5010.INC, etc.)",
-        "SPA (Scratchpad Area) pattern typical of ORCA/OpenCOBOL screen management",
-        "CALL to external COBOL subprograms: ORCSGDAY, ORCSDAY, etc.",
-        "LINKAGE SECTION with multiple COPY-included areas (MCPAREA, ORCA-SPA, LINKAREA, screen areas)",
-        "Shell script invocation via WRK-SHELL-NAME ('scripts/monthly/')",
-        "MCP-STATUS / MCP-EVENT event-driven screen dispatch (EVALUATE MCP-STATUS ALSO MCP-EVENT)",
-        "No COMP-3, no EXEC SQL, no EXEC CICS",
-        "18 CALL statements, 55 PERFORMs, 17 GO TOs – moderate complexity",
-        "File SELECT for error log file (TEIKIERR-FILE)"
+        "27 COPY statements referencing .INC files typical of ORCA system",
+        "18 CALL statements to ORCA subprograms (ORCSGDAY, ORCSDAY, etc.)",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA",
+        "Multi-screen navigation via MCP-STATUS/MCP-EVENT EVALUATE",
+        "Japanese text in comments (encoded as latin-1/EUC-JP)",
+        "Shell script invocation via WRK-SHELL-NAME (scripts/monthly/)",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP middleware",
+        "PERFORM-heavy structured programming (55 PERFORMs)",
+        "File SELECT for TEIKIERR error file"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but contains Japanese multi-byte characters (EUC-JP or Shift-JIS) in comments, which appear garbled under latin-1. This is normal for ORCA project source files from 2002. The program is clearly production-grade medical billing software, not a toy or tutorial. The 'online-cics' program_type label is used loosely here – ORCA uses its own MCP (Message Control Program) framework rather than IBM CICS, but the pattern (screen events, SPA, LINKAGE SECTION) is functionally analogous."
+      "notes": "Comments contain Japanese text encoded in EUC-JP but decoded as latin-1, resulting in mojibake. The program uses JMA ORCA's proprietary MCP (Medical Care Platform) middleware rather than CICS, but program_type 'online-cics' is the closest match for an interactive screen-driven subprogram. Source truncated at 16000 chars; full program is 1482 lines."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7231,
-      "completion_tokens": 851,
-      "total_tokens": 8082,
-      "cost": 0.034458,
+      "prompt_tokens": 8609,
+      "completion_tokens": 675,
+      "total_tokens": 9284,
+      "cost": 0.035952,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034458,
-        "upstream_inference_prompt_cost": 0.021693,
-        "upstream_inference_completions_cost": 0.012765
+        "upstream_inference_cost": 0.035952,
+        "upstream_inference_prompt_cost": 0.025827,
+        "upstream_inference_completions_cost": 0.010125
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +120,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 20.47,
+    "provider": "Anthropic",
+    "latency_s": 17.48,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:50:30Z"
 }

@@ -49,50 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL or GnuCOBOL (screen section with FOREGROUND-COLOR/BACKGROUND-COLOR, REVERSE-VIDEO, HIGHLIGHT)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL or similar open-source COBOL supporting SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR and FUNCTION CURRENT-DATE; no EXEC CICS/SQL, no IBM-specific extensions",
         "evidence": [
-          "SCREEN SECTION with FOREGROUND-COLOR, BACKGROUND-COLOR, REVERSE-VIDEO, HIGHLIGHT, AUTO",
-          "EVALUATE TRUE ... END-EVALUATE",
-          "PERFORM UNTIL ... END-PERFORM",
-          "REWRITE ... INVALID KEY ... NOT INVALID KEY ... END-REWRITE",
-          "READ ... INVALID KEY ... NOT INVALID KEY ... END-READ",
+          "SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR",
           "FUNCTION CURRENT-DATE",
-          "END PROGRAM CUSUPD"
+          "BLANK SCREEN",
+          "REVERSE-VIDEO",
+          "HIGHLIGHT in screen definitions",
+          "INDEXED file with ALTERNATE RECORD KEY"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program updates customer records in an indexed (ISAM) file named CUSTOMER.NDX. It allows the user to search for a customer by ID or by first/last name via interactive screens, then presents the found record for editing and rewrites the updated record back to the file.",
-        "domain": "retail/customer management",
-        "program_type": "online-cics"
+        "domain": "retail-commerce",
+        "domain_detail": "Customer record management system - update functionality for a customer database",
+        "summary": "CUSUPD is a batch/interactive program that allows a user to search for a customer record by ID or name, display the current data on a screen, accept edits, confirm changes, and rewrite the updated record to an indexed VSAM-style file (CUSTOMER.NDX). It handles soft-deleted records (CUST-DST-REC flag).",
+        "program_type": "batch"
       },
       "notable_features": [
-        "SCREEN SECTION with color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR, REVERSE-VIDEO, HIGHLIGHT)",
+        "SCREEN SECTION with color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR, HIGHLIGHT, REVERSE-VIDEO)",
         "Indexed file with ALTERNATE RECORD KEY WITH DUPLICATES",
         "FUNCTION CURRENT-DATE usage",
-        "Interactive DISPLAY/ACCEPT screen I/O",
         "REWRITE with INVALID KEY / NOT INVALID KEY",
-        "Soft-delete flag (CUST-DST-REC) checked before allowing update"
+        "Soft-delete flag (CUST-DST-REC) checked before allowing update",
+        "EVALUATE TRUE nested construct",
+        "No COPY statements, no CALL statements, self-contained program"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The programmer name 'Jonathan Walker' appears in a comment. The program uses screen section features typical of Micro Focus or GnuCOBOL running on a PC/terminal environment rather than CICS. The 450-CLRFLD-RTN paragraph is defined but never PERFORMed, suggesting incomplete development. Overall structure and naming conventions are consistent with a student project."
+      "notes": "Programmer credit comment ('Jonathan Walker') and straightforward structure suggest a student or training exercise. The 450-CLRFLD-RTN paragraph is defined but never called (dead code). READ-TYPE logic in 500-READ-RTN uses TRANS-ID-IN but 300-CID-RTN sets CUS-ID-IN, suggesting a minor logic inconsistency typical of student work. No COMP-3 usage. Max line length exactly 72 confirms fixed format."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4738,
-      "completion_tokens": 577,
-      "total_tokens": 5315,
-      "cost": 0.022869,
+      "prompt_tokens": 6116,
+      "completion_tokens": 513,
+      "total_tokens": 6629,
+      "cost": 0.026043,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.022869,
-        "upstream_inference_prompt_cost": 0.014214,
-        "upstream_inference_completions_cost": 0.008655
+        "upstream_inference_cost": 0.026043,
+        "upstream_inference_prompt_cost": 0.018348,
+        "upstream_inference_completions_cost": 0.007695
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 13.79,
+    "latency_s": 13.65,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:47:56Z"
 }

@@ -49,57 +49,61 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "ACUCOBOL-GT (AcuCOBOL / Micro Focus AcuCOBOL)",
+        "family": "acucobol",
         "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT (AcuCOBOL) targeting Windows 32-bit; uses ACUCOBOL-specific extensions: USAGE HANDLE, USAGE POINTER, USAGE SIGNED-INT, USAGE UNSIGNED-INT, 78-level constants, DISPLAY MESSAGE BOX, SET ENVIRONMENT, COPY .DEF/.LIB files, H-ACU-WND (ACUGUI), -Dw32 -Dl4 compile options",
         "evidence": [
-          "USAGE SIGNED-INT, USAGE UNSIGNED-INT, USAGE HANDLE, USAGE POINTER — ACUCOBOL-GT extensions",
-          "78-level constants (VALUE clauses on 78 items)",
-          "SET ENVIRONMENT ... TO — ACUCOBOL-GT runtime configuration verb",
-          "DISPLAY MESSAGE BOX ... TITLE ... ICON ... TYPE — ACUCOBOL-GT GUI extensions",
-          "H-ACU-WND SIGNED-INT IS EXTERNAL — ACUCOBOL-GT external variable syntax",
-          "CALL 'MAPI32.DLL' — Windows DLL call style used by ACUCOBOL-GT",
-          "SET CONFIGURATION directive syntax",
-          "COPY with .DEF and .LIB extensions typical of ACUCOBOL-GT projects",
-          "Italian comment: 'Questo programma deve essere compilato con le opzioni: -Dw32 -Dl4' — ACUCOBOL-GT compiler flags",
-          "ACCEPT ... FROM CENTURY-DATE — ACUCOBOL-GT intrinsic"
+          "USAGE HANDLE",
+          "USAGE POINTER",
+          "USAGE SIGNED-INT",
+          "USAGE UNSIGNED-INT",
+          "78 level constants",
+          "DISPLAY MESSAGE BOX ... TITLE ... ICON MB-ERROR-ICON TYPE MB-OK",
+          "SET ENVIRONMENT \"DLL-CONVENTION\" TO 1",
+          "CALL \"MAPI32.DLL\"",
+          "H-ACU-WND SIGNED-INT IS EXTERNAL",
+          "COPY \"ACUGUI.DEF\"",
+          "-Dw32 -Dl4 compile options in comment"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program sends an email via the Windows MAPI (Simple MAPI / MAPI32.DLL) interface. It logs on to a MAPI session, resolves the recipient, constructs a MapiMessage structure (subject, body, attachments, originator, recipient), sends the message, then logs off and shuts down. It is designed to be called as a subprogram from a larger ACUCOBOL-GT application.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "Email sending utility using Windows MAPI (Simple MAPI / MAPI32.DLL) to send email with optional attachments from a COBOL application",
+        "summary": "EMAIL2 is a COBOL subprogram that sends email via the Windows Simple MAPI interface (MAPI32.DLL). It accepts subject, destination, message body, and attachment information through a linkage section, logs on to a MAPI session, resolves recipients, optionally prepares attachments, sends the message, then logs off and shuts down.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Direct Windows MAPI32.DLL calls via ACUCOBOL-GT CALL mechanism",
-        "USAGE POINTER fields mirroring C structs (MapiMessage, MapiRecipDesc, MapiFileDesc)",
-        "78-level constants for MAPI error codes and flags",
-        "ACUCOBOL-GT GUI extensions: DISPLAY MESSAGE BOX with TITLE, ICON, TYPE",
-        "USAGE SIGNED-INT / UNSIGNED-INT / HANDLE — ACUCOBOL-GT native types",
-        "SET ENVIRONMENT 'DLL-CONVENTION' TO 1 — ACUCOBOL-GT DLL calling convention control",
-        "Inline C-struct comments (| char[...]; | ULONG etc.) documenting the MAPI layout",
-        "LINKAGE SECTION with COPY of external definition file (LK-EMAIL2.LIB)",
-        "Italian-language comments indicating Italian development team",
-        "OCCURS EmailMaxAttachCount for attachment array — symbolic constant from copybook"
+        "ACUCOBOL-GT extensions: USAGE POINTER, USAGE HANDLE, USAGE SIGNED-INT, USAGE UNSIGNED-INT",
+        "78-level figurative constants",
+        "DISPLAY MESSAGE BOX with TITLE/ICON/TYPE (ACUCOBOL GUI)",
+        "Direct Windows MAPI32.DLL CALL via DLL-CONVENTION",
+        "SET ... TO ADDRESS OF (pointer manipulation)",
+        "OCCURS clause for attachment array (EmailMaxAttachCount)",
+        "Italian-language comments",
+        "COPY copybooks with .DEF and .LIB extensions",
+        "LINKAGE SECTION with structured parameter block",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated at 16000 chars (of 28650 bytes); the PROCEDURE DIVISION is only partially visible but enough is shown to confirm purpose and dialect. The pipe-delimited inline comments (| ULONG, | LPTSTR) are an unusual documentation convention mapping COBOL fields to their C-struct counterparts. The program is clearly production-quality ACUCOBOL-GT code targeting Win32 MAPI email sending."
+      "notes": "Source is truncated at 16000 chars (of 28650 bytes); the MSMAPI-LOGON section is cut off mid-CALL. Italian comment 'Questo programma deve essere compilato con le opzioni: -Dw32 -Dl4' confirms ACUCOBOL Windows 32-bit target. The pipe-character inline comments (| char[...]) are non-standard annotation style used in ACUCOBOL to document C struct mappings."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5891,
-      "completion_tokens": 893,
-      "total_tokens": 6784,
-      "cost": 0.031068,
+      "prompt_tokens": 7269,
+      "completion_tokens": 706,
+      "total_tokens": 7975,
+      "cost": 0.032397,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -108,9 +112,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.031068,
-        "upstream_inference_prompt_cost": 0.017673,
-        "upstream_inference_completions_cost": 0.013395
+        "upstream_inference_cost": 0.032397,
+        "upstream_inference_prompt_cost": 0.021807,
+        "upstream_inference_completions_cost": 0.01059
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,9 +122,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 21.89,
+    "provider": "Anthropic",
+    "latency_s": 17.45,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:24:18Z"
 }

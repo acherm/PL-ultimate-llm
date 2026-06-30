@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (likely running on Linux/Unix with PostgreSQL via MCP layer, part of ORCA/JMA medical system)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses ORCA-specific COPY members and MCP database access pattern typical of JMA ORCA system.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "END-UNSTRING, END-IF terminators (COBOL-85 scope terminators)",
-          "PERFORM ... UNTIL construct",
-          "CALL statements with USING clause",
-          "COPY statements with REPLACING",
-          "SELECT ... ASSIGN ... FILE STATUS",
-          "INITIALIZE verb",
-          "ACCEPT ... FROM DATE"
+          "PROGRAM-ID ORCBPRVPRT",
+          "COPY 'ORCA-DBPATH'",
+          "COPY 'CPORCMCP.INC'",
+          "COPY 'MCPAREA'",
+          "CALL 'ORCSJOB'",
+          "JMA Open Source License in header",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program (ORCBPRVPRT) is part of the ORCA JMA (Japan Medical Association) standard medical receipt software. It prints a preview check list ('receipt check list') by reading from a preview database and outputting formatted error/check records. It handles job management, patient number conversion, system date handling, and formatted print output.",
-        "domain": "healthcare/medical billing (Japanese medical receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) processing system - preview/check list print from preview DB",
+        "summary": "This program (ORCBPRVPRT) is part of the JMA ORCA medical receipt software system. It reads from a preview database and prints a receipt check list, reporting errors found during receipt validation. It processes patient information, insurance details, and outputs a formatted error/check list report.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-encoded comments and string literals (Shift-JIS/EUC-JP encoded, decoded as latin-1 causing mojibake)",
-        "No EXEC SQL or EXEC CICS — uses a proprietary MCP (Message Control Program) database access layer via CALL statements",
-        "Extensive use of COPY statements for copybooks (CPPRVKANRI.INC, CPSYSKANRI.INC, CPPTINF.INC, etc.)",
-        "UNSTRING used to parse comma-delimited command-line parameters",
-        "Job management subsystem (ORCSJOB CALL)",
-        "File STATUS checking on sequential error file (RECEERR-FILE)",
-        "18 CALL statements to various subprograms",
-        "No COMP-3 usage despite being a production financial/medical system"
+        "23 COPY statements referencing ORCA-specific copybooks",
+        "18 CALL statements including ORCSJOB for job management",
+        "UNSTRING of COMMAND-PARAM for parameter parsing",
+        "MCP (Message Control Program) database access pattern",
+        "Japanese text in comments and data literals (Shift-JIS/EUC-JP encoded)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP DB layer",
+        "Error file output (RECEERR-FILE)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file contains Japanese text encoded in EUC-JP or Shift-JIS that was decoded as latin-1, resulting in garbled multi-byte characters in comments and string literals. The program is clearly part of the open-source ORCA JMA medical receipt system (copyright 2002 JMA). Source is truncated at 16000 chars out of 29455 bytes, so the PROCEDURE DIVISION is only partially visible, but enough structure is present for confident classification."
+      "notes": "Source contains Japanese text encoded in EUC-JP or Shift-JIS, decoded as latin-1 resulting in mojibake in the visible text. File is truncated at 16000 chars out of 29455 bytes (737 lines total). The program is clearly part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese medical clinics."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7389,
-      "completion_tokens": 693,
-      "total_tokens": 8082,
-      "cost": 0.032562,
+      "prompt_tokens": 8767,
+      "completion_tokens": 533,
+      "total_tokens": 9300,
+      "cost": 0.034296,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032562,
-        "upstream_inference_prompt_cost": 0.022167,
-        "upstream_inference_completions_cost": 0.010395
+        "upstream_inference_cost": 0.034296,
+        "upstream_inference_prompt_cost": 0.026301,
+        "upstream_inference_completions_cost": 0.007995
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.43,
+    "provider": "Anthropic",
+    "latency_s": 14.57,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:43:02Z"
 }

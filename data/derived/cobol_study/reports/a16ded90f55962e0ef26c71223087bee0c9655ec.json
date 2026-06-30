@@ -49,55 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), Japanese medical billing, GnuCOBOL/OpenCOBOL on Linux/Unix environment evidenced by /var/tmp/ file paths and COPY .INC copybooks",
         "evidence": [
-          "PROGRAM-ID. ORCBNYUALL",
-          "SELECT ... ASSIGN ... FILE STATUS IS",
-          "OCCURS clauses, PIC X/9 definitions",
-          "COPY statements with REPLACING",
-          "Fixed-format source layout, max line 74",
-          "No EXEC SQL / EXEC CICS",
-          "Japanese medical system copyright header (JMA - Japan Medical Association)",
-          "File paths like /var/tmp/ suggesting Unix/Linux GnuCOBOL environment"
+          "PROGRAM-ID ORCBNYUALL",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "SELECT ASSIGN FILE-NAME1 with /var/tmp/ path",
+          "COPY 'CPWKSRYACT.INC' REPLACING",
+          "COPY 'CPSYSKANRI.INC'",
+          "COPY 'CPPTINF.INC'",
+          "no EXEC CICS/SQL",
+          "fixed format max line 74"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch program for bulk registration of hospital admission medical treatment actions (入院診療行為一括登録 - Nyuin Shinryo Koi Ikkatsu Toroku). Part of the ORCA JMA standard medical receipt software system, it reads work files of medical treatment activity data, validates them, and performs batch registration with error and confirmation list output.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing system (ORCA) - inpatient medical treatment batch registration/processing (Nyuin Shinryo Koi Ikkatsu Toroku)",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It performs batch registration and processing of inpatient medical treatment actions (Nyuin Shinryo Koi Ikkatsu), reading work files and parameter files, validating data, and producing error and confirmation lists. It handles patient master, insurance combination, treatment activity records, and outputs error reports with counts.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-language comments and data literals (Shift-JIS/EUC-JP encoded, decoded as latin-1)",
-        "Multiple COPY statements referencing domain-specific copybooks (CPWKSRYACT, CPPTINF, CPSRYACT, CPHKNCOMBI, etc.)",
-        "COPY with REPLACING for record prefix substitution",
-        "Large OCCURS tables (up to 600 entries for sort work area, 400 for link area)",
-        "Sequential file I/O with FILE STATUS checks",
-        "Error list and confirmation list output structures (LST-ERR-AREA, LST-PRT-AREA)",
-        "No COMP-3 usage despite being a financial/billing system",
-        "Unix file paths (/var/tmp/) indicating Linux deployment",
-        "40 CALL statements indicating modular architecture",
-        "131 PERFORM statements indicating structured procedural design"
+        "58 COPY statements referencing JMA ORCA-specific copybooks (.INC files)",
+        "40 CALL statements indicating heavy use of subprogram architecture",
+        "Large OCCURS tables (up to 600 entries) for sort work areas",
+        "Japanese text in comments and data literals (latin-1 encoded Shift-JIS/EUC-JP)",
+        "File paths using /var/tmp/ indicating Linux/Unix runtime",
+        "REPLACING clause in COPY for record prefix substitution",
+        "No EXEC SQL or EXEC CICS",
+        "Sequential file I/O with FILE STATUS",
+        "Error list and confirmation list output structures"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in a Japanese character encoding (likely EUC-JP or Shift-JIS) but was decoded as latin-1, causing the Japanese comments and string literals to appear as mojibake. The program is clearly part of the well-known open-source ORCA (JMA standard receipt software) system used in Japanese medical clinics. The truncated source shows only the first ~16KB of a 111KB file; the PROCEDURE DIVISION is not visible in the excerpt but its presence is confirmed by mechanical indicators."
+      "notes": "Source is truncated at 16000 chars out of 111149 bytes (2635 lines total). Japanese text in comments and literals is encoded as latin-1 decoded bytes, likely originally EUC-JP or Shift-JIS. The program is clearly part of the well-known JMA ORCA open-source Japanese medical receipt system, targeting GnuCOBOL on Linux."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7978,
-      "completion_tokens": 729,
-      "total_tokens": 8707,
-      "cost": 0.034869,
+      "prompt_tokens": 9356,
+      "completion_tokens": 609,
+      "total_tokens": 9965,
+      "cost": 0.037203,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034869,
-        "upstream_inference_prompt_cost": 0.023934,
-        "upstream_inference_completions_cost": 0.010935
+        "upstream_inference_cost": 0.037203,
+        "upstream_inference_prompt_cost": 0.028068,
+        "upstream_inference_completions_cost": 0.009135
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +118,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.47,
+    "provider": "Anthropic",
+    "latency_s": 17.78,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:40:37Z"
 }

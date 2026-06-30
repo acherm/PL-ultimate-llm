@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:73963d659a047afa14db93b49d7d31f25fcb1628",
+    "sha1_git": "73963d659a047afa14db93b49d7d31f25fcb1628",
+    "filename": "/LVVS0092.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8677,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:73963d659a047afa14db93b49d7d31f25fcb1628/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:73963d659a047afa14db93b49d7d31f25fcb1628/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8677,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 220,
+    "blank_lines": 27,
+    "comment_lines": 64,
+    "code_lines": 129,
+    "comment_ratio": 0.332,
+    "max_line_length": 72,
+    "avg_line_length": 38.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LVVS0092"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 1,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 22,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Italian insurance mainframe system 'Portafoglio Vita Italia' (life insurance portfolio). Uses IBM-style COMP, COPY with REPLACING, PERFORM THRU, GOBACK, and structured error handling typical of IBM mainframe COBOL shops.",
+        "evidence": [
+          "DECIMAL-POINT IS COMMA",
+          "PIC S9(04) COMP",
+          "COPY with REPLACING ==(SF)==",
+          "GOBACK",
+          "PERFORM THRU",
+          "IDSV0003 linkage area pattern",
+          "CALL WK-CALL-PGM USING ... ON EXCEPTION ... END-CALL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Italian life insurance portfolio system ('Portafoglio Vita Italia'). This is a service subprogram that retrieves and converts a policy inception date (data decorrenza polizza) by calling LDBS2910.",
+        "summary": "Subprogram LVVS0092 is a service routine in an Italian life insurance system. It initializes working areas, distributes input DCLGEN data into working storage, then calls LDBS2910 to retrieve the policy start date (PRSTZ-INI-NEWFIS) and returns it in the output area. Error handling covers not-found, null (-305), and general SQL/call errors.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "COPY with REPLACING (==SF== pattern)",
+        "DECIMAL-POINT IS COMMA (Italian locale)",
+        "Dynamic CALL via data item WK-CALL-PGM",
+        "ON EXCEPTION clause on CALL",
+        "STRING ... DELIMITED BY SIZE for error message construction",
+        "Multiple COPY books: LDBV2911, LCCVPOL1, IVVC0218, IDSV0002, IDSV0003, IVVC0213",
+        "88-level condition names",
+        "PERFORM VARYING with multiple UNTIL conditions",
+        "GOBACK"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program header says LVVS0007 in comments but PROGRAM-ID is LVVS0092 — likely a copy-paste artifact in the comment block. No EXEC SQL or EXEC CICS present; DB2 interaction is delegated to called subprogram LDBS2910. Italian-language comments and variable names confirm Italian insurance domain context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4702,
+      "completion_tokens": 583,
+      "total_tokens": 5285,
+      "cost": 0.022851,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022851,
+        "upstream_inference_prompt_cost": 0.014106,
+        "upstream_inference_completions_cost": 0.008745
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.51,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:50:15Z"
+}

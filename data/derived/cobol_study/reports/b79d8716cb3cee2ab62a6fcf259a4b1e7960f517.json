@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with string replacement, no EXEC SQL/CICS, no COMP-3.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... ORGANIZATION IS SEQUENTIAL",
-          "COPY statements with REPLACING clauses",
-          "PIC clauses with S9(10), X(nn), 9(nn) patterns",
-          "OCCURS clauses on table definitions",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL or EXEC CICS — pure COBOL",
-          "Copyright 2002 JMA (Japan Medical Association) — ORCA open-source medical billing system"
+          "PROGRAM-ID ORCGS02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with REPLACING syntax",
+          "SELECT ... ASSIGN PRFNAME ORGANIZATION IS SEQUENTIAL",
+          "COPY 'CPPARA.INC', 'CPCOMMONDAT3.INC', 'COMMON-SPA', 'S01COMMON-SPA'",
+          "no EXEC SQL, no EXEC CICS, no COMP-3"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a component of the ORCA JMA standard medical receipt (billing) software system, specifically the 'receipt/claim list' screen (S02). It handles display and management of medical billing claims (seikyu), including patient lookup, claim list display, payment entry, recalculation, and printing of receipts and payment certificates.",
-        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-hoshuu) billing system - accounts receivable / payment collection list screen (S02)",
+        "summary": "This program implements the payment/collection list screen (ORCGS02, S02) of the JMA ORCA medical receipt system. It manages patient billing records, outstanding balances, payment entry, and receipt re-issuance for both outpatient and inpatient cases. It handles complex Japanese medical insurance billing logic including multiple insurance combinations, disaster insurance, and self-pay calculations.",
+        "program_type": "online-cics"
       },
       "notable_features": [
-        "Extensive Japanese-language comments (EUC-JP or Shift-JIS encoded, decoded as latin-1)",
-        "Large WORKING-STORAGE with OCCURS tables up to 500 entries for claim list",
-        "Multiple COPY statements referencing application-specific copybooks (CPPARA.INC, CPCOMMONDAT3.INC, CPERRFL.INC, COMMON-SPA, S01COMMON-SPA, ENUM-VALUE)",
-        "75 CALL statements indicating heavy use of subprogram architecture",
-        "645 PERFORM statements indicating structured procedural decomposition",
-        "No COMP-3 usage despite financial amounts — uses PIC S9(10) display numeric",
-        "No EXEC SQL or EXEC CICS — file I/O via sequential file (parameter file)",
-        "Version history spanning 2000–2014 with many named contributors",
-        "Fixed-format with 15 lines slightly over 72 chars (minor overrun)"
+        "86 COPY statements indicating heavy use of shared copybooks",
+        "75 CALL statements to subprograms",
+        "645 PERFORM statements indicating structured procedural logic",
+        "30 GOTO statements",
+        "Large SPA (scratchpad area) working storage with OCCURS tables up to 500 entries",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "No COMP-3 packed decimal usage",
+        "No EXEC SQL or EXEC CICS",
+        "Fixed-format source with max line length 76",
+        "Extensive revision history spanning 2000-2014"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but Japanese comments are likely EUC-JP or Shift-JIS; the comment text appears garbled in the latin-1 rendering but is clearly Japanese. The program is part of the well-known open-source ORCA (JMA) medical billing system used widely in Japanese clinics. Source is truncated at 16000 chars out of ~411KB (10242 lines total), so only the header and data division are visible, but the structural indicators confirm a complete 4-division COBOL program."
+      "notes": "File is 411KB / 10242 lines - a large production program. Comments are in Japanese EUC encoding, decoded as latin-1 resulting in mojibake in the snippet. The program is part of the well-known open-source JMA ORCA medical receipt system. Program type classified as online-cics equivalent but actually uses a proprietary screen/event framework (not CICS) typical of ORCA's GnuCOBOL-based architecture. Source truncated at 16000 chars; full procedure division not visible but indicators confirm full COBOL structure."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10154,
-      "completion_tokens": 769,
-      "total_tokens": 10923,
-      "cost": 0.041997,
+      "prompt_tokens": 11532,
+      "completion_tokens": 637,
+      "total_tokens": 12169,
+      "cost": 0.044151,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.041997,
-        "upstream_inference_prompt_cost": 0.030462,
-        "upstream_inference_completions_cost": 0.011535
+        "upstream_inference_cost": 0.044151,
+        "upstream_inference_prompt_cost": 0.034596,
+        "upstream_inference_completions_cost": 0.009555
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.55,
+    "latency_s": 19.97,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:13:02Z"
 }

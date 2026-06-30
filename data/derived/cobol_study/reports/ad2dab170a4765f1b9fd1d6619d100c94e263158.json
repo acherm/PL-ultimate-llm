@@ -49,56 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (PC-based, likely RM/COBOL or Micro Focus for DOS/PC)",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "PC-based COBOL for XT/AT, likely Micro Focus Personal COBOL or compatible; uses COMP-4, ACCEPT/DISPLAY with LINE/POSITION clauses, REVERSE attribute, screen-oriented I/O typical of Micro Focus on DOS/PC",
         "evidence": [
-          "PROGRAM-ID. PARTI",
-          "DECIMAL-POINT IS COMMA",
-          "SOURCE-COMPUTER. PC-XT-AT / OBJECT-COMPUTER. PC-XT-AT",
-          "COMP-4 usage (Micro Focus / RM-COBOL extension)",
-          "ACCEPT ... ON EXCEPTION EXCEP (screen I/O with function key handling)",
-          "DISPLAY ... LINE ... POSITION ... REVERSE (screen section style)",
-          "READ ... WITH NO LOCK (Micro Focus file locking extension)",
-          "COPY statements for .SEL, .REG, .WOR, .ERR files (typical Micro Focus copybook structure)",
-          "DATE-WRITTEN. JUL'90 (1990 era PC COBOL)"
+          "SOURCE-COMPUTER. PC-XT-AT",
+          "OBJECT-COMPUTER. PC-XT-AT",
+          "COMP-4 usage",
+          "ACCEPT ... LINE ... POSITION ... ON EXCEPTION EXCEP",
+          "DISPLAY ... LINE ... POSITION ... REVERSE",
+          "DECIMAL-POINT IS COMMA"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program manages inventory 'partidas' (stock lots/batches) for articles in a multi-company, multi-branch system. It provides interactive screen-based CRUD operations (alta/baja/modificación — add/delete/modify) for stock lot records including pricing, cost, internal tax, stock balance, and warehouse position data. It also supports printing reports of articles by brand.",
-        "domain": "inventory/wholesale distribution (likely Argentine retail/wholesale goods management)",
+        "domain": "retail-commerce",
+        "domain_detail": "Inventory/stock management system for articles (products) with partidas (lots/batches), pricing, costs, internal taxes, and stock quantities; likely for a retail or wholesale business in Argentina (Spanish language, peso-style numeric formatting)",
+        "summary": "This program manages article partidas (stock lots/batches) including alta (add), baja (delete), and modification of records. It handles pricing (sale price, cost price, internal tax), stock balances, pending deliveries, kilo tracking, and warehouse position data, with screen-based interactive input and printed reports.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "COMP-4 binary fields used for screen positioning parameters",
-        "Interactive screen I/O using DISPLAY LINE/POSITION and ACCEPT LINE/POSITION with function key detection (ESCAP, F02, F03, F09, F10)",
         "DECIMAL-POINT IS COMMA (European/Latin American numeric format)",
-        "Heavy use of COPY statements for file SELECT, FD, and error handler sections",
-        "PERFORM THRU and GO TO used extensively (171 GOTOs, 256 PERFORMs)",
-        "READ ... WITH NO LOCK (multi-user file locking)",
-        "START ... KEY IS NOT < (indexed file positioning)",
-        "BLANK WHEN ZERO on edited picture clauses",
+        "COMP-4 binary fields used for display control parameters",
+        "Heavy use of COPY statements (36 copybooks) for file SELECT, FD, error handling",
+        "Screen-oriented ACCEPT/DISPLAY with LINE/POSITION/REVERSE clauses",
+        "GOTO-heavy procedural style (171 GOTOs)",
+        "DECLARATIVES section with error handlers via COPY",
         "Signed numeric fields with S9(6)V999 for stock quantities",
-        "No EXEC SQL or EXEC CICS — pure file-based I/O"
+        "BLANK WHEN ZERO and picture editing with comma decimal separator",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "File is truncated at 16000 chars out of 43264 bytes; the full program is ~1111 lines. The heavy use of COPY for all file definitions and error handlers, combined with PC-XT-AT target, COMP-4, and Argentine Spanish field names/comments, strongly suggests a 1990-era Argentine business application written in RM/COBOL or Micro Focus COBOL for DOS. The DECLARATIVES section uses COPY for error handlers, which is a common Micro Focus pattern. The program name PARTI and author ALVARO GUIFFREY are consistent with Argentine provenance."
+      "overall_confidence": "medium",
+      "notes": "Source truncated to first 16000 chars; full program is 1111 lines. Spanish-language variable names and labels suggest Argentine origin (author Alvaro Guiffrey, date Jul 1990). The program_type is classified as online-cics loosely — it is actually a screen-based interactive batch program on PC, not CICS; no better enum fits. COPY statements reference external copybooks not shown. Encoding is latin-1 which is consistent with Spanish text."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7037,
-      "completion_tokens": 823,
-      "total_tokens": 7860,
-      "cost": 0.033456,
+      "prompt_tokens": 8415,
+      "completion_tokens": 596,
+      "total_tokens": 9011,
+      "cost": 0.034185,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033456,
-        "upstream_inference_prompt_cost": 0.021111,
-        "upstream_inference_completions_cost": 0.012345
+        "upstream_inference_cost": 0.034185,
+        "upstream_inference_prompt_cost": 0.025245,
+        "upstream_inference_completions_cost": 0.00894
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 21.71,
+    "provider": "Anthropic",
+    "latency_s": 17.52,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:06:51Z"
 }

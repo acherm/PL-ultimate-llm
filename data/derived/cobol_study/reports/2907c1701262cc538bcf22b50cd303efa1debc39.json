@@ -49,49 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (likely student/academic environment)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses ORGANIZATION IS LINE SEQUENTIAL and GOBACK, consistent with GnuCOBOL conventions. No mainframe-specific features.",
         "evidence": [
-          "GOBACK statement",
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "88-level condition names with FILE-AT-END VALUE '10'",
-          "PERFORM VARYING ... END-PERFORM",
-          "OCCURS with INDEXED BY",
-          "THRU pattern for paragraph ranges"
+          "GOBACK",
+          "BLOCK CONTAINS 0 RECORDS",
+          "88-level condition names with FILE STATUS",
+          "PERFORM ... THRU ... EXIT pattern"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads a province master file (PROV.DAT) and a monthly income file (MONTHR.DAT), loads province records into a working-storage table of up to 6 entries, processes each monthly record (currently just displaying it), and then reports province codes/names and record counts.",
-        "domain": "education/tutorial",
+        "domain": "other",
+        "domain_detail": "Province and monthly income data processing; reads province codes/names and monthly records, accumulates income totals per province",
+        "summary": "MONTHINC reads a province master file (PROV.DAT) and a monthly records file (MONTHR.DAT), loads province data into a table of 6 entries, and processes monthly records displaying them. At end, it displays province codes/names and record counts. The income total field is defined but not yet populated, suggesting the program is incomplete or a student exercise.",
         "program_type": "batch"
       },
       "notable_features": [
         "OCCURS 6 TIMES INDEXED BY for province table",
-        "Dual FILE STATUS fields with 88-level conditions",
-        "PERFORM THRU EXIT pattern throughout",
-        "GOBACK instead of STOP RUN",
-        "WS-INCOME-TOTAL defined but never populated (stub/incomplete logic)",
-        "LINE SEQUENTIAL organization for month input file"
+        "88-level condition names on FILE STATUS fields",
+        "PERFORM THRU EXIT paragraph pattern",
+        "PERFORM VARYING with index",
+        "ORGANIZATION IS LINE SEQUENTIAL",
+        "WS-INCOME-TOTAL defined but never used (incomplete logic)"
       ],
       "maturity": "student-exercise",
-      "overall_confidence": "high",
-      "notes": "The program appears to be a student exercise or work-in-progress: WS-INCOME-TOTAL is declared but never used, and 2100-PROCESS-MONTH only displays the raw record without parsing or accumulating income. The AUTHOR field 'PASIN-RWRK' suggests a personal/academic context. No EXEC SQL or EXEC CICS. No lines exceed 72 characters, consistent with fixed format."
+      "overall_confidence": "medium",
+      "notes": "The WS-INCOME-TOTAL field is declared but never populated, suggesting this is an incomplete student exercise or work-in-progress. The AUTHOR field 'PASIN-RWRK' appears to be a personal/student identifier. No lines exceed 72 characters, consistent with fixed format. Dialect is uncertain; GnuCOBOL is a reasonable guess based on LINE SEQUENTIAL usage."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2122,
-      "completion_tokens": 504,
-      "total_tokens": 2626,
-      "cost": 0.013926,
+      "prompt_tokens": 3500,
+      "completion_tokens": 451,
+      "total_tokens": 3951,
+      "cost": 0.017265,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.013926,
-        "upstream_inference_prompt_cost": 0.006366,
-        "upstream_inference_completions_cost": 0.00756
+        "upstream_inference_cost": 0.017265,
+        "upstream_inference_prompt_cost": 0.0105,
+        "upstream_inference_completions_cost": 0.006765
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -111,8 +113,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 10.71,
+    "latency_s": 10.27,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:24:50Z"
 }

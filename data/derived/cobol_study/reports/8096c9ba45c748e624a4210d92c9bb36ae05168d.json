@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8096c9ba45c748e624a4210d92c9bb36ae05168d",
+    "sha1_git": "8096c9ba45c748e624a4210d92c9bb36ae05168d",
+    "filename": "/pwpa6046.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 36427,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8096c9ba45c748e624a4210d92c9bb36ae05168d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8096c9ba45c748e624a4210d92c9bb36ae05168d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 36427,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 701,
+    "blank_lines": 33,
+    "comment_lines": 37,
+    "code_lines": 631,
+    "comment_ratio": 0.055,
+    "max_line_length": 232,
+    "avg_line_length": 51.0,
+    "long_lines_over_72": 86,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PWPA6046"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 0,
+    "perform_count": 56,
+    "goto_count": 0,
+    "pic_count": 166,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with Micro Focus-style compiler directives ($set preprocess, $set sourceformat, $set constant); free-format source with htmlpp preprocessor; Brazilian Portuguese business application using ICMS/IPI tax fields",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "$set constant processo-reorganizacao",
+          "copy PCW900.CPY",
+          "copy PCW902.CPY",
+          "copy PCW990.CPY",
+          "external-form clause",
+          "identified by clauses in CGI input section"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian fiscal/tax document management - deletion of duplicate EFD168/EFD169 stock movement records (Nota Fiscal items) from a distribution/retail system (CDD Oeste, GEO SPC), involving ICMS, IPI tax fields",
+        "summary": "Batch/web program PWPA6046 that deletes duplicate records from EFD168 (Nota Fiscal) and EFD169 (Nota Fiscal items/stock entries) tables that were incorrectly double-posted by program PWPE0248 on 22/06/2012. It generates a CSV log file of deleted records and supports a diagnostic mode. The program uses a CGI/web form interface with session validation.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "$set compiler directives (GnuCOBOL/Micro Focus style)",
+        "htmlpp preprocessor directive",
+        "external-form section with identified-by clauses (CGI web interface)",
+        "COPY statements with REPLACING for file/record definitions (14 copies)",
+        "CSV log file generation with semicolon delimiters",
+        "Brazilian fiscal tax fields: ICMS, IPI, ICMS-ST, ICMS-Frete",
+        "decimal-point is comma (Brazilian locale)",
+        "free-format source",
+        "linkage section with lnk-par parameter",
+        "88-level condition names",
+        "REDEFINES for date field decomposition"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (701 total lines); procedure division is only partially visible. The program appears to be part of a larger Brazilian ERP/distribution system (likely Totvs/RM or similar). The 'online-cics' program_type is approximate - this is actually a CGI web program using GnuCOBOL's web/CGI framework, not CICS. No EXEC CICS or EXEC SQL present. File decoded with latin-1 due to Portuguese characters (e.g., 'Inválido')."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6936,
+      "completion_tokens": 651,
+      "total_tokens": 7587,
+      "cost": 0.030573,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030573,
+        "upstream_inference_prompt_cost": 0.020808,
+        "upstream_inference_completions_cost": 0.009765
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.62,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:51:34Z"
+}

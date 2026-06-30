@@ -49,53 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), GnuCOBOL/OpenCOBOL dialect used in Japanese medical billing system",
         "evidence": [
-          "PROGRAM-ID. ORCGW03",
-          "EVALUATE ... ALSO ... WHEN constructs (COBOL-85)",
-          "END-IF, END-EVALUATE, END-PERFORM scope terminators",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "COPY directives for .INC files (MCPAREA, ORCA-SPA, LINKAREA, W01.INC through W99.INC)",
-          "No EXEC SQL or EXEC CICS",
-          "Fixed-format source layout"
+          "PROGRAM-ID ORCGW03",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "COPY 'LINKAREA'",
+          "MCP-STATUS / MCP-EVENT usage",
+          "PERFORM ... UNTIL pattern",
+          "no EXEC CICS/SQL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system used in Japanese medical institutions. It handles facility/installation standard information settings (施設基準情報設定), managing screen navigation, data entry, and database read/write operations for system management master records. It is a screen-driven subprogram that interacts with a GUI front-end via MCP (message/control protocol) events.",
-        "domain": "healthcare / medical billing (Japanese medical insurance claims processing)",
-        "program_type": "subprogram"
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical association standard receipt (claims) processing system - facility standard information settings (W03 screen)",
+        "summary": "This program is part of the JMA ORCA medical receipt software system. It handles the facility standard information settings screen (W03), managing system administration master data including validity periods and standard codes. It performs database select/read operations against tbl_syskanri and related tables, and controls screen navigation and SPA (scratchpad area) management.",
+        "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, causing mojibake in latin-1 decoding)",
-        "MCP (Message Control Protocol) event-driven architecture with MCP-STATUS and MCP-EVENT evaluation",
-        "Extensive use of COPY statements for screen layouts (W01.INC through W99.INC) and data structures",
-        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
-        "No EXEC SQL — uses proprietary MCP database access (PERFORM 910-DBSELECT-SEC, 990-DBCLOSE-SEC)",
-        "OCCURS clauses for table structures (SPA-GMN-TBLO OCCURS 25, SPA-NAI-TBLO OCCURS 1000)",
-        "SPA (Scratch Pad Area) pattern for inter-program state management",
-        "127 PERFORM statements indicating complex procedural logic",
-        "Open Source license header (JMA Open Source License)"
+        "Heavy use of COPY statements (59 copybooks) for screen layouts and data structures",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA parameters",
+        "MCP (Message Control Program) interface pattern typical of ORCA",
+        "SPA (Scratchpad Area) pattern for screen state management",
+        "Japanese text in comments (Shift-JIS/EUC-JP encoded)",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT dispatch pattern",
+        "No EXEC SQL - uses MCP database abstraction layer",
+        "OCCURS clauses for tabular data",
+        "REDEFINES for SPA area overlays"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine production COBOL from the open-source ORCA medical receipt system developed by the Japan Medical Association (JMA). Japanese comments are garbled because the file is likely EUC-JP or Shift-JIS encoded but was decoded as latin-1. The COPY count of 0 in mechanical indicators is likely because the copybook references use quoted filenames (COPY 'COMMON-SPA') which may not have been detected by the mechanical parser. The program uses a proprietary MCP database abstraction layer rather than EXEC SQL."
+      "notes": "Source contains Japanese text encoded in EUC-JP or Shift-JIS, decoded as latin-1 causing mojibake in comments. File is truncated at 16000 chars but structure is clear. This is a well-known open-source Japanese medical billing system (JMA ORCA). The MCP interface is ORCA-specific middleware, not CICS, though the program_type is online/interactive."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7144,
-      "completion_tokens": 792,
-      "total_tokens": 7936,
-      "cost": 0.033312,
+      "prompt_tokens": 8522,
+      "completion_tokens": 556,
+      "total_tokens": 9078,
+      "cost": 0.033906,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033312,
-        "upstream_inference_prompt_cost": 0.021432,
-        "upstream_inference_completions_cost": 0.01188
+        "upstream_inference_cost": 0.033906,
+        "upstream_inference_prompt_cost": 0.025566,
+        "upstream_inference_completions_cost": 0.00834
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.14,
+    "latency_s": 15.66,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:50:14Z"
 }

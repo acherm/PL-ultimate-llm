@@ -49,61 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "ACUCOBOL-GT",
+        "family": "acucobol",
         "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT dialect; uses ACUCOBOL GUI extensions (acugui.def, acucobol.def), C$PARAMSIZE intrinsic, signed-long data type, 78-level constants, and XZOOM GUI framework. Italian-language ERP application.",
         "evidence": [
-          "program-id. Zoom-GT (matches filename zoom-gt.cbl)",
-          "copy \"acugui.def\" and copy \"acucobol.def\" — ACUCOBOL-specific GUI/runtime copybooks",
-          "78 level constants (ACUCOBOL/COBOL-85 extension)",
-          "signed-long data type (ACUCOBOL extension)",
-          "set environment ... to ... syntax (ACUCOBOL runtime environment variable setting)",
-          "call \"C$PARAMSIZE\" — ACUCOBOL built-in C$ library routine",
-          "call \"XZOOM\" — ACUCOBOL GUI zoom/lookup widget",
-          "cancel \"XZOOM\" — ACUCOBOL program cancellation",
-          "88-level with FALSE clause (COBOL-85)",
-          "LINKAGE SECTION with USING in PROCEDURE DIVISION",
-          "display message box — ACUCOBOL GUI extension",
-          "goba (truncated, likely 'goback') — visible at end of snippet"
+          "copy \"acugui.def\"",
+          "copy \"acucobol.def\"",
+          "call \"C$PARAMSIZE\"",
+          "77 stato-zoom signed-long",
+          "78 78-walt value 1",
+          "program-id. Zoom-GT",
+          "call \"XZOOM\"",
+          "cancel \"XZOOM\""
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a large dispatch/router program for an ACUCOBOL-GT GUI lookup (zoom) widget used in a business application. It receives a file/entity name via the LINKAGE SECTION and, based on that name, calls one of many PREPARA-* paragraphs to configure and launch the XZOOM lookup window for various business entities (clients, suppliers, articles, orders, invoices, warehouses, agents, etc.). It appears to be part of an Italian ERP or order-management system.",
-        "domain": "ERP / order management / distribution (Italian business application)",
+        "domain": "accounting-erp",
+        "domain_detail": "Italian wholesale/distribution ERP system; lookup/zoom utility for customers, suppliers, articles, orders, invoices, warehouse movements, agents, price lists, promotions, and many other master data entities",
+        "summary": "This is a large dispatch/router program for an ACUCOBOL-GT GUI zoom (lookup) facility used in an Italian ERP/distribution system. It receives a table/entity name via the LINKAGE SECTION, sets up the appropriate XZOOM grid configuration by performing one of many PREPARA-* paragraphs, then calls the XZOOM subprogram to display a searchable grid to the user. It covers a very wide range of business entities including clients, suppliers, articles, orders, invoices, warehouse causals, agents, and promotions.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "ACUCOBOL-GT specific: acugui.def, acucobol.def copybooks",
-        "ACUCOBOL C$PARAMSIZE built-in call",
-        "ACUCOBOL XZOOM GUI lookup widget integration",
-        "SET ENVIRONMENT ... TO ... for XZOOM runtime configuration",
-        "78-level constants (ACUCOBOL/COBOL-85)",
-        "signed-long non-standard data type",
-        "Large EVALUATE dispatch table with 100+ WHEN branches",
-        "COPY directives for external evaluate extension (zoom-gt-evaluate-edi.cpy)",
-        "Italian-language comments and variable names",
-        "DISPLAY MESSAGE BOX GUI extension",
-        "No EXEC SQL or EXEC CICS",
-        "Very large file (~521KB, 10703 lines) — production-scale"
+        "ACUCOBOL-GT GUI extensions (acugui.def, acucobol.def)",
+        "78-level constants (ACUCOBOL extension)",
+        "signed-long data type (ACUCOBOL extension)",
+        "C$PARAMSIZE runtime library call",
+        "XZOOM GUI grid framework",
+        "Large EVALUATE dispatch on string parameter (100+ WHEN branches)",
+        "COPY statements for external definitions and evaluate extensions",
+        "Italian-language comments and entity names",
+        "LINKAGE SECTION with COMO-FILE and COMO-RECORD parameters",
+        "SET ENVIRONMENT statements for XZOOM configuration"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated to first 16000 chars but the structure is clear. The file is very large (521KB, 10703 lines) and contains a comprehensive dispatch table for an Italian ERP system's zoom/lookup subsystem. The 'goba' at the end of the snippet is almost certainly 'goback' truncated by the display limit. All indicators strongly point to ACUCOBOL-GT dialect."
+      "notes": "File is truncated to first 16000 chars; full file is ~521KB / 10703 lines indicating a very large production program. Only the PROCEDURE DIVISION is present in the mechanical indicators (no IDENTIFICATION/ENVIRONMENT/DATA divisions detected), likely because those divisions are in COPY files or the file starts mid-program. The 'goba' at the end of the visible source appears to be a truncation artifact or a label. Italian ERP context is clear from entity names and comments."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5862,
-      "completion_tokens": 843,
-      "total_tokens": 6705,
-      "cost": 0.030231,
+      "prompt_tokens": 7240,
+      "completion_tokens": 645,
+      "total_tokens": 7885,
+      "cost": 0.031395,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -112,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.030231,
-        "upstream_inference_prompt_cost": 0.017586,
-        "upstream_inference_completions_cost": 0.012645
+        "upstream_inference_cost": 0.031395,
+        "upstream_inference_prompt_cost": 0.02172,
+        "upstream_inference_completions_cost": 0.009675
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -123,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.58,
+    "latency_s": 17.44,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:36:31Z"
 }

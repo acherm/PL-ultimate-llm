@@ -49,45 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": null,
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) as indicated by 'Tectonics: cobc' comment; standard COBOL-85 syntax",
         "evidence": [
-          "Tectonics: cobc (GnuCOBOL compiler)",
-          "END PROGRAM ADD-EXAMPLES terminator",
-          "Fixed-format source with standard divisions",
-          "DISPLAY with comma-separated items"
+          "Tectonics: cobc",
+          "END PROGRAM ADD-EXAMPLES",
+          "fixed format, no vendor-specific extensions"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A tutorial/demo program illustrating five different forms of the COBOL ADD statement, including ADD literal TO, ADD identifier TO, ADD GIVING, multiple operands, and combined forms. It displays variable values before and after each ADD operation to show the effect.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates various forms of the ADD statement in COBOL",
+        "summary": "A tutorial/example program by Tom Gonzalez that demonstrates five different forms of the ADD statement in COBOL, including ADD literal TO variable, ADD variable TO variable, ADD ... GIVING, and multi-operand forms. It displays before/after values for each example.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Five distinct ADD statement variants demonstrated",
-        "No PERFORM or CALL statements — purely sequential inline code",
-        "MOVE used to reset variables between examples",
-        "END PROGRAM terminator present"
+        "Multiple ADD statement forms demonstrated",
+        "ADD ... GIVING syntax",
+        "Multi-operand ADD",
+        "DISPLAY used for output",
+        "No PERFORM, CALL, or file I/O"
       ],
-      "maturity": "toy-or-hello-world",
+      "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Clearly a beginner/tutorial program authored in 2014 targeting GnuCOBOL (cobc). No complex features; purely illustrative of ADD statement syntax."
+      "notes": "Clearly an educational/tutorial program. Author and date (08/07/2014) are present in comments. GnuCOBOL dialect confirmed by 'Tectonics: cobc' comment. No ENVIRONMENT DIVISION present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1952,
-      "completion_tokens": 371,
-      "total_tokens": 2323,
-      "cost": 0.011421,
+      "prompt_tokens": 3330,
+      "completion_tokens": 323,
+      "total_tokens": 3653,
+      "cost": 0.014835,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011421,
-        "upstream_inference_prompt_cost": 0.005856,
-        "upstream_inference_completions_cost": 0.005565
+        "upstream_inference_cost": 0.014835,
+        "upstream_inference_prompt_cost": 0.00999,
+        "upstream_inference_completions_cost": 0.004845
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 9.02,
+    "provider": "Anthropic",
+    "latency_s": 8.23,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:33:34Z"
 }

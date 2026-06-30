@@ -49,55 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (or compatible open-source COBOL, likely GnuCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - Japanese Medical Association open-source clinic management system, likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN ... ALSO ... END-EVALUATE (COBOL-85 structured)",
-          "END-IF, END-EVALUATE terminators throughout",
-          "PROCEDURE DIVISION USING with multiple linkage areas",
-          "COPY with REPLACING clauses",
-          "Fixed-format source, columns 7-72",
-          "No EXEC SQL / EXEC CICS — standalone batch/subprogram style",
-          "OCCURS clauses without INDEXED BY (simple table)",
-          "Japanese comments encoded in Latin-1 (EUC-JP or Shift-JIS stored as latin-1)",
-          "PROGRAM-ID ORCGI04 matching JMA ORCA open-source medical software project"
+          "PROGRAM-ID ORCGI04",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "COPY 'LINKAREA'",
+          "COPY 'I04.INC'",
+          "MCP-STATUS / MCP-EVENT usage",
+          "EXEC CICS absent, no DB2, no IBM-specific extensions",
+          "58 COPY statements referencing JMA-specific copybooks"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a screen-handling subprogram for the JMA ORCA open-source medical receipt (billing) system, specifically handling a 'payment confirmation' screen (I04) within the hospital admission/discharge business subsystem. It manages screen initialization, navigation, data entry, and linkage to patient, insurance, and payment master records.",
-        "domain": "healthcare / medical billing (Japanese medical insurance claims)",
-        "program_type": "subprogram"
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese Medical Association standard receipt (reimbursement claim) software - inpatient/hospitalization billing confirmation screen (入院業務 請求確認画面)",
+        "summary": "ORCGI04 is a screen program within the JMA ORCA medical receipt system handling the inpatient billing confirmation screen (I04 window). It processes screen navigation, entry validation, and data management for hospitalization billing records including patient information, insurance combinations, payment masters, and medical act records. It coordinates multiple subprograms via CALL and manages SPA (scratchpad area) state across screen transitions.",
+        "program_type": "online-cics"
       },
       "notable_features": [
-        "Part of JMA ORCA open-source Japanese medical receipt software",
-        "Heavy use of COPY statements with REPLACING for record layout reuse",
-        "Japanese text in comments (EUC-JP or Shift-JIS, decoded as Latin-1 producing mojibake)",
-        "LINKAGE SECTION with multiple areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
-        "Screen SPA (Scratchpad Area) pattern typical of COBOL screen management middleware",
-        "EVALUATE with ALSO for multi-condition dispatch",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP (Message Control Program) interface",
-        "PERFORM count of 149 and GOTO count of 48 indicating substantial procedural logic",
-        "Multiple OCCURS tables for patient, insurance, and medical act records"
+        "58 COPY statements referencing JMA-specific copybooks (CPPTINF, CPSYUNOU, CPJYURRK, etc.)",
+        "MCP (Message Control Program) event-driven screen handling pattern",
+        "SPA (Scratchpad Area) pattern for state management across screens",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT for event dispatch",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA",
+        "Japanese EUC-JP encoded comments (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP database access layer",
+        "OCCURS tables for medical act and reception history records",
+        "149 PERFORM statements indicating structured procedural decomposition"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is clearly production COBOL from the JMA ORCA project (Japan Medical Association open-source receipt software, circa 2000-2002). Japanese comments are garbled because the original encoding (likely EUC-JP or Shift-JIS) was decoded as Latin-1. The dialect is most likely GnuCOBOL or Micro Focus given the open-source Linux-based ORCA platform. Source is truncated at 16000 chars out of 116256 bytes total, but enough is visible to classify confidently."
+      "notes": "Source comments are encoded in Japanese EUC-JP but decoded as latin-1, producing mojibake. The program is part of the well-known JMA ORCA open-source medical receipt system. The 'online-cics' program_type is used loosely - this is actually an MCP (Message Control Program) event-driven online screen program, not CICS, but the pattern is analogous. File was truncated at 16000 chars out of 116256 bytes total."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8162,
-      "completion_tokens": 767,
-      "total_tokens": 8929,
-      "cost": 0.035991,
+      "prompt_tokens": 9540,
+      "completion_tokens": 672,
+      "total_tokens": 10212,
+      "cost": 0.0387,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035991,
-        "upstream_inference_prompt_cost": 0.024486,
-        "upstream_inference_completions_cost": 0.011505
+        "upstream_inference_cost": 0.0387,
+        "upstream_inference_prompt_cost": 0.02862,
+        "upstream_inference_completions_cost": 0.01008
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.49,
+    "latency_s": 17.8,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:41:54Z"
 }

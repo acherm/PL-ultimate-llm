@@ -49,45 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or generic COBOL (possibly Micro Focus or IBM Enterprise COBOL)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple introductory program with no vendor-specific extensions; COBOL-85 syntax assumed based on VALUE literals and PIC clauses",
         "evidence": [
-          "IDENTIFICATION DIVISION with AUTHOR paragraph",
-          "WORKING-STORAGE SECTION with PIC clauses and VALUE",
-          "DISPLAY statements in PROCEDURE DIVISION",
-          "VALUE ZEROS and quoted string literal with double quotes"
+          "PIC 999 VALUE ZEROS",
+          "PIC V99 VALUE .35",
+          "PIC X(15) VALUE \"Phadol\"",
+          "DISPLAY statements"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal demonstration program that declares four working-storage variables (two numeric, one decimal rate, one alphanumeric) and displays their values to the console. It serves as a basic introduction to COBOL data types and the DISPLAY statement.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Basic COBOL data types and DISPLAY demonstration exercise",
+        "summary": "A minimal COBOL program that declares four working-storage variables (two numeric, one decimal rate, one alphanumeric) and displays their values. It appears to be a student exercise demonstrating basic data types and the DISPLAY verb.",
         "program_type": "demo"
       },
       "notable_features": [
-        "PIC V99 for implied-decimal tax rate",
-        "VALUE ZEROS initializer",
-        "No PERFORM, CALL, or GOTO — single straight-line procedure",
-        "AUTHOR paragraph present (common in older/educational COBOL)"
+        "No ENVIRONMENT DIVISION",
+        "No PERFORM or CALL statements",
+        "Inline paragraph label 'Begin'",
+        "Author name suggests Thai origin (Phadol Wongsiri)"
       ],
       "maturity": "toy-or-hello-world",
       "overall_confidence": "high",
-      "notes": "Very short (17 lines) introductory program. The AUTHOR paragraph (PHADOL WONGSIRI) and the student-style naming suggest this is a classroom or tutorial exercise. No dialect-specific extensions are visible, so dialect confidence is medium."
+      "notes": "Very short program (17 lines) with no file I/O, no control flow, and no vendor-specific features. Clearly a beginner exercise or tutorial example. Dialect cannot be determined with confidence due to lack of distinguishing features."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1023,
-      "completion_tokens": 414,
-      "total_tokens": 1437,
-      "cost": 0.009279,
+      "prompt_tokens": 2401,
+      "completion_tokens": 319,
+      "total_tokens": 2720,
+      "cost": 0.011988,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009279,
-        "upstream_inference_prompt_cost": 0.003069,
-        "upstream_inference_completions_cost": 0.00621
+        "upstream_inference_cost": 0.011988,
+        "upstream_inference_prompt_cost": 0.007203,
+        "upstream_inference_completions_cost": 0.004785
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 7.84,
+    "provider": "Anthropic",
+    "latency_s": 7.45,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:42:58Z"
 }

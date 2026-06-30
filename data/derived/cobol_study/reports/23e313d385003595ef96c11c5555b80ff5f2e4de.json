@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:23e313d385003595ef96c11c5555b80ff5f2e4de",
+    "sha1_git": "23e313d385003595ef96c11c5555b80ff5f2e4de",
+    "filename": "/ACTUALIZARPROV.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3237,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:23e313d385003595ef96c11c5555b80ff5f2e4de/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:23e313d385003595ef96c11c5555b80ff5f2e4de/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3237,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 124,
+    "blank_lines": 25,
+    "comment_lines": 0,
+    "code_lines": 99,
+    "comment_ratio": 0.0,
+    "max_line_length": 64,
+    "avg_line_length": 25.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ACTUALIZAR-PROV"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 13,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Likely a PC/DOS-era COBOL compiler (possibly Micro Focus or ACU) given Windows path 'C:\\PROVS\\prov.dat', VALUE OF FILE-ID clause, ASSIGN TO DISK, and LINKAGE SECTION subprogram pattern. Spanish-language identifiers suggest Latin American origin.",
+        "evidence": [
+          "ASSIGN TO DISK",
+          "VALUE OF FILE-ID IS \"C:\\PROVS\\prov.dat\"",
+          "ORGANIZATION IS INDEXED",
+          "ACCESS MODE IS RANDOM",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING",
+          "USE AFTER ERROR PROCEDURE ON I-O (DECLARATIVES)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Supplier/provider master file maintenance — updates supplier records in an indexed file",
+        "summary": "This is a subprogram (ACTUALIZAR-PROV) that manages an indexed supplier file. It accepts a parameter to open, close, or update a supplier record, incrementing a consultation counter and returning the supplier's category and description to the caller.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with PROCEDURE DIVISION USING (called subprogram)",
+        "DECLARATIVES with USE AFTER ERROR on all file operations",
+        "VALUE OF FILE-ID clause for hardcoded Windows file path",
+        "ASSIGN TO DISK with INDEXED organization",
+        "REWRITE for indexed file update",
+        "Spanish-language identifiers and DISPLAY messages"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "No COPY statements or SQL. The hardcoded Windows path and ASSIGN TO DISK suggest a PC COBOL environment (possibly Micro Focus Personal COBOL or similar). The tab-indented lines in the record/working-storage area are mixed with space-indented lines but all lines are within 72 columns so fixed format is confirmed. No comment lines present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3492,
+      "completion_tokens": 462,
+      "total_tokens": 3954,
+      "cost": 0.017406,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017406,
+        "upstream_inference_prompt_cost": 0.010476,
+        "upstream_inference_completions_cost": 0.00693
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.59,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:51:22Z"
+}

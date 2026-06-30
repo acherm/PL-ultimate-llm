@@ -49,52 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus COBOL (Linux/Unix-based, likely OpenCOBOL/GnuCOBOL given the ORCA project context)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCGW13 handles system management information settings for disaster/injury medical billing.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "COPY statements used for shared areas (COMMON-SPA, W01COMMON-SPA, ENUM-VALUE)",
-          "OCCURS clauses, PIC X/9 definitions consistent with COBOL-85",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "PROGRAM-ID ORCGW13 matches filename",
-          "No EXEC SQL or EXEC CICS blocks",
-          "JMA ORCA project is known to use GnuCOBOL/OpenCOBOL on Linux"
+          "PROGRAM-ID ORCGW13",
+          "COPY 'COMMON-SPA'",
+          "COPY 'W01COMMON-SPA'",
+          "COPY 'ENUM-VALUE'",
+          "JMA (Japan Medical Association) copyright header",
+          "Project code name ORCA",
+          "no EXEC CICS / EXEC SQL",
+          "no COMP-3 usage",
+          "fixed format max line 74"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) system, specifically handling system management information settings for medical insurance billing (W13 screen). It manages configuration parameters such as insurance billing categories, tax classifications, point unit prices, and related medical fee schedule settings for Japanese medical institutions.",
-        "domain": "healthcare/medical billing (Japanese medical insurance receipt processing)",
-        "program_type": "online-cics"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-hoshu) billing system — system management information settings screen (W13), handling disaster/injury classification, tax classification, point unit prices, and related billing parameters for medical institutions.",
+        "summary": "ORCGW13 is a screen-based batch/online program within the JMA ORCA medical receipt system that manages system configuration settings for medical billing, including injury/disaster classification codes, tax categories, point unit prices, and related parameters. It uses extensive COPY books for shared SPA (screen parameter area) structures and enumerated values. The program handles display, input validation, and registration of these settings.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS rendered as latin-1)",
-        "Large SPA (Scratchpad Area) working storage structure typical of Japanese medical system screen programs",
-        "OCCURS clauses for list/table structures (up to 50 entries for KIZAITBL, 40 for TBL)",
-        "COPY statements for shared parameter areas (COMMON-SPA, W01COMMON-SPA, ENUM-VALUE)",
-        "No COMP-3 usage despite being a production financial/billing system",
-        "16 CALL statements and 240 PERFORM statements indicating complex business logic",
-        "42 GOTO statements suggesting older structured programming style",
-        "Open source license header (JMA Open Source License)"
+        "69 COPY statements indicating heavy use of shared copybooks",
+        "16 CALL statements to external subprograms",
+        "240 PERFORM statements",
+        "42 GOTO statements",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded with mojibake)",
+        "OCCURS clauses for list/table structures",
+        "SPA (Screen Parameter Area) pattern typical of ORCA system",
+        "Fixed-format source with max line length 74"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS bytes interpreted as latin-1), which is common for older Japanese COBOL systems archived without proper encoding metadata. The program is part of the well-known open-source ORCA medical receipt software project by the Japan Medical Association. Source is truncated at 16000 chars out of 154738 bytes total, but enough structure is visible to classify confidently. The screen-oriented SPA (Scratchpad Area) pattern and naming conventions (GMN = screen, NAI = internal) are characteristic of the ORCA project's online transaction processing style, though no EXEC CICS is present — it likely uses a proprietary screen handler."
+      "notes": "Comments are encoded in Japanese (EUC-JP or Shift-JIS) but decoded as latin-1, resulting in mojibake in the visible text. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars out of 154738 bytes (3709 lines total); full procedure division not visible but mechanical indicators confirm substantial production code."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7200,
-      "completion_tokens": 787,
-      "total_tokens": 7987,
-      "cost": 0.033405,
+      "prompt_tokens": 8578,
+      "completion_tokens": 591,
+      "total_tokens": 9169,
+      "cost": 0.034599,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033405,
-        "upstream_inference_prompt_cost": 0.0216,
-        "upstream_inference_completions_cost": 0.011805
+        "upstream_inference_cost": 0.034599,
+        "upstream_inference_prompt_cost": 0.025734,
+        "upstream_inference_completions_cost": 0.008865
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -113,9 +120,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.6,
+    "provider": "Anthropic",
+    "latency_s": 18.6,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:43:22Z"
 }

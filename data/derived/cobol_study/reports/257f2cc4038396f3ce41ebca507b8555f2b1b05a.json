@@ -49,54 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely running on DOS/Windows environment, possibly RM/COBOL or similar Brazilian PC COBOL)",
+        "family": "other-vendor",
         "standard": "COBOL-85",
+        "detail": "Likely a Brazilian microcomputer COBOL environment (possibly Micro Focus or a local vendor like Unimake/Datasul era), using SCREEN SECTION with BCK-CLR/FOR-CLR attributes, GOBACK, LINKAGE SECTION with PRM-OPR, and calls to proprietary routines DYSPOL/DYMSGM/DYHELP/DYIMPR. Portuguese-language identifiers and Brazilian CEP (postal code) handling. DECIMAL-POINT IS COMMA is typical for Brazilian Portuguese locale.",
         "evidence": [
-          "SCREEN SECTION with LINE/COLUMN/BCK-CLR/FOR-CLR clauses",
-          "ACCEPT ... FROM ESCAPE KEY (Micro Focus / RM-COBOL screen handling)",
-          "ACCEPT ... FROM TIME",
-          "GOBACK statement",
-          "PROCEDURE DIVISION USING PRM-OPR (LINKAGE SECTION parameter)",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "DYNAMIC access mode on INDEXED files",
-          "DELETE FILE CADTMP (file deletion verb)",
-          "Extended screen attributes like BCK-CLR, FOR-CLR, AUTO"
+          "BCK-CLR/FOR-CLR screen attributes",
+          "CALL 'DYSPOL' USING PRM-OPR PRM-SPL",
+          "CALL 'DYIMPR' USING PRM-IMP",
+          "CALL 'DYMSGM' USING PRM-MSG",
+          "CALL 'DYHELP' USING PRM-HLP",
+          "DECIMAL-POINT IS COMMA",
+          "SCREEN SECTION with LINE/COLUMN",
+          "Portuguese identifiers: NOM-MDR, END-MDR, CID-MDR, EST-MDR",
+          "CEP (Brazilian postal code) field"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program generates mailing-label reports ('Mala-Direta') for customers. It reads from an indexed customer master file (CADMDR) within a user-specified code range, formats address labels (name, address, city, state, ZIP), writes them to a temporary indexed file (CADTMP), and then calls a print routine (DYIMPR) to produce the report.",
-        "domain": "business/CRM (customer mailing/direct mail)",
-        "program_type": "online-cics"
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian customer mailing-label (mala-direta) system — generates address labels for a customer master file range",
+        "summary": "Program DY3230 is a batch/interactive program that reads a range of customer records from an indexed master file (CADMDR), formats mailing-label data (name, address, CEP/city/state), writes them to a temporary indexed file (CADTMP), and then calls a print routine (DYIMPR) to produce the physical labels. It provides a screen-based UI for entering the start/end customer code range and displays page count progress.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "SCREEN SECTION with extended color attributes (BCK-CLR, FOR-CLR) and box-drawing characters (IBM CP437/850 encoding)",
-        "ACCEPT ... FROM ESCAPE KEY for keyboard navigation",
-        "CALL to external routines: DYSPOL (security/splash), DYMSGM (messages), DYHELP (help), DYIMPR (print)",
+        "SCREEN SECTION with BCK-CLR/FOR-CLR color attributes and box-drawing characters",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING (called as subprogram)",
         "DECIMAL-POINT IS COMMA (Brazilian locale)",
-        "Dynamic indexed file access with START/READ NEXT",
-        "DELETE FILE verb for temporary file cleanup",
-        "Latin-1 / CP850 encoded screen characters (Û, ß, Ü, É, º, etc.)",
-        "COPY statements for file record layouts (CADMDR.CPY, CADTMP.CPY)"
+        "Calls to proprietary framework routines: DYSPOL, DYMSGM, DYHELP, DYIMPR",
+        "INDEXED files with DYNAMIC access and FILE STATUS",
+        "DELETE FILE statement for CADTMP",
+        "ACCEPT ... FROM ESCAPE KEY for function-key handling",
+        "Portuguese-language variable names and screen text",
+        "CEP (Brazilian postal code) formatted as 99999.999"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "The file uses IBM CP850/CP437 box-drawing characters in screen definitions, typical of Brazilian PC-based COBOL applications from the 1990s. The program is part of a larger application suite (DY prefix naming convention). COPY files (CADMDR.CPY, CADTMP.CPY) are not included, so field-level details of the master and temp files are inferred from context. The 'online-cics' label is not accurate in the CICS sense — this is a screen-based interactive batch/online program using Micro Focus or similar screen I/O, not CICS."
+      "overall_confidence": "medium",
+      "notes": "File decoded as latin-1; screen section contains extended IBM PC box-drawing characters (Û, É, º, È, etc.) consistent with a DOS/Brazilian microcomputer COBOL environment. No COMP-3 usage. The DY prefix on program and called routines suggests a proprietary application framework. Cannot determine exact compiler/vendor without more context."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4613,
-      "completion_tokens": 772,
-      "total_tokens": 5385,
-      "cost": 0.025419,
+      "prompt_tokens": 5991,
+      "completion_tokens": 712,
+      "total_tokens": 6703,
+      "cost": 0.028653,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.025419,
-        "upstream_inference_prompt_cost": 0.013839,
-        "upstream_inference_completions_cost": 0.01158
+        "upstream_inference_cost": 0.028653,
+        "upstream_inference_prompt_cost": 0.017973,
+        "upstream_inference_completions_cost": 0.01068
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +119,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.0,
+    "provider": "Anthropic",
+    "latency_s": 18.26,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:58:27Z"
 }

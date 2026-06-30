@@ -49,47 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Micro Focus COBOL",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM DB2 embedded SQL skeleton; SOURCE-COMPUTER/OBJECT-COMPUTER IBM-AT suggests PC-based IBM COBOL or compatible",
         "evidence": [
-          "PROGRAM-ID. TSQL022C",
           "EXEC SQL INCLUDE SQLCA END-EXEC",
-          "PIC X(66000) VARYING",
-          "SOURCE-COMPUTER. IBM-AT / OBJECT-COMPUTER. IBM-AT",
-          "UTF-8 BOM present"
+          "SOURCE-COMPUTER. IBM-AT",
+          "OBJECT-COMPUTER. IBM-AT",
+          "PIC X(66000) VARYING"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A skeleton/stub COBOL program with embedded SQL (DB2) infrastructure. It declares a large varying-length buffer and includes SQLCA, but the procedure division paragraphs are empty. Likely a test or template program for SQL connectivity.",
-        "domain": "database",
+        "domain": "test-suite",
+        "domain_detail": "Appears to be a test or skeleton program for SQL connectivity testing, likely part of a DB2 SQL test suite (TSQL prefix with numeric suffix)",
+        "summary": "A skeletal COBOL program with EXEC SQL INCLUDE SQLCA and empty procedure paragraphs (CONNECT, MAIN, END). It appears to be a stub or test harness for DB2 SQL operations, with no actual logic implemented.",
         "program_type": "test"
       },
       "notable_features": [
-        "EXEC SQL INCLUDE SQLCA (DB2 embedded SQL)",
-        "PIC X(66000) VARYING — large varying-length string, unusual in standard COBOL",
-        "UTF-8 BOM at file start",
-        "All procedure division paragraphs are empty stubs",
-        "No PERFORM, CALL, or GOTO — purely skeletal"
+        "EXEC SQL INCLUDE SQLCA",
+        "PIC X(66000) VARYING (large variable-length field)",
+        "Empty procedure division paragraphs",
+        "BOM (UTF-8 BOM present)"
       ],
       "maturity": "snippet",
       "overall_confidence": "medium",
-      "notes": "The file is almost entirely a skeleton with empty procedure paragraphs, suggesting it is an unfinished test stub or template. The VARYING clause on PIC X(66000) is a Micro Focus or IBM extension. The IBM-AT computer names suggest a PC-based COBOL environment. The UTF-8 BOM is unusual for traditional mainframe COBOL but common in modern IDE-generated files."
+      "notes": "File has a UTF-8 BOM. The program body is essentially empty with no SQL statements beyond INCLUDE SQLCA and no PERFORM/CALL logic. Likely a test stub or template from a DB2 COBOL test suite. The VARYING clause on PIC X(66000) is notable and suggests IBM DB2 COBOL compatibility."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1034,
-      "completion_tokens": 476,
-      "total_tokens": 1510,
-      "cost": 0.010242,
+      "prompt_tokens": 2412,
+      "completion_tokens": 384,
+      "total_tokens": 2796,
+      "cost": 0.012996,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010242,
-        "upstream_inference_prompt_cost": 0.003102,
-        "upstream_inference_completions_cost": 0.00714
+        "upstream_inference_cost": 0.012996,
+        "upstream_inference_prompt_cost": 0.007236,
+        "upstream_inference_completions_cost": 0.00576
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.19,
+    "provider": "Anthropic",
+    "latency_s": 8.6,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:53:38Z"
 }

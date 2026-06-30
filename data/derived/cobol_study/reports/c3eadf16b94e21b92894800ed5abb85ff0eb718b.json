@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c3eadf16b94e21b92894800ed5abb85ff0eb718b",
+    "sha1_git": "c3eadf16b94e21b92894800ed5abb85ff0eb718b",
+    "filename": "/SCHED-ADD.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8289,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c3eadf16b94e21b92894800ed5abb85ff0eb718b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c3eadf16b94e21b92894800ed5abb85ff0eb718b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8289,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 186,
+    "blank_lines": 17,
+    "comment_lines": 12,
+    "code_lines": 157,
+    "comment_ratio": 0.071,
+    "max_line_length": 73,
+    "avg_line_length": 43.6,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SCHED-ADD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 57,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) style; uses SCREEN SECTION with LINE/COL clauses, INDEXED file with named RECORD KEY syntax (CRN-KEY=ISAM-IO-KEY), relative file path strings, and IS INITIAL PROGRAM — all consistent with GnuCOBOL on a PC/Linux environment",
+        "evidence": [
+          "ASSIGN TO \"../SCHEDULE-MASTER.DAT\" (relative path string)",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "RECORD KEY IS CRN-KEY=ISAM-IO-KEY CRN (GnuCOBOL named key syntax)",
+          "SCREEN SECTION with LINE/COL",
+          "IS INITIAL PROGRAM",
+          "FUNCTION CURRENT-DATE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University course scheduling system (UAFS — University of Arkansas Fort Smith); adds records to a schedule master ISAM file",
+        "summary": "SCHED-ADD is a batch/interactive program that allows a user to add a new course schedule record to an ISAM indexed file (SCHEDULE-MASTER.DAT). It reads the last-used CRN from a sequential file, increments it, collects course details via a screen form, confirms with the user, and writes the new record. The loop allows adding multiple records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SCREEN SECTION with LINE/COL/AUTO clauses",
+        "INDEXED file with multiple ALTERNATE KEYs and named key syntax",
+        "LINE SEQUENTIAL organization for CRN counter file",
+        "FUNCTION CURRENT-DATE for display",
+        "IS INITIAL PROGRAM clause",
+        "REWRITE on sequential file for CRN counter update",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Comment header says BLDG-INQ.CBL but PROGRAM-ID is SCHED-ADD — likely copy-paste of header from another program in the same student project. The named RECORD KEY syntax (CRN-KEY=ISAM-IO-KEY) is GnuCOBOL-specific. REWRITE LAST-CRN (elementary item, not FD record) may be a student coding error. Overall this is a student university project."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4794,
+      "completion_tokens": 566,
+      "total_tokens": 5360,
+      "cost": 0.022872,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022872,
+        "upstream_inference_prompt_cost": 0.014382,
+        "upstream_inference_completions_cost": 0.00849
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.72,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:56:30Z"
+}

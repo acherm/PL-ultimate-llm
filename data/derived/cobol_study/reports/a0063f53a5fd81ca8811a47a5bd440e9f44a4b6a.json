@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely GnuCOBOL or Micro Focus with ACUCOBOL-style extensions)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "APAC GnuCOBOL/OpenCOBOL-based General Ledger system by J.W. Lemmon; uses $set LINKCOUNT compiler directive, COMP-5, CRT SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR, CURSOR IS / CRT STATUS IS clauses, and GNU GPL licensing text. Likely compiled with GnuCOBOL or a compatible open-source COBOL compiler.",
         "evidence": [
-          "$set LINKCOUNT\"512\" compiler directive at top",
-          "CURSOR IS CSTART / CONSOLE IS CRT / CRT STATUS IS KEY-STATUS in SPECIAL-NAMES",
-          "SCREEN SECTION with FOREGROUND-COLOR, BACKGROUND-COLOR, HIGHLIGHT, AUTO clauses",
-          "COMP-5 usage (Micro Focus binary)",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "COPY ... .SL / .FDE / .ID / .CRT / .WS / .GL file extensions typical of Micro Focus",
-          "EXIT PROGRAM statement"
+          "$set LINKCOUNT\"512\" compiler directive",
+          "COMP-5 usage",
+          "CURSOR IS CSTART / CONSOLE IS CRT / CRT STATUS IS KEY-STATUS",
+          "SCREEN SECTION with FOREGROUND-COLOR/BACKGROUND-COLOR",
+          "GNU General Public License text in SECURITY paragraph",
+          "COPY *.CRT / *.SL / *.FDE / *.ID copybook naming conventions",
+          "LINKAGE SECTION with USING clause referencing LS0-GLLEV"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "GLP002 is a General Ledger 'Delete Account' program, part of a larger accounting/ERP system called GLEDGER. It allows an authorised user to delete a G/L account record, with security checks (LS0-GLLEV < 3 triggers 'Not Authorised'), screen-based interaction, and file I/O against multiple ledger files.",
-        "domain": "banking/accounting/ERP (General Ledger)",
+        "domain": "accounting-erp",
+        "domain_detail": "General Ledger (G/L) account deletion module in an APAC accounting/ERP system",
+        "summary": "GLP002 is the 'Delete G/L Account' program in a General Ledger application. It presents a screen-based interactive interface allowing an authorised user to select and delete a general ledger account, with security checks (LS0-GLLEV < 3), recovery file handling, and lookup functionality. It is part of a larger suite of GL programs authored by J.W. Lemmon.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "COMP-3 (packed decimal) used extensively for financial totals",
-        "COMP-5 (Micro Focus binary) for keys and counters",
-        "SCREEN SECTION with CRT display attributes (FOREGROUND-COLOR, BACKGROUND-COLOR, HIGHLIGHT, AUTO)",
-        "CURSOR IS / CONSOLE IS CRT / CRT STATUS in SPECIAL-NAMES",
-        "$set LINKCOUNT compiler directive",
-        "Multiple COPY statements for modular file definitions (.SL, .FDE, .ID, .CRT, .WS, .GL extensions)",
-        "LINKAGE SECTION with chained program parameters (LS-PARID, LS-USER-ID, LS0-PROGRAMS, LS0-SECURITY)",
-        "GNU General Public License notice embedded in SECURITY paragraph",
-        "Box-drawing characters (³, °) used in screen layout data",
-        "GOTO statements used for flow control (37 occurrences)"
+        "$set LINKCOUNT compiler directive (GnuCOBOL/OpenCOBOL)",
+        "SCREEN SECTION with FOREGROUND-COLOR, BACKGROUND-COLOR, HIGHLIGHT",
+        "CRT STATUS IS / CURSOR IS / CONSOLE IS CRT special-names",
+        "COMP-3 and COMP-5 numeric fields",
+        "Extensive use of COPY statements (67 copybooks) for file definitions, screen layouts, and working storage",
+        "LINKAGE SECTION with security level check (LS0-GLLEV)",
+        "REDEFINES used extensively for account number decomposition",
+        "GNU GPL v2 license embedded in SECURITY paragraph",
+        "WS-CHECK field with encoded author name string"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is clearly production-quality COBOL from a commercial General Ledger package (GLEDGER) authored by J.W. Lemmon, originally written in 1983 and updated through 2012. The $set directive and CRT/SCREEN SECTION features are characteristic of Micro Focus or GnuCOBOL. Many COPY statements reference external copybooks that are not shown (truncated source). The source uses latin-1 encoding, which accounts for the box-drawing characters. Line sequence numbers appear on many (but not all) lines, consistent with fixed-format COBOL with some free-format mixed in for the compiler directive at the top."
+      "notes": "Source truncated to first 16000 chars; full PROCEDURE DIVISION not visible but structure is clearly production-quality. The program uses latin-1 encoding with some box-drawing characters (³, °) in screen layout literals. The 'online-cics' program_type is used loosely here — this is actually a screen-based interactive terminal program (not CICS), but no better enum value exists for interactive screen programs."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7740,
-      "completion_tokens": 812,
-      "total_tokens": 8552,
-      "cost": 0.0354,
+      "prompt_tokens": 9118,
+      "completion_tokens": 683,
+      "total_tokens": 9801,
+      "cost": 0.037599,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.0354,
-        "upstream_inference_prompt_cost": 0.02322,
-        "upstream_inference_completions_cost": 0.01218
+        "upstream_inference_cost": 0.037599,
+        "upstream_inference_prompt_cost": 0.027354,
+        "upstream_inference_completions_cost": 0.010245
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.23,
+    "provider": "Anthropic",
+    "latency_s": 20.83,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:04:30Z"
 }

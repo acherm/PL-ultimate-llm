@@ -49,49 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (PC/workstation COBOL, likely from a textbook series)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL; uses INSPECT CONVERTING with LOWER-ALPHA/UPPER-ALPHA from copybooks (WSCASE01.CBL), date handling via WSDATE01.CBL, fixed-format with max line length 65, no COMP-3, no CICS/SQL",
         "evidence": [
           "INSPECT ... CONVERTING LOWER-ALPHA TO UPPER-ALPHA",
-          "88-level condition MENU-PICK-IS-VALID VALUES 0 THRU 4",
-          "EXIT PROGRAM / STOP RUN pattern",
-          "COPY directives referencing .CBL files (SLVND02.CBL, SLVOUCH.CBL, etc.)",
-          "PIC Z(5) and PIC ZZZ,ZZ9.99- editing",
-          "No EXEC SQL, no EXEC CICS, no COMP-3"
+          "COPY 'WSCASE01.CBL'",
+          "COPY 'WSDATE01.CBL'",
+          "EXIT PROGRAM and STOP RUN both present",
+          "max_line_length 65, no lines over 72",
+          "no EXEC CICS, no EXEC SQL, no COMP-3"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Interactive menu-driven maintenance program for a Voucher file, supporting Add, Change, Inquire, and Delete operations. It also reads a Vendor file for validation and a Control file to auto-generate sequential voucher numbers. Fields such as PAID-AMOUNT, PAID-DATE, and CHECK-NO are display-only and not modifiable.",
-        "domain": "accounting/payables (small business accounts-payable voucher system)",
+        "domain": "accounting-erp",
+        "domain_detail": "Accounts payable voucher file maintenance - add, change, inquire, delete vouchers linked to vendor records and a control file",
+        "summary": "VCHMNT01 is a menu-driven batch maintenance program for an accounts payable voucher file. It supports add, change, inquire, and delete operations on voucher records, validating vendor references and managing a control record for auto-incrementing voucher numbers. Fields like PAID-AMOUNT, PAID-DATE, and CHECK-NO are display-only (not modifiable).",
         "program_type": "batch"
       },
       "notable_features": [
-        "INSPECT CONVERTING for case-folding (lower to upper)",
-        "Auto-increment voucher number via a Control file",
-        "Conditional display of paid vs. unpaid voucher fields",
-        "Multiple COPY directives for file-control, FD, and working-storage sections",
-        "Date entry/validation via a shared GET-A-DATE routine (WSDATE01.CBL copybook)",
-        "No EXEC SQL, no EXEC CICS, no COMP-3 usage"
+        "INSPECT CONVERTING for case normalization using LOWER-ALPHA/UPPER-ALPHA copybook constants",
+        "Date entry/validation via shared GET-A-DATE routine (WSDATE01.CBL)",
+        "Auto-increment voucher number via CONTROL-FILE (CONTROL-LAST-VOUCHER)",
+        "9 COPY statements for file control, FD, and working-storage",
+        "No GOTO usage; structured with 123 PERFORMs",
+        "Conditional display of SELECTED vs PAID fields based on VOUCHER-PAID-DATE",
+        "EXIT PROGRAM present alongside STOP RUN (designed as callable subprogram or standalone)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "Source is truncated at 16000 chars (589 total lines); the display routines for VOUCHER-DATE onward and file I/O paragraphs are cut off but the overall structure is clear. The COPY filenames and naming conventions (SLVND02, SLVOUCH, FDVND04, WSCASE01, WSDATE01) are consistent with the textbook series by Stern/Stern or a similar PC-COBOL curriculum package. The program uses a terminal-scroll approach (SCROLL-LINE 25 TIMES for clear-screen) typical of non-CICS batch-interactive programs."
+      "notes": "Source truncated at 16000 chars out of 18623 bytes; the display routines for DATE, DUE, DEDUCTIBLE, SELECTED, PAID-AMOUNT, PAID-DATE, CHECK-NO and file I/O routines are not shown but inferred from PERFORM references. Dialect is medium-confidence as the copybook naming style (.CBL extensions, WSCASE01/WSDATE01 pattern) is consistent with textbook/PC COBOL environments such as GnuCOBOL or Micro Focus Personal COBOL."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6841,
-      "completion_tokens": 675,
-      "total_tokens": 7516,
-      "cost": 0.030648,
+      "prompt_tokens": 8219,
+      "completion_tokens": 653,
+      "total_tokens": 8872,
+      "cost": 0.034452,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.030648,
-        "upstream_inference_prompt_cost": 0.020523,
-        "upstream_inference_completions_cost": 0.010125
+        "upstream_inference_cost": 0.034452,
+        "upstream_inference_prompt_cost": 0.024657,
+        "upstream_inference_completions_cost": 0.009795
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -111,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 21.8,
+    "latency_s": 16.63,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:19:46Z"
 }

@@ -49,15 +49,17 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "unknown (likely GnuCOBOL or any modern compiler)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Minimal hello-world program; free-format layout, no vendor-specific extensions visible",
         "evidence": [
           "IDENTIFICATION DIVISION",
           "PROGRAM-ID. HELLO",
@@ -65,29 +67,31 @@
           "DISPLAY 'Hello World'",
           "STOP RUN"
         ],
-        "confidence": "high"
+        "confidence": "low"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "A minimal Hello World program that displays the string 'Hello World' and stops. It serves purely as a demonstration or tutorial example.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Classic Hello World demonstration program",
+        "summary": "A minimal COBOL program that displays 'Hello World' and stops. It has no data division, no file handling, and no business logic.",
         "program_type": "demo"
       },
       "notable_features": [
-        "No DATA DIVISION or ENVIRONMENT DIVISION — minimal skeleton",
-        "Free-format source (no fixed-column constraints evident)",
-        "Classic Hello World pattern"
+        "No DATA DIVISION",
+        "No ENVIRONMENT DIVISION",
+        "Free-format source",
+        "Minimal 5-line program"
       ],
       "maturity": "toy-or-hello-world",
       "overall_confidence": "high",
-      "notes": "This is the canonical minimal COBOL Hello World program. No ambiguity; all structural indicators are consistent with genuine COBOL source."
+      "notes": "Extremely minimal program; dialect and standard cannot be determined with confidence beyond basic COBOL-85 compatibility. Free format inferred from short lines and no column-72 constraints."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 867,
-      "completion_tokens": 323,
-      "total_tokens": 1190,
-      "cost": 0.007446,
+      "prompt_tokens": 2245,
+      "completion_tokens": 250,
+      "total_tokens": 2495,
+      "cost": 0.010485,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -96,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.007446,
-        "upstream_inference_prompt_cost": 0.002601,
-        "upstream_inference_completions_cost": 0.004845
+        "upstream_inference_cost": 0.010485,
+        "upstream_inference_prompt_cost": 0.006735,
+        "upstream_inference_completions_cost": 0.00375
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,8 +111,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 6.26,
+    "latency_s": 15.8,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:47:40Z"
 }

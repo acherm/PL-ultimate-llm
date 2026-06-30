@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / JMA ORCA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses MCPAREA, MCPDATA.INC and COMMON-SPA copybooks typical of the ORCA system.",
         "evidence": [
-          "PROGRAM-ID. ORCR1200",
-          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY",
-          "COPY directives with REPLACING clauses",
-          "PERFORM ... UNTIL construct",
-          "INITIALIZE verb",
-          "UNSTRING ... DELIMITED BY ... INTO",
-          "END-IF, END-UNSTRING scope terminators",
-          "LINKAGE SECTION with PROCEDURE DIVISION USING",
-          "No EXEC SQL or EXEC CICS",
-          "JMA ORCA open-source medical receipt software project headers"
+          "PROGRAM-ID ORCR1200",
+          "COPY \"MCPAREA\"",
+          "COPY \"MCPDATA.INC\"",
+          "COPY \"COMMON-SPA\"",
+          "JMA (Japan Medical Association) copyright header",
+          "COPY \"CPRCF200.INC\", \"CPRCF250.INC\" etc.",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "EXIT PROGRAM / STOP RUN conditional on SHELLID"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch program that processes public-injury (kougai) inpatient receipt records for the JMA ORCA standard medical receipt software system. It reads and writes indexed receipt files (RECE200, RECE250), performs hospitalization accounting and insurance combination processing, and logs errors to an error file.",
-        "domain": "healthcare / medical billing (Japanese medical insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — specifically the ORCA (JMA standard receipt software) subsystem for public-injury (公害) inpatient receipt basic information processing",
+        "summary": "ORCR1200 is a batch program in the JMA ORCA medical receipt system that processes public-injury (公害) inpatient receipt records. It reads indexed receipt detail files (RECE200, RECE250), performs insurance combination and hospitalization history lookups, and writes error records. It handles special cases such as same-day re-admission and other-insurance history.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-language comments (Shift-JIS / EUC-JP encoded, decoded as latin-1 producing mojibake)",
-        "Extensive use of COPY statements with REPLACING for reusable record layouts (CPRCF200.INC, CPRCF250.INC, CPHKNCOMBI.INC, etc.)",
-        "LINKAGE SECTION with COMMAND-PARAM for shell/batch invocation",
-        "STOP RUN vs EXIT PROGRAM conditional based on shell ID",
-        "OCCURS clauses for insurance combination and day-count tables",
-        "No COMP-3 packed decimal usage despite financial domain",
-        "10 CALL statements suggesting modular subprogram architecture",
-        "210 PERFORM statements indicating heavily structured procedural decomposition",
-        "Part of JMA (Japan Medical Association) open-source ORCA project"
+        "36 COPY statements referencing ORCA-specific copybooks (CPRCF200.INC, CPRCF250.INC, CPHKNCOMBI.INC, etc.)",
+        "LINKAGE SECTION with COMMAND-PARAM parsed via UNSTRING",
+        "INDEXED file I/O with DYNAMIC access mode",
+        "OCCURS tables for insurance combinations and day-count tracking",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "No EXEC SQL or EXEC CICS — uses MCP (middleware) DB access layer",
+        "REPLACING clause on COPY for record aliasing",
+        "210 PERFORM statements indicating structured procedural decomposition"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but comments are clearly Japanese (likely EUC-JP or Shift-JIS), resulting in mojibake in the visible text. The program is part of the well-known JMA ORCA open-source medical receipt software suite used in Japanese clinics. COPY statements reference many external copybooks (not shown) so full data layout cannot be verified from truncated source alone. The copy_count reported as 0 mechanically is inconsistent with the visible COPY statements — likely the mechanical parser did not recognize them due to encoding issues."
+      "notes": "Source comments are in Japanese EUC-JP encoding but the file was decoded as latin-1, resulting in garbled multi-byte characters in comment lines. The code itself is valid COBOL. File is truncated at 16000 chars out of 115678 bytes (2640 lines total), but enough is visible to classify confidently. The MCP (Master Control Program) abstraction layer is characteristic of the JMA ORCA open-source medical system running on GnuCOBOL/Linux."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7977,
-      "completion_tokens": 728,
-      "total_tokens": 8705,
-      "cost": 0.034851,
+      "prompt_tokens": 9355,
+      "completion_tokens": 662,
+      "total_tokens": 10017,
+      "cost": 0.037995,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034851,
-        "upstream_inference_prompt_cost": 0.023931,
-        "upstream_inference_completions_cost": 0.01092
+        "upstream_inference_cost": 0.037995,
+        "upstream_inference_prompt_cost": 0.028065,
+        "upstream_inference_completions_cost": 0.00993
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.18,
+    "provider": "Anthropic",
+    "latency_s": 20.71,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:54:20Z"
 }

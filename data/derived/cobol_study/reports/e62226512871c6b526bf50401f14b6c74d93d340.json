@@ -49,50 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (Japan Medical Association), ORCA API V3 parameter access module, likely compiled with GnuCOBOL/OpenCOBOL",
         "evidence": [
-          "EVALUATE TRUE / WHEN / END-EVALUATE syntax",
-          "EXIT PROGRAM statement",
-          "INITIALIZE verb",
-          "COPY directives for MCPAREA, MCPDATA3.INC, COMMON-SPA",
-          "PROCEDURE DIVISION USING with multiple parameters",
-          "Fixed-format source with columns respected"
+          "Project code name ORCA",
+          "JMA (Japan Medical Association) copyright 2002",
+          "COPY MCPAREA / MCPDATA3.INC / COMMON-SPA",
+          "CALL MONFUNC",
+          "PROGRAM-ID ORCDBAPIV3",
+          "MCP-VERSION, MCP-REDIRECT, MCP-RC fields"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is an API parameter-access module (V3) for the ORCA JMA standard medical receipt software system. It acts as a subprogram that validates hospital number parameters, dispatches database/XML function calls via MCP (Message Control Program) infrastructure, and routes control to a MONFUNC call handler. It handles DB open/close/fetch/commit and XML open/close operations.",
-        "domain": "healthcare/medical billing (JMA ORCA receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA standard medical receipt (claims) processing system - ORCA API V3 database access module",
+        "summary": "This subprogram is the ORCA API V3 parameter access module for the JMA standard medical receipt software. It validates hospital number fields, dispatches database operations (DBOPEN, DBFETCH, DBCOMMIT, etc.) and XML operations via a call to MONFUNC, acting as a middleware layer between the ORCA API and the underlying database functions.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-encoded comments (EUC-JP or Shift-JIS, decoded as latin-1 garbled)",
-        "COPY of MCPAREA, MCPDATA3.INC, COMMON-SPA linkage copybooks",
+        "LINKAGE SECTION with three COPY books (MCPAREA, MCPDATA3.INC, COMMON-SPA)",
+        "PROCEDURE DIVISION USING with three parameters",
         "EVALUATE TRUE with compound WHEN conditions",
-        "CALL to external 'MONFUNC' subprogram",
-        "MCP-VERSION and MCP-REDIRECT fields set before dispatch",
-        "Hospital number numeric validation logic",
-        "No EXEC SQL or EXEC CICS — pure COBOL API wrapper"
+        "CALL MONFUNC for database dispatch",
+        "Japanese comments encoded in latin-1 (Shift-JIS or EUC-JP garbled)",
+        "EXIT PROGRAM pattern",
+        "MCP-VERSION and MCP-REDIRECT fields suggesting API versioning"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the open-source JMA ORCA medical receipt system, a well-known Japanese healthcare software project. Comments are in Japanese (likely EUC-JP) but were decoded as latin-1, resulting in garbled characters. The COPY statements reference copybooks not shown here (MCPAREA, MCPDATA3.INC, COMMON-SPA). Five lines exceed 72 characters, consistent with fixed-format COBOL that occasionally extends into columns 73+. The dialect is most likely GnuCOBOL given the open-source ORCA project context."
+      "notes": "Comments contain Japanese text that appears garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The file is part of the well-known open-source JMA ORCA medical receipt system. High comment ratio (49%) reflects Japanese documentation style. Five lines slightly exceed column 72 but are within 74 characters."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2894,
-      "completion_tokens": 635,
-      "total_tokens": 3529,
-      "cost": 0.018207,
+      "prompt_tokens": 4272,
+      "completion_tokens": 512,
+      "total_tokens": 4784,
+      "cost": 0.020496,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.018207,
-        "upstream_inference_prompt_cost": 0.008682,
-        "upstream_inference_completions_cost": 0.009525
+        "upstream_inference_cost": 0.020496,
+        "upstream_inference_prompt_cost": 0.012816,
+        "upstream_inference_completions_cost": 0.00768
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.84,
+    "latency_s": 12.72,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:56:52Z"
 }

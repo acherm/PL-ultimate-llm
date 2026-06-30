@@ -49,54 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (PC/MS-DOS era)",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "PC-based COBOL (likely Micro Focus or compatible) targeting PC-XT/AT, using COMP-4, ACCEPT/DISPLAY with LINE/POSITION clauses, indexed file I/O with DYNAMIC access, and DECIMAL-POINT IS COMMA (Spanish locale). Dated Nov 1991.",
         "evidence": [
           "SOURCE-COMPUTER. PC-XT-AT",
           "OBJECT-COMPUTER. PC-XT-AT",
+          "COMP-4 usage",
+          "ACCEPT ... LINE ... POSITION ... ON EXCEPTION",
           "DECIMAL-POINT IS COMMA",
-          "COMP-4 usage (Micro Focus extension)",
-          "ACCEPT ... ON EXCEPTION EXCEP (Micro Focus screen I/O)",
-          "DISPLAY ... LINE ... POSITION (Micro Focus screen handling)",
           "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
-          "COPY directives for .SEL and .REG files (Micro Focus convention)",
-          "DATE-WRITTEN. NOV'91"
+          "WRITE ... INVALID KEY REWRITE ..."
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program generates an alphabetical price list ('LISTA ALFABETICA DE PRECIOS') for articles, reading from indexed files (ART01, ART02, MARCAS, LINEAS, etc.), computing prices with and without VAT (IVA), and printing formatted output to IMP02. It also writes an intermediate indexed work file (PRELIS3) before printing.",
-        "domain": "retail/wholesale inventory and pricing",
+        "domain": "retail-commerce",
+        "domain_detail": "Price list generation for articles/products, organized by brand (MARCA) and product line, with pricing in local currency (pesos) and USD, including IVA (VAT) calculations. Likely an Argentine retail/wholesale inventory system.",
+        "summary": "This program generates an alphabetical price list (LISTA ALFABETICA DE PRECIOS) for articles stored in indexed files. It reads product data from ART01/ART02 files, computes prices with and without IVA (21%), handles USD vs. peso pricing, and prints formatted reports organized by brand and product line to an output file (IMP02). It also writes intermediate sorted data to a PRELIS3 indexed file.",
         "program_type": "batch"
       },
       "notable_features": [
-        "COMP-4 (Micro Focus binary usage)",
-        "DECIMAL-POINT IS COMMA (European numeric format, Argentine Spanish context)",
-        "Screen I/O via DISPLAY ... LINE ... POSITION and ACCEPT ... ON EXCEPTION",
-        "Heavy use of COPY statements for file SELECT, FD, and error declaratives",
-        "DECLARATIVES section with per-file error handlers",
-        "Indexed file with DYNAMIC access and START/READ NEXT navigation",
-        "Commented-out alternative price calculation logic",
-        "Argentine Spanish identifiers and comments (e.g., IVA, R.N.I., COTIZACION DOLAR)"
+        "DECIMAL-POINT IS COMMA (Spanish/Argentine locale)",
+        "COMP-4 (binary) usage for line/column layout fields",
+        "Screen I/O with ACCEPT/DISPLAY LINE POSITION clauses",
+        "Indexed file I/O with DYNAMIC access and START/READ NEXT",
+        "Heavy use of COPY statements (40 copybooks) for file definitions and error handlers",
+        "DECLARATIVES section with error handlers per file",
+        "IVA (VAT) computation at 21% (Argentine tax)",
+        "USD/peso dual-currency pricing",
+        "WRITE ... INVALID KEY REWRITE pattern for upsert",
+        "PERFORM THRU for paragraph ranges",
+        "52 GO TO statements indicating older structured style"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "File is named LISPRE13.CBL but PROGRAM-ID is LISPRE8, suggesting version drift or copy/rename. Written in Argentina circa November 1991 for a PC-XT/AT environment. The COPY statements reference external copybooks (.SEL, .REG, .WOR, .ERR, .IMP) that are not included in this file. Source was truncated at 16000 chars out of 25446 bytes, so the latter portion of the PROCEDURE DIVISION is not visible, but the overall structure is clear."
+      "overall_confidence": "medium",
+      "notes": "Source is truncated at 16000 chars out of 25446 bytes; full procedure division not visible. PROGRAM-ID is LISPRE8 but filename is LISPRE13.CBL suggesting versioning. The 40 COPY statements reference external copybooks not shown. Dialect is likely Micro Focus COBOL for DOS/PC given the era (1991) and PC-XT/AT target, but could also be another PC COBOL vendor of the period."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7208,
-      "completion_tokens": 689,
-      "total_tokens": 7897,
-      "cost": 0.031959,
+      "prompt_tokens": 8586,
+      "completion_tokens": 655,
+      "total_tokens": 9241,
+      "cost": 0.035583,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.031959,
-        "upstream_inference_prompt_cost": 0.021624,
-        "upstream_inference_completions_cost": 0.010335
+        "upstream_inference_cost": 0.035583,
+        "upstream_inference_prompt_cost": 0.025758,
+        "upstream_inference_completions_cost": 0.009825
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.88,
+    "latency_s": 18.98,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:48:46Z"
 }

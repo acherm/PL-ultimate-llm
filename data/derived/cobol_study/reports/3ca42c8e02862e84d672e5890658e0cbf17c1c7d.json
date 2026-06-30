@@ -49,46 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) as indicated by 'Tectonics: cobc' comment; Spanish-language identifiers suggest Latin American student context",
         "evidence": [
-          "Tectonics: cobc (GnuCOBOL compiler)",
-          "PICTURE and PIC clauses used interchangeably",
-          "Fixed-format layout with standard divisions",
-          "STOP RUN used as terminator"
+          "Tectonics: cobc",
+          "PROGRAM-ID. MI-PRIMER-PROGRAMA",
+          "PIC A(30)",
+          "PICTURE 9(06)",
+          "DISPLAY \"Hola Usuario\""
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A beginner tutorial program that greets the user by name and then accepts two numbers, displaying each and finally displaying their sum. It demonstrates basic DISPLAY, ACCEPT, and ADD operations.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Introductory COBOL exercise in Spanish; accepts user name and two numbers, displays them and their sum",
+        "summary": "A beginner COBOL program that prompts the user for their name and two numbers, displays a welcome message, and shows the sum of the two numbers. Written in Spanish, clearly a first exercise ('MI-PRIMER-PROGRAMA' means 'MY FIRST PROGRAM').",
         "program_type": "demo"
       },
       "notable_features": [
-        "Spanish-language prompts and comments",
-        "Mix of PIC A(30) for alphabetic and PIC 9 for numeric fields",
-        "Commented-out obsolete STOP literal syntax",
-        "Redundant STOP RUN after END of main procedure (unreachable code)",
-        "Commented-out END PROGRAM statement"
+        "Spanish-language identifiers and display strings",
+        "ACCEPT for interactive input",
+        "ADD ... TO statement",
+        "Comment noting STOP literal is obsolete",
+        "Unreachable STOP RUN after first STOP RUN"
       ],
       "maturity": "toy-or-hello-world",
       "overall_confidence": "high",
-      "notes": "Clearly a first COBOL program (MI-PRIMER-PROGRAMA means 'my first program' in Spanish) written as a student exercise. The duplicate STOP RUN at the end is unreachable dead code. Author and date metadata are consistent with a 2020 student assignment."
+      "notes": "The program has a dead STOP RUN statement at the end (line 49) after the first STOP RUN inside MAIN-PROCEDURE, and a commented-out END PROGRAM line. This is consistent with a beginner exercise. No PERFORM, CALL, or file I/O present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1293,
-      "completion_tokens": 419,
-      "total_tokens": 1712,
-      "cost": 0.010164,
+      "prompt_tokens": 2671,
+      "completion_tokens": 379,
+      "total_tokens": 3050,
+      "cost": 0.013698,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -97,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010164,
-        "upstream_inference_prompt_cost": 0.003879,
-        "upstream_inference_completions_cost": 0.006285
+        "upstream_inference_cost": 0.013698,
+        "upstream_inference_prompt_cost": 0.008013,
+        "upstream_inference_completions_cost": 0.005685
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 8.15,
+    "provider": "Anthropic",
+    "latency_s": 9.12,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:09:13Z"
 }

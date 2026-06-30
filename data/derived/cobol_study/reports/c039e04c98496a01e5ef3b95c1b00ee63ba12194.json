@@ -49,53 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus or similar COBOL used in the ORCA (JMA) open-source medical system, likely compiled with OpenCOBOL/GnuCOBOL on Linux",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE … ALSO … WHEN syntax (COBOL-85)",
-          "END-EVALUATE, END-IF, END-PERFORM inline terminators",
-          "PERFORM UNTIL with inline body",
-          "COPY with REPLACING … BY … using // delimiters",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL / EXEC CICS — pure COBOL"
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY directives for ORCA-specific copybooks (MCPAREA, ORCA-SPA, H01.INC, H99.INC, MCPDATA.INC)",
+          "MCP-STATUS, MCP-EVENT, MCP-WIDGET linkage pattern typical of ORCA MCP framework",
+          "No EXEC CICS or EXEC SQL; uses MCP database access pattern"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA JMA (Japan Medical Association) standard medical receipt (claims) software. It handles the handwritten-correction screen (H99) for the claims management subsystem, supporting display, entry, and confirmation of receipt correction data. It searches the claims database (tbl_seikyu), reads related master data, and manages screen navigation and field editing.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt) management system - specifically the receipt search/correction screen (H99) for the JMA ORCA medical billing system",
+        "summary": "This program implements the receipt search and manual correction screen (H99) of the JMA ORCA medical receipt software. It handles initialization, screen navigation, data entry, and database lookup for medical insurance claims (seikyu) associated with a patient. It interacts with system management master tables and patient public expense information.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "COPY statements with REPLACING using // delimiter convention (Micro Focus / OpenCOBOL style)",
-        "LINKAGE SECTION driven by MCP (Message Control Program) area — event-driven screen handler pattern",
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled)",
-        "Multiple COPY-included file layouts (CPHENREI-BODY.INC, CPSYSKANRI.INC, MCPDATA.INC, etc.)",
-        "EVALUATE MCP-STATUS / MCP-EVENT for screen event dispatch",
-        "PERFORM with inline UNTIL loops",
-        "GO TO used for section exits (structured exit pattern)",
-        "No COMP-3 packed decimal fields visible",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP database access layer (900-DBSELECT-SEC etc.)"
+        "MCP framework linkage (MCP-STATUS, MCP-EVENT, MCP-WIDGET, MCP-PUTTYPE, MCP-WINDOW) - ORCA-specific screen/event model",
+        "27 COPY statements referencing ORCA-specific copybooks",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen handling",
+        "Japanese EUC-encoded comments (latin-1 decoded, garbled)",
+        "PERFORM-heavy structure with 67 PERFORMs and 13 GOTOs",
+        "Database access via MCP abstraction layer (900-DBSELECT-SEC, 900-SEIKYU-READ-SEC)",
+        "OCCURS tables for receipt list display",
+        "REPLACING clause in COPY statements"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known open-source ORCA medical receipt system developed by JMA (Japan Medical Association). Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as latin-1, producing garbled characters. The program uses a proprietary MCP (Message Control Program) middleware layer for screen I/O and database access rather than CICS or raw SQL, but the overall structure and event-driven pattern is analogous to an online CICS program. Source was truncated at 16000 chars; the full file is 51548 bytes / 1296 lines."
+      "notes": "Comments are in Japanese EUC encoding, decoded as latin-1 resulting in garbled characters. The file is part of the well-known open-source JMA ORCA medical receipt system. Program name ORCGH99 suggests it is the H99 screen handler within the claims management (seikyu kanri) subsystem. Source is truncated at 16000 chars out of 51548 bytes total."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7673,
-      "completion_tokens": 769,
-      "total_tokens": 8442,
-      "cost": 0.034554,
+      "prompt_tokens": 9051,
+      "completion_tokens": 610,
+      "total_tokens": 9661,
+      "cost": 0.036303,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034554,
-        "upstream_inference_prompt_cost": 0.023019,
-        "upstream_inference_completions_cost": 0.011535
+        "upstream_inference_cost": 0.036303,
+        "upstream_inference_prompt_cost": 0.027153,
+        "upstream_inference_completions_cost": 0.00915
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.85,
+    "latency_s": 15.97,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:38:49Z"
 }

@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8435f1ede6623683011542708571f050a0598709",
+    "sha1_git": "8435f1ede6623683011542708571f050a0598709",
+    "filename": "/ExecSqlWithAlterSequence.rdz.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1351,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8435f1ede6623683011542708571f050a0598709/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8435f1ede6623683011542708571f050a0598709/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1351,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 33,
+    "blank_lines": 1,
+    "comment_lines": 0,
+    "code_lines": 32,
+    "comment_ratio": 0.0,
+    "max_line_length": 63,
+    "avg_line_length": 40.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "DVZZMFT3"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM Rational Developer for z/OS (RDz) test case, evidenced by .rdz.cbl extension and program-id DVZZMFT3 (DVZ prefix typical of IBM RDz test programs). Uses DB2 EXEC SQL ALTER SEQUENCE syntax.",
+        "evidence": [
+          "EXEC SQL / END-EXEC",
+          "ALTER SEQUENCE with DB2-style options (MINVALUE, MAXVALUE, CYCLE, CACHE, ORDER, RESTART, INCREMENT BY)",
+          "filename contains .rdz.cbl",
+          "PROGRAM-ID DVZZMFT3 (DVZ prefix)",
+          "GOBACK statement"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "IBM RDz SQL parser/compiler test case for ALTER SEQUENCE statement variations",
+        "summary": "This program is a test case for the IBM Rational Developer for z/OS SQL preprocessor or parser. It contains a single EXEC SQL block in the WORKING-STORAGE SECTION that exercises numerous variations of the ALTER SEQUENCE DDL statement (MINVALUE, MAXVALUE, RESTART, INCREMENT BY, CYCLE, CACHE, ORDER). The PROCEDURE DIVISION simply executes GOBACK.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "EXEC SQL with ALTER SEQUENCE DDL statements",
+        "Multiple ALTER SEQUENCE variants in a single EXEC SQL block",
+        "SQL embedded in WORKING-STORAGE SECTION (unusual placement)",
+        "No PIC clauses or host variables",
+        "GOBACK as sole procedure statement",
+        "IBM RDz naming convention (DVZ prefix)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The .rdz.cbl extension strongly indicates IBM Rational Developer for z/OS. The program appears to be a parser/compiler regression test for ALTER SEQUENCE SQL syntax variations. Embedding EXEC SQL in WORKING-STORAGE is atypical for production code and reinforces the test-case interpretation. No host variables or actual DB2 runtime execution is expected."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2613,
+      "completion_tokens": 484,
+      "total_tokens": 3097,
+      "cost": 0.015099,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015099,
+        "upstream_inference_prompt_cost": 0.007839,
+        "upstream_inference_completions_cost": 0.00726
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.63,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:53:29Z"
+}

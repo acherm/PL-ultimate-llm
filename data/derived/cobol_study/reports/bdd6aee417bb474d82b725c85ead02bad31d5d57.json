@@ -49,55 +49,56 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) free-format source; part of Applewood Computers Accounting System (ACAS) by Vincent B. Coen, migrated to Open Cobol in 2009, updated for v3.02 in 2018",
         "evidence": [
-          ">>source free directive at top",
-          "*> comment style throughout",
-          "binary-char unsigned data type",
+          ">>source free directive",
           "set ENVIRONMENT ... to ... syntax",
-          "comment in source: 'Migration to Open Cobol'",
-          "goback statement",
-          "end-if, end-if terminators",
-          "foreground-color in DISPLAY/ACCEPT"
+          "binary-char unsigned usage",
+          "*> and *>> comment style",
+          "'Migration to Open Cobol' in change log",
+          "copy wsnames.cob / wscall.cob / wssystem.cob pattern typical of ACAS/GnuCOBOL"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This program (gl070) is a General Ledger transaction pre-processing module for the Applewood Computers Accounting System (ACAS). It reads batch records for the current cycle, displays a batch status report, and writes a pre-transaction file by expanding posting records into individual debit/credit/VAT entries.",
-        "domain": "accounting/finance (general ledger)",
+        "domain": "accounting-erp",
+        "domain_detail": "General Ledger transaction pre-processing and batch status reporting for the Applewood Computers Accounting System (ACAS)",
+        "summary": "This program (gl070) performs two phases: first it checks batch status for the current cycle and reports open batches, then it pre-processes GL transactions from the posting file into a pre-transaction sequential file. It also displays a batch status report with ledger, batch, status, dates, items, gross and VAT figures.",
         "program_type": "batch"
       },
       "notable_features": [
         ">>source free compiler directive",
-        "GNU GPL v2 licensed open-source accounting system",
-        "BINARY-CHAR UNSIGNED data type (GnuCOBOL extension)",
-        "LINKAGE SECTION with multiple copybook-defined records (wscall.cob, wssystem.cob, wsnames.cob)",
-        "Multiple COPY statements for environment, working-storage, and file definitions",
-        "Screen I/O with foreground-color clauses",
-        "VAT (Value Added Tax) handling in transaction splitting",
-        "GOTO-heavy procedural style with named sections",
-        "26 GOTO statements alongside 25 PERFORMs",
-        "No EXEC SQL or EXEC CICS"
+        "BINARY-CHAR UNSIGNED usage",
+        "SET ENVIRONMENT for COB_SCREEN_EXCEPTIONS/COB_SCREEN_ESC",
+        "Screen I/O with DISPLAY/ACCEPT at line/col",
+        "LINKAGE SECTION with multiple passed records (wscall, wssystem, wsnames, file-defs)",
+        "11 COPY statements for shared copybooks",
+        "VAT handling in transaction splitting (DR/CR sides)",
+        "MULTIPLY pre-amount BY -1 for credit entries",
+        "BLANK WHEN ZERO on numeric display fields",
+        "High comment ratio (~40%) with structured change log"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The program is clearly production-quality COBOL from a real accounting package (ACAS) with a long history (copyright 1976-2018). The free-format directive and GnuCOBOL-specific extensions (BINARY-CHAR UNSIGNED, *> comments, >>source free) confirm GnuCOBOL dialect. The source was truncated at 16000 chars but enough is visible to characterize it fully. The high comment ratio (0.399) is partly due to the extensive copyright header and inline documentation."
+      "notes": "Source truncated at 16000 chars; full file is 17916 bytes/592 lines. The zz060-Convert-Date and zz070-convert-date sections are referenced but only partially visible. No COMP-3 usage despite financial amounts — amounts stored as DISPLAY numeric. GPL v2 licensed open-source accounting system."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6346,
-      "completion_tokens": 638,
-      "total_tokens": 6984,
-      "cost": 0.028608,
+      "prompt_tokens": 7724,
+      "completion_tokens": 554,
+      "total_tokens": 8278,
+      "cost": 0.031482,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028608,
-        "upstream_inference_prompt_cost": 0.019038,
-        "upstream_inference_completions_cost": 0.00957
+        "upstream_inference_cost": 0.031482,
+        "upstream_inference_prompt_cost": 0.023172,
+        "upstream_inference_completions_cost": 0.00831
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 16.23,
+    "provider": "Anthropic",
+    "latency_s": 15.54,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:33:18Z"
 }

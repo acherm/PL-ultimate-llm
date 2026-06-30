@@ -51,56 +51,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS online transaction program, converted by COBOL Conversion Aid (PO 5785-ABJ) in 1996, authored by Logic, Inc., Dallas TX. Uses EXEC CICS, COMP-3, fixed format, VSAM-style keyed file access (ERPYAJ, ERCOMP files).",
         "evidence": [
-          "EXEC CICS present (has_exec_cics: true)",
+          "EXEC CICS present (has_exec_cics=true)",
           "COMP-3 usage throughout",
-          "COMP (binary) fields",
-          "Fixed-format source with sequence numbers in columns 1-6",
-          "EJECT directive",
-          "88-level condition names with multiple VALUES",
-          "XCTL/LINK program names consistent with IBM CICS idioms",
-          "DFH-START PIC X(04) — DFH prefix typical of IBM CICS",
-          "PROGRAM-ID EL6331 with transaction ID EXB8"
+          "TRANS-ID 'EXB8' CICS transaction",
+          "XCTL/LINK to other programs (EL005, EL010, EL626, EL652)",
+          "COBOL Conversion Aid PO 5785-ABJ comment",
+          "Fixed format, max line length 72",
+          "DFH-START PIC X(04) - DFH prefix typical of CICS"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "An IBM CICS online transaction program (transaction EXB8) that handles compensation payments and adjustments. It validates and processes compensation/pay adjustment records against ERPYAJ and ERCOMP VSAM files, enforcing GL account number edits for multiple company types (DCC, CSI, CCC, VPP, FNL, CID) and maintaining security controls.",
         "domain": "insurance",
+        "domain_detail": "Compensation payments and adjustments processing for an insurance carrier system (Logic, Inc.). Handles GL account validation for multiple carriers (DCC, CSI, CCC, CID, VPP, FNL), compensation master file updates, and CICS screen transaction EXB8.",
+        "summary": "This is a CICS online transaction program (transaction EXB8) for processing compensation payments and adjustments in an insurance system. It validates GL account numbers for various carrier types (DCC, CSI, CCC, CID, VPP, FNL), reads/writes compensation and payment adjustment files (ERCOMP, ERPYAJ), and manages security and screen display logic. The program has been actively maintained from 1996 through 2021.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS (XCTL, LINK, file I/O)",
-        "COMP-3 packed-decimal fields",
-        "Extensive 88-level GL account number validation tables",
-        "Multi-company/carrier processing (DCC, CSI, CCC, CID, VPP, FNL)",
-        "Inline copybook expansions (ELCSCTM, ELCSCRTY) with comments indicating COPY statements",
-        "Long change log spanning 2001–2021",
-        "COBOL Conversion Aid annotation (converted 02/12/96)",
-        "Security control area (SECURITY-CONTROL, SECURITY-MESSAGE)",
-        "Running net total field (TOTAL-AMOUNT)",
-        "Fixed-format with sequence numbers in columns 1-6"
+        "EXEC CICS (online CICS transaction EXB8)",
+        "COMP-3 packed decimal fields",
+        "VSAM keyed file access (ERPYAJ, ERCOMP)",
+        "Extensive GL account number validation with 88-level condition names",
+        "Inline copybook expansions (ELCSCTM, ELCSCRTY)",
+        "Change log spanning 1996-2021 with change request numbers",
+        "XCTL and LINK to multiple programs",
+        "REDEFINES usage",
+        "OCCURS tables for security authorization",
+        "Running net total accumulation (TOTAL-AMOUNT)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1; no truncation issues apparent in the structural indicators. The program has an extensive change log from 2001 to 2021, indicating long-lived production use. Copybooks (ELCSCTM, ELCSCRTY) appear to have been inlined rather than using COPY statements. The program-id list includes '00636' and 'PIC' as false positives from the mechanical parser picking up sequence numbers and PIC clauses."
+      "notes": "Source was truncated to first 16000 chars; full program is 4195 lines. Copybooks (ELCSCTM, ELCSCRTY) appear to have been inlined rather than copied at compile time. Line sequence numbers use non-standard prefixes (CIDMOD, 060205, 031710, etc.) reflecting the change log convention. Decoded with latin-1 encoding."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6174,
-      "completion_tokens": 694,
-      "total_tokens": 6868,
-      "cost": 0.028932,
+      "prompt_tokens": 7552,
+      "completion_tokens": 682,
+      "total_tokens": 8234,
+      "cost": 0.032886,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -109,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028932,
-        "upstream_inference_prompt_cost": 0.018522,
-        "upstream_inference_completions_cost": 0.01041
+        "upstream_inference_cost": 0.032886,
+        "upstream_inference_prompt_cost": 0.022656,
+        "upstream_inference_completions_cost": 0.01023
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -120,8 +121,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.98,
+    "latency_s": 18.73,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:17:17Z"
 }

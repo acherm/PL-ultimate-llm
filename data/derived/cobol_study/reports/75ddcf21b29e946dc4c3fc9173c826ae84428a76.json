@@ -49,55 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (or compatible, with htmlpp preprocessor)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and $set directives; appears to be part of a Brazilian ERP/web reporting system (JMA ORCA-style or similar Brazilian COBOL web framework using EXEC HTML blocks)",
         "evidence": [
-          "$set preprocess (htmlpp) endp — Micro Focus-style compiler directive",
-          "$set sourceformat\"free\" — Micro Focus free-format directive",
-          "exec html ... end-exec — htmlpp preprocessor extension for HTML generation",
-          "is external-form — Micro Focus CGI/web extension",
-          "local-storage section — Micro Focus extension",
-          "78 level constant (versao)",
-          "sort ... input procedure / output procedure syntax",
-          "return arqsor at end ... end-return"
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "exec html ... end-exec",
+          "copy PCW900.cpy / PCW902.CPY / PCW990.CPY pattern",
+          "local-storage section",
+          "external-form clause on cgi-input"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "Generates a report of 'Unidades de Venda' (Sales Units) for a Brazilian business application. The program reads sales unit records, sorts them either alphabetically or numerically based on user input, and produces an HTML-formatted report with headers, pagination, and tabular data.",
-        "domain": "retail/distribution (Brazilian ERP/business system)",
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian ERP system - Sales Units (Unidades de Venda) report generation with HTML output via CGI/web interface",
+        "summary": "This program generates a report of Sales Units (Unidades de Venda) for a Brazilian ERP system. It reads unit records, sorts them either alphabetically or numerically based on user selection, and outputs an HTML-formatted report. It also renders a parameter selection screen with HTML fieldsets and dropdowns for the user to choose sort order.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC HTML ... END-EXEC blocks (htmlpp preprocessor for web/CGI output)",
-        "is external-form clause for CGI input handling",
-        "local-storage section (Micro Focus extension)",
-        "$set compiler directives (Micro Focus style)",
-        "SORT with INPUT PROCEDURE and OUTPUT PROCEDURE",
-        "78-level constant definition",
+        "EXEC HTML blocks (htmlpp preprocessor for web/CGI output)",
+        "$set compiler directives (GnuCOBOL)",
+        "external-form CGI input section",
+        "SORT verb with INPUT/OUTPUT PROCEDURE",
+        "local-storage section",
         "Decimal-point is comma (Brazilian locale)",
-        "Multiple COPY statements for modular copybooks (PCS, PCF, PCW, PCP, PCL series)",
-        "CALL to external routines: cabecalho_padrao, write_cabecalho, write_linha",
-        "HTML form generation with SELECT/OPTION elements embedded in COBOL"
+        "Multiple COPY statements for modular framework copybooks",
+        "88-level condition names for sort options",
+        "call to cabecalho_padrao / write_cabecalho / write_linha subprograms"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is a production-grade Brazilian ERP web report program using Micro Focus COBOL with the htmlpp preprocessor to generate HTML output. The program follows a clear CGI/web pattern (f-opcao=0 shows parameters form, f-opcao=1 runs the report). Portuguese-language identifiers and Brazilian date/decimal conventions confirm the locale. The file uses free-format COBOL despite having some fixed-format-looking indentation. Many copybooks are referenced but not shown."
+      "notes": "The program uses a Brazilian COBOL web framework with htmlpp preprocessor generating HTML output. The 'EXEC HTML' blocks are not standard COBOL but a vendor/framework extension. Program IDs and copybook naming conventions (PC prefix) suggest a specific Brazilian ERP product. Decoded with latin-1 which is consistent with Portuguese text content."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4337,
-      "completion_tokens": 658,
-      "total_tokens": 4995,
-      "cost": 0.022881,
+      "prompt_tokens": 5715,
+      "completion_tokens": 510,
+      "total_tokens": 6225,
+      "cost": 0.024795,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.022881,
-        "upstream_inference_prompt_cost": 0.013011,
-        "upstream_inference_completions_cost": 0.00987
+        "upstream_inference_cost": 0.024795,
+        "upstream_inference_prompt_cost": 0.017145,
+        "upstream_inference_completions_cost": 0.00765
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.44,
+    "provider": "Anthropic",
+    "latency_s": 17.89,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:46:43Z"
 }

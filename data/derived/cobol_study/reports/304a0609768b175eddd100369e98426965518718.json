@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:304a0609768b175eddd100369e98426965518718",
+    "sha1_git": "304a0609768b175eddd100369e98426965518718",
+    "filename": "/mov-peso.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3529,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:304a0609768b175eddd100369e98426965518718/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:304a0609768b175eddd100369e98426965518718/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3529,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 113,
+    "blank_lines": 16,
+    "comment_lines": 12,
+    "code_lines": 85,
+    "comment_ratio": 0.124,
+    "max_line_length": 72,
+    "avg_line_length": 30.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "mov-peso"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 5,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "AcuCOBOL-GT or ACUCOBOL dialect: uses DISPLAY MESSAGE ... TITLE ... ICON syntax, 78-level constants, and SPECIAL-NAMES decimal-point is comma — typical of Acu/RM-COBOL Italian business applications",
+        "evidence": [
+          "display message ... title titolo icon 3",
+          "78 titolo value ...",
+          "SPECIAL-NAMES. decimal-point is comma",
+          "copy \"rmovmag.sl\" / copy \"rmovmag.fd\"",
+          "DECLARATIVES with USE AFTER ERROR"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Warehouse/inventory movement file correction — fixes records where both rmo-peso-tot and rmo-peso-tot-utf (total weight and total UTF weight) are simultaneously populated, zeroing out the non-UTF weight field",
+        "summary": "This program scans an indexed file of warehouse movement records (RMOVMAG) and corrects data integrity issues where both the total weight and total UTF weight fields are non-zero simultaneously. It zeroes out the non-UTF total weight field and rewrites the record, then reports the count of corrected records. It is a one-shot data correction utility.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DISPLAY MESSAGE ... TITLE ... ICON (AcuCOBOL/RM-COBOL GUI dialog syntax)",
+        "78-level constant for title string",
+        "SPECIAL-NAMES decimal-point is comma (Italian locale)",
+        "DECLARATIVES with USE AFTER ERROR for file error handling",
+        "88-level condition RecLocked with FALSE clause",
+        "START with KEY >= for indexed file positioning",
+        "REWRITE with INVALID clause",
+        "COPY for both SELECT (.sl) and FD (.fd) copybooks"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Dialect is likely AcuCOBOL-GT based on the DISPLAY MESSAGE/TITLE/ICON GUI syntax; RM-COBOL is also possible. The program is in Italian and appears to be a production data-fix utility for an Italian ERP/warehouse system. No ENVIRONMENT DIVISION detected mechanically but SPECIAL-NAMES and FILE-CONTROL are present (counted under DATA division by the parser). Encoded in latin-1 consistent with Italian text (accented characters in comments)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3135,
+      "completion_tokens": 569,
+      "total_tokens": 3704,
+      "cost": 0.01794,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01794,
+        "upstream_inference_prompt_cost": 0.009405,
+        "upstream_inference_completions_cost": 0.008535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.2,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:55:48Z"
+}

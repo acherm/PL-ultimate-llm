@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:064a38754ec7542f2e858d4f864068b88bf87b12",
+    "sha1_git": "064a38754ec7542f2e858d4f864068b88bf87b12",
+    "filename": "/Listing14-2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2926,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:064a38754ec7542f2e858d4f864068b88bf87b12/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:064a38754ec7542f2e858d4f864068b88bf87b12/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2926,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 98,
+    "blank_lines": 15,
+    "comment_lines": 0,
+    "code_lines": 83,
+    "comment_ratio": 0.0,
+    "max_line_length": 78,
+    "avg_line_length": 28.9,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Listing14-2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Textbook example by Michael Coughlan, compatible with GnuCOBOL/OpenCOBOL; uses LINE SEQUENTIAL and SORT with INPUT PROCEDURE/GIVING",
+        "evidence": [
+          "ORGANIZATION LINE SEQUENTIAL",
+          "SORT WorkFile ON ASCENDING KEY ... INPUT PROCEDURE IS ... GIVING",
+          "SD WorkFile",
+          "RELEASE WorkRec FROM",
+          "88 EndOfBillableServicesFile VALUE HIGH-VALUES"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "telecom",
+        "domain_detail": "Universal Telecoms monthly billing report — filters voice calls and totals billable amounts per subscriber",
+        "summary": "This program sorts a billable services file by subscriber ID, filtering only voice calls via an INPUT PROCEDURE, then reads the sorted file to accumulate and print each subscriber's total billable amount. It produces a formatted print report with headers and per-subscriber lines.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT with INPUT PROCEDURE and GIVING clause",
+        "SD (Sort Description) file",
+        "RELEASE statement in INPUT PROCEDURE",
+        "88-level condition names for EOF detection",
+        "Edited PIC clause with currency symbol ($$$$,$$9.99)",
+        "WRITE ... AFTER ADVANCING PAGE/LINE",
+        "LINE SEQUENTIAL organization"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Filename pattern 'Listing14-2' and author 'Michael Coughlan' strongly indicate this is from a COBOL textbook (likely 'Beginning COBOL for Programmers'). No COMP-3, no EXEC SQL/CICS. Dialect is generic COBOL-85 compatible; GnuCOBOL is the most likely target given the author's known teaching materials."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3223,
+      "completion_tokens": 429,
+      "total_tokens": 3652,
+      "cost": 0.016104,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016104,
+        "upstream_inference_prompt_cost": 0.009669,
+        "upstream_inference_completions_cost": 0.006435
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.67,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:52:11Z"
+}

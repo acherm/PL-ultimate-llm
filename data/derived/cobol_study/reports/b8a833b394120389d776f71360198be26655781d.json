@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b8a833b394120389d776f71360198be26655781d",
+    "sha1_git": "b8a833b394120389d776f71360198be26655781d",
+    "filename": "/printhx3.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 687,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b8a833b394120389d776f71360198be26655781d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b8a833b394120389d776f71360198be26655781d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 687,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 34,
+    "blank_lines": 11,
+    "comment_lines": 0,
+    "code_lines": 23,
+    "comment_ratio": 0.0,
+    "max_line_length": 48,
+    "avg_line_length": 19.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PRINTHX3"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Simple test program calling a PRINTHEX subroutine; GOBACK and COMP without COMP-3 suggest GnuCOBOL or similar open-source environment",
+        "evidence": [
+          "GOBACK",
+          "COMP VALUE",
+          "CALL 'PRINTHEX'",
+          "no EXEC CICS/SQL"
+        ],
+        "confidence": "low"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Unit test verifying that a hex-printing subroutine PRINTHEX correctly converts the integer 300 (0x12C) to its hex string representation",
+        "summary": "This program calls an external subroutine PRINTHEX with a source integer value of 300 and a length of 4, then checks whether the destination string equals '0000012C'. It displays PASS or FAIL accordingly and is clearly a test harness.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "CALL to external subprogram PRINTHEX",
+        "COMP (binary) data items",
+        "GOBACK statement",
+        "Inline IF/ELSE with END-IF",
+        "No PERFORM, no COPY, no SQL/CICS"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "Very small program (34 lines, 687 bytes). Dialect cannot be determined with high confidence from this snippet alone; GOBACK and COMP usage are consistent with GnuCOBOL but also with IBM or Micro Focus. The program appears to be a standalone test case for a hex-formatting utility."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2442,
+      "completion_tokens": 381,
+      "total_tokens": 2823,
+      "cost": 0.013041,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013041,
+        "upstream_inference_prompt_cost": 0.007326,
+        "upstream_inference_completions_cost": 0.005715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.07,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:55:08Z"
+}

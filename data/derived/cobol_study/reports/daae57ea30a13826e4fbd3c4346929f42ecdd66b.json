@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:daae57ea30a13826e4fbd3c4346929f42ecdd66b",
+    "sha1_git": "daae57ea30a13826e4fbd3c4346929f42ecdd66b",
+    "filename": "/S09P000.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4019,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:daae57ea30a13826e4fbd3c4346929f42ecdd66b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:daae57ea30a13826e4fbd3c4346929f42ecdd66b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4019,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 112,
+    "blank_lines": 23,
+    "comment_lines": 21,
+    "code_lines": 68,
+    "comment_ratio": 0.236,
+    "max_line_length": 71,
+    "avg_line_length": 33.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 2,
+    "program_ids": [],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 8,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with Dialog System (DSGRUN) GUI framework and ODBC SQL directive; uses COMP-5, MF-style COPY with quoted filenames, and DS-CNTRL.MF copybook",
+        "evidence": [
+          "*$set sql(DBMAN=ODBC) compiler directive",
+          "COPY \"DS-CNTRL.MF\"",
+          "78 dialog-system VALUE \"DSGRUN\"",
+          "PIC 9(4) comp-5",
+          "COPY with quoted filenames",
+          "Ds-Control-Block / Ds-New-Set / Ds-No-Error MF Dialog System data names"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "SINTEGRA (Brazilian fiscal/tax system) front-end menu dispatcher using Micro Focus Dialog System GUI",
+        "summary": "This is a main menu/dispatcher program for a system called SINTEGRA. It initializes a Micro Focus Dialog System control block, then loops calling the Dialog System runtime (DSGRUN) and dispatching to sub-programs S09P001 through S09P006 based on a flag value, until the user selects exit. EXEC SQL connect/disconnect statements are commented out but indicate ODBC database connectivity was intended.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL with ODBC (DBMan=ODBC) via *$set directive",
+        "Micro Focus Dialog System (DSGRUN) GUI runtime calls",
+        "COPY with quoted filenames (MF style)",
+        "COMP-5 usage",
+        "EVALUATE-based sub-program dispatcher",
+        "Commented-out SQL CONNECT/DISCONNECT and WHENEVER SQLERROR",
+        "78-level constant for dialog-system name"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "No IDENTIFICATION DIVISION present (only DATA and PROCEDURE divisions), suggesting this may be a partial file or the ID division is in a separate segment. The SINTEGRA reference points to a Brazilian state tax reporting system. SQL connectivity is fully commented out, possibly deferred or removed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3170,
+      "completion_tokens": 507,
+      "total_tokens": 3677,
+      "cost": 0.017115,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017115,
+        "upstream_inference_prompt_cost": 0.00951,
+        "upstream_inference_completions_cost": 0.007605
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.82,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:53:19Z"
+}

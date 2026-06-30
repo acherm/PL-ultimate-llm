@@ -49,44 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or generic COBOL (possibly Micro Focus)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Generic COBOL-85; no vendor-specific extensions visible. Inline END-PERFORM and PERFORM VARYING with END-PERFORM suggest COBOL-85 minimum.",
         "evidence": [
-          "END-PERFORM terminator (COBOL-85+)",
-          "PERFORM VARYING ... UNTIL inline loop",
-          "OCCURS clause on elementary item with VALUE",
-          "DISPLAY with string literals using double quotes"
+          "END-PERFORM",
+          "PERFORM VARYING ... UNTIL",
+          "OCCURS 5 TIMES",
+          "PIC X(10)"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Demonstrates a one-dimensional COBOL table (array) using OCCURS. It displays table elements individually, then iterates over them using two forms of PERFORM VARYING.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates one-dimensional table (array) definition and iteration in COBOL",
+        "summary": "A simple demonstration program that defines a one-dimensional table of 5 PIC X(10) elements initialized to '**BUU**', then displays each element individually, via PERFORM VARYING inline, and via a separate paragraph with PERFORM VARYING.",
         "program_type": "demo"
       },
       "notable_features": [
-        "OCCURS clause on a PIC X(10) item with a VALUE clause (non-standard in strict COBOL-85 but accepted by many compilers)",
-        "Two forms of PERFORM VARYING: inline (with END-PERFORM) and out-of-line (referencing a paragraph)",
-        "No ENVIRONMENT DIVISION present"
+        "OCCURS clause for one-dimensional table",
+        "PERFORM VARYING with inline END-PERFORM",
+        "PERFORM with separate paragraph and VARYING",
+        "Subscript-based table access WS-A(n)"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The VALUE clause on an OCCURS item is technically non-conforming in strict COBOL-85 but is widely accepted by GnuCOBOL and Micro Focus. The program is clearly a tutorial/exercise illustrating one-dimensional table handling. No ambiguity about it being genuine COBOL."
+      "notes": "Very short 30-line program with no ENVIRONMENT DIVISION, no file I/O, and no CALL statements. Clearly a teaching/learning example for COBOL table handling. No vendor-specific indicators; dialect family left as unknown."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1152,
-      "completion_tokens": 419,
-      "total_tokens": 1571,
-      "cost": 0.009741,
+      "prompt_tokens": 2530,
+      "completion_tokens": 333,
+      "total_tokens": 2863,
+      "cost": 0.012585,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -95,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009741,
-        "upstream_inference_prompt_cost": 0.003456,
-        "upstream_inference_completions_cost": 0.006285
+        "upstream_inference_cost": 0.012585,
+        "upstream_inference_prompt_cost": 0.00759,
+        "upstream_inference_completions_cost": 0.004995
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -106,8 +110,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 8.62,
+    "latency_s": 8.43,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:33:59Z"
 }

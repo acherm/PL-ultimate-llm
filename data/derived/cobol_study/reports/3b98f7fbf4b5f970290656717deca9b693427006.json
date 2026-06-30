@@ -49,52 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL (JMA ORCA project, Linux-based)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. No EXEC SQL or EXEC CICS. Heavy use of COPY and CALL. Japanese EUC or Shift-JIS encoded comments (decoded as latin-1).",
         "evidence": [
-          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCR0030",
-          "ENVIRONMENT DIVISION, DATA DIVISION, PROCEDURE DIVISION all present",
-          "fixed-format source with 80-column lines",
-          "no EXEC SQL / EXEC CICS / COMP-3 usage",
-          "JMA Open Source License header; ORCA is known to use GnuCOBOL on Linux",
-          "653 PIC clauses, 539 PERFORM, 46 CALL — typical production COBOL-85 style"
+          "PROGRAM-ID ORCR0030",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "JMA standard receipt software",
+          "COPY count=47, CALL count=46",
+          "no EXEC SQL, no EXEC CICS",
+          "fixed format, max line 80"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a large batch COBOL program (ORCR0030) belonging to the JMA (Japan Medical Association) ORCA standard medical receipt software system. It performs point/score aggregation and receipt editing by insurance category (診療区分別点数集計), processing medical claim data for Japanese health insurance billing. The program handles complex receipt layout editing, partial co-payment calculations, and various insurance-type-specific logic.",
-        "domain": "healthcare / medical billing (Japanese health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/rezept) processing system — ORCA (JMA standard receipt software). This module appears to handle point aggregation/calculation by diagnosis category for medical receipts.",
+        "summary": "ORCR0030 is a large batch program in the JMA ORCA medical receipt system that computes and edits point (score) totals broken down by diagnosis/treatment category for insurance claim receipts. It processes various medical billing rules including outpatient management fees, prescription fees, examination counts, and partial-payment amounts across multiple insurance types.",
         "program_type": "batch"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — pure COBOL batch logic",
-        "No COMP-3 usage despite heavy numeric processing",
-        "46 CALL statements indicating modular architecture with many subprograms",
-        "539 PERFORM statements — deeply structured procedural logic",
-        "8 GOTO statements — mostly legacy flow control",
-        "Extensive Japanese-language comments (Shift-JIS/EUC-JP encoded, decoded as latin-1)",
-        "Very large single program: 14,287 lines, ~689 KB",
-        "Long revision history spanning 2000–2006 with named developers",
-        "JMA Open Source License (Japanese Medical Association ORCA project)"
+        "47 COPY statements indicating heavy use of shared copybooks",
+        "46 CALL statements to external subprograms",
+        "539 PERFORM statements indicating complex procedural logic",
+        "No COMP-3 usage despite financial calculations",
+        "No EXEC SQL or EXEC CICS",
+        "Japanese-language comments (EUC-JP/Shift-JIS encoded, rendered as latin-1 mojibake)",
+        "Extensive revision history spanning 2000-2006",
+        "Long comment header with JMA Open Source License notice",
+        "8 GO TO statements",
+        "653 PIC clauses across 14287 lines"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but the comments contain Japanese text (likely EUC-JP or Shift-JIS), which appears garbled in the latin-1 rendering. This does not affect COBOL classification. The program is clearly a large, mature production component of the well-known JMA ORCA open-source medical receipt system used in Japanese clinics. Dialect is most likely GnuCOBOL (formerly OpenCOBOL) given the ORCA project's known technology stack, though IBM or Micro Focus cannot be entirely ruled out without seeing compiler directives or environment entries."
+      "notes": "File is 689KB / 14287 lines — a very large production program. Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as latin-1, producing mojibake. The program belongs to the well-known JMA ORCA open-source medical receipt system. Source was truncated to first 16000 chars; full procedure division not visible but mechanical indicators confirm all four divisions present."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 15011,
-      "completion_tokens": 727,
-      "total_tokens": 15738,
-      "cost": 0.055938,
+      "prompt_tokens": 16389,
+      "completion_tokens": 582,
+      "total_tokens": 16971,
+      "cost": 0.057897,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.055938,
-        "upstream_inference_prompt_cost": 0.045033,
-        "upstream_inference_completions_cost": 0.010905
+        "upstream_inference_cost": 0.057897,
+        "upstream_inference_prompt_cost": 0.049167,
+        "upstream_inference_completions_cost": 0.00873
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 22.09,
+    "latency_s": 17.95,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:20:37Z"
 }

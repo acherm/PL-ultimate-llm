@@ -49,50 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (mainframe-style, possibly GnuCOBOL for academic use)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Standard academic COBOL, likely compiled with IBM or GnuCOBOL; uses BLOCK CONTAINS 0 RECORDS and DA-S/UR-S device assignments suggesting possible IBM mainframe or mainframe-style environment",
         "evidence": [
           "BLOCK CONTAINS 0 RECORDS",
-          "LABEL RECORDS ARE STANDARD / OMITTED",
-          "DA-S-INPUT / UR-S-REPORT device assignments (IBM JCL-style DDnames)",
-          "OCCURS 10 TIMES on a working-storage item",
-          "PIC Z,ZZ9.99 and PIC $Z,ZZ9.99 edited pictures",
-          "VALUE ZEROS / VALUE SPACES initializers",
-          "Fixed format, max line length 66 (within 72-col boundary)"
+          "LABEL RECORDS ARE STANDARD",
+          "LABEL RECORDS ARE OMITTED",
+          "DA-S-INPUT / UR-S-REPORT SELECT assignments",
+          "OCCURS 10 TIMES without INDEXED BY",
+          "PIC Z9 / PIC ZZ9 / PIC $Z,ZZ9.99 edit patterns"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads an employee input file and produces a formatted printed report listing employee SSN, name, ID, title, type, hire date, pay rate, and status. It also computes and prints summary statistics: total records read, counts and average rates for hourly vs. salaried employees, and counts by employee type (1–10).",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "University programming assignment (Assignment 2) processing employee payroll/classification data",
+        "summary": "Reads an employee input file and produces a formatted report showing employee details (SSN, name, ID, title, type, date, rate, status). Computes summary statistics including total records, counts of hourly vs salaried employees, average pay rates, and counts by employee type (1-10).",
         "program_type": "batch"
       },
       "notable_features": [
-        "Multi-level SSN field split into three sub-fields with dash literals for formatted output",
-        "OCCURS 10 TIMES array for per-type employee counts",
-        "Page numbering and line-count logic for paginated report",
-        "Edited PIC clauses: Z,ZZ9.99, $Z9.99, $Z,ZZ9.99, 99/99/9999",
-        "IBM-style device assignments (DA-S-INPUT, UR-S-REPORT)",
-        "No COMP-3, no EXEC SQL, no EXEC CICS"
+        "OCCURS 10 TIMES for employee type counters",
+        "Formatted SSN output with dashes (PIC 999-99-9999 style)",
+        "Multiple heading and payment summary print lines",
+        "Page numbering and line counting logic",
+        "DATE retrieval via CURRENT-DATE",
+        "No COMP-3 usage",
+        "No EXEC SQL or EXEC CICS",
+        "Single CALL statement"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "File is named 'assignment2.cbl' and the AUTHOR is 'TIM PATRICK', strongly indicating a student assignment. Source was truncated at 16000 chars (~56% of total 28694 bytes), so the full PROCEDURE DIVISION is not visible, but the DATA DIVISION and partial PROCEDURE DIVISION are sufficient for confident classification. The IBM-style DDname assignments suggest a mainframe or mainframe-emulation teaching environment."
+      "notes": "File is named 'assignment2.cbl' and the AUTHOR is 'TIM PATRICK'; comments explicitly label it 'ASSIGNMENT 2'. Source is truncated at 16000 chars but the structure is clear. The DA-S/UR-S device assignments are reminiscent of IBM mainframe JCL conventions but could also be a mainframe-style academic environment. No COMP-3 or advanced features present."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4644,
-      "completion_tokens": 631,
-      "total_tokens": 5275,
-      "cost": 0.023397,
+      "prompt_tokens": 6022,
+      "completion_tokens": 493,
+      "total_tokens": 6515,
+      "cost": 0.025461,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.023397,
-        "upstream_inference_prompt_cost": 0.013932,
-        "upstream_inference_completions_cost": 0.009465
+        "upstream_inference_cost": 0.025461,
+        "upstream_inference_prompt_cost": 0.018066,
+        "upstream_inference_completions_cost": 0.007395
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.91,
+    "latency_s": 13.29,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:53:57Z"
 }

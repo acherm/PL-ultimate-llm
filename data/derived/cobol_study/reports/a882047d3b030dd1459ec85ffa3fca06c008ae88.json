@@ -49,52 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with quoted filenames (.INC copybooks), BINARY usage, and no EXEC CICS/SQL.",
         "evidence": [
           "PROGRAM-ID. ORCGI01",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "COPY statements with REPLACING",
-          "OCCURS ... INDEXED BY",
-          "PIC S9(9) BINARY (not COMP-3, consistent with GnuCOBOL/OpenCOBOL)",
-          "Fixed-format source, max line length 74",
-          "JMA ORCA open-source medical software project copyright header"
+          "COPY \"ENUM-VALUE\"",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"CPPTINF.INC\"",
+          "PIC S9(9) BINARY",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch/online registration program for hospital admission and discharge (入退院登録) within the ORCA JMA standard medical receipt software system. It manages patient hospitalization records, insurance combination data, disease name records, and related billing/collection information. It is part of the Japanese Medical Association's open-source clinic management system.",
-        "domain": "healthcare / medical billing (Japanese medical receipt software)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-hoshuu) system - inpatient/outpatient admission registration (nyuuin/taiin touroku) subsystem I01",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It handles patient admission and discharge registration (nyuuin/taiin touroku), managing patient master data, insurance combination records, hospitalization history, and related medical billing information. It is a large batch/interactive subprogram with extensive COPY-based data structures for patient, insurance, ward, and receipt data.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Extensive use of COPY statements for shared record layouts (no inline EXEC SQL or EXEC CICS)",
-        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 causing mojibake)",
-        "Large working-storage with many flag, index, and work areas",
-        "OCCURS tables with INDEXED BY for patient history, insurance combinations, and billing records",
-        "PIC S9(9) BINARY usage (no COMP-3)",
-        "27 CALL statements and 574 PERFORM statements indicating a large, modular production program",
-        "197 GO TO statements typical of older COBOL-85 style",
-        "No EXEC SQL or EXEC CICS — likely uses file I/O or PostgreSQL via CALL interface"
+        "56 COPY statements referencing .INC copybooks",
+        "27 CALL statements",
+        "574 PERFORM statements",
+        "197 GOTO statements",
+        "BINARY usage (PIC S9(9) BINARY)",
+        "OCCURS with INDEXED BY clauses",
+        "REDEFINES clauses",
+        "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)",
+        "No EXEC SQL or EXEC CICS",
+        "Large working-storage with complex nested structures"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is 367KB / 9228 lines and was truncated to 16000 chars for review; the full program is much larger. Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as Latin-1, producing mojibake. The ORCA project is a well-known open-source Japanese medical clinic management system. The program handles hospital admission/discharge registration (入退院登録 I01). No COPY count was reported mechanically (copy_count=0) despite many COPY statements visible in the source — this may be a mechanical counting artifact."
+      "notes": "Source is 9228 lines, truncated in the snippet at ~16000 chars. Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The file is part of the well-known open-source JMA ORCA medical receipt system. No COMP-3 usage detected despite medical billing context, which is unusual but consistent with GnuCOBOL/OpenCOBOL usage on Linux rather than IBM mainframe."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8176,
-      "completion_tokens": 711,
-      "total_tokens": 8887,
-      "cost": 0.035193,
+      "prompt_tokens": 9554,
+      "completion_tokens": 587,
+      "total_tokens": 10141,
+      "cost": 0.037467,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035193,
-        "upstream_inference_prompt_cost": 0.024528,
-        "upstream_inference_completions_cost": 0.010665
+        "upstream_inference_cost": 0.037467,
+        "upstream_inference_prompt_cost": 0.028662,
+        "upstream_inference_completions_cost": 0.008805
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.88,
+    "latency_s": 15.68,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:11:11Z"
 }

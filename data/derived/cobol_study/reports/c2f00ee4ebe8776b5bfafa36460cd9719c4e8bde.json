@@ -47,56 +47,62 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus Visual COBOL / COBOL for .NET (OO COBOL targeting ASP.NET)",
+        "family": "micro-focus",
         "standard": "COBOL-2002",
+        "detail": "Micro Focus COBOL for .NET (Visual COBOL / Net Express OO COBOL) - ASP.NET Web Forms code-behind page using class-id, method-id, type references to System.Web.UI, RunUnit, and .NET framework types",
         "evidence": [
-          "class-id batsweb.fullatbat is partial implements type System.Web.UI.ICallbackEventHandler inherits type System.Web.UI.Page",
-          "method-id Page_Load protected / method-id Button5_Click protected",
-          "type System.Web.UI.Page, type RunUnit, type Single, type String — .NET type references",
-          "self::Session, self::Request::QueryString[\"league\"] — .NET property access syntax",
-          "invoke bat666rununit::Call(\"BAT666WEBF\") — OO COBOL method invocation",
-          "local-storage section inside methods",
-          "set ... to new batsweb.bat666Data — OO instantiation",
-          "attribute System.Web.Services.WebMethod — .NET attribute decoration",
-          "COPY \"Y:\\SYDEXSOURCE\\...\" — Windows path copybooks"
+          "class-id batsweb.fullatbat is partial",
+          "implements type System.Web.UI.ICallbackEventHandler",
+          "inherits type System.Web.UI.Page public",
+          "method-id Page_Load protected",
+          "type RunUnit",
+          "type System.Web.UI",
+          "invoke bat666rununit::Call",
+          "set cm to self::ClientScript",
+          "01 bat666rununit type RunUnit",
+          "01 mydata type batsweb.bat666Data"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "An ASP.NET web page (code-behind) written in Micro Focus COBOL for .NET that implements a 'full at-bat' baseball statistics viewer. It loads player and game data from indexed files, populates UI controls (dropdowns, checkboxes, text boxes), and handles client callback events to retrieve and display video paths associated with selected at-bat records.",
-        "domain": "sports statistics / baseball analytics web application",
+        "domain": "other",
+        "domain_detail": "Baseball statistics web application - at-bat query and video playback system for a baseball league database",
+        "summary": "This is an ASP.NET Web Forms code-behind page written in Micro Focus OO COBOL for .NET. It implements a baseball at-bat statistics viewer that queries a player/game database, filters at-bats by date, pitcher, batter, team, inning, and other criteria, and returns video paths for selected at-bats via an ICallbackEventHandler (AJAX callback) mechanism.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "OO COBOL class definition with 'class-id ... is partial' targeting ASP.NET System.Web.UI.Page",
-        "Implements ICallbackEventHandler for AJAX-style client callbacks (RaiseCallbackEvent / GetCallbackResult)",
-        "Multiple method-id definitions (Page_Load, Button5_Click, loadList, atBat_Selected, playAll, CleanupPage)",
-        ".NET type references (System.Text.StringBuilder, System.Single, System.Web.Services.WebMethod)",
-        "VSAM-style indexed file access (SELECT ... ORGANIZATION IS INDEXED, ACCESS IS DYNAMIC, LOCK MANUAL)",
-        "COPY statements referencing Windows UNC-style paths (Y:\\SYDEXSOURCE\\...)",
-        "Session state management via self::Session::Item(...)",
-        "GOTO-heavy procedural loops within methods (team-loop, runners-loop, 5-loop, lines-loop, videos-loop)",
-        "INSPECT ... REPLACING ALL \" \" BY X'A0' for non-breaking space substitution in table rows",
-        "RunUnit object used to call legacy COBOL programs (BAT666WEBF) from within .NET context"
+        "OO COBOL with class-id/method-id syntax",
+        "Micro Focus .NET COBOL (Visual COBOL) ASP.NET integration",
+        "ICallbackEventHandler implementation for AJAX callbacks",
+        "RunUnit usage for calling legacy COBOL subprograms from OO context",
+        "INDEXED file access with DYNAMIC ACCESS and ALTERNATE KEY",
+        "COPY statements referencing Windows file paths (Y:\\SYDEXSOURCE\\...)",
+        "String concatenation using & operator (.NET style)",
+        "type references to .NET framework classes (System.Web.UI, System.Text.StringBuilder, etc.)",
+        "Session state management via self::Session",
+        "GOTO-based loops (team-loop, runners-loop, outs-loop, etc.)",
+        "INSPECT REPLACING for HTML non-breaking space substitution",
+        "UNSTRING for parsing callback event arguments"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is a genuine Micro Focus Visual COBOL (or Micro Focus COBOL for .NET) source file — a partial class code-behind for an ASP.NET .aspx page. The .aspx.cbl extension is the standard Micro Focus convention for COBOL ASP.NET code-behind files. The code bridges legacy COBOL business logic (RunUnit, indexed files, COPY books) with .NET web infrastructure. The source is truncated at 16000 chars but enough is visible to classify with high confidence. No EXEC SQL or EXEC CICS present; the 'online' nature is via ASP.NET rather than CICS."
+      "notes": "The filename .aspx.cbl confirms this is an ASP.NET Web Forms code-behind file written in Micro Focus Visual COBOL for .NET. The program_type 'online-cics' is the closest enum match for an online/web program; it is actually an ASP.NET web application, not CICS. No IDENTIFICATION DIVISION or ENVIRONMENT DIVISION header present (partial class). Source is truncated at 16000 chars out of 60425 bytes total."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5619,
-      "completion_tokens": 922,
-      "total_tokens": 6541,
-      "cost": 0.030687,
+      "prompt_tokens": 6997,
+      "completion_tokens": 661,
+      "total_tokens": 7658,
+      "cost": 0.030906,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +111,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.030687,
-        "upstream_inference_prompt_cost": 0.016857,
-        "upstream_inference_completions_cost": 0.01383
+        "upstream_inference_cost": 0.030906,
+        "upstream_inference_prompt_cost": 0.020991,
+        "upstream_inference_completions_cost": 0.009915
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +122,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 20.88,
+    "latency_s": 18.25,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:09:51Z"
 }

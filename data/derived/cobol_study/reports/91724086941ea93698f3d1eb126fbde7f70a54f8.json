@@ -49,55 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Micro Focus COBOL (Japanese medical system, likely running on Linux/Unix)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL; uses COPY includes with .INC extension typical of ORCA system",
         "evidence": [
-          "EVALUATE ... WHEN ... END-EVALUATE",
-          "IF ... END-IF structured conditionals",
-          "PERFORM with section names",
-          "OCCURS clause on PIC X(01)",
-          "INITIALIZE verb",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "EXIT PROGRAM",
-          "COPY statements for include files (.INC extension)",
-          "Fixed-format source layout (columns 7-72)"
+          "PROGRAM-ID ORCSC95SUB",
+          "COPY CPSYSKANRI.INC",
+          "COPY MCPDATA.INC",
+          "COPY COMMON-SPA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a subprogram (ORCSC95SUB) that is part of the ORCA Japanese Medical Association standard receipt (claims) software. It handles initialization and editing of a common SPA (scratchpad area) parameter block used in medical billing/receipt processing, including reading system management master records and setting various flags for printing, bed counts, drug information, and fee calculation rules. It also handles correction processing for medical treatment dates.",
-        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-koui) processing system; this subprogram handles initial common SPA (scratchpad area) editing for medical treatment act input",
+        "summary": "ORCSC95SUB is a subprogram within the JMA ORCA medical receipt software system. It initializes and populates a shared SPA (scratchpad area) with system management master data (hospital info, print flags, bed counts, check function settings, etc.) used during medical treatment act entry. It handles two processing modes: initial SPA editing and correction-time treatment-date change.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments (rendered as Latin-1 mojibake in the archived file)",
-        "Extensive use of COPY statements for modular include files (CPSK*.INC, MCP*.INC, COMMON-SPA, etc.)",
-        "No EXEC SQL or EXEC CICS — DB access appears to be via CALL-based MCP (middleware) interface",
-        "LINKAGE SECTION with multiple SPA (scratchpad area) parameters passed via USING",
-        "EVALUATE used for dispatch on processing mode (KBN codes)",
-        "Date-based conditional logic for Japanese fiscal year reform dates (e.g., '20170901', '20180401')",
-        "No COMP-3 usage despite financial/billing domain",
-        "67 PERFORM statements indicating heavily structured procedural decomposition",
-        "Copyright notice: JMA Open Source License, 2002"
+        "Heavy use of COPY includes (20 copybooks) for data structures",
+        "LINKAGE SECTION with multiple SPA parameter areas",
+        "EVALUATE on processing mode flag",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Japanese EUC-encoded comments throughout",
+        "PERFORM-heavy structure (67 performs, 0 GOTOs)",
+        "Date-based conditional logic for Japanese fiscal year revisions (Heisei era dates)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine COBOL source. Japanese comments are encoded in EUC-JP or Shift-JIS but were decoded as Latin-1, producing mojibake. The program is clearly production medical billing software from the ORCA project (Japan Medical Association open-source receipt system). The 0 COPY statements shown in mechanical indicators conflicts with the visible COPY statements in the source — the mechanical count likely failed to parse them due to encoding issues. The program references many external copybooks and uses a middleware call pattern (MCP) rather than direct SQL."
+      "notes": "File decoded with latin-1 but contains Japanese EUC-JP encoded text in comments (garbled under latin-1). Source is truncated at 16000 chars out of 75616 bytes total. The program is clearly part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8667,
-      "completion_tokens": 735,
-      "total_tokens": 9402,
-      "cost": 0.037026,
+      "prompt_tokens": 10045,
+      "completion_tokens": 512,
+      "total_tokens": 10557,
+      "cost": 0.037815,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037026,
-        "upstream_inference_prompt_cost": 0.026001,
-        "upstream_inference_completions_cost": 0.011025
+        "upstream_inference_cost": 0.037815,
+        "upstream_inference_prompt_cost": 0.030135,
+        "upstream_inference_completions_cost": 0.00768
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +115,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 19.71,
+    "provider": "Anthropic",
+    "latency_s": 15.35,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:50:55Z"
 }

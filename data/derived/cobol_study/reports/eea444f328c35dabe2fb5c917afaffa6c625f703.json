@@ -50,47 +50,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Rational Developer for z/OS (RDz) / IBM Enterprise COBOL",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "Likely IBM Rational Developer for z (RDz) based on .rdz.cbl extension; nested program structure using ID DIVISION shorthand",
         "evidence": [
-          ".rdz.cbl file extension indicating IBM Rational Developer for z/OS",
-          "IDENTIFICATION DIVISION with trailing space before period",
+          "IDENTIFICATION DIVISION",
           "ID DIVISION shorthand for nested program",
-          "END PROGRAM MainProgram terminator",
-          "nested program structure"
+          "END PROGRAM MainProgram",
+          "PROGRAM-ID. Nested",
+          "fixed format, .rdz.cbl filename"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A minimal skeleton or stub program demonstrating nested COBOL program structure. It defines a main program 'MainProgram' containing a nested program 'Nested', with no actual logic. Likely a template or tutorial snippet.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Minimal skeleton demonstrating nested program structure in COBOL",
+        "summary": "A minimal COBOL program skeleton containing a main program 'MainProgram' with a nested program 'Nested'. No data division or meaningful procedure division logic is present. Appears to be a template or stub.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Nested program structure (ID DIVISION shorthand inside outer program)",
-        "END PROGRAM terminator for outer program",
-        "No DATA DIVISION, no ENVIRONMENT DIVISION, no PROCEDURE DIVISION statements",
-        "UTF-8 BOM present () at start of file",
-        ".rdz.cbl extension indicating IBM Rational Developer for z/OS IDE"
+        "Nested program structure (ID DIVISION shorthand)",
+        "END PROGRAM terminator",
+        "BOM (UTF-8 BOM present)",
+        "No DATA DIVISION, no PROCEDURE DIVISION logic"
       ],
-      "maturity": "toy-or-hello-world",
-      "overall_confidence": "high",
-      "notes": "The file is extremely minimal — only 9 lines with no actual logic. The UTF-8 BOM character is present. The .rdz.cbl extension strongly suggests IBM Rational Developer for z/OS tooling. The nested program 'Nested' has no PROCEDURE DIVISION of its own, making this essentially a structural skeleton or auto-generated stub. The nested program is not terminated with END PROGRAM Nested, which may be intentional (implicit termination) or an incomplete snippet."
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "File contains a UTF-8 BOM character at the start. Only 9 lines total with no actual logic. The .rdz.cbl extension strongly suggests IBM Rational Developer for z/OS tooling. The nested program uses the abbreviated 'ID DIVISION' form. This is essentially an empty skeleton/template."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 900,
-      "completion_tokens": 494,
-      "total_tokens": 1394,
-      "cost": 0.01011,
+      "prompt_tokens": 2278,
+      "completion_tokens": 342,
+      "total_tokens": 2620,
+      "cost": 0.011964,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.01011,
-        "upstream_inference_prompt_cost": 0.0027,
-        "upstream_inference_completions_cost": 0.00741
+        "upstream_inference_cost": 0.011964,
+        "upstream_inference_prompt_cost": 0.006834,
+        "upstream_inference_completions_cost": 0.00513
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 9.4,
+    "provider": "Anthropic",
+    "latency_s": 7.96,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:57:38Z"
 }

@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fdb64c219cb5a29b006c020f0ee4b45e575265c8",
+    "sha1_git": "fdb64c219cb5a29b006c020f0ee4b45e575265c8",
+    "filename": "/cxp100-08-06-2009.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 101942,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fdb64c219cb5a29b006c020f0ee4b45e575265c8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fdb64c219cb5a29b006c020f0ee4b45e575265c8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 101942,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2521,
+    "blank_lines": 250,
+    "comment_lines": 144,
+    "code_lines": 2127,
+    "comment_ratio": 0.063,
+    "max_line_length": 72,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CXP100"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 50,
+    "call_count": 20,
+    "perform_count": 288,
+    "goto_count": 0,
+    "pic_count": 98,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL for Windows/DOS environment; uses DS-CONTROL-BLOCK (Micro Focus dialog system), COPY with quoted filenames (e.g. 'CXP100.CPB', 'DS-CNTRL.MF'), 78-level constants, ACCEPT FROM COMMAND-LINE, ASSIGN TO PRINTER, DECIMAL-POINT IS COMMA, and path-based file references typical of Micro Focus on PC/Windows",
+        "evidence": [
+          "COPY \"DS-CNTRL.MF\"",
+          "78 REFRESH-TEXT-AND-DATA-PROC VALUE 255",
+          "DS-CONTROL-BLOCK",
+          "CXP100-DATA-BLOCK-VERSION-NO",
+          "ACCEPT PARAMETROS-W FROM COMMAND-LINE",
+          "ASSIGN TO PRINTER",
+          "DECIMAL-POINT IS COMMA",
+          "EMP-REFERENCIA with backslash path separators"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Cash register / daily cash movement (Movimento de Caixa) module of a Brazilian ERP system, integrating accounts payable, bank accounts, and general ledger",
+        "summary": "Program CXP100 manages daily cash movement entries for a Brazilian business ERP. It handles inclusion, exclusion, and reversal of cash transactions, integrating with accounts payable (contas a pagar) and bank account (contas correntes) modules. Alterations are not permitted due to system integration; incorrect entries must be deleted and re-entered.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "50 COPY statements for file SELECT and FD sections",
+        "78-level constant (Micro Focus extension)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "DS-CONTROL-BLOCK (Micro Focus Dialog System)",
+        "Path construction using backslash separators for Windows file paths",
+        "OCCURS 50 TIMES for sequence array",
+        "REDEFINES used for path/string manipulation",
+        "Log files (LOGCAIXA, LOGCCD) for audit trail",
+        "CANCEL verb used after CALL",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is in Latin-1 encoding with Portuguese comments and variable names. File dated 1998/2009. Truncated at 16000 chars out of ~102KB total (2521 lines). The program is part of a larger Brazilian ERP suite (CXP=Caixa/Cash, CBP=Banco, CPP=Contas a Pagar, etc.). No COMP-3 usage despite financial calculations, which is consistent with Micro Focus PC COBOL rather than IBM mainframe."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8124,
+      "completion_tokens": 653,
+      "total_tokens": 8777,
+      "cost": 0.034167,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034167,
+        "upstream_inference_prompt_cost": 0.024372,
+        "upstream_inference_completions_cost": 0.009795
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.94,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:40:40Z"
+}

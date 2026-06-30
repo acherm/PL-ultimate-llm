@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8863e4a2a169c832029645c964604bf1351b0981",
+    "sha1_git": "8863e4a2a169c832029645c964604bf1351b0981",
+    "filename": "/ExecSqlWithAlterSequence.rdz.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3575,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8863e4a2a169c832029645c964604bf1351b0981/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8863e4a2a169c832029645c964604bf1351b0981/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3575,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 93,
+    "blank_lines": 0,
+    "comment_lines": 34,
+    "code_lines": 59,
+    "comment_ratio": 0.366,
+    "max_line_length": 72,
+    "avg_line_length": 37.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DVZZMFT3"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM DB2 for z/OS test program; DSNH error codes (DSNHSM5S, DSNHPARS) are DB2 precompiler/SQL messages; SOURCE-COMPUTER IBM-370; program-id DVZZMFT3 follows IBM naming convention; likely developed with IBM Rational Developer for z/OS (RDz, indicated by .rdz.cbl extension)",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-370",
+          "DSNH336I DSNHSM5S",
+          "DSNH637I DSNHSM5S",
+          "DSNH628I DSNHSM5S",
+          "DSNH846I DSNHSM5S",
+          "DSNH104I DSNHPARS",
+          "program-id DVZZMFT3",
+          "EXEC SQL ALTER SEQUENCE ... END-EXEC"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "DB2 SQL ALTER SEQUENCE syntax validation test; exercises valid and invalid ALTER SEQUENCE options including RESTART, INCREMENT BY, MINVALUE, MAXVALUE, CYCLE, CACHE, ORDER",
+        "summary": "This program is a test/validation suite for DB2 SQL ALTER SEQUENCE statements. It exercises numerous valid and invalid syntax combinations, with comments annotating expected DB2 precompiler error codes (DSNH*) for the invalid cases. It appears to be a developer test or regression case for DB2 sequence object DDL support.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "EXEC SQL ALTER SEQUENCE (DB2 DDL embedded SQL)",
+        "Multiple intentionally invalid SQL statements with expected DB2 error codes annotated in comments",
+        "IBM DB2 precompiler error message references (DSNH336I, DSNH637I, DSNH628I, DSNH846I, DSNH104I)",
+        "No DATA DIVISION content (no PIC clauses, no working-storage variables)",
+        "IBM RDz file extension (.rdz.cbl)",
+        "GOBACK statement"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The file is essentially a test harness with no real data division or business logic; it exists solely to validate DB2 ALTER SEQUENCE SQL syntax. The .rdz.cbl extension strongly suggests IBM Rational Developer for z/OS. High comment ratio (37%) due to annotated expected error codes."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3430,
+      "completion_tokens": 583,
+      "total_tokens": 4013,
+      "cost": 0.019035,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019035,
+        "upstream_inference_prompt_cost": 0.01029,
+        "upstream_inference_completions_cost": 0.008745
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.33,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:38:33Z"
+}

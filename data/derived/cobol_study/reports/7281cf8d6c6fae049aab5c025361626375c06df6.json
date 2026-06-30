@@ -49,56 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Nihon Igikai standard receipt system), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCHC02V02 is a prescription/receipt printing component (A5 format).",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "SELECT ... ASSIGN ... FILE STATUS IS pattern",
-          "COPY with REPLACING clause",
-          "PIC X, PIC 9, OCCURS, REDEFINES usage consistent with COBOL-85",
-          "No EXEC SQL or EXEC CICS",
-          "Fixed format, max line 74, comment lines in column 7 with *",
-          "PROGRAM-ID ORCHC02V02 matches filename",
-          "Japanese comments encoded in latin-1 (actually EUC-JP or Shift-JIS garbled)",
-          "Project identified as ORCA (JMA Open Source medical software, known to use GnuCOBOL/OpenCOBOL)"
+          "PROGRAM-ID. ORCHC02V02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY HC02V02.INC",
+          "COPY CPCOMMONPRT.INC",
+          "SELECT PRT-FILE ASSIGN HC01PARA",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed format, max line 74"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a prescription/receipt printing component (A5 format) for the ORCA JMA standard medical receipt software system used in Japanese medical institutions. It handles printing of prescription slips including patient insurance information, drug details, dosage quantities, and various medical billing data. It is part of the 'ORCHC02' prescription print subsystem.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (shinryo-hoshu seikyu) printing system — prescription slip printing for outpatient/inpatient medical care under Japan's national health insurance scheme",
+        "summary": "ORCHC02V02 is a batch COBOL program that prints medical prescription receipts (A5 format) for the JMA ORCA standard receipt software system. It handles insurance combination data, drug/procedure line items, patient information, and various Japanese health insurance rule changes across many revision levels from 2002 to 2015.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese comments encoded in EUC-JP or Shift-JIS (rendered as latin-1 mojibake)",
-        "Extensive revision history spanning 2002-2015 with version numbers",
-        "COPY statements referencing project-specific copybooks (HC02V02.INC, CPCOMMONPRT.INC)",
-        "16 CALL statements, 345 PERFORM statements indicating complex procedural logic",
-        "No COMP-3 packed decimal usage despite financial/billing domain",
-        "No EXEC SQL or EXEC CICS — file-based I/O only",
-        "PRT-FILE with large record size PIC X(10000) for print output",
-        "OCCURS clauses for insurance combination and drug detail arrays",
+        "44 COPY statements (heavy use of copybooks/includes)",
+        "16 CALL statements to external subprograms",
+        "345 PERFORM statements indicating structured procedural logic",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded with mojibake)",
+        "OCCURS clauses for insurance combination and drug line arrays",
         "REDEFINES used for numeric/display conversion of quantities",
-        "Open source JMA ORCA project copyright notice"
+        "No COMP-3 packed decimal despite financial/medical domain",
+        "No EXEC SQL or EXEC CICS — flat file I/O only",
+        "Extensive revision history spanning 2002–2015 in comments",
+        "FD PRT-FILE with PIC X(10000) large record for print output"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine production COBOL from the open-source ORCA medical receipt system developed by the Japan Medical Association (JMA). Japanese text in comments is encoded in EUC-JP or Shift-JIS but decoded as latin-1, causing mojibake. The program has a long maintenance history (2002-2015) with many revision entries. No COPY body is shown (copybooks referenced externally). The single GOTO (goto_count=1) is typical of legacy COBOL. Zero COMP-3 is somewhat unusual for a billing system but not disqualifying."
+      "notes": "File decoded as latin-1 but comments are Japanese EUC or Shift-JIS, appearing as mojibake in this encoding. This is definitively the JMA ORCA open-source medical receipt system, a well-known Japanese healthcare COBOL application. Source is truncated at 16000 chars out of 234178 bytes (5473 lines total); classification is based on the visible portion plus mechanical indicators."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10205,
-      "completion_tokens": 798,
-      "total_tokens": 11003,
-      "cost": 0.042585,
+      "prompt_tokens": 11583,
+      "completion_tokens": 610,
+      "total_tokens": 12193,
+      "cost": 0.043899,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.042585,
-        "upstream_inference_prompt_cost": 0.030615,
-        "upstream_inference_completions_cost": 0.01197
+        "upstream_inference_cost": 0.043899,
+        "upstream_inference_prompt_cost": 0.034749,
+        "upstream_inference_completions_cost": 0.00915
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.6,
+    "latency_s": 18.1,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:00:31Z"
 }

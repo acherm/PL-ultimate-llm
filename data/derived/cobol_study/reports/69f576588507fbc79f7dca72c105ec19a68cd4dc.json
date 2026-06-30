@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:69f576588507fbc79f7dca72c105ec19a68cd4dc",
+    "sha1_git": "69f576588507fbc79f7dca72c105ec19a68cd4dc",
+    "filename": "/admin-server.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9977,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:69f576588507fbc79f7dca72c105ec19a68cd4dc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:69f576588507fbc79f7dca72c105ec19a68cd4dc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9977,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 251,
+    "blank_lines": 34,
+    "comment_lines": 17,
+    "code_lines": 200,
+    "comment_ratio": 0.078,
+    "max_line_length": 73,
+    "avg_line_length": 38.7,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "admin-server"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 18,
+    "goto_count": 0,
+    "pic_count": 45,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with SCREEN SECTION, inline comments using *>, FOREGROUND-COLOR, REVERSE-VIDEO, HIGHLIGHT, BLINK — typical GnuCOBOL screen handling. Likely compiled with GnuCOBOL 2.x or 3.x.",
+        "evidence": [
+          "*> inline comment syntax",
+          "SCREEN SECTION with FOREGROUND-COLOR IS 3",
+          "REVERSE-VIDEO HIGHLIGHT",
+          "BLANK SCREEN",
+          "PROCEDURE DIVISION USING ADMIN-NAME with LINKAGE SECTION",
+          "LINE SEQUENTIAL organization"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "BBS (Bulletin Board System) administration panel for a service called 'MAKERS BBS' with user account and payment management",
+        "summary": "An admin server subprogram for a BBS system that provides a terminal-based admin menu. It allows administrators to process payments (single entry or batch from bank statement) and manage users. It is called with an admin name via LINKAGE SECTION and delegates payment processing to external subprograms.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "SCREEN SECTION with full TUI (text user interface) screens",
+        "LINKAGE SECTION — called as subprogram with ADMIN-NAME parameter",
+        "CALL to 'process-single-payment' and 'process-bank-statement' subprograms",
+        "*> inline comment syntax (GnuCOBOL extension)",
+        "FOREGROUND-COLOR, BLINK, UNDERLINE, REVERSE-VIDEO screen attributes",
+        "LINE SEQUENTIAL file organization",
+        "Recursive PERFORM pattern for menu loops (no GOTO)",
+        "Hex literal X'0A' used as newline filler in file records"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program is clearly a subprogram (PROCEDURE DIVISION USING ADMIN-NAME) intended to be called from a main server program. Some menu options appear incomplete (e.g., 'Manage Users', 'Manage Posts', 'Add Admin' are displayed but not yet implemented). The file definitions (users.dat, transactions.dat, admins.dat) are declared but not opened/read in this module — likely handled by the called subprograms."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5580,
+      "completion_tokens": 555,
+      "total_tokens": 6135,
+      "cost": 0.025065,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025065,
+        "upstream_inference_prompt_cost": 0.01674,
+        "upstream_inference_completions_cost": 0.008325
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.82,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:37:54Z"
+}

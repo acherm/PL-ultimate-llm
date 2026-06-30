@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:70361799b1d11dd7c4d60a1b497d8a73004e764d",
+    "sha1_git": "70361799b1d11dd7c4d60a1b497d8a73004e764d",
+    "filename": "/Consult.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11637,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:70361799b1d11dd7c4d60a1b497d8a73004e764d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:70361799b1d11dd7c4d60a1b497d8a73004e764d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11637,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 247,
+    "blank_lines": 1,
+    "comment_lines": 44,
+    "code_lines": 202,
+    "comment_ratio": 0.179,
+    "max_line_length": 151,
+    "avg_line_length": 46.1,
+    "long_lines_over_72": 39,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 2,
+    "program_ids": [
+      "Consult"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 23,
+    "goto_count": 0,
+    "pic_count": 41,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL with ODBC/ESQL (ecob or similar preprocessor); uses EXEC SQL with ODBC DSN connection string, scroll cursor, ROW_NUMBER() window function. French-language identifiers and comments. Program-id uses AS clause for external name 'FaStock.Consult'.",
+        "evidence": [
+          "program-id. Consult as \"FaStock.Consult\"",
+          "exec sql connect using :connexion-database",
+          "declare cr-article insensitive scroll cursor",
+          "ROW_NUMBER() OVER (ORDER BY idarticle)",
+          "sqlcode = 100 or sqlcode= 101",
+          "screen section with line/col clauses",
+          "French comments and identifiers"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Stock/inventory management system (FaStock) - consultation of articles by supplier with pagination and detail drill-down",
+        "summary": "This program implements a supplier article consultation module for a stock management application called FaStock. It connects to an ODBC database, loads paginated lists of articles belonging to a named supplier using SQL cursors, displays them on screen, and allows the user to navigate pages or drill into stock detail for a specific article reference.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL with ODBC DSN connection string (Server=localhost;Database=Fastock;dsn=Fastock)",
+        "EXEC SQL DECLARE INSENSITIVE SCROLL CURSOR",
+        "SQL ROW_NUMBER() window function for pagination",
+        "SCREEN SECTION with dynamic LINE/COL display",
+        "EVALUATE TRUE for menu navigation",
+        "French-language identifiers and comments",
+        "program-id AS clause for external name",
+        "No COPY statements, no CALL statements",
+        "SQLCA included via EXEC SQL INCLUDE"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Only DATA DIVISION and PROCEDURE DIVISION are present (no IDENTIFICATION or ENVIRONMENT divisions shown, though program-id appears at top suggesting IDENTIFICATION DIVISION header may be omitted). The SQL logic has a potential bug: 'if sqlcode not equal 100 or sqlcode not equal 101' is always true due to OR logic. French comments and identifiers suggest a French-speaking developer/student project. Could be a student project given the FaStock application context, but the structure is reasonably complete."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5082,
+      "completion_tokens": 571,
+      "total_tokens": 5653,
+      "cost": 0.023811,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023811,
+        "upstream_inference_prompt_cost": 0.015246,
+        "upstream_inference_completions_cost": 0.008565
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.33,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T22:01:44Z"
+}

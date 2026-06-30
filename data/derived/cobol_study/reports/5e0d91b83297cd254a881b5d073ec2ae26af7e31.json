@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5e0d91b83297cd254a881b5d073ec2ae26af7e31",
+    "sha1_git": "5e0d91b83297cd254a881b5d073ec2ae26af7e31",
+    "filename": "/Serie07Prog04.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12684,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5e0d91b83297cd254a881b5d073ec2ae26af7e31/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5e0d91b83297cd254a881b5d073ec2ae26af7e31/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12684,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 312,
+    "blank_lines": 22,
+    "comment_lines": 53,
+    "code_lines": 237,
+    "comment_ratio": 0.183,
+    "max_line_length": 80,
+    "avg_line_length": 39.7,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ProgApareo"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 25,
+    "goto_count": 0,
+    "pic_count": 25,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 style, likely compiled with GnuCOBOL on a PC/Linux environment given LINE SEQUENTIAL files and .TXT extensions; Spanish-language comments and Argentine student context (Serie07Prog04, author Lautaro-Rojas, date 04/10/2022)",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "FILE STATUS clauses",
+          "PROGRAM-ID ProgApareo",
+          "DATE-WRITTEN 04/10/2022",
+          "STOP RUN in error handler"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University programming exercise (Serie 07, Program 04) implementing a file-matching (apareo) algorithm between CUENTAS and SERVICIOS files by client number, producing updated accounts, rejections, and incidences files",
+        "summary": "This is a student exercise implementing a classic sequential file merge/match (apareo) between two input files: CUENTAS (accounts) and SERVICIOS (services), keyed on client number. It produces three output files: updated accounts, rejections (clients who cannot pay), and incidences (mismatches). The merge logic is partially implemented with debug DISPLAY statements still present.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Sequential file matching (apareo) algorithm",
+        "5 files: 2 input, 3 output",
+        "LINE SEQUENTIAL organization",
+        "FILE STATUS checking on all open/close/read operations",
+        "Centralized error handler paragraph (00010-Mostrar-anulado) with STOP RUN",
+        "Numbered paragraph naming convention (00001-, 00050-, etc.)",
+        "Extensive debug DISPLAY statements left in code",
+        "Incomplete merge logic (some branches only have DISPLAY placeholders)",
+        "Spanish-language comments and identifiers"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is clearly a student exercise from an Argentine university course (filename Serie07Prog04, author Lautaro-Rojas, 2022). The merge/apareo logic is incomplete — the equal and greater-than branches in 00000-B lack actual WRITE operations and the PERFORM loop condition in 00050-Apareo appears logically inverted (UNTIL NOT= '10' would never enter if FS is not EOF). Many debug DISPLAY statements remain. No COMP-3, no SQL, no CICS."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6532,
+      "completion_tokens": 577,
+      "total_tokens": 7109,
+      "cost": 0.028251,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028251,
+        "upstream_inference_prompt_cost": 0.019596,
+        "upstream_inference_completions_cost": 0.008655
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.98,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:48:33Z"
+}

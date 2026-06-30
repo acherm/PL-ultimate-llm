@@ -49,47 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or generic COBOL (no vendor-specific extensions)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple standard COBOL with no vendor-specific extensions; compatible with GnuCOBOL or any standard compiler",
         "evidence": [
-          "IDENTIFICATION DIVISION / PROGRAM-ID structure",
-          "WORKING-STORAGE SECTION with PIC 9(8) and PIC 9(9)",
+          "IDENTIFICATION DIVISION",
+          "WORKING-STORAGE SECTION",
           "COMPUTE RESULT = NUM1 + NUM2",
-          "DISPLAY / ACCEPT verbs",
-          "No vendor-specific extensions detected"
+          "ACCEPT/DISPLAY statements"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A simple program that accepts two numeric inputs from the user, adds them together, and displays the result. It is a basic arithmetic demonstration with no file I/O or complex logic.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Basic arithmetic demonstration for learning COBOL",
+        "summary": "A minimal COBOL program that accepts two numbers from the user, adds them together using COMPUTE, and displays the result. It is a simple introductory exercise.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Uses COMPUTE verb for addition",
-        "Interactive ACCEPT/DISPLAY for console I/O",
-        "No ENVIRONMENT DIVISION",
-        "No PERFORM, GOTO, or CALL statements",
-        "Minimal structure: single paragraph MAIN-PROCEDURE"
+        "ACCEPT for interactive input",
+        "COMPUTE for arithmetic",
+        "No PERFORM, CALL, or GOTO usage",
+        "No FILE or ENVIRONMENT DIVISION"
       ],
       "maturity": "toy-or-hello-world",
       "overall_confidence": "high",
-      "notes": "This is a straightforward beginner/tutorial COBOL program. The filename 'PlusTwonumber.cbl' matches the program's purpose exactly. No dialect-specific features are present, making it compatible with most modern COBOL compilers including GnuCOBOL."
+      "notes": "Very short 15-line program with no comments, no error handling, and no file I/O. Clearly a beginner tutorial or hello-world style exercise. No vendor-specific features to determine dialect with confidence."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 996,
-      "completion_tokens": 427,
-      "total_tokens": 1423,
-      "cost": 0.009393,
+      "prompt_tokens": 2374,
+      "completion_tokens": 281,
+      "total_tokens": 2655,
+      "cost": 0.011337,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009393,
-        "upstream_inference_prompt_cost": 0.002988,
-        "upstream_inference_completions_cost": 0.006405
+        "upstream_inference_cost": 0.011337,
+        "upstream_inference_prompt_cost": 0.007122,
+        "upstream_inference_completions_cost": 0.004215
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,8 +110,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 8.99,
+    "latency_s": 7.81,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:50:47Z"
 }

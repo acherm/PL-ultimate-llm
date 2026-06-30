@@ -49,52 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA Japan Medical Association)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "EVALUATE ... WHEN construct (COBOL-85)",
-          "PERFORM VARYING ... UNTIL with inline END-PERFORM",
-          "COPY statements with REPLACING clause",
-          "OCCURS clauses, PIC X/9 definitions",
-          "EXIT PROGRAM statement",
-          "ORCA project copyright header identifying JMA open-source medical software"
+          "PROGRAM-ID ORCSCKTKNKCHK",
+          "COPY directives referencing .INC files typical of JMA ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "MCPDATA-REC and MCP-TABLE usage typical of ORCA DB access layer",
+          "No EXEC SQL or EXEC CICS; uses MCP-based DB access"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This subprogram (ORCSCKTKNKCHK) is part of the ORCA JMA standard medical receipt (claims) software. It performs contraindication (kinki) drug combination checks and editing for outpatient/inpatient medical treatment records, including checking against interaction master tables (tbl_interact) and check master tables (tbl_chk). It supports initialization, individual drug check, and full-set drug check modes controlled by a function code parameter.",
-        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (shinryo-koui) processing system - contraindicated drug combination check (kinki yakuzai check) for outpatient/inpatient billing",
+        "summary": "This program is a subprogram in the JMA ORCA medical receipt system that performs contraindicated drug combination checks (kinki yakuzai check) for medical procedures. It validates drug interactions using the tbl_interact and tbl_chk master tables, and manages SPA (screen parameter area) data for the check results. It handles initialization, individual drug check, and full combination check modes.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS mojibake)",
-        "COPY statements referencing multiple project-specific copybooks (CPSRYACT.INC, CPINTERACT.INC, CPCHK.INC, MCPDATA.INC, etc.)",
-        "Database access via MCP (Message Control Program) interface with MCP-TABLE / MCP-PATHNAME / MCP-RC pattern (PostgreSQL via ORCA middleware)",
-        "OCCURS 100 nested tables for drug combination check work areas",
-        "LINKAGE SECTION with multiple SPA (scratchpad area) parameters",
-        "No EXEC SQL or EXEC CICS — uses proprietary MCP DB interface instead",
-        "EVALUATE on function-code parameter to dispatch to init/single-check/all-check sections",
-        "131 PERFORM statements indicating complex procedural logic"
+        "18 COPY statements referencing JMA ORCA-specific .INC copybooks",
+        "MCP-based database access layer (MCPDATA-REC, MCP-TABLE, MCP-PATHNAME, MCP-RC)",
+        "LINKAGE SECTION with multiple SPA (screen parameter area) parameters",
+        "OCCURS 100 nested table structures for drug combination tracking",
+        "Japanese comments encoded in Latin-1 (actually EUC-JP or Shift-JIS mojibake)",
+        "No COMP-3 usage despite numeric processing",
+        "EVALUATE for dispatch on processing mode (KBN 1/2/3)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known open-source Japanese medical receipt system ORCA (JMA). Comments are in Japanese encoded as EUC-JP or Shift-JIS but decoded as latin-1, causing mojibake in the displayed text. The program uses a proprietary MCP database abstraction layer rather than EXEC SQL. No COPY bodies are shown (only directives), so full data layout cannot be verified, but all structural indicators confirm genuine production COBOL."
+      "notes": "Source file is encoded in Latin-1 per decoder but contains Japanese text that appears as mojibake (likely original encoding is EUC-JP or Shift-JIS). This is a well-structured production subprogram from the JMA ORCA open-source medical receipt system. The file was truncated at 16000 chars out of 62818 bytes total."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7468,
-      "completion_tokens": 734,
-      "total_tokens": 8202,
-      "cost": 0.033414,
+      "prompt_tokens": 8846,
+      "completion_tokens": 570,
+      "total_tokens": 9416,
+      "cost": 0.035088,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033414,
-        "upstream_inference_prompt_cost": 0.022404,
-        "upstream_inference_completions_cost": 0.01101
+        "upstream_inference_cost": 0.035088,
+        "upstream_inference_prompt_cost": 0.026538,
+        "upstream_inference_completions_cost": 0.00855
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +114,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.84,
+    "latency_s": 18.57,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:34:30Z"
 }

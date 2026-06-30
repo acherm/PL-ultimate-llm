@@ -49,53 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM CICS/VSAM online program, part of IBM GenApp (CB12) sample application, copyright IBM Corp. 2011-2013",
         "evidence": [
-          "EXEC CICS commands (ASSIGN, RECEIVE, READQ TS, WRITEQ TS, ENQ, DEQ, READ FILE, SEND TEXT, RETURN)",
-          "DFHRESP(NORMAL) built-in condition",
-          "EIBCALEN, EIBTASKN EIB fields",
-          "DFHCOMMAREA linkage section",
-          "IBM copyright header 'CB12' product code",
-          "Fixed format, max line length 72",
-          "COMP (binary) usage without COMP-3",
-          "Function RANDOM and Function INTEGER intrinsic functions (COBOL-85+)"
+          "EXEC CICS ASSIGN",
+          "EXEC CICS ReadQ TS",
+          "EXEC CICS Read File('KSDSCUST')",
+          "DFHRESP(NORMAL)",
+          "EIBCALEN",
+          "EIBTASKN",
+          "DFHCOMMAREA",
+          "LICENSED MATERIALS - PROPERTY OF IBM",
+          "CB12"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This CICS online program returns a random customer number from a VSAM KSDS customer dataset. It reads low and high customer number bounds from a control Temporary Storage Queue (TSQ named GENACNTL), computes a random customer number within that range using EIBTASKN as a seed, then reads the nearest matching record from the VSAM file. The result is returned either via COMMAREA (if invoked by LINK) or via a CICS SEND TEXT screen.",
-        "domain": "insurance",
+        "domain": "demo-example",
+        "domain_detail": "IBM General Insurance Application (GenApp) sample - CICS VSAM customer inquiry",
+        "summary": "This program returns a random customer number from a VSAM KSDS customer dataset. It reads a control TSQ (GENACNTL) to obtain low and high customer number bounds, computes a random customer number using EIBTASKN as seed, then reads the VSAM file KSDSCUST using GTEQ. It can be invoked via LINK or transaction, returning results via COMMAREA or screen.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS commands throughout (ASSIGN, RECEIVE, READQ TS, WRITEQ TS, ENQ/DEQ, READ FILE, SEND TEXT, RETURN)",
-        "DFHCOMMAREA linkage section for inter-program communication",
-        "EIB fields: EIBCALEN, EIBTASKN",
-        "VSAM KSDS file access via EXEC CICS READ with GTEQ option",
-        "Temporary Storage Queue (TSQ) used as a control/seed store",
-        "FUNCTION RANDOM and FUNCTION INTEGER intrinsic functions",
-        "ENQ/DEQ for serialized TSQ access",
-        "IBM GenApp sample application (GENACNTL TSQ, KSDSCUST file)"
+        "EXEC CICS (multiple: ASSIGN, RECEIVE, ENQ/DEQ, ReadQ TS, WriteQ TS, Read File, SEND TEXT, RETURN)",
+        "VSAM KSDS file access via EXEC CICS Read with GTEQ",
+        "Temporary Storage Queue (TSQ) for control data",
+        "FUNCTION RANDOM and FUNCTION INTEGER for random number generation",
+        "DFHCOMMAREA linkage section",
+        "ENQ/DEQ for TSQ serialization",
+        "EIBCALEN and EIBTASKN EIB fields used",
+        "Dual invocation mode: LINK (commarea) or TRAN (receive)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is part of the IBM CICS GenApp (General Insurance Application) sample, as evidenced by the 'CB12' product code, IBM copyright, TSQ name 'GENACNTL', and file name 'KSDSCUST'. The program handles both LINK (commarea) and transaction (RECEIVE) invocation modes. No EXEC SQL or COMP-3 usage. All lines fit within 72 columns confirming fixed format."
+      "notes": "This is part of the IBM GenApp (General Insurance Application) sample/demo application (CB12). While it is a demo/sample, it is written to production-quality standards with proper error handling patterns, ENQ/DEQ serialization, and realistic CICS patterns. Max line length is exactly 72, confirming strict fixed-format COBOL."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3726,
-      "completion_tokens": 721,
-      "total_tokens": 4447,
-      "cost": 0.021993,
+      "prompt_tokens": 5104,
+      "completion_tokens": 549,
+      "total_tokens": 5653,
+      "cost": 0.023547,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.021993,
-        "upstream_inference_prompt_cost": 0.011178,
-        "upstream_inference_completions_cost": 0.010815
+        "upstream_inference_cost": 0.023547,
+        "upstream_inference_prompt_cost": 0.015312,
+        "upstream_inference_completions_cost": 0.008235
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.92,
+    "latency_s": 13.39,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:42:30Z"
 }

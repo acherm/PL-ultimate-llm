@@ -49,55 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), developed by MCC/NACL for Japan Medical Association. Targets GnuCOBOL/OpenCOBOL on Linux (file paths like /var/tmp/ visible in comments).",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "COPY statements referencing .INC and named copybooks (ENUM-VALUE, COMMON-SPA, K02SCR-SPA, etc.)",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "Linux-style file paths (/var/tmp/) suggesting open-source GnuCOBOL environment",
-          "Project name 'ORCA' - JMA (Japan Medical Association) open-source medical receipt software",
-          "No EXEC SQL or EXEC CICS",
-          "PERFORM count 810, CALL count 121 consistent with large production COBOL-85 program"
+          "PROGRAM-ID ORCGK02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY statements with .INC and quoted copybook names",
+          "file paths /var/tmp/ in commented SELECT clauses",
+          "no EXEC SQL or EXEC CICS",
+          "fixed format, max line 76"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a core component of the ORCA JMA standard medical receipt (claims processing) software for Japan. It handles medical treatment act (診療行為) input processing, including patient insurance information, prescription sets, drug/procedure entry, and various billing calculations. It is a large, long-lived production program with an extensive revision history spanning 2000–2018.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical clinic/hospital receipt (shinryo-koui) input processing subsystem for the JMA ORCA standard medical billing software",
+        "summary": "ORCGK02 is a large batch/interactive subprogram within the JMA ORCA medical receipt system that handles medical procedure (shinryo-koui) input and editing. It manages patient visit records, insurance combinations, prescription sets, and various medical billing calculations for Japanese national health insurance claims.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Extensive Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake)",
-        "Large number of COPY statements referencing domain-specific copybooks (K02SCR-SPA, COMMON-SPA, K01COMMON-SPA, ENUM-VALUE, CPK02SPASCR.INC)",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage",
-        "121 CALL statements indicating heavy use of subprogram architecture",
-        "810 PERFORM statements indicating structured procedural decomposition",
+        "73 COPY statements referencing domain-specific copybooks (CPK02SPASCR.INC, COMMON-SPA, K02SCR-SPA, ENUM-VALUE, etc.)",
+        "121 CALL statements indicating heavy subprogram delegation",
+        "810 PERFORM statements indicating structured procedural logic",
         "165 GOTO statements",
-        "Revision history spanning ~18 years (2000–2018) with named maintainers (MCC, NACL)",
-        "Linux/Unix file paths in commented-out file definitions (/var/tmp/)",
-        "Fixed-format with max line length 76, 9 lines over 72 chars"
+        "No COMP-3 usage (PIC 9 fields without COMP-3)",
+        "Extensive Japanese-language comments (EUC-JP/latin-1 encoded)",
+        "Long revision history spanning 2000-2018",
+        "Linux file system paths in commented-out SELECT clauses",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is encoded in latin-1 but the Japanese comments are actually EUC-JP, causing mojibake in the displayed text. The program is part of the well-known open-source ORCA (JMA standard receipt software) project used in Japanese medical clinics. The truncated source shows only the header and working-storage section; the full 15,605-line file contains the complete procedure division. No copybook-only or JCL indicators present."
+      "notes": "Source is encoded in EUC-JP (displayed as latin-1 mojibake in the excerpt). The file is 15605 lines and highly mature production code with an 18-year revision history. Truncated at 16000 chars; full file is ~656KB. The program is part of the well-known open-source JMA ORCA project."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 11813,
-      "completion_tokens": 784,
-      "total_tokens": 12597,
-      "cost": 0.047199,
+      "prompt_tokens": 13191,
+      "completion_tokens": 562,
+      "total_tokens": 13753,
+      "cost": 0.048003,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.047199,
-        "upstream_inference_prompt_cost": 0.035439,
-        "upstream_inference_completions_cost": 0.01176
+        "upstream_inference_cost": 0.048003,
+        "upstream_inference_prompt_cost": 0.039573,
+        "upstream_inference_completions_cost": 0.00843
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 18.5,
+    "latency_s": 15.75,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:50:30Z"
 }

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:222f259959619566fd325c66e1946e303590273a",
+    "sha1_git": "222f259959619566fd325c66e1946e303590273a",
+    "filename": "/TN0004.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 21172,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:222f259959619566fd325c66e1946e303590273a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:222f259959619566fd325c66e1946e303590273a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 21172,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 491,
+    "blank_lines": 49,
+    "comment_lines": 22,
+    "code_lines": 420,
+    "comment_ratio": 0.05,
+    "max_line_length": 72,
+    "avg_line_length": 42.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TR0004"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 67,
+    "goto_count": 0,
+    "pic_count": 89,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL on Windows (file paths use D:/Intern by NTT data/... Windows-style paths); student intern project at NTT Data Thailand context suggested by path naming",
+        "evidence": [
+          "ASSIGN TO string literal with Windows path 'D:/Intern by NTT data/Test/new-tr0004/FILE-INPUT.DAT'",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "COPY with absolute Windows path string",
+          "no EXEC CICS or EXEC SQL",
+          "FILE-AT-END condition name usage"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Credit card transaction reporting: reads card transaction records and produces separate reports for Visa, Mastercard, JCB, and an all-cards combined file with totals",
+        "summary": "Batch program that reads a flat file of credit card transactions (card number, amount, MDR, VAT, card type) and writes them to four separate output report files categorized by card type (Visa, Mastercard, JCB, and all). It prints paginated reports with headers and summary totals per card type and grand totals.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple output files (4 output + 1 input) with separate FILE STATUS fields",
+        "Paginated report output with line counting and header reprinting every 55 lines",
+        "Card type branching (Visa, Mastercard, JCB)",
+        "COPY statement referencing external copybook via absolute Windows path",
+        "ACCEPT FROM DATE and FROM TIME for report timestamps",
+        "Reference modification (FM-DATE(5:2), FM-TIME(1:2), etc.)",
+        "No COMP-3 usage despite financial amounts",
+        "Numeric editing PIC clauses with Z,ZZZ,ZZ9.99 patterns"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Source truncated at 16000 chars; full PROCEDURE DIVISION not visible. Program-ID is TR0004 but filename is TN0004.cbl — minor mismatch. Windows absolute paths in ASSIGN and COPY clauses strongly suggest a student/intern exercise environment (NTT Data internship path visible). Copybook content not shown. FILE-AT-END used as condition-name on WS-100-FILE-STATUS which is a non-standard but GnuCOBOL-compatible pattern."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7949,
+      "completion_tokens": 580,
+      "total_tokens": 8529,
+      "cost": 0.032547,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032547,
+        "upstream_inference_prompt_cost": 0.023847,
+        "upstream_inference_completions_cost": 0.0087
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.98,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:46:12Z"
+}

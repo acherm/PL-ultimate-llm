@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4cdbba90c57f1a9101480d6c7551e0b218245eaa",
+    "sha1_git": "4cdbba90c57f1a9101480d6c7551e0b218245eaa",
+    "filename": "/DB2CBLEX.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28616,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4cdbba90c57f1a9101480d6c7551e0b218245eaa/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4cdbba90c57f1a9101480d6c7551e0b218245eaa/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28616,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 349,
+    "blank_lines": 0,
+    "comment_lines": 133,
+    "code_lines": 216,
+    "comment_ratio": 0.381,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 349,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DB2CBLEX"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 2,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM DB2 mainframe COBOL with EXEC SQL, DCLGEN copybook (DCLEMP), SQLCA include, and CHAMP link control statements. Uses DSN8110.EMP sample DB2 table. Fixed format with sequence numbers in columns 73-80.",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC SQL INCLUDE DCLEMP END-EXEC",
+          "DECLARE EMP_RECORD CURSOR FOR",
+          "FROM DSN8110.EMP",
+          "CHAMP LINK CONTROL STATEMENTS",
+          "DB2OEXP: YES",
+          "DB2OISO: UR",
+          "LABEL RECORDS ARE STANDARD",
+          "RECORDING MODE IS F",
+          "sequence numbers in columns 73-80"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "IBM DB2 sample employee table (DSN8110.EMP) used in training/tutorial context; program fetches and reports employee records",
+        "summary": "Batch COBOL program that opens a DB2 cursor against the IBM sample EMP table (DSN8110.EMP), fetches all employee records ordered by FIRSTNME, and writes them to a report output file. The extensive change log shows iterative ORDER BY clause changes, suggesting a training or learning exercise.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL cursor declaration with ORDER BY",
+        "EXEC SQL INCLUDE SQLCA",
+        "EXEC SQL INCLUDE DCLEMP (DCLGEN copybook)",
+        "COMP-3 usage (WS-CURR-JULIAN7)",
+        "NULL indicator array (NULL_IND OCCURS 2 TIMES)",
+        "CHAMP link control statements (DB2OEXP, DB2OISO)",
+        "ABEND program call (WAASABND)",
+        "COPY REPORT copybook",
+        "Fixed format with sequence numbers",
+        "Extensive change log showing repeated ORDER BY modifications"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars but all four divisions are present. The repeated ORDER BY changes in the change log (same developer 'LOUIS' changing ORDER BY column many times over months) strongly suggests a student or training exercise using the IBM sample DB2 employee table DSN8110.EMP. Sequence numbers in columns 73-80 confirm IBM mainframe fixed format."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5478,
+      "completion_tokens": 574,
+      "total_tokens": 6052,
+      "cost": 0.025044,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025044,
+        "upstream_inference_prompt_cost": 0.016434,
+        "upstream_inference_completions_cost": 0.00861
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.87,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:37:36Z"
+}

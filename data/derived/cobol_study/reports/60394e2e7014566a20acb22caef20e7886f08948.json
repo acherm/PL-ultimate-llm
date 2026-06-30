@@ -49,50 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (or compatible open-source COBOL, given GPL license and TP ONE SRL authorship)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL-based web application framework by Federico Priolo / TP ONE SRL; uses COBW3 copybook pattern for CGI/web output",
         "evidence": [
-          "EVALUATE ... WHEN ... WHEN OTHER construct (COBOL-85)",
-          "GOBACK statement",
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "PERFORM ... THRU pattern throughout",
-          "Fixed-format line numbering (000010, 000020, ...)",
-          "GPL copyright header referencing Federico Priolo / TP ONE SRL"
+          "GPL license header by Federico Priolo TP ONE SRL",
+          "COPY COBW3.CBL",
+          "COPY GLOBALS.CBL",
+          "COPY IMAGES.CBL",
+          "PERFORM INIZIO-WEB THRU EX-INIZIO-WEB",
+          "PERFORM FINE-WEB THRU EX-FINE-WEB",
+          "GOBACK",
+          "DECIMAL-POINT IS COMMA"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "OPENDELE is a web-oriented batch/CGI-style COBOL program that handles deletion of records from different file types (tables, causals, schedules/hours) based on a view parameter. It opens the appropriate file, reads a key from a view, deletes the record, and reports success or failure via a message display routine.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "Web-based record deletion utility for a small business application managing tables (TABELLE), causals (CAUSALI), and schedules (ORARI)",
+        "summary": "OPENDELE is a CGI/web program that handles deletion of records from different file types (tables, causals, schedules) based on a view parameter. It opens the appropriate file, reads the key from a view, deletes the record, and displays a success or error message.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Heavy use of COPY statements for file SELECT, FD, and procedure sections (modular copybook-driven architecture)",
-        "Web integration via COBW3.CBL and INIZIO-WEB/FINE-WEB routines (likely CGI or similar)",
-        "EVALUATE used for dispatching on entity type (TA=tables, CA=causals, OR=hours)",
+        "COPY-heavy architecture with separate SEL/FDE/PIO copybooks per file type",
+        "EVALUATE used for dispatch on STRINGA-VIEW",
         "DECIMAL-POINT IS COMMA (European locale)",
-        "GPL v2+ open-source license header",
-        "No EXEC SQL or EXEC CICS — uses native COBOL file I/O",
-        "No PIC clauses in main source (all data definitions in copybooks)"
+        "Web CGI framework via COBW3.CBL copybook",
+        "GOBACK statement",
+        "No EXEC SQL or EXEC CICS",
+        "5 COPY statements in FILE-CONTROL section"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The copy_count shown as 0 in mechanical indicators appears incorrect — the source clearly contains many COPY statements. This is likely a parsing artifact. The program is part of a larger web application framework (TP ONE / COBW3) by Federico Priolo, released under GPL. The fixed-format line numbers suggest it may have been developed with a traditional COBOL IDE or editor."
+      "notes": "Part of a larger GnuCOBOL web framework (COBW3) developed by Federico Priolo / TP ONE SRL under GPL v2+. The program relies heavily on copybooks for file definitions and I/O procedures. Italian-language messages ('CANCELLAZIONE EFFETTUATA', 'ERRORE CANCELLAZIONE') confirm Italian business context. No PIC clauses visible because all data definitions are in copybooks."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2943,
-      "completion_tokens": 604,
-      "total_tokens": 3547,
-      "cost": 0.017889,
+      "prompt_tokens": 4321,
+      "completion_tokens": 518,
+      "total_tokens": 4839,
+      "cost": 0.020733,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.017889,
-        "upstream_inference_prompt_cost": 0.008829,
-        "upstream_inference_completions_cost": 0.00906
+        "upstream_inference_cost": 0.020733,
+        "upstream_inference_prompt_cost": 0.012963,
+        "upstream_inference_completions_cost": 0.00777
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -111,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 15.5,
+    "provider": "Anthropic",
+    "latency_s": 12.76,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:31:10Z"
 }

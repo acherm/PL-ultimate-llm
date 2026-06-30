@@ -49,53 +49,55 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
-        "standard": "COBOL-2002",
+        "family": "gnucobol",
+        "standard": "COBOL-2014",
+        "detail": "GnuCOBOL free-format source using >>SOURCE FORMAT FREE directive and modern intrinsic functions; likely compiled with GnuCOBOL 3.x",
         "evidence": [
-          ">>source format free compiler directive",
-          "function module-id usage",
-          "call 'lib-readdata' external library pattern",
-          "inline END-IF, END-PERFORM, END-UNSTRING terminators",
-          "OCCURS DEPENDING ON with indexed by",
-          "COMP (binary) without COMP-3",
-          "free-format source layout"
+          ">>source format free",
+          "function module-id",
+          "call 'lib-readdata'",
+          "OCCURS 0 TO 9999 TIMES DEPENDING ON",
+          "function trim",
+          "function abs"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This program solves Advent of Code 2022 Day 15 Part B (beacon exclusion zones). It reads sensor/beacon coordinate pairs, computes Manhattan distances, then for each row in a 0–4,000,000 range finds coverage gaps to locate the one uncovered position and computes the tuning frequency.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Advent of Code 2022 Day 15 Part 2 puzzle solution - finding the distress beacon position using sensor Manhattan distance ranges",
+        "summary": "This program reads sensor/beacon coordinate data, computes Manhattan distances, then for each row in a 0-4000000 range checks which x-positions are covered by sensors. It merges overlapping ranges and looks for a row with more than one non-overlapping range to find the uncovered beacon position, computing the tuning frequency.",
         "program_type": "batch"
       },
       "notable_features": [
-        ">>source format free compiler directive (GnuCOBOL)",
-        "OCCURS DEPENDING ON with dynamic sizing",
-        "FUNCTION TRIM and FUNCTION ABS intrinsic functions",
-        "FUNCTION MODULE-ID for dynamic filename construction",
-        "External CALL to 'lib-readdata' helper library",
-        "Range-merging algorithm for interval coverage",
-        "Large iteration limit (4,000,000 rows) typical of AoC puzzle part 2",
+        ">>SOURCE FORMAT FREE compiler directive",
+        "OCCURS DEPENDING ON with 0 minimum (ODO)",
+        "function module-id for dynamic filename construction",
+        "call to external 'lib-readdata' utility",
+        "UNSTRING with multiple delimiters for parsing",
+        "Large iteration range (0 to 4,000,000)",
+        "No COMP-3 usage - all COMP binary",
         "Extensive commented-out debug DISPLAY statements",
-        "s9(18) COMP for large result accumulation"
+        "Indexed table access with multiple indexes"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "This is clearly an Advent of Code 2022 Day 15 Part B solution written in GnuCOBOL free format. The filename '15b.cbl' matches the day/part naming convention common in AoC repositories. The program uses a custom 'lib-readdata' library suggesting a personal AoC COBOL framework. Commented-out lines show test values (limit 0–20 for sample, 0–4000000 for real input). The tuning frequency formula ((x+1)*4000000 + y) is visible in the code."
+      "notes": "This is clearly an Advent of Code 2022 Day 15 Part 2 solution written in GnuCOBOL free format. The filename '15b.cbl' matches AoC day 15 part b. The magic number 4000000 and the tuning frequency formula ((x+1)*4000000 + y) are characteristic of that puzzle. The 'lib-readdata' call suggests a personal utility library used across multiple AoC solutions."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4145,
-      "completion_tokens": 608,
-      "total_tokens": 4753,
-      "cost": 0.021555,
+      "prompt_tokens": 5523,
+      "completion_tokens": 494,
+      "total_tokens": 6017,
+      "cost": 0.023979,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.021555,
-        "upstream_inference_prompt_cost": 0.012435,
-        "upstream_inference_completions_cost": 0.00912
+        "upstream_inference_cost": 0.023979,
+        "upstream_inference_prompt_cost": 0.016569,
+        "upstream_inference_completions_cost": 0.00741
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 14.16,
+    "provider": "Anthropic",
+    "latency_s": 13.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:44:23Z"
 }

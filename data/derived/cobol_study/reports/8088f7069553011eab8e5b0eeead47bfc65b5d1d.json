@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8088f7069553011eab8e5b0eeead47bfc65b5d1d",
+    "sha1_git": "8088f7069553011eab8e5b0eeead47bfc65b5d1d",
+    "filename": "/TP.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 20974,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8088f7069553011eab8e5b0eeead47bfc65b5d1d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8088f7069553011eab8e5b0eeead47bfc65b5d1d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 20974,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 645,
+    "blank_lines": 121,
+    "comment_lines": 35,
+    "code_lines": 489,
+    "comment_ratio": 0.067,
+    "max_line_length": 73,
+    "avg_line_length": 30.5,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TRABAJO"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 59,
+    "goto_count": 0,
+    "pic_count": 88,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "rm-cobol",
+        "standard": "COBOL-85",
+        "detail": "RM-COBOL-85 explicitly declared in SOURCE-COMPUTER and OBJECT-COMPUTER paragraphs; Windows-style relative paths with backslashes in ASSIGN clauses; DECIMAL-POINT IS COMMA",
+        "evidence": [
+          "SOURCE-COMPUTER. RM-COBOL-85",
+          "OBJECT-COMPUTER. RM-COBOL-85",
+          "ASSIGN TO \"..\\AUTOS.TXT\"",
+          "DECIMAL-POINT IS COMMA",
+          "ORGANIZATION IS LINE SEQUENTIAL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Car rental management system processing rental requests, rejections, and statistics for a vehicle fleet",
+        "summary": "This program (TRABAJO PRACTICO NRO. 1) processes car rental requests from three input solicitation files (SOL1, SOL2, SOL3) and an existing rentals file (ALQ), merging them by key (patente/date), writing accepted rentals to an output file, rejected records to a rejections file, and producing a printed listing and statistics by car brand and month.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "Multiple sequential file merge (3-way solicitation merge with ALQ)",
+        "OCCURS table for cars (300 entries) and statistics (100 brands x 12 months)",
+        "88-level condition names for file status checking",
+        "HIGH-VALUES used as sentinel for end-of-file",
+        "INDEXED BY clause on OCCURS table",
+        "Windows-style backslash paths in ASSIGN clauses",
+        "PROGRAM-ID with quoted string containing spaces"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program name is 'TRABAJO PRACTICO NRO. 1' (Spanish for 'Practical Assignment No. 1'), strongly indicating a university student exercise. Source is truncated at 16000 chars; the PROCEDURE DIVISION is incomplete. Mixed indentation with tabs visible in the source. The PROGRAM-ID uses a quoted string with spaces which is non-standard but supported by RM-COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8113,
+      "completion_tokens": 515,
+      "total_tokens": 8628,
+      "cost": 0.032064,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032064,
+        "upstream_inference_prompt_cost": 0.024339,
+        "upstream_inference_completions_cost": 0.007725
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.85,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:58:06Z"
+}

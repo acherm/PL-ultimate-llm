@@ -49,52 +49,58 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (Open COBOL) free-format source, part of the Applewood Computers Accounting System (ACAS) by Vincent B Coen. Uses >>source free directive and *> comments typical of GnuCOBOL.",
         "evidence": [
-          ">>source free (GnuCOBOL compiler directive)",
-          "*> style comments (GnuCOBOL/COBOL-2002 inline comments)",
-          "foreground-color clause in DISPLAY/ACCEPT",
-          "UPPER clause in ACCEPT",
-          "exit section",
-          "copy \"envdiv.cob\" / copy \"wsmaps03.cob\" etc. (GnuCOBOL-style copybook references)",
-          "comment references to 'Open Cobol v3.00.00'"
+          ">>source free",
+          "*> comment style",
+          "copy \"envdiv.cob\"",
+          "copy \"wsmaps03.cob\"",
+          "copy \"wscall.cob\"",
+          "Migration to Open Cobol v3.00.00 in changelog",
+          "foreground-color clause in DISPLAY",
+          "exit section"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "This is a Cheque Payments Menu program (PL900) that presents a numbered menu for cheque-related operations (generate payments, amend, proof, generate cheques, print register, print remittance advices). It accepts user input and CALLs the appropriate sub-program (PL910–PL960) passing shared linkage data. It is part of the Applewood Computers Accounting System (ACAS).",
-        "domain": "banking",
-        "program_type": "batch"
+        "domain": "accounting-erp",
+        "domain_detail": "Cheque Payments Menu module of the Applewood Computers Accounting System (ACAS); handles payment processing workflow including generating, amending, proofing cheques and printing remittance advices.",
+        "summary": "This program presents a Cheque Payments Menu to the user, allowing selection of sub-modules (pl910-pl960) for generating, amending, proofing payments, generating cheques, printing cheque registers, and printing remittance advices. It is a menu-driver subprogram that calls child programs via dynamic CALL and manages caller/called linkage data.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        ">>source free compiler directive (GnuCOBOL)",
-        "Screen I/O with foreground-color and ACCEPT with UPPER/AUTO UPDATE",
-        "COPY statements for shared copybooks (envdiv, wsmaps03, wscall, wssystem, wsnames, Test-Data-Flags)",
-        "LINKAGE SECTION with multiple parameters passed via USING",
-        "Date format conversion section supporting UK/USA/International formats",
-        "GOTO-heavy control flow (11 GOTOs)",
-        "GNU GPL copyright notice embedded in comments",
-        "Long version history in comments dating from 1984 to 2023"
+        ">>source free compiler directive",
+        "*> free-format comments",
+        "COPY copybooks (envdiv.cob, wsmaps03.cob, wscall.cob, wssystem.cob, wsnames.cob, Test-Data-Flags.cob)",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING",
+        "Dynamic CALL using ws-called variable",
+        "Screen I/O with DISPLAY AT row/col and foreground-color",
+        "ACCEPT with AUTO UPDATE UPPER",
+        "Date format conversion (UK/USA/International) via REDEFINES",
+        "EXIT SECTION",
+        "Multiple GO TO statements for menu navigation"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly a production accounting system module with a long maintenance history (1984–2023). The program is part of ACAS (Applewood Computers Accounting System) and uses GnuCOBOL (formerly OpenCOBOL) free-format source. The comment ratio of 50% is largely due to the extensive copyright and change-history comments. The GOTO-heavy style is consistent with older COBOL practices maintained over decades."
+      "notes": "Program is part of a long-lived accounting system (copyright 1976-2024) with a detailed changelog spanning 1984-2023. Comment ratio is 50% due to extensive copyright/change-history comments. The >>source free directive confirms GnuCOBOL free format. No EXEC SQL or EXEC CICS present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3419,
-      "completion_tokens": 662,
-      "total_tokens": 4081,
-      "cost": 0.020187,
+      "prompt_tokens": 4797,
+      "completion_tokens": 576,
+      "total_tokens": 5373,
+      "cost": 0.023031,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.020187,
-        "upstream_inference_prompt_cost": 0.010257,
-        "upstream_inference_completions_cost": 0.00993
+        "upstream_inference_cost": 0.023031,
+        "upstream_inference_prompt_cost": 0.014391,
+        "upstream_inference_completions_cost": 0.00864
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 14.27,
+    "latency_s": 13.93,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:27:05Z"
 }

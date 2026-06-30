@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:772faf254b7cb41236673c64d847f576cb9d0c40",
+    "sha1_git": "772faf254b7cb41236673c64d847f576cb9d0c40",
+    "filename": "/ex02.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5505,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:772faf254b7cb41236673c64d847f576cb9d0c40/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:772faf254b7cb41236673c64d847f576cb9d0c40/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5505,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 162,
+    "blank_lines": 30,
+    "comment_lines": 13,
+    "code_lines": 119,
+    "comment_ratio": 0.098,
+    "max_line_length": 71,
+    "avg_line_length": 32.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EX02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 42,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Brazilian student exercise, likely compiled with GnuCOBOL (OpenCOBOL); uses VALUE OF FILE-ID and LINE SEQUENTIAL typical of GnuCOBOL on PC",
+        "evidence": [
+          "ASSIGN TO DISK",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "VALUE OF FILE-ID IS",
+          "DECIMAL-POINT IS COMMA",
+          "LABEL RECORD ARE STANDARD",
+          "LABEL RECORD IS OMITTED"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian Portuguese student exercise for a tourism company (TURISMAR TURISMOS) client report",
+        "summary": "Reads a sequential customer file (CADCLI.DAT) and produces a formatted report (RELCLI.TXT) listing clients who visited the company in 2010 or 2011. Prints paginated headers with page numbers and a final total of matching clients.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "VALUE OF FILE-ID for file assignment (GnuCOBOL/older style)",
+        "Reference modification: TELEFONE-CLIENTE(1:4), DATA-VIS-CLI(5:8)",
+        "Paginated report with header paragraphs and line counter",
+        "PIC 99(02) unusual picture clause for VAR-PAG",
+        "Portuguese-language identifiers and comments",
+        "No COMP-3, no EXEC SQL, no COPY statements"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is a student exercise written in Brazilian Portuguese by 'Bruno Carvalho' dated 22/04/2023. The PIC 99(02) for VAR-PAG appears to be a typo/student error (should be PIC 9(02) or PIC Z9). Date filter logic uses substring reference modification on DATA-VIS-CLI which compares numeric substring to integer literals 2010/2011 — a common student approach. No lines exceed 72 characters confirming fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4198,
+      "completion_tokens": 502,
+      "total_tokens": 4700,
+      "cost": 0.020124,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020124,
+        "upstream_inference_prompt_cost": 0.012594,
+        "upstream_inference_completions_cost": 0.00753
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.45,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:47:00Z"
+}

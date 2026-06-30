@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:51259dd3a7849575adda4968563f17861a18e854",
+    "sha1_git": "51259dd3a7849575adda4968563f17861a18e854",
+    "filename": "/EDI-impord-p.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 159037,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:51259dd3a7849575adda4968563f17861a18e854/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:51259dd3a7849575adda4968563f17861a18e854/raw/"
+  },
+  "indicators": {
+    "bytes_len": 159037,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3955,
+    "blank_lines": 321,
+    "comment_lines": 520,
+    "code_lines": 3114,
+    "comment_ratio": 0.143,
+    "max_line_length": 113,
+    "avg_line_length": 39.2,
+    "long_lines_over_72": 52,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "EDI-impord-p"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 74,
+    "call_count": 20,
+    "perform_count": 220,
+    "goto_count": 0,
+    "pic_count": 134,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT dialect evidenced by 'handle' data type, 'comp-1' usage, '78' level constants, 'signed-short' usage, and 'acucobol.def' copybook. Italian business application (ERP/order management).",
+        "evidence": [
+          "77 dir-import-handle handle",
+          "77 statusCheck signed-short",
+          "77 nargs pic 99 comp-1",
+          "78 titolo value ...",
+          "copy \"acucobol.def\"",
+          "decimal-point is comma"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "EDI order import processing for an Italian wholesale/distribution company. Imports EDI orders from a predefined folder, validates them, writes EDI files with source data, and copies files to a backup folder.",
+        "summary": "This program imports EDI orders from a predefined directory, performs validation checks (customer, destination, articles, prices, promotions, packaging), writes processed EDI order records (master and detail), and copies the source files to a backup folder. It logs results and handles errors extensively.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ACUCOBOL 'handle' data type for directory operations",
+        "78-level constants (ACUCOBOL extension)",
+        "signed-short usage",
+        "decimal-point is comma (Italian locale)",
+        "74 COPY statements referencing .sl and .fd copybooks",
+        "DECLARATIVES with USE AFTER ERROR for each file",
+        "Linkage section with batch-linkage, user, and macrobatch log parameters",
+        "No EXEC SQL or EXEC CICS",
+        "Large program: ~3955 lines, 220 PERFORMs, 20 CALLs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is ~159KB/3955 lines. Encoded as latin-1 (Italian text in REMARKS). The extensive use of ACUCOBOL-specific features (handle, comp-1 for numeric args, 78-level, acucobol.def) strongly indicates ACUCOBOL-GT runtime. The program is part of a larger Italian ERP/distribution system with EDI integration."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7122,
+      "completion_tokens": 545,
+      "total_tokens": 7667,
+      "cost": 0.029541,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029541,
+        "upstream_inference_prompt_cost": 0.021366,
+        "upstream_inference_completions_cost": 0.008175
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.18,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:43:39Z"
+}

@@ -49,54 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (open-cobol)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (open-cobol/GnuCOBOL); references to open-cobol 0.23 migration and ORCA-specific COPY libraries",
         "evidence": [
-          "PROGRAM-ID. A00000L103",
-          "All four DIVISIONS present",
-          "COPY statements with REPLACING clauses",
-          "OCCURS clauses, PIC definitions",
-          "Comment referencing 'open-cobol 0.23' migration",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "ORGANIZATION INDEXED / ACCESS MODE DYNAMIC file control",
-          "No EXEC SQL or EXEC CICS"
+          "COPY \"CPCOMMONSHELL.INC\"",
+          "COPY \"MCPAREA\"",
+          "COPY \"CPORCSPRT.INC\"",
+          "comment: open-cobol 0.23 対応",
+          "Project code name ORCA / JMA (Japan Medical Association)",
+          "SELECT L103T-FILE ASSIGN L103TPARA ORGANIZATION INDEXED"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch report/list program (component of the ORCA Japan Medical Association standard receipt software) that produces an inpatient/outpatient patient list ('在院患者一覧' – patient census list). It reads patient, insurance, medical-act, and hospitalization history data from indexed files and writes a formatted print output, including error file handling.",
-        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-hoshuu) software - inpatient/outpatient patient list component",
+        "summary": "This program is the patient list (kanja ichiran) component of the JMA ORCA medical receipt system. It extracts and processes patient visit records, insurance information, and billing data, writing results to a temporary indexed file and an error file. It handles multiple insurance types including self-pay, workers compensation, and public assistance.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Part of the JMA ORCA open-source medical receipt software project",
-        "Heavy use of COPY statements for modular record layouts (30+ copybooks)",
-        "ORGANIZATION INDEXED with DYNAMIC access for temporary work file",
-        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1)",
-        "No EXEC SQL or EXEC CICS – DB access via CALL subprograms (MCP pattern)",
-        "80 CALL statements indicating extensive subprogram-based architecture",
-        "Version history spanning 2004–2008 with named maintainers",
-        "OCCURS tables for insurance combination and self-pay management",
-        "Error file (RECEERR-FILE) for runtime error reporting"
+        "42 COPY statements referencing ORCA-specific copybooks (CPPTINF, CPJYURRK, CPSRYACCT, etc.)",
+        "80 CALL statements indicating heavy use of subprogram architecture",
+        "INDEXED file organization with DYNAMIC access",
+        "OCCURS tables for insurance and department data",
+        "Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake)",
+        "No EXEC SQL or EXEC CICS - uses MCP (message control protocol) DB access layer via MCPAREA/MCPDATA copybooks",
+        "Version history spanning 2004-2008 with named developers"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded as latin-1 but the Japanese comments are almost certainly EUC-JP or Shift-JIS, causing mojibake in the displayed text. The source is clearly genuine production COBOL from the ORCA medical software project. The truncation at 16000 chars covers only the DATA DIVISION; the PROCEDURE DIVISION is not shown but its presence is confirmed by mechanical indicators (perform_count=85, call_count=80, goto_count=0)."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text, appearing as mojibake. Source is truncated at 16000 chars out of ~107KB total. The program is part of the well-known open-source JMA ORCA medical billing system for Japan, compiled with open-cobol (now GnuCOBOL). No COMP-3 usage detected despite financial calculations, consistent with GnuCOBOL/open-cobol style."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8845,
-      "completion_tokens": 664,
-      "total_tokens": 9509,
-      "cost": 0.036495,
+      "prompt_tokens": 10223,
+      "completion_tokens": 582,
+      "total_tokens": 10805,
+      "cost": 0.039399,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.036495,
-        "upstream_inference_prompt_cost": 0.026535,
-        "upstream_inference_completions_cost": 0.00996
+        "upstream_inference_cost": 0.039399,
+        "upstream_inference_prompt_cost": 0.030669,
+        "upstream_inference_completions_cost": 0.00873
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.69,
+    "latency_s": 16.72,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:34:36Z"
 }

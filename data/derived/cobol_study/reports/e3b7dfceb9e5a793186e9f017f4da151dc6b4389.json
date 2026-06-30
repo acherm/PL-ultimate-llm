@@ -49,58 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL / ORCA project)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日本医師会標準レセプトソフト); GnuCOBOL/OpenCOBOL-based system used in Japanese medical clinics",
         "evidence": [
-          "PROGRAM-ID. SOKATU0815",
-          "PROCEDURE DIVISION USING COMMAND-PARAM",
-          "COPY directives with REPLACING (many .INC copybooks)",
-          "ORGANIZATION IS LINE SEQUENTIAL",
-          "FILE STATUS IS",
-          "PERFORM ... UNTIL",
-          "INITIALIZE statements",
-          "UNSTRING ... DELIMITED BY",
-          "JMA ORCA project copyright header",
-          "No EXEC SQL / EXEC CICS",
-          "Fixed-format source layout"
+          "PROGRAM-ID SOKATU0815",
+          "COPY directives referencing CPRCF010.INC, CPPTINF.INC, CPSK1001.INC etc. (ORCA-specific copybooks)",
+          "Project code name ORCA in header comment",
+          "Copyright 2002 JMA (Japan Medical Association)",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "No EXEC CICS / EXEC SQL",
+          "LINE SEQUENTIAL file organization"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA ORCA (Japan Medical Association standard receipt software) system. It generates a medical insurance claim/billing request document for a wide-area federation (広域連合) in Iwate Prefecture, processing receipt data and producing a formatted print output file. It reads receipt DB update files, aggregates claim data by insurer/public-expense category, and writes results to an update file and error file.",
-        "domain": "healthcare/medical billing (Japanese national health insurance claims processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) processing for Iwate prefecture wide-area federation (岩手県広域連合) diagnostic fee claim submission",
+        "summary": "SOKATU0815 is a batch program in the JMA ORCA medical receipt system that generates or updates insurance claim (レセプト) data for a specific prefecture-level wide-area health insurance federation. It reads receipt DB update files, aggregates claim counts and amounts by insurer and public expense category, and produces output for submission. The program handles multiple revision cycles dating from 2008 through 2017.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Heavy use of COPY directives with REPLACING for copybooks (.INC files)",
-        "Japanese EUC-JP encoded comments (decoded as latin-1, hence garbled)",
+        "30 COPY statements referencing ORCA-specific copybooks (CPRCF010, CPPTINF, CPHKNNUM, CPSK1001-1903, CPSK2007, CPSK2010, etc.)",
         "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
-        "UNSTRING for parsing comma-delimited command parameters",
         "LINE SEQUENTIAL file organization",
-        "Multiple version history entries in comments (01.00.01 through 01.00.08)",
-        "OCCURS clauses for tabular insurance/public-expense data",
-        "REDEFINES used for address/name fields",
-        "No COMP-3 usage despite financial data",
-        "GOTO used (noted in change history as replacement for PERFORM)"
+        "UNSTRING on COMMAND-PARAM for parameter parsing",
+        "OCCURS tables for public expense (公費) aggregation up to 100 entries",
+        "REDEFINES on hospital name/address fields",
+        "High comment ratio (32%) with Japanese EUC-JP encoded comments",
+        "Revision history embedded in comments spanning 2008-2017",
+        "No COMP-3 usage despite financial calculations",
+        "GOTO usage (3 occurrences, noted in revision history as replacement for PERFORM)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but the comments are actually Japanese EUC-JP encoded, causing the garbled appearance. The program is clearly part of the open-source JMA ORCA medical receipt software project. The COPY statements reference many external copybooks that are not shown. The truncation at 16000 chars covers roughly the first 400 lines of 2283 total, but the structure and purpose are clear from what is visible."
+      "notes": "File is encoded in EUC-JP (decoded as latin-1), causing Japanese text to appear as mojibake in the snippet. The program is part of the well-known open-source JMA ORCA system. Source is truncated at 16000 chars out of ~95KB total; full procedure division not visible but structure is clear from indicators (132 PERFORMs, 9 CALLs, 30 COPYs)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 9037,
-      "completion_tokens": 679,
-      "total_tokens": 9716,
-      "cost": 0.037296,
+      "prompt_tokens": 10415,
+      "completion_tokens": 673,
+      "total_tokens": 11088,
+      "cost": 0.04134,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -109,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037296,
-        "upstream_inference_prompt_cost": 0.027111,
-        "upstream_inference_completions_cost": 0.010185
+        "upstream_inference_cost": 0.04134,
+        "upstream_inference_prompt_cost": 0.031245,
+        "upstream_inference_completions_cost": 0.010095
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -120,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.85,
+    "latency_s": 17.86,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:17:52Z"
 }

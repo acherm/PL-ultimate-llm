@@ -49,52 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "MetaWare Technologies COBOL (translated/ported, likely targeting GnuCOBOL or similar open-source runtime)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "MetaWare Technologies Cobol-Translater 0.9.16 (2016) - a COBOL translator/preprocessor tool, likely targeting GnuCOBOL or similar open-source runtime. Uses LINE SEQUENTIAL organization and MW- prefixed generated fillers.",
         "evidence": [
-          "Comment header: 'MetaWare Technologies Cobol-Translater 0.9.16 13/06/2016'",
-          "ORGANIZATION LINE SEQUENTIAL (translated from mainframe sequential)",
-          "DECIMAL-POINT IS COMMA (European locale, typical of French mainframe COBOL)",
-          "COMP-3 packed decimal usage",
-          "88-level condition names",
-          "LABEL RECORD STANDARD / BLOCK CONTAINS 0 RECORDS (mainframe-style FD clauses)",
-          "Sequence numbers in columns 73-80 (e.g. 00010000, 00020001)"
+          "MetaWare Technologies Cobol-Translater 0.9.16 13/06/2016 in comment",
+          "ORGANIZATION LINE SEQUENTIAL",
+          "MW-FILLER generated names",
+          "*MW DAR-2 directive comment",
+          "*{ Tr-Select-Sequential 1.3 translator blocks"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program processes stock movement files resulting from the merger of two subsidiary companies ('filiales'). It reads two input movement files (FHV030 and FHV031), filters/excludes certain records based on matching criteria, and writes the retained movements to an output file (FGS40). It also reads a company code file (FNSOC) and a parameter file (FPARAM).",
-        "domain": "retail/distribution inventory (stock valuation - 'VALO DES STOCKS')",
+        "domain": "retail-commerce",
+        "domain_detail": "Stock valuation (VALO DES STOCKS) - exclusion of movements following merger of two subsidiary files (filiales). French retail/distribution context with société/lieu/article codes.",
+        "summary": "Batch program BYHV36 processes stock movement files from two merged subsidiaries (FHV030 and FHV031), filtering/excluding certain movements resulting from the merger. It reads movement records, compares keys (société, lieu, article codes), and writes retained movements to an output file (FGS40). The program runs monthly or on-request (MENSUEL ET RQ).",
         "program_type": "batch"
       },
       "notable_features": [
-        "COMP-3 packed decimal fields (monetary and quantity fields)",
-        "DECIMAL-POINT IS COMMA (French/European locale)",
-        "MetaWare COBOL translator comments marking transformed SELECT statements (Tr-Select-Sequential)",
-        "Original mainframe SELECT statements preserved as comments alongside translated LINE SEQUENTIAL versions",
-        "French-language comments and field names throughout",
-        "Sequence numbers in columns 73-80 indicating mainframe origin",
-        "Multiple input files with complex record layouts (146-byte and 179-byte records)",
-        "88-level condition names for file status flags (DEBUT/FIN)"
+        "COMP-3 packed decimal fields (9 occurrences)",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "LINE SEQUENTIAL file organization",
+        "MetaWare COBOL translator preprocessor annotations (*{ Tr-Select-Sequential blocks)",
+        "88-level condition names for file status flags",
+        "French-language comments and field names",
+        "LABEL RECORD STANDARD",
+        "BLOCK CONTAINS 0 RECORDS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was originally written for an IBM mainframe environment (evidenced by fixed-format, sequence numbers, LABEL RECORD STANDARD, BLOCK CONTAINS 0, COMP-3, and French mainframe conventions) and was subsequently translated by 'MetaWare Technologies Cobol-Translater 0.9.16' in 2016 to run on a non-mainframe platform using LINE SEQUENTIAL file organization. The source is truncated at 16000 chars (about half the full 32400-byte file), so the PROCEDURE DIVISION is not visible, but all structural indicators confirm genuine production COBOL."
+      "notes": "Source is truncated to first 16000 chars (400 lines total shown). The MetaWare Technologies Cobol-Translater header indicates this was processed by a COBOL translation tool that converted mainframe-style SELECT statements to LINE SEQUENTIAL equivalents, suggesting original IBM mainframe heritage adapted for open-source/PC runtime. All 4 divisions present. High comment ratio (34.5%) includes translator-generated comment blocks."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4309,
-      "completion_tokens": 731,
-      "total_tokens": 5040,
-      "cost": 0.023892,
+      "prompt_tokens": 5687,
+      "completion_tokens": 549,
+      "total_tokens": 6236,
+      "cost": 0.025296,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -103,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.023892,
-        "upstream_inference_prompt_cost": 0.012927,
-        "upstream_inference_completions_cost": 0.010965
+        "upstream_inference_cost": 0.025296,
+        "upstream_inference_prompt_cost": 0.017061,
+        "upstream_inference_completions_cost": 0.008235
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -114,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.5,
+    "latency_s": 15.57,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:45:24Z"
 }

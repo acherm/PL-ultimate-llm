@@ -49,54 +49,57 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL or compatible (ORCA/JMA open-source medical system)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); GnuCOBOL/OpenCOBOL-based system used in Japanese medical clinics",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax (COBOL-85)",
-          "END-EVALUATE, END-IF structured terminators",
-          "OCCURS clauses with PIC definitions",
-          "COPY statements with REPLACING",
-          "EXIT PROGRAM",
-          "PROCEDURE DIVISION USING with multiple linkage parameters",
-          "Fixed-format source with comment lines in column 7 (*)"
+          "PROGRAM-ID ORCGS03N",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "COPY 'LINKAREA'",
+          "EXEC SQL absent, EXEC CICS absent",
+          "MCP-STATUS / MCP-EVENT linkage pattern typical of ORCA MCP framework"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a billing/receipt confirmation screen handler (S03N) for the ORCA JMA standard medical receipt software system. It manages patient billing data including insurance fees, co-payments, and payment collection records. It handles screen navigation, data entry, and payment registration for the Japanese medical billing subsystem.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical clinic receipt/billing system (レセプト); specifically the payment/collection confirmation screen (収納登録 S03N component)",
+        "summary": "This program is the S03N (payment confirmation) component of the JMA ORCA standard medical receipt software. It handles screen navigation, data entry, and processing for patient billing and payment registration, including insurance amounts, self-pay amounts, and payment history. It interacts with patient master, medical-act, and payment master records via the MCP framework.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — uses MCP (Message Control Program) middleware instead, typical of ORCA system",
-        "Japanese-language comments encoded in latin-1 (actually Shift-JIS or EUC-JP, mojibake visible)",
-        "COPY statements referencing many domain-specific copybooks (CPSYUNOU, CPSRYACT, CPSRYACCT, CPPTINF, etc.)",
-        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA — screen-based online program",
-        "OCCURS clauses for insurance fee arrays (up to 12 entries), payment history tables",
-        "EVALUATE with ALSO for multi-condition dispatch on MCP-STATUS/MCP-EVENT",
-        "Signed PIC S9 fields for adjustment amounts",
-        "Version history comments with revision tracking (01.01.01, 01.01.04, etc.)",
-        "27 CALL statements, 88 PERFORMs, 22 GOTOs — substantial procedural complexity",
-        "No COMP-3 usage despite financial calculations"
+        "MCP framework linkage (MCPAREA, ORCA-SPA, LINKAREA) typical of ORCA/GnuCOBOL screen programs",
+        "27 COPY statements referencing ORCA-specific copybooks (CPSYUNOU, CPSRYACT, CPPTINF, etc.)",
+        "27 CALL statements",
+        "OCCURS clauses for insurance amounts and payment history tables",
+        "Japanese text in comments (Shift-JIS/EUC-JP encoded, decoded as latin-1)",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT dispatch pattern",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "Signed numeric fields (PIC S9) for adjustment amounts",
+        "REPLACING clause in COPY for record aliasing"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the open-source ORCA (JMA standard receipt software) project, a well-known Japanese medical billing system. Comments are in Japanese encoded as Shift-JIS or EUC-JP but decoded as latin-1, causing mojibake. The program is a screen handler for payment confirmation (S03N component). The absence of EXEC SQL/CICS is expected — ORCA uses its own MCP middleware layer. Source is clearly production-grade medical software, not a tutorial or demo."
+      "notes": "Source file is encoded in a Japanese encoding (likely EUC-JP or Shift-JIS) but decoded as latin-1, causing mojibake in comments. Content is clearly identifiable as JMA ORCA system code. Max line length 74 and fixed format confirmed. The program is a screen-handling subprogram called via the ORCA MCP (Medical Care Platform) framework rather than CICS, but classified as online-cics as the closest analog for interactive screen programs."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7555,
-      "completion_tokens": 738,
-      "total_tokens": 8293,
-      "cost": 0.033735,
+      "prompt_tokens": 8933,
+      "completion_tokens": 632,
+      "total_tokens": 9565,
+      "cost": 0.036279,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033735,
-        "upstream_inference_prompt_cost": 0.022665,
-        "upstream_inference_completions_cost": 0.01107
+        "upstream_inference_cost": 0.036279,
+        "upstream_inference_prompt_cost": 0.026799,
+        "upstream_inference_completions_cost": 0.00948
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +118,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.88,
+    "provider": "Anthropic",
+    "latency_s": 17.38,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:13:22Z"
 }

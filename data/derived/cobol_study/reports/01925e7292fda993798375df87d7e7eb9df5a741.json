@@ -49,46 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar free/tab-indented COBOL",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple COBOL-85 program; tab-indented source, no vendor-specific extensions. Likely GnuCOBOL or similar free compiler given the style.",
         "evidence": [
-          "END-IF terminators (COBOL-85+)",
+          "END-IF used",
           "END PROGRAM cash-register",
-          "COMPUTE with structured IF blocks",
-          "tab-indented source with PROGRAM-ID using hyphenated name"
+          "COMPUTE with structured IF",
+          "PIC ZZ999V99 display picture"
         ],
         "confidence": "medium"
       },
-      "source_format": "free",
+      "source_format": "tab",
       "purpose": {
-        "summary": "A simple pet-shop cash register program that accepts pet names from the user, accumulates their prices into an order total, and loops until the user declines to add more items. It then displays the total cost.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Pet store cash register simulation accepting pet orders and accumulating a running total",
+        "summary": "A simple interactive cash register program for a pet store. It accepts pet names from the user, adds the corresponding price to a running total, and loops until the user indicates they are done, then displays the total.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Tab-indented source (non-standard fixed format)",
+        "Tab-indented source format",
         "GO TO used for loop back to UI paragraph",
-        "IDENTIFICATION DIVISION present in source but not flagged by mechanical scan (likely due to tab indentation)",
-        "Euro sign (€) in DISPLAY statement — UTF-8 encoding confirmed",
-        "Bug: STORE_OPTION is never set; comparison with OPTION will always be false unless OPTION is also spaces"
+        "Euro sign in DISPLAY output",
+        "No PERFORM used; loop implemented with GO TO",
+        "IDENTIFICATION DIVISION present but missing from mechanical indicators (likely parsed differently)"
       ],
       "maturity": "student-exercise",
-      "overall_confidence": "high",
-      "notes": "The mechanical indicator shows identification=false, but the source clearly contains 'IDENTIFICATION DIVISION.' — likely the tab indentation confused the parser. The program has a logic bug: STORE_OPTION is never assigned a value, so the loop-continue check (IF STORE_OPTION EQUALS OPTION) will never be true, meaning the loop never repeats regardless of user input. This is consistent with a student exercise. Source format is tab-indented free-form COBOL."
+      "overall_confidence": "medium",
+      "notes": "Mechanical indicators show IDENTIFICATION division as absent but the source clearly contains it; likely a parsing artifact. The source uses tab indentation throughout rather than fixed-column format. The GO TO loop and lack of PERFORM suggest a beginner exercise. The euro sign in the DISPLAY statement suggests a European author."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1482,
-      "completion_tokens": 487,
-      "total_tokens": 1969,
-      "cost": 0.011751,
+      "prompt_tokens": 2860,
+      "completion_tokens": 338,
+      "total_tokens": 3198,
+      "cost": 0.01365,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -97,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011751,
-        "upstream_inference_prompt_cost": 0.004446,
-        "upstream_inference_completions_cost": 0.007305
+        "upstream_inference_cost": 0.01365,
+        "upstream_inference_prompt_cost": 0.00858,
+        "upstream_inference_completions_cost": 0.00507
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,8 +111,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 10.67,
+    "latency_s": 13.5,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:53:26Z"
 }

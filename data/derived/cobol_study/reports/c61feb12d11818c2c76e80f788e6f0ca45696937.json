@@ -49,54 +49,54 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (open-cobol)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (open-cobol/GnuCOBOL); revision history explicitly mentions open-cobol1.0 compatibility and ver4.8 support",
         "evidence": [
-          "PROGRAM-ID. SEIKYU4707",
-          "comment mentions 'open-cobol1.0対応' (open-cobol 1.0 support)",
-          "PROCEDURE DIVISION USING COMMAND-PARAM with LINKAGE SECTION",
-          "END-UNSTRING terminator (COBOL-85+)",
-          "COPY statements with REPLACING",
-          "No EXEC SQL or EXEC CICS",
-          "Fixed-format source with standard column layout"
+          "open-cobol1.0ÂÐ±þ in revision history",
+          "PROGRAM-ID SEIKYU4707",
+          "COPY directives with JMA ORCA-specific INC files (CPORCSPRT.INC, CPORCSDAY.INC, etc.)",
+          "CALL ORCSJOB",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "no EXEC CICS or EXEC SQL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch COBOL program (SEIKYU4707) that generates a medical fee claim/billing document (請求書) for patients with mental disabilities under a special Okinawa Prefecture treatment payment scheme (沖縄県精神障害者特別措置医療支払請求書, form 121). It reads indexed claim files, computes billing amounts, and produces printed output via job/print management subprogram calls.",
-        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing system (JMA ORCA) - Okinawa Prefecture mental disability special treatment medical payment claim form (receipt form 121)",
+        "summary": "This program generates medical insurance billing claim documents (seikyu-sho) for a specific Okinawa Prefecture mental disability special treatment category. It reads patient and insurance data, performs calculations for billing amounts, and produces printed output via the ORCA print subsystem. It is part of the JMA standard receipt software suite.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Extensive use of COPY statements for modular include files (CPCOMMONDAT2.INC, CPSK1001.INC, CPPRTKANRI.INC, etc.)",
-        "Japanese Shift-JIS/EUC encoded comments (decoded as latin-1, hence garbled)",
-        "CALL to external subprograms: ORCSJOB, and others for print/job management",
-        "UNSTRING of COMMAND-PARAM for parameter parsing",
-        "LINKAGE SECTION with COMMAND-PARAM for batch invocation",
-        "Indexed file (ORGANIZATION IS INDEXED, ACCESS MODE IS DYNAMIC)",
-        "Revision history embedded in comments spanning 2009–2014",
-        "Program option support added in 2013 (FLG-PRGOPTION, PRGOPTION-REC)",
-        "Temporary directory handling subprogram (CPORCSGETTEMP.INC) added in ver4.8",
-        "No COMP-3 usage despite numeric fields; no EXEC SQL or EXEC CICS"
+        "29 COPY statements referencing JMA ORCA-specific INC files",
+        "34 CALL statements including ORCSJOB, ORCSPRT subsystems",
+        "UNSTRING of COMMAND-PARAM for parameter passing via LINKAGE SECTION",
+        "REDEFINES usage",
+        "OCCURS tables",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "No EXEC SQL or EXEC CICS",
+        "Revision history embedded in comments spanning 2009-2014"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but comments are Japanese (likely EUC-JP or Shift-JIS), causing mojibake in the displayed text. The program is part of the JMA (Japan Medical Association) open-source 'ORCA' medical receipt software project. Multiple COPY statements reference external copybooks not shown. The 34 CALL statements and 62 PERFORMs indicate a substantial, well-structured production program. No COMP-3 is unusual for a billing program but consistent with the indicators."
+      "notes": "File is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments. Content is clearly identifiable as JMA ORCA medical receipt software. Program name SEIKYU4707 follows ORCA naming convention for billing (seikyu) programs. The '4707' suffix likely identifies the specific claim form type (Okinawa mental disability special treatment, form 121)."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8658,
-      "completion_tokens": 770,
-      "total_tokens": 9428,
-      "cost": 0.037524,
+      "prompt_tokens": 10036,
+      "completion_tokens": 543,
+      "total_tokens": 10579,
+      "cost": 0.038253,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +105,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037524,
-        "upstream_inference_prompt_cost": 0.025974,
-        "upstream_inference_completions_cost": 0.01155
+        "upstream_inference_cost": 0.038253,
+        "upstream_inference_prompt_cost": 0.030108,
+        "upstream_inference_completions_cost": 0.008145
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +116,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.79,
+    "latency_s": 14.24,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:32:10Z"
 }

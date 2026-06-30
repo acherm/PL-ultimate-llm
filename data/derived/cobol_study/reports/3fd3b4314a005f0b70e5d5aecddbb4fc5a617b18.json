@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3fd3b4314a005f0b70e5d5aecddbb4fc5a617b18",
+    "sha1_git": "3fd3b4314a005f0b70e5d5aecddbb4fc5a617b18",
+    "filename": "/COURSE-INQ.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6177,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3fd3b4314a005f0b70e5d5aecddbb4fc5a617b18/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3fd3b4314a005f0b70e5d5aecddbb4fc5a617b18/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6177,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 134,
+    "blank_lines": 13,
+    "comment_lines": 13,
+    "code_lines": 108,
+    "comment_ratio": 0.107,
+    "max_line_length": 72,
+    "avg_line_length": 45.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COURCE-INQ"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 32,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses SCREEN SECTION with AUTO clause, INDEXED file with relative path assignment, IS INITIAL PROGRAM, and FUNCTION CURRENT-DATE — all consistent with GnuCOBOL. No IBM-specific extensions observed.",
+        "evidence": [
+          "ASSIGN TO \"../COURSE-MASTER.DAT\" (relative path, not DD name)",
+          "IS INITIAL PROGRAM",
+          "SCREEN SECTION with AUTO clause",
+          "FUNCTION CURRENT-DATE",
+          "BLANK SCREEN clause"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University course inquiry system (UAFS - University of Arkansas Fort Smith context implied by 'UAFS' label)",
+        "summary": "An interactive screen-based program that allows users to look up course information by subject and course number from an ISAM indexed file. It displays course title and credits, and loops until the user exits or enters X.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "SCREEN SECTION with AUTO clause and FROM/TO fields",
+        "INDEXED file with RANDOM access and FILE STATUS",
+        "FUNCTION CURRENT-DATE for date display",
+        "IS INITIAL PROGRAM clause",
+        "Relative file path in ASSIGN clause",
+        "PERFORM UNTIL with compound condition",
+        "READ with INVALID KEY / NOT INVALID KEY"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "PROGRAM-ID has a typo: 'COURCE-INQ' vs intended 'COURSE-INQ' (also noted in filename). Author listed as 'CHIRS JEONG' (likely 'CHRIS JEONG'). The program_type is set to online-cics as a proxy for interactive screen I/O, though it uses SCREEN SECTION (not CICS). Date field WS-DATE uses only 8 bytes (YYYY+MM+DD=8 digits) but FUNCTION CURRENT-DATE returns 21 characters — this may be a bug or intentional truncation."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4059,
+      "completion_tokens": 503,
+      "total_tokens": 4562,
+      "cost": 0.019722,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019722,
+        "upstream_inference_prompt_cost": 0.012177,
+        "upstream_inference_completions_cost": 0.007545
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.02,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:41:59Z"
+}

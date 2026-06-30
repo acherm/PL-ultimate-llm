@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (Japan Medical Association open-source receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "PROGRAM-ID. ORCSPTNUM",
-          "EVALUATE ... WHEN ... END-EVALUATE",
-          "PERFORM VARYING ... UNTIL ... END-PERFORM",
-          "IF ... END-IF constructs throughout",
-          "COPY directives with REPLACING",
-          "CALL 'ORCSKANACHK2' / 'ORCSPTID' / 'orcsstring'",
-          "EXIT PROGRAM",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+          "PROGRAM-ID ORCSPTNUM",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY directives with .INC copybooks typical of ORCA",
+          "CALL to ORCSKANACHK2, ORCSPTID, orcsstring — ORCA subsystem calls",
+          "No EXEC CICS or EXEC SQL",
+          "Fixed-format source with Japanese EUC-JP encoded comments"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This subprogram (ORCSPTNUM) is part of the ORCA JMA standard medical receipt software. It accepts a patient number or patient name input, determines whether the input is a half-width numeric patient ID or a full-width Kana/Kanji name, and then searches the patient master database to resolve and return the corresponding patient ID and patient number. It handles group/branch hospital configurations and patient number construction management.",
-        "domain": "healthcare / medical records (Japanese medical receipt system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software — patient number input processing subprogram",
+        "summary": "This subprogram (ORCSPTNUM) handles patient number input processing for the JMA ORCA medical receipt system. It accepts a patient number or patient name, validates and normalizes the input (half-width/full-width character checks), then looks up the corresponding patient ID or name in the patient master database. It returns a return code indicating success, no data found, or ambiguous match.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1 producing mojibake)",
-        "COPY directives for multiple include files (CPPTINF.INC, CPPTNUM.INC, CPSYSKANRI.INC, CPSK1009.INC, MCPAREA, etc.)",
-        "CALL to external subprograms: ORCSKANACHK2, ORCSPTID, orcsstring, and DB access routines",
-        "LINKAGE SECTION with COPY-based parameter area (CPORCSPTNUM.INC, COMMON-SPA)",
-        "MCP (Message Control Program) style DB access pattern (MCP-TABLE, MCP-PATHNAME, PERFORM 910-DBSELECT-SEC)",
-        "No EXEC SQL or EXEC CICS — DB access is via CALL/PERFORM abstraction layer",
-        "DISPLAY statement left in code (debug trace: DISPLAY 'WRK-NAME:' WRK-NAME)",
-        "Group hospital / branch hospital support (SPTNUM-GRPHOSPNUM)",
-        "Copyright notice: JMA Open Source License, 2002"
+        "13 COPY statements referencing ORCA-specific .INC copybooks",
+        "CALL to ORCSKANACHK2 (kana character check)",
+        "CALL to ORCSPTID (patient ID lookup)",
+        "CALL to orcsstring (string utility)",
+        "Japanese EUC-JP encoded comments throughout",
+        "LINKAGE SECTION with USING clause — called as subprogram",
+        "DB access via MCP (Message Control Program) abstraction layer (MCPDATA, MCPAREA)",
+        "DISPLAY statement left in code (debug trace)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known open-source ORCA (JMA standard receipt software) project from Japan. Japanese comments are garbled because the file is EUC-JP or Shift-JIS encoded but was decoded as latin-1. The COPY statements reference external copybooks not shown here. A DISPLAY debug statement remains in section 201-NAME-HEN-SEC, which is unusual for production but common in ORCA source releases. No COMP-3 usage despite numeric fields, which is consistent with GnuCOBOL/OpenCOBOL usage on Linux. The 'copy_count: 0' in mechanical indicators likely means the COPY directives were not counted by the tool, but they are clearly present in the source."
+      "notes": "File is encoded in latin-1 per mechanical indicator but comments are actually Japanese EUC-JP (garbled in latin-1 view). Source is truncated at 16000 chars out of 24144 bytes. The DISPLAY debug statement in 201-NAME-HEN-SEC suggests a minor debug artifact left in production code. The program is clearly part of the well-known JMA ORCA open-source medical receipt system."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7232,
-      "completion_tokens": 875,
-      "total_tokens": 8107,
-      "cost": 0.034821,
+      "prompt_tokens": 8610,
+      "completion_tokens": 586,
+      "total_tokens": 9196,
+      "cost": 0.03462,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034821,
-        "upstream_inference_prompt_cost": 0.021696,
-        "upstream_inference_completions_cost": 0.013125
+        "upstream_inference_cost": 0.03462,
+        "upstream_inference_prompt_cost": 0.02583,
+        "upstream_inference_completions_cost": 0.00879
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 20.38,
+    "latency_s": 15.47,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:35:42Z"
 }

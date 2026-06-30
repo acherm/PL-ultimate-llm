@@ -49,58 +49,60 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely Micro Focus Personal COBOL or COBOL/2 for DOS/Windows)",
+        "family": "micro-focus",
         "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with $SET LINKCOUNT directive, COMP-5, CRT STATUS, CURSOR IS, CONSOLE IS CRT, SCREEN SECTION, COMMIT statement, and FOREGROUND-COLOR/BACKGROUND-COLOR extensions",
         "evidence": [
-          "$set LINKCOUNT\"468\" compiler directive at top",
-          "COMP-5 usage (Micro Focus binary)",
-          "CRT STATUS IS KEY-STATUS in SPECIAL-NAMES",
-          "SCREEN SECTION with COPY *.CRT copybooks",
-          "CURSOR IS CSTART in SPECIAL-NAMES",
-          "FOREGROUND-COLOR / BACKGROUND-COLOR in DISPLAY",
+          "$set LINKCOUNT\"468\"",
+          "COMP-5 usage",
+          "CRT STATUS IS KEY-STATUS",
+          "CURSOR IS CSTART",
+          "CONSOLE IS CRT",
+          "SCREEN SECTION",
+          "FOREGROUND-COLOR",
+          "BACKGROUND-COLOR",
           "COMMIT statement",
-          "ACCEPT WS-STIME FROM TIME",
-          "EXIT PROGRAM",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION"
+          "COPY *.SL / *.FDE / *.CRT copybook naming conventions"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A stock price update program (STP033) that maintains stock price records in a multi-user environment. It manages concurrent access via a queue/lock mechanism using a PARAM file, writes recovery file records for rollback, and provides a screen-based interactive interface for updating stock prices.",
-        "domain": "retail/inventory (stock price management, likely point-of-sale or wholesale/retail business system)",
+        "domain": "accounting-erp",
+        "domain_detail": "Stock price update module for a retail/wholesale inventory management system (APAC business software by J.W. Lemmon)",
+        "summary": "STP033 is a stock price update program that manages retail, wholesale, and cash-sale prices for stock items. It handles concurrent access control via a PARAM queue mechanism, maintains a recovery file for transaction rollback, and uses a shared/network file for stock control records. It is part of a larger APAC business accounting suite.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "COMP-3 (packed decimal) for monetary/calculation fields",
-        "COMP-5 (Micro Focus native binary) extensively used for subscripts and keys",
-        "SCREEN SECTION with color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR)",
-        "Multi-user locking/queuing mechanism via PARAM file",
-        "Recovery file with transaction logging for rollback",
-        "COMMIT statement (Micro Focus transaction control)",
-        "Extensive use of COPY statements for modular file definitions and screen layouts",
-        "LINKAGE SECTION with chained program parameters (LS-PARID, LS-USER-ID, LS0-PROGRAMS, LS0-SECURITY)",
-        "$set compiler directive (Micro Focus)",
-        "ASCII box-drawing characters (X\"B3\", X\"CD\") for screen borders",
-        "GPL license header embedded in SECURITY paragraph"
+        "$SET LINKCOUNT compiler directive (Micro Focus)",
+        "COMP-5 binary items",
+        "SCREEN SECTION with CRT display",
+        "FOREGROUND-COLOR/BACKGROUND-COLOR screen attributes",
+        "COMMIT statement for record locking",
+        "57 COPY statements indicating modular copybook architecture",
+        "Recovery file mechanism for transaction integrity",
+        "LINKAGE SECTION with chained program parameters",
+        "COMP-3 packed decimal arithmetic",
+        "Concurrent user queue management via PARAM file"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File is truncated at 16000 chars out of 32583 bytes; the full procedure division is not visible but the visible portion shows a well-structured production system. The program is part of a larger APAC business suite by J.W. Lemmon, version 8.13.07 (March 2008). The 'online-cics' program_type label is used loosely here — this is actually a Micro Focus screen-based interactive batch/online program, not CICS. No EXEC CICS or EXEC SQL present. The COPY statements reference many external copybooks (APACFIDS, CONTROL, DEPART, PARAM, RECOVER, SHARED, STOCK, STKPRC, etc.) that are not included in this file."
+      "notes": "Source is truncated to first 16000 chars; full program is 1026 lines. The program is part of a commercial APAC accounting suite authored by J.W. Lemmon, licensed under GPL v2+. Version 8.13.07 dated March 2008. Heavy use of copybooks (57 COPY statements) means much logic is in external files not visible here. The program_type is classified as online-cics equivalent (interactive terminal) rather than batch due to SCREEN SECTION and CRT usage, though no EXEC CICS is present — it uses Micro Focus interactive COBOL."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7667,
-      "completion_tokens": 798,
-      "total_tokens": 8465,
-      "cost": 0.034971,
+      "prompt_tokens": 9045,
+      "completion_tokens": 572,
+      "total_tokens": 9617,
+      "cost": 0.035715,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -109,9 +111,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.034971,
-        "upstream_inference_prompt_cost": 0.023001,
-        "upstream_inference_completions_cost": 0.01197
+        "upstream_inference_cost": 0.035715,
+        "upstream_inference_prompt_cost": 0.027135,
+        "upstream_inference_completions_cost": 0.00858
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -120,8 +122,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 20.12,
+    "latency_s": 20.22,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:19:26Z"
 }

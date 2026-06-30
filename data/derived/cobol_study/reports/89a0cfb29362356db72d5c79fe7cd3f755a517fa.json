@@ -49,56 +49,59 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM Enterprise COBOL for z/OS with CICS; uses PROCESS compiler directives (XOPTS, NOSEQ, LIB, OPTIMIZE), EXEC CICS, SYNCHRONIZED, COMP-2, COMP-5, POINTER, and dfheiblk linkage — all characteristic of IBM mainframe CICS COBOL",
         "evidence": [
-          "PROCESS XOPTS(APOST) and PROCESS NOSEQ LIB OPTIMIZE(FULL) compiler directives typical of IBM Enterprise COBOL",
-          "EXEC CICS present (has_exec_cics: true)",
-          "SYNCHRONIZED clause on structures (C API alignment)",
-          "COMP-2 (double-precision float), COMP-5, BINARY usage",
-          "POINTER VALUE NULL data item",
-          "CALL 'init' USING dfheiblk — dfheiblk is the CICS EIB block",
-          "GOBACK statement",
-          "ODO (OCCURS DEPENDING ON) tables",
-          "Fixed format, max line length 72"
+          "PROCESS XOPTS(APOST)",
+          "PROCESS NOSEQ LIB OPTIMIZE(FULL)",
+          "EXEC CICS (has_exec_cics=true)",
+          "dfheiblk in CALL 'init' USING dfheiblk",
+          "SYNCHRONIZED clause",
+          "COMP-2 (floating point)",
+          "COMP-5",
+          "POINTER VALUE NULL",
+          "GOBACK"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A CICS online transaction that invokes the MSN Live Search SOAP web service via the LegStar c2ws C API bridge. It constructs a search request (query='Mainframe'), calls the remote service through an HTTP proxy endpoint, and processes the structured reply containing search results.",
-        "domain": "telecom/web-services integration (mainframe-to-web bridge demo)",
+        "domain": "other",
+        "domain_detail": "LegStar middleware integration — CICS COBOL program acting as a client to a SOAP web service (MSN Live Search) via the LegStar c2ws C API",
+        "summary": "MSNSEARC is a CICS COBOL sample transaction that uses the LegStar c2ws (COBOL-to-Web-Service) C API to invoke the MSN Live Search SOAP web service. It constructs a search request for the query 'Mainframe', calls the remote service via an HTTP proxy, and processes the structured XML/SOAP reply mapped to COBOL data structures.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS (CICS online transaction)",
-        "CALL to LegStar 'init' C API using dfheiblk (CICS EIB)",
-        "POINTER and ADDRESS OF for passing data to C API",
-        "SYNCHRONIZED clause for C struct alignment",
-        "COMP-2 (IEEE double) for geographic coordinates (Latitude, Longitude, Radius)",
-        "COMP-5 (native binary) for integer fields",
-        "OCCURS DEPENDING ON (ODO) for variable-length arrays",
-        "PROCESS compiler directives (IBM-style)",
-        "No EXEC SQL — pure CICS/web-service integration",
-        "Linkage Section used for reply data (COM-REPLY) addressed via pointer"
+        "EXEC CICS (online CICS transaction)",
+        "PROCESS compiler directives (XOPTS, NOSEQ, OPTIMIZE)",
+        "LegStar c2ws C API integration (CALL 'init', CALL to invoke service)",
+        "POINTER and SET ADDRESS OF for dynamic data passing",
+        "SYNCHRONIZED clause for C-compatible struct alignment",
+        "COMP-2 floating-point fields (Latitude, Longitude, Radius)",
+        "COMP-5 binary fields",
+        "Variable-length OCCURS DEPENDING ON arrays for SOAP response",
+        "dfheiblk passed to C API init call",
+        "No COPY statements — all structures inline"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is a complete, well-structured CICS COBOL program from the LegStar open-source mainframe integration framework. It demonstrates calling a SOAP web service (MSN Live Search) from a CICS transaction. The source was truncated at 16000 chars but all four divisions are present and the structure is clear. The PROCESS directives and dfheiblk reference strongly indicate IBM Enterprise COBOL targeting a z/OS CICS environment."
+      "notes": "Source is truncated at 16000 chars; the INVOKE-SERVICE and EPILOG paragraphs are not shown but their structure is implied. The program is a LegStar sample/demo but is written to production-quality standards with real MSN Live Search AppID and proper error handling patterns. Domain classified as 'other' because it is middleware/integration tooling rather than a specific business domain."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4828,
-      "completion_tokens": 708,
-      "total_tokens": 5536,
-      "cost": 0.025104,
+      "prompt_tokens": 6206,
+      "completion_tokens": 637,
+      "total_tokens": 6843,
+      "cost": 0.028173,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +110,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.025104,
-        "upstream_inference_prompt_cost": 0.014484,
-        "upstream_inference_completions_cost": 0.01062
+        "upstream_inference_cost": 0.028173,
+        "upstream_inference_prompt_cost": 0.018618,
+        "upstream_inference_completions_cost": 0.009555
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +120,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 16.96,
+    "provider": "Anthropic",
+    "latency_s": 16.26,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:55:15Z"
 }

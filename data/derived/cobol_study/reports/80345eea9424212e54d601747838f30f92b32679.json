@@ -49,50 +49,52 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) project by Sauro Menna, 2016; compiler options visible in comments: cobc -x -fbinary-size=1--8 -fnotrunc -fbinary-byteorder=big-endian",
         "evidence": [
-          "cobc -x compiler invocation in comments with GnuCOBOL-specific flags (-fbinary-size, -fnotrunc, -fbinary-byteorder)",
-          "FUNCTION ALL INTRINSIC in REPOSITORY",
-          "GOBACK usage",
-          "END-READ, END-IF, END-RETURN inline terminators",
-          "SORT with INPUT PROCEDURE / OUTPUT PROCEDURE",
-          "RETURN file-sort AT END ... END-RETURN"
+          "cobc -x -t .\\listing\\%1.lst -I .\\copy -Wall -fbinary-size=1--8",
+          "function all intrinsic in REPOSITORY",
+          "LGPL 3.0 license comment",
+          "GOBACK used as main exit"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A COBOL sort module that reads records from an input file, filters them based on multiple field conditions, sorts them on an ascending key (srt-ch-field), and writes the sorted/filtered records to an output file. It also maintains input and output record counters and includes totalizer and reset-totalizer routines.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Sort demonstration/tutorial module showing COBOL SORT verb with input/output procedures, filtering, and totalizer copybooks",
+        "summary": "A COBOL sort program (sincsqf04) that reads an input file, filters records by multiple field conditions, sorts them on an ascending key (srt-ch-field), and writes the results to an output file. It uses SORT with INPUT PROCEDURE and OUTPUT PROCEDURE, includes totalizer and environment copybooks, and displays record counts. Appears to be a teaching/example module in a larger sort-tutorial suite.",
         "program_type": "batch"
       },
       "notable_features": [
         "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
         "FUNCTION ALL INTRINSIC in REPOSITORY",
-        "Multiple COPY statements for file-control, FD, and working-storage sections",
-        "Inline comments with ## markers indicating template/modifiable sections",
-        "RELEASE and RETURN verbs for sort processing",
-        "Totalizer and reset-totalizer paragraphs using COPY for reusable logic",
-        "GnuCOBOL-specific compiler flags documented in comments"
+        "Heavy use of COPY statements (12 copybooks) for file-control, FD, working-storage, and procedure sections",
+        "Inline comments with ## markers indicating modifiable template placeholders",
+        "RELEASE and RETURN verbs for sort file handling",
+        "GOBACK as program exit",
+        "No EXEC SQL or EXEC CICS",
+        "Compiler directive comments showing GnuCOBOL build options"
       ],
-      "maturity": "student-exercise",
+      "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The ## markers throughout the code suggest this is a template or tutorial program by Sauro Menna, designed to demonstrate COBOL sort techniques with modifiable sections. The COPY statements reference external copybooks (sinsqf01, soutsqf01, ssrtsqf01, finsqf01, foutsqf01, fsrtsqf01, wktotsum01, wkenvfield, prenvfield1, prenvfield2, praddsrttot, przerotot) that are not shown. The fs-sort file status variable appears to be used for both the sort file and the output file in different paragraphs, which may be intentional given the copybook structure."
+      "notes": "The ## markers in comments appear to be template/tutorial annotations indicating where users should modify keys or filtering logic. The program is part of a larger suite (sincsqf01..04 naming pattern). High comment ratio (36%) consistent with tutorial/example code. All four COBOL divisions present; fixed format confirmed."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2694,
-      "completion_tokens": 633,
-      "total_tokens": 3327,
-      "cost": 0.017577,
+      "prompt_tokens": 4072,
+      "completion_tokens": 517,
+      "total_tokens": 4589,
+      "cost": 0.019971,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -101,9 +103,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.017577,
-        "upstream_inference_prompt_cost": 0.008082,
-        "upstream_inference_completions_cost": 0.009495
+        "upstream_inference_cost": 0.019971,
+        "upstream_inference_prompt_cost": 0.012216,
+        "upstream_inference_completions_cost": 0.007755
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,8 +114,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 13.56,
+    "latency_s": 13.49,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:12:07Z"
 }

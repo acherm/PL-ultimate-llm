@@ -49,47 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL likely; uses COMMAND-LINE special register and LINE SEQUENTIAL organization, common in GnuCOBOL/open-source COBOL environments",
         "evidence": [
+          "ACCEPT input-file-name FROM COMMAND-LINE",
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "ACCEPT ... FROM COMMAND-LINE",
-          "OCCURS 1 TO 9999 TIMES DEPENDING ON (ODO)",
-          "END-READ, END-PERFORM, END-IF structured delimiters",
-          "free-style indentation consistent with GnuCOBOL usage"
+          "ODO table with DEPENDING ON",
+          "PROGRAM-ID. advent-of-code-day-1"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Solves Advent of Code Day 1 puzzle (likely 2021 'Sonar Sweep' part 2) by reading a list of integers from a file and counting how many times a sliding window sum of size 3 increases compared to the previous window. It reads all values into a dynamic table and computes rolling sums.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Advent of Code puzzle solution - Day 1, sliding window sum comparison",
+        "summary": "Reads a file of numeric values and uses a sliding window of size 3 to count how many times the windowed sum increases compared to the previous window. This is a solution to the Advent of Code Day 1 Part 2 puzzle.",
         "program_type": "batch"
       },
       "notable_features": [
-        "OCCURS DEPENDING ON (ODO) for variable-length table",
-        "ACCEPT ... FROM COMMAND-LINE for runtime file name input",
-        "Sliding window sum logic using indexed table lookups",
-        "ORGANIZATION IS LINE SEQUENTIAL for text file input",
-        "No COMP-3 or SQL/CICS usage"
+        "ACCEPT FROM COMMAND-LINE for runtime file name",
+        "ODO (OCCURS DEPENDING ON) table for dynamic array",
+        "LINE SEQUENTIAL file organization",
+        "Sliding window algorithm implemented in COBOL",
+        "No COMP-3 or SQL usage"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The mechanical indicators show 0 divisions detected, but the source clearly contains all four standard divisions (IDENTIFICATION, ENVIRONMENT, DATA, PROCEDURE). This is likely a parser artifact. The program is a self-contained Advent of Code solution, consistent with a hobbyist or student exercise. Dialect is likely GnuCOBOL given the COMMAND-LINE clause and LINE SEQUENTIAL usage, though Micro Focus is also possible."
+      "notes": "The program is clearly a hobbyist/educational Advent of Code solution. No IDENTIFICATION DIVISION header keywords like AUTHOR are present. The mechanical indicator shows divisions_present as all false, but the source clearly contains all four divisions - likely a parser limitation. Fixed format inferred from indentation style and no lines over 72 chars."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1419,
-      "completion_tokens": 503,
-      "total_tokens": 1922,
-      "cost": 0.011802,
+      "prompt_tokens": 2797,
+      "completion_tokens": 377,
+      "total_tokens": 3174,
+      "cost": 0.014046,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011802,
-        "upstream_inference_prompt_cost": 0.004257,
-        "upstream_inference_completions_cost": 0.007545
+        "upstream_inference_cost": 0.014046,
+        "upstream_inference_prompt_cost": 0.008391,
+        "upstream_inference_completions_cost": 0.005655
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 10.63,
+    "provider": "Anthropic",
+    "latency_s": 12.62,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:02:40Z"
 }

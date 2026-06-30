@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM MVS/CICS/DB2 mainframe COBOL; generated from skeleton BDOSKEL (Business Framework, Federated Mutual Insurance); uses EXEC SQL INCLUDE (DB2 DCLGENs) and EXEC CICS; fixed-format 80-column lines",
         "evidence": [
-          "EXEC SQL INCLUDE ... END-EXEC (DB2 embedded SQL)",
-          "EXEC CICS (CICS online transaction processing)",
-          "BINARY PIC S9(04) (IBM-style binary usage)",
-          "MVS operating system noted in comments",
-          "Fixed format, 80-column lines, all lines long_lines_over_72 = 6345",
-          "PROGRAM-ID. XZ0D0006 with IBM naming conventions",
-          "COPY ... REPLACING == syntax"
+          "EXEC SQL INCLUDE",
+          "EXEC CICS",
+          "BINARY PIC S9(04)",
+          "MVS mentioned in header",
+          "PROGRAM-ID XZ0D0006",
+          "skeleton BDOSKEL",
+          "max_line_length=80, all lines padded to 80"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a Business Data Object (BDO) program for Federated Mutual Insurance's HALO/MCM system that performs CRUD operations (read, delete, insert, update) on the ACT_NOT_FRM database view/table. It operates within a Business Framework on MVS/CICS, handling activity notification form data with DB2 SQL access.",
         "domain": "insurance",
+        "domain_detail": "Federated Mutual Insurance – CRS application; Business Data Object (BDO) for ACT_NOT_FRM (activity notice form) table; supports READ, DELETE, INSERT, UPDATE via DB2 and CICS",
+        "summary": "This is a CICS/DB2 online Business Data Object (BDO) program generated for Federated Mutual Insurance's CRS system. It provides CRUD operations (read, delete, insert, update) against the ACT_NOT_FRM database view/table. It is invoked via CICS LINK from a primary business object (HALOMCM) or called as a secondary BDO.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC SQL (DB2 embedded SQL with INCLUDE for DCLGENs)",
-        "EXEC CICS (CICS online transaction processing)",
-        "Business Framework BDO skeleton-generated code (BDOSKEL template)",
-        "Multiple COPY statements with REPLACING for interface copybooks",
-        "BINARY (COMP) usage for numeric fields",
-        "88-level condition names extensively used for switches",
-        "Multiple cursor switches (CURSOR0 through CURSOR8)",
-        "UMT (User Message Table) storage records pattern",
-        "Maintenance log with case numbers embedded in comments",
-        "Large program: 6345 lines, 513KB, 304 PERFORMs, 173 GOTOs"
+        "EXEC SQL (DB2) with DCLGEN INCLUDEs",
+        "EXEC CICS (CICS online program)",
+        "Business Framework BDO skeleton-generated code",
+        "Multiple COPY statements (21 copybooks)",
+        "NULL indicators for DB2 host variables",
+        "UMT (Unit of Measure Table) storage records",
+        "High GOTO count (173) and PERFORM count (304) typical of generated BDO skeletons",
+        "Fixed 80-column format with all lines padded"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly a production insurance application program generated from a skeleton template (BDOSKEL) and subsequently hand-modified. The program was generated in December 2008 and last recompiled in August 2012. The source is truncated to 16000 chars out of ~514KB, so only the WORKING-STORAGE SECTION beginning is visible, but the structural indicators (all 4 divisions present, EXEC SQL, EXEC CICS, 28 CALLs, 304 PERFORMs) confirm a full production BDO program. No COMP-3 usage detected despite being IBM mainframe, which is somewhat unusual but not disqualifying."
+      "notes": "Source truncated to first 16000 chars; full program is 6345 lines / ~514KB. All 4 COBOL divisions present. Generated code from skeleton BDOSKEL version S21PHASE2INF; maintenance log entries from 2008–2012. No COMP-3 usage visible in truncated portion despite insurance domain (may appear later). Program name XZ0D0006 matches filename."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 4210,
-      "completion_tokens": 698,
-      "total_tokens": 4908,
-      "cost": 0.0231,
+      "prompt_tokens": 5588,
+      "completion_tokens": 578,
+      "total_tokens": 6166,
+      "cost": 0.025434,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.0231,
-        "upstream_inference_prompt_cost": 0.01263,
-        "upstream_inference_completions_cost": 0.01047
+        "upstream_inference_cost": 0.025434,
+        "upstream_inference_prompt_cost": 0.016764,
+        "upstream_inference_completions_cost": 0.00867
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.23,
+    "provider": "Anthropic",
+    "latency_s": 23.38,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:47:17Z"
 }

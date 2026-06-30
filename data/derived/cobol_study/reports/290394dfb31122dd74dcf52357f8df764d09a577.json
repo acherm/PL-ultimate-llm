@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL; uses COPY includes with .INC extension and MCP (middleware) database calls typical of ORCA",
         "evidence": [
-          "PROGRAM-ID. ORCSCHKTCHK",
-          "EVALUATE ... WHEN ... END-EVALUATE",
-          "END-IF used throughout",
-          "COPY directives with REPLACING clause",
-          "OCCURS clauses with PIC definitions",
-          "PROCEDURE DIVISION USING with multiple linkage parameters",
-          "EXIT PROGRAM",
-          "No EXEC SQL or EXEC CICS",
-          "Fixed-format source, max line 74"
+          "PROGRAM-ID ORCSCHKTCHK",
+          "COPY 'CPK02SPASCR.INC'",
+          "COPY 'COMMON-SPA'",
+          "COPY 'MCPAREA'",
+          "COPY 'MCPDATA.INC'",
+          "MCP-TABLE / MCP-RC / PERFORM 910-DBSELECT-SEC",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is a subprogram within the ORCA JMA (Japan Medical Association) standard medical receipt software system. It performs comprehensive check processing for 'Houkatu' (comprehensive/bundled) medical treatment billing, validating billing codes, calculation periods, hospitalization fees, and related master data. It handles multiple processing modes including full check, auto-generation check, error deletion, and hospitalization fee calculation checks.",
-        "domain": "healthcare/medical billing (Japanese national health insurance receipt processing)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt) processing system — comprehensive medical act (包括診療行為) check processing for inpatient/outpatient billing",
+        "summary": "This subprogram performs validation checks on bundled/comprehensive medical treatment acts (包括診療行為チェック) within the JMA ORCA standard receipt software. It checks whether medical procedures qualify for bundled billing, handles inpatient fee calculation period checks, and manages automatic generation checks. It is called with a parameter area specifying the type of processing (full check, auto-generation, error deletion, inpatient fee check, etc.).",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
-        "Multiple COPY statements referencing domain-specific copybooks (CPHKTSANTEI.INC, CPHKTSRYCD.INC, CPSANTEI.INC, CPNYUINACCT.INC, etc.)",
-        "LINKAGE SECTION with multiple passed areas (SPA, screen SPA, check parameter areas)",
-        "OCCURS tables up to 600 entries for billing check master data",
-        "No EXEC SQL or EXEC CICS — database access via MCP (middleware call pattern with MCP-TABLE, MCP-RC)",
-        "EVALUATE used for multi-mode dispatch (syori codes 1-6)",
-        "Open Source license header (JMA Open Source License)",
-        "Version history spanning 2007–2017 with Japanese revision notes"
+        "19 COPY statements for shared record layouts (.INC files)",
+        "MCP middleware database access pattern (MCP-TABLE, MCP-RC, PERFORM 910-DBSELECT-SEC)",
+        "LINKAGE SECTION with multiple parameter areas (USING clause)",
+        "OCCURS tables for medical procedure codes and bundling classification",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS — uses ORCA MCP abstraction layer",
+        "EVALUATE for dispatch on processing type code",
+        "Large working-storage with complex nested OCCURS structures"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine production COBOL from the open-source ORCA medical receipt system developed by JMA (Japan Medical Association). Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The database access pattern uses an MCP middleware layer (PERFORM 910-DBSELECT-SEC with MCP-TABLE/MCP-RC fields) rather than embedded SQL. The COPY statements reference many domain-specific copybooks that are not shown. Source is truncated at 16000 chars out of 120223 bytes total."
+      "notes": "Comments are encoded in Japanese EUC-JP but decoded as latin-1, producing mojibake. The program is part of the well-known open-source JMA ORCA system. Source is truncated at 16000 chars out of 120223 bytes (2734 lines total); full procedure division not visible but structure is clear from what is shown."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8523,
-      "completion_tokens": 746,
-      "total_tokens": 9269,
-      "cost": 0.036759,
+      "prompt_tokens": 9901,
+      "completion_tokens": 603,
+      "total_tokens": 10504,
+      "cost": 0.038748,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.036759,
-        "upstream_inference_prompt_cost": 0.025569,
-        "upstream_inference_completions_cost": 0.01119
+        "upstream_inference_cost": 0.038748,
+        "upstream_inference_prompt_cost": 0.029703,
+        "upstream_inference_completions_cost": 0.009045
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.62,
+    "latency_s": 15.79,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:35:26Z"
 }

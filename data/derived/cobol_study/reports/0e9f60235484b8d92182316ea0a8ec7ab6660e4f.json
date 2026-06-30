@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0e9f60235484b8d92182316ea0a8ec7ab6660e4f",
+    "sha1_git": "0e9f60235484b8d92182316ea0a8ec7ab6660e4f",
+    "filename": "/pl940.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 25376,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0e9f60235484b8d92182316ea0a8ec7ab6660e4f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0e9f60235484b8d92182316ea0a8ec7ab6660e4f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 25376,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 650,
+    "blank_lines": 0,
+    "comment_lines": 245,
+    "code_lines": 405,
+    "comment_ratio": 0.377,
+    "max_line_length": 93,
+    "avg_line_length": 38.0,
+    "long_lines_over_72": 41,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "pl940"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 11,
+    "call_count": 2,
+    "perform_count": 19,
+    "goto_count": 11,
+    "pic_count": 175,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Applewood Computers Accounting System (ACAS), compiled with GnuCOBOL/OpenCOBOL; uses >>source free directive, *> comments, and GNU GPL licensing. Version 3.02.06.",
+        "evidence": [
+          ">>source free",
+          "*> comment style",
+          "copy \"envdiv.cob\"",
+          "copy \"wsfnctn.cob\"",
+          "copy \"wsnames.cob\"",
+          "program-id. pl940",
+          "22/03/09 vbc - 3.0.00 Migration to Open Cobol v3.00.00",
+          "GNU General Public License reference"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Accounts payable cheque/payment file writer for the Applewood Computers Accounting System (ACAS); produces a CSV-style text file for cheque printing via mail-merge or BACS bank payment submission",
+        "summary": "This program is the cheque file writer module (pl940) of the ACAS purchase ledger subsystem. It reads supplier payment records and writes a formatted output file (645-byte records) containing payee details, amounts in words and figures, invoice references, and dates, suitable for mail-merge printing or bank payment (BACS) submission. It also updates payment records with the payment date.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        ">>source free compiler directive",
+        "*> free-format comments",
+        "COPY statements for modular copybooks (wspl.cob, plwspay.cob, wsmaps03.cob, wsnames.cob, etc.)",
+        "Number-to-words table (word-filler) for cheque amount in words (1-99)",
+        "REDEFINES on word-filler for indexed access",
+        "Currency name parameterisation via WS-Currency-Major / WS-Currency-Minor",
+        "Linkage section with CALL interface",
+        "OCCURS clause for address lines and invoice detail lines",
+        "LINE SEQUENTIAL file organisation",
+        "Dummy 01-level for unused file handler call parameters"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; procedure division not visible but mechanical indicators show 19 PERFORMs, 11 GOTOs, 2 CALLs, and 11 COPYs, consistent with a production batch program. No COMP-3 usage despite financial domain — amounts stored as PICTURE Z/9 display items. Originally written 1984, last updated 2024."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7449,
+      "completion_tokens": 611,
+      "total_tokens": 8060,
+      "cost": 0.031512,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031512,
+        "upstream_inference_prompt_cost": 0.022347,
+        "upstream_inference_completions_cost": 0.009165
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.97,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:42:34Z"
+}

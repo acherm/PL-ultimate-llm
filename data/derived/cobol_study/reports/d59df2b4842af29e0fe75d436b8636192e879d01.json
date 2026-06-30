@@ -49,47 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus (likely GnuCOBOL based on *> comment style and GOBACK)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar free compiler; uses *> comment style and GOBACK; no vendor-specific extensions",
         "evidence": [
-          "*> inline comment style (COBOL-85+)",
-          "EVALUATE ... ALSO TRUE ALSO (multi-subject EVALUATE, COBOL-85)",
-          "END-EVALUATE terminator",
-          "GOBACK statement",
-          "WITH NO ADVANCING on DISPLAY"
+          "*> QuarterlyPurchases (COBOL-2002 style inline comment)",
+          "GOBACK",
+          "EVALUATE ... ALSO TRUE ALSO",
+          "WITH NO ADVANCING"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Calculates a discount percentage for a book purchase based on three factors: quarterly purchase amount (QP), quantity of books purchased (QTY), and club membership status (Y/N). Uses a multi-subject EVALUATE to implement a discount lookup table.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Bookstore discount calculation exercise demonstrating multi-condition EVALUATE",
+        "summary": "A student exercise that accepts quarterly purchase amount, quantity of books, and club membership status, then uses a multi-condition EVALUATE statement to determine and display a discount percentage.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Multi-subject EVALUATE with ALSO TRUE and ALSO MEMBER conditions",
-        "THRU ranges in WHEN clauses",
+        "Multi-subject EVALUATE with ALSO TRUE ALSO pattern",
         "*> inline comment style",
         "GOBACK instead of STOP RUN",
-        "No PERFORM or CALL statements — entirely sequential logic"
+        "WITH NO ADVANCING on DISPLAY"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Author field 'ROMRAWIN' suggests a student exercise. The program is self-contained with no file I/O, no subprogram calls, and no PERFORM loops. The *> comment syntax confirms at minimum COBOL-85 compliance. GOBACK is common in GnuCOBOL and Micro Focus environments."
+      "notes": "The *> comment syntax is technically COBOL-2002+, but the overall structure and simplicity are consistent with a student exercise. AUTHOR field 'ROMRAWIN' suggests academic origin. No ENVIRONMENT DIVISION present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1678,
-      "completion_tokens": 460,
-      "total_tokens": 2138,
-      "cost": 0.011934,
+      "prompt_tokens": 3056,
+      "completion_tokens": 307,
+      "total_tokens": 3363,
+      "cost": 0.013773,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011934,
-        "upstream_inference_prompt_cost": 0.005034,
-        "upstream_inference_completions_cost": 0.0069
+        "upstream_inference_cost": 0.013773,
+        "upstream_inference_prompt_cost": 0.009168,
+        "upstream_inference_completions_cost": 0.004605
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,8 +110,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 9.4,
+    "latency_s": 7.8,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:49:48Z"
 }

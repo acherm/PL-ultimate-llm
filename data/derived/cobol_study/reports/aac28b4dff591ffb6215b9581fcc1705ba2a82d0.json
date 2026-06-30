@@ -49,51 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus / GnuCOBOL with OO-style program-id alias (possibly Micro Focus Visual COBOL or NetCOBOL targeting .NET/Windows)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with ODBC/ADO-style SQL connection string targeting SQL Server Express (localhost\\SQLEXPRESS, System.Data.SqlClient factory), likely compiled with GnuCOBOL's ESQL support. French-language identifiers and accented characters (é) suggest French-speaking developer. Program-id uses AS alias syntax.",
         "evidence": [
-          "program-id. stockvalorise as \"FaStock.stockvalorise\" — namespace/alias syntax typical of Micro Focus Visual COBOL or GnuCOBOL .NET",
-          "EXEC SQL CONNECT USING :connexion-database with ADO.NET-style connection string (SqlClient factory) — Micro Focus ESQL or GnuCOBOL ODBC",
-          "select assign to dynamic CheminFichier — dynamic file assignment",
+          "program-id. stockvalorise as \"FaStock.stockvalorise\"",
+          "connexion-database value \"Trusted_Connection=yes;Database=FaStock;server=localhost\\SQLEXPRESS;factory=System.Data.SqlClient;\"",
+          "EXEC SQL connect using :connexion-database",
           "organization is line sequential",
-          "end program stockvalorise — explicit end marker",
-          "SQLCODE = 100 or 101 — non-standard dual check suggesting Micro Focus runtime"
+          "select dynamic CheminFichier",
+          "French variable names: nom-article, fournisseur, quantite"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Batch program that generates a 'Stock Valorisé' (valued inventory) report to a text file. It iterates over suppliers via a DB2/SQL cursor, then for each supplier fetches articles with their stock value and price, computes totals per article and per supplier, and writes formatted lines including grand total.",
-        "domain": "inventory/stock management (retail or warehouse)",
+        "domain": "retail-commerce",
+        "domain_detail": "Inventory/stock valuation report for a small business stock management application called FaStock",
+        "summary": "This program connects to a SQL Server database, iterates over suppliers using a cursor, and for each supplier fetches associated stock articles with their quantities and prices. It calculates per-article, per-supplier, and total stock values, writing a formatted valuation report to a text file.",
         "program_type": "batch"
       },
       "notable_features": [
-        "EXEC SQL with ADO.NET-style connection string (SqlClient, SQL Server/SQLEXPRESS) — unusual embedded SQL dialect",
-        "EXEC SQL INCLUDE SQLCA",
-        "Cursor-based SQL iteration (DECLARE/OPEN/FETCH/CLOSE) for both suppliers and stock articles",
-        "Dynamic file assignment (assign to dynamic CheminFichier)",
+        "EXEC SQL with ODBC-style connection string (non-standard GnuCOBOL/ESQL extension)",
+        "SQL cursors for supplier and stock iteration",
         "MOVE CORRESPONDING used extensively",
-        "French-language identifiers and report labels (Stock Valorisé, fournisseur, article)",
+        "Dynamic file assignment via CheminFichier",
+        "French-language identifiers and accented characters in literals (é in 'Valorisé')",
+        "SQLCODE 100/101 end-of-cursor detection",
         "No COMP-3 usage despite numeric calculations",
-        "program-id alias syntax (as \"FaStock.stockvalorise\")"
+        "record varying (variable-length file records)",
+        "AS alias in PROGRAM-ID"
       ],
       "maturity": "production-like",
-      "overall_confidence": "high",
-      "notes": "The connection string references System.Data.SqlClient and SQL Server Express, strongly suggesting a Windows/.NET environment with Micro Focus Visual COBOL or a similar dialect. SQLCODE = 101 check (in addition to 100) is non-standard and may be dialect-specific. The file is decoded as latin-1, consistent with the accented character 'é' in 'Valorisé'. No IDENTIFICATION DIVISION header is present (program-id appears directly), which is valid in many modern COBOL dialects."
+      "overall_confidence": "medium",
+      "notes": "Missing IDENTIFICATION DIVISION header (only 3 divisions present); the program-id line serves as implicit identification. Accented character 'é' decoded via latin-1. The SQL connection string with System.Data.SqlClient factory is unusual and suggests a GnuCOBOL ESQL preprocessor with .NET or ODBC bridge. Overall structure is coherent and production-like for a small business application."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 2891,
-      "completion_tokens": 716,
-      "total_tokens": 3607,
-      "cost": 0.019413,
+      "prompt_tokens": 4269,
+      "completion_tokens": 575,
+      "total_tokens": 4844,
+      "cost": 0.021432,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.019413,
-        "upstream_inference_prompt_cost": 0.008673,
-        "upstream_inference_completions_cost": 0.01074
+        "upstream_inference_cost": 0.021432,
+        "upstream_inference_prompt_cost": 0.012807,
+        "upstream_inference_completions_cost": 0.008625
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 16.31,
+    "provider": "Anthropic",
+    "latency_s": 23.19,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:39:30Z"
 }

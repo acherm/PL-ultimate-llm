@@ -49,44 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or generic COBOL-85 compatible",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple two-dimensional table example; no vendor-specific extensions. COBOL-85 inferred from END-PERFORM and OCCURS with REDEFINES pattern.",
         "evidence": [
-          "END-PERFORM terminators (COBOL-85+)",
-          "OCCURS with VALUE clause",
-          "REDEFINES used for table overlay",
-          "PERFORM VARYING ... UNTIL structure"
+          "END-PERFORM",
+          "PERFORM VARYING ... UNTIL",
+          "OCCURS 3 TIMES",
+          "REDEFINES"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Demonstrates a two-dimensional table in COBOL by redefining a 9-character string as a 3x3 table. It displays the entire table and then iterates over each row and column element, displaying each cell individually.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates two-dimensional table access using OCCURS and REDEFINES in COBOL",
+        "summary": "A small demonstration program that defines a two-dimensional 3x3 table by redefining a 9-character string, then iterates over rows and columns using nested PERFORM VARYING loops to display each cell.",
         "program_type": "demo"
       },
       "notable_features": [
-        "Two-dimensional OCCURS table using REDEFINES",
+        "Two-dimensional OCCURS table",
+        "REDEFINES to overlay a PIC X(9) value",
         "Nested PERFORM VARYING loops",
-        "Subscript notation WS-COL(WS-IDX-ROW, WS-IDX-COL)"
+        "No FILE SECTION or I/O"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "Very small, self-contained program clearly written as a learning exercise to illustrate two-dimensional tables. AUTHOR name 'PLAIIFAH' suggests a student. No STOP RUN present, which is a minor omission typical of tutorial snippets."
+      "notes": "Very short program (23 lines) with no error handling, no file I/O, and a personal AUTHOR name (PLAIIFAH), strongly suggesting a student or tutorial exercise. No vendor-specific features detected."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1142,
-      "completion_tokens": 393,
-      "total_tokens": 1535,
-      "cost": 0.009321,
+      "prompt_tokens": 2520,
+      "completion_tokens": 312,
+      "total_tokens": 2832,
+      "cost": 0.01224,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -95,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.009321,
-        "upstream_inference_prompt_cost": 0.003426,
-        "upstream_inference_completions_cost": 0.005895
+        "upstream_inference_cost": 0.01224,
+        "upstream_inference_prompt_cost": 0.00756,
+        "upstream_inference_completions_cost": 0.00468
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -105,9 +109,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 7.05,
+    "provider": "Anthropic",
+    "latency_s": 8.0,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:20:13Z"
 }

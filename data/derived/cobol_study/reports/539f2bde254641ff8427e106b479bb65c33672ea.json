@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:539f2bde254641ff8427e106b479bb65c33672ea",
+    "sha1_git": "539f2bde254641ff8427e106b479bb65c33672ea",
+    "filename": "/VPOPUPMSG.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 24065,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:539f2bde254641ff8427e106b479bb65c33672ea/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:539f2bde254641ff8427e106b479bb65c33672ea/raw/"
+  },
+  "indicators": {
+    "bytes_len": 24065,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 583,
+    "blank_lines": 32,
+    "comment_lines": 34,
+    "code_lines": 517,
+    "comment_ratio": 0.062,
+    "max_line_length": 72,
+    "avg_line_length": 39.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "VPOPUPMSG"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 17,
+    "perform_count": 17,
+    "goto_count": 0,
+    "pic_count": 143,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL using VPLUS/SP2 GUI library (HP VPLUS or compatible screen management system); uses COMP-5, free-format source directive, COPY 'vplus/SP250', COPY 'vplus/COMAREA', COPY 'vplus/VPLUSMEM'",
+        "evidence": [
+          ">>source format free.",
+          "COMP-5 usage throughout",
+          "COPY \"vplus/SP250\"",
+          "COPY \"vplus/COMAREA\"",
+          "COPY \"vplus/VPLUSMEM\"",
+          "CALL \"SP2\" USING SP2-OPEN-WINDOW",
+          "SP2-KEY-LEFT, SP2-KEY-ENTER etc. constants",
+          "FUNCTION LENGTH intrinsic function"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "GUI popup message dialog utility for VPLUS/SP2 windowing environment; callable subprogram that displays a configurable popup message box with buttons (OK, Yes/No, Retry/Cancel) and returns user response",
+        "summary": "VPOPUPMSG is a reusable subprogram that creates and manages a GUI popup message dialog using the VPLUS SP2 windowing API. It accepts a message (up to 4 lines), a dialog type (bang/stop/info/question), button configuration (OK, Yes/No, No/Yes, Retry/Cancel), optional Cancel button, and a timeout. It opens a window, creates a panel, adds static text fields and push buttons, conducts a conversation loop, and returns the user's button choice via VP-Reply.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>source format free compiler directive",
+        "COMP-5 binary fields (Micro Focus extension)",
+        "VPLUS/SP2 GUI windowing API (SP2-OPEN-WINDOW, SP2-SET-PANEL-DEF, SP2-SET-FIELD-DEF, SP2-SET-STATIC-DEF)",
+        "COPY of vplus/SP250, vplus/COMAREA, vplus/VPLUSMEM copybooks",
+        "REDEFINES on level-10 items",
+        "OCCURS 7 for button entries",
+        "FUNCTION LENGTH intrinsic function",
+        "LINKAGE SECTION with COMAREA and VPOPUP parameters",
+        "88-level condition names for button types and replies",
+        "PROCEDURE DIVISION USING with named parameters"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; the VPOPUP-Conversation paragraph is cut off mid-line. The SP2 API is characteristic of HP VPLUS or a Micro Focus VPLUS-compatible GUI library. No EXEC CICS or EXEC SQL present. The program is a well-structured, parameterized utility subprogram consistent with production use."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8931,
+      "completion_tokens": 686,
+      "total_tokens": 9617,
+      "cost": 0.037083,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037083,
+        "upstream_inference_prompt_cost": 0.026793,
+        "upstream_inference_completions_cost": 0.01029
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.95,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:44:55Z"
+}

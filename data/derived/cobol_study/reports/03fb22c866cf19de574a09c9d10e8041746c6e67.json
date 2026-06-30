@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:03fb22c866cf19de574a09c9d10e8041746c6e67",
+    "sha1_git": "03fb22c866cf19de574a09c9d10e8041746c6e67",
+    "filename": "/fixsection.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2542,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:03fb22c866cf19de574a09c9d10e8041746c6e67/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:03fb22c866cf19de574a09c9d10e8041746c6e67/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2542,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 92,
+    "blank_lines": 13,
+    "comment_lines": 0,
+    "code_lines": 79,
+    "comment_ratio": 0.0,
+    "max_line_length": 67,
+    "avg_line_length": 26.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "fix-section"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2002",
+        "detail": "Uses BINARY-LONG UNSIGNED and LINKAGE SECTION with argc/argv/result pattern typical of GnuCOBOL CGI or web-service subprogram style",
+        "evidence": [
+          "binary-long unsigned",
+          "procedure division using ... returning need-more",
+          "end program fix-section",
+          "program-id. fix-section (hyphenated)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Web or API backend utility that applies patches/settings to a named section in a file-based database",
+        "summary": "This subprogram receives a section name, an API key, and a list of parameter patches via its linkage section. It validates the API key against a sections database, then writes or rewrites setting records for each patch parameter. Returns a short result code ('ok', 'bn', 'na', 'fl').",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "BINARY-LONG UNSIGNED in LINKAGE SECTION",
+        "PROCEDURE DIVISION RETURNING clause",
+        "argc/argv/result pattern (CGI or REST-like interface)",
+        "COPY for file-control and record definitions (sectiondb, settingdb, sectionrecord, settingrecord)",
+        "WRITE with INVALID KEY / REWRITE fallback pattern",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Dialect is inferred as GnuCOBOL based on BINARY-LONG UNSIGNED and the argc/argv linkage pattern common in GnuCOBOL CGI programs. No compiler directives present. The hyphenated PROGRAM-ID is valid in GnuCOBOL. Standard is estimated as COBOL-2002 due to inline END-IF/END-PERFORM/END-READ usage and BINARY-LONG type."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2864,
+      "completion_tokens": 465,
+      "total_tokens": 3329,
+      "cost": 0.015567,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015567,
+        "upstream_inference_prompt_cost": 0.008592,
+        "upstream_inference_completions_cost": 0.006975
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.76,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:35:15Z"
+}

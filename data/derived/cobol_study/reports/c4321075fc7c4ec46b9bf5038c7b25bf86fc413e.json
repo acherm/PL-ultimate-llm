@@ -49,54 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible mainframe COBOL (NIST CCVS test suite)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "NIST CCVS (Cobol Compiler Validation System) test suite, version 4.2 April 1993. Uses placeholder names like XXXXX082/083/055/014 for system-specific values. Program SQ220A tests variable-length sequential file I/O (RECORD IS VARYING IN SIZE FROM 120 TO 151).",
         "evidence": [
+          "COBOL 85 VERSION 4.2, Apr 1993 SSVG",
+          "ON-SITE VALIDATION, NATIONAL INSTITUTE OF STD & TECH",
+          "XXXXX082/XXXXX083 placeholder computer names",
           "RECORD IS VARYING IN SIZE FROM 120 TO 151 CHARACTERS DEPENDING ON RECORD-LENGTH",
-          "ORGANIZATION IS INDEXED / ACCESS MODE IS RANDOM / RECORD KEY",
-          "ORGANIZATION SEQUENTIAL / ACCESS SEQUENTIAL",
-          "LABEL RECORDS ARE STANDARD",
-          "PICTURE clause usage consistent with COBOL-85",
-          "Comment header: 'COBOL 85 VERSION 4.2, Apr 1993 SSVG'",
-          "XXXXX082/XXXXX083 placeholder computer names typical of NIST CCVS",
-          "Sequence numbers in columns 1-6 with version tag in columns 73-80 (SQ2204.2)"
+          "sequence numbers in columns 1-6 with SQ2204.2 in columns 73-80"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a NIST COBOL Compiler Validation System (CCVS) test program (SQ220A) that validates variable-length sequential file I/O. It builds a sequential mass-storage file with mixed 120-character and 151-character records (using RECORD IS VARYING), writes 450 records in a specific pattern, then reads them back and verifies field values including the NEXT RECORD clause behavior.",
-        "domain": "education/tutorial",
+        "domain": "test-suite",
+        "domain_detail": "NIST COBOL Compiler Validation System (CCVS) - tests variable-length sequential file handling",
+        "summary": "This is a NIST CCVS test program (SQ220A) that validates COBOL 85 variable-length sequential file I/O. It builds a sequential mass storage file with 450 records of two sizes (120 and 151 characters), then reads and validates the records. It also checks the NEXT RECORD clause and RECORD IS VARYING IN SIZE DEPENDING ON behavior.",
         "program_type": "test"
       },
       "notable_features": [
-        "RECORD IS VARYING IN SIZE FROM 120 TO 151 CHARACTERS DEPENDING ON RECORD-LENGTH (variable-length records)",
-        "NEXT RECORD clause validation",
-        "NIST CCVS test harness boilerplate (TEST-RESULTS, CCVS-C-1, FILE-RECORD-INFORMATION-REC)",
-        "Placeholder computer/file names (XXXXX082, XXXXX083, XXXXX014, XXXXX055, XXXXX062)",
-        "P-prefixed lines for optional indexed file (RAW-DATA) used for result logging",
-        "C-prefixed lines for conditional LABEL RECORDS clause",
-        "COMPUTATIONAL (COMP) usage for counters",
-        "61 PERFORM statements and 60 GOTO statements typical of CCVS structure",
-        "Sequence numbers with version tag in columns 73-80"
+        "RECORD IS VARYING IN SIZE FROM 120 TO 151 CHARACTERS DEPENDING ON RECORD-LENGTH",
+        "NEXT RECORD clause testing",
+        "Indexed file (RAW-DATA) with RECORD KEY for result logging",
+        "LABEL RECORDS clause (COBOL-85 style)",
+        "XXXXX placeholder tokens for site-specific customization",
+        "FILE-RECORD-INFORMATION-REC structured diagnostic area",
+        "60 GOTO statements typical of CCVS test harness",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is unambiguously a NIST CCVS (Compiler Validation System) test suite program for COBOL-85, specifically testing variable-length sequential file features. The 'P' and 'C' prefixes in column 7 are CCVS conditional compilation indicators. The file is complete and well-structured. Source was truncated to 16000 chars but the structure is clear from what is shown."
+      "notes": "This is a well-known NIST CCVS test suite file. The sequence numbers in columns 73-80 (SQ2204.2) confirm the file identity. Lines marked with 'P' prefix are conditional (platform-specific) and lines with 'C' are conditional compiler-specific. The source is truncated at 16000 chars but the structure is clear from what is shown."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 5792,
-      "completion_tokens": 760,
-      "total_tokens": 6552,
-      "cost": 0.028776,
+      "prompt_tokens": 7170,
+      "completion_tokens": 609,
+      "total_tokens": 7779,
+      "cost": 0.030645,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.028776,
-        "upstream_inference_prompt_cost": 0.017376,
-        "upstream_inference_completions_cost": 0.0114
+        "upstream_inference_cost": 0.030645,
+        "upstream_inference_prompt_cost": 0.02151,
+        "upstream_inference_completions_cost": 0.009135
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +115,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.81,
+    "latency_s": 15.82,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:22:53Z"
 }

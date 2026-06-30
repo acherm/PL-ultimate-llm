@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5a7716ef6546a581c52af0e226e5893df5ccefb8",
+    "sha1_git": "5a7716ef6546a581c52af0e226e5893df5ccefb8",
+    "filename": "/UPDATE_PART.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2650,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5a7716ef6546a581c52af0e226e5893df5ccefb8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5a7716ef6546a581c52af0e226e5893df5ccefb8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2650,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 85,
+    "blank_lines": 13,
+    "comment_lines": 23,
+    "code_lines": 49,
+    "comment_ratio": 0.319,
+    "max_line_length": 72,
+    "avg_line_length": 30.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "UPDATE_PART"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 2,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses GOBACK, END-PARAGRAPH, COPY with REPLACING pseudo-text, indexed file I/O with relative path syntax typical of GnuCOBOL on Windows",
+        "evidence": [
+          "GOBACK before STOP RUN",
+          "END-PARAGRAPH paragraph terminator",
+          "COPY PART_DEF REPLACING ==:TAG:== BY ==REC==",
+          "SELECT IDXFILE ASSIGN TO \"..\\PARTLIST.DAT\"",
+          "PROCEDURE DIVISION USING LS-PART, LS-RESULT-CODE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Parts inventory management - updating a part record in an indexed file",
+        "summary": "This subprogram updates a record in an indexed parts file. It verifies the part exists by key, then rewrites the record, returning result codes 00 for success or 99 for a bad key failure. It is called with a part structure and a result code via the LINKAGE SECTION.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Indexed file I/O with RANDOM access and RECORD KEY",
+        "REWRITE with INVALID KEY / NOT INVALID KEY",
+        "COPY with REPLACING pseudo-text substitution (==:TAG:==)",
+        "PROCEDURE DIVISION USING linkage parameters",
+        "END-PARAGRAPH explicit paragraph terminator",
+        "GOBACK used before STOP RUN"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author and date comment (Brock Sharp, 03/22/19) suggest a student project. The Windows-style relative path '..\\PARTLIST.DAT' and use of END-PARAGRAPH (a GnuCOBOL extension) support GnuCOBOL on Windows. The COPY copybook PART_DEF is not shown but is referenced twice with tag replacement."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3103,
+      "completion_tokens": 481,
+      "total_tokens": 3584,
+      "cost": 0.016524,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016524,
+        "upstream_inference_prompt_cost": 0.009309,
+        "upstream_inference_completions_cost": 0.007215
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.12,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T21:48:07Z"
+}

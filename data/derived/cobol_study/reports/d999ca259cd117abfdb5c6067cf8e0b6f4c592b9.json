@@ -49,53 +49,58 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (with DB2 embedded SQL, also compatible with IBM Enterprise COBOL on z/OS)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL with DB2 embedded SQL (EXEC SQL). Author explicitly notes differences between GnuCOBOL and z/OS DB2 programs, including use of GETDBID module for credentials. COMP-5 usage is consistent with GnuCOBOL.",
         "evidence": [
-          "EXEC SQL ... END-EXEC blocks (DB2 embedded SQL)",
-          "COMP-5 usage (GnuCOBOL/Micro Focus extension)",
-          "GOBACK statement",
-          "EXEC SQL CONNECT RESET END-EXEC (GnuCOBOL DB2 connection pattern)",
-          "Comments explicitly mention GnuCOBOL and ZOS differences",
-          "COPY WSFST / COPY WSDT with REPLACING (copybook references)",
-          "RECORDING MODE IS F (IBM-style FD clause)",
-          "NEXT SENTENCE usage"
+          "PROGRAM-ID. DBCBEX16",
+          "EXEC SQL INCLUDE SQLCA",
+          "EXEC SQL DECLARE DB1-C1 CURSOR",
+          "EXEC SQL OPEN DB1-C1",
+          "EXEC SQL FETCH DB1-C1",
+          "EXEC SQL CONNECT RESET",
+          "WS-SQL-STATUS PIC S9(9) COMP-5",
+          "comment: GnuCOBOL programs use GETDBID",
+          "comment: differences between GnuCOBOL and ZOS DB2"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program reads all employee records from a DB2 view (VEMP) using a cursor and produces a formatted printed report with page headers, column headers, detail lines, and a footer showing total record count. It handles DB2 connection setup (including GnuCOBOL-specific connection logic) and cursor open/fetch/close lifecycle.",
-        "domain": "education/tutorial",
+        "domain": "demo-example",
+        "domain_detail": "Educational DB2/GnuCOBOL example reading employee records via a database view and printing a formatted report",
+        "summary": "This program reads all employee records from a DB2 view (VEMP) using a cursor and prints a formatted report with page headers, column headers, detail lines, and a footer showing record count. It is an educational example (Example 1-6) created to learn GnuCOBOL DB2 programming.",
         "program_type": "batch"
       },
       "notable_features": [
-        "EXEC SQL embedded DB2 (DECLARE CURSOR, OPEN, FETCH, CLOSE, CONNECT RESET)",
-        "SQLCA included via EXEC SQL INCLUDE SQLCA",
-        "COMP-5 for SQL status field (GnuCOBOL/Micro Focus binary)",
-        "Sequential file output for printed report with pagination logic",
-        "COPY statements with REPLACING for reusable working-storage snippets (WSFST, WSDT)",
-        "Explicit GnuCOBOL vs z/OS DB2 connection differences documented in comments",
-        "FUNCTION CURRENT-DATE usage",
-        "88-level condition names for SQL status codes including negative value (-803)"
+        "EXEC SQL embedded DB2 SQL (cursor-based fetch)",
+        "EXEC SQL DECLARE CURSOR with VIEW (VEMP)",
+        "EXEC SQL CONNECT RESET for GnuCOBOL DB connection management",
+        "COMP-5 for SQL status",
+        "COPY statements (WSFST, WSDT) with REPLACING",
+        "FUNCTION CURRENT-DATE",
+        "Sequential file output with AFTER ADVANCING PAGE",
+        "88-level condition names for SQL status codes",
+        "No GOTO usage; structured with PERFORM"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program is explicitly described as a learning/tutorial example ('Created to learn') by the author. It is part of a series (DBCBEX16 = DB COBOL Example 1-6). The COPY statements reference external copybooks (WSFST, WSDT) not shown in the source. The 9816-Create-Cursor-DB1 paragraph is effectively empty (commented-out debug display), which is intentional for this example. Minor typo in EOJ message: 'DCBCEX16' instead of 'DBCBEX16'."
+      "notes": "Program is explicitly described as a learning exercise ('Created to learn') by David Stagowski. The 9816-Create-Cursor-DB1 paragraph is essentially empty (stub). GETDBID module referenced in comments but not called in this snippet. EOJ message has a typo: 'DCBCEX16' instead of 'DBCBEX16'."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 4345,
-      "completion_tokens": 713,
-      "total_tokens": 5058,
-      "cost": 0.02373,
+      "prompt_tokens": 5723,
+      "completion_tokens": 580,
+      "total_tokens": 6303,
+      "cost": 0.025869,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +109,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.02373,
-        "upstream_inference_prompt_cost": 0.013035,
-        "upstream_inference_completions_cost": 0.010695
+        "upstream_inference_cost": 0.025869,
+        "upstream_inference_prompt_cost": 0.017169,
+        "upstream_inference_completions_cost": 0.0087
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +120,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.44,
+    "latency_s": 15.03,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:29:41Z"
 }

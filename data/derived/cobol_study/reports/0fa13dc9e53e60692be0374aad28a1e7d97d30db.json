@@ -49,55 +49,63 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS/DB2)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS/DB2 program targeting IBM Flex Enterprise Server (IBM-FLEX-ES); uses EXEC CICS and EXEC SQL with SQLCA, DFHAID, DFHCOMMAREA, and BMS maps typical of IBM CICS/TS",
         "evidence": [
-          "EXEC CICS SEND MAP / RECEIVE MAP / LINK / RETURN constructs",
-          "EXEC SQL INCLUDE SQLCA / SELECT INTO / DECLARE TABLE",
-          "EIBCALEN, EIBAID, DFHCLEAR, DFHPF3, DFHPF12, DFHENTER — standard CICS EIB fields",
-          "COPY DFHAID — IBM CICS standard copybook",
-          "SOURCE-COMPUTER. IBM-FLEX-ES — IBM Flex Enterprise Server",
-          "EVALUATE TRUE with 88-level condition names",
-          "PROCEDURE DIVISION USING DFHCOMMAREA — standard CICS linkage pattern",
-          "Comment '(C) 2017 IBM - JIM HILDNER' and 'EPSDEMOS 2008'"
+          "SOURCE-COMPUTER. IBM-FLEX-ES",
+          "OBJECT-COMPUTER. IBM-FLEX-ES",
+          "EXEC CICS LINK PROGRAM",
+          "EXEC SQL INCLUDE SQLCA",
+          "EXEC SQL DECLARE SYSIBM.SYSDUMMY1",
+          "COPY DFHAID",
+          "EIBCALEN",
+          "EIBAID",
+          "DFHCLEAR",
+          "DFHPF3",
+          "DFHENTER"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "An online CICS mortgage-calculation program that presents a BMS map (EPMENU/EPSMORT) to accept loan principal, term in years, and interest rate from the user, then calls a subprogram (EPSCSMRT) to compute the monthly payment. It also performs a dummy DB2 SQL SELECT against SYSIBM.SYSDUMMY1 on each invocation, likely to verify database connectivity.",
-        "domain": "banking",
+        "domain": "banking-finance",
+        "domain_detail": "Mortgage calculation CICS online transaction; part of IBM EPSDEMOS sample application (2008/2017)",
+        "summary": "EPSCMORT is a CICS online program that presents a BMS map (EPMENU/EPSMORT) to accept mortgage input (loan amount, years, interest rate), validates numeric fields via a called subprogram (EPSNBRVL), links to a calculation subprogram (EPSCSMRT) to compute monthly payments, and displays results. It also performs a dummy DB2 SQL call against SYSIBM.SYSDUMMY1 on each invocation. Navigation via PF keys and ENTER is handled with an EVALUATE structure.",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS BMS SEND MAP / RECEIVE MAP with MAPONLY, ERASE, DATAONLY variants",
-        "EXEC CICS LINK to subprograms EPSCSMRT and EPSMLIST",
-        "EXEC CICS RETURN with TRANSID and COMMAREA for pseudo-conversational design",
-        "EXEC SQL against SYSIBM.SYSDUMMY1 (DB2 dummy table) with SQLCA and SQLCODE checking",
-        "EXEC SQL DECLARE TABLE for SYSIBM.SYSDUMMY1",
+        "EXEC CICS (BMS SEND MAP / RECEIVE MAP, LINK, RETURN with TRANSID/COMMAREA)",
+        "EXEC SQL with DB2 SQLCA and SYSIBM.SYSDUMMY1 dummy query",
+        "COPY DFHAID for AID key constants",
+        "COPY EPSMORT (BMS mapset copybook)",
+        "COPY EPSMTCOM (communication area copybook)",
+        "COPY EPSNBRPM (number parameter copybook)",
         "CALL to EPSNBRVL for numeric field validation",
-        "88-level condition names used for send-flag control",
-        "REDEFINES for numeric conversion (W-PMT-CNVRT / W-PMT-NUMBER)",
-        "COPY DFHAID, COPY EPSMORT, COPY EPSMTCOM, COPY EPSNBRPM — multiple copybooks",
-        "Pseudo-conversational CICS pattern with PROCESS-INDICATOR in COMMAREA"
+        "EXEC CICS LINK to EPSCSMRT for mortgage calculation",
+        "EXEC CICS LINK to EPSMLIST",
+        "88-level condition names for send-flag control",
+        "REDEFINES for numeric conversion",
+        "LINKAGE SECTION with DFHCOMMAREA"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is a well-structured, production-style CICS/DB2 COBOL program from an IBM tutorial/demo suite (EPSDEMOS). The comment references a CI/CD test date (04/05/2021) suggesting it was used in a GitLab CI pipeline test. No lines exceed 72 characters, confirming fixed-format. COPY statements reference external copybooks (DFHAID, EPSMORT, EPSMTCOM, EPSNBRPM) not shown in the source."
+      "notes": "This is part of the well-known IBM EPSDEMOS (Enterprise COBOL demo) sample application. The comment mentions a 2021 test date for GitLab CI Runner, suggesting it was used in a CI/CD pipeline. No lines exceed 72 characters; strictly fixed format. The program is a teaching/demo artifact but is structured in a production-like manner."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 3533,
-      "completion_tokens": 844,
-      "total_tokens": 4377,
-      "cost": 0.023259,
+      "prompt_tokens": 4911,
+      "completion_tokens": 686,
+      "total_tokens": 5597,
+      "cost": 0.025023,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +114,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.023259,
-        "upstream_inference_prompt_cost": 0.010599,
-        "upstream_inference_completions_cost": 0.01266
+        "upstream_inference_cost": 0.025023,
+        "upstream_inference_prompt_cost": 0.014733,
+        "upstream_inference_completions_cost": 0.01029
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,9 +124,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 18.33,
+    "provider": "Anthropic",
+    "latency_s": 17.3,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:56:00Z"
 }

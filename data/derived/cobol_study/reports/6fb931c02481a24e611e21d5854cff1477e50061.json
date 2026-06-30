@@ -49,56 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or Micro Focus COBOL (Linux/Unix environment, JMA ORCA project)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with .INC copybooks, LINE SEQUENTIAL files, and CALL to ORCA subsystem programs.",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "ORGANIZATION IS INDEXED with DYNAMIC access and RECORD KEY",
+          "PROGRAM-ID ORCT0010",
+          "COPY \"CPTEIKI01.INC\"",
           "ORGANIZATION LINE SEQUENTIAL",
-          "COPY statements with REPLACING clause",
-          "UNSTRING ... DELIMITED BY ... INTO",
-          "CALL 'ORCSJOB' USING",
-          "PERFORM section-name pattern",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL or EXEC CICS",
-          "Japanese text in comments (JMA ORCA open-source medical billing system, known to use GnuCOBOL)"
+          "CALL \"ORCSJOB\"",
+          "COPY \"MCPAREA\"",
+          "COPY \"COMMON-SPA\"",
+          "JMA (Japan Medical Association) copyright header"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA ORCA (Japan Medical Association) standard medical receipt/billing software. It creates periodic billing (teiki seikyuu) collection data, processing patient hospitalization records and periodic billing management information to produce output files for regular insurance claim submissions.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt billing system - periodic billing (Teiki Seikyuu) data creation component",
+        "summary": "This program is part of the JMA ORCA medical receipt software system. It creates periodic billing collection data (Teiki Seikyuu Shunou Data Sakusei) by reading patient hospitalization history and periodic billing management files, processing billing periods, and writing output to indexed and sequential files. It handles job management, error logging, and calls multiple subsystem programs for date conversion, DB access, and billing calculations.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Extensive use of COPY statements with REPLACING for modular file/record layouts",
-        "UNSTRING used to parse comma-delimited command parameters from COMMAND-PARAM linkage",
-        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
-        "Multiple indexed and sequential files (TEIKI01, TEIKI03, error file)",
-        "Japanese-language comments and error messages (EUC-JP encoding, decoded as latin-1)",
-        "Job management sub-call (ORCSJOB) for step/job tracking",
-        "No COMP-3, no EXEC SQL, no EXEC CICS",
-        "19 CALL statements indicating heavy use of subprogram architecture",
-        "Open-source JMA ORCA project copyright header"
+        "34 COPY statements referencing .INC copybooks",
+        "19 CALL statements to ORCA subsystem programs (ORCSJOB, etc.)",
+        "UNSTRING of COMMAND-PARAM for argument parsing",
+        "INDEXED file with DYNAMIC access mode",
+        "LINE SEQUENTIAL file organization",
+        "LINKAGE SECTION with COMMAND-PARAM",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "OCCURS tables for billing period management",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file was decoded with latin-1 but the Japanese comments are actually EUC-JP encoded, causing mojibake in the displayed text. The program is clearly part of the well-known open-source JMA ORCA medical billing system used in Japanese clinics. Source is truncated at 16000 chars out of ~75KB; the full procedure division is not shown but the structure is unambiguous. No COMP-3 usage despite being a financial/billing program, which is somewhat unusual but consistent with GnuCOBOL usage patterns in this project."
+      "notes": "File decoded as latin-1 but contains Japanese EUC-JP encoded text in comments, causing mojibake in the displayed source. This is consistent with the JMA ORCA open-source medical receipt system distributed in Japan. The program is a batch component (ORCT0010) for periodic billing data creation within the larger ORCA system."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8074,
-      "completion_tokens": 727,
-      "total_tokens": 8801,
-      "cost": 0.035127,
+      "prompt_tokens": 9452,
+      "completion_tokens": 533,
+      "total_tokens": 9985,
+      "cost": 0.036351,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.035127,
-        "upstream_inference_prompt_cost": 0.024222,
-        "upstream_inference_completions_cost": 0.010905
+        "upstream_inference_cost": 0.036351,
+        "upstream_inference_prompt_cost": 0.028356,
+        "upstream_inference_completions_cost": 0.007995
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,9 +117,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 17.32,
+    "provider": "Anthropic",
+    "latency_s": 15.18,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:06:36Z"
 }

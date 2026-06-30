@@ -49,54 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "Micro Focus COBOL (likely OpenCOBOL/GnuCOBOL on Linux, part of ORCA medical system)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); GnuCOBOL/OpenCOBOL-based system used in Japanese medical clinics",
         "evidence": [
-          "PERFORM UNTIL with END-PERFORM",
-          "EVALUATE / WHEN / END-EVALUATE",
-          "INITIALIZE statement",
-          "OCCURS clause without INDEXED BY",
-          "COPY with REPLACING using // delimiters",
-          "DYNAMIC access mode on indexed file",
-          "CALL 'ORCSGETTEMP' USING",
-          "fixed-format source with comment lines in column 7"
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "PROGRAM-ID ORCBD008",
+          "COPY 'CPCOMMONSHELL.INC'",
+          "COPY 'MCPAREA'",
+          "CALL 'ORCSGETTEMP'",
+          "Japanese comments throughout",
+          "JMA Open Source License"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "ORCBD008 is a batch report-generation program for the ORCA Japanese medical receipt (レセプト) system. It reads a collection (収納) file, sorts and formats daily summary report data (日計表, HCM41), and produces printed output covering patient insurance billing totals. It handles multiple processing modes (by slip issue date or treatment date) and supports group medical practice.",
-        "domain": "healthcare/medical billing (Japanese medical insurance claims)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical clinic daily accounting report (日計表 HCM41) — part of JMA ORCA standard receipt (レセプト) software",
+        "summary": "ORCBD008 generates a daily accounting summary report (日計表) for a medical clinic. It reads a collection (収納) file, sorts and aggregates payment data by patient and insurance type, and produces a formatted print report. It handles multiple processing modes (ticket issue date vs. treatment date) and supports group practice.",
         "program_type": "batch"
       },
       "notable_features": [
-        "Japanese-language comments and data names (Shift-JIS/UTF-8 mixed)",
-        "COPY statements with // REPLACING delimiters for multiple copybooks (CPSYUNOU.INC, CPPTINF.INC, etc.)",
-        "INDEXED file with DYNAMIC access and multiple REDEFINES key layouts",
-        "Version history annotations in comments (01.00.01 through 04.02.01)",
-        "Conditional compilation-style comment blocks marking UPD-START/UPD-END and ADD-START/ADD-END",
-        "LINKAGE SECTION with external parameter area (ORCBD008AREA via CPORCBD008.INC)",
-        "No EXEC SQL or EXEC CICS — DB access via CALL to internal subroutines (MCP pattern)",
-        "OCCURS 11 for summary accumulation array (SUM-OCC)",
-        "Date conversion subroutines (CPORCSDAY.INC, 31012-SEIWA-HEN-SEC for Japanese era date)"
+        "25 COPY statements referencing ORCA-specific copybooks (CPSYUNOU.INC, CPPTHKNINF.INC, CPPTINF.INC, etc.)",
+        "LINKAGE SECTION with USING clause — called as subprogram",
+        "INDEXED file with DYNAMIC access (ISAM)",
+        "EVALUATE for processing mode selection",
+        "Japanese-language comments and data names",
+        "Version history comments with dates (04/01/09 through 08/03/10)",
+        "No EXEC SQL or EXEC CICS — uses MCP (ORCA DB abstraction layer)",
+        "OCCURS clause for summary accumulation array"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File is part of the open-source ORCA (JMA standard receipt software) project, a well-known Japanese medical billing system. The source uses UTF-8 encoding with Japanese characters in comments and string literals. The COPY statements reference many external copybooks not shown here. The program is clearly production-grade with a formal version history and copyright notice."
+      "notes": "Source truncated to first 16000 chars; full file is 1408 lines. All four COBOL divisions present. Fixed format confirmed by mechanical indicators (max line 74, long_lines_over_72=5). GnuCOBOL dialect inferred from JMA ORCA project context; no IBM or Micro Focus specific extensions visible."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6695,
-      "completion_tokens": 719,
-      "total_tokens": 7414,
-      "cost": 0.03087,
+      "prompt_tokens": 8073,
+      "completion_tokens": 549,
+      "total_tokens": 8622,
+      "cost": 0.032454,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.03087,
-        "upstream_inference_prompt_cost": 0.020085,
-        "upstream_inference_completions_cost": 0.010785
+        "upstream_inference_cost": 0.032454,
+        "upstream_inference_prompt_cost": 0.024219,
+        "upstream_inference_completions_cost": 0.008235
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,9 +116,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 23.73,
+    "provider": "Anthropic",
+    "latency_s": 18.91,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:40:16Z"
 }

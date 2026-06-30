@@ -49,49 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible mainframe COBOL",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "Brazilian mainframe-style COBOL; uses DECIMAL-POINT IS COMMA (Portuguese locale), SYSIN/SYSOUT, sequence numbers in columns 73-80, and COMP-3. Likely compiled on IBM z/OS or compatible environment.",
         "evidence": [
-          "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
-          "COMP-3 packed decimal usage",
-          "ACCEPT ... FROM SYSIN / DISPLAY with LENGTH OF",
-          "Fixed-format with sequence numbers (00010005 etc.) in columns 73-80",
-          "77-level working storage items",
-          "SECTION in PROCEDURE DIVISION with EXIT paragraph"
+          "DECIMAL-POINT IS COMMA",
+          "ACCEPT ... FROM SYSIN",
+          "COMP-3",
+          "sequence numbers in columns 73-80 (e.g. 00010005)",
+          "LENGTH OF clause in DISPLAY"
         ],
-        "confidence": "high"
+        "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads two numeric values (a Euro quantity and a conversion rate) from SYSIN, multiplies them to compute a Real (Brazilian currency) equivalent, formats all three values with display masks, and prints the results to SYSOUT. It is a simple currency conversion demonstration program.",
-        "domain": "education/tutorial",
-        "program_type": "batch"
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian Portuguese COBOL exercise involving numeric input and display formatting with masks (mascaras). Converts Euro quantities to Brazilian Reais.",
+        "summary": "Reads two numeric values from SYSIN (a Euro quantity and a conversion rate), multiplies them to compute a result in Brazilian Reais, applies display masks (Z and comma patterns), and prints the formatted values to SYSOUT. The program is a student exercise demonstrating numeric input, COMPUTE, and PIC mask formatting.",
+        "program_type": "demo"
       },
       "notable_features": [
-        "DECIMAL-POINT IS COMMA (Brazilian/European locale convention)",
-        "COMP-3 packed decimal for the computed result",
-        "Numeric display masks using Z, period, and comma (e.g. Z.ZZZ.ZZZ.ZZ9,99)",
-        "ACCEPT FROM SYSIN / DISPLAY to SYSOUT",
-        "LENGTH OF intrinsic used in DISPLAY statements",
-        "Sequence numbers in columns 73-80 (mainframe style)"
+        "DECIMAL-POINT IS COMMA (Portuguese/Brazilian locale)",
+        "COMP-3 packed decimal usage",
+        "Numeric display masks with Z.ZZZ.ZZZ.ZZ9,99 pattern",
+        "ACCEPT from SYSIN / DISPLAY to SYSOUT",
+        "LENGTH OF in DISPLAY statement",
+        "Sequence numbers in columns 73-80"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The comment header identifies the author as 'TRUTT' and dates the program 02/11/2023, consistent with a student or training exercise. The Portuguese-language comments and Brazilian Real/Euro conversion context confirm a Brazilian educational setting. The use of DECIMAL-POINT IS COMMA is standard for Brazilian COBOL programs. No COPY, CALL, or PERFORM statements are present, keeping the program self-contained and simple."
+      "notes": "Comments are in Brazilian Portuguese. The sequence numbers (e.g. 00010005) suggest IBM mainframe editing conventions. The program is very short (47 lines) and clearly a learning exercise on numeric masks and arithmetic."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1799,
-      "completion_tokens": 540,
-      "total_tokens": 2339,
-      "cost": 0.013497,
+      "prompt_tokens": 3177,
+      "completion_tokens": 436,
+      "total_tokens": 3613,
+      "cost": 0.016071,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.013497,
-        "upstream_inference_prompt_cost": 0.005397,
-        "upstream_inference_completions_cost": 0.0081
+        "upstream_inference_cost": 0.016071,
+        "upstream_inference_prompt_cost": 0.009531,
+        "upstream_inference_completions_cost": 0.00654
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -110,9 +112,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 12.36,
+    "provider": "Anthropic",
+    "latency_s": 10.07,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:01:35Z"
 }

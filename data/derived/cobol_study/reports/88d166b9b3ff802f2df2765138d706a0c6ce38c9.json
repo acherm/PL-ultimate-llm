@@ -49,51 +49,53 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL (CICS)",
+        "family": "ibm-mainframe",
         "standard": "COBOL-85",
+        "detail": "IBM CICS online program using EXEC CICS PUT/GET CONTAINER (CICS channels/containers API, CICS TS 3.1+), likely running on z/OS. Uses DFHCOMMAREA linkage pattern.",
         "evidence": [
-          "EXEC CICS PUT CONTAINER ... CHANNEL ... END-EXEC",
-          "EXEC CICS LINK PROGRAM ... CHANNEL ... END-EXEC",
-          "EXEC CICS GET CONTAINER ... INTO ... END-EXEC",
-          "EXEC CICS RETURN END-EXEC",
+          "EXEC CICS PUT CONTAINER ... CHANNEL(...)",
+          "EXEC CICS LINK PROGRAM('ALNSCORE') CHANNEL('CHAN')",
+          "EXEC CICS GET CONTAINER ... INTO(...)",
+          "EXEC CICS RETURN",
           "DFHCOMMAREA in LINKAGE SECTION",
-          "COPY MODELIN / COPY MODELOUT (copybook references)",
-          "fixed-format source, no long lines over 72"
+          "COPY MODELIN / COPY MODELOUT"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A CICS online program that invokes a machine-learning fraud-detection model (ALNSCORE) via CICS channels and containers. It passes input transaction data (amount, merchant info, card details, etc.) to the model and retrieves the prediction/probability output. It appears to be part of an IBM z/OS AI scoring integration (likely IBM z/OS Connect or Watson Machine Learning for z/OS).",
-        "domain": "banking",
+        "domain": "banking-finance",
+        "domain_detail": "Credit card fraud detection using a machine learning model scoring service (ALNSCORE) invoked via CICS channels/containers",
+        "summary": "FRAUDMOD is a CICS online program that takes credit card transaction input data (amount, merchant info, card, etc.) from DFHCOMMAREA, packages it into CICS containers on a channel, invokes an ML scoring program (ALNSCORE) via EXEC CICS LINK, retrieves the output prediction/probability, and returns results. It appears to interface with an AI/ML inference engine (ALN prefix suggests IBM z/OS AI scoring).",
         "program_type": "online-cics"
       },
       "notable_features": [
-        "EXEC CICS PUT/GET CONTAINER with CHANNEL — CICS channel/container API for passing data to linked programs",
-        "EXEC CICS LINK PROGRAM('ALNSCORE') — invokes an AI/ML scoring program",
-        "DFHCOMMAREA with COPY MODELIN / COPY MODELOUT — standard CICS communication area with copybook-defined input/output structures",
-        "UUID-style MODEL_ID value ('0ceb7c7c-cf47-492b-bbb7-3d41a0ade12c') suggesting integration with a model registry",
-        "Commented-out test data MOVE statements suggesting development/debug scaffolding",
-        "PERFORM UNTIL loop to display probability array elements",
-        "No COMP-3, no SQL, no compiler directives"
+        "EXEC CICS PUT CONTAINER / GET CONTAINER (CICS channels and containers)",
+        "EXEC CICS LINK to ML scoring program ALNSCORE",
+        "DFHCOMMAREA with COPY-based input/output model structures",
+        "UUID-style MODEL_ID (GUID) for ML model identification",
+        "ALN_ prefixed containers suggesting IBM z/OS AI scoring framework",
+        "Commented-out test data MOVE statements",
+        "PERFORM UNTIL loop displaying probability array"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The COPY statements (COPY MODELIN, COPY MODELOUT) reference external copybooks not shown in this file, so the full data structure is not visible. The commented-out MOVE statements and DISPLAY statements suggest this may still be in active development or testing, but the overall structure is production-oriented. The program integrates with what appears to be IBM Watson Machine Learning for z/OS or a similar AI scoring service via the ALNSCORE CICS program."
+      "notes": "The program is short but structurally complete and uses advanced CICS features (channels/containers). The ALN prefix and MODEL_ID UUID strongly suggest IBM Z AI/ML scoring integration (possibly IBM Watson Machine Learning for z/OS or similar). COPY members MODELIN and MODELOUT are not shown. Some commented-out debug/test code remains."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1727,
-      "completion_tokens": 681,
-      "total_tokens": 2408,
-      "cost": 0.015396,
+      "prompt_tokens": 3105,
+      "completion_tokens": 546,
+      "total_tokens": 3651,
+      "cost": 0.017505,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -102,9 +104,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.015396,
-        "upstream_inference_prompt_cost": 0.005181,
-        "upstream_inference_completions_cost": 0.010215
+        "upstream_inference_cost": 0.017505,
+        "upstream_inference_prompt_cost": 0.009315,
+        "upstream_inference_completions_cost": 0.00819
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -112,9 +114,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 13.79,
+    "provider": "Anthropic",
+    "latency_s": 13.17,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:16:44Z"
 }

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:22f6b72cb5228d34abc65a3f812d179f0cbd2621",
+    "sha1_git": "22f6b72cb5228d34abc65a3f812d179f0cbd2621",
+    "filename": "/BATCH_1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5651,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:22f6b72cb5228d34abc65a3f812d179f0cbd2621/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:22f6b72cb5228d34abc65a3f812d179f0cbd2621/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5651,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 157,
+    "blank_lines": 24,
+    "comment_lines": 13,
+    "code_lines": 120,
+    "comment_ratio": 0.098,
+    "max_line_length": 73,
+    "avg_line_length": 35.0,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BATCH_1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 51,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (OpenCOBOL) based on Linux file paths (/oscobol/src/), RECORDING MODE IS V with variable-length records, and FUNCTION CURRENT-DATE usage. Author 'UCA' and French comments suggest academic/educational context.",
+        "evidence": [
+          "ASSIGN TO '/oscobol/src/transactions.txt' (Unix path)",
+          "RECORDING MODE IS V",
+          "BLOCK CONTAINS 0",
+          "RECORD IS VARYING IN SIZE FROM 100 to 30000",
+          "FUNCTION CURRENT-DATE",
+          "French display text: 'TRAITEMENT BACH STATISTIQUES VISITES'"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise simulating batch processing of visit statistics and transaction records, likely for a university COBOL course (author 'UCA').",
+        "summary": "A batch program that reads a visit file sequentially, displays each record, then writes a hardcoded transaction record to a transactions output file. It uses FUNCTION CURRENT-DATE to timestamp the transaction. French display messages suggest a francophone academic environment.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "RECORDING MODE IS V with variable-length records (up to 30000 bytes)",
+        "FUNCTION CURRENT-DATE for timestamping",
+        "Duplicate data-name definitions (WS-CURRENT-DATE, WS-CURRENT-YEAR, etc.) across multiple 01-level records",
+        "Unix/Linux file paths in SELECT ASSIGN",
+        "French language in DISPLAY statements",
+        "PIC Z(1) used for END-OF-FILE flag (unusual)",
+        "PERFORM THRU pattern for paragraph range"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "DATE-WRITTEN value '20201502' appears to be an invalid date (day 02, month 15). Duplicate data-names (WS-CURRENT-DATE, WS-CURRENT-YEAR, etc.) defined at multiple levels would cause compilation errors in strict compilers. The program has structural issues consistent with student work. One line slightly exceeds 72 characters (max_line_length=73)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3981,
+      "completion_tokens": 524,
+      "total_tokens": 4505,
+      "cost": 0.019803,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019803,
+        "upstream_inference_prompt_cost": 0.011943,
+        "upstream_inference_completions_cost": 0.00786
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.31,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:45:30Z"
+}

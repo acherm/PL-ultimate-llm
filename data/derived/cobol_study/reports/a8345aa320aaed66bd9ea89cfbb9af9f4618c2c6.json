@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or Fujitsu COBOL (Japanese medical system, likely running on Linux/Unix with GnuCOBOL or Fujitsu NetCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "PERFORM UNTIL with END-PERFORM (COBOL-85 scope terminators)",
-          "UNSTRING ... DELIMITED BY ... INTO (standard COBOL-85)",
-          "STRING ... DELIMITED BY SIZE ... INTO ... END-STRING",
-          "COPY with REPLACING clause",
-          "EXIT PROGRAM",
-          "LINKAGE SECTION with USING clause on PROCEDURE DIVISION",
-          "Japanese EUC/Shift-JIS encoded comments (JMA ORCA medical software, known to run on Linux with GnuCOBOL or Fujitsu NetCOBOL)"
+          "PROGRAM-ID ORCDTCHK003",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY directives with .INC files typical of ORCA",
+          "CALL ORCSJOB",
+          "EXEC SQL absent, EXEC CICS absent",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(2000)"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the JMA (Japan Medical Association) ORCA standard medical receipt software. It reads a data-check intermediate file (DTCHK004), formats the check results into a checklist report layout (HCM401), and writes error output to an error file. It is a batch subprogram that generates a 'check list' (checklist creation) for medical data validation.",
-        "domain": "healthcare / medical billing (Japanese national health insurance receipt processing)",
-        "program_type": "subprogram"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt processing system - data check list creation subsystem",
+        "summary": "This program is part of the JMA ORCA medical receipt software system. It reads a data-check intermediate file (DTCHK004), formats check result records into a printable checklist (HCM401 layout), and outputs an error report file. It processes inpatient/outpatient check results page by page with header and body sections.",
+        "program_type": "batch"
       },
       "notable_features": [
-        "Japanese EUC or Shift-JIS encoded comments and string literals (latin-1 decoded, appears garbled)",
-        "COPY statements referencing multiple INC copybooks (CPDTCHK004.INC, HCM401.INC, CPCOMMONDAT6.INC, CPORCSPRTLNK.INC, CPORCBSD01PARA.INC, CPJOBKANRI.INC, etc.)",
-        "COPY with REPLACING clause for parameterized copybook reuse",
-        "LINKAGE SECTION with DTCHK-RC (S9(09)) and COMMAND-PARAM (X(2000))",
-        "UNSTRING of COMMAND-PARAM delimited by comma to parse multiple parameters",
-        "CALL to external subprograms: ORCSJOB and others (12 total CALLs)",
+        "LINKAGE SECTION with COMMAND-PARAM (called as subprogram with parameter string)",
+        "UNSTRING used to parse comma-delimited COMMAND-PARAM",
+        "Multiple COPY directives with REPLACING (14 copybooks)",
         "INDEXED file with SEQUENTIAL access (DTCHK004-FILE)",
+        "Japanese text in comments and string literals (EUC-JP/Shift-JIS encoded)",
+        "Step/job management via ORCSJOB call",
+        "Date conversion subroutine calls (800-SEIWA-HEN-SEC, 800-ZENKAKU-HEN-SEC)",
         "No EXEC SQL or EXEC CICS",
-        "Fixed-format source with comment lines in columns 1-6 using asterisk"
+        "PERFORM UNTIL loop structure for paginated report generation"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the open-source JMA ORCA medical receipt software project (Japan). Comments are in Japanese encoded as EUC-JP or Shift-JIS, decoded here as latin-1 causing garbled display. The program is a well-structured production subprogram with job management, parameter parsing, file I/O, and report formatting. Source was truncated at 16000 chars out of 26541 bytes total."
+      "notes": "Source contains Japanese text encoded in EUC-JP or Shift-JIS, decoded as latin-1 resulting in mojibake in the visible text. File is truncated at 16000 chars out of 26541 bytes. The program is clearly part of the well-known JMA ORCA open-source medical receipt system used in Japanese clinics."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7034,
-      "completion_tokens": 834,
-      "total_tokens": 7868,
-      "cost": 0.033612,
+      "prompt_tokens": 8412,
+      "completion_tokens": 558,
+      "total_tokens": 8970,
+      "cost": 0.033606,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.033612,
-        "upstream_inference_prompt_cost": 0.021102,
-        "upstream_inference_completions_cost": 0.01251
+        "upstream_inference_cost": 0.033606,
+        "upstream_inference_prompt_cost": 0.025236,
+        "upstream_inference_completions_cost": 0.00837
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.63,
+    "latency_s": 14.97,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T19:54:40Z"
 }

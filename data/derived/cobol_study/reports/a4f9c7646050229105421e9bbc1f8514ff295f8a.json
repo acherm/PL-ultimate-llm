@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a4f9c7646050229105421e9bbc1f8514ff295f8a",
+    "sha1_git": "a4f9c7646050229105421e9bbc1f8514ff295f8a",
+    "filename": "/sort2f.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4540,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a4f9c7646050229105421e9bbc1f8514ff295f8a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a4f9c7646050229105421e9bbc1f8514ff295f8a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4540,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 141,
+    "blank_lines": 18,
+    "comment_lines": 29,
+    "code_lines": 94,
+    "comment_ratio": 0.236,
+    "max_line_length": 70,
+    "avg_line_length": 31.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SORT2F"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style with RECORDING MODE IS F, LABEL RECORDS ARE STANDARD, BLOCK CONTAINS 0 RECORDS, GOBACK, and COMP (binary). Likely compiled with IBM Enterprise COBOL or similar.",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "LABEL RECORDS ARE STANDARD",
+          "BLOCK CONTAINS 0 RECORDS",
+          "GOBACK",
+          "PIC S9(4) COMP",
+          "SORT-RETURN",
+          "COPY ... REPLACING ==:tag:=="
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Part of a series of COBOL internal sort examples created for learning purposes",
+        "summary": "SORT2F is the second in a series of four educational programs demonstrating COBOL internal sort. This version uses an Input Procedure to filter records (excluding Illinois and New York customers) before sorting by city, with GIVING clause for output. It reads from INFile, releases filtered records to a sort work file, and writes sorted output to OUTFile.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with INPUT PROCEDURE and GIVING",
+        "RELEASE statement for sort file",
+        "COPY with REPLACING ==:tag:== pseudo-text replacement",
+        "SD (Sort Description) file definition",
+        "SORT-RETURN check after sort",
+        "Conditional filtering in input procedure (state-based exclusion)",
+        "GOBACK instead of STOP RUN",
+        "6 COPY statements for reusable copybooks"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is explicitly documented as created to learn COBOL sorting. Part of a four-program series (SORT1F-SORT4F). The COPY statements reference external copybooks (CUSTOMER, WSFST) not shown in the source. The 2110-Process-INFile-Record paragraph has a logic issue: it only moves the record to SORTFile when state is NOT Illinois or New York, but always releases in 8000-Release-SortFile regardless, which could release uninitialized/previous records for filtered rows."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3541,
+      "completion_tokens": 506,
+      "total_tokens": 4047,
+      "cost": 0.018213,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018213,
+        "upstream_inference_prompt_cost": 0.010623,
+        "upstream_inference_completions_cost": 0.00759
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.51,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:47:53Z"
+}

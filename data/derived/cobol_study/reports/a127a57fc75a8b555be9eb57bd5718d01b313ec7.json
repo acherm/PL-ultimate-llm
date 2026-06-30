@@ -49,48 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL-style inline comments with *> and CLASS definition in SPECIAL-NAMES; Spanish-language comments suggest Latin American educational context",
         "evidence": [
-          "END-IF terminators (COBOL-85+)",
+          "*> comment style (GnuCOBOL/COBOL-2002+)",
+          "CLASS Hexadecimal IS ... in SPECIAL-NAMES",
           "END PROGRAM IFdeClaseOtipo",
-          "*> inline comment style (GnuCOBOL/COBOL-2002 style, though used here in fixed format)",
-          "CLASS user-defined in SPECIAL-NAMES",
-          "ALPHABETIC-LOWER clause",
-          "Spanish-language identifiers and comments suggest educational/Latin American context common with GnuCOBOL"
+          "ALPHABETIC-LOWER clause"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Demonstrates the use of IF with class conditions (NUMERIC, ALPHABETIC, ALPHABETIC-LOWER, NOT NUMERIC) and user-defined CLASS names (Hexadecimal, Decimal) defined in SPECIAL-NAMES. It is a tutorial/exercise program showing how to test data types and custom character classes in COBOL.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise demonstrating CLASS definitions and IF IS NUMERIC/ALPHABETIC/ALPHABETIC-LOWER/custom class conditions in COBOL",
+        "summary": "A small educational program that defines two custom character classes (Hexadecimal and Decimal) in SPECIAL-NAMES and then demonstrates various IF class-condition tests including NUMERIC, ALPHABETIC, ALPHABETIC-LOWER, NOT NUMERIC, and the user-defined classes. All comments are in Spanish, indicating a Latin American student context.",
         "program_type": "demo"
       },
       "notable_features": [
-        "User-defined CLASS in SPECIAL-NAMES (Hexadecimal, Decimal)",
-        "*> inline comment style used in fixed-format source",
-        "ALPHABETIC-LOWER condition test",
-        "Spanish-language comments and identifiers",
-        "No PERFORM, CALL, or GOTO — purely sequential with IF blocks"
+        "Custom CLASS definitions in SPECIAL-NAMES (Hexadecimal, Decimal)",
+        "Use of IS NUMERIC, IS ALPHABETIC, IS ALPHABETIC-LOWER class conditions",
+        "*> inline comment style",
+        "Spanish-language comments",
+        "END PROGRAM terminator"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The *> comment style is technically a COBOL-2002 feature but is widely supported in GnuCOBOL in fixed format. The program has a minor logical bug: both branches of the ALPHABETIC-LOWER IF display the same 'minusculas' message. This is consistent with a student exercise. No file I/O, no subprogram calls, no SQL or CICS."
+      "notes": "The *> comment syntax is valid in COBOL-2002 and later, or GnuCOBOL; no EXEC SQL/CICS, no COPY, no PERFORM or CALL. The program is a straightforward classroom demonstration of class conditions. There is a likely copy-paste bug: both branches of the ALPHABETIC-LOWER IF display the same 'minusculas' message."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1369,
-      "completion_tokens": 539,
-      "total_tokens": 1908,
-      "cost": 0.012192,
+      "prompt_tokens": 2747,
+      "completion_tokens": 447,
+      "total_tokens": 3194,
+      "cost": 0.014946,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -99,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.012192,
-        "upstream_inference_prompt_cost": 0.004107,
-        "upstream_inference_completions_cost": 0.008085
+        "upstream_inference_cost": 0.014946,
+        "upstream_inference_prompt_cost": 0.008241,
+        "upstream_inference_completions_cost": 0.006705
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 10.28,
+    "provider": "Anthropic",
+    "latency_s": 9.93,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:31:23Z"
 }

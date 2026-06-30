@@ -49,47 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible mainframe COBOL",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used (END-IF, COMPUTE, PERFORM VARYING); no vendor-specific extensions visible. Sequence numbers suggest IBM-style editing but no mainframe-specific syntax.",
         "evidence": [
-          "END-IF terminator (COBOL-85+)",
-          "PERFORM ... VARYING ... UNTIL construct",
-          "sequence numbers in columns 73-80 (e.g. 00010000)",
-          "fixed-format with all lines at 80 chars",
-          "ID DIVISION shorthand for IDENTIFICATION DIVISION"
+          "END-IF",
+          "COMPUTE C = 0",
+          "PERFORM PARA-1 VARYING I FROM WS-NUM1 BY 1",
+          "DIVIDE I BY J GIVING X REMAINDER WS-MOD"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Accepts two numbers as input (a range start and end) and displays all prime numbers within that range. It checks primality by counting divisors using modulo division.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Prime number detection exercise",
+        "summary": "Accepts two numbers as input range boundaries and displays all prime numbers within that range. Uses nested PERFORM loops to check divisibility for each candidate number.",
         "program_type": "demo"
       },
       "notable_features": [
-        "PERFORM VARYING with UNTIL for nested loop logic",
-        "DIVIDE ... GIVING ... REMAINDER for modulo operation",
-        "END-IF structured terminator",
-        "Sequence numbers in columns 73-80 suggesting mainframe origin",
-        "Bug: PARA-2 UNTIL condition uses WS-NUM1 instead of I, likely a student error"
+        "PERFORM VARYING with UNTIL",
+        "DIVIDE ... GIVING ... REMAINDER",
+        "Nested paragraph structure for prime checking",
+        "Sequence numbers in columns 73-80 suggesting mainframe-style editing"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program has a likely bug: PARA-2 iterates UNTIL J = WS-NUM1 rather than UNTIL J = I, which would cause incorrect primality testing for most values. This is consistent with a student exercise. Sequence numbers suggest it was written or edited on a mainframe system (IBM-style). No CICS, SQL, or COPY statements present."
+      "notes": "Sequence numbers in columns 73-80 (e.g. 00010000, 00020000) suggest IBM mainframe editing conventions, but no IBM-specific syntax is used. The logic has a minor bug: PARA-2 uses UNTIL J = WS-NUM1 instead of UNTIL J = I, which would not correctly detect primes for all inputs. This is consistent with a student exercise."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1361,
-      "completion_tokens": 461,
-      "total_tokens": 1822,
-      "cost": 0.010998,
+      "prompt_tokens": 2739,
+      "completion_tokens": 360,
+      "total_tokens": 3099,
+      "cost": 0.013617,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -98,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.010998,
-        "upstream_inference_prompt_cost": 0.004083,
-        "upstream_inference_completions_cost": 0.006915
+        "upstream_inference_cost": 0.013617,
+        "upstream_inference_prompt_cost": 0.008217,
+        "upstream_inference_completions_cost": 0.0054
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -109,8 +110,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 10.08,
+    "latency_s": 8.14,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:27:35Z"
 }

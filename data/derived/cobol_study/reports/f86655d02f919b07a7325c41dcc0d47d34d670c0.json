@@ -49,46 +49,49 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL (Spanish-language comments, HP computer references, free-ish formatting)",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Spanish-language educational COBOL program; PROGRAM-ID contains spaces ('USO DE PERFORM') which is non-standard; likely GnuCOBOL or similar permissive compiler",
         "evidence": [
-          "PERFORM ... TIMES syntax (COBOL-85)",
-          "WORKING-STORAGE SECTION with PIC X",
-          "All four divisions present",
-          "PROGRAM-ID. USO DE PERFORM (non-standard multi-word program-id, common in GnuCOBOL tutorials)",
-          "Spanish-language identifiers and metadata (SALUDO, VerMensaje, HOLA AMIGOS COBOLEROS)"
+          "PERFORM VerMensaje 10 TIMES",
+          "WORKING-STORAGE SECTION",
+          "PIC X(38)",
+          "STOP RUN",
+          "Spanish identifiers and comments"
         ],
-        "confidence": "medium"
+        "confidence": "low"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "A minimal tutorial/demo program that displays a greeting message ('HOLA, AMIGOS COBOLEROS') ten times using a PERFORM loop. It is a simple exercise illustrating the PERFORM ... TIMES construct.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Simple demonstration of the PERFORM...TIMES statement in Spanish",
+        "summary": "A minimal COBOL program that demonstrates the PERFORM...TIMES construct by displaying a greeting message 10 times. Written in Spanish, likely as a student or tutorial exercise.",
         "program_type": "demo"
       },
       "notable_features": [
-        "PERFORM ... TIMES loop (10 iterations)",
-        "Spanish-language program metadata and identifiers",
-        "Non-standard multi-word PROGRAM-ID (USO DE PERFORM)",
-        "Apparent typo/artifact in DISPLAY statement: DISPLAY \"\"SALUDO (double-quote before variable name)"
+        "PERFORM...TIMES loop",
+        "Spanish-language identifiers and metadata",
+        "Non-standard PROGRAM-ID with spaces ('USO DE PERFORM')",
+        "Incomplete DISPLAY statement at end of file (possible truncation)"
       ],
       "maturity": "toy-or-hello-world",
-      "overall_confidence": "high",
-      "notes": "The PROGRAM-ID 'USO DE PERFORM' contains spaces, which is non-standard but tolerated by some compilers (e.g., GnuCOBOL). The DISPLAY statement at the end appears to have a stray double-quote before SALUDO, suggesting either a typo or truncation. The file is very short (24 lines) and clearly a beginner tutorial example. Source format appears free or at least not strictly fixed-72-column given no long lines and indentation style."
+      "overall_confidence": "medium",
+      "notes": "The source appears truncated — the DISPLAY statement at the end is incomplete (shows 'DISPLAY \"\"SALUDO' without closing quote or period). PROGRAM-ID value 'USO DE PERFORM' contains spaces which is non-standard. Spanish language throughout. No long lines over 72 columns and free-format style. Dialect cannot be determined with confidence due to minimal code."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1024,
-      "completion_tokens": 540,
-      "total_tokens": 1564,
-      "cost": 0.011172,
+      "prompt_tokens": 2402,
+      "completion_tokens": 365,
+      "total_tokens": 2767,
+      "cost": 0.012681,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -97,9 +100,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.011172,
-        "upstream_inference_prompt_cost": 0.003072,
-        "upstream_inference_completions_cost": 0.0081
+        "upstream_inference_cost": 0.012681,
+        "upstream_inference_prompt_cost": 0.007206,
+        "upstream_inference_completions_cost": 0.005475
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -107,9 +110,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 10.59,
+    "provider": "Anthropic",
+    "latency_s": 9.95,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:12:36Z"
 }

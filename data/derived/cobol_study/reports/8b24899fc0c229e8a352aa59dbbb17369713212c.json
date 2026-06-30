@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8b24899fc0c229e8a352aa59dbbb17369713212c",
+    "sha1_git": "8b24899fc0c229e8a352aa59dbbb17369713212c",
+    "filename": "/InputHandling.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6493,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8b24899fc0c229e8a352aa59dbbb17369713212c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8b24899fc0c229e8a352aa59dbbb17369713212c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6493,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 171,
+    "blank_lines": 1,
+    "comment_lines": 41,
+    "code_lines": 129,
+    "comment_ratio": 0.241,
+    "max_line_length": 79,
+    "avg_line_length": 37.0,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "InputHandling"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 12,
+    "goto_count": 0,
+    "pic_count": 8,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) indicated by 'Tectonics: cobc' comment; uses FUNCTION NUMVAL, UNSTRING WITH POINTER, LINE SEQUENTIAL, LINKAGE SECTION with COPY copybooks",
+        "evidence": [
+          "Tectonics: cobc",
+          "FUNCTION NUMVAL",
+          "UNSTRING ... WITH POINTER",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "COPY \"VectorDim.cpy\"",
+          "PROCEDURE DIVISION USING INPUT-VEKTOR ABBRUCH MATRIX"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Numerical methods / linear algebra input parsing, likely for a student project implementing an iterative solver (e.g. power method or similar) with matrix and vector input",
+        "summary": "This subprogram reads an input file (input.txt) line by line and parses configuration parameters (dim, n, epsilon, start vector x) and matrix rows. It populates shared data structures (vector, abort criteria, matrix) passed via LINKAGE SECTION for use by a numerical computation program. Comments are in German, suggesting a German-language academic context.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "FUNCTION NUMVAL for string-to-numeric conversion",
+        "UNSTRING with POINTER for tokenizing space-delimited input",
+        "INSPECT TALLYING and REPLACING for prefix detection and stripping",
+        "LINKAGE SECTION with three COPY copybooks (VectorDim.cpy, Abbruch.cpy, InputMatrix.cpy)",
+        "FILE STATUS checking with custom HANDLE-ERROR paragraph",
+        "German-language comments",
+        "No GOTO usage; structured with PERFORM paragraphs",
+        "ORGANIZATION IS LINE SEQUENTIAL"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "All comments are in German; program is clearly a student exercise for a numerical methods course. The 'Tectonics: cobc' header confirms GnuCOBOL. Some TODO comments indicate incomplete error handling. The file is a subprogram (EXIT PROGRAM) called from a main program that passes linkage parameters."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4137,
+      "completion_tokens": 514,
+      "total_tokens": 4651,
+      "cost": 0.020121,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020121,
+        "upstream_inference_prompt_cost": 0.012411,
+        "upstream_inference_completions_cost": 0.00771
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.06,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:51:08Z"
+}

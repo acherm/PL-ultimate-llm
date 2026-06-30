@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f09c9d32d4e1d22773a69f69369b32b5efc25be0",
+    "sha1_git": "f09c9d32d4e1d22773a69f69369b32b5efc25be0",
+    "filename": "/stt-day-p.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 17657,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f09c9d32d4e1d22773a69f69369b32b5efc25be0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f09c9d32d4e1d22773a69f69369b32b5efc25be0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 17657,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 521,
+    "blank_lines": 63,
+    "comment_lines": 20,
+    "code_lines": 438,
+    "comment_ratio": 0.044,
+    "max_line_length": 72,
+    "avg_line_length": 32.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "stt-day-p"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 2,
+    "perform_count": 31,
+    "goto_count": 0,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT dialect: uses ACUCOBOL-specific DISPLAY MESSAGE ... TITLE ... ICON syntax, 78-level constants, COPY .sl/.fd/.def file conventions, 'acucobol.def' copybook, and CANCEL verb for subprograms",
+        "evidence": [
+          "copy \"acucobol.def\"",
+          "display message ... title titolo icon 2",
+          "78 titolo value ...",
+          "78 max-righe value 66",
+          "CANCEL \"geslock\"",
+          "copy \"trasporti.sl\"",
+          "copy \"trasporti.fd\"",
+          "decimal-point is comma"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Italian transport/logistics management system: daily control printout of invoiced delivery notes (bolle fatturate) for a given day",
+        "summary": "This program (stt-day-p) is a subprogram that generates a daily control report of invoiced transport delivery notes ('bolle fatturate'). It reads transport, client, and carrier files, accumulates totals (number of bills and total kg), and writes a formatted sequential text report. The program is Italian-language and part of a transport management application.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "ACUCOBOL DISPLAY MESSAGE ... TITLE ... ICON GUI dialogs",
+        "78-level constant definitions",
+        "DECLARATIVES with USE AFTER ERROR sections for multiple files",
+        "LINKAGE SECTION with external linkage copybook (link-stt-day.def)",
+        "File locking handling via 'geslock' subprogram CALL/CANCEL",
+        "SPECIAL-NAMES decimal-point is comma (Italian locale)",
+        "STRING with LOW-VALUE delimiters for path construction",
+        "ACCEPT from ENVIRONMENT and CENTURY-DATE/TIME",
+        "No EXEC SQL or EXEC CICS",
+        "14 COPY statements for file definitions and common definitions"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is in Italian; encoded as latin-1 (contains accented characters like 'già'). The program is clearly part of a larger Italian transport/logistics application suite. Truncated at 16000 chars but the main structure is fully visible. No COMP-3 usage despite numeric totals, which is consistent with ACUCOBOL on PC platforms."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6446,
+      "completion_tokens": 564,
+      "total_tokens": 7010,
+      "cost": 0.027798,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027798,
+        "upstream_inference_prompt_cost": 0.019338,
+        "upstream_inference_completions_cost": 0.00846
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.85,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:55:34Z"
+}

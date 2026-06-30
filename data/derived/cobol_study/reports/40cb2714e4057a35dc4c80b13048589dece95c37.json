@@ -49,55 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) or similar open-source COBOL on Linux",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA (Japan Medical Association standard receipt software) running on Linux, compiled with GnuCOBOL. Program ORCS02 handles inpatient co-payment calculation (負担金額算定サブ).",
         "evidence": [
-          "IDENTIFICATION DIVISION / PROGRAM-ID. ORCS02",
-          "WORKING-STORAGE SECTION with PIC clauses",
-          "OCCURS clauses with numeric literals",
-          "REDEFINES usage",
-          "Fixed-format source layout",
-          "Comment header states 'OS LINUX'",
-          "Project 'ORCA' - JMA (Japan Medical Association) open source medical software",
-          "No EXEC SQL, no EXEC CICS, no COMP-3"
+          "PROGRAM-ID. ORCS02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "OS LINUX in comments",
+          "no EXEC CICS / EXEC SQL",
+          "COPY count 33, CALL count 87 consistent with GnuCOBOL/ORCA style",
+          "fixed format, no compiler directives"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a subprogram (ORCS02) that calculates patient co-payment amounts for inpatient medical billing, part of the JMA (Japan Medical Association) ORCA standard receipt software system. It handles complex Japanese health insurance co-payment calculations including public assistance (Kohi), self-pay, and various regional subsidy schemes.",
-        "domain": "healthcare/medical billing (Japanese national health insurance)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/レセプト) system — inpatient patient co-payment amount calculation subprogram for the JMA ORCA standard receipt software",
+        "summary": "ORCS02 is a subprogram within the JMA ORCA medical receipt system that calculates patient co-payment amounts for inpatient (入院) claims. It handles multiple public assistance (公費) insurance combinations, regional subsidy rules, consumption tax, and various rounding/ceiling logic for different Japanese prefectures and insurance types.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
+        "Large working-storage with complex insurance co-payment tables (HOKEN-FUTAN-AREA, HOKEN-ZAN-AREA, HOKEN-KAISU-TABLE)",
+        "OCCURS clauses for daily/monthly accumulation arrays (up to 31 days)",
+        "REDEFINES used for table access",
+        "33 COPY statements referencing ORCA copybooks",
+        "87 CALL statements to other ORCA subprograms",
+        "Extensive Japanese-language comments (EUC-JP encoded, displayed as latin-1 mojibake)",
+        "No COMP-3 usage — uses PIC 9 binary arithmetic",
         "No EXEC SQL or EXEC CICS",
-        "No COMP-3 packed decimal despite financial calculations",
-        "87 CALL statements indicating heavy use of subprogram architecture",
-        "283 PERFORM statements indicating structured procedural decomposition",
-        "OCCURS tables for daily/monthly insurance co-payment tracking (up to 31 days)",
-        "REDEFINES used for table aliasing",
-        "Large program: ~10,000 lines, ~508KB",
-        "Open source JMA ORCA medical receipt software (copyright 2002)",
-        "Extensive revision history in comments spanning 2002-2005"
+        "Revision history spanning 2002–2005 with 39+ named revisions"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "File decoded with latin-1 but contains Japanese text (likely EUC-JP or Shift-JIS), causing mojibake in the comments. The program is clearly production medical billing software from the JMA ORCA project. The absence of COMP-3 is somewhat unusual for financial COBOL but consistent with some GnuCOBOL/OpenCOBOL implementations. The 508KB size and 10,064 lines confirm a substantial production subprogram."
+      "notes": "File is encoded in EUC-JP but decoded as latin-1, causing Japanese comments to appear as mojibake. Source is truncated at 16000 chars out of 508117 bytes (10064 lines); full program body not visible but structure is clear. This is part of the well-known open-source JMA ORCA medical billing system for Linux."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10484,
-      "completion_tokens": 676,
-      "total_tokens": 11160,
-      "cost": 0.041592,
+      "prompt_tokens": 11862,
+      "completion_tokens": 601,
+      "total_tokens": 12463,
+      "cost": 0.044601,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.041592,
-        "upstream_inference_prompt_cost": 0.031452,
-        "upstream_inference_completions_cost": 0.01014
+        "upstream_inference_cost": 0.044601,
+        "upstream_inference_prompt_cost": 0.035586,
+        "upstream_inference_completions_cost": 0.009015
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 15.33,
+    "latency_s": 15.83,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:25:44Z"
 }

@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL / OpenCOBOL (ORCA project, Linux-based Japanese medical system)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE ... ALSO ... WHEN syntax",
-          "END-IF, END-EVALUATE scope terminators",
-          "BINARY clause on PIC S9(9)",
-          "OCCURS clauses without INDEXED BY",
-          "COPY statements with quoted filenames (.INC, .CBL pattern)",
-          "PROCEDURE DIVISION USING with multiple linkage items",
-          "EXIT PROGRAM",
-          "Fixed-format source with comment lines in column 7"
+          "PROGRAM-ID ORCGW28",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "COPY 'LINKAREA'",
+          "MCP-STATUS / MCP-EVENT usage",
+          "EXEC CICS absent, no DB2, uses MCPDATA.INC pattern typical of JMA ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This program is part of the ORCA (JMA standard receipt software) Japanese medical billing system. It handles the screen logic for setting up hospital-specific admission fee (入院料) information, including selection ranges, fee classification, tax classification, and validity date ranges. It is a screen-driven subprogram called via a window manager (MCP) framework.",
-        "domain": "healthcare / medical billing (Japanese national health insurance claims)",
-        "program_type": "subprogram"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - hospital/clinic admission fee information settings screen (W28)",
+        "summary": "This program implements the hospital admission fee information settings screen (ORCGW28) within the JMA ORCA medical receipt system. It handles screen initialization, data entry, and navigation for configuring ward-specific admission fee parameters including fee classification, unit price, and tax category. It interacts with system management master files and ward information via COPY-included file layouts.",
+        "program_type": "online-cics"
       },
       "notable_features": [
-        "Japanese-language comments encoded in Latin-1 (actually EUC-JP or Shift-JIS, decoded as Latin-1 producing mojibake)",
-        "MCP (screen/window manager) framework with MCP-STATUS and MCP-EVENT evaluation",
-        "Extensive use of COPY statements for shared data structures (.INC files)",
-        "OCCURS 400 table for hospital department list items",
-        "BINARY (COMP) usage for count fields",
-        "No EXEC SQL or EXEC CICS — uses custom DB access via COPY/CALL pattern",
-        "LINKAGE SECTION with multiple areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
-        "Open Source license header (JMA Open Source License)"
+        "46 COPY statements for modular screen/file layouts",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA parameters",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT dispatch pattern",
+        "OCCURS 400 for ward list items",
+        "BINARY usage for combo box counts",
+        "Japanese comments encoded in Latin-1 (Shift-JIS/EUC-JP garbled)",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP (Medical Care Platform) API",
+        "Screen area defined via multiple COPY includes (W01.INC through W99.INC)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is genuine production COBOL from the open-source ORCA Japanese medical receipt software project (circa 2002-2004). Comments are in Japanese (EUC-JP or Shift-JIS) but were decoded as Latin-1, resulting in garbled display. The dialect is most consistent with GnuCOBOL/OpenCOBOL targeting Linux, as ORCA is known to use. The 5 lines slightly over 72 characters are minor and typical of this codebase. No embedded SQL or CICS; database access is abstracted through COPY/CALL-based MCP framework."
+      "notes": "Source file contains Japanese text encoded in EUC-JP or Shift-JIS, decoded as Latin-1 causing mojibake in comments. The MCP (Medical Care Platform) framework is the JMA ORCA GUI/DB middleware, not CICS; program_type set to online-cics as closest analog for an interactive screen program. File truncated at 16000 chars out of 76068 bytes total."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 7327,
-      "completion_tokens": 705,
-      "total_tokens": 8032,
-      "cost": 0.032556,
+      "prompt_tokens": 8705,
+      "completion_tokens": 574,
+      "total_tokens": 9279,
+      "cost": 0.034725,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.032556,
-        "upstream_inference_prompt_cost": 0.021981,
-        "upstream_inference_completions_cost": 0.010575
+        "upstream_inference_cost": 0.034725,
+        "upstream_inference_prompt_cost": 0.026115,
+        "upstream_inference_completions_cost": 0.00861
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.67,
+    "latency_s": 15.79,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:05:43Z"
 }

@@ -49,49 +49,51 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); uses ORCMCPSUB database middleware calls typical of the ORCA/GnuCOBOL stack",
         "evidence": [
-          "END-IF, END-PERFORM (COBOL-85 scope terminators)",
-          "PERFORM UNTIL with inline body",
-          "EXIT PROGRAM",
-          "CALL 'ORCMCPSUB' USING — custom MCP database interface",
-          "COPY directives for .INC files (CPJYURRK.INC, CPHKNCOMBI.INC, etc.)",
-          "Fixed-format source with columns 7-72"
+          "PROGRAM-ID ORCGQSUB03",
+          "COPY CPQSUB03.INC / CPORCMCP.INC / MCPAREA",
+          "CALL ORCMCPSUB USING MCPAREA ORCMCPAREA MCPDATA-REC",
+          "Copyright 2002 JMA (Japan Medical Association)",
+          "ORC-DBPATH / MCP-FUNC / MCP-RC patterns"
         ],
-        "confidence": "medium"
+        "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "A subprogram (ORCGQSUB03) that retrieves and assembles insurance combination (HKNCOMBI) information for a patient inquiry. It checks inpatient records first, then outpatient reception records, and returns the insurance combination number, insurance number, insurance combination name, department code, and last date to the caller via a linkage area.",
-        "domain": "healthcare / medical billing (Japanese medical receipt software — JMA ORCA system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) system – patient insurance combination lookup subprogram",
+        "summary": "This subprogram (ORCGQSUB03) retrieves insurance combination information for a patient given a hospital ID, patient ID, and visit date. It checks inpatient admission records first, then outpatient visit records, and resolves the applicable insurance combination name and number, returning results via the linkage section.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)",
-        "Custom database access via CALL 'ORCMCPSUB' with DBSELECT/DBFETCH/DBCLOSECURSOR function codes (proprietary MCP layer)",
-        "Heavy use of COPY for record layouts (.INC files)",
-        "No EXEC SQL or EXEC CICS — uses an abstraction layer instead",
-        "Part of the open-source JMA ORCA medical receipt system",
-        "PERFORM UNTIL loop for cursor-style fetch iteration"
+        "CALL 'ORCMCPSUB' for DB SELECT/FETCH/CLOSE cursor operations (ORCA middleware)",
+        "COPY of multiple .INC copybooks (CPJYURRK, CPSRYKARRK, CPPTNYUINRRK, CPHKNCOMBI, MCPDATA, CPORCMCP, MCPAREA, CPQSUB03)",
+        "LINKAGE SECTION with QSUB03-LNK parameter block",
+        "PERFORM UNTIL loop for cursor fetch iteration",
+        "No EXEC SQL or EXEC CICS – uses proprietary ORCMCPSUB abstraction layer",
+        "High comment ratio (41%) with Japanese-language comments"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known Japanese open-source medical receipt software 'ORCA' developed by JMA. Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The COPY statements reference external .INC copybooks not shown here. The database access pattern (DBSELECT → DBFETCH → DBCLOSECURSOR) is characteristic of the ORCA MCP middleware layer."
+      "notes": "Source contains Latin-1 encoded Japanese text (EUC-JP or Shift-JIS stored as latin-1 bytes) in comments and data names. The file is part of the well-known open-source JMA ORCA medical receipt system. No truncation observed; all four COBOL divisions present."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 6467,
-      "completion_tokens": 644,
-      "total_tokens": 7111,
-      "cost": 0.029061,
+      "prompt_tokens": 7845,
+      "completion_tokens": 574,
+      "total_tokens": 8419,
+      "cost": 0.032145,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +102,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.029061,
-        "upstream_inference_prompt_cost": 0.019401,
-        "upstream_inference_completions_cost": 0.00966
+        "upstream_inference_cost": 0.032145,
+        "upstream_inference_prompt_cost": 0.023535,
+        "upstream_inference_completions_cost": 0.00861
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -111,8 +113,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.18,
+    "latency_s": 15.6,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:37:12Z"
 }

@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ec79ef32db2fcf631e388b2ac2d2c6d571bc228c",
+    "sha1_git": "ec79ef32db2fcf631e388b2ac2d2c6d571bc228c",
+    "filename": "/crp052.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 94267,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ec79ef32db2fcf631e388b2ac2d2c6d571bc228c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ec79ef32db2fcf631e388b2ac2d2c6d571bc228c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 94267,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2139,
+    "blank_lines": 171,
+    "comment_lines": 126,
+    "code_lines": 1842,
+    "comment_ratio": 0.064,
+    "max_line_length": 127,
+    "avg_line_length": 42.1,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CRP052"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 41,
+    "call_count": 32,
+    "perform_count": 164,
+    "goto_count": 0,
+    "pic_count": 240,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with OO extensions (class-control, object reference), COMP-X, COMP-5 usage, and Windows GUI (wclass window object). Likely targeting Micro Focus NetExpress or similar Windows-based COBOL environment. Brazilian Portuguese application (KELLO ERP system).",
+        "evidence": [
+          "class-control. Window is class \"wclass\"",
+          "77 janelaPrincipal object reference",
+          "77 handle8 pic 9(08) comp-x value zeros",
+          "77 wHandle pic 9(09) comp-5 value zeros",
+          "COPY \"DS-CNTRL.MF\"",
+          "PRINTER IS LPRINTER",
+          "DECIMAL-POINT IS COMMA",
+          "EMP-REFERENCIA PIC X(15) VALUE \"\\PROGRAMA\\KELLO\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Accounts receivable (contas a receber) - individual customer statement report listing titles/invoices with payment status (to pay and paid) within a requested movement interval. Part of the KELLO ERP system.",
+        "summary": "CRP052 is a batch report program that generates an individual customer accounts-receivable extract (Extrato de Cliente). It lists all financial titles/invoices with status 0 (to pay) or 2 (paid) within a specified date range, printing totals including gross value, net value, balance, average delay days, and interest receivable.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OO COBOL class-control with Window object reference (Micro Focus extension)",
+        "COMP-X and COMP-5 usage (Micro Focus numeric types)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "41 COPY statements for modular file/record definitions",
+        "Indexed WORK file with multiple alternate record keys",
+        "PRINTER IS LPRINTER special-names",
+        "Brazilian Portuguese comments and field names",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 packed decimal usage",
+        "Complex report layout with multiple header/detail/total lines"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 2139 lines. The program is clearly part of a Brazilian ERP system called KELLO, authored by Mareli Amâncio Volpato, dated 12/04/1999. Decoded with latin-1 which is consistent with Brazilian Portuguese characters (e.g. Â, Ã). No COMP-3 is notable for a financial application but may be in copybooks."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7794,
+      "completion_tokens": 636,
+      "total_tokens": 8430,
+      "cost": 0.032922,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032922,
+        "upstream_inference_prompt_cost": 0.023382,
+        "upstream_inference_completions_cost": 0.00954
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.18,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:40:31Z"
+}

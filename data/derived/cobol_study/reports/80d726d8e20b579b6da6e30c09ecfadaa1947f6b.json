@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:80d726d8e20b579b6da6e30c09ecfadaa1947f6b",
+    "sha1_git": "80d726d8e20b579b6da6e30c09ecfadaa1947f6b",
+    "filename": "/gctestsetup.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13435,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:80d726d8e20b579b6da6e30c09ecfadaa1947f6b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:80d726d8e20b579b6da6e30c09ecfadaa1947f6b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13435,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 339,
+    "blank_lines": 4,
+    "comment_lines": 59,
+    "code_lines": 276,
+    "comment_ratio": 0.176,
+    "max_line_length": 76,
+    "avg_line_length": 37.6,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "gctestsetup"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 8,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 49,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) program; compile command in header uses 'cobc -x -std=default'; uses BINARY-LONG, TRIM intrinsic, SUBSTITUTE intrinsic, CBL_COPY_FILE, SYSTEM calls, ENVIRONMENT-NAME/ENVIRONMENT-VALUE — all GnuCOBOL extensions",
+        "evidence": [
+          "cobc -x -std=default in comment",
+          "BINARY-LONG SIGNED",
+          "call 'SYSTEM'",
+          "call 'CBL_COPY_FILE'",
+          "display env-set-name upon ENVIRONMENT-NAME",
+          "display env-set-value upon ENVIRONMENT-VALUE",
+          "TRIM(r-command, TRAILING)",
+          "SUBSTITUTE(cmd-def, '$1',...)",
+          "function all intrinsic"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Test environment setup utility for GCSort (a COBOL sort utility project by Sauro Menna)",
+        "summary": "This program reads a definition file (gctestsetup.def) and a setup configuration file (gctestsetup.cfg) to set up a test environment for the GCSort project. It processes commands such as compile, compdll, setvar, unsetvar, execute, and copy, invoking system calls and managing environment variables accordingly.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "BINARY-LONG SIGNED data type (GnuCOBOL extension)",
+        "TRIM and SUBSTITUTE intrinsic functions",
+        "call 'SYSTEM' for OS command execution",
+        "call 'CBL_COPY_FILE' GnuCOBOL library routine",
+        "ENVIRONMENT-NAME / ENVIRONMENT-VALUE for setting env vars",
+        "function all intrinsic in REPOSITORY",
+        "Windows/Linux branching via ntype flag",
+        "EVALUATE on trimmed string value",
+        "Inline debug lines prefixed with 'D' and 'TEST00***'",
+        "Tab character in source (mixed indentation)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "One line slightly exceeds column 72 (long_lines_over_72=1). Source contains a tab character in the identification division line and in working-storage, suggesting minor formatting inconsistency but overall fixed format. The program is part of the open-source GCSort test framework by Sauro Menna (2016/2017), licensed LGPL 3.0."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5493,
+      "completion_tokens": 592,
+      "total_tokens": 6085,
+      "cost": 0.025359,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025359,
+        "upstream_inference_prompt_cost": 0.016479,
+        "upstream_inference_completions_cost": 0.00888
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.48,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:57:02Z"
+}

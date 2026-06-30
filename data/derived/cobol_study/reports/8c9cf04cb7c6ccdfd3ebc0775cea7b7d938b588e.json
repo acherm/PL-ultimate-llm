@@ -49,49 +49,50 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL or similar open-source COBOL",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used; no vendor-specific extensions. Likely compiled with GnuCOBOL or similar open-source compiler given student context.",
         "evidence": [
+          "88 END-OF-INPUT-FILE VALUE HIGH-VALUE",
           "ORGANIZATION IS LINE SEQUENTIAL",
-          "88-level condition END-OF-INPUT-FILE with HIGH-VALUE",
-          "SET END-OF-INPUT-FILE TO TRUE",
-          "GOBACK statement",
-          "PERFORM ... UNTIL with condition name",
-          "No COMP-3, no EXEC SQL/CICS"
+          "GOBACK",
+          "SET END-OF-INPUT-FILE TO TRUE"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Reads a sequential data file of trader records (province, ID, income) and produces a formatted report showing province totals, member counts, and member incomes. Also tracks and displays the province with the maximum income in a footer.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise processing trader/province income data from a flat file",
+        "summary": "Reads a sequential file of trader records (province, ID, income), aggregates income by province, and displays a formatted report with header, rows per province, and a footer showing the province with maximum income. Appears to be a student assignment (AUTHOR: KITTIKUN, program name FINALTRADER2).",
         "program_type": "batch"
       },
       "notable_features": [
-        "88-level condition on file buffer for end-of-file detection",
-        "PERFORM UNTIL with condition-name (END-OF-INPUT-FILE)",
+        "88-level condition name for EOF detection (HIGH-VALUE)",
+        "Dollar-sign PICTURE clauses ($999,999,999) for formatted output",
+        "PERFORM UNTIL loop for group-break processing",
         "GOBACK instead of STOP RUN",
-        "Formatted report with header, rows, and footer using PIC $999,999,999 edited pictures",
         "Mixed paragraph naming conventions (hyphen vs underscore: PROCESS-COL-PV vs PROCESS_LINE)",
-        "CLOSE INPUT-FILE placed inside READ-LINE paragraph (potential logic issue — closes on every read)"
+        "Potential logic bug: CLOSE INPUT-FILE inside READ-LINE paragraph executed on every read"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The CLOSE INPUT-FILE statement is inside the READ-LINE paragraph, which means it executes on every call to READ-LINE, not just at end-of-file — this is likely a student bug. The program appears to be a course assignment (AUTHOR. KITTIKUN, filename 'finaltrader2.cbl'). The MOST-INC field is used as both the max-province tracker and an accumulator, which may also be a logic error. No lines exceed 72 characters, consistent with fixed format."
+      "notes": "The program has a likely logic bug: CLOSE INPUT-FILE is placed unconditionally inside READ-LINE, meaning the file is closed after every record read, not just at EOF. This is characteristic of a student exercise. No COMP-3, no SQL, no CICS. The underscore in paragraph name PROCESS_LINE is non-standard but accepted by most modern compilers."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1800,
-      "completion_tokens": 553,
-      "total_tokens": 2353,
-      "cost": 0.013695,
+      "prompt_tokens": 3178,
+      "completion_tokens": 434,
+      "total_tokens": 3612,
+      "cost": 0.016044,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -100,9 +101,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.013695,
-        "upstream_inference_prompt_cost": 0.0054,
-        "upstream_inference_completions_cost": 0.008295
+        "upstream_inference_cost": 0.016044,
+        "upstream_inference_prompt_cost": 0.009534,
+        "upstream_inference_completions_cost": 0.00651
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -110,9 +111,9 @@
         "audio_tokens": 0
       }
     },
-    "provider": "Google",
-    "latency_s": 14.67,
+    "provider": "Anthropic",
+    "latency_s": 10.27,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:34:26Z"
 }

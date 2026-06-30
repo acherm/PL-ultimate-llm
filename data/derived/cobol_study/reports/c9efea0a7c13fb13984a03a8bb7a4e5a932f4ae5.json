@@ -50,54 +50,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL",
-        "standard": "COBOL-2002",
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL connector/binding library for the Agar GUI toolkit (libagar). Uses GnuCOBOL-specific extensions: BINARY-LONG UNSIGNED, BASED clause, USAGE POINTER, hex literals with h'...', IS RECURSIVE program-id.",
         "evidence": [
-          "comment header explicitly states 'agar connector for GNUCOBOL'",
           "program-id. agarcob is recursive",
-          "usage binary-long unsigned / usage binary-long sync",
+          "usage binary-long unsigned",
           "usage pointer sync",
-          "01 pane-instance based.",
-          "hex literals with h'...' syntax",
-          "fixed-format line numbering (000010, 000020, ...)"
+          "01 pane-instance based",
+          "h'00001' hex literal syntax",
+          "comment: agar connector for GNUCOBOL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a GnuCOBOL binding/connector library for the Agar GUI toolkit, providing COBOL-accessible constants, data structures, and callable wrappers for Agar GUI objects (windows, buttons, labels, combos, menus, graphs, etc.). It defines flag constants, widget instance layouts, and likely CALL interfaces to the underlying C Agar library. The program is recursive, suggesting it may dispatch GUI events or callbacks.",
-        "domain": "utility",
+        "domain": "utility-tooling",
+        "domain_detail": "GnuCOBOL binding/connector for the Agar cross-platform GUI toolkit library, exposing Agar widget flags, object flags, window positions, and GUI component constants to COBOL programs.",
+        "summary": "This program is a GnuCOBOL connector for the Agar GUI library (libagar). It defines working-storage constants and data structures mirroring Agar C structs (windows, boxes, buttons, combos, labels, graphs, etc.) and provides a COBOL interface to the Agar GUI API via CALL statements. It is a utility/binding layer, not a business application.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "IS RECURSIVE clause on PROGRAM-ID",
-        "BASED storage (heap-allocated structures mapped to Agar C structs)",
-        "USAGE BINARY-LONG UNSIGNED and USAGE POINTER SYNC",
-        "Hex literals using h'...' GnuCOBOL syntax",
-        "Large number of CALL statements (117) consistent with C library FFI",
-        "Nested/inner program 'DefaultDestroy' (two PROGRAM-IDs present)",
-        "No EXEC SQL or EXEC CICS",
-        "No COPY statements — all definitions inline",
-        "Platform-conditional comments (Linux vs Windows struct sizes noted in comments)",
-        "Copyright notice: Federico Priolo / TP ONE SRL, GPL v2+"
+        "USAGE POINTER (GnuCOBOL extension)",
+        "BINARY-LONG UNSIGNED",
+        "BASED clause on 01-level items",
+        "IS RECURSIVE program-id",
+        "Hex literals using h'...' syntax",
+        "117 CALL statements (C library interop)",
+        "Two nested program-ids (DefaultDestroy, agarcob)",
+        "COPY count 2",
+        "No EXEC SQL or EXEC CICS"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is a GnuCOBOL FFI wrapper for the Agar cross-platform GUI library. Struct offsets are hardcoded (pic x(712) fillers) to match the C layout, with commented-out variants for Linux vs Windows debug builds, indicating real portability work. The truncated source shows only the DATA DIVISION constants; the PROCEDURE DIVISION with 117 CALLs and 152 PERFORMs is present but not shown in the excerpt."
+      "notes": "Source is truncated to first 16000 chars out of 78827 bytes / 2274 lines; the procedure division is not visible in the excerpt but the high CALL count (117) and PERFORM count (152) confirm substantial procedural code. The program is a GPL-licensed open-source utility by Federico Priolo / TP ONE SRL, dated 2012-2020."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6541,
-      "completion_tokens": 658,
-      "total_tokens": 7199,
-      "cost": 0.029493,
+      "prompt_tokens": 7919,
+      "completion_tokens": 540,
+      "total_tokens": 8459,
+      "cost": 0.031857,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -106,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.029493,
-        "upstream_inference_prompt_cost": 0.019623,
-        "upstream_inference_completions_cost": 0.00987
+        "upstream_inference_cost": 0.031857,
+        "upstream_inference_prompt_cost": 0.023757,
+        "upstream_inference_completions_cost": 0.0081
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -117,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 16.55,
+    "latency_s": 14.68,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:29:56Z"
 }

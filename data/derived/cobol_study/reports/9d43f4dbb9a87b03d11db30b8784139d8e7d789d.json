@@ -49,54 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible Japanese mainframe COBOL (likely Fujitsu/NEC)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt (レセプト) system – NACL development, GnuCOBOL/OpenCOBOL target with ISAM indexed files and COPY/REPLACING directives typical of ORCA",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC / RECORD KEY IS — standard ISAM file handling",
-          "FILE STATUS IS clauses",
-          "COPY with REPLACING using // delimiters (Fujitsu/NEC style)",
-          "PIC X(nn) and PIC 9(nn) data definitions",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded as mojibake)",
-          "PERFORM count 470, CALL count 12 — typical production batch program"
+          "PROGRAM-ID ORCRDPC10",
+          "COPY CPRCF062.INC / CPRCF0641.INC etc.",
+          "COPY CPTEMPFL.INC REPLACING //TEMPFLPARA// BY //RECE62PARA//",
+          "SELECT … ASSIGN … ORGANIZATION IS INDEXED ACCESS MODE IS DYNAMIC",
+          "comment headers in Japanese (EUC-JP encoded) referencing NACL developers and ORCA subsystem",
+          "no EXEC CICS / EXEC SQL",
+          "no COMP-3 usage"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a batch COBOL program (ORCRDPC10) that creates/edits DPC (receipt/claim) files for a Japanese medical receipt (レセプト) processing system, specifically handling admission (入院) receipt data. It reads and writes multiple indexed files (RECE62, RECE641, RECE65, RECE68, RECE69, RECE900) corresponding to receipt detail, admission history, and sequence number data, and produces an error file.",
-        "domain": "healthcare/medical insurance claims (Japanese medical receipt processing — ORCA system)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) DPC file creation – inpatient admission/discharge processing for the JMA ORCA medical billing system",
+        "summary": "ORCRDPC10 creates DPC (Diagnosis Procedure Combination) E/F files for the ORCA medical receipt subsystem. It reads and writes multiple indexed ISAM files (RECE62, RECE641, RECE65, RECE68, RECE69, RECE900) representing receipt detail, admission/discharge history, and sequence numbers, computing procedure points and billing flags for inpatient claims. The program has an extensive revision history spanning 2007–2017 covering Japanese fiscal-year regulatory changes.",
         "program_type": "batch"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — pure file-based batch processing",
-        "Multiple INDEXED files with DYNAMIC access (ISAM-style)",
-        "COPY statements with REPLACING using // delimiter syntax (Fujitsu/NEC COBOL convention)",
-        "Extensive Japanese-language comments (EUC or Shift-JIS, rendered as mojibake under latin-1 decoding)",
-        "Long revision history spanning 2007–2017 with named developers (NACL team)",
-        "No COMP-3 usage despite numeric fields — unusual for mainframe but consistent with open-source ORCA (GnuCOBOL/OpenCOBOL target)",
-        "470 PERFORM statements indicating complex procedural logic",
+        "54 COPY statements with REPLACING directives",
+        "Multiple INDEXED ORGANIZATION files with DYNAMIC access",
+        "Japanese EUC-JP comments (latin-1 decoded, garbled)",
+        "470 PERFORM statements indicating complex structured logic",
         "16 GOTO statements",
-        "Program belongs to ORCA (Open Receipt Computer Advantage) — Japanese open-source medical claims system"
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 (unusual for billing system – points stored as PIC 9)",
+        "Extensive revision history in comments (2007–2017)",
+        "CPTEMPFL.INC copybook used repeatedly with REPLACING for file-name parameterisation"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the ORCA (日医標準レセプトソフト) open-source Japanese medical receipt software, likely compiled with GnuCOBOL/OpenCOBOL on Linux rather than a traditional mainframe. Comments are in Japanese (EUC-JP or Shift-JIS) and appear garbled under latin-1 decoding. The COPY delimiter style (//) and absence of COMP-3 are consistent with GnuCOBOL/Fujitsu-compatible dialect. Source is truncated at 16000 chars out of 354628 bytes total."
+      "notes": "Source is encoded in EUC-JP but decoded as latin-1, making all Japanese comments appear as garbled bytes. File is 7657 lines and clearly production ORCA medical billing code. Truncated to first 16000 chars for analysis but structure and purpose are unambiguous from the visible portion."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10791,
-      "completion_tokens": 829,
-      "total_tokens": 11620,
-      "cost": 0.044808,
+      "prompt_tokens": 12169,
+      "completion_tokens": 626,
+      "total_tokens": 12795,
+      "cost": 0.045897,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -105,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.044808,
-        "upstream_inference_prompt_cost": 0.032373,
-        "upstream_inference_completions_cost": 0.012435
+        "upstream_inference_cost": 0.045897,
+        "upstream_inference_prompt_cost": 0.036507,
+        "upstream_inference_completions_cost": 0.00939
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -116,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 20.59,
+    "latency_s": 20.35,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:22Z"
+  "generated_at": "2026-06-17T20:04:51Z"
 }

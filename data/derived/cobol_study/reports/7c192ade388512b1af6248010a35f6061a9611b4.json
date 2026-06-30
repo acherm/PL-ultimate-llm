@@ -49,53 +49,55 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA JMA medical system",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - open source Japanese medical billing system, compiled with GnuCOBOL/OpenCOBOL on Linux",
         "evidence": [
-          "EVALUATE ... WHEN ... END-EVALUATE",
-          "END-IF used throughout",
-          "CALL 'ORCMCPSUB' USING ... pattern",
-          "COPY directives with .INC files",
-          "PROCEDURE DIVISION USING multiple linkage items",
-          "EXIT PROGRAM",
-          "INITIALIZE statements",
-          "fixed-format source with comment lines in column 7"
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "CALL 'ORCMCPSUB'",
+          "COPY 'CPORCSP02.INC'",
+          "COPY 'COMMON-SPA'",
+          "fixed format, max line 74, no EXEC CICS/SQL"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "This is a patient registration screen editing and SPA (Scratch Pad Area) initialization subprogram for the ORCA JMA (Japan Medical Association) standard medical receipt software system. It handles initial parameter setup, patient information retrieval, insurance/public expense information loading, and screen data preparation for the patient registration subsystem (P02). It is called with processing mode 'INIT' or 'GMN' to set up or refresh screen state.",
-        "domain": "healthcare / medical billing (Japanese medical receipt software)",
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/レセプト) system - patient registration screen editing and SPA initial setup subprogram",
+        "summary": "ORCSP02 is a subprogram in the JMA ORCA medical receipt software system handling patient registration screen editing and SPA (screen parameter area) initialization. It processes INIT and GMN operations, retrieving system management info, insurance/public expense combinations, and patient information from a database via ORCMCPSUB calls. It manages parameter table records and linkage areas for the patient registration subsystem.",
         "program_type": "subprogram"
       },
       "notable_features": [
-        "No EXEC SQL or EXEC CICS — database access via CALL 'ORCMCPSUB' (MCP abstraction layer)",
-        "Extensive use of COPY statements with .INC copybooks (CPPTINF, CPPTHKNINF, CPPTKOHINF, etc.)",
-        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1, hence garbled display)",
-        "LINKAGE SECTION with multiple SPA (Scratch Pad Area) parameters — typical ORCA screen subprogram pattern",
-        "REDEFINES used for display formatting (WRK-RATE-EDIT-R, WRK-NENREI-GR)",
-        "60 CALL statements, 229 PERFORM statements — substantial procedural logic",
-        "No COMP-3 usage despite being a production financial/medical system",
-        "Copyright notice: JMA Open Source License, 2002"
+        "49 COPY statements for modular copybook-based architecture",
+        "60 CALL statements primarily to ORCMCPSUB database access layer",
+        "LINKAGE SECTION with multiple SPA (Screen Parameter Area) parameters",
+        "EVALUATE for processing mode dispatch (INIT/GMN)",
+        "Japanese EUC-encoded comments (latin-1 decoded with mojibake)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCMCPSUB DB abstraction",
+        "REDEFINES usage",
+        "PROCEDURE DIVISION USING with 5 parameters"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known open-source ORCA (JMA standard receipt software) project from Japan, circa 2002-2003. Japanese comments are encoded in EUC-JP or Shift-JIS but were decoded as latin-1, causing mojibake in the displayed text. The source is truncated at 16000 chars out of 167783 bytes (3754 lines total), but the visible portion is clearly representative. The MCP (Message Control Program) abstraction layer replaces direct SQL, which explains has_exec_sql=false despite database operations. The 5 lines over 72 characters are minor and consistent with fixed-format COBOL."
+      "notes": "File decoded as latin-1 but contains Japanese EUC-JP encoded text appearing as mojibake. This is the JMA ORCA open-source medical receipt software, a well-known Japanese healthcare IT system. Source is truncated at 16000 chars out of 167783 bytes (3754 lines total). The program is a subprogram (called component) not a standalone batch program. No COMP-3 usage despite being a financial/billing system - likely uses display numerics throughout."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 8762,
-      "completion_tokens": 767,
-      "total_tokens": 9529,
-      "cost": 0.037791,
+      "prompt_tokens": 10140,
+      "completion_tokens": 595,
+      "total_tokens": 10735,
+      "cost": 0.039345,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +106,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.037791,
-        "upstream_inference_prompt_cost": 0.026286,
-        "upstream_inference_completions_cost": 0.011505
+        "upstream_inference_cost": 0.039345,
+        "upstream_inference_prompt_cost": 0.03042,
+        "upstream_inference_completions_cost": 0.008925
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +117,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.14,
+    "latency_s": 16.79,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:21Z"
+  "generated_at": "2026-06-17T19:45:54Z"
 }

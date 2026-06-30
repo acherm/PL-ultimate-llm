@@ -49,56 +49,57 @@
     "has_compiler_directives": true
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) free-format source, part of the Applewood Computers Accounting System (ACAS) IRS module, version 3.02.35. Author V B Coen, converted from COBOL/2 to Open/GNU COBOL starting 2009.",
         "evidence": [
-          ">>source free (GnuCOBOL compiler directive)",
-          "*> comment style (GnuCOBOL/OpenCOBOL)",
-          "binary-char data type (GnuCOBOL extension)",
-          "copy 'screenio.cpy' and other GnuCOBOL-style copybooks",
-          "comment 'start of conversion to open/Gnu cobol' in change log",
-          "File-Info layout referencing 'GNU v2 manual'",
-          "program-id. irs. with free format"
+          ">>source free directive at top",
+          "*> comment style (GnuCOBOL free format)",
+          "binary-char usage",
+          "copy 'screenio.cpy'",
+          "references to GNU General Public License and Open Cobol",
+          "File-Info layout described as 'per GNU v2 manual'",
+          "Prog-Name value 'IRS (3.02.35)'"
         ],
         "confidence": "high"
       },
       "source_format": "free",
       "purpose": {
-        "summary": "Main menu control program for the IRS (Integrated Revenue/Accounting System) module of the Applewood Computers Accounting System (ACAS). It manages system navigation, calls subordinate programs (irs010–irs090), handles backup scripts, and maintains system parameter files. It also handles date validation, OS detection, and environment variable processing.",
-        "domain": "accounting/finance (small business accounting system)",
+        "domain": "accounting-erp",
+        "domain_detail": "IRS (Integrated Revenue System / Accounts) module of the Applewood Computers Accounting System (ACAS) — a UK small-business accounting package covering nominal ledger, postings, EOY processing, and system file maintenance.",
+        "summary": "This is the main menu control program for the IRS accounting subsystem within ACAS. It handles system initialisation, menu navigation, backup script invocation, and dispatches to subordinate programs (irs010–irs090) for ledger postings, nominal accounts, final accounts, and EOY processing. It also manages the ACAS parameter/system file and environment variable setup.",
         "program_type": "batch"
       },
       "notable_features": [
-        "GnuCOBOL free-format source (>>source free directive)",
-        "Extensive change log spanning 1982–2020",
-        "Multiple COPY statements for copybooks (envdiv.cob, screenio.cpy, wsmaps03.cob, wscall.cob, wstime.cob, wsfnctn.cob, etc.)",
-        "Screen section usage via screenio.cpy",
-        "OS-type detection (Linux, Windows, OS/2, macOS) for backup script selection",
-        "CALL count of 40 including calls to sys002, maps04, acas000, irs010–irs090",
-        "PERFORM count of 40 and GOTO count of 15",
-        "binary-char (GnuCOBOL extension)",
-        "File-Info structure for CBL-FILE-INFO intrinsic",
-        "GNU GPL licensed open-source accounting software",
-        "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage"
+        ">>source free compiler directive",
+        "High comment ratio (~42%) with extensive change history dating back to 1982",
+        "13 COPY statements for copybooks (envdiv.cob, screenio.cpy, wsmaps03.cob, wscall.cob, wstime.cob, wsfnctn.cob, etc.)",
+        "40 CALL statements dispatching to irs010–irs090 and acas* subprograms",
+        "Screen Section usage via screenio.cpy",
+        "OS detection logic (Linux/Windows/OS2/OSX) for backup script selection",
+        "BINARY-CHAR usage (GnuCOBOL extension)",
+        "Environment variable handling (ACAS_LEDGERS, ACAS_BIN, ACAS_IRS)",
+        "File-Info structure for CBL-FILE-DETAILS intrinsic",
+        "Date format support (UK/USA/International)"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "This is clearly a long-lived production COBOL program (originally written 1982, last modified 2020) for a real accounting system. The free-format directive and GnuCOBOL-specific features are unambiguous. The source was truncated at 16000 chars out of ~45786 bytes, but the visible portion is sufficient for confident classification. The high comment ratio (0.416) is largely due to the extensive change log and copyright header."
+      "notes": "Source truncated to first 16000 chars; full file is ~45KB/1017 lines. Program has a very long change history from 1982 through 2020, indicating mature production software. No EXEC SQL or EXEC CICS present. The 'IRS' name refers to an internal accounting/revenue system, not the US tax authority."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 6041,
-      "completion_tokens": 751,
-      "total_tokens": 6792,
-      "cost": 0.029388,
+      "prompt_tokens": 7419,
+      "completion_tokens": 679,
+      "total_tokens": 8098,
+      "cost": 0.032442,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -107,9 +108,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.029388,
-        "upstream_inference_prompt_cost": 0.018123,
-        "upstream_inference_completions_cost": 0.011265
+        "upstream_inference_cost": 0.032442,
+        "upstream_inference_prompt_cost": 0.022257,
+        "upstream_inference_completions_cost": 0.010185
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -118,8 +119,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 17.32,
+    "latency_s": 17.52,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:23Z"
+  "generated_at": "2026-06-17T20:32:24Z"
 }

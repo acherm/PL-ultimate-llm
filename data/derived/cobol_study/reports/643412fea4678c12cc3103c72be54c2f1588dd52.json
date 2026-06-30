@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:643412fea4678c12cc3103c72be54c2f1588dd52",
+    "sha1_git": "643412fea4678c12cc3103c72be54c2f1588dd52",
+    "filename": "/Vchpay01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16738,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:643412fea4678c12cc3103c72be54c2f1588dd52/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:643412fea4678c12cc3103c72be54c2f1588dd52/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16738,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 506,
+    "blank_lines": 0,
+    "comment_lines": 97,
+    "code_lines": 409,
+    "comment_ratio": 0.192,
+    "max_line_length": 65,
+    "avg_line_length": 32.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "VCHPAY01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 0,
+    "perform_count": 77,
+    "goto_count": 0,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL environment; uses INSPECT CONVERTING with LOWER-ALPHA/UPPER-ALPHA from copybook WSCASE01.CBL, fixed-format with no lines over 72 chars, no COMP-3, no CICS/SQL. Copybook naming conventions (.CBL extension, SL/FD prefixes) suggest a small business or educational COBOL system.",
+        "evidence": [
+          "COPY WSCASE01.CBL (lower/upper alpha conversion)",
+          "COPY WSDATE01.CBL (date handling)",
+          "INSPECT ... CONVERTING LOWER-ALPHA TO UPPER-ALPHA",
+          "No COMP-3, no EXEC SQL, no EXEC CICS",
+          "Copybook names: SLVND02.CBL, SLVOUCH.CBL, SLCONTRL.CBL, FDVND04.CBL, FDVOUCH.CBL, FDCONTRL.CBL",
+          "max_line_length 65, no lines over 72"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Accounts payable voucher payment processing; marks vouchers as paid or re-opens them, handles partial payments and generates new vouchers for balances",
+        "summary": "VCHPAY01 is a change-only program that allows a user to mark an accounts payable voucher as paid by entering a payment date, amount, and check number, or to re-open a previously paid voucher by clearing those fields. It also supports partial payments by optionally generating a new voucher for the unpaid balance.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INSPECT CONVERTING LOWER-ALPHA TO UPPER-ALPHA for case normalization",
+        "Date formatting via WSDATE01.CBL copybook",
+        "Partial payment logic with optional new voucher generation",
+        "Control file used to auto-increment voucher numbers",
+        "Commented-out WITH LOCK / WITH HOLD variants for record locking",
+        "9 COPY statements for file control, FD, and working-storage",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars (506 lines total, ~409 code lines); the READ-VENDOR-RECORD paragraph and any subsequent paragraphs are cut off. The copybook naming convention (SL/FD prefixes, .CBL extension) and overall structure suggest a small business accounts payable system, possibly from a COBOL textbook series or small commercial package. Dialect is medium-confidence GnuCOBOL/PC-COBOL due to lack of mainframe-specific features."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8113,
+      "completion_tokens": 664,
+      "total_tokens": 8777,
+      "cost": 0.034299,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034299,
+        "upstream_inference_prompt_cost": 0.024339,
+        "upstream_inference_completions_cost": 0.00996
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.48,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T20:38:15Z"
+}

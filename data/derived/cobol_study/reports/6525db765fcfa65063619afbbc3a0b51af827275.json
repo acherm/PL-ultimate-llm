@@ -49,53 +49,56 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "GnuCOBOL (OpenCOBOL) / ORCA project (JMA)",
+        "family": "gnucobol",
         "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY copybooks like COMMON-SPA, P02COMMON-SPA, P02SCR-SPA, ENUM-VALUE",
         "evidence": [
-          "IDENTIFICATION DIVISION / ENVIRONMENT DIVISION / DATA DIVISION / PROCEDURE DIVISION all present",
-          "COPY statements for copybooks (ENUM-VALUE, COMMON-SPA, P02COMMON-SPA, P02SCR-SPA)",
-          "PIC clauses with standard COBOL syntax",
-          "Fixed-format source with comment lines in column 7 (*)",
-          "No EXEC SQL or EXEC CICS — consistent with GnuCOBOL batch/screen program",
-          "OCCURS with INDEXED BY clause",
-          "Project header identifies JMA ORCA open-source medical software, known to use GnuCOBOL"
+          "PROGRAM-ID ORCGP02W1",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY COMMON-SPA / P02COMMON-SPA / P02SCR-SPA / ENUM-VALUE",
+          "no EXEC CICS / EXEC SQL",
+          "fixed format, max line 78",
+          "no COMP-3 usage"
         ],
         "confidence": "high"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Patient registration and insurance information management screen program (P02) for the ORCA JMA standard medical receipt software system. It handles patient basic information entry, insurance/public expense (hoken/kouhi) registration, validation, and related screen workflows. The program manages patient data including name, birthdate, address, insurance numbers, and various insurance type combinations.",
-        "domain": "healthcare / medical billing (Japanese medical receipt system)",
-        "program_type": "batch"
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA patient registration subsystem (P02) - patient basic information registration screen handling insurance and public expense (Kōhi) data",
+        "summary": "This program implements the patient basic information registration screen (component P02) of the JMA ORCA medical receipt system. It manages patient registration, insurance (Hoken) and public expense (Kōhi) entry, validation, and related master lookups. It is a large batch/screen-driven subprogram with extensive flag management, index areas, and copybook-based SPA (scratchpad area) communication.",
+        "program_type": "subprogram"
       },
       "notable_features": [
-        "Japanese-language comments encoded in latin-1 (actually EUC-JP or Shift-JIS, decoded as latin-1 producing mojibake)",
-        "Extensive revision history spanning 2000–2008 with named developers",
-        "COPY statements for shared SPA (scratchpad area) copybooks typical of ORCA architecture",
-        "OCCURS with INDEXED BY for name/insurance table handling",
-        "Large working-storage section with many flag, counter, index, and work areas",
-        "30 CALL statements and 413 PERFORM statements indicating complex modular structure",
-        "52 GOTO statements",
+        "48 COPY statements referencing ORCA-specific copybooks",
+        "30 CALL statements to external subprograms",
+        "413 PERFORM statements indicating complex procedural logic",
+        "52 GO TO statements",
         "No EXEC SQL or EXEC CICS",
-        "No COMP-3 usage despite being a production financial/medical system"
+        "No COMP-3 usage",
+        "Extensive Japanese comments (EUC-JP encoded, decoded as latin-1)",
+        "Detailed revision history spanning 2000-2008",
+        "Fixed-format source with max line length 78",
+        "Large program: 7360 lines, ~320KB"
       ],
       "maturity": "production-like",
       "overall_confidence": "high",
-      "notes": "The file is part of the well-known open-source JMA ORCA medical receipt software project for Japan. Comments are in Japanese (EUC-JP or Shift-JIS) but decoded as latin-1, producing garbled characters. The source is large (7360 lines, ~320KB) and clearly production-grade. The program_type is listed as batch but it likely drives a screen-based (character terminal or GTK) UI via the ORCA framework rather than CICS. No copybook-only content — full program with all four divisions present."
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (garbled in latin-1 view). This is part of the well-known open-source JMA ORCA medical receipt system. The program is a patient registration screen handler (ORCGP02W1) within the P02 subsystem. Source truncated at 16000 chars but structure is clear from what is visible."
     },
     "truncated": true,
     "usage": {
-      "prompt_tokens": 10036,
-      "completion_tokens": 733,
-      "total_tokens": 10769,
-      "cost": 0.041103,
+      "prompt_tokens": 11414,
+      "completion_tokens": 588,
+      "total_tokens": 12002,
+      "cost": 0.043062,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -104,9 +107,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.041103,
-        "upstream_inference_prompt_cost": 0.030108,
-        "upstream_inference_completions_cost": 0.010995
+        "upstream_inference_cost": 0.043062,
+        "upstream_inference_prompt_cost": 0.034242,
+        "upstream_inference_completions_cost": 0.00882
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -115,8 +118,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 19.05,
+    "latency_s": 26.66,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:46:01Z"
 }

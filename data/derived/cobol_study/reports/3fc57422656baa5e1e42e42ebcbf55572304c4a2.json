@@ -49,46 +49,48 @@
     "has_compiler_directives": false
   },
   "judge": {
-    "schema": "cobol-judge/1",
+    "schema": "cobol-judge/2",
     "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
     "parse_ok": true,
     "verdict": {
-      "cobol_confirmed": "true",
-      "not_cobol_label": "null",
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
       "dialect": {
-        "guess": "IBM Enterprise COBOL or compatible mainframe COBOL",
+        "family": "unknown",
         "standard": "COBOL-85",
+        "detail": "Simple student exercise using EVALUATE TRUE with 88-level condition names; no vendor-specific extensions visible",
         "evidence": [
-          "EVALUATE TRUE ... END-EVALUATE (COBOL-85 construct)",
-          "88-level condition names with VALUES ... THRU",
-          "Fixed-format with sequence numbers in columns 1-6",
-          "ACCEPT/DISPLAY pattern typical of mainframe student exercises"
+          "EVALUATE TRUE",
+          "END-EVALUATE",
+          "88 CND-CHILD VALUES 00 THRU 12",
+          "ACCEPT WS-AGE"
         ],
         "confidence": "medium"
       },
       "source_format": "fixed",
       "purpose": {
-        "summary": "Accepts an age value from the user and categorizes it as Child (0-12), Teen (13-19), Adult (20-65), or Senior (65-99) using an EVALUATE TRUE statement with 88-level condition names. A simple educational exercise demonstrating the EVALUATE statement.",
-        "domain": "education/tutorial",
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise to categorize a person's age into CHILD/TEEN/ADULT/SENIOR using EVALUATE statement",
+        "summary": "Accepts an age value from the user and uses an EVALUATE TRUE statement with 88-level condition names to display whether the person is a child, teen, adult, or senior. Created as a student exercise by Emma Kay in 2016.",
         "program_type": "demo"
       },
       "notable_features": [
         "EVALUATE TRUE with 88-level condition names",
-        "88-level conditions using VALUES ... THRU ranges",
-        "Overlapping range: age 65 matches both CND-ADULT and CND-SENIOR (potential logic bug)",
-        "Sequence numbers in columns 1-6 (mainframe style)",
-        "No FILE SECTION or external I/O beyond ACCEPT/DISPLAY"
+        "ACCEPT from console",
+        "88-level VALUE THRU ranges",
+        "No ENVIRONMENT DIVISION"
       ],
       "maturity": "student-exercise",
       "overall_confidence": "high",
-      "notes": "The program has a deliberate or accidental overlap: age 65 satisfies both CND-ADULT (20-65) and CND-SENIOR (65-99). In EVALUATE TRUE, the first matching WHEN wins, so age 65 would be classified as ADULT. This is likely a student exercise authored by 'EMMA KAY' on 7/18/2016 under project JEBA02. The comment_lines count of 0 from the mechanical indicators appears incorrect — lines 000310-000370 are clearly comment lines (asterisk in column 7), suggesting the mechanical parser may not have detected them."
+      "notes": "Program is a straightforward student exercise with a clear creation date (7/18/2016) and author. No ENVIRONMENT DIVISION present. The 88-level condition for CND-ADULT and CND-SENIOR overlap at age 65, which is a minor logic issue typical of student work."
     },
     "truncated": false,
     "usage": {
-      "prompt_tokens": 1408,
-      "completion_tokens": 542,
-      "total_tokens": 1950,
-      "cost": 0.012354,
+      "prompt_tokens": 2786,
+      "completion_tokens": 326,
+      "total_tokens": 3112,
+      "cost": 0.013248,
       "is_byok": false,
       "prompt_tokens_details": {
         "cached_tokens": 0,
@@ -97,9 +99,9 @@
         "video_tokens": 0
       },
       "cost_details": {
-        "upstream_inference_cost": 0.012354,
-        "upstream_inference_prompt_cost": 0.004224,
-        "upstream_inference_completions_cost": 0.00813
+        "upstream_inference_cost": 0.013248,
+        "upstream_inference_prompt_cost": 0.008358,
+        "upstream_inference_completions_cost": 0.00489
       },
       "completion_tokens_details": {
         "reasoning_tokens": 0,
@@ -108,8 +110,8 @@
       }
     },
     "provider": "Anthropic",
-    "latency_s": 11.04,
+    "latency_s": 7.43,
     "raw": null
   },
-  "generated_at": "2026-06-17T18:33:24Z"
+  "generated_at": "2026-06-17T20:41:03Z"
 }

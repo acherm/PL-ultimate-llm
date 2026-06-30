@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a8d3b65907b67ff1f4c711324a72e271f190b9c9",
+    "sha1_git": "a8d3b65907b67ff1f4c711324a72e271f190b9c9",
+    "filename": "/EDGD1CLQ.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 18039,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a8d3b65907b67ff1f4c711324a72e271f190b9c9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a8d3b65907b67ff1f4c711324a72e271f190b9c9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 18039,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 440,
+    "blank_lines": 20,
+    "comment_lines": 28,
+    "code_lines": 392,
+    "comment_ratio": 0.067,
+    "max_line_length": 72,
+    "avg_line_length": 39.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EDGD1CLQ"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 4,
+    "call_count": 0,
+    "perform_count": 49,
+    "goto_count": 0,
+    "pic_count": 26,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/VSAM online program; uses DFHAID, DFHBMSCA, DFHCOMMAREA, EIBRESP, DFHRESP, EIBCALEN, EIBTRNID, EIBAID — classic IBM CICS BMS conventions",
+        "evidence": [
+          "EXEC CICS SEND MAP / RECEIVE MAP",
+          "COPY DFHAID",
+          "COPY DFHBMSCA",
+          "DFHCOMMAREA / EIBCALEN",
+          "EIBRESP / DFHRESP(NORMAL)",
+          "EXEC CICS STARTBR / READNEXT / ENDBR FILE('EDP3CR')",
+          "EXEC CICS RETURN TRANSID('EDCQ') COMMAREA(WK-COM)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Credit master file browser (Maestro de Créditos) — likely a Guatemalan banking/microfinance application ('SEMILLERO' training project by instructor 'DON EDGAR')",
+        "summary": "Online CICS program that browses a VSAM credit master file (EDP3CR) and displays paginated results on a BMS map (EDCLQ). It supports forward/backward paging via PF5/PF6, cursor-based selection, and XCTL transfer to EDGD1CL3. The program manages screen page state via COMMAREA.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS BMS map send/receive (EDCLQ mapset)",
+        "VSAM browse with STARTBR/READNEXT/ENDBR",
+        "Bidirectional paging logic (PF5 forward, PF6 backward) with saved key arrays in COMMAREA",
+        "DFHBMUNP/DFHBMPRO attribute manipulation",
+        "CURRENCY SIGN IS 'Q' (Guatemalan Quetzal)",
+        "OCCURS 15 key-save array for multi-page navigation",
+        "EIBAID function key evaluation (DFHPF5, DFHPF6, DFHPF7, DFHPF10, DFHENTER)",
+        "COPY of DFHAID, DFHBMSCA, EDMACR, EDCLQ"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (440 lines total, ~392 code lines); the 400-BUSCAR-CLIENTE paragraph referenced in the EVALUATE is cut off. Program appears to be a training/semillero project but is written to production-quality CICS standards. Spanish-language comments and data names; Guatemalan currency symbol confirms regional context."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7485,
+      "completion_tokens": 680,
+      "total_tokens": 8165,
+      "cost": 0.032655,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032655,
+        "upstream_inference_prompt_cost": 0.022455,
+        "upstream_inference_completions_cost": 0.0102
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.19,
+    "raw": null
+  },
+  "generated_at": "2026-06-17T19:52:22Z"
+}

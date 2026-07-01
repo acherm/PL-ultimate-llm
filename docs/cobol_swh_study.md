@@ -155,6 +155,8 @@ under-reporting copybook usage as 0 % → corrected to ~69 % (Main).
   editor temp files (`tempCodeRunnerFile.cbl`).
 - **Binaries:** 6/350 (Main) and 10/350 (LC) sampled contents are non-text.
 
+![Contamination of the COBOL extension space](assets/cobol/fig_contamination.png)
+
 ### 4.2 Size
 
 | | Main (n=344 text) | LC (n=340 text) |
@@ -166,6 +168,8 @@ under-reporting copybook usage as 0 % → corrected to ~69 % (Main).
 
 Both are right-skewed (large enterprise programs + many small files);
 lowercase files are ~5× smaller at the median.
+
+![Program size distribution](assets/cobol/fig_loc.png)
 
 ### 4.3 Dialect family (Main, n=317)
 
@@ -209,6 +213,14 @@ programs, GnuCOBOL, COBOL-85, fixed-format, batch/CICS) — a single project is
 the largest source of archived COBOL under this extension. Lowercase `.cbl`
 is where the teaching and hobby COBOL lives.
 
+![Business domain by extension casing](assets/cobol/fig_domain.png)
+
+![Maturity by extension casing](assets/cobol/fig_maturity.png)
+
+![Dialect family by extension casing](assets/cobol/fig_dialect.png)
+
+![Program type by extension casing](assets/cobol/fig_program_type.png)
+
 ### 4.8 Feature prevalence
 
 | Feature | Main | LC |
@@ -218,6 +230,8 @@ is where the teaching and hobby COBOL lives.
 | EXEC SQL (embedded DB2) | 5 % | 8 % |
 | EXEC CICS (online tx) | 6 % | 6 % |
 | COMP-3 (packed decimal) | 5 % | 7 % |
+
+![Feature prevalence](assets/cobol/fig_features.png)
 
 ## 5. Insights
 
@@ -238,6 +252,12 @@ is where the teaching and hobby COBOL lives.
    enum-constrained structured outputs give clean, aggregatable categories at
    ~$0.03/file. Post-hoc normalization means schema changes don't require
    re-judging.
+5. **Extension-level PLI is blind to all of this.** Pygments / Linguist would
+   map every file here to COBOL from the extension alone; none of the
+   contamination, sub-structure, or the `.CBL`≠`.cbl` population split is
+   visible without reading content. The LLM-judge is therefore a *complement*
+   to PLI — and a way to bootstrap a better, case-aware extension→PL mapping
+   (see §7.1).
 
 ## 6. Limitations
 
@@ -264,10 +284,60 @@ is where the teaching and hobby COBOL lives.
 
 ## 7. Future work
 
+### 7.1 PLI (Pygments / Linguist) and revising the extension→PL mapping
+
+A natural first step before any LLM would be a programming-language
+identification (PLI) tool — GitHub Linguist or Pygments. Yet PLI buys us
+almost nothing *here*, and understanding why motivates two concrete changes.
+
+**Why PLI can't do better on this corpus.** For a lone file, Linguist and
+Pygments are essentially extension→language lookups. Linguist runs its
+heuristics + Bayesian classifier only for *ambiguous* extensions (those that
+several languages claim); `.cbl`/`.CBL` map unambiguously to COBOL in its
+table, so no content disambiguation fires. Pygments'
+`guess_lexer_for_filename` likewise resolves `.cbl`→COBOL from the name alone.
+Neither tool will tell you that a given `.cbl` is actually a Calibre
+comic-book list, a `.NET` designer file, or a synthetic `WBC_*_FOO`
+placeholder; neither yields dialect, standard, domain, or maturity. In our own
+mapping the picture is even flatter: `.cbl` (and, once case-folded, `.CBL`) →
+`pl/cobol`, and that is the *entire* signal. This is precisely why the
+**content-based LLM pass is complementary, not redundant** — it recovers the
+contamination and the sub-structure that extension-level PLI cannot see.
+
+**(1) Revise the mapping to be case-aware.** The study shows `.CBL` and
+`.cbl` are *semantically distinct populations* (enterprise/ORCA vs
+education/hobby; §4.7), yet our `ext_claim` table keys COBOL under lowercase
+`.cbl` only, and the miner lower-cases extensions before matching — so the two
+casings collapse and the distinction is lost. The raw SWH-MSR-ARV data
+*preserves* case (`.CBL` 192 k, `.cbl` 57 k, plus a mixed-case tail
+`.Cbl`/`.CBl`/…), and the project already hit this once: the documented
+**`.R` vs `.r` fix** (`docs/SWH_EXTENSIONS_DECISIONS.md`) recovered 21.5 M
+capital-`.R` occurrences that case-folding had dropped. COBOL is the second
+instance, with a sharper twist: `.R`/`.r` was a *coverage* miss (same
+language, dropped rows), whereas `.CBL`/`.cbl` is a *population* difference
+(same language, different provenance and character). The mapping should record
+casing and let downstream analysis split on it; folding should be an explicit,
+reversible choice, not a silent default.
+
+**(2) Bootstrap cheap heuristics from the judge.** The LLM is too costly to
+run archive-wide, but it is an excellent *oracle* for deriving deterministic
+detectors that scale. From the labels it produced we can distil near-free
+rules that reclassify mis-extensioned contents *before* any COBOL analysis:
+content starting `This is cobol file number` → `synthetic/placeholder`;
+`*.aspx.designer.cbl` or a `<global::`-style first line → `.NET generated`; a
+Calibre comic-book-list structure (`[DC Comics] …`, issue-numbered titles) →
+`data:comic-book-list`; zero divisions + no `PROGRAM-ID` → `not-cobol`. Folded
+back into the extension→PL pipeline, these convert the LLM's one-off judgements
+into permanent, auditable mapping corrections: the judge labels the hard tail,
+the heuristics carry it at scale, and the extension mapping stops over-claiming
+COBOL for ~10–40 % of these files.
+
+### 7.2 Other directions
+
 - **Ground truth & judge eval.** Use the review tool to annotate a stratified
   ~100–200 file sample; report judge precision/recall per field, and inter-
-  rater agreement. Add a second model (e.g. a different provider) for a judge-
-  vs-judge comparison and majority/adversarial verification.
+  rater agreement. Add a second model (a different provider) for a judge-vs-
+  judge comparison and majority/adversarial verification.
 - **Origin recovery.** Reprocess from the SWH dataset (graph / provenance, or
   the parquet that produced these lists) to attach origin + anchor revision,
   enabling project-level concentration analysis (how much is *literally* the
@@ -278,8 +348,8 @@ is where the teaching and hobby COBOL lives.
 - **Sharper deterministic layer.** Distinguish copybooks from programs;
   detect free-vs-fixed more robustly (tab-expanded GnuCOBOL); count
   paragraphs/sections; flag EBCDIC/Japanese encodings explicitly.
-- **Beyond casing.** Mine other COBOL extensions (`.cob`, `.cpy`, `.ccp`,
-  `.cbl` copybooks) and compare; quantify the comic-book / non-COBOL
+- **Other extensions.** Mine and compare the rest of the COBOL family
+  (`.cob`, `.cpy`, `.ccp`, `.cobol`) and quantify the comic-book / non-COBOL
   collision rate corpus-wide, not just in samples.
 
 ## 8. Reproducibility & artefacts
@@ -296,7 +366,8 @@ python3 -m tools.cobol.review_server                           # human annotatio
 `reports/<sha1_git>.json` (653 per-content: sample + content + indicators +
 verdict), `indicators*.csv`, `summary*.{md,json}`. Toolkit: `tools/cobol/`
 (`sample`, `common`, `indicators`, `judge`, `taxonomy`, `run_study`,
-`review_server`) + `README.md`.
+`review_server`, `make_figures`) + `README.md`. Figures in this report are
+generated by `python3 -m tools.cobol.make_figures` → `docs/assets/cobol/`.
 
 **Cost & scale.** Current stored verdicts (653 files): 3.98 M prompt +
 0.35 M completion tokens, ~$17.2 embedded. Cumulative OpenRouter spend

@@ -330,7 +330,8 @@ Calibre comic-book-list structure (`[DC Comics] …`, issue-numbered titles) →
 back into the extension→PL pipeline, these convert the LLM's one-off judgements
 into permanent, auditable mapping corrections: the judge labels the hard tail,
 the heuristics carry it at scale, and the extension mapping stops over-claiming
-COBOL for ~10–40 % of these files.
+COBOL for ~10–40 % of these files. **Both ideas are implemented and evaluated
+as prototypes in §8.**
 
 ### 7.2 Other directions
 
@@ -352,7 +353,65 @@ COBOL for ~10–40 % of these files.
   (`.cob`, `.cpy`, `.ccp`, `.cobol`) and quantify the comic-book / non-COBOL
   collision rate corpus-wide, not just in samples.
 
-## 8. Reproducibility & artefacts
+## 8. Prototypes & validation
+
+Both future-work ideas from §7.1 are implemented as self-contained prototypes
+that do **not** modify the production taxonomy pipeline.
+
+### 8.1 Case-aware extension mapping (`tools/cobol/case_aware_mapping.py`)
+
+The SWH extension-popularity data preserves casing; the COBOL `.cbl` key has
+these variants (249,372 occurrences total): **`.CBL` 192,066 (77.0 %)**,
+**`.cbl` 57,265 (23.0 %)**, and a 41-occurrence mixed-case tail (`.Cbl`,
+`.CBl`, …). The current `ext_claim` folds all of them into a single lowercase
+`.cbl → pl/cobol` claim. The prototype emits a case-aware claim table
+(`data/derived/cobol_study/ext_claim_case_aware_prototype.csv`) with `.CBL`
+and `.cbl` as **distinct rows**, each → `pl/cobol`, carrying occurrence counts
+and a study-derived `population_hint` (enterprise/ORCA vs education/hobby). The
+minimal production change is a `CASE_SIGNIFICANT` allow-list in `_norm_ext`:
+`return tok if tok in CASE_SIGNIFICANT else tok.lower()`, plus matching SWH's
+case-preserved extensions without lower-casing for those keys.
+
+### 8.2 Content reclassifier for the non-COBOL tail (`tools/cobol/reclassify.py`)
+
+A deterministic, zero-API classifier reads a slice of each file and assigns one
+of `cobol`, `cobol-generated`, `cobol-copybook`, `synthetic-placeholder`,
+`comic-book-list`, `binary-data`, `other` — bootstrapped from the judge's
+labels (§7.1(2)).
+
+**Experiment.** We score it against the **LLM judge as oracle** on the binary
+task "is this COBOL?" over a 162-file evaluation set: 92 tail files (what the
+division-gate skipped), 20 `WBC_*_FOO` synthetic placeholders, and 50
+judge-confirmed COBOL controls. Oracle = the judge's `cobol_confirmed` (cached;
+$2.07 one-off). Baseline = the **division-gate** (`n_divisions ≥ 2`) that
+`run_study` used for cost-gating.
+
+| System — is-COBOL, vs LLM oracle | Precision | Recall | F1 | Accuracy |
+|---|---:|---:|---:|---:|
+| **Content reclassifier** | **1.00** | **0.79** | **0.88** | **0.88** |
+| Division-gate baseline | 1.00 | 0.55 | 0.71 | 0.75 |
+
+![Reclassifier vs division-gate](assets/cobol/fig_reclassify.png)
+
+Both are perfectly precise (nothing they call COBOL is non-COBOL), but the
+reclassifier recovers **72 vs 50** genuine COBOL files — it rescues the COBOL
+the crude gate wrongly excluded: Micro-Focus OO `.designer.cbl`, copybooks
+(`SQLCA`/`SQLDA` includes, level+PIC records), GnuCOBOL `TESTSUITE` files, and
+COBOL carrying a stray NUL or Shift-JIS/EUC-JP Japanese comments. It is
+flawless on synthetic placeholders (20/20) and controls (50/50), and it adds a
+**fine-grained contamination taxonomy** the gate and the extension mapping
+cannot: of the non-COBOL it flags — 27 comic-book lists, 20 synthetic
+placeholders, 3 binaries, 40 other/foreign text.
+
+**Where it still loses to the LLM.** The 19 residual misses are all *weak
+copybooks* — short data fragments with no strong marker — exactly the
+ambiguous cases where the judge's semantic reading wins. That is the intended
+division of labour: cheap heuristics carry the clear ~88 %, the LLM (or a real
+COBOL parser) adjudicates the ambiguous copybook tail. Applied archive-wide,
+the reclassifier strips the comic-book / synthetic / binary contamination from
+`.cbl`/`.CBL` at zero API cost.
+
+## 9. Reproducibility & artefacts
 
 **Commands**
 ```bash
@@ -360,14 +419,19 @@ python3 -m tools.cobol.sample --n 350 --seed 7 --exclude-name 'WBC_.*_FOO'
 python3 -m tools.cobol.run_study --no-judge                    # indicators only (no key)
 OPENROUTER_API_KEY=… python3 -m tools.cobol.run_study --judge --judge-min-divisions 2 --tag scaled
 python3 -m tools.cobol.review_server                           # human annotation UI
+python3 -m tools.cobol.case_aware_mapping                      # §8.1 prototype
+OPENROUTER_API_KEY=… python3 -m tools.cobol.eval_reclassify --tail-all   # §8.2 experiment
+python3 -m tools.cobol.make_figures                            # figures → docs/assets/cobol/
 ```
 
 **Artefacts** (`data/derived/cobol_study/`): `worklist*.csv`,
 `reports/<sha1_git>.json` (653 per-content: sample + content + indicators +
-verdict), `indicators*.csv`, `summary*.{md,json}`. Toolkit: `tools/cobol/`
-(`sample`, `common`, `indicators`, `judge`, `taxonomy`, `run_study`,
-`review_server`, `make_figures`) + `README.md`. Figures in this report are
-generated by `python3 -m tools.cobol.make_figures` → `docs/assets/cobol/`.
+verdict), `indicators*.csv`, `summary*.{md,json}`,
+`ext_claim_case_aware_prototype.csv` (§8.1), `reclassify_eval.json` +
+`reclassify_oracle_cache.json` (§8.2). Toolkit: `tools/cobol/` (`sample`,
+`common`, `indicators`, `judge`, `taxonomy`, `run_study`, `review_server`,
+`reclassify`, `eval_reclassify`, `case_aware_mapping`, `make_figures`) +
+`README.md`. The 8 figures are generated by `make_figures` → `docs/assets/cobol/`.
 
 **Cost & scale.** Current stored verdicts (653 files): 3.98 M prompt +
 0.35 M completion tokens, ~$17.2 embedded. Cumulative OpenRouter spend

@@ -103,6 +103,24 @@ python3 -m tools.cobol.review_server --port 9000 --reviewer alice
   — git is the sync layer, no DB, no merge conflicts. These are meant to be
   committed (ground truth), unlike the regenerable study outputs.
 
+## Prototypes (see report §8)
+
+```bash
+# 8.1 Case-aware mapping: emit .CBL vs .cbl as distinct pl/cobol claims
+python3 -m tools.cobol.case_aware_mapping
+
+# 8.2 Content reclassifier for the non-COBOL tail + validation experiment
+python3 -m tools.cobol.reclassify <swhid>                    # classify one file
+OPENROUTER_API_KEY=… python3 -m tools.cobol.eval_reclassify --tail-all
+```
+
+- `reclassify.py` labels a `.cbl`/`.CBL` file from content: `cobol`,
+  `cobol-generated`, `cobol-copybook`, `synthetic-placeholder`,
+  `comic-book-list`, `binary-data`, `other`. Zero API cost.
+- `eval_reclassify.py` scores it against the LLM judge (oracle) on
+  is-COBOL: **P 1.00 / R 0.79 / F1 0.88**, beating the division-gate
+  baseline (F1 0.71). Oracle verdicts are cached, so re-runs are free.
+
 ## Notes & caveats
 
 - **SWH quota:** anonymous access is ~120 requests/hour. We make **1 request

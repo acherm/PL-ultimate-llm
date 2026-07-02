@@ -163,6 +163,29 @@ def main():
     fig.tight_layout(); fig.savefig(OUT / "fig_contamination.png"); plt.close(fig)
     print("wrote fig_contamination.png")
 
+    # Fig 8 — reclassifier vs division-gate (if the experiment has run)
+    evalp = STUDY / "reclassify_eval.json"
+    if evalp.exists():
+        ev = json.loads(evalp.read_text())
+        h, g = ev["heuristic_vs_oracle"], ev["division_gate_vs_oracle"]
+        mkeys = ["precision", "recall", "f1", "accuracy"]
+        fig, ax = plt.subplots(figsize=(7.2, 3.4))
+        x = range(len(mkeys)); w = .38
+        ax.bar([i - w/2 for i in x], [h[k] for k in mkeys], w, color=UP,
+               label="reclassifier (content)")
+        ax.bar([i + w/2 for i in x], [g[k] for k in mkeys], w, color="#999999",
+               label="division-gate baseline")
+        for i, k in enumerate(mkeys):
+            ax.text(i - w/2, h[k] + .01, f"{h[k]:.2f}", ha="center", fontsize=8)
+            ax.text(i + w/2, g[k] + .01, f"{g[k]:.2f}", ha="center", fontsize=8)
+        ax.set_xticks(list(x)); ax.set_xticklabels(mkeys)
+        ax.set_ylim(0, 1.15); ax.set_ylabel("score (vs LLM oracle)")
+        ax.set_title(f"Reclassifier vs division-gate on is-COBOL (n={ev['n']})",
+                     fontweight="bold")
+        ax.legend(loc="lower left")
+        fig.tight_layout(); fig.savefig(OUT / "fig_reclassify.png"); plt.close(fig)
+        print("wrote fig_reclassify.png")
+
     print(f"\next-split: .CBL judged={nU} gated={up_g} | .cbl judged={nL} gated={lo_g}")
 
 

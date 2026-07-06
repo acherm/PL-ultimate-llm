@@ -98,9 +98,12 @@ python3 -m tools.cobol.review_app             # http://127.0.0.1:8766
 - **Browse / filter**: by dataset, reclassifier label, filename, or
   `flag=disagree` / `unreviewed` / `noncobol`.
 - **Per file**: source + indicators beside a labels table (all sources, with
-  disagreements highlighted) and a human-review form.
+  disagreements highlighted), a **recovered-origin** panel (forge + qualified-
+  SWHID deep links, from `recover_origins.py`), and a human-review form.
+- Browse filter `flag=hasorigin` lists the byte-confirmed origins.
 - Human reviews save to `reviews_cobol/<sha>/` (`cobol-review/1`), shared with
-  `review_server.py`.
+  `review_server.py` (which also shows the recovered origin + pre-fills the
+  origin field).
 
 ### Single-study review server (`review_server.py`)
 

@@ -192,6 +192,28 @@ def render_index(flt: str) -> bytes:
     return page("samples", head + table)
 
 
+_ORIGINS = None
+
+
+def recovered_origin(sha: str) -> dict | None:
+    """Byte-confirmed origin recovered by tools/cobol/recover_origins.py."""
+    global _ORIGINS
+    if _ORIGINS is None:
+        _ORIGINS = {}
+        p = STUDY_DIR / "origins.jsonl"
+        if p.exists():
+            for line in p.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                try:
+                    o = json.loads(line)
+                except Exception:
+                    continue
+                if o.get("content_match"):
+                    _ORIGINS[o["sha"]] = o
+    return _ORIGINS.get(sha)
+
+
 def render_review(sha: str) -> bytes:
     r = load_report(sha)
     if not r:
@@ -203,6 +225,8 @@ def render_review(sha: str) -> bytes:
     cv = canonical_view(verdict) or {}
     existing = reviews_for(sha)
     prev = existing[-1]["human"] if existing else {}
+    prov = recovered_origin(sha)
+    origin_default = prev.get("origin_url") or (prov["origin"] if prov else "")
 
     # judge panel
     if verdict:
@@ -258,7 +282,7 @@ def render_review(sha: str) -> bytes:
       <label>Source format</label>
       <select name=source_format>{_opts(tax.SOURCE_FORMATS, prev.get('source_format',''))}</select>
       <label>Origin URL (paste forge link if found)</label>
-      <input type=text name=origin_url value="{_esc(prev.get('origin_url',''))}" placeholder="https://github.com/...">
+      <input type=text name=origin_url value="{_esc(origin_default)}" placeholder="https://github.com/...">
       <label>Notes</label>
       <textarea name=notes rows=4>{_esc(prev.get('notes',''))}</textarea>
       <button type=button onclick=submitReview()>Save review</button>
@@ -279,7 +303,15 @@ def render_review(sha: str) -> bytes:
     left = (f"<h2 style='margin:4px 0'>{_esc(r['sample'].get('filename','') or sha[:16])}</h2>"
             f"<p class=muted>{_esc(swhid)} · {ind['bytes_len']} bytes</p>"
             f"<pre class=code>{_esc(code)}</pre>")
-    right = (f"<div class=panel judgebox><h3>LLM judge</h3>{jbody}</div>"
+    prov_html = ""
+    if prov:
+        anc = (f" @ <code>{_esc(prov['anchor'])}</code>" if prov.get("anchor")
+               else " <span class=muted>(no anchor)</span>")
+        prov_html = (f"<div class=panel judgebox><h3>recovered origin</h3>"
+                     f"<a target=_blank href='{_esc(prov['origin'])}'>{_esc(prov['origin'])}</a>{anc}"
+                     f"<p class=muted style='word-break:break-all'>{_esc(prov.get('qualified',''))}</p></div>")
+    right = (f"{prov_html}"
+             f"<div class=panel judgebox><h3>LLM judge</h3>{jbody}</div>"
              f"<div class=panel><h3>indicators</h3><div class=kv>{indrows}</div></div>"
              f"{form}")
     return page(r['sample'].get('filename', sha),

@@ -349,8 +349,15 @@ as prototypes in §8.**
   judge comparison and majority/adversarial verification.
 - **Origin recovery.** A bare `swh:1:cnt:` does not reverse to an origin via
   the public REST API (no origin field, no origins-containing-content
-  endpoint), and web/GitHub code-search finds nothing for the vanished WBC
-  repo. What *does* work (tested, `tools/cobol/swh_dataset.py`): the SWH public
+  endpoint). The repo already ships a *heuristic* recoverer,
+  `tools/swh_extension_mining.py::qualify_via_github`: it searches GitHub by
+  filename, keeps the candidate whose byte-length matches (so the content
+  SWHID is identical), reads the latest commit as the anchor, and emits
+  `swh:1:cnt:…;origin=…;anchor=swh:1:rev:…;path=…` — which the review UIs then
+  render as forge/SWH deep links. Tested on COBOL samples it works but has
+  modest recall (files not on GitHub, or forks whose bytes differ, are
+  refused), and it finds *nothing* for the vanished WBC repo. For an
+  authoritative, complete answer: the SWH public
   **ORC dataset** is readable anonymously over plain HTTPS (no AWS account) —
   `origin` is ~9.5 GB (~255 M origins). But the reverse traversal must scan
   `directory_entry` (**~13 TB**, UUID-sharded) then walk dir→rev→snapshot→

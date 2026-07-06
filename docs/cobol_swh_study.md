@@ -11,11 +11,13 @@ SWH, compute deterministic structural indicators (lines of code, divisions,
 embedded SQL/CICS, copybooks, …), and run an enum-constrained
 **LLM-as-judge** (Claude Sonnet 4.6 via OpenRouter) that classifies each file
 by dialect family, language standard, source format, program type, business
-domain, and maturity. Across 653 judged files we find that the SWH COBOL
-extension space is (a) **heavily contaminated** — ~40 % of the deduplicated
-`.CBL` list is a single family of synthetic placeholder files, and the
-lowercase `.cbl` space additionally collides with Calibre comic-book
-libraries and editor artefacts; and (b) **strongly bimodal** — the uppercase
+domain, and maturity. Across 653 judged files (plus a 1,000-content
+reclassifier sweep) we find that the SWH COBOL extension space is
+(a) **heavily contaminated** — a content-based estimate on 1,000 uniform-random
+contents puts **~46 % as not COBOL** (95 % CI 42–49 %), ~41 % of it a single
+family of synthetic placeholder files, with the lowercase `.cbl` space
+additionally colliding with Calibre comic-book libraries and editor artefacts;
+and (b) **strongly bimodal** — the uppercase
 `.CBL` archive is dominated (83 % of a clean slice) by one open-source
 enterprise system, the Japan Medical Association's **ORCA** medical-receipt
 software (GnuCOBOL, COBOL-85, fixed-format, batch), whereas lowercase `.cbl`
@@ -146,7 +148,9 @@ under-reporting copybook usage as 0 % → corrected to ~69 % (Main).
 - **Synthetic placeholders dominate `.CBL`.** `WBC_*_FOO.CBL` files — literal
   contents "This is cobol file number N" — account for **109,999 / 276,831
   (~40 %)** of the deduplicated union. In the unfiltered pilot, 51 % of a
-  random 100 were this noise.
+  random 100 were this noise. A content-based sweep of 1,000 uniform-random
+  contents confirms it at the population level: **45.6 % non-COBOL** (40.8 %
+  synthetic), quantified in §8.3.
 - **Extension collisions differ by casing.** After excluding `WBC_*_FOO`, the
   mechanical gate still rejected **17 %** of lowercase `.cbl` vs **~6 %** of
   `.CBL`. Lowercase `.cbl` collides with **Calibre comic-book libraries**
@@ -411,6 +415,39 @@ COBOL parser) adjudicates the ambiguous copybook tail. Applied archive-wide,
 the reclassifier strips the comic-book / synthetic / binary contamination from
 `.cbl`/`.CBL` at zero API cost.
 
+### 8.3 Archive-scale contamination estimate (1,000-content sample)
+
+Applying the reclassifier (§8.2) to a fresh **uniform random sample of 1,000
+contents from the full 276,831-content union** — this time *including* the
+`WBC_*_FOO` noise — classified from content at zero API cost:
+
+| Class | Share (95% CI) | |
+|---|---|---|
+| **COBOL** (cobol + copybook + generated) | **54.4 %** (51.3–57.5) | genuine |
+| synthetic-placeholder (`WBC_*_FOO`) | 40.8 % (37.8–43.9) | contamination |
+| other / foreign text | 2.8 % (1.9–4.0) | contamination |
+| comic-book-list (Calibre/CBR) | 1.7 % (1.1–2.7) | contamination |
+| binary-data | 0.3 % (0.1–0.9) | contamination |
+| **Non-COBOL total** | **45.6 %** (42.5–48.7) | |
+
+![What is in the .cbl/.CBL extension space](assets/cobol/fig_corpus_1k.png)
+
+**So ~46 % of the SWH COBOL extension space is not COBOL** — nearly all of it
+(40.8 %) a single family of synthetic placeholder stubs. Content-based
+cross-check: this 40.8 % matches the *filename*-based `WBC_*_FOO` share (41 %)
+and the corpus-wide count (109,999 / 276,831 = 39.7 %) — three independent
+routes to the same number.
+
+**Bias direction (from the §8.2 metrics).** The reclassifier has precision
+1.00 on is-COBOL, so everything it calls COBOL really is — the 54.4 % COBOL
+figure is a *lower bound* and 45.6 % non-COBOL an *upper bound*. Its recall
+(0.79) means some genuine weak copybooks are dumped into `other`, so the true
+`other` share is smaller and true COBOL a little higher. The firm floor on
+contamination is the 40.8 % synthetic stratum (detected unambiguously); the
+honest range is **~41–46 % non-COBOL, ≥54 % genuine COBOL**. Scaling this pass
+to the whole archive (a token lifts the ~120 req/h cap) would tighten it and
+let the estimate be split by extension casing.
+
 ## 9. Reproducibility & artefacts
 
 **Commands**
@@ -421,6 +458,8 @@ OPENROUTER_API_KEY=… python3 -m tools.cobol.run_study --judge --judge-min-divi
 python3 -m tools.cobol.review_server                           # human annotation UI
 python3 -m tools.cobol.case_aware_mapping                      # §8.1 prototype
 OPENROUTER_API_KEY=… python3 -m tools.cobol.eval_reclassify --tail-all   # §8.2 experiment
+python3 -m tools.cobol.corpus_estimate --worklist worklist_1k.csv        # §8.3 sweep (no key)
+python3 -m tools.cobol.corpus_estimate --report               # §8.3 aggregate + CIs
 python3 -m tools.cobol.make_figures                            # figures → docs/assets/cobol/
 ```
 
@@ -428,10 +467,11 @@ python3 -m tools.cobol.make_figures                            # figures → doc
 `reports/<sha1_git>.json` (653 per-content: sample + content + indicators +
 verdict), `indicators*.csv`, `summary*.{md,json}`,
 `ext_claim_case_aware_prototype.csv` (§8.1), `reclassify_eval.json` +
-`reclassify_oracle_cache.json` (§8.2). Toolkit: `tools/cobol/` (`sample`,
-`common`, `indicators`, `judge`, `taxonomy`, `run_study`, `review_server`,
-`reclassify`, `eval_reclassify`, `case_aware_mapping`, `make_figures`) +
-`README.md`. The 8 figures are generated by `make_figures` → `docs/assets/cobol/`.
+`reclassify_oracle_cache.json` (§8.2), `corpus_estimate.jsonl` +
+`worklist_1k.csv` (§8.3). Toolkit: `tools/cobol/` (`sample`, `common`,
+`indicators`, `judge`, `taxonomy`, `run_study`, `review_server`, `reclassify`,
+`eval_reclassify`, `case_aware_mapping`, `corpus_estimate`, `make_figures`) +
+`README.md`. The 9 figures are generated by `make_figures` → `docs/assets/cobol/`.
 
 **Cost & scale.** Current stored verdicts (653 files): 3.98 M prompt +
 0.35 M completion tokens, ~$17.2 embedded. Cumulative OpenRouter spend

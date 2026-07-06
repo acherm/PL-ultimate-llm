@@ -186,6 +186,35 @@ def main():
         fig.tight_layout(); fig.savefig(OUT / "fig_reclassify.png"); plt.close(fig)
         print("wrote fig_reclassify.png")
 
+    # Fig 9 — archive-scale contamination (1K uniform random, content-based)
+    est = STUDY / "corpus_estimate.jsonl"
+    if est.exists():
+        from .reclassify import COBOL_LABELS
+        recs = [json.loads(l) for l in est.read_text().splitlines() if l.strip()]
+        n = len(recs)
+        cnt = Counter(r["label"] for r in recs)
+        order = sorted(cnt, key=lambda k: (k not in COBOL_LABELS, -cnt[k]))
+        vals = [100 * cnt[k] / n for k in order]
+        cols = [UP if k in COBOL_LABELS else LO for k in order]
+        n_non = sum(v for k, v in zip(order, vals) if k not in COBOL_LABELS)
+        fig, ax = plt.subplots(figsize=(7.6, 3.8))
+        bars = ax.barh(order, vals, color=cols)
+        for b, v in zip(bars, vals):
+            if v > 0.3:
+                ax.text(v + .4, b.get_y() + b.get_height()/2, f"{v:.1f}%",
+                        va="center", fontsize=8)
+        ax.invert_yaxis(); ax.set_xlabel("% of contents")
+        ax.set_xlim(0, max(vals) * 1.15 + 3)
+        ax.set_title(f"What is in the .cbl/.CBL space? (n={n} uniform random)\n"
+                     f"{n_non:.0f}% non-COBOL  ·  {100-n_non:.0f}% COBOL",
+                     fontweight="bold", fontsize=11)
+        from matplotlib.patches import Patch
+        ax.legend(handles=[Patch(color=UP, label="COBOL"),
+                           Patch(color=LO, label="non-COBOL / contamination")],
+                  loc="lower right")
+        fig.tight_layout(); fig.savefig(OUT / "fig_corpus_1k.png"); plt.close(fig)
+        print("wrote fig_corpus_1k.png")
+
     print(f"\next-split: .CBL judged={nU} gated={up_g} | .cbl judged={nL} gated={lo_g}")
 
 

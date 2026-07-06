@@ -284,8 +284,15 @@ class App:
             f"<a href='/list?flag=disagree'><b>{jr_d}</b> disagree</a></p>"
             f"<p>reclassifier vs LLM-oracle: <b>{ro_a}</b> agree · "
             f"<b>{ro_d}</b> disagree</p></div>")
+        legend = ("<p class=muted style='margin:6px 0'><b>is-COBOL label sources</b> — "
+                  "<b>judge</b>: the LLM verdict · "
+                  "<b>reclassifier</b>: deterministic content rules (reclassify.py) · "
+                  "<b>oracle</b>: LLM is-COBOL used to validate the reclassifier · "
+                  "<b>division-gate</b>: cheap baseline = has ≥2 COBOL divisions · "
+                  "<b>human</b>: your reviews. A file is ⚠ when its available "
+                  "is-COBOL votes disagree.</p>")
         return page("dashboard",
-            f"<div class=cards>{cards}</div>"
+            f"<div class=cards>{cards}</div>{legend}"
             f"<div class=panel><h3>datasets</h3>{dsrows}</div>"
             f"{agree}"
             f"<div class=panel><h3>reclassifier label distribution</h3>"
@@ -339,7 +346,7 @@ class App:
                 f"<button>search</button></form>")
         return page("browse", head +
             "<table><tr><th>rev</th><th>file</th><th>datasets</th><th>judge</th>"
-            "<th>reclassifier</th><th>oracle</th><th>gate</th><th></th></tr>"
+            "<th>reclassifier</th><th>oracle</th><th>division-gate</th><th></th></tr>"
             + "".join(trs) + "</table>")
 
     def detail(self, sha):

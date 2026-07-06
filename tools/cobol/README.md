@@ -80,10 +80,31 @@ verdict through `taxonomy.normalize_*`, so older free-text (`cobol-judge/1`)
 verdicts collapse into the same clean enum distributions **without a
 re-judge** — just re-run `run_study --no-judge` to regenerate the summary.
 
-## Human review / annotation tool
+## Human review / annotation tools
 
-A local web app to review samples and record human ground-truth that
-confirms or corrects the judge:
+### Unified label-review app (`review_app.py`) — recommended
+
+One pane over **all** labels a content has received — the LLM **judge**
+verdict, the deterministic **reclassifier** label, the LLM **oracle**, the
+**division-gate** baseline, and your **human** reviews — keyed by content and
+surfacing where they disagree (the interesting cases to review):
+
+```bash
+python3 -m tools.cobol.review_app             # http://127.0.0.1:8766
+```
+
+- **Dashboard**: counts, per-dataset membership, reclassifier label
+  distribution, and is-COBOL agreement (e.g. judge vs reclassifier).
+- **Browse / filter**: by dataset, reclassifier label, filename, or
+  `flag=disagree` / `unreviewed` / `noncobol`.
+- **Per file**: source + indicators beside a labels table (all sources, with
+  disagreements highlighted) and a human-review form.
+- Human reviews save to `reviews_cobol/<sha>/` (`cobol-review/1`), shared with
+  `review_server.py`.
+
+### Single-study review server (`review_server.py`)
+
+A lighter tool scoped to just the study reports:
 
 ```bash
 python3 -m tools.cobol.review_server          # http://127.0.0.1:8765

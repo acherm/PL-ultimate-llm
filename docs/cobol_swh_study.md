@@ -347,10 +347,19 @@ as prototypes in §8.**
   ~100–200 file sample; report judge precision/recall per field, and inter-
   rater agreement. Add a second model (a different provider) for a judge-vs-
   judge comparison and majority/adversarial verification.
-- **Origin recovery.** Reprocess from the SWH dataset (graph / provenance, or
-  the parquet that produced these lists) to attach origin + anchor revision,
-  enabling project-level concentration analysis (how much is *literally* the
-  ORCA repo and its forks?) and fork de-duplication.
+- **Origin recovery.** A bare `swh:1:cnt:` does not reverse to an origin via
+  the public REST API (no origin field, no origins-containing-content
+  endpoint), and web/GitHub code-search finds nothing for the vanished WBC
+  repo. What *does* work (tested, `tools/cobol/swh_dataset.py`): the SWH public
+  **ORC dataset** is readable anonymously over plain HTTPS (no AWS account) —
+  `origin` is ~9.5 GB (~255 M origins). But the reverse traversal must scan
+  `directory_entry` (**~13 TB**, UUID-sharded) then walk dir→rev→snapshot→
+  origin recursively, so it is an **swh-graph** (backward BFS) or
+  **swh-provenance** job, not a laptop one; Athena/Spark suit the *forward*
+  direction (origin→files). Practically: re-run the `.cbl`/`.CBL` extraction
+  *starting from* revisions/snapshots and keep origin as a column — then
+  project-level concentration (how much is *literally* the ORCA repo and its
+  forks, or the single WBC generator) and fork de-duplication become possible.
 - **Scale & stratify.** With an `SWH_TOKEN` (higher quota), scale to a few
   thousand contents; stratify by size band and extension casing to reduce the
   ORCA-domination of naïve samples.

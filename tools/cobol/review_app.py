@@ -63,6 +63,7 @@ def build_index() -> dict[str, dict]:
             "cached": (CACHE_DIR / f"{sha}.bin").exists(),
             "length": None, "n_divisions": None, "code_lines": None,
             "judge": None, "reclass": None, "oracle": None, "gate": None,
+            "provenance": None,
         })
 
     # 1. study reports -> indicators + judge verdict
@@ -141,6 +142,21 @@ def build_index() -> dict[str, dict]:
             fn = next(iter(d["filenames"]), "")
             res = rc.classify(fn, raw)
             d["reclass"] = {"label": res["label"], "is_cobol": res["is_cobol"]}
+
+    # 6. recovered origins (tools/cobol/recover_origins.py) — byte-confirmed only
+    op = STUDY_DIR / "origins.jsonl"
+    if op.exists():
+        for line in op.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            try:
+                o = json.loads(line)
+            except Exception:
+                continue
+            if o.get("content_match") and o["sha"] in idx:
+                idx[o["sha"]]["provenance"] = {
+                    "origin": o.get("origin"), "anchor": o.get("anchor"),
+                    "qualified": o.get("qualified")}
     return idx
 
 
@@ -229,6 +245,7 @@ def page(title, body):
             f"<a href='/list'>browse</a>"
             f"<a href='/list?flag=disagree'>disagreements</a>"
             f"<a href='/list?flag=unreviewed'>unreviewed</a>"
+            f"<a href='/list?flag=hasorigin'>with origin</a>"
             f"<span class=muted style='color:#cde4ff'>{esc(title)}</span></header>"
             f"<main>{body}</main>").encode("utf-8")
 
@@ -265,10 +282,12 @@ class App:
         jr_a, jr_d = pair("judge", "reclass")
         ro_a, ro_d = pair("reclass", "oracle")
 
+        prov = sum(1 for d in idx.values() if d.get("provenance"))
         cards = "".join(
             f"<div class=card><b>{v}</b><span class=muted>{k}</span></div>"
             for k, v in [("labelled contents", n), ("cached bytes", cached),
-                         ("human-reviewed", reviewed)])
+                         ("human-reviewed", reviewed),
+                         ("recovered origins", prov)])
         dsrows = "".join(
             f"<a class='tag ds' href='/list?dataset={esc(k)}'>{esc(k)}: {v}</a> "
             for k, v in ds.most_common())
@@ -313,6 +332,8 @@ class App:
         if flag == "unreviewed" and reviews_for(d["sha"]):
             return False
         if flag == "noncobol" and (d["reclass"] and d["reclass"]["is_cobol"]):
+            return False
+        if flag == "hasorigin" and not d.get("provenance"):
             return False
         return True
 
@@ -410,7 +431,15 @@ class App:
                 f"{''.join(f'<span class=\"tag ds\">{esc(x)}</span>' for x in sorted(d['datasets']))} · "
                 f"<a target=_blank href='https://archive.softwareheritage.org/swh:1:cnt:{esc(sha)}/'>SWH ↗</a></p>"
                 f"<pre class=code>{esc(code)}</pre>")
-        right = (f"<div class=panel><h3>labels ({len(vs)} is-COBOL votes"
+        prov = d.get("provenance")
+        prov_html = ""
+        if prov and prov.get("origin"):
+            anc = f" @ <code>{esc(prov['anchor'])}</code>" if prov.get("anchor") else " <span class=muted>(no anchor)</span>"
+            prov_html = (f"<div class=panel><h3>recovered origin</h3>"
+                         f"<a target=_blank href='{esc(prov['origin'])}'>{esc(prov['origin'])}</a>{anc}"
+                         f"<p class=muted style='word-break:break-all'>{esc(prov.get('qualified',''))}</p></div>")
+        right = (f"{prov_html}"
+                 f"<div class=panel><h3>labels ({len(vs)} is-COBOL votes"
                  f"{' · ⚠ disagree' if len(set(vs.values()))>1 else ' · unanimous'})</h3>"
                  f"<table>{lbl_rows}</table>{summ}</div>{form}")
         return page(rep_name(d), f"<div class=grid><div>{left}</div><div>{right}</div></div>")

@@ -468,6 +468,32 @@ honest range is **~41–46 % non-COBOL, ≥54 % genuine COBOL**. Scaling this pa
 to the whole archive (a token lifts the ~120 req/h cap) would tighten it and
 let the estimate be split by extension casing.
 
+### 8.4 Origin recovery via the GitHub matcher
+
+Running the repo's existing `qualify_via_github` (§7 note) over the 653
+judge-confirmed COBOL contents, and confirming each hit by requiring the
+GitHub file's `sha1_git` to equal our target content (byte-identical, not
+just same-name/same-length):
+
+| Outcome | Count | |
+|---|---:|---|
+| **confirmed origin** (byte-identical, **all with anchor rev**) | **67 (10.3 %)** | across **41 distinct repos** |
+| no GitHub candidate | 414 | not on GitHub (or search empty) |
+| filename found, length differs | 154 | a fork/variant, correctly refused |
+| length matched but content differs | 17 | rejected by the sha check |
+
+The recovered origins skew to **education / tooling / sample** repos —
+Advent-of-Code COBOL, IBM-learn / Open-Mainframe-Project, COBOL parsers
+(`proleap-cobol-parser`, `TypeCobol`, `che4z-lsp-for-cobol`,
+`gnucobol-contrib`), and course notes. Tellingly, the **enterprise / ORCA
+uppercase `.CBL` bulk did *not* match** (it lives on non-GitHub git and is the
+414 no-candidate / 154 fork tail) — so its origin needs swh-graph, and the
+GitHub route recovers precisely the public-learning slice. This corroborates
+the §4.7 population split from the provenance side. Results
+(`data/derived/cobol_study/origins.jsonl`) surface in the review app as a
+per-file *recovered origin* panel (forge + qualified-SWHID deep links) and a
+`with origin` filter.
+
 ## 9. Reproducibility & artefacts
 
 **Commands**
@@ -480,6 +506,7 @@ python3 -m tools.cobol.case_aware_mapping                      # §8.1 prototype
 OPENROUTER_API_KEY=… python3 -m tools.cobol.eval_reclassify --tail-all   # §8.2 experiment
 python3 -m tools.cobol.corpus_estimate --worklist worklist_1k.csv        # §8.3 sweep (no key)
 python3 -m tools.cobol.corpus_estimate --report               # §8.3 aggregate + CIs
+python3 -m tools.cobol.recover_origins                         # §8.4 origin recovery (needs gh auth)
 python3 -m tools.cobol.make_figures                            # figures → docs/assets/cobol/
 ```
 

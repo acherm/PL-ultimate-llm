@@ -24,8 +24,14 @@ from urllib.parse import parse_qs, urlparse
 
 from .common import ROOT, STUDY_DIR
 
-CSV_CANDIDATES = [ROOT / "cbl_file+origin.csv",
-                  ROOT / "COBOL-SWH-extracted" / "cbl_file+origin.csv"]
+# All graph-derived origin CSVs to load & merge (lowercase .cbl + uppercase
+# .CBL). Same schema: SWHID,name,<SWH browse URL>. Any that exist are used.
+CSV_FILES = [
+    ROOT / "cbl_file+origin.csv",          # lowercase .cbl
+    ROOT / "CBL_files+origins.csv",        # uppercase .CBL
+    ROOT / "COBOL-SWH-extracted" / "cbl_file+origin.csv",
+    ROOT / "COBOL-SWH-extracted" / "CBL_files+origins.csv",
+]
 GH_JSONL = STUDY_DIR / "origins.jsonl"
 
 _graph: dict[str, dict] | None = None
@@ -55,8 +61,9 @@ def graph_origins() -> dict[str, dict]:
     global _graph
     if _graph is None:
         _graph = {}
-        path = next((p for p in CSV_CANDIDATES if p.exists()), None)
-        if path:
+        for path in CSV_FILES:
+            if not path.exists():
+                continue
             with path.open(encoding="utf-8", newline="") as f:
                 reader = csv.reader(f)
                 next(reader, None)  # header
@@ -66,7 +73,7 @@ def graph_origins() -> dict[str, dict]:
                     sha = row[0].replace("swh:1:cnt:", "").split(";")[0].strip()
                     rec = _parse_browse_url(row[2])
                     if sha and rec:
-                        _graph[sha] = rec
+                        _graph.setdefault(sha, rec)  # first CSV wins on collision
     return _graph
 
 

@@ -150,7 +150,11 @@ under-reporting copybook usage as 0 % → corrected to ~69 % (Main).
   (~40 %)** of the deduplicated union. In the unfiltered pilot, 51 % of a
   random 100 were this noise. A content-based sweep of 1,000 uniform-random
   contents confirms it at the population level: **45.6 % non-COBOL** (40.8 %
-  synthetic), quantified in §8.3.
+  synthetic), quantified in §8.3. Their **origin** (from the graph CSV, §8.4)
+  is a single GitLab **test fixture** —
+  `gitlab.com/fbetestpublic/repo-with-many-files-in-one-tree` (branch
+  `changing-commits`) — i.e. 100 k `.CBL` files used as *filler to populate a
+  many-files tree*, never COBOL in intent.
 - **Extension collisions differ by casing.** After excluding `WBC_*_FOO`, the
   mechanical gate still rejected **17 %** of lowercase `.cbl` vs **~6 %** of
   `.CBL`. Lowercase `.cbl` collides with **Calibre comic-book libraries**
@@ -497,10 +501,14 @@ per-file *recovered origin* panel (forge + qualified-SWHID deep links) and a
 **Graph-derived origins (primary source).** The maintainer separately produced
 `cbl_file+origin.csv` by traversing the SWH graph: one SWH *browse* URL per
 lowercase content, carrying `origin_url` + `path` + visit `timestamp` +
-`branch`. This covers **99.7 %** of the lowercase `.cbl` corpus across *all*
-forges — GitHub ~63k, GitLab ~8.5k, Bitbucket ~3.5k, **SourceForge SVN/CVS**
-~3.5k, cobolworx GitLab, Google Code — i.e. the authoritative, broad source the
-review tools now use as *primary* (`tools/cobol/origins.py`). It also cross-
+`branch`. With the uppercase companion `CBL_files+origins.csv`, this now covers **both
+corpora** — **276,600** graph origins across *all* forges (GitHub ~143k, GitLab
+~120k, Bitbucket ~6k, **SourceForge SVN/CVS** ~4.7k, cobolworx GitLab, Google
+Code), the authoritative broad source the review tools use as *primary*
+(`tools/cobol/origins.py`; 1,794 / 1,797 of our indexed contents resolve).
+Two headline resolutions: the **WBC** synthetic bulk → one GitLab many-files
+test fixture (§4.1), and the **ORCA** enterprise programs →
+`github.com/izumiya/jma-receipt` (the JMA receipt system, mirrored). It also cross-
 checks the GitHub matcher: of the 67 byte-confirmed matches, 60 appear in the
 CSV but only **21 name the same repo** — the other 39 point to a different
 (often upstream) origin for the *identical bytes*, a concrete illustration of

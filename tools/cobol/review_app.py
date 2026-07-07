@@ -29,6 +29,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
+from . import origins as orig_mod
 from . import reclassify as rc
 from . import taxonomy as tax
 from .common import CACHE_DIR, STUDY_DIR
@@ -143,20 +144,11 @@ def build_index() -> dict[str, dict]:
             res = rc.classify(fn, raw)
             d["reclass"] = {"label": res["label"], "is_cobol": res["is_cobol"]}
 
-    # 6. recovered origins (tools/cobol/recover_origins.py) — byte-confirmed only
-    op = STUDY_DIR / "origins.jsonl"
-    if op.exists():
-        for line in op.read_text(encoding="utf-8").splitlines():
-            if not line.strip():
-                continue
-            try:
-                o = json.loads(line)
-            except Exception:
-                continue
-            if o.get("content_match") and o["sha"] in idx:
-                idx[o["sha"]]["provenance"] = {
-                    "origin": o.get("origin"), "anchor": o.get("anchor"),
-                    "qualified": o.get("qualified")}
+    # 6. origins — graph CSV (cbl_file+origin.csv) + github-match, merged
+    for sha, d in idx.items():
+        prov = orig_mod.origin_for(sha)
+        if prov:
+            d["provenance"] = prov
     return idx
 
 
@@ -433,11 +425,22 @@ class App:
                 f"<pre class=code>{esc(code)}</pre>")
         prov = d.get("provenance")
         prov_html = ""
-        if prov and prov.get("origin"):
-            anc = f" @ <code>{esc(prov['anchor'])}</code>" if prov.get("anchor") else " <span class=muted>(no anchor)</span>"
-            prov_html = (f"<div class=panel><h3>recovered origin</h3>"
-                         f"<a target=_blank href='{esc(prov['origin'])}'>{esc(prov['origin'])}</a>{anc}"
-                         f"<p class=muted style='word-break:break-all'>{esc(prov.get('qualified',''))}</p></div>")
+        if prov:
+            g, h = prov.get("graph"), prov.get("github")
+            rows = ""
+            if g:
+                rows += (f"<div>graph</div><div>"
+                         f"<a target=_blank href='{esc(g['origin'])}'>{esc(g['origin'])}</a> "
+                         f"<span class=tag>{esc(g.get('forge',''))}</span><br>"
+                         f"<span class=muted>{esc(g.get('path') or '')} · {esc(g.get('branch') or '')} · {esc(g.get('timestamp') or '')}</span> "
+                         f"<a class=muted target=_blank href='{esc(g.get('swh_browse_url',''))}'>SWH↗</a></div>")
+            if h:
+                anc = f" @ <code>{esc(h['anchor'])}</code>" if h.get("anchor") else ""
+                note = "" if prov.get("agree") is not False else " <span class=muted>(≠ graph — same bytes, another repo)</span>"
+                rows += (f"<div>github</div><div>"
+                         f"<a target=_blank href='{esc(h['origin'])}'>{esc(h['origin'])}</a>{anc}{note}</div>")
+            prov_html = (f"<div class=panel judgebox><h3>origin</h3>"
+                         f"<div class=kv>{rows}</div></div>")
         right = (f"{prov_html}"
                  f"<div class=panel><h3>labels ({len(vs)} is-COBOL votes"
                  f"{' · ⚠ disagree' if len(set(vs.values()))>1 else ' · unanimous'})</h3>"

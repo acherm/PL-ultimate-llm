@@ -98,9 +98,13 @@ python3 -m tools.cobol.review_app             # http://127.0.0.1:8766
 - **Browse / filter**: by dataset, reclassifier label, filename, or
   `flag=disagree` / `unreviewed` / `noncobol`.
 - **Per file**: source + indicators beside a labels table (all sources, with
-  disagreements highlighted), a **recovered-origin** panel (forge + qualified-
-  SWHID deep links, from `recover_origins.py`), and a human-review form.
-- Browse filter `flag=hasorigin` lists the byte-confirmed origins.
+  disagreements highlighted), an **origin** panel, and a human-review form.
+- **Origin** (`tools/cobol/origins.py`) merges two sources: *graph* — the
+  maintainer's `cbl_file+origin.csv` (SWH-graph-derived, ~99.7 % of lowercase
+  `.cbl`, all forges; origin URL + path + visit timestamp) — and *github* —
+  the byte-confirmed matches from `recover_origins.py`. It shows both and flags
+  when they name different repos for the same bytes.
+- Browse filter `flag=hasorigin` lists contents with a recovered origin.
 - Human reviews save to `reviews_cobol/<sha>/` (`cobol-review/1`), shared with
   `review_server.py` (which also shows the recovered origin + pre-fills the
   origin field).

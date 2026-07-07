@@ -494,6 +494,19 @@ the §4.7 population split from the provenance side. Results
 per-file *recovered origin* panel (forge + qualified-SWHID deep links) and a
 `with origin` filter.
 
+**Graph-derived origins (primary source).** The maintainer separately produced
+`cbl_file+origin.csv` by traversing the SWH graph: one SWH *browse* URL per
+lowercase content, carrying `origin_url` + `path` + visit `timestamp` +
+`branch`. This covers **99.7 %** of the lowercase `.cbl` corpus across *all*
+forges — GitHub ~63k, GitLab ~8.5k, Bitbucket ~3.5k, **SourceForge SVN/CVS**
+~3.5k, cobolworx GitLab, Google Code — i.e. the authoritative, broad source the
+review tools now use as *primary* (`tools/cobol/origins.py`). It also cross-
+checks the GitHub matcher: of the 67 byte-confirmed matches, 60 appear in the
+CSV but only **21 name the same repo** — the other 39 point to a different
+(often upstream) origin for the *identical bytes*, a concrete illustration of
+SWH's global content dedup (one blob, many origins). The review app shows both
+and flags where they differ.
+
 ## 9. Reproducibility & artefacts
 
 **Commands**

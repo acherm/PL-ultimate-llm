@@ -23,6 +23,7 @@ import argparse
 import getpass
 import html
 import json
+import re
 import time
 from collections import Counter
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -36,6 +37,50 @@ from .common import CACHE_DIR, STUDY_DIR
 from .reclassify import COBOL_LABELS
 from .review_server import REVIEWS_DIR, SCHEMA, reviews_for, save_review
 from .run_study import canonical_view
+
+# ---- group-assertion rules: one statement labels a whole origin / pattern ---
+RULES_FILE = REVIEWS_DIR / "_rules.jsonl"
+RULE_LABELS = ["not-cobol:synthetic", "noise", "data", "docs",
+               "not-cobol:other", "cobol"]
+
+
+def load_rules() -> list[dict]:
+    out = []
+    if RULES_FILE.exists():
+        for line in RULES_FILE.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                try:
+                    out.append(json.loads(line))
+                except Exception:
+                    pass
+    return out
+
+
+def save_rule(rule: dict) -> None:
+    RULES_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with RULES_FILE.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(rule) + "\n")
+
+
+def content_origin(d: dict):
+    p = d.get("provenance")
+    return p["primary"].get("origin") if p and p.get("primary") else None
+
+
+def rule_for(d: dict, rules: list[dict]):
+    """First rule whose origin/filename matches this content, else None."""
+    name = rep_name(d)
+    origin = content_origin(d)
+    for r in rules:
+        if r.get("scope") == "origin" and origin and r.get("value") == origin:
+            return r
+        if r.get("scope") == "filename" and r.get("value"):
+            try:
+                if re.search(r["value"], name):
+                    return r
+            except re.error:
+                pass
+    return None
 
 REPORTS = STUDY_DIR / "reports"
 WORKLIST_DATASET = {
@@ -275,11 +320,21 @@ class App:
         ro_a, ro_d = pair("reclass", "oracle")
 
         prov = sum(1 for d in idx.values() if d.get("provenance"))
+        rules = load_rules()
+        ruled = sum(1 for d in idx.values() if rule_for(d, rules))
         cards = "".join(
             f"<div class=card><b>{v}</b><span class=muted>{k}</span></div>"
             for k, v in [("labelled contents", n), ("cached bytes", cached),
                          ("human-reviewed", reviewed),
-                         ("recovered origins", prov)])
+                         ("recovered origins", prov),
+                         ("rule-labelled", ruled)])
+        rule_html = ""
+        if rules:
+            rule_html = "<div class=panel><h3>group rules</h3>" + "".join(
+                f"<div class=muted><span class=tag>{esc(r['label'])}</span> "
+                f"{esc(r['scope'])} = {esc(r['value'])} "
+                f"<a href='/list?flag=ruled'>({sum(1 for d in idx.values() if rule_for(d,[r]))} contents)</a></div>"
+                for r in rules) + "</div>"
         dsrows = "".join(
             f"<a class='tag ds' href='/list?dataset={esc(k)}'>{esc(k)}: {v}</a> "
             for k, v in ds.most_common())
@@ -303,7 +358,7 @@ class App:
                   "<b>human</b>: your reviews. A file is ⚠ when its available "
                   "is-COBOL votes disagree.</p>")
         return page("dashboard",
-            f"<div class=cards>{cards}</div>{legend}"
+            f"<div class=cards>{cards}</div>{legend}{rule_html}"
             f"<div class=panel><h3>datasets</h3>{dsrows}</div>"
             f"{agree}"
             f"<div class=panel><h3>reclassifier label distribution</h3>"
@@ -327,9 +382,12 @@ class App:
             return False
         if flag == "hasorigin" and not d.get("provenance"):
             return False
+        if flag == "ruled" and not rule_for(d, getattr(self, "_rules", [])):
+            return False
         return True
 
     def listing(self, f):
+        self._rules = load_rules()
         rows = [d for d in self.idx.values() if self._match(d, f)]
         rows.sort(key=rep_name)
         shown = rows[:600]
@@ -441,10 +499,43 @@ class App:
                          f"<a target=_blank href='{esc(h['origin'])}'>{esc(h['origin'])}</a>{anc}{note}</div>")
             prov_html = (f"<div class=panel judgebox><h3>origin</h3>"
                          f"<div class=kv>{rows}</div></div>")
+
+        # group-assertion panel: label a whole origin / filename-pattern at once
+        rules = load_rules()
+        cur = rule_for(d, rules)
+        origin = content_origin(d) or ""
+        pat = re.sub(r"\d+", r"\\d+", re.escape(rep_name(d)))
+        cur_html = (f"<p class=muted>already covered: <span class=tag>{esc(cur['label'])}</span> "
+                    f"{esc(cur['scope'])}={esc(cur['value'])}</p>") if cur else ""
+        assert_html = f"""
+        <div class=panel><h3>assert for a group</h3>{cur_html}
+        <p class=muted>One statement labels every matching content — e.g. all files
+        from a synthetic fixture repo. No need to click through 100k files.</p>
+        <form id=rf>
+          <input type=hidden name=example_sha value="{esc(sha)}">
+          <label>Scope</label>
+          <select name=scope onchange="rscope(this.value)">
+            <option value=origin>this origin</option>
+            <option value=filename>filename pattern (regex)</option>
+          </select>
+          <label>Value</label><input name=value id=rval value="{esc(origin)}">
+          <label>Label</label><select name=label>{opts(RULE_LABELS, 'not-cobol:synthetic')}</select>
+          <label>Rationale</label><input name=rationale placeholder="synthetic placeholder, not COBOL">
+          <button type=button onclick=saverule()>Assert rule</button> <span id=rmsg class=muted></span>
+        </form></div>
+        <script>
+        const _origin={json.dumps(origin)}, _pat={json.dumps(pat)};
+        function rscope(v){{document.getElementById('rval').value=(v=='origin')?_origin:_pat;}}
+        async function saverule(){{const fd=new FormData(document.getElementById('rf'));
+          const r=await fetch('/api/rule',{{method:'POST',headers:{{'Content-Type':'application/json'}},
+          body:JSON.stringify(Object.fromEntries(fd.entries()))}});const j=await r.json();
+          document.getElementById('rmsg').textContent=r.ok?(' asserted ✓ ('+j.matched+' contents)'):(' err: '+(j.error||''));}}
+        </script>"""
+
         right = (f"{prov_html}"
                  f"<div class=panel><h3>labels ({len(vs)} is-COBOL votes"
                  f"{' · ⚠ disagree' if len(set(vs.values()))>1 else ' · unanimous'})</h3>"
-                 f"<table>{lbl_rows}</table>{summ}</div>{form}")
+                 f"<table>{lbl_rows}</table>{summ}</div>{assert_html}{form}")
         return page(rep_name(d), f"<div class=grid><div>{left}</div><div>{right}</div></div>")
 
 
@@ -475,13 +566,34 @@ class Handler(BaseHTTPRequestHandler):
             self._send(page("404", "not found"), 404)
 
     def do_POST(self):
-        if urlparse(self.path).path != "/api/review":
-            self._send(b'{"error":"unknown"}', 404, "application/json"); return
+        path = urlparse(self.path).path
         n = int(self.headers.get("Content-Length", 0))
         try:
             data = json.loads(self.rfile.read(n).decode("utf-8"))
         except Exception as e:
             self._send(json.dumps({"error": str(e)}).encode(), 400, "application/json"); return
+        if path == "/api/rule":
+            scope = (data.get("scope") or "").strip()
+            value = (data.get("value") or "").strip()
+            label = (data.get("label") or "").strip()
+            if scope not in ("origin", "filename") or not value or not label:
+                self._send(b'{"error":"scope/value/label required"}', 400, "application/json"); return
+            if scope == "filename":
+                try:
+                    re.compile(value)
+                except re.error as e:
+                    self._send(json.dumps({"error": f"bad regex: {e}"}).encode(), 400, "application/json"); return
+            rule = {"scope": scope, "value": value, "label": label,
+                    "rationale": (data.get("rationale") or "").strip(),
+                    "example_sha": data.get("example_sha", ""),
+                    "reviewer": {"kind": "human", "id": self.reviewer_id},
+                    "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time()))}
+            save_rule(rule)
+            matched = sum(1 for d in self.app.idx.values() if rule_for(d, [rule]))
+            self._send(json.dumps({"ok": True, "matched": matched}).encode(), 200, "application/json")
+            return
+        if path != "/api/review":
+            self._send(b'{"error":"unknown"}', 404, "application/json"); return
         sha = (data.get("sha1_git") or "").strip()
         if len(sha) != 40:
             self._send(b'{"error":"bad sha"}', 400, "application/json"); return

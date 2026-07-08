@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c0f75d60d07426a98c9f6c6b81bf3e9a3afdc9ee",
+    "sha1_git": "c0f75d60d07426a98c9f6c6b81bf3e9a3afdc9ee",
+    "filename": "/ORCSSKYGET.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28148,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c0f75d60d07426a98c9f6c6b81bf3e9a3afdc9ee/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c0f75d60d07426a98c9f6c6b81bf3e9a3afdc9ee/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28148,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 700,
+    "blank_lines": 0,
+    "comment_lines": 182,
+    "code_lines": 518,
+    "comment_ratio": 0.26,
+    "max_line_length": 74,
+    "avg_line_length": 39.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSSKYGET"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 3,
+    "perform_count": 33,
+    "goto_count": 0,
+    "pic_count": 11,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software, Japan Medical Association). Likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY includes with .INC extension and MCP (middleware communication protocol) pattern typical of JMA ORCA.",
+        "evidence": [
+          "PROGRAM-ID ORCSSKYGET",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY MCPAREA / MCPDATA.INC / CPORCSSKYGET.INC",
+          "MCP-TABLE / MCP-PATHNAME / MCP-RC pattern",
+          "COPY COMMON-SPA / SPA-AREA / SPA-HOSPNUM",
+          "tbl_syunou table references",
+          "fixed format max line 74"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) processing — retrieves and edits insurer burden amounts and medical fee data for high-cost medical expense (高額療養費) claims under social/national insurance",
+        "summary": "ORCSSKYGET is a subprogram in the JMA ORCA medical receipt system that retrieves and assembles insurer-side claim data (公費・高額療養費) for a given treatment month. It handles two processing modes: mode 1 reads receipt-level medical care and food/living expense data from RECE10 and a KOHSKY table; mode 2 queries the tbl_syunou payment collection table to aggregate medical fee totals, patient days, and co-payment amounts by insurer category.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with multiple COPY-based parameter areas (ORCSSKYGETAREA, RECE10-REC, SPA-AREA)",
+        "MCP middleware database access pattern (900-DBSELECT-SEC, 900-SYUNOU-READ-SEC, 900-CLOSE-SEC)",
+        "Japanese EUC-JP encoded comments (latin-1 decoded, garbled)",
+        "COPY copybooks with .INC extension",
+        "PERFORM VARYING loops over indexed insurance/date arrays",
+        "COMPUTE arithmetic for medical fee accumulation",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP layer",
+        "OCCURS arrays for daily treatment flags (WRK-TAIHI-DAY 31 elements)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in Japanese EUC-JP but the file was decoded as latin-1, resulting in garbled multi-byte characters. The program logic is clearly readable. Source is truncated at 16000 chars (~57% of 28148 bytes); the remaining procedure division sections (900-series utility sections) are not shown but referenced. Dialect is GnuCOBOL/OpenCOBOL based on JMA ORCA project conventions."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8470,
+      "completion_tokens": 711,
+      "total_tokens": 9181,
+      "cost": 0.036075,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036075,
+        "upstream_inference_prompt_cost": 0.02541,
+        "upstream_inference_completions_cost": 0.010665
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.11,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:57:04Z"
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7401b85ca923052a8a5f5690815062a03bc4533b",
+    "sha1_git": "7401b85ca923052a8a5f5690815062a03bc4533b",
+    "filename": "/SEIKYU4017.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 80965,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7401b85ca923052a8a5f5690815062a03bc4533b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7401b85ca923052a8a5f5690815062a03bc4533b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 80965,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1858,
+    "blank_lines": 1,
+    "comment_lines": 729,
+    "code_lines": 1128,
+    "comment_ratio": 0.393,
+    "max_line_length": 78,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU4017"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 54,
+    "perform_count": 59,
+    "goto_count": 4,
+    "pic_count": 81,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), GnuCOBOL-based open source system used in Japanese medical clinics",
+        "evidence": [
+          "PROGRAM-ID SEIKYU4017",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'CPCOMMONDAT2.INC'",
+          "COPY 'COMMON-SPA'",
+          "CALL 'ORCSJOB'",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "no EXEC CICS/SQL",
+          "fixed format max 78 cols"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (レセプト請求書) - specifically Fukuoka city 41-type welfare medical expense claim form for social insurance and self-pay patients (141, 241 types)",
+        "summary": "This program generates medical insurance claim forms (レセプト/seikyu-sho) for the Fukuoka city 41-type welfare medical billing category. It reads patient and insurance data, processes billing records, and outputs formatted claim documents. It is part of the JMA ORCA open-source standard receipt software system used by Japanese medical institutions.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "28 COPY statements referencing ORCA-specific copybooks (CPSK1001.INC, CPSK1002.INC, CPPRTDATA.INC, etc.)",
+        "54 CALL statements to ORCA subsystem routines (ORCSJOB, etc.)",
+        "LINKAGE SECTION with COMMAND-PARAM for batch invocation",
+        "UNSTRING used to parse comma-delimited command parameters",
+        "REDEFINES clauses for hospital name/address fields",
+        "OCCURS 100 table for insurance combination parameters",
+        "Japanese text in comments (EUC-JP encoded, displayed as latin-1 mojibake)",
+        "Version history spanning 2005-2015 with named maintainers",
+        "SPA-AREA (shared parameter area) pattern typical of ORCA",
+        "INITIALIZE used extensively for area clearing"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file is encoded in EUC-JP but decoded as latin-1, causing Japanese characters to appear as mojibake in the comments and string literals. Content is clearly identifiable as JMA ORCA system code. Truncated at 16000 chars out of ~81KB total; PROCEDURE DIVISION logic is only partially visible but structure is clear."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9411,
+      "completion_tokens": 618,
+      "total_tokens": 10029,
+      "cost": 0.037503,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037503,
+        "upstream_inference_prompt_cost": 0.028233,
+        "upstream_inference_completions_cost": 0.00927
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.26,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:35:26Z"
+}

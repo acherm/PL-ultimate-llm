@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dae981e561172a9812c659eb260738e02e01a2c4",
+    "sha1_git": "dae981e561172a9812c659eb260738e02e01a2c4",
+    "filename": "/ORCGS02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 180020,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dae981e561172a9812c659eb260738e02e01a2c4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dae981e561172a9812c659eb260738e02e01a2c4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 180020,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3979,
+    "blank_lines": 1,
+    "comment_lines": 1068,
+    "code_lines": 2910,
+    "comment_ratio": 0.268,
+    "max_line_length": 79,
+    "avg_line_length": 44.2,
+    "long_lines_over_72": 168,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGS02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 40,
+    "call_count": 68,
+    "perform_count": 186,
+    "goto_count": 32,
+    "pic_count": 153,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with string replacement syntax, no EXEC SQL/CICS, no COMP-3, consistent with GnuCOBOL conventions used in the JMA ORCA project.",
+        "evidence": [
+          "PROGRAM-ID ORCGS02",
+          "COPY with REPLACING //SPA-// BY //WRK-SPA-//",
+          "40 COPY statements referencing .INC files",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "No EXEC SQL, no EXEC CICS, no COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) billing system - patient billing/claims list screen (請求一覧 S02 component)",
+        "summary": "This program is the S02 component of the JMA ORCA medical receipt software system, implementing a billing/claims list screen for patient medical billing. It manages display and processing of patient billing records including insurance combinations, treatment dates, and claim amounts. It handles recalculation, patient search, and navigation between billing screens.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "40 COPY statements for modular record layouts (.INC files)",
+        "68 CALL statements indicating heavy subprogram architecture",
+        "186 PERFORM statements",
+        "32 GOTO statements",
+        "Japanese comments encoded in EUC-JP/latin-1",
+        "COPY with REPLACING clause",
+        "Extensive SPA (scratchpad area) data structures",
+        "OCCURS clauses for table handling",
+        "Detailed revision history in comments (2000-2002)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP encoded (garbled in latin-1 view). This is part of the well-known open-source JMA ORCA medical receipt system. The filename ORCGS02.CBL matches the PROGRAM-ID ORCGS02. Source is truncated at 16000 chars out of 180020 bytes total; full procedure division not visible but structural indicators confirm complete COBOL program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10282,
+      "completion_tokens": 568,
+      "total_tokens": 10850,
+      "cost": 0.039366,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039366,
+        "upstream_inference_prompt_cost": 0.030846,
+        "upstream_inference_completions_cost": 0.00852
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.63,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:24:52Z"
+}

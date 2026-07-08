@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d78600d254f1499cb9d9422bf56cda4f2048b41e",
+    "sha1_git": "d78600d254f1499cb9d9422bf56cda4f2048b41e",
+    "filename": "/ORCS01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 732520,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d78600d254f1499cb9d9422bf56cda4f2048b41e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d78600d254f1499cb9d9422bf56cda4f2048b41e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 732520,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 14280,
+    "blank_lines": 2,
+    "comment_lines": 2369,
+    "code_lines": 11909,
+    "comment_ratio": 0.166,
+    "max_line_length": 108,
+    "avg_line_length": 50.3,
+    "long_lines_over_72": 330,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCS01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 102,
+    "perform_count": 333,
+    "goto_count": 8,
+    "pic_count": 390,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), running on Linux with GnuCOBOL. Copyright 2002 JMA (Japan Medical Association). Program ORCS01 is a patient co-payment calculation subprogram.",
+        "evidence": [
+          "PROGRAM-ID. ORCS01",
+          "OS LINUX in comments",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "no EXEC CICS/SQL",
+          "COPY count=28, CALL count=102 typical of GnuCOBOL ORCA system"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese national health insurance medical receipt (レセプト) co-payment calculation. Handles multiple insurance types including elderly care (老人), disaster insurance (労災), self-pay (自費), and various regional public expense (公費) combinations.",
+        "summary": "ORCS01 is a subprogram in the JMA ORCA medical receipt system that calculates patient co-payment amounts (負担金算定) for various Japanese health insurance types. It handles complex rules for elderly patients, multiple insurance combinations, regional public expense programs, and special cases such as disaster insurance and self-pay. The program has an extensive revision history spanning 2000–2006 covering numerous insurance regulation changes.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Extensive Japanese-language comments (EUC-JP encoded, displayed as latin-1 mojibake)",
+        "102 CALL statements indicating heavy use of subprogram architecture",
+        "28 COPY statements for shared copybooks",
+        "333 PERFORM statements indicating structured procedural logic",
+        "No COMP-3 usage despite financial calculations (uses PIC 9 numeric)",
+        "No EXEC SQL or EXEC CICS",
+        "Long revision history with 100+ named revisions from 2000 to 2006",
+        "Fixed-format source with some lines exceeding 72 columns (330 long lines)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP (Japanese) but decoded as latin-1, causing comment text to appear as mojibake. The program is clearly part of the well-known open-source JMA ORCA medical receipt system for Linux. Source is truncated at 16000 chars out of 732520 bytes (14280 lines total); only the header comments and beginning of WORKING-STORAGE SECTION are visible, but the structure and purpose are unambiguous."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 14326,
+      "completion_tokens": 616,
+      "total_tokens": 14942,
+      "cost": 0.052218,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.052218,
+        "upstream_inference_prompt_cost": 0.042978,
+        "upstream_inference_completions_cost": 0.00924
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.3,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:37:00Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0f67c45c87178a00c2ad47e919c16520baa7d63b",
+    "sha1_git": "0f67c45c87178a00c2ad47e919c16520baa7d63b",
+    "filename": "/irsnominalUNL.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8142,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0f67c45c87178a00c2ad47e919c16520baa7d63b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0f67c45c87178a00c2ad47e919c16520baa7d63b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8142,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 222,
+    "blank_lines": 0,
+    "comment_lines": 116,
+    "code_lines": 106,
+    "comment_ratio": 0.523,
+    "max_line_length": 108,
+    "avg_line_length": 35.7,
+    "long_lines_over_72": 26,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "irsnominalUNL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 8,
+    "call_count": 1,
+    "perform_count": 10,
+    "goto_count": 3,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source, part of the Applewood Computers Accounting System (ACAS v3.02+) by Vincent Bryan Coen. Uses >>source free directive and GnuCOBOL-style *> comments.",
+        "evidence": [
+          ">>source free compiler directive",
+          "*> comment style throughout",
+          "binary-char data type",
+          "GOBACK statement",
+          "PERFORM FOREVER construct",
+          "COPY statements with .cob extensions"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Applewood Computers Accounting System (ACAS) - nominal ledger unload utility that backs up an ISAM nominal ledger file to a sequential .seq file",
+        "summary": "This program reads all records from an ISAM-organized nominal ledger file (irsnominal) and writes them sequentially to a backup file named irsacnts.seq. It is part of the ACAS accounting system and acts as a companion to a corresponding restore program. Output logging is handled via a called module ACAS-Sysout.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        ">>source free compiler directive",
+        "PERFORM FOREVER loop construct",
+        "Dynamic/indexed file access with status checking",
+        "COPY statements for environment, FD, and working-storage sections (envdiv.cob, irsfdwsnl.cob, irswsnl.cob, wsfnctn.cob, wsnames.cob, wscall.cob, Test-Data-Flags.cob, Proc-Get-Env-Set-Files.cob)",
+        "CALL to external ACAS-Sysout logging module",
+        "Environment variable usage (ACAS_BIN, ACAS_LEDGERS)",
+        "GNU GPL licensed source with copyright notice embedded in comments",
+        "High comment ratio (52%) with detailed documentation"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly a production component of the ACAS accounting system. The high comment ratio is due to extensive copyright/license text embedded as comments. The program references ACAS v3.02 and is dated 2023, suggesting active maintenance of a long-running system (copyright 1976-2024)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4709,
+      "completion_tokens": 548,
+      "total_tokens": 5257,
+      "cost": 0.022347,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022347,
+        "upstream_inference_prompt_cost": 0.014127,
+        "upstream_inference_completions_cost": 0.00822
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.52,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:43:43Z"
+}

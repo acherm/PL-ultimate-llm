@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:44067e630d902fedb9d963dfcdec7dc290d1a1a7",
+    "sha1_git": "44067e630d902fedb9d963dfcdec7dc290d1a1a7",
+    "filename": "/ORCGI04.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 153030,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:44067e630d902fedb9d963dfcdec7dc290d1a1a7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:44067e630d902fedb9d963dfcdec7dc290d1a1a7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 153030,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3957,
+    "blank_lines": 1,
+    "comment_lines": 1253,
+    "code_lines": 2703,
+    "comment_ratio": 0.317,
+    "max_line_length": 74,
+    "avg_line_length": 37.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 70,
+    "call_count": 20,
+    "perform_count": 224,
+    "goto_count": 68,
+    "pic_count": 96,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with REPLACING, LINKAGE SECTION with MCP/SPA/LINKAGE areas typical of ORCA middleware.",
+        "evidence": [
+          "PROGRAM-ID ORCGI04",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "COPY 'LINKAREA'",
+          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
+          "MCP-STATUS / MCP-EVENT EVALUATE",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "70 COPY statements with REPLACING"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - hospital admission/discharge billing confirmation screen (nyuuin seikyu kakunin gaamen)",
+        "summary": "This program implements a hospital admission billing confirmation screen (ORCGI04) within the JMA ORCA medical receipt system. It handles patient admission/discharge registration, insurance combination management, periodic billing history, and payment detail processing. It is an online screen program driven by MCP events (LINK, PUTG/CLICKED, and other input events).",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "70 COPY statements with REPLACING for modular record layouts",
+        "LINKAGE SECTION with MCP/SPA/LINK/SCR areas (ORCA middleware pattern)",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT for event-driven screen control",
+        "224 PERFORM statements and 68 GOTO statements",
+        "No EXEC SQL or EXEC CICS (uses proprietary MCP DB access layer)",
+        "Japanese comments encoded in EUC-JP/latin-1 (garbled in ASCII view)",
+        "REDEFINES usage",
+        "Large program: ~3957 lines, 70 copybooks"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are Japanese EUC-JP encoded, appearing garbled. This is a well-known open-source Japanese medical receipt system (JMA ORCA). The program is an online screen handler using the ORCA MCP middleware framework rather than CICS, but is functionally equivalent to an online-cics program type. Source is fixed-format COBOL with max line length 74."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10395,
+      "completion_tokens": 607,
+      "total_tokens": 11002,
+      "cost": 0.04029,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04029,
+        "upstream_inference_prompt_cost": 0.031185,
+        "upstream_inference_completions_cost": 0.009105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:46:43Z"
+}

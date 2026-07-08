@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:075180f5c7b5773839af4b73cd2707ea0fb2c6a3",
+    "sha1_git": "075180f5c7b5773839af4b73cd2707ea0fb2c6a3",
+    "filename": "/ORCS02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 992627,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:075180f5c7b5773839af4b73cd2707ea0fb2c6a3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:075180f5c7b5773839af4b73cd2707ea0fb2c6a3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 992627,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 19850,
+    "blank_lines": 0,
+    "comment_lines": 2183,
+    "code_lines": 17667,
+    "comment_ratio": 0.11,
+    "max_line_length": 108,
+    "avg_line_length": 49.0,
+    "long_lines_over_72": 118,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCS02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 35,
+    "call_count": 67,
+    "perform_count": 465,
+    "goto_count": 10,
+    "pic_count": 455,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA (Japan Medical Association standard receipt software) running on Linux, compiled with GnuCOBOL. No COMP-3, no EXEC SQL/CICS, consistent with open-source GnuCOBOL usage on Linux.",
+        "evidence": [
+          "PROGRAM-ID ORCS02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "OS LINUX in header comment",
+          "JMA Open Source License",
+          "PIC 9(10) without COMP-3",
+          "35 COPY statements, 67 CALLs typical of GnuCOBOL modular style"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/claim calculation) — specifically inpatient (nyuuin) patient co-payment and public expense burden calculation sub-program for the JMA ORCA medical receipt system",
+        "summary": "ORCS02 is a subprogram within the JMA ORCA open-source medical receipt system that calculates patient co-payment amounts and public subsidy burdens for inpatient claims. It handles complex Japanese health insurance rules including elderly patient thresholds, regional public expense programs, meal/living expense charges, and various special insurance combinations. The program has an extensive revision history spanning 2002–2008 covering numerous prefectural and national insurance rule changes.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "No FILE SECTION entries (pure calculation subprogram)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite financial calculations",
+        "35 COPY statements for shared data structures",
+        "67 CALL statements to other ORCA modules",
+        "465 PERFORM statements indicating complex procedural logic",
+        "Japanese EUC-JP encoded comments (latin-1 decoded with mojibake)",
+        "Extensive revision history (100+ revisions) in header comments",
+        "Nearly 20,000 lines — large production subprogram",
+        "Fixed-format source with some lines exceeding column 72"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text, appearing as mojibake. The program is part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars but mechanical indicators confirm ~992KB / 19850 lines total. No COMP-3 is unusual for financial calculations but consistent with GnuCOBOL ORCA codebase style."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 16007,
+      "completion_tokens": 614,
+      "total_tokens": 16621,
+      "cost": 0.057231,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.057231,
+        "upstream_inference_prompt_cost": 0.048021,
+        "upstream_inference_completions_cost": 0.00921
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.96,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:19:16Z"
+}

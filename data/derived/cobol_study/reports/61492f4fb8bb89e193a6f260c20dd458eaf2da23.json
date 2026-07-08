@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:61492f4fb8bb89e193a6f260c20dd458eaf2da23",
+    "sha1_git": "61492f4fb8bb89e193a6f260c20dd458eaf2da23",
+    "filename": "/ORCR0810.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 100861,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:61492f4fb8bb89e193a6f260c20dd458eaf2da23/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:61492f4fb8bb89e193a6f260c20dd458eaf2da23/raw/"
+  },
+  "indicators": {
+    "bytes_len": 100861,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2311,
+    "blank_lines": 0,
+    "comment_lines": 562,
+    "code_lines": 1749,
+    "comment_ratio": 0.243,
+    "max_line_length": 83,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 14,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0810"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 8,
+    "perform_count": 190,
+    "goto_count": 6,
+    "pic_count": 76,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based system used in Japanese medical clinics",
+        "evidence": [
+          "PROGRAM-ID ORCR0810",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY directives with .INC files (CPRCF082.INC, CPSRYACCT.INC, etc.)",
+          "MCPDATA.INC and MCPAREA copybooks typical of JMA ORCA",
+          "COMMON-SPA copybook",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "EXIT PROGRAM / STOP RUN pattern",
+          "No EXEC CICS or EXEC SQL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing - monthly billing for labor accident (労災) and self-pay (自賠責) insurance claims; extracts target patients for receipt creation",
+        "summary": "ORCR0810 is a batch program in the JMA ORCA medical receipt system that creates monthly business files for labor accident and self-pay insurance receipts. It extracts target patients, reads receipt detail files (RECE82), and processes insurance combination data for billing. It also manages job control steps and cancellation handling.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "28 COPY statements referencing JMA ORCA-specific copybooks (.INC files)",
+        "LINKAGE SECTION with COMMAND-PARAM parsed via UNSTRING",
+        "Job management via SJOBKANRI-MODE / ORCSJOB subprogram calls",
+        "EVALUATE on insurance type codes (RECEKBN)",
+        "OCCURS tables for daily visit counts and insurance combinations",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "REPLACING clause on COPY for record renaming",
+        "DYNAMIC and SEQUENTIAL access modes on same physical file via two SELECT entries"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are in Japanese EUC encoding, decoded as latin-1 resulting in mojibake. The file is part of the well-known open-source JMA ORCA (日医標準レセプトソフト) system. Source truncated at 16000 chars out of ~100KB; full program likely contains more procedure division logic. No COMP-3 usage detected despite financial calculations, which is consistent with GnuCOBOL ORCA codebase style."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9858,
+      "completion_tokens": 621,
+      "total_tokens": 10479,
+      "cost": 0.038889,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038889,
+        "upstream_inference_prompt_cost": 0.029574,
+        "upstream_inference_completions_cost": 0.009315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.72,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:48:35Z"
+}

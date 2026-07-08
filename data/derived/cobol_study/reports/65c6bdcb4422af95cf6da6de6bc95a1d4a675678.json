@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:65c6bdcb4422af95cf6da6de6bc95a1d4a675678",
+    "sha1_git": "65c6bdcb4422af95cf6da6de6bc95a1d4a675678",
+    "filename": "/ORCS02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 584182,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:65c6bdcb4422af95cf6da6de6bc95a1d4a675678/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:65c6bdcb4422af95cf6da6de6bc95a1d4a675678/raw/"
+  },
+  "indicators": {
+    "bytes_len": 584182,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 11657,
+    "blank_lines": 0,
+    "comment_lines": 1904,
+    "code_lines": 9753,
+    "comment_ratio": 0.163,
+    "max_line_length": 108,
+    "avg_line_length": 49.1,
+    "long_lines_over_72": 110,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCS02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 33,
+    "call_count": 87,
+    "perform_count": 279,
+    "goto_count": 10,
+    "pic_count": 283,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), developed by NACL for Japan Medical Association, running on Linux with GnuCOBOL",
+        "evidence": [
+          "Project code name ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "OS LINUX in program header",
+          "PROGRAM-ID ORCS02",
+          "no EXEC CICS/SQL, no COMP-3, consistent with GnuCOBOL/OpenCOBOL on Linux"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/claim calculation) - specifically inpatient cost-sharing calculation (負担金算定サブ for hospitalization)",
+        "summary": "ORCS02 is a subprogram in the JMA ORCA medical receipt system that calculates patient cost-sharing amounts (負担金) for inpatient medical insurance claims. It handles complex Japanese health insurance rules including public assistance (公費), income-based limits, regional public expense programs, and various special calculation cases. The program is a large batch subprogram called by other ORCA modules.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Large subprogram with 87 CALL statements and 279 PERFORM statements",
+        "33 COPY statements indicating heavy use of copybooks",
+        "Japanese EUC-JP encoded comments (latin-1 decoded, garbled)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite financial calculations",
+        "OCCURS clauses for insurance combination tables",
+        "REDEFINES usage",
+        "Extensive revision history spanning 2002-2005",
+        "Fixed-format source with some lines over 72 chars"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is 584KB / 11657 lines - a large production subprogram. Comments are in Japanese EUC-JP encoding, decoded as latin-1 resulting in garbled display. The program is part of the well-known open-source JMA ORCA medical receipt system. No COMP-3 is unusual for financial calculations but consistent with GnuCOBOL/OpenCOBOL usage patterns in ORCA. Source truncated to first 16000 chars; full program likely contains the procedure division with the actual calculation logic."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12509,
+      "completion_tokens": 570,
+      "total_tokens": 13079,
+      "cost": 0.046077,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.046077,
+        "upstream_inference_prompt_cost": 0.037527,
+        "upstream_inference_completions_cost": 0.00855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.98,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:43:49Z"
+}

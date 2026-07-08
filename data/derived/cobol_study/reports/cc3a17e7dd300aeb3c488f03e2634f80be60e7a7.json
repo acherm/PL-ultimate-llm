@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cc3a17e7dd300aeb3c488f03e2634f80be60e7a7",
+    "sha1_git": "cc3a17e7dd300aeb3c488f03e2634f80be60e7a7",
+    "filename": "/ORCSC10S200204.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 203422,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cc3a17e7dd300aeb3c488f03e2634f80be60e7a7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cc3a17e7dd300aeb3c488f03e2634f80be60e7a7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 203422,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4761,
+    "blank_lines": 0,
+    "comment_lines": 1657,
+    "code_lines": 3104,
+    "comment_ratio": 0.348,
+    "max_line_length": 74,
+    "avg_line_length": 41.7,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC10S200204"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 31,
+    "call_count": 24,
+    "perform_count": 201,
+    "goto_count": 50,
+    "pic_count": 212,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), GnuCOBOL/OpenCOBOL target, Linux/Unix environment evidenced by /var/tmp/ file paths",
+        "evidence": [
+          "PROGRAM-ID ORCSC10S200204",
+          "SELECT PARA-FILE ASSIGN FILE-NAME2 ORGANIZATION IS LINE SEQUENTIAL",
+          "/var/tmp/ path in FILE-NAME2",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "No EXEC CICS or EXEC SQL",
+          "No COMP-3 usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/shinsa) system - automatic calculation of examination/consultation fees (shinsatsu-ryo) for outpatient medical visits under JMA ORCA system",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It handles automatic generation and editing of medical examination fee calculations (shinsatsu-ryo jido hassei henshi shori) for outpatient visits. It processes patient visit data, determines first-visit vs. re-visit fees, applies age-based and time-based rules, and handles various special cases including elderly patients, telephone re-consultations, and same-day re-visits.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Large inline lookup table (TBL-SINSATU-AREA) with medical fee codes",
+        "LINE SEQUENTIAL file organization for parameter file",
+        "31 COPY statements indicating heavy use of shared copybooks",
+        "24 CALL statements to other subprograms",
+        "201 PERFORM statements indicating structured procedural logic",
+        "50 GOTO statements",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "No COMP-3 packed decimal despite financial calculations",
+        "File path /var/tmp/ indicating Linux/Unix runtime environment"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file is encoded in EUC-JP (Japanese encoding) but was decoded as latin-1, causing comment text to appear as garbled characters. The program name ORCSC10S200204 follows JMA ORCA naming conventions. The file is large (4761 lines, ~203KB) and highly structured with extensive revision history comments. The '200204' suffix likely indicates a version or date (2002/04). Only the first 16000 chars were shown but mechanical indicators confirm full COBOL structure with all four divisions present."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12720,
+      "completion_tokens": 608,
+      "total_tokens": 13328,
+      "cost": 0.04728,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04728,
+        "upstream_inference_prompt_cost": 0.03816,
+        "upstream_inference_completions_cost": 0.00912
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.46,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:54:45Z"
+}

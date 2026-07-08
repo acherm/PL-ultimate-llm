@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dbf69e1946cab9f716257eca0045a7097c0da466",
+    "sha1_git": "dbf69e1946cab9f716257eca0045a7097c0da466",
+    "filename": "/ORCSSYU40.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 42927,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dbf69e1946cab9f716257eca0045a7097c0da466/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dbf69e1946cab9f716257eca0045a7097c0da466/raw/"
+  },
+  "indicators": {
+    "bytes_len": 42927,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1056,
+    "blank_lines": 0,
+    "comment_lines": 373,
+    "code_lines": 683,
+    "comment_ratio": 0.353,
+    "max_line_length": 74,
+    "avg_line_length": 39.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSSYU40"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 7,
+    "perform_count": 56,
+    "goto_count": 4,
+    "pic_count": 77,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY includes (.INC), LINKAGE SECTION with SPA-AREA pattern typical of ORCA subsystem programs.",
+        "evidence": [
+          "PROGRAM-ID ORCSSYU40",
+          "COPY CPSYSKANRI.INC / CPSRYACT.INC / MCPDATA.INC / ORCA-SPA / COMMON-SPA",
+          "LINKAGE SECTION USING SPA-AREA ORCSSYU40AREA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "No EXEC CICS / no EXEC SQL",
+          "OCCURS ... INDEXED pattern, SEARCH/SET"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/shinryo-koui) system — specifically a subprogram handling out-of-benefit-coverage point calculation for Fukuoka Prefecture local public expense support, within the JMA ORCA standard receipt software.",
+        "summary": "Subprogram ORCSSYU40 calculates insurance-excluded (kyufugai) medical procedure points for initial consultation fees, home-visit fees, and related add-on items. It is called from both the medical-act entry screen and the payment (syunou) screen, and returns aggregated point totals in the linkage area.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with SPA-AREA (ORCA subsystem pattern)",
+        "14 COPY statements for shared record layouts (.INC files)",
+        "OCCURS table with INDEXED BY and SEARCH (linear table lookup for procedure codes)",
+        "REDEFINES on table area for structured access",
+        "Japanese EUC-encoded comments (latin-1 decoded, garbled)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "EVALUATE/WHEN used extensively",
+        "EXIT PROGRAM at end of main section"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text, appearing garbled. Source is truncated at 16000 chars (full file is 42927 bytes / 1056 lines). The ORCA project is a well-known open-source Japanese medical receipt system; this is a regional (Fukuoka Prefecture) adaptation subprogram."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10077,
+      "completion_tokens": 619,
+      "total_tokens": 10696,
+      "cost": 0.039516,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039516,
+        "upstream_inference_prompt_cost": 0.030231,
+        "upstream_inference_completions_cost": 0.009285
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.31,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:44:39Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:33004f57f728987373a48dfc02062e39c3fe313f",
+    "sha1_git": "33004f57f728987373a48dfc02062e39c3fe313f",
+    "filename": "/ORCRCP400.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 225074,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:33004f57f728987373a48dfc02062e39c3fe313f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:33004f57f728987373a48dfc02062e39c3fe313f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 225074,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5129,
+    "blank_lines": 3,
+    "comment_lines": 1110,
+    "code_lines": 4016,
+    "comment_ratio": 0.217,
+    "max_line_length": 116,
+    "avg_line_length": 42.9,
+    "long_lines_over_72": 24,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCRCP400"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 43,
+    "call_count": 84,
+    "perform_count": 193,
+    "goto_count": 15,
+    "pic_count": 301,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with REPLACING, indexed file I/O, and .INC copybooks typical of the ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCRCP400",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY CPRCF002.INC / CPCOMMONSHELL.INC / HCRCP400.INC etc",
+          "SELECT ... ASSIGN RECE01PARA ORGANIZATION IS INDEXED",
+          "no EXEC CICS / EXEC SQL / COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — specifically receipt print file creation for outpatient/inpatient billing (法別・入院外), part of the JMA ORCA standard receipt software suite.",
+        "summary": "ORCRCP400 is a batch program in the JMA ORCA medical receipt system that creates print files for insurance claim receipts (レセプト印刷用ファイル作成). It reads multiple indexed receipt data files (RECE02, RECE031, RECE061, RECE09, RECE11), processes patient and insurance information, and writes formatted output for printing, including disease name (傷病名) editing and prefectural-specific items.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "43 COPY statements with REPLACING for copybook reuse",
+        "84 CALL statements indicating heavy subprogram delegation",
+        "Multiple indexed VSAM-style files with DYNAMIC/SEQUENTIAL access",
+        "REDEFINES used extensively for multi-layout record areas",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS — pure file-based batch",
+        "Disease name (傷病名) multi-line editing logic",
+        "Prefectural special items (県単用項目) handling"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are in Japanese EUC encoding, decoded as latin-1 producing mojibake in the excerpt. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars out of 225074 bytes (5129 lines total); full analysis based on visible structure and mechanical indicators."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9162,
+      "completion_tokens": 621,
+      "total_tokens": 9783,
+      "cost": 0.036801,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036801,
+        "upstream_inference_prompt_cost": 0.027486,
+        "upstream_inference_completions_cost": 0.009315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.57,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:38:27Z"
+}

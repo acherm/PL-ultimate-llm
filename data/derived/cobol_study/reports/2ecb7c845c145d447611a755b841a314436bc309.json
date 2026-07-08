@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2ecb7c845c145d447611a755b841a314436bc309",
+    "sha1_git": "2ecb7c845c145d447611a755b841a314436bc309",
+    "filename": "/RDB457.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8672,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2ecb7c845c145d447611a755b841a314436bc309/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2ecb7c845c145d447611a755b841a314436bc309/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8672,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 243,
+    "blank_lines": 42,
+    "comment_lines": 19,
+    "code_lines": 182,
+    "comment_ratio": 0.095,
+    "max_line_length": 83,
+    "avg_line_length": 34.7,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "RDB457"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 42,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe-style batch COBOL, likely compiled on a mainframe or compatible environment. Uses RETURN-CODE special register, FILE STATUS codes, and ASSIGN TO SYS00n-style DDnames typical of IBM JCL/mainframe conventions. Spanish-language comments and identifiers suggest Latin American mainframe shop (possibly Colombian banking).",
+        "evidence": [
+          "ASSIGN TO SYS001-CN255SE (mainframe DDname convention)",
+          "RETURN-CODE special register usage",
+          "FILE STATUS '97' handling (IBM-specific open status)",
+          "PERFORM ... THRU paragraph pattern",
+          "CALL 'GEC002' (external utility call)",
+          "END-IF structured conditionals (COBOL-85)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "ETL/EGL transformation program merging two input files (CN255SE - transaction notifications, CN285SE - device/network data) to produce an output file (RD457SS) with enriched transaction records. Context suggests Colombian or Latin American banking.",
+        "summary": "This batch program performs a merge-join (ETL) between two sequential input files keyed on account number. It reads CN255SE (transaction notifications) and CN285SE (device/network data), matches records by account number key, and writes merged records to output file RD457SS. It tracks read and write counts and displays summary statistics on completion.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Merge/join logic on two sequential files by key comparison (WK-LLAVE1 vs WK-LLAVE2)",
+        "FILE STATUS error handling with '97' (IBM file-not-found open status)",
+        "RETURN-CODE special register for job step return code",
+        "CALL to external utility 'GEC002' for date retrieval",
+        "ACCEPT ... FROM TIME for system time",
+        "REDEFINES clause for date decomposition",
+        "Spanish-language identifiers and comments",
+        "PERFORM THRU paragraph exit pattern throughout"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source uses tab characters for indentation in some DATA DIVISION entries (mixed tabs/spaces), though the overall format is fixed-column. The program appears to be a student or training exercise ('Grupo 5 COBIW', 'COBIW' likely a COBOL course) but is written in production style with proper error handling, file status checks, and structured logic. Domain is clearly banking/finance based on field names (NUM-CTA=account number, NUM-TRANSAC=transaction number)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5290,
+      "completion_tokens": 608,
+      "total_tokens": 5898,
+      "cost": 0.02499,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02499,
+        "upstream_inference_prompt_cost": 0.01587,
+        "upstream_inference_completions_cost": 0.00912
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.89,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:30:09Z"
+}

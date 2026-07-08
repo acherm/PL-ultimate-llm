@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:88f29ab363e1d4e104a3a1e1cb246414e359d24b",
+    "sha1_git": "88f29ab363e1d4e104a3a1e1cb246414e359d24b",
+    "filename": "/IDBSMOV0.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 38173,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:88f29ab363e1d4e104a3a1e1cb246414e359d24b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:88f29ab363e1d4e104a3a1e1cb246414e359d24b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 38173,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1294,
+    "blank_lines": 236,
+    "comment_lines": 72,
+    "code_lines": 986,
+    "comment_ratio": 0.068,
+    "max_line_length": 72,
+    "avg_line_length": 28.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "IDBSMOV0"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 141,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Italian IBM mainframe DB2 application, project NEWLIFE, standard DB2 embedded SQL subprogram pattern with SQLCA, indicator variables, and cursor management",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC SQL INCLUDE IDBDMOV0 END-EXEC",
+          "EXEC SQL ... INTO :MOV-ID-MOVI ... :IND-MOV-ID-OGG (indicator variables)",
+          "PROGRAM-ID. IDBSMOV0 IS INITIAL",
+          "DECIMAL-POINT IS COMMA",
+          "GOBACK",
+          "DATE-WRITTEN. 04 SET 2008 (Italian date format)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Italian insurance/financial system (NEWLIFE project, ANIA company codes - Associazione Nazionale fra le Imprese Assicuratrici), DB2 data access module for MOVI (movements) table",
+        "summary": "This is a DB2 data access subprogram for the MOVI (movements) table in the NEWLIFE insurance project. It handles SELECT, INSERT, UPDATE, DELETE, and cursor operations (open/close/fetch) for movement records, supporting multiple access patterns including primary key, historical (effetto/competenza), and object-based access. It is called by higher-level programs via a standard service interface (IDSV0003).",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC SQL embedded DB2 with SQLCA",
+        "Indicator variables for nullable columns",
+        "Multiple cursor management (open/close/fetch-first/fetch-next)",
+        "EVALUATE TRUE structured dispatch pattern",
+        "PROCEDURE DIVISION USING (subprogram interface)",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "IS INITIAL clause on PROGRAM-ID",
+        "Italian-language comments and identifiers",
+        "Historical record management (aggiornamento storico, delete logica)",
+        "GOBACK statement"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars out of 38173 bytes; full INSERT and remaining SQL statements not visible but structure is clear. Italian insurance domain inferred from ANIA (Italian insurance association) references and project name NEWLIFE. No CICS, pure batch DB2 subprogram."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7733,
+      "completion_tokens": 566,
+      "total_tokens": 8299,
+      "cost": 0.031689,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031689,
+        "upstream_inference_prompt_cost": 0.023199,
+        "upstream_inference_completions_cost": 0.00849
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.13,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:42:22Z"
+}

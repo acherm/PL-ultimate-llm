@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e2229c19e4e47410a3ede63086e5768967c58046",
+    "sha1_git": "e2229c19e4e47410a3ede63086e5768967c58046",
+    "filename": "/MAIN-MENU.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10199,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e2229c19e4e47410a3ede63086e5768967c58046/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e2229c19e4e47410a3ede63086e5768967c58046/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10199,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 236,
+    "blank_lines": 28,
+    "comment_lines": 12,
+    "code_lines": 196,
+    "comment_ratio": 0.058,
+    "max_line_length": 73,
+    "avg_line_length": 41.2,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MAIN-MENU"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 6,
+    "perform_count": 25,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Uses SCREEN SECTION with LINE/COL clauses and AUTO attribute, consistent with GnuCOBOL (OpenCOBOL) or similar open-source COBOL compiler targeting terminal-based screen I/O",
+        "evidence": [
+          "SCREEN SECTION with LINE/COL/AUTO",
+          "BLANK SCREEN clause",
+          "ACCEPT/DISPLAY screen names",
+          "EVALUATE...END-EVALUATE",
+          "PERFORM UNTIL...END-PERFORM"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Academic group project: a student information system menu shell covering student records, course records, schedules, instructor records, building records, and reports",
+        "summary": "MAIN-MENU is a terminal-based interactive menu program for a student information system. It presents a main menu and sub-menus for students, courses, schedules, instructors, buildings, and reports, dispatching to sub-programs via CALL or nested PERFORM. It is a group project from 2014.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SCREEN SECTION with LINE/COL positioning and AUTO attribute",
+        "BLANK SCREEN clause",
+        "Date/time display via ACCEPT FROM DATE and ACCEPT FROM TIME",
+        "EVALUATE statement for menu dispatch",
+        "CALL to external subprograms (STU-BUILDER, COURSE-MASTER, COURSE-ADD, COURSE-UPDATE, COURSE-INQUIRY, COURSE-LIST)",
+        "Nested paragraph structure (210-STUDENT defined inside 200-MAIN indentation, likely a coding error)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is clearly a student group project (author and date in header comments, 2014). Paragraph 210-STUDENT appears to be indented as if nested inside 200-MAIN but COBOL paragraphs are not truly nested; this is a common student mistake. Several sub-menus (schedule, building, instructor, reports) incorrectly PERFORM 210-STUDENT instead of their own logic, suggesting incomplete implementation. Dialect is likely GnuCOBOL based on SCREEN SECTION usage, but could also be Micro Focus or ACUCOBOL; no compiler-specific directives present to disambiguate."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5333,
+      "completion_tokens": 544,
+      "total_tokens": 5877,
+      "cost": 0.024159,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024159,
+        "upstream_inference_prompt_cost": 0.015999,
+        "upstream_inference_completions_cost": 0.00816
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.8,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:32:47Z"
+}

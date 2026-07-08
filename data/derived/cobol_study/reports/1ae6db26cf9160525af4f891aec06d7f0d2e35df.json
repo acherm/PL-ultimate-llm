@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1ae6db26cf9160525af4f891aec06d7f0d2e35df",
+    "sha1_git": "1ae6db26cf9160525af4f891aec06d7f0d2e35df",
+    "filename": "/Vndrpt04.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7659,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1ae6db26cf9160525af4f891aec06d7f0d2e35df/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1ae6db26cf9160525af4f891aec06d7f0d2e35df/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7659,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 240,
+    "blank_lines": 0,
+    "comment_lines": 3,
+    "code_lines": 237,
+    "comment_ratio": 0.013,
+    "max_line_length": 66,
+    "avg_line_length": 30.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "VNDRPT04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 0,
+    "perform_count": 34,
+    "goto_count": 0,
+    "pic_count": 32,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Likely a PC/workstation COBOL environment (possibly Micro Focus or similar) given ASSIGN TO PRINTER, LINE SEQUENTIAL, ACCEPT OMITTED, and .CBL file extensions with COPY of .CBL files. No mainframe-specific features detected.",
+        "evidence": [
+          "ASSIGN TO PRINTER",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ACCEPT OMITTED",
+          "COPY with quoted filenames ending in .CBL",
+          "EXIT PROGRAM followed by STOP RUN pattern",
+          "SEARCH with INDEXED BY"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Vendor master file reporting — prints a formatted vendor list with name, address, contact, phone, and state lookup",
+        "summary": "VNDRPT04 reads a vendor file sequentially and prints a paginated vendor report to a printer file. It loads a state code table from a state file and performs a table lookup to resolve state codes to full state names for each vendor record.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY of external .CBL files for SELECT and FD entries (SLVND02.CBL, SLSTATE.CBL, FDVND04.CBL, FDSTATE.CBL)",
+        "OCCURS 50 TIMES INDEXED BY for state code table",
+        "SEARCH statement for table lookup",
+        "WRITE BEFORE ADVANCING PAGE for form feed",
+        "ACCEPT OMITTED before STOP RUN",
+        "Multi-line record printing (4 lines per vendor)",
+        "Page numbering and column headers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "No SQL or CICS. The use of quoted COPY filenames and ASSIGN TO PRINTER with LINE SEQUENTIAL suggests a PC-based COBOL environment rather than IBM mainframe. The ACCEPT OMITTED pattern is common in Micro Focus or similar PC COBOL to pause before exit. Standard is inferred as COBOL-85 based on SEARCH, INDEXED BY, and structured PERFORM usage."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5061,
+      "completion_tokens": 485,
+      "total_tokens": 5546,
+      "cost": 0.022458,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022458,
+        "upstream_inference_prompt_cost": 0.015183,
+        "upstream_inference_completions_cost": 0.007275
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.34,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:12:11Z"
+}

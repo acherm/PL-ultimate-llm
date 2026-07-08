@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0d5a100f713b5970fd426e0e1644a4b60205d264",
+    "sha1_git": "0d5a100f713b5970fd426e0e1644a4b60205d264",
+    "filename": "/ORCR0640.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 863379,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0d5a100f713b5970fd426e0e1644a4b60205d264/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0d5a100f713b5970fd426e0e1644a4b60205d264/raw/"
+  },
+  "indicators": {
+    "bytes_len": 863379,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 18039,
+    "blank_lines": 0,
+    "comment_lines": 2917,
+    "code_lines": 15122,
+    "comment_ratio": 0.162,
+    "max_line_length": 80,
+    "avg_line_length": 46.9,
+    "long_lines_over_72": 76,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0640"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 51,
+    "call_count": 49,
+    "perform_count": 871,
+    "goto_count": 10,
+    "pic_count": 670,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCR0640 is part of the ORCA (日医標準レセプトソフト) system developed by NaCl for JMA.",
+        "evidence": [
+          "PROGRAM-ID. ORCR0640",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "JMA standard receipt software",
+          "JMA Open Source License",
+          "NaCl developer references in change log",
+          "no EXEC CICS / EXEC SQL",
+          "COPY count 51 consistent with GnuCOBOL ORCA codebase"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — specifically inpatient (入院) diagnosis/treatment category point aggregation (診療区分別点数集計)",
+        "summary": "ORCR0640 is a large batch program in the JMA ORCA medical receipt software suite. It aggregates and formats inpatient medical insurance claim (レセプト) data by diagnosis/treatment category, computing point totals, co-payment amounts, and various special billing items for submission to Japanese health insurers. The program handles numerous regional public expense (地方公費) variations and special billing rules across Japanese prefectures.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Large program: 18039 lines, ~863KB",
+        "51 COPY statements indicating heavy use of shared copybooks",
+        "49 CALL statements to external subprograms",
+        "871 PERFORM statements indicating complex structured logic",
+        "No COMP-3 usage (unusual for financial calculations — may use COMP or display numeric)",
+        "No EXEC SQL or EXEC CICS",
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "Detailed version history spanning 2002–2007 with many revision entries",
+        "10 GO TO statements (minimal)",
+        "Fixed-format source with max line length 80"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but comments are actually EUC-JP encoded Japanese text, appearing garbled in latin-1 rendering. This is characteristic of the JMA ORCA codebase. The program is clearly production-grade medical billing software with an extensive multi-year change history. No COMP-3 found despite financial calculations; numeric storage approach may rely on COMP or DISPLAY numerics. Source truncated to first 16000 chars; full file is 863KB/18039 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 16657,
+      "completion_tokens": 642,
+      "total_tokens": 17299,
+      "cost": 0.059601,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.059601,
+        "upstream_inference_prompt_cost": 0.049971,
+        "upstream_inference_completions_cost": 0.00963
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.33,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:16:16Z"
+}

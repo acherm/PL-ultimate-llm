@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d021202f8fff44b45e6ba281c0a6dfce6df1c5e9",
+    "sha1_git": "d021202f8fff44b45e6ba281c0a6dfce6df1c5e9",
+    "filename": "/PROG05.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7944,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d021202f8fff44b45e6ba281c0a6dfce6df1c5e9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d021202f8fff44b45e6ba281c0a6dfce6df1c5e9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7944,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 200,
+    "blank_lines": 26,
+    "comment_lines": 1,
+    "code_lines": 173,
+    "comment_ratio": 0.006,
+    "max_line_length": 72,
+    "avg_line_length": 37.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PROG05"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 40,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) with SCREEN SECTION, LOCK MODE IS MANUAL, DECIMAL-POINT IS COMMA, and intrinsic functions (FUNCTION PI, FUNCTION SIN, FUNCTION COS, FUNCTION ATAN, FUNCTION SQRT). Brazilian Portuguese identifiers and date format suggest Brazilian educational/small-business context.",
+        "evidence": [
+          "LOCK MODE IS MANUAL (GnuCOBOL extension)",
+          "SCREEN SECTION with BACKGROUND-COLOR/FOREGROUND-COLOR",
+          "FUNCTION PI, FUNCTION SIN, FUNCTION COS, FUNCTION ATAN, FUNCTION SQRT",
+          "DECIMAL-POINT IS COMMA",
+          "ASSIGN TO DISK",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "PERFORM UNTIL EXIT / EXIT PERFORM"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer portfolio distribution system - assigns customers to the nearest salesperson based on geographic distance (Haversine formula)",
+        "summary": "This program reads all customer records and for each customer iterates over all salesperson records to compute the geographic distance using the Haversine formula. It then writes a CSV file (DIST.CSV) mapping each customer to the nearest salesperson. The program uses indexed files for customers and vendors and a line-sequential output file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Haversine distance calculation using FUNCTION SIN, COS, ATAN, SQRT, PI",
+        "SCREEN SECTION with color attributes",
+        "LOCK MODE IS MANUAL on indexed files",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "LINKAGE SECTION with DATA-DE-HOJE passed from calling program",
+        "COPY statements for FD definitions (ARQ-CLIENTE.FD, ARQ-VENDEDOR.FD)",
+        "CSV output file generation",
+        "PERFORM THRU with EXIT paragraphs",
+        "Continuation lines with hyphen in column 7"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The program is authored by 'WILKSON SILVA' dated 18/01/2020, suggesting a student or small-business project. The Haversine formula implementation is somewhat simplified (uses ATAN instead of ATAN2). The continuation line syntax (hyphen in col 7) is used for long literals and arithmetic expressions. No COMP-3 usage. Dialect is likely GnuCOBOL based on LOCK MODE IS MANUAL and SCREEN SECTION features, but could also be Micro Focus; GnuCOBOL is more common in Brazilian educational settings."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4861,
+      "completion_tokens": 630,
+      "total_tokens": 5491,
+      "cost": 0.024033,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024033,
+        "upstream_inference_prompt_cost": 0.014583,
+        "upstream_inference_completions_cost": 0.00945
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.14,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:20:40Z"
+}

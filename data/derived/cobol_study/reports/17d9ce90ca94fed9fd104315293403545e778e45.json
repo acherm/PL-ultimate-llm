@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:17d9ce90ca94fed9fd104315293403545e778e45",
+    "sha1_git": "17d9ce90ca94fed9fd104315293403545e778e45",
+    "filename": "/assert.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2913,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:17d9ce90ca94fed9fd104315293403545e778e45/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:17d9ce90ca94fed9fd104315293403545e778e45/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2913,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 96,
+    "blank_lines": 11,
+    "comment_lines": 0,
+    "code_lines": 85,
+    "comment_ratio": 0.0,
+    "max_line_length": 58,
+    "avg_line_length": 29.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "assert"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 5,
+    "call_count": 1,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 11,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL subprogram using pseudo-text COPY REPLACING with == delimiters and $CATCHPARAMS directive-like macro; authored 2020",
+        "evidence": [
+          "copy \"definitions.cpy\" replacing ==!MAX-PARAMS-NUM== by ==4==",
+          "$CATCHPARAMS",
+          "copy \"catchx.pdv\" replacing ==!W== by ==operator==",
+          "78 level items (VALUE-DIMENSION, DESCRIPTION-DIMENSION)",
+          "goback giving w-return-value"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Test assertion utility subprogram for a COBOL testing framework",
+        "summary": "This is a subprogram named 'assert' that accepts an operator, expected value, actual value, and description via the linkage section. It calls 'assert-logic' to evaluate the assertion and then displays a formatted OK/KO result message to the console.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "COPY REPLACING with pseudo-text == delimiters",
+        "78-level constant definitions",
+        "$CATCHPARAMS macro/directive",
+        "GOBACK GIVING",
+        "STRING verb with POINTER",
+        "Multiple COPY of .pdv (procedure division) fragments",
+        "Linkage section with 4 parameters"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "The $CATCHPARAMS token and .pdv copybook pattern suggest a custom macro/framework layer on top of GnuCOBOL. The dialect could also be Micro Focus but GnuCOBOL is more likely given the open-source style and 2020 date. No long lines over 72 columns confirms fixed format. The copy files (definitions.cpy, catchx.pdv) are not shown, limiting full analysis."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2997,
+      "completion_tokens": 450,
+      "total_tokens": 3447,
+      "cost": 0.015741,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015741,
+        "upstream_inference_prompt_cost": 0.008991,
+        "upstream_inference_completions_cost": 0.00675
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 371.43,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:55:17Z"
+}

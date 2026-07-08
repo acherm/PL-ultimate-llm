@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1f75570a09a4efd1ed03afa834e3297ecd858325",
+    "sha1_git": "1f75570a09a4efd1ed03afa834e3297ecd858325",
+    "filename": "/ORCL0031.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 204956,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1f75570a09a4efd1ed03afa834e3297ecd858325/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1f75570a09a4efd1ed03afa834e3297ecd858325/raw/"
+  },
+  "indicators": {
+    "bytes_len": 204956,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4709,
+    "blank_lines": 0,
+    "comment_lines": 1263,
+    "code_lines": 3446,
+    "comment_ratio": 0.268,
+    "max_line_length": 102,
+    "avg_line_length": 42.5,
+    "long_lines_over_72": 16,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCL0031"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 42,
+    "call_count": 31,
+    "perform_count": 254,
+    "goto_count": 15,
+    "pic_count": 160,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING, no EXEC SQL/CICS, no COMP-3",
+        "evidence": [
+          "PROGRAM-ID ORCL0031",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with REPLACING directives (CPWKSRYACT.INC, CPPTBYOMEI.INC, CPTENSU.INC etc.)",
+          "no EXEC SQL / EXEC CICS",
+          "no COMP-3 usage",
+          "file path /var/tmp/ references suggest Linux environment",
+          "latin-1 decoded with Japanese EUC-JP comment text"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software – converts point-score (点数) module data into medical treatment act (診療行為) records, handling disease name (病名) registration, insurance combination, hospitalization counts, and related clinical data",
+        "summary": "ORCL0031 is a subprogram within the JMA ORCA medical receipt system that converts point-score/treatment-act master data into work treatment-act records. It manages patient disease-name (byomei) registration and updates, insurance information, hospitalization flags, and various medical billing calculations. The program has an extensive revision history spanning 2000–2012 covering group treatment, UID tables, public-expense support, and quantity decimal handling.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "42 COPY statements with REPLACING for modular copybook inclusion",
+        "31 CALL statements indicating heavy subprogram delegation",
+        "254 PERFORM statements",
+        "Japanese EUC-JP comments throughout (latin-1 decoded)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 packed decimal fields",
+        "Extensive flag area (FLG-AREA) with many single-digit PIC 9(01) flags",
+        "OCCURS clauses for disease-name and insurance tables",
+        "Long revision history (2000–2012) with named maintainers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars; full file is ~205KB / 4709 lines. Japanese comments are EUC-JP encoded but decoded as latin-1, causing mojibake in the displayed text. Dialect identified as GnuCOBOL/OpenCOBOL based on Linux path references and JMA ORCA project context; no IBM-specific extensions observed."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11042,
+      "completion_tokens": 650,
+      "total_tokens": 11692,
+      "cost": 0.042876,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.042876,
+        "upstream_inference_prompt_cost": 0.033126,
+        "upstream_inference_completions_cost": 0.00975
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.55,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:25:22Z"
+}

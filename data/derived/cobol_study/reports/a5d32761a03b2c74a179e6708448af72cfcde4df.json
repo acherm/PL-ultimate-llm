@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a5d32761a03b2c74a179e6708448af72cfcde4df",
+    "sha1_git": "a5d32761a03b2c74a179e6708448af72cfcde4df",
+    "filename": "/G3-BLD-VISA-ISS.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1922,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a5d32761a03b2c74a179e6708448af72cfcde4df/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a5d32761a03b2c74a179e6708448af72cfcde4df/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1922,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 56,
+    "blank_lines": 17,
+    "comment_lines": 10,
+    "code_lines": 29,
+    "comment_ratio": 0.256,
+    "max_line_length": 73,
+    "avg_line_length": 33.3,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "G3_BLD_VISA_ISS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses ISAM file handling with SELECT/FD copybooks, structured for a student or academic environment (G3 prefix, dual author names, 2012/2014 dates)",
+        "evidence": [
+          "PROGRAM-ID. G3_BLD_VISA_ISS",
+          "COPY SELECT-ISS",
+          "COPY FD-ISS",
+          "WRITE ISS-REC FROM ISS-REC-TXT BEFORE ADVANCING 1 LINE",
+          "EXIT PROGRAM"
+        ],
+        "confidence": "low"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "VISA issuer file build utility; reads a text flat file and writes to an ISAM indexed file for issuer records",
+        "summary": "This program builds an ISAM indexed file for VISA issuer data. It reads records from a sequential text input file (ISS-FILE-TXT) and writes them to an indexed output file (ISS-FILE), counting records processed and displaying completion status.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ISAM file handling via SELECT/FD copybooks",
+        "PERFORM UNTIL loop with AT END / NOT AT END",
+        "WRITE ... BEFORE ADVANCING (print-style write on indexed file)",
+        "EXIT PROGRAM (subprogram-style termination)",
+        "Dual-author header comment with two dates"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "No IDENTIFICATION DIVISION header present (PROGRAM-ID appears standalone); missing IDENTIFICATION DIVISION keyword is unusual. The G3 prefix and dual student names suggest an academic project. Dialect is uncertain; GnuCOBOL is a reasonable guess for a student environment but cannot be confirmed from source alone. The WRITE ... BEFORE ADVANCING on an indexed file is unusual and may indicate a coding error or non-standard extension."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2700,
+      "completion_tokens": 463,
+      "total_tokens": 3163,
+      "cost": 0.015045,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015045,
+        "upstream_inference_prompt_cost": 0.0081,
+        "upstream_inference_completions_cost": 0.006945
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.38,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:43:32Z"
+}

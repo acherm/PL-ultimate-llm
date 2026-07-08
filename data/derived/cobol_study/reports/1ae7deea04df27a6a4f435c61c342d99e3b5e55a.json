@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1ae7deea04df27a6a4f435c61c342d99e3b5e55a",
+    "sha1_git": "1ae7deea04df27a6a4f435c61c342d99e3b5e55a",
+    "filename": "/ORCGT01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 352010,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1ae7deea04df27a6a4f435c61c342d99e3b5e55a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1ae7deea04df27a6a4f435c61c342d99e3b5e55a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 352010,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 7798,
+    "blank_lines": 0,
+    "comment_lines": 1652,
+    "code_lines": 6146,
+    "comment_ratio": 0.212,
+    "max_line_length": 102,
+    "avg_line_length": 44.1,
+    "long_lines_over_72": 55,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGT01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 67,
+    "call_count": 37,
+    "perform_count": 378,
+    "goto_count": 71,
+    "pic_count": 114,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with REPLACING, SELECT/ASSIGN with file status, and typical ORCA conventions.",
+        "evidence": [
+          "PROGRAM-ID ORCGT01",
+          "COPY 'COMMON-SPA'",
+          "COPY 'T01COMMON-SPA'",
+          "COPY 'CPERRFL.INC' REPLACING",
+          "SELECT RECEERR-FILE ASSIGN RECEERR FILE STATUS IS STS-RECEERR",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "JMA Open Source License"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — specifically the general summary table and public expense claim document creation component (総括表・公費請求書作成 T01)",
+        "summary": "ORCGT01 is the main batch program for creating general summary tables and public expense claim documents (総括表・公費請求書) within the JMA ORCA standard medical receipt software. It manages print job control, receipt electric transmission (レセ電) data checks, and various insurance claim workflows. The program has an extensive revision history spanning 2000–2014 covering regulatory changes, disaster relief support, and online claim processing.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "67 COPY statements indicating heavy use of shared copybooks",
+        "37 CALL statements to subprograms",
+        "378 PERFORM statements",
+        "71 GOTO statements",
+        "Japanese EUC/Latin-1 encoded comments with full revision history",
+        "REDEFINES usage",
+        "OCCURS clause",
+        "File STATUS checking",
+        "No EXEC SQL or EXEC CICS (file-based, not DB2/CICS)",
+        "Large program: ~7800 lines, 352KB"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is encoded in Latin-1 but contains EUC-JP Japanese text in comments (mojibake in the snippet). This is consistent with the JMA ORCA open-source medical receipt system distributed under the JMA Open Source License. The file is clearly production-grade with a detailed multi-year change log. No COMP-3 usage detected despite financial calculations, which is typical for GnuCOBOL/OpenCOBOL on Linux rather than IBM mainframe."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 13980,
+      "completion_tokens": 608,
+      "total_tokens": 14588,
+      "cost": 0.05106,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.05106,
+        "upstream_inference_prompt_cost": 0.04194,
+        "upstream_inference_completions_cost": 0.00912
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.21,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:39:31Z"
+}

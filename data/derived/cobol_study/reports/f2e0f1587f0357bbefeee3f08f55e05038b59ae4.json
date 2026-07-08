@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f2e0f1587f0357bbefeee3f08f55e05038b59ae4",
+    "sha1_git": "f2e0f1587f0357bbefeee3f08f55e05038b59ae4",
+    "filename": "/ctxml000.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 227342,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f2e0f1587f0357bbefeee3f08f55e05038b59ae4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f2e0f1587f0357bbefeee3f08f55e05038b59ae4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 227342,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 5236,
+    "blank_lines": 198,
+    "comment_lines": 42,
+    "code_lines": 4996,
+    "comment_ratio": 0.008,
+    "max_line_length": 85,
+    "avg_line_length": 41.4,
+    "long_lines_over_72": 15,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MIGRACION-XML"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 164,
+    "call_count": 0,
+    "perform_count": 548,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) targeting a Windows environment; Spanish-language identifiers, backslash path separators in COPY statements, MySQL SQL generation for data migration",
+        "evidence": [
+          "COPY \"DATOS\\ABASTAUD.FCN\"",
+          "PROGRAM-ID. MIGRACION-XML",
+          "AUTHOR. FERNANDO-NEGROTTO",
+          "MOVE \"truncate movimientosstock;\" TO STR-INSERT",
+          "PIC X(5000) for SQL output",
+          "no EXEC SQL/CICS, no COMP-3"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Argentine retail/commerce ERP system data migration — exports legacy COBOL flat-file data to MySQL XML/SQL format covering articles, clients, suppliers, sales, purchases, payments, cheques, accounts, stock movements, etc.",
+        "summary": "This batch program (MIGRACION-XML) reads data from a large set of legacy COBOL indexed/sequential files and generates MySQL INSERT/TRUNCATE SQL statements to migrate the data into a relational database. It covers virtually all business entities of an Argentine retail ERP: articles, clients, suppliers, sales, purchases, payments, cheques, accounts, stock, price lists, and audit tables. The program writes output SQL files in chunks controlled by a record counter.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "164 COPY statements for file control and data structures",
+        "Generates MySQL SQL (INSERT/TRUNCATE) as text output",
+        "Spanish-language identifiers and comments",
+        "Windows-style backslash paths in COPY",
+        "PIC X(5000) output record for SQL strings",
+        "548 PERFORM calls, zero GOTO — structured programming",
+        "No EXEC SQL or EXEC CICS",
+        "Chunked SQL file output with VAR-NUM-ARCHIVO counter",
+        "Covers ~50+ business tables including audit tables"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source truncated to first 16000 chars; full program is 5236 lines. Dialect is inferred as GnuCOBOL on Windows based on backslash COPY paths and absence of mainframe/MF-specific syntax. Could also be Micro Focus on Windows but GnuCOBOL is more likely given the open-source Argentine ERP context. The .FCN/.FSC/.TXE/.CPY copybook extensions are non-standard and specific to this application."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8239,
+      "completion_tokens": 599,
+      "total_tokens": 8838,
+      "cost": 0.033702,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033702,
+        "upstream_inference_prompt_cost": 0.024717,
+        "upstream_inference_completions_cost": 0.008985
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:57:24Z"
+}

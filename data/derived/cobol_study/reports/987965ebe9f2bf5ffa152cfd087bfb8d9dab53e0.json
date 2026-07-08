@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:987965ebe9f2bf5ffa152cfd087bfb8d9dab53e0",
+    "sha1_git": "987965ebe9f2bf5ffa152cfd087bfb8d9dab53e0",
+    "filename": "/SOKATU1215.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 117710,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:987965ebe9f2bf5ffa152cfd087bfb8d9dab53e0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:987965ebe9f2bf5ffa152cfd087bfb8d9dab53e0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 117710,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2768,
+    "blank_lines": 2,
+    "comment_lines": 1148,
+    "code_lines": 1618,
+    "comment_ratio": 0.415,
+    "max_line_length": 81,
+    "avg_line_length": 41.5,
+    "long_lines_over_72": 12,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU1215"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 32,
+    "call_count": 13,
+    "perform_count": 163,
+    "goto_count": 2,
+    "pic_count": 110,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY includes with .INC extension, ORGANIZATION IS INDEXED, LINE SEQUENTIAL files, and shell/MCP linkage patterns typical of ORCA.",
+        "evidence": [
+          "PROGRAM-ID SOKATU1215",
+          "COPY 'CPORCSPRTLNK.INC'",
+          "COPY 'CPCOMMONSHELL.INC'",
+          "COPY 'MCPAREA'",
+          "COPY 'MCPDATA.INC'",
+          "SELECT ... ORGANIZATION IS INDEXED ACCESS MODE IS DYNAMIC",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "JMA ORCA copyright header 2002"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/seikyu) processing — specifically a monthly claim aggregation and printing program for Chiba/wide-area federation (Senbatsu/Hiroi-rengou) medical receipt submission",
+        "summary": "SOKATU1215 is part of the JMA ORCA medical receipt software system. It aggregates and prints monthly insurance claim (receipt) summary reports for submission to insurers, handling public expense (kouhi) breakdowns, patient counts, days, and point totals. It reads receipt DB update files, a temporary indexed file, and writes error files, producing printed claim summary documents.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "32 COPY statements referencing .INC copybooks",
+        "ORGANIZATION IS INDEXED with DYNAMIC access",
+        "LINE SEQUENTIAL file organization",
+        "LINKAGE SECTION with COMMAND-PARAM (shell invocation)",
+        "OCCURS tables for public expense (kouhi) breakdown up to 100 entries",
+        "REDEFINES usage for hospital name/address fields",
+        "High comment ratio (41%) with Japanese EUC-JP encoded comments",
+        "Version history embedded in comments (01.00.01 through 01.00.13)",
+        "PERFORM...UNTIL main loop structure with GOTO used sparingly (2 occurrences)",
+        "No EXEC SQL or EXEC CICS — flat file based"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (garbled in latin-1 view). This is genuine production COBOL from the open-source JMA ORCA medical receipt system, well-maintained with a long revision history from 2008 to 2016. Source is truncated at 16000 chars but sufficient evidence is present for classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10607,
+      "completion_tokens": 641,
+      "total_tokens": 11248,
+      "cost": 0.041436,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.041436,
+        "upstream_inference_prompt_cost": 0.031821,
+        "upstream_inference_completions_cost": 0.009615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.21,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:05:14Z"
+}

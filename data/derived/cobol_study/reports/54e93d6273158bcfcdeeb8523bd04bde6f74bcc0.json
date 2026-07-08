@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:54e93d6273158bcfcdeeb8523bd04bde6f74bcc0",
+    "sha1_git": "54e93d6273158bcfcdeeb8523bd04bde6f74bcc0",
+    "filename": "/SEIKYU1903.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 102361,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:54e93d6273158bcfcdeeb8523bd04bde6f74bcc0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:54e93d6273158bcfcdeeb8523bd04bde6f74bcc0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 102361,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2514,
+    "blank_lines": 1,
+    "comment_lines": 666,
+    "code_lines": 1847,
+    "comment_ratio": 0.265,
+    "max_line_length": 74,
+    "avg_line_length": 39.7,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU1903"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 45,
+    "perform_count": 102,
+    "goto_count": 3,
+    "pic_count": 144,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based system used in Japanese medical clinics. Program SEIKYU1903 handles local public expense (地方公費) duplicate/complex receipt processing.",
+        "evidence": [
+          "PROGRAM-ID. SEIKYU1903",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY directives with .INC files typical of ORCA",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "PROCEDURE DIVISION USING COMMAND-PARAM",
+          "No EXEC CICS or EXEC SQL",
+          "SELECT with ORGANIZATION IS INDEXED"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (レセプト/receipt) system - specifically local public expense (地方公費) mountain/complex receipt processing for JMA ORCA standard medical receipt software",
+        "summary": "This program (SEIKYU1903) is part of the JMA ORCA standard medical receipt software system. It processes local public expense (地方公費) billing receipts, handling patient insurance information, payment collection data, and generating printed receipt documents. It reads indexed files, processes patient and insurance combination records, and outputs formatted billing receipts.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "29 COPY statements referencing ORCA-specific .INC copybooks",
+        "45 CALL statements to ORCA subprograms",
+        "UNSTRING of COMMAND-PARAM for batch parameter passing",
+        "LINKAGE SECTION with COMMAND-PARAM",
+        "INDEXED file organization with DYNAMIC access",
+        "REDEFINES usage for hospital name/address fields",
+        "OCCURS tables for insurance combination data",
+        "Japanese EUC-JP encoded comments (latin-1 decoded)",
+        "No COMP-3 usage despite financial calculations",
+        "INITIALIZE used extensively"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments. Content is clearly identifiable as JMA ORCA medical receipt software. Source truncated at 16000 chars out of 102361 bytes total. The program name SEIKYU1903 follows ORCA naming conventions (SEIKYU=billing, 19=subsystem, 03=component). Created 2014-06-04 per comment header."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9122,
+      "completion_tokens": 604,
+      "total_tokens": 9726,
+      "cost": 0.036426,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036426,
+        "upstream_inference_prompt_cost": 0.027366,
+        "upstream_inference_completions_cost": 0.00906
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.97,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:50:32Z"
+}

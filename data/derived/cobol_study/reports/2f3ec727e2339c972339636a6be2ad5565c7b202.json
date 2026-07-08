@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2f3ec727e2339c972339636a6be2ad5565c7b202",
+    "sha1_git": "2f3ec727e2339c972339636a6be2ad5565c7b202",
+    "filename": "/ORCR0030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 498163,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2f3ec727e2339c972339636a6be2ad5565c7b202/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2f3ec727e2339c972339636a6be2ad5565c7b202/raw/"
+  },
+  "indicators": {
+    "bytes_len": 498163,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 10269,
+    "blank_lines": 0,
+    "comment_lines": 1889,
+    "code_lines": 8380,
+    "comment_ratio": 0.184,
+    "max_line_length": 78,
+    "avg_line_length": 47.5,
+    "long_lines_over_72": 91,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 38,
+    "call_count": 39,
+    "perform_count": 380,
+    "goto_count": 9,
+    "pic_count": 545,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (Nihon Ishi-kai standard receipt software); compiled with GnuCOBOL/OpenCOBOL on Linux. No EXEC SQL or EXEC CICS; uses COPY extensively.",
+        "evidence": [
+          "PROGRAM-ID ORCR0030",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "38 COPY statements",
+          "no EXEC SQL / EXEC CICS",
+          "fixed format max line 78",
+          "latin-1 encoding with Japanese EUC-JP comment text"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (rezept) processing system — calculates and edits point totals by diagnosis/treatment category for health insurance claims",
+        "summary": "ORCR0030 is a large batch subprogram in the JMA ORCA medical receipt software. It aggregates and edits point (score) columns broken down by treatment category for health insurance claim forms (rezept). It handles numerous special cases including outpatient management fees, prescription fees, specific device points, partial co-payment amounts, and various insurance combinations.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "38 COPY statements indicating heavy use of shared copybooks",
+        "39 CALL statements to other ORCA subprograms",
+        "380 PERFORM statements indicating structured procedural logic",
+        "No COMP-3 usage despite financial calculations",
+        "No EXEC SQL or EXEC CICS",
+        "Fixed-format source with Japanese EUC-JP comments (latin-1 decoded)",
+        "Extensive revision history spanning 2000-2006 with named developers",
+        "~10,000 lines of production code"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments contain Japanese EUC-JP multibyte characters rendered as latin-1 mojibake. This is the JMA ORCA open-source medical receipt system, well-known in Japanese healthcare IT. The program is clearly GnuCOBOL/OpenCOBOL targeted (Linux-based ORCA system), COBOL-85 style. Source truncated to first 16000 chars but mechanical indicators confirm full 10269-line file."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 16389,
+      "completion_tokens": 559,
+      "total_tokens": 16948,
+      "cost": 0.057552,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.057552,
+        "upstream_inference_prompt_cost": 0.049167,
+        "upstream_inference_completions_cost": 0.008385
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 31.26,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:12:55Z"
+}

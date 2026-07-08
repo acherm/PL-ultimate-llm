@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a9fa17c77b356be829f3b83a55b2877d33484f32",
+    "sha1_git": "a9fa17c77b356be829f3b83a55b2877d33484f32",
+    "filename": "/ORCL0012P.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7898,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a9fa17c77b356be829f3b83a55b2877d33484f32/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a9fa17c77b356be829f3b83a55b2877d33484f32/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7898,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 215,
+    "blank_lines": 1,
+    "comment_lines": 89,
+    "code_lines": 125,
+    "comment_ratio": 0.416,
+    "max_line_length": 71,
+    "avg_line_length": 35.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCL0012P"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 5,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt (診療報酬) system - GnuCOBOL/OpenCOBOL based. Program ORCL0012P is a command-line launcher/wrapper for ORCL0012, part of the ORCA (日医標準レセプトソフト) open-source medical billing system.",
+        "evidence": [
+          "PROGRAM-ID ORCL0012P",
+          "COPY 'COMMON-SPA'",
+          "COPY 'MCPAREA'",
+          "COPY 'MCPDATA.INC'",
+          "COPY 'CPORCMCP.INC'",
+          "CALL 'ORCDBMAIN'",
+          "CALL 'ORCL0012'",
+          "file path /var/tmp/claim",
+          "MCP-FUNC DBOPEN/DBSTART/DBCOMMIT/DBDISCONNECT pattern",
+          "PROCEDURE DIVISION USING COMMAND-PARAM with PIC X(100)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical receipt billing system (日医標準レセプトソフト) - handles insurance claim (診療報酬) processing for a specific patient/visit",
+        "summary": "This program is a command-line entry-point (launcher) for the ORCL0012 subprogram in the ORCA medical billing system. It parses a comma-delimited parameter string (patient ID, treatment category, time, hospital number, doctor code, insurance combination, return code), opens a database connection via ORCDBMAIN, calls ORCL0012 to process the claim, writes output to a /var/tmp/claim file, then commits and disconnects the database.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "UNSTRING with DELIMITED BY comma for parameter parsing",
+        "PROCEDURE DIVISION USING COMMAND-PARAM (command-line argument passing)",
+        "Database open/start/commit/disconnect via CALL 'ORCDBMAIN' with MCP-FUNC pattern",
+        "Japanese EUC-JP encoded comments (latin-1 decoded as mojibake)",
+        "COPY of MCPAREA, MCPDATA.INC, CPORCMCP.INC, COMMON-SPA",
+        "Dynamic file name construction using PIC fields (FILE-HOSPNUM, FILE-PTID, FILE-SRYKA)",
+        "ACCEPT SYS-YMD FROM DATE for system date",
+        "COMPUTE to add 2000 to 2-digit year (Y2K adjustment)",
+        "Debug DISPLAY statements marked with *???"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in Japanese EUC-JP but the file was decoded as latin-1, resulting in mojibake. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Version history comments indicate revisions from 2000 through 2007. The file name suffix 'P' in ORCL0012P suggests it is the 'program' (main entry) counterpart to the ORCL0012 subprogram."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5029,
+      "completion_tokens": 764,
+      "total_tokens": 5793,
+      "cost": 0.026547,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026547,
+        "upstream_inference_prompt_cost": 0.015087,
+        "upstream_inference_completions_cost": 0.01146
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.72,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:24:25Z"
+}

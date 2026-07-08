@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:244e8d935b215f9e9369e15221d13345b55def4d",
+    "sha1_git": "244e8d935b215f9e9369e15221d13345b55def4d",
+    "filename": "/pw00212p.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 17475,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:244e8d935b215f9e9369e15221d13345b55def4d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:244e8d935b215f9e9369e15221d13345b55def4d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 17475,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 407,
+    "blank_lines": 45,
+    "comment_lines": 41,
+    "code_lines": 321,
+    "comment_ratio": 0.113,
+    "max_line_length": 171,
+    "avg_line_length": 41.9,
+    "long_lines_over_72": 65,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW00212P"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 1,
+    "perform_count": 40,
+    "goto_count": 0,
+    "pic_count": 24,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with Micro Focus-style extensions; uses $set preprocess(htmlpp), $set sourceformat\"free\", EXEC HTML blocks, IDENTIFIED BY clause for CGI form fields — consistent with a Brazilian web/CGI COBOL framework (likely OpenCOBOL/GnuCOBOL with htmlpp preprocessor)",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "exec html ... end-exec",
+          "identified by \"primeiroLista\"",
+          "is external-form",
+          "copy PCW900.CPY / PCW904.CPY / PCP8000.CPY / PCP9000.CPY"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Brazilian logistics/distribution geographic area and CDD (Centro de Distribuição Domiciliária — postal delivery center) lookup utility, likely part of a postal or courier management system",
+        "summary": "This program implements a CGI-based web search screen for geographic areas (Geografias) and CDDs (postal distribution centers). It reads a configuration file (EFD90013.CFG) listing geo/CDD mappings, supports pagination and filtering by geography, and returns a selected code to a calling web form via JavaScript interop.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC HTML blocks (htmlpp preprocessor for CGI/web output)",
+        "$set preprocess(htmlpp) compiler directive",
+        "$set sourceformat\"free\" directive",
+        "IS EXTERNAL-FORM clause for CGI input",
+        "IDENTIFIED BY clause mapping form fields",
+        "Inline JavaScript generation within EXEC HTML",
+        "COPY-based modular structure (7 copybooks)",
+        "Decimal-point is comma (Brazilian locale)",
+        "FUNCTION NUMVAL usage",
+        "EXIT PERFORM CYCLE (COBOL-2002 feature)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is part of a Brazilian CGI/web COBOL framework using the htmlpp preprocessor with GnuCOBOL. The 'online-cics' program_type is used as the closest match for an interactive web/CGI program (no actual CICS). Source truncated before end of file but enough is visible to classify confidently. The domain is postal/courier logistics based on 'CDD' (Centro de Distribuição Domiciliária) terminology common in Brazilian postal services (Correios)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6235,
+      "completion_tokens": 596,
+      "total_tokens": 6831,
+      "cost": 0.027645,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027645,
+        "upstream_inference_prompt_cost": 0.018705,
+        "upstream_inference_completions_cost": 0.00894
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.45,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:09:56Z"
+}

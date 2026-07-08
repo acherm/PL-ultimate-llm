@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a7695d4324c904f61c12e0ee690c1b27d23be6f9",
+    "sha1_git": "a7695d4324c904f61c12e0ee690c1b27d23be6f9",
+    "filename": "/gorbitsa.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4220,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a7695d4324c904f61c12e0ee690c1b27d23be6f9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a7695d4324c904f61c12e0ee690c1b27d23be6f9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4220,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 137,
+    "blank_lines": 14,
+    "comment_lines": 12,
+    "code_lines": 111,
+    "comment_ratio": 0.098,
+    "max_line_length": 65,
+    "avg_line_length": 29.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "GORBITSA"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 12,
+    "goto_count": 0,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Uses GnuCOBOL-style debug lines with '+DEBUG*' indicator in column 7, DYNAMIC file assignment, ARGUMENT-NUMBER/ARGUMENT-VALUE special registers, and LINE SEQUENTIAL organization — all characteristic of GnuCOBOL",
+        "evidence": [
+          "+DEBUG* lines as debug indicator",
+          "SELECT ... ASSIGN TO DYNAMIC",
+          "ACCEPT ... FROM ARGUMENT-NUMBER",
+          "ACCEPT ... FROM ARGUMENT-VALUE",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "END-ADD, END-DISPLAY, END-EVALUATE, END-READ, END-PERFORM, END-IF, END-STRING"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Implementation of the GORBITSA esoteric programming language interpreter",
+        "summary": "This program implements an interpreter for the GORBITSA esoteric programming language. It loads a GORBITSA program from a file specified as a command-line argument, then executes it by iterating through instructions and dispatching on opcodes (T for Transmit, S for Set, others as NOOP). It is a toy/demo interpreter for an esoteric language.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "Conditional debug lines using +DEBUG* indicator (GnuCOBOL debug line feature)",
+        "ACCEPT FROM ARGUMENT-NUMBER / ARGUMENT-VALUE for command-line argument handling",
+        "DYNAMIC file assignment",
+        "OCCURS clause for RAM array (256 elements) and instruction array",
+        "PERFORM THRU pattern for paragraph ranges",
+        "No GOTO except GO EXIT-PROGRAM (paragraph fall-through style)",
+        "LINE SEQUENTIAL file organization"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The +DEBUG* lines in column 7 are GnuCOBOL debug indicator lines, activated with the -fdebugging-line compiler flag. The program implements only a subset of GORBITSA opcodes (T and S), suggesting it is incomplete or a learning exercise. No COMP-3, no SQL, no CICS."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3559,
+      "completion_tokens": 499,
+      "total_tokens": 4058,
+      "cost": 0.018162,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018162,
+        "upstream_inference_prompt_cost": 0.010677,
+        "upstream_inference_completions_cost": 0.007485
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.17,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:29:18Z"
+}

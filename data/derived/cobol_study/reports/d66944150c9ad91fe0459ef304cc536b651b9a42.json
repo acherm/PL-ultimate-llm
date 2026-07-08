@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d66944150c9ad91fe0459ef304cc536b651b9a42",
+    "sha1_git": "d66944150c9ad91fe0459ef304cc536b651b9a42",
+    "filename": "/COACTUPC.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 182463,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d66944150c9ad91fe0459ef304cc536b651b9a42/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d66944150c9ad91fe0459ef304cc536b651b9a42/raw/"
+  },
+  "indicators": {
+    "bytes_len": 182463,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 4236,
+    "blank_lines": 376,
+    "comment_lines": 492,
+    "code_lines": 3368,
+    "comment_ratio": 0.127,
+    "max_line_length": 78,
+    "avg_line_length": 42.1,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COACTUPC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 56,
+    "call_count": 0,
+    "perform_count": 64,
+    "goto_count": 51,
+    "pic_count": 316,
+    "comp3_count": 4,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/VSAM online program, part of Amazon's AWS CardDemo mainframe modernization reference application (Apache License 2.0, July 2022). Uses EXEC CICS, COPY statements for copybooks, fixed format.",
+        "evidence": [
+          "EXEC CICS present (has_exec_cics=true)",
+          "COPY 'CSUTLDWY' copybook reference",
+          "PIC S9(09) COMP and COMP-3 usage",
+          "Fixed format, max line length 78",
+          "56 COPY statements typical of IBM mainframe shop",
+          "PROGRAM-ID COACTUPC"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Credit card account management - account update screen processing for a CICS online application (AWS CardDemo reference app)",
+        "summary": "COACTUPC is a CICS online program that accepts and processes credit card account update transactions. It validates user input fields including account status, credit limits, balances, dates (open date, expiry, reissue), customer SSN, phone numbers, and FICO scores, then updates account records. It is part of the AWS CardDemo mainframe modernization reference application.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (online CICS transaction)",
+        "56 COPY statements for copybook includes",
+        "COMP-3 packed decimal arithmetic",
+        "88-level condition names extensively used for field validation",
+        "REDEFINES clauses for numeric/character dual access",
+        "SSN validation logic with invalid range checks",
+        "US phone number format validation",
+        "Multiple date field validations (open date, expiry, reissue, date of birth)",
+        "51 GOTO statements",
+        "Apache License 2.0 header - AWS open source reference app"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars but sufficient evidence is present. This is the AWS CardDemo open-source COBOL modernization reference application published by Amazon. The program is a realistic, production-quality CICS online program for credit card account updates."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7619,
+      "completion_tokens": 513,
+      "total_tokens": 8132,
+      "cost": 0.030552,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030552,
+        "upstream_inference_prompt_cost": 0.022857,
+        "upstream_inference_completions_cost": 0.007695
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.69,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:32:28Z"
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6d2c13737cc12b8118a4378780a10a0608445200",
+    "sha1_git": "6d2c13737cc12b8118a4378780a10a0608445200",
+    "filename": "/ORCBC010.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 221029,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6d2c13737cc12b8118a4378780a10a0608445200/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6d2c13737cc12b8118a4378780a10a0608445200/raw/"
+  },
+  "indicators": {
+    "bytes_len": 221029,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4803,
+    "blank_lines": 0,
+    "comment_lines": 845,
+    "code_lines": 3958,
+    "comment_ratio": 0.176,
+    "max_line_length": 79,
+    "avg_line_length": 45.0,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBC010"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 54,
+    "call_count": 15,
+    "perform_count": 337,
+    "goto_count": 13,
+    "pic_count": 177,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses .INC copybooks with REPLACING, indexed files, and Japanese EUC-JP encoded comments.",
+        "evidence": [
+          "PROGRAM-ID ORCBC010",
+          "COPY with .INC extensions and REPLACING //token// BY //token// syntax",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED",
+          "JMA Open Source License header",
+          "Project code name ORCA",
+          "No EXEC CICS or EXEC SQL",
+          "Fixed format, max line 79"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-hoshuu) data collection and basic information creation subsystem. Processes hospital/patient/insurance/diagnosis data for medical billing.",
+        "summary": "ORCBC010 is a batch program in the JMA ORCA medical receipt system that creates and manages basic collection data (patient base info, insurance combinations, diagnosis info, disease name info) for medical billing. It reads and writes multiple indexed files (COLDAT91, COLDAT01, COLDAT02, COLDAT03) and produces an error file. The program handles insurance combination logic, disease name editing, and receipt type determination.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "54 COPY statements with REPLACING using //token// syntax",
+        "Multiple indexed files with DYNAMIC and SEQUENTIAL access modes",
+        "Japanese EUC-JP encoded comments throughout",
+        "Large working storage tables (e.g. TABLE-HKNNUM-AREA OCCURS 2000)",
+        "No COMP-3 usage despite financial/medical billing context",
+        "15 CALL statements to external subprograms",
+        "337 PERFORM statements indicating structured procedural logic",
+        "Error file output (COLDATERR-FILE)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in Japanese EUC-JP (displayed as latin-1 mojibake in this rendering). File is 4803 lines and 221KB, a substantial production program. Part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. No COMP-3 is unusual for a billing system but may reflect use of display numerics for interchange compatibility."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8693,
+      "completion_tokens": 569,
+      "total_tokens": 9262,
+      "cost": 0.034614,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034614,
+        "upstream_inference_prompt_cost": 0.026079,
+        "upstream_inference_completions_cost": 0.008535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:30:39Z"
+}

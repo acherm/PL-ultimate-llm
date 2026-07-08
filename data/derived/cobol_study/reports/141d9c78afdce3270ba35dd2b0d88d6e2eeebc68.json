@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:141d9c78afdce3270ba35dd2b0d88d6e2eeebc68",
+    "sha1_git": "141d9c78afdce3270ba35dd2b0d88d6e2eeebc68",
+    "filename": "/ORCGM01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 49161,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:141d9c78afdce3270ba35dd2b0d88d6e2eeebc68/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:141d9c78afdce3270ba35dd2b0d88d6e2eeebc68/raw/"
+  },
+  "indicators": {
+    "bytes_len": 49161,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1268,
+    "blank_lines": 0,
+    "comment_lines": 489,
+    "code_lines": 779,
+    "comment_ratio": 0.386,
+    "max_line_length": 80,
+    "avg_line_length": 37.8,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGM01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 13,
+    "perform_count": 40,
+    "goto_count": 11,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses MCPSUB/ORCSLOCK/ORCSJOB call conventions typical of the ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCGM01",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "CALL MCPSUB / ORCSLOCK / ORCSJOB",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "PATH-SHELL-SHELL / master_upgrade.sh shell invocation",
+          "No EXEC CICS / EXEC SQL",
+          "Fixed format, max line 80"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) processing system — business menu selection and master maintenance screen controller (M01 screen group)",
+        "summary": "ORCGM01 is the main menu/screen controller for the ORCA medical receipt system's business selection subsystem. It handles screen initialization, navigation between menu screens (M01, M01N, M02, M95-M97, MERR, MID1, MVER), master update processing via shell invocation, and job management (ORCSJOB). It acts as an online subprogram called by the ORCA middleware (MCPSUB framework).",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "28 COPY statements (heavy use of copybooks for screen layouts and data areas)",
+        "CALL to MCPSUB middleware framework",
+        "CALL to ORCSLOCK (exclusive lock control)",
+        "CALL to ORCSJOB (job management)",
+        "Shell script invocation via MCP-FUNC=SHELL (master_upgrade.sh)",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT pattern",
+        "Japanese EUC-encoded comments (latin-1 decoded, garbled)",
+        "No EXEC SQL or EXEC CICS",
+        "DISPLAY statement used for debug output"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese, appearing garbled. This is the JMA ORCA open-source medical receipt system, well-known in Japanese healthcare IT. The program is a production-quality online subprogram within the ORCA middleware framework, not a batch program. Source is truncated at 16000 chars out of ~49KB total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8878,
+      "completion_tokens": 638,
+      "total_tokens": 9516,
+      "cost": 0.036204,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036204,
+        "upstream_inference_prompt_cost": 0.026634,
+        "upstream_inference_completions_cost": 0.00957
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.94,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:31:57Z"
+}

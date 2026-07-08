@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:374abff3902edec53ab080fe06a2325d1a057b7c",
+    "sha1_git": "374abff3902edec53ab080fe06a2325d1a057b7c",
+    "filename": "/trader.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2925,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:374abff3902edec53ab080fe06a2325d1a057b7c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:374abff3902edec53ab080fe06a2325d1a057b7c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2925,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 93,
+    "blank_lines": 10,
+    "comment_lines": 3,
+    "code_lines": 80,
+    "comment_ratio": 0.036,
+    "max_line_length": 62,
+    "avg_line_length": 30.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TRADER"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 21,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL; uses GOBACK, LINE SEQUENTIAL, 88-level condition name with HIGH-VALUES, and currency-sign picture clauses. No mainframe-specific extensions.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SET END-OF-INPUT-FILE TO TRUE",
+          "GOBACK",
+          "88 END-OF-INPUT-FILE VALUE HIGH-VALUES",
+          "PIC $$$,$$$,$$9"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise involving trader/province income aggregation from a flat file",
+        "summary": "Reads trader records from a sequential input file containing province ID, trader ID, and income. Aggregates income by province and writes a formatted report to an output file. The logic appears incomplete or buggy (PROCESS-P-INCOME resets P-INCOME immediately after setting PV-PROCESSING, and READ-LINE is only called once before the PERFORM loop).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "88-level condition name used as end-of-file flag",
+        "LINE SEQUENTIAL file organization",
+        "Currency-sign (dollar) picture clauses for formatted output",
+        "GOBACK instead of STOP RUN",
+        "Duplicate report header definition in both FILE SECTION and WORKING-STORAGE",
+        "Logic appears incomplete/buggy - READ-LINE not called inside PERFORM loop"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program has apparent logic errors: READ-LINE is performed once before the UNTIL loop but never inside it, and PROCESS-P-INCOME resets P-INCOME to ZEROS after moving PV-ID to PV-PROCESSING, making accumulation ineffective. This is consistent with a student exercise. AUTHOR field 'NATCHA' suggests a Thai student context given 'PV' likely meaning 'province' (จังหวัด)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3211,
+      "completion_tokens": 466,
+      "total_tokens": 3677,
+      "cost": 0.016623,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016623,
+        "upstream_inference_prompt_cost": 0.009633,
+        "upstream_inference_completions_cost": 0.00699
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.19,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:36:23Z"
+}

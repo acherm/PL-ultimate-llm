@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5ee48b216257237ecb463352d158ff85b9c2ae6b",
+    "sha1_git": "5ee48b216257237ecb463352d158ff85b9c2ae6b",
+    "filename": "/ORCGZ100.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 29893,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5ee48b216257237ecb463352d158ff85b9c2ae6b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5ee48b216257237ecb463352d158ff85b9c2ae6b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 29893,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 780,
+    "blank_lines": 0,
+    "comment_lines": 268,
+    "code_lines": 512,
+    "comment_ratio": 0.344,
+    "max_line_length": 74,
+    "avg_line_length": 37.3,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGZ100"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 2,
+    "perform_count": 45,
+    "goto_count": 5,
+    "pic_count": 5,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), GnuCOBOL/OpenCOBOL-based system for Japanese medical billing",
+        "evidence": [
+          "PROGRAM-ID ORCGZ100",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA pattern typical of JMA ORCA",
+          "CALL ORCSCLIENTSV",
+          "SPA-MW = SPA-GINBEE (GINBEE environment check)",
+          "Japanese EUC-encoded comments",
+          "COPY Z01.INC through Z100.INC screen area copybooks",
+          "JMA copyright header 2002"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/rezept) output screen processing for the JMA ORCA standard medical billing system",
+        "summary": "This program (ORCGZ100) is the output instruction screen (Z100) component of the JMA ORCA medical receipt software. It handles initialization, screen transitions, and input validation for CSV output of point-number master settings, including filename checks and client-save functionality. It supports both standard Linux and GINBEE (a specific deployment environment) output paths.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (29 copybooks) for screen and SPA areas",
+        "LINKAGE SECTION with multiple COPY-based areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "MCP-STATUS/MCP-EVENT driven screen navigation (ORCA MCP framework)",
+        "GINBEE environment detection via SPA-MW = SPA-GINBEE",
+        "STRING verb for dynamic CSV filename construction",
+        "Japanese EUC-JP encoded comments throughout",
+        "PERFORM VARYING with nested IF for filename validation",
+        "No EXEC SQL or EXEC CICS (uses proprietary MCP framework instead)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP (Latin-1 decoded), causing garbled display of Japanese comments. The program is part of the well-known open-source JMA ORCA medical receipt system. The 'online-cics' program_type is used loosely here — ORCA uses its own MCP (Medical Care Platform) framework analogous to CICS for screen handling, not actual CICS. Revision history shows updates through 2014 (04.08.01 = version 4.8.1)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8038,
+      "completion_tokens": 614,
+      "total_tokens": 8652,
+      "cost": 0.033324,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033324,
+        "upstream_inference_prompt_cost": 0.024114,
+        "upstream_inference_completions_cost": 0.00921
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:19:40Z"
+}

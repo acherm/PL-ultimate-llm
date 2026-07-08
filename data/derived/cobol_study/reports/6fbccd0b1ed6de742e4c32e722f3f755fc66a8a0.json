@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6fbccd0b1ed6de742e4c32e722f3f755fc66a8a0",
+    "sha1_git": "6fbccd0b1ed6de742e4c32e722f3f755fc66a8a0",
+    "filename": "/py050090.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 66678,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6fbccd0b1ed6de742e4c32e722f3f755fc66a8a0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6fbccd0b1ed6de742e4c32e722f3f755fc66a8a0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 66678,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1378,
+    "blank_lines": 136,
+    "comment_lines": 59,
+    "code_lines": 1183,
+    "comment_ratio": 0.048,
+    "max_line_length": 176,
+    "avg_line_length": 47.4,
+    "long_lines_over_72": 279,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PY050090"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 48,
+    "call_count": 1,
+    "perform_count": 142,
+    "goto_count": 0,
+    "pic_count": 71,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus/GnuCOBOL OO-style with $set directives, external-form, IDENTIFIED BY clauses, REPOSITORY with class definitions (EscreveJson, Utils), and htmlpp preprocessor — typical of Brazilian commercial COBOL systems (possibly Stefanini/TOTVS-style or similar)",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "class EscreveJson as \"PY990002\"",
+          "class Utils as \"PY990004\"",
+          "cgi-input is external-form",
+          "identified by \"idDivDialog\"",
+          "copy PCW902.CPY",
+          "$set constant processo-reorganizacao"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian commercial system handling boleto (bank slip) and bonificação (bonus/discount) voucher printing for sales operations, including nota fiscal (invoice) management",
+        "summary": "This program (PY050090) manages the printing of boleto/bonificação canhoto (receipt stubs) for sales operations. It loads map data, invoice lists, and customer information, then allows selection and printing of payment vouchers. It interacts with multiple files including invoices, customers, payment conditions, and printers.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "$set compiler directives (htmlpp preprocessor, sourceformat free, constant)",
+        "REPOSITORY section with OO class references (EscreveJson, Utils)",
+        "external-form CGI input section with IDENTIFIED BY clauses",
+        "48 COPY statements for file-control and data division",
+        "Brazilian Portuguese identifiers and comments",
+        "decimal-point is comma (Brazilian locale)",
+        "JSON generation via EscreveJson class",
+        "No EXEC SQL or EXEC CICS despite online nature — uses proprietary web/CGI framework",
+        "88-level condition names extensively used",
+        "REDEFINES on form input array (occurs limite-lista)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source truncated to first 16000 chars; full program is 1378 lines. The $set sourceformat\"free\" directive contradicts the mechanical indicator of 'fixed' format and 279 long lines — likely free format with long lines. The program appears to be part of a Brazilian ERP/commercial system using a proprietary CGI-based COBOL web framework. The htmlpp preprocessor and external-form construct suggest Micro Focus or a compatible compiler. Program type classified as online-cics equivalent (web CGI) rather than batch."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6538,
+      "completion_tokens": 618,
+      "total_tokens": 7156,
+      "cost": 0.028884,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028884,
+        "upstream_inference_prompt_cost": 0.019614,
+        "upstream_inference_completions_cost": 0.00927
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:41:25Z"
+}

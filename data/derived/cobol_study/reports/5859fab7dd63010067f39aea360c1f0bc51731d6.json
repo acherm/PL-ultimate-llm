@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5859fab7dd63010067f39aea360c1f0bc51731d6",
+    "sha1_git": "5859fab7dd63010067f39aea360c1f0bc51731d6",
+    "filename": "/3-NATMET.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13751,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5859fab7dd63010067f39aea360c1f0bc51731d6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5859fab7dd63010067f39aea360c1f0bc51731d6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13751,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 440,
+    "blank_lines": 71,
+    "comment_lines": 28,
+    "code_lines": 341,
+    "comment_ratio": 0.076,
+    "max_line_length": 74,
+    "avg_line_length": 29.3,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "3-NATMET"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 22,
+    "call_count": 10,
+    "perform_count": 49,
+    "goto_count": 0,
+    "pic_count": 17,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely AcuCOBOL or Micro Focus with ACUCOBOL-style screen I/O extensions (ACCEPT with LINE/POSITION/SIZE/TAB/UPDATE/NO BEEP/CURSOR/CONTROL clauses, C$RERR call, EXC-KEY control variables). French-language business application with form-based printing via P080 subprogram.",
+        "evidence": [
+          "ACCEPT ... LINE ... POSITION ... SIZE ... TAB UPDATE NO BEEP CURSOR ... CONTROL \"UPPER\"",
+          "CALL \"C$RERR\" USING EXTENDED-STATUS",
+          "EXC-KEY, EXC-KFR usage pattern",
+          "SELECT OPTIONAL ... ASSIGN TO RANDOM",
+          "COPY copybook pattern with .CPY and .FC/.FDE extensions"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "HR personnel management system - prints a list of number of persons by trade/profession (métier) with optional nationality breakdown",
+        "summary": "Program 3-NATMET reads personnel registry records, accumulates counts by trade (métier) and optionally by nationality/residence, stores intermediate results in an indexed file, then prints a formatted report via a form-printing subprogram (P080). It is part of a larger French-language HR/personnel management suite.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "AcuCOBOL-style screen ACCEPT with LINE/POSITION/SIZE/CONTROL clauses",
+        "C$RERR extended error status call",
+        "Heavy use of COPY statements (22 copybooks) for modular structure",
+        "Indexed file with DYNAMIC access and SELECT OPTIONAL",
+        "DECLARATIVES section with USE AFTER ERROR",
+        "DELETE FILE statement",
+        "French-language comments and box-drawing characters in comments",
+        "Form-based report printing via P080 subprogram",
+        "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+        "OCCURS on counter fields in file record"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source is in Latin-1 encoding with French text and IBM box-drawing characters in comments. The dialect is likely AcuCOBOL based on screen I/O syntax and C$RERR, but Micro Focus is also possible. Many implementation details are hidden in the 22 COPY members which are not shown. The program is part of a larger suite (numbered programs, shared copybooks like V-LINK.CPY, V-VAR.CPY)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6984,
+      "completion_tokens": 603,
+      "total_tokens": 7587,
+      "cost": 0.029997,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029997,
+        "upstream_inference_prompt_cost": 0.020952,
+        "upstream_inference_completions_cost": 0.009045
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:11:51Z"
+}

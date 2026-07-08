@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1a3e9ee7c24ca01fe9b8f0e6d6eff91cf7ba72ca",
+    "sha1_git": "1a3e9ee7c24ca01fe9b8f0e6d6eff91cf7ba72ca",
+    "filename": "/sale-report.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7655,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1a3e9ee7c24ca01fe9b8f0e6d6eff91cf7ba72ca/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1a3e9ee7c24ca01fe9b8f0e6d6eff91cf7ba72ca/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7655,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 200,
+    "blank_lines": 10,
+    "comment_lines": 0,
+    "code_lines": 190,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 37.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SALE-REPORT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL; uses LINE SEQUENTIAL, GOBACK, DISPLAY UPON CONSOLE, and fixed format. No mainframe-specific features like COMP-3 or JCL references.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "DISPLAY ... UPON CONSOLE",
+          "FILE STATUS IS",
+          "88-level condition names with OF qualifier"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Shop sales reporting — reads shop receipts data file and produces a formatted sales report with per-shop totals",
+        "summary": "SALE-REPORT reads a sequential input file of shop receipts (header and detail records) and writes a formatted report showing item ID, quantity sold, cost per item, and total quantity/cost per shop. It processes multiple shops in a single pass, accumulating totals per shop group.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "PERFORM THRU paragraph exit pattern",
+        "88-level condition names used for file status checks",
+        "DISPLAY UPON CONSOLE for error messages",
+        "GOBACK instead of STOP RUN for normal termination",
+        "Numeric editing with $$$9.99 and ZZZZ9 picture clauses",
+        "Dual-buffer input (INPUT-HEAD-BUFFER and INPUT-DETAIL-BUFFER redefine same FD implicitly)",
+        "No COPY statements, no CALL statements, no SQL or CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program uses a Thai author name (VIRAPAT) suggesting a student or training context. The variable name WS-CACULATION contains a spelling error ('CACULATION' instead of 'CALCULATION'). The two 01-level records under the same FD (INPUT-HEAD-BUFFER and INPUT-DETAIL-BUFFER) share the same buffer implicitly. No COMP-3 usage and no mainframe-specific extensions; most consistent with GnuCOBOL or similar PC/open-source COBOL environment."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4718,
+      "completion_tokens": 512,
+      "total_tokens": 5230,
+      "cost": 0.021834,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021834,
+        "upstream_inference_prompt_cost": 0.014154,
+        "upstream_inference_completions_cost": 0.00768
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.65,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:08:40Z"
+}

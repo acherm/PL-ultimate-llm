@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7cb5d26003cea2b8240cff08d3cd71839fd1e6f4",
+    "sha1_git": "7cb5d26003cea2b8240cff08d3cd71839fd1e6f4",
+    "filename": "/ORCGH01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 141460,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7cb5d26003cea2b8240cff08d3cd71839fd1e6f4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7cb5d26003cea2b8240cff08d3cd71839fd1e6f4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 141460,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3310,
+    "blank_lines": 0,
+    "comment_lines": 761,
+    "code_lines": 2549,
+    "comment_ratio": 0.23,
+    "max_line_length": 90,
+    "avg_line_length": 41.7,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGH01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 13,
+    "perform_count": 173,
+    "goto_count": 38,
+    "pic_count": 42,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日本医師会標準レセプトソフト); uses GnuCOBOL/OpenCOBOL conventions with COPY-based linkage, MCP-STATUS/MCP-EVENT screen handling, and CALL to ORCA subsystem routines",
+        "evidence": [
+          "PROGRAM-ID ORCGH01",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY MCPAREA / COPY ORCA-SPA / COPY LINKAREA",
+          "CALL ORCSPTID USING ORCSPTIDAREA",
+          "MCP-STATUS / MCP-EVENT EVALUATE",
+          "EXEC SQL absent, EXEC CICS absent"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) management system – claims/billing correction screen H01 for patient insurance billing",
+        "summary": "This program implements the claims management handwritten-correction screen (H01) of the JMA ORCA medical receipt software. It handles screen initialisation, patient lookup, insurance billing record retrieval, and correction entry for medical claims submitted to insurers. It coordinates with multiple subsystem CALLs for date conversion, patient ID resolution, locking, and DB search.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "26 COPY statements for modular copybook-based data layout",
+        "13 CALL statements to ORCA subsystem routines (ORCSPTID, ORCSPTNUM, etc.)",
+        "MCP-STATUS/MCP-EVENT driven screen navigation (ORCA GUI framework)",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT pattern",
+        "Exclusive-control (lock) processing via CPORCSLOCK",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "173 PERFORM statements indicating complex procedural flow",
+        "38 GOTO statements",
+        "No COMP-3 usage despite financial domain"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP but decoded as latin-1, causing mojibake in Japanese comments; content is clearly readable COBOL. Source is truncated to first 16000 chars of a 141460-byte file (3310 lines total). Program is part of the open-source JMA ORCA system, a well-known Japanese medical billing platform built on GnuCOBOL/OpenCOBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9828,
+      "completion_tokens": 641,
+      "total_tokens": 10469,
+      "cost": 0.039099,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039099,
+        "upstream_inference_prompt_cost": 0.029484,
+        "upstream_inference_completions_cost": 0.009615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.47,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:21:06Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8ae6c9479ce7fecf5e41429d2ad533d745f1da90",
+    "sha1_git": "8ae6c9479ce7fecf5e41429d2ad533d745f1da90",
+    "filename": "/ORCR0840.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 446012,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8ae6c9479ce7fecf5e41429d2ad533d745f1da90/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8ae6c9479ce7fecf5e41429d2ad533d745f1da90/raw/"
+  },
+  "indicators": {
+    "bytes_len": 446012,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 9246,
+    "blank_lines": 0,
+    "comment_lines": 1580,
+    "code_lines": 7666,
+    "comment_ratio": 0.171,
+    "max_line_length": 78,
+    "avg_line_length": 47.2,
+    "long_lines_over_72": 30,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0840"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 44,
+    "call_count": 6,
+    "perform_count": 450,
+    "goto_count": 2,
+    "pic_count": 380,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses .INC copybooks with REPLACING, indexed file I/O, no EXEC SQL/CICS.",
+        "evidence": [
+          "PROGRAM-ID ORCR0840",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with REPLACING using // delimiters",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "SELECT ... ASSIGN ... FILE STATUS",
+          "no EXEC SQL, no EXEC CICS, no COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — specifically diagnosis classification point aggregation for hospitalization (入院) receipts including nursing care and self-pay categories",
+        "summary": "ORCR0840 is a batch program in the JMA ORCA medical receipt system that aggregates and edits diagnosis/treatment classification point data for inpatient (hospitalization) receipts. It reads and writes multiple indexed ISAM files (RECE82, RECE84, RECE85, RECE8A, RECE8B) representing receipt detail records, performing complex calculation and editing logic for medical billing. The program has an extensive revision history spanning 2003–2008 covering numerous Japanese health insurance rule changes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "44 COPY statements with REPLACING using // delimiter (GnuCOBOL style)",
+        "Multiple indexed file selects with DYNAMIC and SEQUENTIAL access on same physical file via different FDs",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage",
+        "450 PERFORM statements indicating complex structured logic",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "Extensive revision history in comments (2003–2008)",
+        "Large program: 9246 lines, ~446KB"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are in Japanese EUC-JP encoding but the file was decoded as latin-1, causing garbled display. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Dialect is GnuCOBOL (OpenCOBOL) based on the // REPLACING delimiter convention and Linux/open-source context of ORCA."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12258,
+      "completion_tokens": 599,
+      "total_tokens": 12857,
+      "cost": 0.045759,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.045759,
+        "upstream_inference_prompt_cost": 0.036774,
+        "upstream_inference_completions_cost": 0.008985
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.78,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:16:54Z"
+}

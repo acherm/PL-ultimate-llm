@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:15c7c8f81e4b33a7cc97a7f3a69e4b7da1b1238f",
+    "sha1_git": "15c7c8f81e4b33a7cc97a7f3a69e4b7da1b1238f",
+    "filename": "/ORCSC10S201307.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 322087,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:15c7c8f81e4b33a7cc97a7f3a69e4b7da1b1238f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:15c7c8f81e4b33a7cc97a7f3a69e4b7da1b1238f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 322087,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 7501,
+    "blank_lines": 0,
+    "comment_lines": 2282,
+    "code_lines": 5219,
+    "comment_ratio": 0.304,
+    "max_line_length": 76,
+    "avg_line_length": 41.9,
+    "long_lines_over_72": 11,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSC10S201307"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 25,
+    "call_count": 27,
+    "perform_count": 342,
+    "goto_count": 49,
+    "pic_count": 220,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), GnuCOBOL/OpenCOBOL dialect used in Japanese medical billing system",
+        "evidence": [
+          "PROGRAM-ID ORCSC10S201307",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "fixed format, max line 76, no EXEC SQL/CICS",
+          "25 COPY statements typical of ORCA codebase",
+          "no COMP-3 usage, consistent with GnuCOBOL ORCA style"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing - outpatient consultation fee (shinsatsu-ryou) automatic calculation and editing processing for medical receipt claims",
+        "summary": "This program is part of the JMA ORCA medical receipt system and handles automatic generation and editing of outpatient consultation fees (shinsatsu-ryou) for medical billing. It processes various fee calculation rules including first-visit fees, re-visit fees, telephone re-visits, same-day re-visits, pediatric outpatient fees, rehabilitation fees, and various age/condition-based adjustments. The program has been updated through multiple revisions from 2002 to 2013 to accommodate Japanese medical fee schedule revisions.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Large working-storage with many flag fields (FLG-* pattern)",
+        "25 COPY statements for shared data structures",
+        "27 CALL statements to other ORCA subprograms",
+        "342 PERFORM statements indicating complex procedural logic",
+        "49 GOTO statements",
+        "Inline table initialization with VALUE clauses for fee codes",
+        "Japanese EUC-encoded comments (latin-1 decoded with mojibake)",
+        "No EXEC SQL or EXEC CICS - file-less batch subprogram",
+        "Extensive revision history spanning 2002-2013 in comments",
+        "Multiple occurrence tables for rehabilitation date tracking"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in Japanese EUC-JP but decoded as latin-1, resulting in mojibake display. The program is clearly part of the well-known JMA ORCA open-source medical receipt system used widely in Japanese clinics. File name suffix '201307' likely indicates the July 2013 fee schedule revision version. The program is a subprogram (no file I/O defined, called by higher-level ORCA components)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11826,
+      "completion_tokens": 604,
+      "total_tokens": 12430,
+      "cost": 0.044538,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.044538,
+        "upstream_inference_prompt_cost": 0.035478,
+        "upstream_inference_completions_cost": 0.00906
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.92,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:46:10Z"
+}

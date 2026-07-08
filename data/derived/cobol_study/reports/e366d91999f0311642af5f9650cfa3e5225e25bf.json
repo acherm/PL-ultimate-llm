@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e366d91999f0311642af5f9650cfa3e5225e25bf",
+    "sha1_git": "e366d91999f0311642af5f9650cfa3e5225e25bf",
+    "filename": "/ORCR0030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1341751,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e366d91999f0311642af5f9650cfa3e5225e25bf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e366d91999f0311642af5f9650cfa3e5225e25bf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1341751,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 27773,
+    "blank_lines": 0,
+    "comment_lines": 4201,
+    "code_lines": 23572,
+    "comment_ratio": 0.151,
+    "max_line_length": 80,
+    "avg_line_length": 47.3,
+    "long_lines_over_72": 208,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 55,
+    "call_count": 56,
+    "perform_count": 1014,
+    "goto_count": 11,
+    "pic_count": 1105,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software) - GnuCOBOL/OpenCOBOL based Japanese medical billing system",
+        "evidence": [
+          "PROGRAM-ID ORCR0030",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "JMA standard receipt software",
+          "JMA Open Source License",
+          "COPY count 55 indicating modular ORCA structure",
+          "no EXEC CICS/SQL, consistent with GnuCOBOL batch"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing - specifically point aggregation by diagnosis category (診療区分別点数集計) for medical billing claims",
+        "summary": "ORCR0030 is a large batch program in the JMA ORCA open-source medical receipt system. It aggregates and edits medical treatment points by diagnosis category for generating insurance claim receipts (レセプト). The program handles complex Japanese national health insurance billing rules including co-payment calculations, special items, and various insurance types.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Very large program: 27773 lines, ~1.3MB",
+        "55 COPY statements indicating heavy use of shared copybooks",
+        "56 CALL statements to other ORCA subprograms",
+        "1014 PERFORM statements indicating complex procedural logic",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage (unusual for financial calculations)",
+        "Extensive Japanese-language comments in EUC-JP/latin-1 encoding",
+        "Long revision history spanning 2000-2006 with multiple contributors (MCC, NACL teams)",
+        "Handles multiple Japanese insurance types: national health, welfare, long-term care"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but contains Japanese EUC-JP encoded text in comments (visible as garbled latin-1 sequences). This is the JMA ORCA open-source medical receipt software, a well-known Japanese healthcare IT system. The absence of COMP-3 is notable for a financial/billing system but may reflect GnuCOBOL conventions or use of binary/display arithmetic. Source truncated to first 16000 chars; full program is ~1.3MB with 27773 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 16392,
+      "completion_tokens": 577,
+      "total_tokens": 16969,
+      "cost": 0.057831,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.057831,
+        "upstream_inference_prompt_cost": 0.049176,
+        "upstream_inference_completions_cost": 0.008655
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.49,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:24:06Z"
+}

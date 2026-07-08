@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:62bd6b6e719a7e51a903c14cec96f593f39a2fc5",
+    "sha1_git": "62bd6b6e719a7e51a903c14cec96f593f39a2fc5",
+    "filename": "/DCBIUHLD.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7476,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:62bd6b6e719a7e51a903c14cec96f593f39a2fc5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:62bd6b6e719a7e51a903c14cec96f593f39a2fc5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7476,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 248,
+    "blank_lines": 57,
+    "comment_lines": 2,
+    "code_lines": 189,
+    "comment_ratio": 0.01,
+    "max_line_length": 69,
+    "avg_line_length": 29.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DCBIUHLD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Classic IBM mainframe batch COBOL; uses GOBACK, RECORDING MODE F, BLOCK CONTAINS 0 RECORDS, hex literals (X'05'), THRU in PERFORM, and a divide-by-zero abend technique typical of IBM mainframe shops",
+        "evidence": [
+          "GOBACK",
+          "RECORDING MODE F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "MOVE X'05' TO PB-COMPANY-CD",
+          "COMPUTE WS-ABEND-FLD = WS-ABEND-FLD / WS-ZERO-FLD (abend technique)",
+          "ORGANIZATION IS INDEXED / ACCESS IS DYNAMIC",
+          "FILE STATUS IS",
+          "COPY ERCPNDB"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Pending Business (PNDB) master file maintenance; clears a 'hold' billing flag (PB-RECORD-BILL = 'H') for records matching a given batch ID in an indexed ERP/pending-business database",
+        "summary": "Batch utility that reads an indexed ERPNDB (pending business) file sequentially, reads a batch ID from a control input file, and for each matching record of type '1' with a billing hold flag of 'H', clears the flag via a REWRITE. Produces a summary report of records read, bypassed, and updated.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Indexed file with DYNAMIC access and START/READ NEXT sequential scan",
+        "Divide-by-zero abend technique for forced abnormal termination (9999-ABEND-RTN)",
+        "COPY ERCPNDB copybook for FD record layout",
+        "STRING verb used for formatted report output",
+        "88-level condition name END-OF-ERPNDB",
+        "THRU clause on all PERFORM statements",
+        "No EXEC SQL or EXEC CICS",
+        "GOBACK instead of STOP RUN"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The COPY ERCPNDB copybook is not shown; field names like PB-CONTROL-PRIMARY, PB-COMPANY-CD, PB-RECORD-TYPE, PB-ENTRY-BATCH, PB-RECORD-BILL, and PENDING-BUSINESS are defined there. The program appears to be a one-off data-fix/hold-release utility for an insurance or ERP pending-business system."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4650,
+      "completion_tokens": 593,
+      "total_tokens": 5243,
+      "cost": 0.022845,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022845,
+        "upstream_inference_prompt_cost": 0.01395,
+        "upstream_inference_completions_cost": 0.008895
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.21,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:45:54Z"
+}

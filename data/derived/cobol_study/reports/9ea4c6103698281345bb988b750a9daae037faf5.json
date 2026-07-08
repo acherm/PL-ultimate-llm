@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9ea4c6103698281345bb988b750a9daae037faf5",
+    "sha1_git": "9ea4c6103698281345bb988b750a9daae037faf5",
+    "filename": "/TODOHANDLER.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3390,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9ea4c6103698281345bb988b750a9daae037faf5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9ea4c6103698281345bb988b750a9daae037faf5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3390,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 117,
+    "blank_lines": 21,
+    "comment_lines": 0,
+    "code_lines": 96,
+    "comment_ratio": 0.0,
+    "max_line_length": 55,
+    "avg_line_length": 27.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TODOHANDLER"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 6,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL-based CGI web application handling a TODO list; German-language identifiers (e.g. 'TODOLISTE', 'Action unbekannt') suggest European/German developer context",
+        "evidence": [
+          "GOBACK statement",
+          "EVALUATE TRUE / WHEN structure",
+          "COPY copybooks (TODOACTIONS, CGIUTILDATA, TODOITEM)",
+          "CALL 'CGIUTIL' and 'TODOLISTE'",
+          "No EXEC CICS or EXEC SQL",
+          "Fixed format, max line length under 72"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "CGI-based web TODO list manager; reads HTTP POST input, parses action parameter, and dispatches to add/show/delete/sort operations on a todo list",
+        "summary": "TODOHANDLER is a CGI COBOL program that reads web form POST data from stdin (KEYBOARD), parses an 'action' parameter, and dispatches to subprograms (TODOLISTE, CGIUTIL) to add, show, delete, or sort TODO list entries. It outputs an HTTP Content-Type header and HTML. German identifiers suggest a German-speaking developer.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "CGI web interface via ASSIGN TO KEYBOARD for POST data",
+        "EVALUATE TRUE dispatch on action parameter",
+        "COPY of multiple copybooks (TODOACTIONS, CGIUTILDATA, TODOITEM)",
+        "CALL to external subprograms CGIUTIL and TODOLISTE",
+        "German-language string literals and identifiers",
+        "HTTP header output via DISPLAY",
+        "GOBACK used for program termination"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Program type is technically a CGI batch program invoked by a web server; classified as batch since there is no CICS. The ASSIGN TO KEYBOARD pattern for reading stdin is a GnuCOBOL CGI idiom. Maturity assessed as student-exercise given the simple structure and TODO-list domain."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3149,
+      "completion_tokens": 505,
+      "total_tokens": 3654,
+      "cost": 0.017022,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017022,
+        "upstream_inference_prompt_cost": 0.009447,
+        "upstream_inference_completions_cost": 0.007575
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.54,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:26:04Z"
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b8f8ac90bdf927c526ea4025b01d5c55dac36843",
+    "sha1_git": "b8f8ac90bdf927c526ea4025b01d5c55dac36843",
+    "filename": "/RADTP009.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 63550,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b8f8ac90bdf927c526ea4025b01d5c55dac36843/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b8f8ac90bdf927c526ea4025b01d5c55dac36843/raw/"
+  },
+  "indicators": {
+    "bytes_len": 63550,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 775,
+    "blank_lines": 0,
+    "comment_lines": 148,
+    "code_lines": 627,
+    "comment_ratio": 0.191,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 775,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "RADTP009"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 8,
+    "call_count": 0,
+    "perform_count": 101,
+    "goto_count": 0,
+    "pic_count": 75,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS online program, Italian banking/finance system ('Sistema Rapporti Dormienti' - Dormant Accounts System), authored by Engineering S.p.A. Uses BMS maps, DFHCOMMAREA, DFHAID, EXEC CICS constructs typical of IBM CICS/VS or CICS/TS.",
+        "evidence": [
+          "EXEC CICS HANDLE ABEND",
+          "DFHCOMMAREA PIC X(10000)",
+          "COPY DFHAID",
+          "EIBAID = DFHCLEAR",
+          "EIBCALEN",
+          "EXEC CICS ... RESP(WS-RESP)",
+          "PACKED-DECIMAL",
+          "S9(08) BINARY",
+          "DECIMAL-POINT IS COMMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Sistema Rapporti Dormienti (Dormant Accounts System) - parameter entry screen for dormant account reporting, Italian banking application",
+        "summary": "RADTP009 is an IBM CICS online transaction program (TRANSID: RADO) for the 'Sistema Rapporti Dormienti' (Dormant Accounts System). It handles parameter insertion via BMS map RADMH09/RADSH09, managing pseudo-conversational flow, screen navigation, input validation, and error handling for a dormant accounts reporting subsystem.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (BMS maps, HANDLE ABEND, XCTL)",
+        "Pseudo-conversational design with COMMAREA (DFHCOMMAREA PIC X(10000))",
+        "BMS map handling (RADMH09/RADSH09)",
+        "DECIMAL-POINT IS COMMA (Italian locale)",
+        "Multiple COPY statements (RADCXW00, RADCX001, RADCX002, RADCX003, RADCDPAR, RADMH09, DFHAID, RADXDPAR)",
+        "EVALUATE for state machine (RADCX1-STAT)",
+        "PACKED-DECIMAL and BINARY usage",
+        "Italian-language comments and variable names",
+        "Sequence numbers in columns 73-80"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars out of 63550 bytes (775 lines total). All four COBOL divisions present. Fixed format confirmed by all lines being exactly 80 chars with sequence numbers in cols 73-80. The '???' marker at line 00018900 appears to be an inline annotation or source artifact. Program is clearly production-grade Italian banking software."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6259,
+      "completion_tokens": 651,
+      "total_tokens": 6910,
+      "cost": 0.028542,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028542,
+        "upstream_inference_prompt_cost": 0.018777,
+        "upstream_inference_completions_cost": 0.009765
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 23.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:14:13Z"
+}

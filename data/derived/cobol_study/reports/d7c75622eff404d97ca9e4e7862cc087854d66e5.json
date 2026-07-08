@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d7c75622eff404d97ca9e4e7862cc087854d66e5",
+    "sha1_git": "d7c75622eff404d97ca9e4e7862cc087854d66e5",
+    "filename": "/ORCS01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1292644,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d7c75622eff404d97ca9e4e7862cc087854d66e5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d7c75622eff404d97ca9e4e7862cc087854d66e5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1292644,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 25684,
+    "blank_lines": 2,
+    "comment_lines": 3156,
+    "code_lines": 22526,
+    "comment_ratio": 0.123,
+    "max_line_length": 108,
+    "avg_line_length": 49.3,
+    "long_lines_over_72": 339,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCS01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 31,
+    "call_count": 79,
+    "perform_count": 603,
+    "goto_count": 12,
+    "pic_count": 636,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), running on Linux, compiled with GnuCOBOL/OpenCOBOL",
+        "evidence": [
+          "Project code name ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "OS LINUX comment",
+          "PROGRAM-ID ORCS01",
+          "no EXEC CICS/SQL, no COMP-3, fixed format, 31 COPY statements typical of ORCA codebase"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) calculation subsystem - patient co-payment amount calculation for various insurance types (elderly care, national health, etc.)",
+        "summary": "ORCS01 is a subprogram within the JMA ORCA medical receipt software system that calculates patient co-payment (負担金) amounts for medical insurance claims. It handles multiple insurance types including elderly care (老人), national health insurance, and various regional public expense programs. The program has an extensive revision history spanning 2000-2008 covering Japanese health insurance law changes.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Extensive Japanese-language comments (EUC-JP encoded, displayed as latin-1 mojibake)",
+        "31 COPY statements indicating heavy use of shared copybooks",
+        "79 CALL statements to other subprograms",
+        "603 PERFORM statements indicating complex procedural logic",
+        "No COMP-3 usage (unusual for financial calculations)",
+        "No EXEC SQL or EXEC CICS",
+        "Long revision history with 100+ named revisions tracking Japanese health insurance law changes",
+        "25684 lines - very large production subprogram",
+        "Fixed format with some lines exceeding 72 columns (339 long lines)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is 1.29MB with 25684 lines - one of the largest COBOL subprograms typical of the JMA ORCA open-source medical receipt system. Japanese text in comments is EUC-JP encoded but decoded as latin-1, causing mojibake display. The program tracks Japanese health insurance regulation changes from 2000 through at least 2008. No COMP-3 is surprising for financial calculations but consistent with known ORCA coding style using PICTURE 9 fields."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 16702,
+      "completion_tokens": 572,
+      "total_tokens": 17274,
+      "cost": 0.058686,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.058686,
+        "upstream_inference_prompt_cost": 0.050106,
+        "upstream_inference_completions_cost": 0.00858
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.96,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:30:50Z"
+}

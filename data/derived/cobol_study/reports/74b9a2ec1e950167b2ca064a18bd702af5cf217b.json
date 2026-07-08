@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:74b9a2ec1e950167b2ca064a18bd702af5cf217b",
+    "sha1_git": "74b9a2ec1e950167b2ca064a18bd702af5cf217b",
+    "filename": "/ORCGK08.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 270166,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:74b9a2ec1e950167b2ca064a18bd702af5cf217b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:74b9a2ec1e950167b2ca064a18bd702af5cf217b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 270166,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6334,
+    "blank_lines": 0,
+    "comment_lines": 1674,
+    "code_lines": 4660,
+    "comment_ratio": 0.264,
+    "max_line_length": 74,
+    "avg_line_length": 41.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGK08"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 82,
+    "call_count": 41,
+    "perform_count": 406,
+    "goto_count": 25,
+    "pic_count": 264,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses /var/tmp/ file paths and LINE SEQUENTIAL files typical of open-source COBOL on Unix",
+        "evidence": [
+          "PROGRAM-ID ORCGK08",
+          "SELECT PARA-FILE ASSIGN FILE-NAME2 ORGANIZATION IS LINE SEQUENTIAL",
+          "file paths /var/tmp/K01PARA*.TXT",
+          "/var/tmp/K02SPASCR*.TXT",
+          "COPY ENUM-VALUE, COPY COMMON-SPA, COPY K01COMMON-SPA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo-koui) processing system - specifically a medical procedure confirmation/input screen component (shinryo-koui kakunin, component K08)",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system for Japanese medical institutions. It handles medical procedure (shinryo-koui) confirmation and input processing, managing screen display, parameter files, and procedure data tables for medical billing. It is a large production batch/screen program with extensive SPA (scratchpad area) data structures for tracking medical procedures, insurance combinations, and billing calculations.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "82 COPY statements indicating heavy use of shared copybooks",
+        "41 CALL statements to external subprograms",
+        "406 PERFORM statements indicating complex procedural logic",
+        "OCCURS 600 for large in-memory tables (SPA-GMN-TBL, SPA-NAI-TBL)",
+        "REDEFINES used extensively for multi-format data areas",
+        "LINE SEQUENTIAL file organization",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "No EXEC SQL or EXEC CICS - pure file-based processing",
+        "Large PIC X(60000) record fields for parameter data",
+        "SPA (scratchpad area) pattern typical of ORCA multi-program architecture"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP encoding, appearing as mojibake. The program is part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese clinics. Truncated at 16000 chars out of 270166 bytes (6334 lines total); full program not visible but structure is clear. No COMP-3 usage despite financial calculations - uses PIC S9 display format instead."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9836,
+      "completion_tokens": 653,
+      "total_tokens": 10489,
+      "cost": 0.039303,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039303,
+        "upstream_inference_prompt_cost": 0.029508,
+        "upstream_inference_completions_cost": 0.009795
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:09:11Z"
+}

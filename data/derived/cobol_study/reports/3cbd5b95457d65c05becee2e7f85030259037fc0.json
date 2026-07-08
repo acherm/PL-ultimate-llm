@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3cbd5b95457d65c05becee2e7f85030259037fc0",
+    "sha1_git": "3cbd5b95457d65c05becee2e7f85030259037fc0",
+    "filename": "/S04P028.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7603,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3cbd5b95457d65c05becee2e7f85030259037fc0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3cbd5b95457d65c05becee2e7f85030259037fc0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7603,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 196,
+    "blank_lines": 30,
+    "comment_lines": 10,
+    "code_lines": 156,
+    "comment_ratio": 0.06,
+    "max_line_length": 72,
+    "avg_line_length": 36.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "S04P028-p"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 3,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 21,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with $SET SQL(DBMAN=ODBC) directive and Dialog System (DSGRUN) UI framework; Portuguese-language comments suggest Brazilian development environment named LINCE-386",
+        "evidence": [
+          "$SET SQL(DBMAN=ODBC) compiler directive",
+          "COPY 'DS-CNTRL.MF'",
+          "CALL DIALOG-SYSTEM USING DS-CONTROL-BLOCK",
+          "78 level item (COBOL-85 constant)",
+          "DECIMAL-POINT IS COMMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Condominium management system (Brazilian real estate/property management); zeroing payment dates for condominium residents",
+        "summary": "This program is part of a Brazilian condominium management system (Sistema04). It connects to an ODBC database, reads condominium records, and zeroes out payment dates (DS409-CP02) for matching records via SQL UPDATE. It uses Micro Focus Dialog System for the UI interaction loop.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL with ODBC (DBMAN=ODBC via $SET directive)",
+        "Micro Focus Dialog System (DSGRUN) UI framework",
+        "SQL cursor (Consulta09) with FETCH loop",
+        "SQL CONNECT TO database",
+        "COPY copybooks for file definitions and Dialog System control blocks",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "Portuguese-language comments and month name table",
+        "78-level constant for program name"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program written in 1994 by author 'AZIZ' on a LINCE-386 machine. Uses Micro Focus COBOL with embedded SQL via ODBC. The program_type is classified as 'online-cics' as the closest match for a Dialog System interactive program (no CICS is actually used). Month names include Portuguese characters (MARÇO) decoded via latin-1. Some tab characters visible in WS-STATUS field definitions."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4433,
+      "completion_tokens": 505,
+      "total_tokens": 4938,
+      "cost": 0.020874,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020874,
+        "upstream_inference_prompt_cost": 0.013299,
+        "upstream_inference_completions_cost": 0.007575
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.26,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:41:31Z"
+}

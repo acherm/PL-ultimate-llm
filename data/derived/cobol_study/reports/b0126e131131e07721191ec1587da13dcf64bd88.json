@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b0126e131131e07721191ec1587da13dcf64bd88",
+    "sha1_git": "b0126e131131e07721191ec1587da13dcf64bd88",
+    "filename": "/trmtsrch.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16294,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b0126e131131e07721191ec1587da13dcf64bd88/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b0126e131131e07721191ec1587da13dcf64bd88/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16294,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 421,
+    "blank_lines": 59,
+    "comment_lines": 25,
+    "code_lines": 337,
+    "comment_ratio": 0.069,
+    "max_line_length": 72,
+    "avg_line_length": 37.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TRMTSRCH"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 1,
+    "perform_count": 8,
+    "goto_count": 8,
+    "pic_count": 82,
+    "comp3_count": 15,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe batch COBOL; uses RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, ASSIGN TO UT-S-ddname conventions, VSAM INDEXED file (PATMSTR), COMP/COMP-3, GOBACK, RETURN-CODE special register",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-390",
+          "OBJECT-COMPUTER. IBM-390",
+          "ASSIGN TO UT-S-SYSOUT",
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-3",
+          "GOBACK",
+          "RETURN-CODE"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Inpatient hospital treatment record processing; searches sorted treatment records against a lab test table, calculates lab costs via a called subprogram, and writes matched records to an output file",
+        "summary": "TRMTSRCH reads sorted inpatient treatment records and a lab test reference file, loads the lab test data into an in-memory table, searches each treatment record's lab charges against the table, calls an external cost-calculation subprogram (CLCLBCST), and writes matched records plus a trailer to an output file. It also validates record counts against a trailer record and abends on errors.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "VSAM INDEXED file access (PATMSTR) with RECORD KEY and FILE STATUS",
+        "SEARCH statement with INDEXED BY for lab test table lookup",
+        "CALL to external subprogram CLCLBCST with CALC-COSTS-REC",
+        "COMP-3 packed-decimal accumulators",
+        "COPY statements (TREATMNT, PATMSTR, ABENDREC)",
+        "Trailer record validation with record count balancing",
+        "88-level condition names for file status and lab test categories",
+        "GOBACK with MOVE ZERO TO RETURN-CODE",
+        "Inline comment noting a known bug (NICE BUG comment)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars but the visible portion covers nearly all logic. The program references copybooks TREATMNT, PATMSTR, and ABENDREC which are not shown. A developer comment explicitly flags a known bug ('NICE BUG = THIS SHOULD BE IN 100-MAINLINE'). Author is Jon Sayles, associated with COBOL Development Center training materials, so this may be a teaching/courseware example despite production-like structure."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7790,
+      "completion_tokens": 606,
+      "total_tokens": 8396,
+      "cost": 0.03246,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03246,
+        "upstream_inference_prompt_cost": 0.02337,
+        "upstream_inference_completions_cost": 0.00909
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.13,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:21:23Z"
+}

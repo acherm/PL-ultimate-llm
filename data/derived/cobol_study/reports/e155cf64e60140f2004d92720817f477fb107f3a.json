@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e155cf64e60140f2004d92720817f477fb107f3a",
+    "sha1_git": "e155cf64e60140f2004d92720817f477fb107f3a",
+    "filename": "/TIPSEC.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8888,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e155cf64e60140f2004d92720817f477fb107f3a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e155cf64e60140f2004d92720817f477fb107f3a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8888,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 258,
+    "blank_lines": 5,
+    "comment_lines": 0,
+    "code_lines": 253,
+    "comment_ratio": 0.0,
+    "max_line_length": 69,
+    "avg_line_length": 33.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TIPSEC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 1,
+    "perform_count": 58,
+    "goto_count": 0,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "rm-cobol",
+        "standard": "COBOL-85",
+        "detail": "RM/COBOL dialect — SOURCE-COMPUTER and OBJECT-COMPUTER both set to RMCOBOL; uses RM/COBOL screen-handling extensions (DISPLAY ... LINE ... POSITION ... CONTROL, ACCEPT ... ESCAPE KEY, WINDOW-CREATE/WINDOW-REMOVE controls)",
+        "evidence": [
+          "SOURCE-COMPUTER. RMCOBOL",
+          "OBJECT-COMPUTER. RMCOBOL",
+          "CONTROL 'WINDOW-CREATE'",
+          "CONTROL 'WINDOW-REMOVE'",
+          "ACCEPT F FROM ESCAPE KEY",
+          "DISPLAY ... LINE ... POSITION ... CONTROL 'BCOLOR=BLACK, FCOLOR=WHITE'"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Turkish-language general-purpose lookup/selection popup window — likely part of a larger business application (Turkish variable names: DTIP, DTIP-ADI, DTIP-NO suggest a 'type' or category lookup table)",
+        "summary": "TIPSEC is a subprogram that implements a scrollable popup list-selection window. It accepts window coordinates and a key, opens a keyed file (DTIP), displays records in a bordered window with box-drawing characters, and allows the user to navigate (arrow keys, PgUp/PgDn, Home, End, Ctrl-Home, Ctrl-End) and select a record, returning the selected code and name to the caller via LINKAGE SECTION parameters.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with USING clause — called subprogram",
+        "RM/COBOL screen extensions: DISPLAY LINE/POSITION/CONTROL with BCOLOR/FCOLOR",
+        "WINDOW-CREATE and WINDOW-REMOVE windowing controls",
+        "Box-drawing characters for window border (É, Í, », È, ¼, º)",
+        "ACCEPT FROM ESCAPE KEY for function-key handling",
+        "Keyed sequential file navigation (START, READ NEXT, READ PREVIOUS)",
+        "COPY directives for file-control, FD, status, and window copybooks",
+        "CALL/CANCEL 'GOLGE' for shadow/drop-shadow effect",
+        "Turkish variable and paragraph names",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 which is consistent with Turkish box-drawing and special characters. The program is clearly part of a larger Turkish RM/COBOL business application. Variable names and logic are in Turkish (e.g., SATIR=row, EKRAN=screen, BILGI=info, YUKARI=up, ASAGI=down). The GOTO usage is present despite COBOL-85 structured constructs also being used."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5392,
+      "completion_tokens": 667,
+      "total_tokens": 6059,
+      "cost": 0.026181,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026181,
+        "upstream_inference_prompt_cost": 0.016176,
+        "upstream_inference_completions_cost": 0.010005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.47,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:38:45Z"
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9e3b228c07937a0be33a3b12f0f39735693d419b",
+    "sha1_git": "9e3b228c07937a0be33a3b12f0f39735693d419b",
+    "filename": "/ORCGJ04.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 382173,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9e3b228c07937a0be33a3b12f0f39735693d419b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9e3b228c07937a0be33a3b12f0f39735693d419b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 382173,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 9004,
+    "blank_lines": 0,
+    "comment_lines": 2495,
+    "code_lines": 6509,
+    "comment_ratio": 0.277,
+    "max_line_length": 76,
+    "avg_line_length": 41.4,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGJ04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 74,
+    "call_count": 71,
+    "perform_count": 485,
+    "goto_count": 71,
+    "pic_count": 340,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY includes (.INC files), no COMP-3, no EXEC SQL/CICS, fixed format.",
+        "evidence": [
+          "PROGRAM-ID ORCGJ04",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY CPK02SPASCR.INC",
+          "COPY COMMON-SPA",
+          "COPY J04SCR-SPA",
+          "COPY CPORCSSRYSYU.INC",
+          "no COMP-3 usage",
+          "no EXEC SQL/CICS",
+          "fixed source format with max line 76"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) processing system - diagnosis/treatment act input (診療行為入力) component of the JMA ORCA standard receipt software",
+        "summary": "This program is the diagnosis/treatment act input component (診療行為入力) of the JMA ORCA standard medical receipt software. It handles entry and validation of medical procedures, medications, and associated billing data for Japanese health insurance claims. It manages screen interaction, set processing, drug/procedure code lookup, and various medical billing rules.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "74 COPY statements referencing .INC copybooks",
+        "71 CALL statements to external subprograms",
+        "485 PERFORM statements indicating complex procedural logic",
+        "71 GOTO statements",
+        "Large program: 9004 lines, ~382KB",
+        "Extensive Japanese comments (EUC-JP/latin-1 encoded)",
+        "No COMP-3 packed decimal usage",
+        "No EXEC SQL or EXEC CICS",
+        "Fixed-format source with very few lines over 72 chars",
+        "Revision history spanning 2000-2014 with multiple maintainers (MCC, NACL)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but Japanese comments are EUC-JP encoded (garbled in latin-1 view). The program_type is listed as online-cics but this is actually a GnuCOBOL screen-based interactive program using the ORCA framework's own screen handling (not CICS); 'online-cics' is the closest enum match for an interactive screen program. Source truncated to first 16000 chars; full program is 9004 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10585,
+      "completion_tokens": 620,
+      "total_tokens": 11205,
+      "cost": 0.041055,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.041055,
+        "upstream_inference_prompt_cost": 0.031755,
+        "upstream_inference_completions_cost": 0.0093
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.02,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:12:43Z"
+}

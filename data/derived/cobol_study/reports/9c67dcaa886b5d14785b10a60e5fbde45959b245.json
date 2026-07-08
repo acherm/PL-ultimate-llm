@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9c67dcaa886b5d14785b10a60e5fbde45959b245",
+    "sha1_git": "9c67dcaa886b5d14785b10a60e5fbde45959b245",
+    "filename": "/ORCR0501.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 175946,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9c67dcaa886b5d14785b10a60e5fbde45959b245/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9c67dcaa886b5d14785b10a60e5fbde45959b245/raw/"
+  },
+  "indicators": {
+    "bytes_len": 175946,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4020,
+    "blank_lines": 2,
+    "comment_lines": 903,
+    "code_lines": 3115,
+    "comment_ratio": 0.225,
+    "max_line_length": 116,
+    "avg_line_length": 42.8,
+    "long_lines_over_72": 20,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0501"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 40,
+    "call_count": 7,
+    "perform_count": 276,
+    "goto_count": 22,
+    "pic_count": 184,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with REPLACING using // delimiters, indexed file I/O, and Japanese EUC/Shift-JIS encoded comments.",
+        "evidence": [
+          "PROGRAM-ID ORCR0501",
+          "COPY with REPLACING //RECEDAT1// BY //RECE41//",
+          "SELECT ... ASSIGN RECE41PARA ORGANIZATION IS INDEXED",
+          "JMA (Japan Medical Association) copyright header",
+          "filename ORCR0501.CBL",
+          "no EXEC CICS or EXEC SQL",
+          "copy_count=40 with .INC copybooks"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - monthly billing: creates detailed files for short-term benefit (労災自賠責) receipts and edits print data",
+        "summary": "This program is part of the JMA ORCA medical receipt system. It processes monthly billing data for workers' compensation and automobile liability insurance (労災・自賠責) receipts, reading indexed files (patient info, disease names, point demand, amount demand) and producing detailed receipt print data files. It handles disease name editing, receipt comments, surgical history, and multi-page receipt formatting.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "40 COPY statements with .INC copybooks",
+        "COPY REPLACING with // delimiter syntax",
+        "Indexed sequential file I/O (ORGANIZATION IS INDEXED)",
+        "Japanese EUC/latin-1 encoded comments throughout",
+        "OCCURS tables for receipt data storage (TBL-RECE-OCC OCCURS 99)",
+        "Large working storage with complex data structures",
+        "No EXEC SQL or EXEC CICS",
+        "REDEFINES usage",
+        "276 PERFORM statements indicating structured procedural logic",
+        "22 GOTO statements"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but contains Japanese EUC or Shift-JIS encoded text in comments (garbled in latin-1 view). Source is truncated to 16000 chars out of ~176KB total. The program is clearly production-grade JMA ORCA software, a well-known open-source Japanese medical billing system. GnuCOBOL dialect inferred from COPY REPLACING // syntax and Linux-style file assignment names."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9310,
+      "completion_tokens": 603,
+      "total_tokens": 9913,
+      "cost": 0.036975,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036975,
+        "upstream_inference_prompt_cost": 0.02793,
+        "upstream_inference_completions_cost": 0.009045
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.16,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:39:55Z"
+}

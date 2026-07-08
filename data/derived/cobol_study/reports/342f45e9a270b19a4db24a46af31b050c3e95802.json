@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:342f45e9a270b19a4db24a46af31b050c3e95802",
+    "sha1_git": "342f45e9a270b19a4db24a46af31b050c3e95802",
+    "filename": "/ORCR0090.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 237448,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:342f45e9a270b19a4db24a46af31b050c3e95802/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:342f45e9a270b19a4db24a46af31b050c3e95802/raw/"
+  },
+  "indicators": {
+    "bytes_len": 237448,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5102,
+    "blank_lines": 0,
+    "comment_lines": 1371,
+    "code_lines": 3731,
+    "comment_ratio": 0.269,
+    "max_line_length": 114,
+    "avg_line_length": 45.5,
+    "long_lines_over_72": 56,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0090"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 2,
+    "perform_count": 302,
+    "goto_count": 14,
+    "pic_count": 417,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software); GnuCOBOL/OpenCOBOL targeting Linux, using COPY with .INC copybooks and ASSIGN to symbolic names",
+        "evidence": [
+          "PROGRAM-ID ORCR0090",
+          "COPY 'CPRCF002.INC'",
+          "ASSIGN RECE01PARA",
+          "ORGANIZATION IS INDEXED",
+          "JMA (Japan Medical Association) copyright header",
+          "ORCA project code name in header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) printing/editing system for JMA ORCA standard receipt software",
+        "summary": "ORCR0090 is a receipt (レセプト) printing/editing program within the JMA ORCA medical billing system. It reads multiple indexed receipt data files (RECE02, RECE04, RECE05, RECE06) and produces formatted receipt output. The program has an extensive revision history spanning 2000–2010 covering Japanese medical fee revisions, prescription handling, examination items, and various billing calculation adjustments.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "21 COPY statements referencing .INC copybooks",
+        "Multiple indexed ISAM files with DYNAMIC and SEQUENTIAL access",
+        "302 PERFORM statements indicating complex procedural logic",
+        "14 GOTO statements",
+        "Extensive Japanese-language comments (Shift-JIS/EUC-JP encoded, decoded as latin-1)",
+        "Long revision history with version numbers from 01.00.01 through 04.05.05",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite financial calculations"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file is 5102 lines with ~27% comment ratio; Japanese text in comments is encoded in EUC-JP or Shift-JIS but decoded as latin-1, resulting in mojibake in the archived form. The file is part of the well-known open-source JMA ORCA medical receipt system. No COMP-3 is unusual for financial COBOL but consistent with GnuCOBOL ORCA codebase style."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15123,
+      "completion_tokens": 550,
+      "total_tokens": 15673,
+      "cost": 0.053619,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.053619,
+        "upstream_inference_prompt_cost": 0.045369,
+        "upstream_inference_completions_cost": 0.00825
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.04,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:06:56Z"
+}

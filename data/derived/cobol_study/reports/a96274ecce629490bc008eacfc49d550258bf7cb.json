@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a96274ecce629490bc008eacfc49d550258bf7cb",
+    "sha1_git": "a96274ecce629490bc008eacfc49d550258bf7cb",
+    "filename": "/ORCSAPIFMTERM.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11501,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a96274ecce629490bc008eacfc49d550258bf7cb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a96274ecce629490bc008eacfc49d550258bf7cb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11501,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 315,
+    "blank_lines": 0,
+    "comment_lines": 145,
+    "code_lines": 170,
+    "comment_ratio": 0.46,
+    "max_line_length": 74,
+    "avg_line_length": 35.5,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSAPIFMTERM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 5,
+    "perform_count": 14,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "PROGRAM-ID ORCSAPIFMTERM",
+          "COPY COMMON-SPA",
+          "CALL ORCDBMAIN",
+          "CALL MONFUNC",
+          "MCP-TABLE / MCP-PATHNAME / MCP-FUNC pattern",
+          "Copyright JMA 2002 ORCA project"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) processing system - API parameter terminal cleanup processing",
+        "summary": "This subprogram handles post-processing after API form data creation for a terminal session. It reads API parameter records from the database (tbl_api_para), pushes print event data via MONFUNC, then deletes the API parameter records for the terminal/operator combination.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "COPY copybooks: CPPUSHPRINT001.INC, CPAPIPARA.INC, CPPARA001.INC, MCPDATA.INC, MCPAREA, COMMON-SPA",
+        "CALL ORCDBMAIN for DB SELECT/FETCH/CLOSECURSOR/DELETE operations",
+        "CALL MONFUNC for push event notification",
+        "LINKAGE SECTION with SPA-AREA parameter",
+        "High comment ratio (46%) with Japanese-encoded comments (latin-1 encoded Shift-JIS/EUC-JP)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCDBMAIN abstraction layer"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in a Japanese multi-byte encoding (likely EUC-JP or Shift-JIS) decoded as latin-1, resulting in mojibake in the displayed text. File is part of the well-known open-source JMA ORCA medical receipt system. Program acts as a terminal-session cleanup subprogram called via SPA-AREA linkage."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5913,
+      "completion_tokens": 517,
+      "total_tokens": 6430,
+      "cost": 0.025494,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025494,
+        "upstream_inference_prompt_cost": 0.017739,
+        "upstream_inference_completions_cost": 0.007755
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.89,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:28:20Z"
+}

@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:75bda9a294ea82e1f709ccf60066fdb6bf307be4",
+    "sha1_git": "75bda9a294ea82e1f709ccf60066fdb6bf307be4",
+    "filename": "/ORCBM550.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 104193,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:75bda9a294ea82e1f709ccf60066fdb6bf307be4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:75bda9a294ea82e1f709ccf60066fdb6bf307be4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 104193,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2247,
+    "blank_lines": 1,
+    "comment_lines": 498,
+    "code_lines": 1748,
+    "comment_ratio": 0.222,
+    "max_line_length": 84,
+    "avg_line_length": 45.4,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBM550"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 20,
+    "call_count": 33,
+    "perform_count": 134,
+    "goto_count": 3,
+    "pic_count": 75,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software); compiled with GnuCOBOL/OpenCOBOL on Linux; uses MCPDATA/MCPAREA copy members typical of ORCA middleware",
+        "evidence": [
+          "PROGRAM-ID ORCBM550",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY MCPDATA.INC / MCPAREA",
+          "COPY COMMON-SPA",
+          "COPY CPORCSJOBKANRI.INC",
+          "LINE SEQUENTIAL file organization",
+          "no EXEC CICS / no EXEC SQL",
+          "PERFORM ... END-PERFORM structured syntax"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt) online submission system; handles online receipt (onrece) data import for the JMA ORCA medical billing system",
+        "summary": "ORCBM550 is a batch program in the JMA ORCA medical receipt system that reads CSV/parameter files containing online insurance claim (receipt) data and loads them into the ORCA database. It parses command-line parameters, opens DB connections via MCP middleware, reads patient and claim body records, and manages job-step control.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY members for ORCA-specific layouts (CPONRECE-BODY.INC, CPONRECE-KANRI.INC, CPSK1009.INC, CPJOBKANRI.INC)",
+        "MCP middleware DB access (MCPDATA.INC, MCPAREA) instead of EXEC SQL",
+        "UNSTRING of comma-delimited COMMAND-PARAM for up to 20 file arguments",
+        "OCCURS 50000 table for receipt body records (TBL-ONRECE-B-AREA)",
+        "Japanese Shift-JIS/EUC encoded comments (latin-1 decoded)",
+        "Code conversion copybooks (CPORCSJISTOEUC, CPORCSZENHANCNV)",
+        "LINKAGE SECTION with COMMAND-PARAM passed via USING",
+        "LINE SEQUENTIAL file organization for CSV/parameter input",
+        "Job management via ORCSJOB subroutine (900-CALL-ORCSJOB-SEC)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but contains Japanese text encoded in Shift-JIS or EUC-JP; comment lines show garbled multi-byte characters. Source is truncated at 16000 chars out of 104193 bytes total. The ORCA system is a well-known open-source Japanese medical billing platform; this program is clearly production-grade infrastructure code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8471,
+      "completion_tokens": 661,
+      "total_tokens": 9132,
+      "cost": 0.035328,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035328,
+        "upstream_inference_prompt_cost": 0.025413,
+        "upstream_inference_completions_cost": 0.009915
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.14,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:31:06Z"
+}

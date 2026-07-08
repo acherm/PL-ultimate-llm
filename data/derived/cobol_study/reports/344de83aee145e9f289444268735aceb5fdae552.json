@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:344de83aee145e9f289444268735aceb5fdae552",
+    "sha1_git": "344de83aee145e9f289444268735aceb5fdae552",
+    "filename": "/HBSIS06P.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 21045,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:344de83aee145e9f289444268735aceb5fdae552/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:344de83aee145e9f289444268735aceb5fdae552/raw/"
+  },
+  "indicators": {
+    "bytes_len": 21045,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 494,
+    "blank_lines": 74,
+    "comment_lines": 68,
+    "code_lines": 352,
+    "comment_ratio": 0.162,
+    "max_line_length": 72,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "HBSIS06P"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 29,
+    "goto_count": 0,
+    "pic_count": 51,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL/OpenCOBOL style; uses LOCK MODE IS MANUAL, ORGANIZATION IS LINE SEQUENTIAL, SORT with INPUT/OUTPUT PROCEDURE, and DECIMAL-POINT IS COMMA — typical of Brazilian GnuCOBOL development environment",
+        "evidence": [
+          "LOCK MODE IS MANUAL",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "DECIMAL-POINT IS COMMA",
+          "SORT ARQ-SORT ON ASCENDING KEY ... INPUT PROCEDURE IS ... OUTPUT PROCEDURE IS",
+          "VALUE OF FILE-ID IS 'ArqVendedor'",
+          "ASSIGN TO DISK"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Salesperson (vendedor) report generation — Brazilian business application producing both a formatted text report and a CSV file of salesperson records with code, CPF, name, latitude, and longitude",
+        "summary": "HBSIS06P is a batch subprogram that generates a salesperson report. It reads an indexed salesperson file, sorts records by code or name in ascending or descending order based on linkage parameters, and writes output to both a formatted text report (RELVENDEDOR.TXT) and a CSV file (RELVENDEDOR.CSV). It validates input parameters and returns a return code and message via the LINKAGE SECTION.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "SORT with INPUT PROCEDURE / OUTPUT PROCEDURE",
+        "Dual output: formatted text report and CSV",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "ALTERNATE RECORD KEY on indexed file",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING",
+        "COPY copybook for file layout (HBSIS04C.CPY) and linkage (HBSIS06L)",
+        "LOCK MODE IS MANUAL on indexed file",
+        "Latitude/longitude fields in salesperson record",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; remaining ~5000 chars (output sort routine, finalize, and utility sections) not visible but structure is clear. Program is in Portuguese (Brazilian), consistent with a Brazilian commercial COBOL application. Analyst name and date (17/02/2019) present in header comments."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6626,
+      "completion_tokens": 562,
+      "total_tokens": 7188,
+      "cost": 0.028308,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028308,
+        "upstream_inference_prompt_cost": 0.019878,
+        "upstream_inference_completions_cost": 0.00843
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.44,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:53:58Z"
+}

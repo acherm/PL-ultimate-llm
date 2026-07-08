@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1c00f5a393cf1ef3455399d6e6df83b1ac2e7ad6",
+    "sha1_git": "1c00f5a393cf1ef3455399d6e6df83b1ac2e7ad6",
+    "filename": "/ASYNCPNT.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16538,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1c00f5a393cf1ef3455399d6e6df83b1ac2e7ad6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1c00f5a393cf1ef3455399d6e6df83b1ac2e7ad6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16538,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 415,
+    "blank_lines": 66,
+    "comment_lines": 106,
+    "code_lines": 243,
+    "comment_ratio": 0.304,
+    "max_line_length": 72,
+    "avg_line_length": 37.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ASYNCPNT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 78,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/TS COBOL program using EXEC CICS asynchronous child transaction API (RUN TRANSID/FETCH CHILD), compiled with PROCESS CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD) compiler options. IBM sample code copyright 2016.",
+        "evidence": [
+          "PROCESS CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD)",
+          "EXEC CICS RUN TRANSID ... CHILD",
+          "EXEC CICS FETCH CHILD ... COMPSTATUS ... ABCODE",
+          "EXEC CICS ASSIGN STARTCODE",
+          "(c) Copyright IBM Corp. 2016",
+          "COMP-5 SYNC",
+          "LOCAL-STORAGE SECTION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Credit card application processing using CICS asynchronous child transactions",
+        "summary": "ASYNCPNT is a CICS parent coordinating program that processes a credit card application asynchronously. It accepts a customer account number from either a terminal (transaction ACCA) or a web service, then fans out to multiple child transactions (credit check, name lookup, address lookup, customer status, DB cache update) using the CICS asynchronous API (RUN TRANSID/FETCH CHILD), collects results, and returns a consolidated response.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS RUN TRANSID ... CHILD (CICS asynchronous child transaction API)",
+        "EXEC CICS FETCH CHILD ... COMPSTATUS ... ABCODE",
+        "EXEC CICS PUT/GET CONTAINER with named channels",
+        "LOCAL-STORAGE SECTION (thread-safe storage)",
+        "PROCESS compiler options directive (CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD))",
+        "Dual invocation path: terminal (STARTCODE=TD) and web service",
+        "COMP-5 SYNC for binary length field",
+        "No EXEC SQL, no COPY statements"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars but the essential logic is visible. This is an IBM-supplied sample program (copyright IBM Corp. 2016) demonstrating the CICS asynchronous API introduced in CICS TS 5.2+. All error handling is intentionally omitted per the program comments. The program is well-structured and representative of production CICS coding style despite being a sample."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6852,
+      "completion_tokens": 621,
+      "total_tokens": 7473,
+      "cost": 0.029871,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029871,
+        "upstream_inference_prompt_cost": 0.020556,
+        "upstream_inference_completions_cost": 0.009315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.35,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:32:07Z"
+}

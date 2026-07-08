@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:69cb114feb1d30d8104f7be60b72a1c089c8717d",
+    "sha1_git": "69cb114feb1d30d8104f7be60b72a1c089c8717d",
+    "filename": "/ORCR0487.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 133749,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:69cb114feb1d30d8104f7be60b72a1c089c8717d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:69cb114feb1d30d8104f7be60b72a1c089c8717d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 133749,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3136,
+    "blank_lines": 2,
+    "comment_lines": 807,
+    "code_lines": 2327,
+    "comment_ratio": 0.257,
+    "max_line_length": 116,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 12,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0487"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 6,
+    "perform_count": 215,
+    "goto_count": 13,
+    "pic_count": 163,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCR0487 handles self-pay insurance receipt file creation for monthly billing.",
+        "evidence": [
+          "PROGRAM-ID ORCR0487",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY directives with .INC files (CPRCF041.INC, CPCOMMONSHELL.INC, HCM48.INC)",
+          "ASSIGN RECE41PARA style (GnuCOBOL/OpenCOBOL environment variable assignment)",
+          "No EXEC CICS or EXEC SQL",
+          "Fixed format, no IBM-specific extensions like COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - monthly billing detail file creation for self-pay insurance (自費診療), part of JMA ORCA open-source medical receipt software",
+        "summary": "ORCR0487 is a batch program in the JMA ORCA medical receipt system that creates monthly billing detail files for self-pay/private insurance receipts. It reads indexed files for patient insurance information, disease names, and point/amount claim data, then formats and outputs receipt documents. The program handles new-style receipt formats with group diagnosis support.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "34 COPY statements with .INC copybooks",
+        "REPLACING clause used with COPY for parameterized copybooks",
+        "Indexed sequential file I/O (ORGANIZATION IS INDEXED) for multiple receipt files",
+        "OCCURS tables for receipt storage (up to 99 entries of 10000 bytes each)",
+        "Japanese text in comments (EUC-JP or Shift-JIS encoded, rendered as latin-1 mojibake)",
+        "REDEFINES usage",
+        "Multiple file status fields",
+        "No COMP-3 usage despite financial data",
+        "Newline constant defined as X'0A' suggesting Unix/Linux environment"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file contains Japanese text encoded in EUC-JP (or possibly Shift-JIS) but decoded as latin-1, resulting in mojibake in the comments. The program is clearly part of the well-known JMA ORCA open-source medical receipt system used widely in Japanese medical clinics. File truncated at 16000 chars out of 133749 bytes total (3136 lines), so only the DATA DIVISION is visible; PROCEDURE DIVISION not shown but inferred from mechanical indicators (215 PERFORMs, 13 GOTOs, 6 CALLs)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9675,
+      "completion_tokens": 672,
+      "total_tokens": 10347,
+      "cost": 0.039105,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039105,
+        "upstream_inference_prompt_cost": 0.029025,
+        "upstream_inference_completions_cost": 0.01008
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.72,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:33:17Z"
+}

@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:741ceae559366a5c07e5a427c7b2bf063e942aec",
+    "sha1_git": "741ceae559366a5c07e5a427c7b2bf063e942aec",
+    "filename": "/ORCGK05.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 284049,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:741ceae559366a5c07e5a427c7b2bf063e942aec/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:741ceae559366a5c07e5a427c7b2bf063e942aec/raw/"
+  },
+  "indicators": {
+    "bytes_len": 284049,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6789,
+    "blank_lines": 0,
+    "comment_lines": 2077,
+    "code_lines": 4712,
+    "comment_ratio": 0.306,
+    "max_line_length": 76,
+    "avg_line_length": 40.8,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGK05"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 66,
+    "call_count": 87,
+    "perform_count": 314,
+    "goto_count": 88,
+    "pic_count": 325,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses /var/tmp/ file paths and LINE SEQUENTIAL files typical of GnuCOBOL on Unix/Linux",
+        "evidence": [
+          "PROGRAM-ID ORCGK05",
+          "FILE paths /var/tmp/K05SPASCR.TXT and /var/tmp/K01PARA.TXT",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "COPY directives for ENUM-VALUE, CPK02SPASCR.INC, COMMON-SPA, K01COMMON-SPA, K02SCR-SPA",
+          "Copyright JMA (Japan Medical Association) 2002",
+          "No EXEC CICS or EXEC SQL",
+          "No COMP-3 usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryo koui) input processing system - diagnostic/treatment act set entry component",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It handles input processing for medical treatment acts (shinryo koui nyuryoku), managing screen SPA data, parameter files, and set-code entry for medical procedures. It is a large batch/interactive subprogram with extensive working storage for medical billing calculations.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "66 COPY statements indicating heavy use of copybooks",
+        "87 CALL statements to external subprograms",
+        "314 PERFORM statements",
+        "88 GOTO statements",
+        "Large PIC X(30000) and PIC X(60000) data records for SPA/parameter data",
+        "LINE SEQUENTIAL file organization",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded as garbled)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "File paths rooted at /var/tmp/ indicating Linux/Unix runtime",
+        "Extensive flag and index working storage areas"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in Japanese (EUC-JP or Shift-JIS), decoded as latin-1 resulting in garbled characters. The file is part of the well-known open-source JMA ORCA medical receipt system for Japan. Source truncated at 16000 chars out of 284049 bytes (6789 lines total); classification is based on visible structure and known ORCA codebase patterns."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9981,
+      "completion_tokens": 611,
+      "total_tokens": 10592,
+      "cost": 0.039108,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039108,
+        "upstream_inference_prompt_cost": 0.029943,
+        "upstream_inference_completions_cost": 0.009165
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.68,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:36:03Z"
+}

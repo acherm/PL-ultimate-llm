@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cbb70e38469906804f9b700a78595ad72ea6ac8f",
+    "sha1_git": "cbb70e38469906804f9b700a78595ad72ea6ac8f",
+    "filename": "/insmov.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3027,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cbb70e38469906804f9b700a78595ad72ea6ac8f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cbb70e38469906804f9b700a78595ad72ea6ac8f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3027,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 83,
+    "blank_lines": 13,
+    "comment_lines": 9,
+    "code_lines": 61,
+    "comment_ratio": 0.129,
+    "max_line_length": 72,
+    "avg_line_length": 35.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "INSMOV"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL with MySQL/MariaDB via ESQL (str_to_date function is MySQL-specific); Spanish-language variable naming and author name suggest Latin American academic or small-business context",
+        "evidence": [
+          "EXEC SQL INSERT INTO banco.movimiento",
+          "str_to_date(..., '%Y%m%d%H%i%s%f') — MySQL date function",
+          "EXEC SQL INCLUDE movimiento",
+          "COPY 'insmov.cpy'",
+          "SQLERRML/SQLERRMC SQLCA fields"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Banking transaction (movimiento) insertion — inserts a movement/transaction record into a banco.movimiento table with fields for payment medium ID, date, concept, and amount",
+        "summary": "This is a subprogram (INSMOV) that validates input parameters and inserts a financial transaction record into a MySQL/MariaDB database table called banco.movimiento. It validates the transaction ID, date, and concept fields before performing the SQL INSERT, returning status codes to the caller.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC SQL embedded SQL (ESQL) with MySQL str_to_date function",
+        "LINKAGE SECTION with COPY for parameter area",
+        "EVALUATE TRUE for input validation",
+        "Indicator variables (null indicators) for each SQL host variable",
+        "SQLCA fields: SQLCODE, SQLERRML, SQLERRMC",
+        "Spanish-language identifiers and author name"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "No ENVIRONMENT DIVISION present. The use of MySQL str_to_date() strongly suggests GnuCOBOL with an ESQL preprocessor targeting MySQL/MariaDB rather than IBM DB2. The copybook 'insmov.cpy' defines the AREA-INSMOV linkage structure which is not shown. Overall structure is clean and production-like despite small size."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3076,
+      "completion_tokens": 491,
+      "total_tokens": 3567,
+      "cost": 0.016593,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016593,
+        "upstream_inference_prompt_cost": 0.009228,
+        "upstream_inference_completions_cost": 0.007365
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.91,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:09:29Z"
+}

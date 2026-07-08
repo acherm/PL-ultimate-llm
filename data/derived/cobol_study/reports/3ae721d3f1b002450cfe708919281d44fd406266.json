@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3ae721d3f1b002450cfe708919281d44fd406266",
+    "sha1_git": "3ae721d3f1b002450cfe708919281d44fd406266",
+    "filename": "/HEAD.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1357,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3ae721d3f1b002450cfe708919281d44fd406266/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3ae721d3f1b002450cfe708919281d44fd406266/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1357,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 39,
+    "blank_lines": 0,
+    "comment_lines": 0,
+    "code_lines": 39,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 33.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "HEAD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2002",
+        "detail": "Uses FUNCTION ALL INTRINSIC in REPOSITORY section and GOBACK; likely GnuCOBOL generating HTML meta/link tags for a web application at observe.observer",
+        "evidence": [
+          "FUNCTION ALL INTRINSIC in REPOSITORY",
+          "END-DISPLAY verb",
+          "GOBACK statement",
+          "END PROGRAM HEAD"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "HTML generation / web templating - outputs HTML <meta> and <link> tags for a webpage at observe.observer",
+        "summary": "This program generates HTML header meta and link tags (theme-color, twitter card, viewport, stylesheet, content-type) for a web page. It uses COBOL DISPLAY with data items from a copybook (DICTIONARY.CPY) that likely define HTML element templates. It appears to be part of a COBOL-based HTML generation framework.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "FUNCTION ALL INTRINSIC in REPOSITORY section",
+        "COPY 'DICTIONARY.CPY' for HTML element definitions",
+        "DISPLAY used for HTML output generation",
+        "String continuation with -    ' pattern for long URLs",
+        "No PIC clauses - relies entirely on copybook definitions",
+        "Generates HTML meta tags including Twitter card and viewport"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Unusual use of COBOL as an HTML templating engine. The DICTIONARY.CPY copybook likely defines BECOMES, CLOSE-META, CLOSE-LINK, NL, META, L1NK etc. as HTML-generating constructs. The program name HEAD suggests it outputs the HTML <head> section. The domain observe.observer URL suggests a real deployed web application. No IDENTIFICATION DIVISION header present (just PROGRAM-ID inline)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2585,
+      "completion_tokens": 435,
+      "total_tokens": 3020,
+      "cost": 0.01428,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01428,
+        "upstream_inference_prompt_cost": 0.007755,
+        "upstream_inference_completions_cost": 0.006525
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.29,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:52:44Z"
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:aee8ad5369d2ba2313277a9a54b716e327627b39",
+    "sha1_git": "aee8ad5369d2ba2313277a9a54b716e327627b39",
+    "filename": "/ORCR0483.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 131551,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:aee8ad5369d2ba2313277a9a54b716e327627b39/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:aee8ad5369d2ba2313277a9a54b716e327627b39/raw/"
+  },
+  "indicators": {
+    "bytes_len": 131551,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3122,
+    "blank_lines": 3,
+    "comment_lines": 780,
+    "code_lines": 2339,
+    "comment_ratio": 0.25,
+    "max_line_length": 82,
+    "avg_line_length": 41.1,
+    "long_lines_over_72": 12,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0483"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 8,
+    "perform_count": 205,
+    "goto_count": 16,
+    "pic_count": 202,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCR0483 handles monthly business receipt detail file creation for public disaster/self-pay insurance.",
+        "evidence": [
+          "PROGRAM-ID ORCR0483",
+          "COPY directives with .INC extensions (CPRCF041.INC, CPCOMMONSHELL.INC, HCM56V01.INC)",
+          "SELECT ... ASSIGN RECE41PARA style (GnuCOBOL/OpenCOBOL file assignment)",
+          "Copyright JMA 2002, NACL developer names",
+          "No EXEC CICS or EXEC SQL",
+          "REPLACING //RECEDAT1// BY //RECE41// syntax"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese Medical Association (JMA) ORCA standard medical receipt billing system. This program creates monthly business receipt detail files for public disaster (公務災害) and self-pay (自費) insurance categories.",
+        "summary": "ORCR0483 is a batch program in the JMA ORCA medical receipt software suite. It reads indexed patient insurance and disease-name files (RECE41, RECE43, RECE47) and produces detailed receipt output files for public disaster and self-pay billing. It handles disease-name editing, receipt comments, and period-of-treatment formatting.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "34 COPY statements with .INC copybooks and REPLACING clauses",
+        "Indexed sequential file I/O (ORGANIZATION IS INDEXED, SEQUENTIAL access)",
+        "Japanese text in comments (EUC-JP/latin-1 encoded)",
+        "REDEFINES used for multi-format record layouts",
+        "OCCURS tables for hospital/system master data",
+        "No COMP-3 usage despite financial data",
+        "No EXEC SQL or EXEC CICS",
+        "205 PERFORM statements indicating structured procedural decomposition",
+        "16 GOTO statements"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comment text is encoded in EUC-JP (displayed as latin-1 mojibake). File is part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars out of 131551 bytes (3122 lines); full procedure division not visible but structural indicators confirm production-quality code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9776,
+      "completion_tokens": 603,
+      "total_tokens": 10379,
+      "cost": 0.038373,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038373,
+        "upstream_inference_prompt_cost": 0.029328,
+        "upstream_inference_completions_cost": 0.009045
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.4,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:07:18Z"
+}

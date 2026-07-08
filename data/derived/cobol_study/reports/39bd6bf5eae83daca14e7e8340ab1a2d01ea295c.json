@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:39bd6bf5eae83daca14e7e8340ab1a2d01ea295c",
+    "sha1_git": "39bd6bf5eae83daca14e7e8340ab1a2d01ea295c",
+    "filename": "/genrep.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12130,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:39bd6bf5eae83daca14e7e8340ab1a2d01ea295c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:39bd6bf5eae83daca14e7e8340ab1a2d01ea295c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12130,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 309,
+    "blank_lines": 33,
+    "comment_lines": 20,
+    "code_lines": 256,
+    "comment_ratio": 0.072,
+    "max_line_length": 74,
+    "avg_line_length": 38.3,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "GENREP"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 31,
+    "goto_count": 0,
+    "pic_count": 58,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (OpenCOBOL) based on LINE SEQUENTIAL organization, GOBACK, SORT on table array, and no vendor-specific extensions. Could also be Micro Focus, but GnuCOBOL is most consistent with the feature set and file naming conventions.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "SORT WS-ARRAY-TRN ON ASCENDING KEY",
+          "BLOCK CONTAINS 0 RECORDS",
+          "88-level condition names with FILE-AT-END",
+          "SEARCH with SET/WHEN"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Product transaction reporting — reads product catalog and transaction CSV files, matches transactions to products, and generates a formatted sales report",
+        "summary": "GENREP reads a product CSV file and a transaction CSV file into in-memory arrays, sorts transactions by product ID, then generates a formatted report (report.rpt) showing per-product transaction details including quantity and line totals, with subtotals per product. It is a batch report generation program.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OCCURS table with INDEXED BY and SEARCH (linear search)",
+        "SORT on in-memory table array (SORT WS-ARRAY-TRN)",
+        "LINE SEQUENTIAL file organization for CSV input",
+        "88-level condition names for file status",
+        "PERFORM VARYING with multiple UNTIL conditions",
+        "Commented-out DEBUG paragraphs (2910, 2920)",
+        "Formatted report output with $-sign edited PIC clauses",
+        "GOBACK instead of STOP RUN"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The program has a fixed maximum of 5 products and 50 transactions hardcoded, debug paragraphs commented out, and an AUTHOR field of WORAMET — all consistent with a student exercise or coursework assignment. No COMP-3, no SQL, no CICS. The dialect cannot be pinpointed precisely without compiler directives, but GnuCOBOL is the most likely target given the feature set."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6490,
+      "completion_tokens": 518,
+      "total_tokens": 7008,
+      "cost": 0.02724,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02724,
+        "upstream_inference_prompt_cost": 0.01947,
+        "upstream_inference_completions_cost": 0.00777
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.44,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:47:05Z"
+}

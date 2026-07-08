@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:725bcfdc907956c8c6b7b998ad07edd9c8d79932",
+    "sha1_git": "725bcfdc907956c8c6b7b998ad07edd9c8d79932",
+    "filename": "/py050128.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7027,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:725bcfdc907956c8c6b7b998ad07edd9c8d79932/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:725bcfdc907956c8c6b7b998ad07edd9c8d79932/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7027,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 165,
+    "blank_lines": 27,
+    "comment_lines": 25,
+    "code_lines": 113,
+    "comment_ratio": 0.181,
+    "max_line_length": 116,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 36,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PY050128"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 0,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Promax ERP system (Brazilian retail/distribution), GnuCOBOL with OO extensions (invoke), htmlpp preprocessor, free-format source with $set directives",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "invoke EscreveJson c-instancia-objeto-json",
+          "invoke Utils \"RetiraZerosaEsquerda\"",
+          "class EscreveJson as \"PY990002\"",
+          "copy PCW900.CPY",
+          "program-id PY050128",
+          "OPC: 03.01.23.07.00"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Promax ERP system - Brazilian retail/distribution; query of scheduled order critiques with product bonification parameters",
+        "summary": "This program queries and generates a JSON table of scheduled order critiques, reading product bonification parameters (WD47600) and product master data (PD00100), then outputs product code, description, and value as JSON records. It is part of the Promax ERP system used in Brazilian retail/distribution.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "GnuCOBOL OO extensions: INVOKE, REPOSITORY CLASS",
+        "htmlpp preprocessor directive ($set preprocess)",
+        "Free source format via $set sourceformat directive",
+        "JSON generation via object invocation (EscreveJson class)",
+        "14 COPY statements for modular copybook inclusion",
+        "LINKAGE SECTION with external CGI input (cgi-input is external-form)",
+        "decimal-point is comma (Brazilian locale)",
+        "78-level constant for version"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File uses GnuCOBOL with OO extensions and htmlpp preprocessor, typical of the Brazilian Promax ERP system. The program is a CGI-style web backend generating JSON output. Source format is declared free via compiler directive despite mechanical guess of fixed. No EXEC CICS but online/web-facing via CGI linkage pattern."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3854,
+      "completion_tokens": 510,
+      "total_tokens": 4364,
+      "cost": 0.019212,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019212,
+        "upstream_inference_prompt_cost": 0.011562,
+        "upstream_inference_completions_cost": 0.00765
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.99,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:07:33Z"
+}

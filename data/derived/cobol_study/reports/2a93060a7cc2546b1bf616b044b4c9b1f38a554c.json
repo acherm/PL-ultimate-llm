@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2a93060a7cc2546b1bf616b044b4c9b1f38a554c",
+    "sha1_git": "2a93060a7cc2546b1bf616b044b4c9b1f38a554c",
+    "filename": "/ZBNKPRT1.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 49617,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2a93060a7cc2546b1bf616b044b4c9b1f38a554c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2a93060a7cc2546b1bf616b044b4c9b1f38a554c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 49617,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 606,
+    "blank_lines": 0,
+    "comment_lines": 61,
+    "code_lines": 545,
+    "comment_ratio": 0.101,
+    "max_line_length": 80,
+    "avg_line_length": 79.9,
+    "long_lines_over_72": 603,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PIC",
+      "ZBNKPRT1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 5,
+    "perform_count": 62,
+    "goto_count": 3,
+    "pic_count": 78,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL demonstration banking application; uses $SET compiler directive (NOHOSTFD), RECORDING MODE IS V, POINTER data type, and CEE3DMP LE areas typical of Micro Focus enterprise COBOL",
+        "evidence": [
+          "Copyright (C) 1998-2006 Micro Focus",
+          "$SET NOHOSTFD compiler directive",
+          "RECORDING MODE IS V",
+          "WS-CEE3DMP-AREAS (Language Environment dump areas)",
+          "PIC 9(1) COMP",
+          "S9(4) COMP",
+          "POINTER data type"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Micro Focus Demo Bank - prints bank account statements from an extract file",
+        "summary": "ZBNKPRT1 reads a sequential extract file of bank account transactions and prints formatted bank statements to a print output file. It formats account numbers, transaction descriptions, dates, amounts, and balances with running totals.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$SET NOHOSTFD compiler directive (Micro Focus specific)",
+        "RECORDING MODE IS V (variable-length records)",
+        "POINTER data type with REDEFINES",
+        "COMP-3 packed decimal for totals",
+        "CEE3DMP Language Environment dump areas",
+        "6 COPY statements for copybooks",
+        "REDEFINES for numeric picture clauses over character fields",
+        "Carriage control characters in print lines (CC values '1','0',' ')"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 606 lines. The program-id list shows 'PIC' as a spurious match from the mechanical parser. CEE3DMP areas suggest this may also target IBM LE-compatible environments under Micro Focus. Fixed format confirmed by avg line length ~80 and 603 lines over 72 chars."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6903,
+      "completion_tokens": 469,
+      "total_tokens": 7372,
+      "cost": 0.027744,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027744,
+        "upstream_inference_prompt_cost": 0.020709,
+        "upstream_inference_completions_cost": 0.007035
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.86,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:40:05Z"
+}

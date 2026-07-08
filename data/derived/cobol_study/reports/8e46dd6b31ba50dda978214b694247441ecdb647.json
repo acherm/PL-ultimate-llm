@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8e46dd6b31ba50dda978214b694247441ecdb647",
+    "sha1_git": "8e46dd6b31ba50dda978214b694247441ecdb647",
+    "filename": "/ORCSODRNACCT.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 331491,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8e46dd6b31ba50dda978214b694247441ecdb647/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8e46dd6b31ba50dda978214b694247441ecdb647/raw/"
+  },
+  "indicators": {
+    "bytes_len": 331491,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6666,
+    "blank_lines": 0,
+    "comment_lines": 1247,
+    "code_lines": 5419,
+    "comment_ratio": 0.187,
+    "max_line_length": 101,
+    "avg_line_length": 48.7,
+    "long_lines_over_72": 46,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSODRNACCT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 46,
+    "call_count": 159,
+    "perform_count": 237,
+    "goto_count": 12,
+    "pic_count": 162,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY statements with .INC files typical of ORCA system",
+          "PROGRAM-ID ORCSODRNACCT",
+          "no EXEC CICS/SQL, no COMP-3, uses PIC 9/X patterns consistent with GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical institution inpatient accounting/billing system (nyuin = hospitalization, acct = accounting) for the JMA ORCA electronic medical record system",
+        "summary": "This program (ORCSODRNACCT) creates inpatient accounting records for the JMA ORCA medical receipt software system. It handles hospitalization registration, insurance combination processing, meal/food calculation, room charge calculation, and special inpatient fee accounting. It processes patient admission/discharge events and generates accounting entries for various inpatient charges.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "46 COPY statements referencing ORCA-specific copybooks (.INC files)",
+        "159 CALL statements indicating heavy use of subprogram architecture",
+        "Japanese-encoded comments (EUC-JP/latin-1 decoded)",
+        "REDEFINES usage for date/numeric fields",
+        "OCCURS clauses for table handling",
+        "No EXEC SQL or EXEC CICS (file-based/MCP data access layer)",
+        "MCPDATA.INC and MCPAREA copy suggesting MCP (middleware) data access",
+        "Large program: 6666 lines, 331KB"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but contains Japanese EUC-JP encoded comments (visible as garbled latin-1 characters). This is the JMA ORCA open-source medical receipt system, a well-known Japanese healthcare IT system. The program handles inpatient accounting creation (nyuin kaikei sakusei). Source is fixed-format COBOL. No COMP-3 usage is notable for a financial calculation program - numeric fields use PIC 9 without COMP-3."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10211,
+      "completion_tokens": 566,
+      "total_tokens": 10777,
+      "cost": 0.039123,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039123,
+        "upstream_inference_prompt_cost": 0.030633,
+        "upstream_inference_completions_cost": 0.00849
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.06,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:15:51Z"
+}

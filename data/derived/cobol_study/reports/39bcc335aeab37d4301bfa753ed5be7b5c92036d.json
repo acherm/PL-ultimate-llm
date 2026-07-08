@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:39bcc335aeab37d4301bfa753ed5be7b5c92036d",
+    "sha1_git": "39bcc335aeab37d4301bfa753ed5be7b5c92036d",
+    "filename": "/ORCGTID1.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6970,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:39bcc335aeab37d4301bfa753ed5be7b5c92036d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:39bcc335aeab37d4301bfa753ed5be7b5c92036d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6970,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 176,
+    "blank_lines": 1,
+    "comment_lines": 94,
+    "code_lines": 81,
+    "comment_ratio": 0.537,
+    "max_line_length": 74,
+    "avg_line_length": 38.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGTID1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 17,
+    "call_count": 1,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Japan Medical Association open-source receipt system), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "PROGRAM-ID ORCGTID1",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "CALL 'ORCDBMAIN'",
+          "MCP-STATUS / MCP-EVENT / MCP-FUNC / MCP-PUTTYPE / MCP-WINDOW patterns",
+          "LINKAGE SECTION with MCPAREA SPAAREA LINKAREA SCRAREA",
+          "JMA copyright notice 2002"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claim) software — screen transition component for a confirmation screen (TID1) within the general summary / public expense claim subsystem",
+        "summary": "This program is a screen-handling subprogram within the JMA ORCA medical receipt system. It handles the TID1 confirmation screen, processing LINK (initialization) and PUTG/CLICKED events to navigate between screens (back or register). It calls ORCDBMAIN to perform window transitions via the MCP framework.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with multiple COPY-based parameter areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "17 COPY statements for screen and data layout includes",
+        "MCP event-driven screen framework (MCP-STATUS, MCP-EVENT, MCP-WIDGET)",
+        "EVALUATE ALSO construct for multi-condition dispatch",
+        "CALL 'ORCDBMAIN' for window/DB operations",
+        "Japanese comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP middleware instead",
+        "High comment ratio (54%) with revision history in Japanese"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Japanese text in comments is garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The program is part of the well-known open-source JMA ORCA project. Fixed format with a few lines slightly over 72 characters (likely column 73-74 continuation or trailing spaces). No COMP-3 or SQL usage; relies entirely on the ORCA MCP framework for database and screen management."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4515,
+      "completion_tokens": 610,
+      "total_tokens": 5125,
+      "cost": 0.022695,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022695,
+        "upstream_inference_prompt_cost": 0.013545,
+        "upstream_inference_completions_cost": 0.00915
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.3,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:52:54Z"
+}

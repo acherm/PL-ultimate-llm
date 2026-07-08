@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c7dcefc1d9e6e97fe3b2b6f1d3e20a0d1bce4b95",
+    "sha1_git": "c7dcefc1d9e6e97fe3b2b6f1d3e20a0d1bce4b95",
+    "filename": "/ORCGDSUB02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 31080,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c7dcefc1d9e6e97fe3b2b6f1d3e20a0d1bce4b95/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c7dcefc1d9e6e97fe3b2b6f1d3e20a0d1bce4b95/raw/"
+  },
+  "indicators": {
+    "bytes_len": 31080,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 747,
+    "blank_lines": 0,
+    "comment_lines": 233,
+    "code_lines": 514,
+    "comment_ratio": 0.312,
+    "max_line_length": 74,
+    "avg_line_length": 40.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGDSUB02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 18,
+    "call_count": 16,
+    "perform_count": 18,
+    "goto_count": 0,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL on Linux. Uses ORCDBMAIN, MCP-based DB access, and shell dispatch patterns typical of the ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCGDSUB02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "CALL \"ORCDBMAIN\"",
+          "CALL \"ORCSGETTEMP\"",
+          "CALL \"ORCSPRTNM\"",
+          "COPY \"MCPDATA.INC\"",
+          "COPY \"ORCA-BLOB\"",
+          "COPY \"CPORCBSD01PARA.INC\"",
+          "MCP-FUNC, MCP-TABLE, MCP-PATHNAME patterns"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) processing system - data check subprogram for receipt billing (ORCBSD01 subsystem)",
+        "summary": "This subprogram (ORCGDSUB02) performs data validation/check processing for the JMA ORCA medical receipt billing system. It deletes system management records (SYSKANRI 3003), manages job control entries, writes a parameter file for a data-check shell script, and dispatches shell jobs (orcbsd01.sh, print_prv.sh) via the MCP database interface. It also handles BLOB import of parameter files and conditional print processing.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (18 copybooks) for modular structure",
+        "CALL to ORCDBMAIN for MCP-based database access",
+        "BLOB import via 910-BLOBIMPORT-SEC",
+        "Shell script dispatch via SHELLTBL/MCP SHELL function",
+        "LINKAGE SECTION with multiple SPA (session parameter area) arguments",
+        "Japanese comments encoded in EUC-JP/latin-1",
+        "No EXEC SQL or EXEC CICS (uses proprietary MCP DB layer)",
+        "OPEN/WRITE/CLOSE of sequential parameter file at runtime",
+        "UID generation via CALL 800-ORCUIDSET-SEC"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source comments are in Japanese (EUC-JP) decoded as latin-1, causing mojibake in the archived text. File is part of the well-known open-source JMA ORCA medical receipt system. Truncated at 16000 chars but enough structure is visible for confident classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8541,
+      "completion_tokens": 628,
+      "total_tokens": 9169,
+      "cost": 0.035043,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035043,
+        "upstream_inference_prompt_cost": 0.025623,
+        "upstream_inference_completions_cost": 0.00942
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:33:50Z"
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6630eca01a555f64bb15091841f52e909c863638",
+    "sha1_git": "6630eca01a555f64bb15091841f52e909c863638",
+    "filename": "/PAYRPTRB.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 21923,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6630eca01a555f64bb15091841f52e909c863638/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6630eca01a555f64bb15091841f52e909c863638/raw/"
+  },
+  "indicators": {
+    "bytes_len": 21923,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 429,
+    "blank_lines": 1,
+    "comment_lines": 12,
+    "code_lines": 416,
+    "comment_ratio": 0.028,
+    "max_line_length": 243,
+    "avg_line_length": 50.1,
+    "long_lines_over_72": 44,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PAYRPTRB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 17,
+    "goto_count": 0,
+    "pic_count": 140,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) targeting Windows desktop environment; uses LINE SEQUENTIAL organization and Windows file paths, consistent with GnuCOBOL on Windows",
+        "evidence": [
+          "organization is line sequential",
+          "ASSIGN TO C:\\Users\\Ryan\\Desktop\\PAYROLLDT.txt",
+          "GOBACK",
+          "RECORDING MODE IS F",
+          "88-level condition names with VALUE THRU"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Employee payroll processing: reads payroll input records, computes gross pay (with overtime at 1.5x), deductions, and net pay, then writes output records and a formatted payroll report",
+        "summary": "PAYRPTRB reads employee payroll data from a flat file, calculates base pay, overtime, gross pay, deductions (SSN/Medicare, state, local, federal), and net pay for each employee. It writes processed records to an output file and generates a formatted payroll report with headings, detail lines, and totals. The program was written by Ryan Brooks as a student or coursework exercise.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "Three files: input, output, and report",
+        "Formatted edit pictures with $ZZZ,ZZZ.99 patterns",
+        "Overtime calculation at 1.5x rate for hours > 40",
+        "88-level condition names for file status",
+        "ACCEPT WS-RUN-DATE FROM DATE for run date",
+        "Page heading and detail line structures for report",
+        "WS-RULER ruler line for column alignment debugging",
+        "GOBACK statement",
+        "Windows absolute file paths in SELECT clauses",
+        "Apparent syntax error: 88-level items used where 10-level items expected in PREV-DATE group"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The source is truncated at 16000 chars (line ~293 of 429). There is a suspicious block around line 010000-010200 where 88-level items are used inside a group item (PREV-DATE) where 10-level items were likely intended, suggesting a copy-paste error. No COMP-3 usage despite payroll context. The program is clearly a student assignment by Ryan Brooks given the author field, Windows desktop paths, and overall structure."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7763,
+      "completion_tokens": 558,
+      "total_tokens": 8321,
+      "cost": 0.031659,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031659,
+        "upstream_inference_prompt_cost": 0.023289,
+        "upstream_inference_completions_cost": 0.00837
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.36,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:16:23Z"
+}

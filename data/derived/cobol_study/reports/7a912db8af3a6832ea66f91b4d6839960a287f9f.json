@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7a912db8af3a6832ea66f91b4d6839960a287f9f",
+    "sha1_git": "7a912db8af3a6832ea66f91b4d6839960a287f9f",
+    "filename": "/ORCGPERR.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5677,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7a912db8af3a6832ea66f91b4d6839960a287f9f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7a912db8af3a6832ea66f91b4d6839960a287f9f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5677,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 159,
+    "blank_lines": 0,
+    "comment_lines": 87,
+    "code_lines": 72,
+    "comment_ratio": 0.547,
+    "max_line_length": 74,
+    "avg_line_length": 34.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGPERR"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 1,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "PROGRAM-ID ORCGPERR",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA",
+          "CALL ORCDBMAIN",
+          "Copyright JMA Japan Medical Association 2002",
+          "MCP-STATUS / MCP-EVENT / MCP-FUNC / MCP-PUTTYPE patterns typical of ORCA MCP framework"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) processing system - error message screen component for patient registration subsystem",
+        "summary": "This program is the error-message screen component (ORCGPERR) of the JMA ORCA medical receipt software. It handles screen transitions by evaluating MCP-STATUS/MCP-EVENT, performing initialization on LINK, and navigating back to the PERR error screen via PUTWINDOW calls to ORCDBMAIN.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (21 copybooks) for screen layout and linkage areas",
+        "LINKAGE SECTION with multiple COPY-defined areas (MCPAREA, ORCA-SPA, LINKAREA, SCRAREA)",
+        "CALL to ORCDBMAIN (ORCA database/MCP main routine)",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT (multi-subject evaluate)",
+        "Japanese comments encoded in latin-1 (Shift-JIS or EUC-JP garbled)",
+        "No EXEC SQL or EXEC CICS",
+        "MCP framework (PUTWINDOW, MCP-FUNC, MCP-PUTTYPE) typical of ORCA"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The file is part of the well-known open-source JMA ORCA medical receipt system. High comment ratio (55%) is partly due to commented-out COPY statements and revision history blocks."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4163,
+      "completion_tokens": 547,
+      "total_tokens": 4710,
+      "cost": 0.020694,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020694,
+        "upstream_inference_prompt_cost": 0.012489,
+        "upstream_inference_completions_cost": 0.008205
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.96,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:08:47Z"
+}

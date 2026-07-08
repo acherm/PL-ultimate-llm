@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c5444218c3dcde52b3655d10a45e0cc02d6d6d67",
+    "sha1_git": "c5444218c3dcde52b3655d10a45e0cc02d6d6d67",
+    "filename": "/procesar.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7620,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c5444218c3dcde52b3655d10a45e0cc02d6d6d67/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c5444218c3dcde52b3655d10a45e0cc02d6d6d67/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7620,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 234,
+    "blank_lines": 34,
+    "comment_lines": 37,
+    "code_lines": 163,
+    "comment_ratio": 0.185,
+    "max_line_length": 72,
+    "avg_line_length": 31.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "procesar"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 3,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 43,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) indicated by compile comment 'cobc -x procesar.cbl clientes.cbl -o procesar.exe'; Spanish-language identifiers suggest Latin American educational/development context",
+        "evidence": [
+          "cobc -x procesar.cbl clientes.cbl -o procesar.exe",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SORT with INPUT/OUTPUT PROCEDURE",
+          "CALL clientes USING"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Client statistics processing system; reads a master file of resource records, looks up client data via a subprogram call, updates an indexed statistics file, and produces a sorted output file",
+        "summary": "Batch program that reads a sequential master file (MAESTRO.DAT), filters active records (MAE-ESTADO='A'), looks up client details via a CALL to a 'clientes' subprogram, updates an indexed statistics file (ESTCLIE.DAT), and produces a sorted output using SORT with INPUT/OUTPUT PROCEDUREs. Contains several TODO comments indicating work-in-progress.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT with INPUT PROCEDURE / OUTPUT PROCEDURE using SD file",
+        "CALL to external 'clientes' subprogram with open/close/read operations",
+        "INDEXED file with DYNAMIC access and START for sequential browsing",
+        "88-level condition names for EOF flags",
+        "Spanish-language identifiers throughout",
+        "Multiple TODO comments indicating incomplete/in-progress code",
+        "LINE SEQUENTIAL organization",
+        "GnuCOBOL compile command in comment header"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The file contains multiple TODO comments and a placeholder paragraph name 'Xxxx01', indicating this is a student exercise or work-in-progress. The compile command at the top ('cobc -x') confirms GnuCOBOL. The BuscarNroSec paragraph has a logic issue noted by a TODO comment. No COMP-3 usage. Spanish identifiers suggest Latin American academic context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4658,
+      "completion_tokens": 511,
+      "total_tokens": 5169,
+      "cost": 0.021639,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021639,
+        "upstream_inference_prompt_cost": 0.013974,
+        "upstream_inference_completions_cost": 0.007665
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.1,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:30:17Z"
+}

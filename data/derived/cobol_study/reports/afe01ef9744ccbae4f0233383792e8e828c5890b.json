@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:afe01ef9744ccbae4f0233383792e8e828c5890b",
+    "sha1_git": "afe01ef9744ccbae4f0233383792e8e828c5890b",
+    "filename": "/ORCGS02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 257964,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:afe01ef9744ccbae4f0233383792e8e828c5890b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:afe01ef9744ccbae4f0233383792e8e828c5890b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 257964,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6390,
+    "blank_lines": 0,
+    "comment_lines": 1831,
+    "code_lines": 4559,
+    "comment_ratio": 0.287,
+    "max_line_length": 76,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 15,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGS02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 59,
+    "call_count": 52,
+    "perform_count": 381,
+    "goto_count": 35,
+    "pic_count": 215,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY statements with .INC and no-extension copybooks typical of ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCGS02",
+          "COPY CPERRFL.INC",
+          "COPY COMMON-SPA",
+          "COPY S01COMMON-SPA",
+          "COPY ENUM-VALUE",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "no EXEC CICS/SQL",
+          "no COMP-3 usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - payment/receipt list management screen (S02 component handling patient billing, insurance claims, and payment collection)",
+        "summary": "ORCGS02 is a screen program in the JMA ORCA medical receipt system that manages a payment/receipt list (seikyu ichiran). It handles patient billing records, insurance combinations, inpatient/outpatient classification, and payment status display and editing. The program supports recalculation, re-issuance of receipts, and various insurance-related processing.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "59 COPY statements indicating heavy use of shared copybooks",
+        "52 CALL statements to subprograms",
+        "381 PERFORM statements indicating structured procedural logic",
+        "OCCURS 500 table for receipt records",
+        "OCCURS 100 for insurance combination list",
+        "Japanese comments encoded in EUC-JP/latin-1 (garbled in ASCII view)",
+        "No EXEC SQL or EXEC CICS - uses proprietary ORCA middleware",
+        "Extensive revision history with version tracking from 2000-2008"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file is 6390 lines, decoded as latin-1 but contains Japanese EUC-JP encoded comments which appear garbled. This is the ORCA (JMA standard receipt software) system, a well-known open-source Japanese medical billing system. The program_type is listed as online-cics but actually uses ORCA's own screen/middleware framework rather than CICS. Fixed format with a few lines slightly over 72 chars (15 long lines)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11316,
+      "completion_tokens": 574,
+      "total_tokens": 11890,
+      "cost": 0.042558,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.042558,
+        "upstream_inference_prompt_cost": 0.033948,
+        "upstream_inference_completions_cost": 0.00861
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.8,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:51:46Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d3378d08ca5b930790ac7bbba3e91242c1e2e1af",
+    "sha1_git": "d3378d08ca5b930790ac7bbba3e91242c1e2e1af",
+    "filename": "/ORCR1260.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 171964,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d3378d08ca5b930790ac7bbba3e91242c1e2e1af/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d3378d08ca5b930790ac7bbba3e91242c1e2e1af/raw/"
+  },
+  "indicators": {
+    "bytes_len": 171964,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3759,
+    "blank_lines": 1,
+    "comment_lines": 882,
+    "code_lines": 2876,
+    "comment_ratio": 0.235,
+    "max_line_length": 114,
+    "avg_line_length": 44.7,
+    "long_lines_over_72": 27,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR1260"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 20,
+    "call_count": 3,
+    "perform_count": 190,
+    "goto_count": 7,
+    "pic_count": 305,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING, indexed file I/O, no EXEC SQL/CICS",
+        "evidence": [
+          "PROGRAM-ID ORCR1260",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with REPLACING //RECEDAT1// BY //RECE200//",
+          "SELECT ... ASSIGN RECE200PARA ORGANIZATION IS INDEXED",
+          "no EXEC SQL, no EXEC CICS, no COMP-3",
+          "CPRCF200.INC / CPRECEDAT1.INC copybook naming convention typical of ORCA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - inpatient (入院) receipt editing/compilation for public injury (公害) claims",
+        "summary": "ORCR1260 is a batch program in the JMA ORCA medical receipt system that reads indexed receipt files (RECE200, RECE220, RECE230, RECE240) and compiles/edits inpatient receipt data for public injury (公害) insurance claims. It builds tables of medical procedures, examinations, and drug items, writing output to an error file and formatted receipt records. The program has an extensive revision history spanning 2007-2016 covering Japanese medical fee revisions.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "20 COPY statements with REPLACING for copybook parameterisation",
+        "Indexed sequential file I/O (DYNAMIC and SEQUENTIAL access modes)",
+        "Large OCCURS tables (up to 300 entries) for procedure/drug line items",
+        "REDEFINES usage for quantity fields",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded as mojibake)",
+        "No COMP-3 packed decimal despite financial calculations",
+        "190 PERFORM statements indicating structured procedural decomposition",
+        "3759 lines with 23% comment ratio reflecting production maintenance history"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are Japanese encoded (likely EUC-JP or Shift-JIS), appearing as mojibake. This is the JMA ORCA open-source medical receipt software widely used in Japanese clinics. The filename ORCR1260.CBL and program-id ORCR1260 are consistent with the ORCA naming convention. Source truncated at 16000 chars; full file is 171964 bytes / 3759 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10635,
+      "completion_tokens": 645,
+      "total_tokens": 11280,
+      "cost": 0.04158,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04158,
+        "upstream_inference_prompt_cost": 0.031905,
+        "upstream_inference_completions_cost": 0.009675
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.89,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:36:21Z"
+}

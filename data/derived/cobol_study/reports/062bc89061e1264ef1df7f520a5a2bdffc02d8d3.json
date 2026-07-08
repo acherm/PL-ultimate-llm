@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:062bc89061e1264ef1df7f520a5a2bdffc02d8d3",
+    "sha1_git": "062bc89061e1264ef1df7f520a5a2bdffc02d8d3",
+    "filename": "/PROGCOLE.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9716,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:062bc89061e1264ef1df7f520a5a2bdffc02d8d3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:062bc89061e1264ef1df7f520a5a2bdffc02d8d3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9716,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 270,
+    "blank_lines": 58,
+    "comment_lines": 8,
+    "code_lines": 204,
+    "comment_ratio": 0.038,
+    "max_line_length": 72,
+    "avg_line_length": 35.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PROGCOLE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL student project; uses DECIMAL-POINT IS COMMA (Brazilian Portuguese locale), structured PERFORM with END-IF, UNSTRING, INSPECT TALLYING — all standard COBOL-85 features. No mainframe-specific extensions.",
+        "evidence": [
+          "DECIMAL-POINT IS COMMA",
+          "INSPECT ... TALLYING ... FOR ALL",
+          "UNSTRING ... DELIMITED BY SPACE INTO",
+          "CALL '/home/recic/Dev/PROG01/Modulos/PROGCADS' (Unix path)",
+          "GOBACK",
+          "END PROGRAM PROGCOLE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian student exercise simulating user registration data collection and validation (email, name, password, phone) for a fictional corporate context (bradesco.com / capgemini.com domains)",
+        "summary": "PROGCOLE is a user-registration data-collection module that prompts the user to enter an email, full name, password, and phone number, validates each field interactively with recursive PERFORM calls, and then delegates to an external subprogram (PROGCADS) to persist the registration. It appears to be a student exercise authored in March 2023.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "INSPECT TALLYING for multi-character validation",
+        "UNSTRING for name splitting",
+        "Recursive PERFORM for re-prompting on invalid input",
+        "CALL with Unix absolute path to subprogram",
+        "88-level condition names (FS-OK, EXT-OK)",
+        "GOBACK at end of program"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author name (Renan Cicero) and date (09/03/2023) are present in comments. The Unix path in the CALL statement confirms a GnuCOBOL/Linux environment. The program uses recursive PERFORM (not PERFORM UNTIL) for re-validation loops, which is a common student pattern but could cause stack issues in deep recursion. No file I/O is actually used despite FILE-CONTROL section being present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4955,
+      "completion_tokens": 530,
+      "total_tokens": 5485,
+      "cost": 0.022815,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022815,
+        "upstream_inference_prompt_cost": 0.014865,
+        "upstream_inference_completions_cost": 0.00795
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.61,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:30:20Z"
+}

@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:865b05524ff27d0fef7d2cf8a509850f391b4a5b",
+    "sha1_git": "865b05524ff27d0fef7d2cf8a509850f391b4a5b",
+    "filename": "/my-grade.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3574,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:865b05524ff27d0fef7d2cf8a509850f391b4a5b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:865b05524ff27d0fef7d2cf8a509850f391b4a5b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3574,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 107,
+    "blank_lines": 13,
+    "comment_lines": 0,
+    "code_lines": 94,
+    "comment_ratio": 0.0,
+    "max_line_length": 67,
+    "avg_line_length": 32.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MY-GRADE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used; LINE SEQUENTIAL organization and GOBACK suggest GnuCOBOL or similar open-source/PC compiler, possibly used in a Thai university context (author name NATCHA)",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "EVALUATE TRUE",
+          "88 END-OF-GRADE-FILE VALUE HIGH-VALUE",
+          "PERFORM UNTIL END-OF-GRADE-FILE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student grade calculation program for a Thai university course; computes weighted GPA averages overall, for science subjects, and for CS subjects",
+        "summary": "Reads student grade records from a file, converts letter grades to numeric values, and computes weighted average grades overall, for science faculty subjects (SUB-ID starting with '3'), and for CS subjects (SUB-ID starting with '31'). Writes the computed averages to an output file and displays them.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "88-level condition name for EOF detection (END-OF-GRADE-FILE VALUE HIGH-VALUE)",
+        "EVALUATE TRUE for grade-to-numeric conversion",
+        "PERFORM THRU with EXIT paragraphs",
+        "IN qualifier used for file record fields (AVG-GRADE IN AVG-FILE / AVG-DETAIL)",
+        "GOBACK instead of STOP RUN"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is clearly a student exercise for computing GPA. The use of PERFORM THRU with EXIT paragraphs is an older style. The 002-AVG-CAL paragraph is called AT END which means it runs after EOF is detected, writing final averages. No error handling for division by zero. Author name 'NATCHA' suggests Thai student context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3525,
+      "completion_tokens": 451,
+      "total_tokens": 3976,
+      "cost": 0.01734,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01734,
+        "upstream_inference_prompt_cost": 0.010575,
+        "upstream_inference_completions_cost": 0.006765
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.57,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:07:55Z"
+}

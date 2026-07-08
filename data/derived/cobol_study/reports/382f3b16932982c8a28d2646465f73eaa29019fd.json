@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:382f3b16932982c8a28d2646465f73eaa29019fd",
+    "sha1_git": "382f3b16932982c8a28d2646465f73eaa29019fd",
+    "filename": "/SEIKYU2205.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 70189,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:382f3b16932982c8a28d2646465f73eaa29019fd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:382f3b16932982c8a28d2646465f73eaa29019fd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 70189,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1729,
+    "blank_lines": 0,
+    "comment_lines": 503,
+    "code_lines": 1226,
+    "comment_ratio": 0.291,
+    "max_line_length": 81,
+    "avg_line_length": 39.6,
+    "long_lines_over_72": 13,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU2205"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 30,
+    "perform_count": 66,
+    "goto_count": 5,
+    "pic_count": 96,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Nihon Ishi-kai standard receipt system), GnuCOBOL/OpenCOBOL-based, Japanese medical billing domain",
+        "evidence": [
+          "PROGRAM-ID SEIKYU2205",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "CALL ORCSJOB, CALL ORCSDAY",
+          "COPY CPORCSPRTLNK.INC, CPORCSPRT.INC, CPORCSDAY.INC",
+          "COPY COMMON-SPA, MCPAREA, MCPDATA.INC",
+          "fixed format, no EXEC CICS/SQL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical billing (receipt/seikyu) system for Shizuoka city public expense medical care (chiho kohi) - specifically for mother-child household and severely disabled persons medical expense claims (forms 184,185,199,299)",
+        "summary": "Batch program that generates medical expense claim documents (seikyu-sho) for local government public expense categories including mother-child households and severely disabled persons. It reads patient and insurance data, calculates totals, and produces printed claim forms with subtotals and grand totals. Part of the JMA ORCA open-source medical receipt software suite.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "26 COPY statements referencing ORCA-specific copybooks (CPSK1001.INC, CPSK1002.INC, CPHKNJAINF.INC, etc.)",
+        "30 CALL statements to ORCA runtime modules (ORCSJOB, ORCSDAY, etc.)",
+        "UNSTRING of COMMAND-PARAM for batch parameter passing",
+        "LINKAGE SECTION with COMMAND-PARAM",
+        "Japanese text in comments (EUC-JP/latin-1 decoded)",
+        "REDEFINES usage for hospital name/address fields",
+        "OCCURS tables for insurance and option parameters",
+        "No EXEC SQL or EXEC CICS - file-based I/O with INDEXED organization",
+        "Revision history spanning 2007-2018"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments and string literals. Content is clearly readable as COBOL. File is truncated at 16000 chars out of 70189 bytes total. Program is part of the well-known JMA ORCA open-source medical receipt system used by Japanese clinics."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9833,
+      "completion_tokens": 641,
+      "total_tokens": 10474,
+      "cost": 0.039114,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039114,
+        "upstream_inference_prompt_cost": 0.029499,
+        "upstream_inference_completions_cost": 0.009615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.66,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:24:01Z"
+}

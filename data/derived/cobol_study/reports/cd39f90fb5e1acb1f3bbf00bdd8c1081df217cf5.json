@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cd39f90fb5e1acb1f3bbf00bdd8c1081df217cf5",
+    "sha1_git": "cd39f90fb5e1acb1f3bbf00bdd8c1081df217cf5",
+    "filename": "/ricalfor-bat.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 38148,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cd39f90fb5e1acb1f3bbf00bdd8c1081df217cf5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cd39f90fb5e1acb1f3bbf00bdd8c1081df217cf5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 38148,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1062,
+    "blank_lines": 94,
+    "comment_lines": 28,
+    "code_lines": 940,
+    "comment_ratio": 0.029,
+    "max_line_length": 72,
+    "avg_line_length": 34.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "ricalfor-bat"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 66,
+    "call_count": 6,
+    "perform_count": 107,
+    "goto_count": 0,
+    "pic_count": 59,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Italian ERP/wholesale management system, likely compiled with GnuCOBOL (OpenCOBOL) on Linux/Windows; uses .sl copybook extensions, COMP-1 for numeric, handle of window (GUI extension), decimal-point is comma (Italian locale), 78-level constants",
+        "evidence": [
+          "SPECIAL-NAMES. decimal-point is comma",
+          "copy *.sl and *.fd copybook pattern",
+          "handle of window value 0",
+          "78 titolo value ...",
+          "COMP-1 for nargs",
+          "line sequential file organization",
+          "no EXEC CICS/SQL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Italian wholesale/distribution ERP - supplier order management (ordfor/ordfor2), recalculation of stock levels, promotions, raw material costs, 6-month demand forecasting, automatic supplier notifications",
+        "summary": "Batch program that recalculates data in the ordfor2 supplier-order file: promotions, stock levels (giacenza), raw material costs, and 6-month demand (fabbisogno). If ordfor2 has never been generated it falls back to ordfor. Results are used to trigger automatic supplier alerts.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "66 COPY statements for file definitions (.sl/.fd pattern)",
+        "USE AFTER ERROR DECLARATIVES for each file",
+        "handle of window (GUI/windowing extension)",
+        "decimal-point is comma (Italian locale)",
+        "78-level figurative constants",
+        "LINKAGE SECTION with batch-linkage copybook",
+        "line sequential files for logging/mail",
+        "Italian-language comments and variable names",
+        "COMP-1 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars out of 38148 bytes; full procedure division not visible. Dialect is likely GnuCOBOL or Micro Focus on Linux given .sl file extensions and line-sequential usage, but no definitive compiler directive seen. The 'handle of window' suggests possible Micro Focus or a GUI-extended GnuCOBOL build. Italian ERP context (possibly custom or ARCA/similar Italian ERP)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6455,
+      "completion_tokens": 541,
+      "total_tokens": 6996,
+      "cost": 0.02748,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02748,
+        "upstream_inference_prompt_cost": 0.019365,
+        "upstream_inference_completions_cost": 0.008115
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.97,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:02:57Z"
+}

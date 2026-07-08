@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2a0d2df665a0035350b6f9ca5990ca06c31cc5be",
+    "sha1_git": "2a0d2df665a0035350b6f9ca5990ca06c31cc5be",
+    "filename": "/pw00757s.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 19810,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2a0d2df665a0035350b6f9ca5990ca06c31cc5be/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2a0d2df665a0035350b6f9ca5990ca06c31cc5be/raw/"
+  },
+  "indicators": {
+    "bytes_len": 19810,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 421,
+    "blank_lines": 64,
+    "comment_lines": 38,
+    "code_lines": 319,
+    "comment_ratio": 0.106,
+    "max_line_length": 123,
+    "avg_line_length": 46.1,
+    "long_lines_over_72": 111,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW00757S"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 0,
+    "perform_count": 28,
+    "goto_count": 0,
+    "pic_count": 24,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with OOP extensions (INVOKE, OBJECT REFERENCE), htmlpp preprocessor, free-format source; likely Promax retail/finance system (Brazilian Portuguese context, PY990004/PY990011 class references)",
+        "evidence": [
+          "$set preprocess(htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "invoke utils \"subtractDias\"",
+          "invoke ControlePrazao \"new\"",
+          "object reference value null",
+          "class Utils as \"PY990004\"",
+          "class ControlePrazao as \"PY990011\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian retail Prazão (installment/credit) system - generates a CIG (situação PDVs Prazão) CSV export file showing PDV unit status including capital employed, amounts received, overdue totals, and PDVs without repurchase",
+        "summary": "Batch program PW00757S generates a delimited CSV file (CIG) reporting the status of PDVs (points of sale) in a Prazão (installment credit) system. It reads control, installment, and charge files, calculates paid values and overdue amounts, and writes one record per PDV with financial summary fields. Part of the Promax retail management system used in Brazil.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OOP INVOKE syntax (GnuCOBOL OO extension)",
+        "OBJECT REFERENCE / class repository",
+        "htmlpp preprocessor directive ($set preprocess(htmlpp))",
+        "$set sourceformat free",
+        "21 COPY statements for modular copybook structure",
+        "decimal-point is comma (Brazilian locale)",
+        "STRING with delimited by for CSV generation",
+        "external-form CGI input section",
+        "Portuguese-language identifiers and comments",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; full file is 421 lines. Program is clearly part of a larger Brazilian retail ERP/Promax system. GnuCOBOL OO dialect confirmed by INVOKE and class repository syntax. Free format confirmed by compiler directive."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6510,
+      "completion_tokens": 538,
+      "total_tokens": 7048,
+      "cost": 0.0276,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0276,
+        "upstream_inference_prompt_cost": 0.01953,
+        "upstream_inference_completions_cost": 0.00807
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.76,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:41:16Z"
+}

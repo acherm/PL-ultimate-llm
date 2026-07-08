@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:df74a43594ee835034f17d27faf400a4423f0112",
+    "sha1_git": "df74a43594ee835034f17d27faf400a4423f0112",
+    "filename": "/CL15EJ01.v.1.1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15977,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:df74a43594ee835034f17d27faf400a4423f0112/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:df74a43594ee835034f17d27faf400a4423f0112/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15977,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 458,
+    "blank_lines": 89,
+    "comment_lines": 34,
+    "code_lines": 335,
+    "comment_ratio": 0.092,
+    "max_line_length": 72,
+    "avg_line_length": 33.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CL15EJ01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 28,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) student exercise; Spanish-language comments and identifiers; DECIMAL-POINT IS COMMA; LINE SEQUENTIAL files with relative paths",
+        "evidence": [
+          "Tectonics: cobc in header comment",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO '../EMPLEADOS.TXT'",
+          "DECIMAL-POINT IS COMMA",
+          "END PROGRAM CL15EJ01"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University/course exercise (Clase 15, Ejercicio 1) performing a file merge/match (apareo) between an EMPLOYEES file and a SALES file, writing matched and error records",
+        "summary": "This program reads two sorted sequential files (EMPLEADOS and VENTAS), performs a classic file-merge (apareo) matching employees to their sales by employee ID, accumulates sales amounts per employee, and writes matched results to APAREO.TXT and unmatched/error records to ERROR.TXT. It handles three cases: sale with no employee, employee with no sales, and matched records (checking employee status 'A').",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA",
+        "LINE SEQUENTIAL file organization",
+        "Classic sorted-file merge (apareo) algorithm",
+        "88-level condition names for FILE STATUS",
+        "COPY copybooks for output record layouts (APAREO, ERROR)",
+        "Sentinel value 99999999 used for EOF detection",
+        "PERFORM THRU paragraph pattern throughout",
+        "Spanish-language identifiers and comments",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author and date in header (Emiliano Tomasi, 25/09/2023). The file uses two COPY statements (APAREO and ERROR) whose contents are not shown. The inline case labels (Caso1, Caso2, Caso3) in the EVALUATE block are non-standard annotation style but do not affect compilation. Max line length is exactly 72, consistent with fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 7542,
+      "completion_tokens": 508,
+      "total_tokens": 8050,
+      "cost": 0.030246,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030246,
+        "upstream_inference_prompt_cost": 0.022626,
+        "upstream_inference_completions_cost": 0.00762
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.92,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:35:43Z"
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ec6cda5c4b60f2ff94e9e33d0713a74d5469eaf9",
+    "sha1_git": "ec6cda5c4b60f2ff94e9e33d0713a74d5469eaf9",
+    "filename": "/CSADDBL.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16041,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ec6cda5c4b60f2ff94e9e33d0713a74d5469eaf9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ec6cda5c4b60f2ff94e9e33d0713a74d5469eaf9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16041,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 319,
+    "blank_lines": 4,
+    "comment_lines": 77,
+    "code_lines": 238,
+    "comment_ratio": 0.244,
+    "max_line_length": 72,
+    "avg_line_length": 49.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "CSADDBL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 5,
+    "perform_count": 9,
+    "goto_count": 2,
+    "pic_count": 116,
+    "comp3_count": 8,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/VSAM online program; EXEC CICS translated by preprocessor (kxdfhei1 calls with DFHEIV0 hex literals); DFHEIBLK/DFHCOMMAREA linkage section pattern typical of IBM CICS translator output",
+        "evidence": [
+          "EXEC CICS WRITE DATASET('FORMDEFS')",
+          "CALL 'kxdfhei1' USING DFHEIV0",
+          "DFHEIBLK / DFHCOMMAREA in LINKAGE SECTION",
+          "EIBRESP, EIBDATE, EIBTRNID fields",
+          "COMP-3, COMP SYNC usage",
+          "VSAM KSDS file FORMDEFS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Central States Health and Life – coversheet/form definition billing system; adds new form records to a VSAM KSDS file (FORMDEFS)",
+        "summary": "CSADDBL is a CICS business-logic subprogram that accepts input via a commarea (form name, month, description, messages, comments), validates and converts the month abbreviation to a numeric code, writes a new form-definition record to the VSAM KSDS file FORMDEFS, and returns pass/fail status with an output commarea.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS WRITE to VSAM KSDS (FORMDEFS)",
+        "EXEC CICS RETURN",
+        "CICS translator output: kxdfhei1 calls with hex-encoded DFHEIV0 literals",
+        "DFHEIBLK / DFHCOMMAREA linkage section",
+        "COMP-3 packed-decimal fields",
+        "Month-name table with REDEFINES and OCCURS",
+        "INSPECT CONVERTING for case normalization",
+        "Inline copybook expansions (FORMREC, CSADD-COMMAREA) with change log",
+        "Copyright notices from Central States Health and Life and Clerity Solutions"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source was truncated at 16000 chars but the visible portion is complete enough for classification. The EXEC CICS statements appear in commented-out form alongside their pre-translated kxdfhei1 equivalents, which is the standard IBM CICS command-level translator pattern. The file was authored by 'Pablo' at Colleyville, Texas for Central States Health and Life (insurance domain)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6606,
+      "completion_tokens": 609,
+      "total_tokens": 7215,
+      "cost": 0.028953,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028953,
+        "upstream_inference_prompt_cost": 0.019818,
+        "upstream_inference_completions_cost": 0.009135
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.4,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:40:45Z"
+}

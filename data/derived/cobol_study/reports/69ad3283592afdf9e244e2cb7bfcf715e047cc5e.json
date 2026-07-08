@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:69ad3283592afdf9e244e2cb7bfcf715e047cc5e",
+    "sha1_git": "69ad3283592afdf9e244e2cb7bfcf715e047cc5e",
+    "filename": "/ORCGK02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 624612,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:69ad3283592afdf9e244e2cb7bfcf715e047cc5e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:69ad3283592afdf9e244e2cb7bfcf715e047cc5e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 624612,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 14674,
+    "blank_lines": 0,
+    "comment_lines": 4435,
+    "code_lines": 10239,
+    "comment_ratio": 0.302,
+    "max_line_length": 76,
+    "avg_line_length": 41.6,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGK02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 82,
+    "call_count": 154,
+    "perform_count": 727,
+    "goto_count": 214,
+    "pic_count": 374,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses /var/tmp/ file paths and LINE SEQUENTIAL files typical of GnuCOBOL on Unix",
+        "evidence": [
+          "PROGRAM-ID ORCGK02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "FILE paths /var/tmp/K02SPASCR and /var/tmp/K01PARA",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "COPY directives for .INC files like CPK02SPASCR.INC",
+          "no EXEC CICS or EXEC SQL",
+          "no COMP-3 usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-koui) input processing system for Japanese medical clinics; handles outpatient medical procedure entry and fee calculation",
+        "summary": "ORCGK02 is a large batch/interactive program in the JMA ORCA medical receipt software suite. It handles medical procedure (shinryo-koui) input, validation, and fee calculation for outpatient visits. The program manages screen SPA data, parameter files, insurance combination checks, prescription flags, and various medical billing rules.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "82 COPY statements referencing domain-specific copybooks (.INC files)",
+        "154 CALL statements indicating heavy subprogram delegation",
+        "727 PERFORM statements and 214 GOTO statements",
+        "Large working-storage with many flag fields (FLG-*) and index fields (IDX-*)",
+        "LINE SEQUENTIAL file organization for SPA and parameter data",
+        "Japanese-language comments encoded in EUC-JP/latin-1",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite financial calculations",
+        "File paths rooted at /var/tmp/ indicating Linux/Unix runtime",
+        "Extensive revision history in comments spanning 2000-2003"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is 624KB / 14674 lines, truncated in display to first 16000 chars. Comments contain Japanese text encoded in EUC-JP, decoded here as latin-1 producing mojibake. The program is part of the well-known open-source JMA ORCA project. No COMP-3 is unusual for financial data but consistent with GnuCOBOL ORCA codebase style."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10875,
+      "completion_tokens": 614,
+      "total_tokens": 11489,
+      "cost": 0.041835,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.041835,
+        "upstream_inference_prompt_cost": 0.032625,
+        "upstream_inference_completions_cost": 0.00921
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.19,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:08:31Z"
+}

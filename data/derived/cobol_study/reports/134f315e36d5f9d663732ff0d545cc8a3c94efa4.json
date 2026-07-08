@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:134f315e36d5f9d663732ff0d545cc8a3c94efa4",
+    "sha1_git": "134f315e36d5f9d663732ff0d545cc8a3c94efa4",
+    "filename": "/ORCGW96.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 62875,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:134f315e36d5f9d663732ff0d545cc8a3c94efa4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:134f315e36d5f9d663732ff0d545cc8a3c94efa4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 62875,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1667,
+    "blank_lines": 1,
+    "comment_lines": 512,
+    "code_lines": 1154,
+    "comment_ratio": 0.307,
+    "max_line_length": 74,
+    "avg_line_length": 36.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW96"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 64,
+    "call_count": 10,
+    "perform_count": 99,
+    "goto_count": 8,
+    "pic_count": 44,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), GnuCOBOL/OpenCOBOL dialect used in the ORCA project. Program ORCGW96 handles CRON job scheduling settings in the system management subsystem.",
+        "evidence": [
+          "PROGRAM-ID ORCGW96",
+          "COPY 'COMMON-SPA'",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "MCP-STATUS / MCP-EVENT usage",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "LINKAGE SECTION with MCPAREA SPAAREA LINKAREA SCRAREA",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed format max line 74"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (claims) processing system - system management CRON scheduling configuration screen",
+        "summary": "ORCGW96 is a screen program within the JMA ORCA medical receipt software that manages CRON job scheduling settings. It initialises and displays a scheduling configuration screen (W96), reads CRON job records from the database, populates combo-box lists for day-of-week, month, day-of-month, and hour, and handles user input events for editing CRON entries.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (64 copybooks) for screen layouts and shared areas",
+        "LINKAGE SECTION with multiple passed areas (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "MCP-STATUS/MCP-EVENT driven event loop (ORCA MCP framework, not CICS)",
+        "Japanese EUC/Latin-1 encoded comments and string literals",
+        "OCCURS tables for CRON schedule entries and combo-box lists",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for screen navigation",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "Fixed-format source with lines up to 74 chars"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in Latin-1 but contains EUC-JP Japanese text in comments and string literals, causing mojibake in the excerpt. The program is part of the well-known open-source JMA ORCA project. program_type is set to online-cics as the closest enum match, but the actual framework is the ORCA MCP (Message Control Program) GUI framework, not CICS."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8291,
+      "completion_tokens": 629,
+      "total_tokens": 8920,
+      "cost": 0.034308,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034308,
+        "upstream_inference_prompt_cost": 0.024873,
+        "upstream_inference_completions_cost": 0.009435
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.86,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:36:45Z"
+}

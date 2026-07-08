@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:81f9f9933aa7ecce5b5f2a2ac86c0d5a7f3b1a92",
+    "sha1_git": "81f9f9933aa7ecce5b5f2a2ac86c0d5a7f3b1a92",
+    "filename": "/cbl0005.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5043,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:81f9f9933aa7ecce5b5f2a2ac86c0d5a7f3b1a92/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:81f9f9933aa7ecce5b5f2a2ac86c0d5a7f3b1a92/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5043,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 135,
+    "blank_lines": 0,
+    "comment_lines": 21,
+    "code_lines": 114,
+    "comment_ratio": 0.156,
+    "max_line_length": 69,
+    "avg_line_length": 36.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBL0004"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 53,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Classic IBM mainframe-style COBOL with RECORDING MODE F, COMP-3 packed decimal, GOBACK, and FUNCTION CURRENT-DATE; consistent with IBM Enterprise COBOL or similar mainframe environment",
+        "evidence": [
+          "RECORDING MODE F",
+          "COMP-3",
+          "GOBACK",
+          "FUNCTION CURRENT-DATE",
+          "SELECT ... ASSIGN TO ddname style"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Account management financial reporting — reads account records with credit limits and balances and produces a formatted print report",
+        "summary": "This batch program reads account records (ACCT-REC) containing account number, credit limit, balance, and name fields, then writes a formatted financial report (PRINT-LINE) with date headers and columnar account data. It is a straightforward sequential file processing program producing a printed ledger-style report.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal for monetary fields (ACCT-LIMIT, ACCT-BALANCE)",
+        "RECORDING MODE F on both FD entries",
+        "FUNCTION CURRENT-DATE for dynamic date header",
+        "Structured paragraph-based flow without GO TO",
+        "PERFORM UNTIL loop with end-of-file flag pattern",
+        "ZZ,ZZZ,ZZ9.99 edited numeric picture for currency display",
+        "GOBACK instead of STOP RUN"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "PROGRAM-ID is CBL0004 but filename is cbl0005.cbl — minor mismatch suggesting this is part of a tutorial series (e.g. IBM COBOL course). No COPY statements or CALLs; self-contained simple program. Author field 'Otto B. Formatted' is a playful tutorial name. Overall structure is consistent with an IBM learning exercise."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3979,
+      "completion_tokens": 454,
+      "total_tokens": 4433,
+      "cost": 0.018747,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018747,
+        "upstream_inference_prompt_cost": 0.011937,
+        "upstream_inference_completions_cost": 0.00681
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:05:48Z"
+}

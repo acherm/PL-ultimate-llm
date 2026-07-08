@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7f000f015f39326438f5604f8c59c359930324cd",
+    "sha1_git": "7f000f015f39326438f5604f8c59c359930324cd",
+    "filename": "/ORCR0600.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 110201,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7f000f015f39326438f5604f8c59c359930324cd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7f000f015f39326438f5604f8c59c359930324cd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 110201,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2555,
+    "blank_lines": 0,
+    "comment_lines": 625,
+    "code_lines": 1930,
+    "comment_ratio": 0.245,
+    "max_line_length": 76,
+    "avg_line_length": 42.1,
+    "long_lines_over_72": 15,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0600"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 11,
+    "perform_count": 226,
+    "goto_count": 7,
+    "pic_count": 69,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY books with INC extension, MCP (middleware) calls, and LINKAGE SECTION with COMMAND-PARAM pattern typical of ORCA system programs.",
+        "evidence": [
+          "PROGRAM-ID ORCR0600",
+          "COPY MCPAREA / MCPDATA.INC / CPORCSLNK.INC",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(2000)",
+          "SELECT RECEERR-FILE ASSIGN RECEERR",
+          "JMA Open Source License copyright header",
+          "Japanese EUC-JP encoded comments throughout",
+          "PERFORM ... UNTIL pattern, no EXEC CICS/SQL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - provisional receipt data creation (仮収納データ作成) for the JMA ORCA medical billing system",
+        "summary": "ORCR0600 is a batch program in the JMA ORCA medical receipt software system that creates provisional receipt/payment data (仮収納データ作成). It processes patient insurance combination records, diagnosis accounting data, and hospitalization accounting records to generate receipt billing data, with support for cancellation processing, real-time preview, and various insurance types including workers compensation and public nuisance insurance.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "28 COPY book inclusions (INC files) for record layouts",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "UNSTRING of COMMAND-PARAM for parameter parsing",
+        "MCP (middleware) DB access pattern via MCPDATA",
+        "OCCURS tables for day-count arrays",
+        "Japanese EUC-JP encoded comments and string literals",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP DB layer",
+        "STOP RUN vs EXIT PROGRAM conditional based on SHELLID"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP (decoded as latin-1), causing garbled display of Japanese characters in the comment block. The program is part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars out of 110201 bytes (2555 lines total), but enough structure is visible for confident classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10302,
+      "completion_tokens": 596,
+      "total_tokens": 10898,
+      "cost": 0.039846,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039846,
+        "upstream_inference_prompt_cost": 0.030906,
+        "upstream_inference_completions_cost": 0.00894
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.99,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:32:44Z"
+}

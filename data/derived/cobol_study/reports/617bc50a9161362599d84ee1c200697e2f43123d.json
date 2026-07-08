@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:617bc50a9161362599d84ee1c200697e2f43123d",
+    "sha1_git": "617bc50a9161362599d84ee1c200697e2f43123d",
+    "filename": "/sales.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 35824,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:617bc50a9161362599d84ee1c200697e2f43123d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:617bc50a9161362599d84ee1c200697e2f43123d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 35824,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 941,
+    "blank_lines": 0,
+    "comment_lines": 401,
+    "code_lines": 540,
+    "comment_ratio": 0.426,
+    "max_line_length": 146,
+    "avg_line_length": 37.1,
+    "long_lines_over_72": 123,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "sales"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 14,
+    "perform_count": 46,
+    "goto_count": 45,
+    "pic_count": 85,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (Open COBOL) v2/v3, part of the Applewood Computers Accounting System (ACAS) by Vincent B. Coen. Uses >>source free directive, COB_SCREEN_EXCEPTIONS env vars, and GnuCOBOL-specific intrinsics.",
+        "evidence": [
+          ">>source free compiler directive",
+          "set ENVIRONMENT 'COB_SCREEN_EXCEPTIONS' to 'Y'",
+          "set ENVIRONMENT 'COB_SCREEN_ESC' to 'Y'",
+          "Migration to Open Cobol v3.00.0 noted in changelog",
+          "binary-char usage",
+          "copy copybooks like wsnames.cob, wssystem.cob"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Sales Ledger System Menu for the Applewood Computers Accounting System (ACAS), a multi-module accounting package covering sales, purchase, stock, invoicing, and payments.",
+        "summary": "This is the main menu driver for the Sales Ledger subsystem of ACAS. It initialises the environment, reads system parameter files, and dispatches to various sales ledger sub-programs (sl000, sl010, sl020, xl150, etc.). It also handles backup script execution on exit and supports both flat-file and RDB processing modes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        ">>source free compiler directive",
+        "COB_SCREEN_EXCEPTIONS / COB_SCREEN_ESC environment variable setup",
+        "14 COPY statements for modular copybook architecture",
+        "14 CALL statements dispatching to sub-programs",
+        "45 GO TO statements",
+        "ACCEPT from LINES / COLUMNS for terminal size validation",
+        "File-Info layout matching GnuCOBOL CBL-FILE-DETAILS",
+        "Extensive changelog spanning 1984-2018",
+        "GNU GPL v2 licensed open-source accounting system",
+        "RDB (relational database) vs flat-file dual-mode processing",
+        "Support for UK/USA/International date formats",
+        "Crontab/forced-run support via WS-Calling-Data args"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to 16000 chars out of 35824 bytes (941 lines total). The program is clearly a long-lived production system with a detailed changelog from 1984 to 2018. No COMP-3 usage despite being an accounting system, consistent with GnuCOBOL on Linux. The COBOL-85 standard is the base but GnuCOBOL extensions are used throughout."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7489,
+      "completion_tokens": 637,
+      "total_tokens": 8126,
+      "cost": 0.032022,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032022,
+        "upstream_inference_prompt_cost": 0.022467,
+        "upstream_inference_completions_cost": 0.009555
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.53,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:29:29Z"
+}

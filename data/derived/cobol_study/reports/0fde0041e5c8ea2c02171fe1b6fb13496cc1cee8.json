@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0fde0041e5c8ea2c02171fe1b6fb13496cc1cee8",
+    "sha1_git": "0fde0041e5c8ea2c02171fe1b6fb13496cc1cee8",
+    "filename": "/listen15.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6788,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0fde0041e5c8ea2c02171fe1b6fb13496cc1cee8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0fde0041e5c8ea2c02171fe1b6fb13496cc1cee8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6788,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 215,
+    "blank_lines": 25,
+    "comment_lines": 20,
+    "code_lines": 170,
+    "comment_ratio": 0.105,
+    "max_line_length": 72,
+    "avg_line_length": 30.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LISTEN10"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 12,
+    "call_count": 10,
+    "perform_count": 18,
+    "goto_count": 4,
+    "pic_count": 2,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "OpenEZA / Open Source EZASOKET project - a GnuCOBOL implementation of IBM TCP/IP socket API (EZASOKET). Uses COPY books from the OpenEZA library.",
+        "evidence": [
+          "COPY EZADATA",
+          "COPY SELDATA",
+          "CALL 'EZASOKET'",
+          "CALL 'EZACIC06'",
+          "OpenEZA comment block with GPL v3 license",
+          "MOVE 'SELECTEX' TO EZA-FUNCTION",
+          "BY VALUE ECBLIST-PTR"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "TCP/IP socket programming test harness using EZASOKET API; implements a listener/server using SELECTEX for single-process concurrency",
+        "summary": "This program implements a TCP socket listener (server) using the OpenEZA EZASOKET interface. It binds to port 5015, listens for connections, uses SELECTEX for non-blocking I/O multiplexing, accepts a connection, receives data, and validates that the received data matches the expected string 'TEST SEND FROM SEND0015'. It is a test counterpart to send0015.cbl.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "CALL 'EZASOKET' with SELECTEX function for socket I/O multiplexing",
+        "BY VALUE pointer argument (ECBLIST-PTR) in CALL statement",
+        "Multiple COPY books for socket API sections (INITAPI, SOCKET, BIND, LISTEN, ACCEPT, etc.)",
+        "GOBACK statement",
+        "DISPLAY ... UPON CONSOLE",
+        "Inline IF/ELSE with END-IF (COBOL-85 scope terminators)",
+        "GPL v3 license header in comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program-ID is LISTEN10 but filename is listen15.cbl and the program references port 5015 and 'LISTEN15' string - minor inconsistency suggesting iterative development. The copy_count of 12 means most logic is in copybooks not visible here."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4491,
+      "completion_tokens": 527,
+      "total_tokens": 5018,
+      "cost": 0.021378,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021378,
+        "upstream_inference_prompt_cost": 0.013473,
+        "upstream_inference_completions_cost": 0.007905
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.13,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:13:26Z"
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d42c1b48628c7180ceff8062cb43b29cac2fea7a",
+    "sha1_git": "d42c1b48628c7180ceff8062cb43b29cac2fea7a",
+    "filename": "/ORCR0030.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 199468,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d42c1b48628c7180ceff8062cb43b29cac2fea7a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d42c1b48628c7180ceff8062cb43b29cac2fea7a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 199468,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4086,
+    "blank_lines": 2,
+    "comment_lines": 813,
+    "code_lines": 3271,
+    "comment_ratio": 0.199,
+    "max_line_length": 78,
+    "avg_line_length": 47.8,
+    "long_lines_over_72": 84,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0030"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 53,
+    "perform_count": 106,
+    "goto_count": 3,
+    "pic_count": 198,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with REPLACING using // delimiters, INDEXED files with DYNAMIC access, no EXEC SQL/CICS.",
+        "evidence": [
+          "PROGRAM-ID ORCR0030",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with // delimiters for REPLACING",
+          "ASSIGN to symbolic names (RECE01PARA, RECE04PARA, etc.)",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "No EXEC SQL, no EXEC CICS",
+          "28 COPY statements with .INC extensions"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - JMA ORCA (Open Receipt Computer Advantage). Handles medical billing receipt data editing and point calculation for Japanese national health insurance claims.",
+        "summary": "This program (ORCR0030) is part of the JMA ORCA medical receipt software system. It processes and edits medical insurance receipt (レセプト) data, performing point/score calculations for various medical procedures, prescriptions, and examinations. It reads and writes indexed ISAM files (RECE02, RECE04, RECE05) containing receipt detail records and produces OCR-formatted output for insurance claim submission.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "28 COPY statements with .INC copybooks using // REPLACING delimiter syntax",
+        "Multiple SELECT entries for same physical file with different access modes (DYNAMIC vs SEQUENTIAL)",
+        "OCR output area definitions (OCR1-AREA, OCR2-AREA) for insurance claim forms",
+        "53 CALL statements indicating heavy use of subprograms",
+        "Japanese EUC-encoded comments (latin-1 decoded, actually EUC-JP)",
+        "INDEXED files with both DYNAMIC and SEQUENTIAL access modes",
+        "No COMP-3 usage despite numeric processing",
+        "Extensive flag and index working-storage areas"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in EUC-JP (Japanese) but decoded as latin-1, resulting in mojibake in the displayed text. The file is part of the well-known open-source JMA ORCA medical receipt system used in Japanese medical clinics. The // delimiter in COPY REPLACING is characteristic of GnuCOBOL/OpenCOBOL. Source is truncated at 16000 chars out of ~199KB total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11192,
+      "completion_tokens": 635,
+      "total_tokens": 11827,
+      "cost": 0.043101,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.043101,
+        "upstream_inference_prompt_cost": 0.033576,
+        "upstream_inference_completions_cost": 0.009525
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.22,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:39:18Z"
+}

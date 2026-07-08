@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:13ed3036ba2d8bf5b74e2a53116e237fb3de0a2a",
+    "sha1_git": "13ed3036ba2d8bf5b74e2a53116e237fb3de0a2a",
+    "filename": "/weather.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8270,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:13ed3036ba2d8bf5b74e2a53116e237fb3de0a2a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:13ed3036ba2d8bf5b74e2a53116e237fb3de0a2a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8270,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 254,
+    "blank_lines": 70,
+    "comment_lines": 0,
+    "code_lines": 184,
+    "comment_ratio": 0.0,
+    "max_line_length": 114,
+    "avg_line_length": 31.6,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "checkfilestatus",
+      "weather"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 6,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 42,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL-style program using CALL 'system', FUNCTION CONCATENATE, FUNCTION TRIM, nested programs with END PROGRAM, and LINE SEQUENTIAL files. Likely compiled with GnuCOBOL on Linux/Unix.",
+        "evidence": [
+          "call \"system\" using \"curl -s ...\"",
+          "organization is line sequential",
+          "function concatenate(...)",
+          "function trim(...)",
+          "end program checkfilestatus",
+          "end program weather",
+          "nested program-id structure"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Weather lookup utility that uses IP geolocation and a weather API to display current weather conditions",
+        "summary": "This program fetches the user's location via IP geolocation (ip-api.com) using curl, then queries the WorldWeatherOnline API for current weather at that location. It parses CSV responses using UNSTRING and displays temperature, description, humidity, and pressure. A nested subprogram 'checkfilestatus' handles file status error reporting.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "CALL 'system' to invoke shell commands (curl, rm)",
+        "FUNCTION CONCATENATE and FUNCTION TRIM intrinsic functions",
+        "UNSTRING with delimiter for CSV parsing",
+        "Nested program structure (END PROGRAM)",
+        "LINE SEQUENTIAL file organization",
+        "Linkage section in nested subprogram",
+        "EVALUATE on file status codes",
+        "Hardcoded API key visible in source",
+        "No PERFORM statements (uses paragraph fall-through)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The procedure division indicator shows false in mechanical analysis but the source clearly contains procedure divisions. The program has no PERFORM statements and relies on paragraph fall-through execution, which is unusual. An API key is hardcoded in the source. The 'checkfilestatus' nested program uses numeric literals (00, 02, etc.) in EVALUATE WHEN clauses which may behave as alphanumeric comparisons against PIC X(2) file-status. Overall this appears to be a personal/educational project demonstrating COBOL interacting with web APIs."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4338,
+      "completion_tokens": 515,
+      "total_tokens": 4853,
+      "cost": 0.020739,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020739,
+        "upstream_inference_prompt_cost": 0.013014,
+        "upstream_inference_completions_cost": 0.007725
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.27,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:29:24Z"
+}

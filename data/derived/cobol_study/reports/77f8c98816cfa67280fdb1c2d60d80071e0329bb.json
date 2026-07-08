@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:77f8c98816cfa67280fdb1c2d60d80071e0329bb",
+    "sha1_git": "77f8c98816cfa67280fdb1c2d60d80071e0329bb",
+    "filename": "/ORCGWID1.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7820,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:77f8c98816cfa67280fdb1c2d60d80071e0329bb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:77f8c98816cfa67280fdb1c2d60d80071e0329bb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7820,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 223,
+    "blank_lines": 0,
+    "comment_lines": 94,
+    "code_lines": 129,
+    "comment_ratio": 0.422,
+    "max_line_length": 74,
+    "avg_line_length": 34.1,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGWID1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 64,
+    "call_count": 1,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); GnuCOBOL/OpenCOBOL-based, screen-driven subprogram with LINKAGE SECTION and CALL to ORCDBMAIN",
+        "evidence": [
+          "PROGRAM-ID ORCGWID1",
+          "COPY 'ORCA-SPA'",
+          "COPY 'MCPAREA'",
+          "CALL 'ORCDBMAIN'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "MCP-STATUS / MCP-EVENT / MCP-FUNC / MCP-PUTTYPE patterns typical of ORCA middleware"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software — patient registration confirmation screen WID1",
+        "summary": "This is a subprogram (screen component) in the JMA ORCA medical receipt system. It handles the confirmation screen WID1 for patient registration, evaluating MCP events (LINK, PUTG/CLICKED) and dispatching to initialization or screen-transition routines. It calls ORCDBMAIN to perform window PUT operations.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Extremely high COPY count (64 copybooks) for screen layout and shared areas",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA parameters",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen navigation",
+        "CALL 'ORCDBMAIN' with MCP-FUNC='PUTWINDOW' for window management",
+        "Japanese EUC-encoded comments (decoded as latin-1 garbled)",
+        "No EXEC SQL or EXEC CICS — uses proprietary ORCA MCP middleware",
+        "MCP-PUTTYPE set to 'JOIN' (corrected from 'BACK' per inline comment)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are in Japanese EUC encoding, displayed as garbled latin-1 in this context. The file is part of the well-known open-source JMA ORCA project. The 64 COPY statements pull in screen layout copybooks (W01.INC through WID2.INC). Only 1 PIC clause is visible in the source itself; the rest are in copybooks."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5004,
+      "completion_tokens": 599,
+      "total_tokens": 5603,
+      "cost": 0.023997,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023997,
+        "upstream_inference_prompt_cost": 0.015012,
+        "upstream_inference_completions_cost": 0.008985
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.57,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:00:58Z"
+}

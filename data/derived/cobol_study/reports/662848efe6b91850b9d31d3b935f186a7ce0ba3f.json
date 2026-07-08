@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:662848efe6b91850b9d31d3b935f186a7ce0ba3f",
+    "sha1_git": "662848efe6b91850b9d31d3b935f186a7ce0ba3f",
+    "filename": "/ORCBM501.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 85174,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:662848efe6b91850b9d31d3b935f186a7ce0ba3f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:662848efe6b91850b9d31d3b935f186a7ce0ba3f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 85174,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1959,
+    "blank_lines": 0,
+    "comment_lines": 532,
+    "code_lines": 1427,
+    "comment_ratio": 0.272,
+    "max_line_length": 85,
+    "avg_line_length": 42.5,
+    "long_lines_over_72": 13,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBM501"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 27,
+    "call_count": 13,
+    "perform_count": 105,
+    "goto_count": 0,
+    "pic_count": 118,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software); GnuCOBOL/OpenCOBOL dialect used in the ORCA project. Program ORCBM501 creates receipt electronic billing data (CSV format, RECEDEN) without claim management, using tbl_receden_tmp. Copied from ORCBM500 in 2017.",
+        "evidence": [
+          "PROGRAM-ID ORCBM501",
+          "COPY directives with .INC copybooks (CPSK2005.INC, CPRECEDEN.INC, CPBTPARA.INC, CPJOBKANRI.INC, COMMON-SPA)",
+          "grpsys prefix on COPY line",
+          "SELECT ... ASSIGN ... ORGANIZATION IS LINE SEQUENTIAL",
+          "JMA Open Source License copyright header",
+          "Japanese EUC-JP encoded comments throughout",
+          "no EXEC CICS / EXEC SQL",
+          "CPTEMPFL.INC REPLACING pattern typical of ORCA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト電算) billing data file creation for the JMA ORCA medical receipt system. Generates CSV-format electronic claim data (RECEDEN) without claim management processing.",
+        "summary": "ORCBM501 is a batch program in the JMA ORCA medical receipt system that creates electronic receipt billing data files (CSV/fixed-format, RECEDEN) for submission to health insurers. It reads receipt data, formats it into structured records, and writes output files along with an error file. It is a variant of ORCBM500 that operates without claim management (ÀÁµá´ÉÍý¤Ê¤·).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "27 COPY statements referencing ORCA-specific copybooks (.INC files)",
+        "13 CALL statements to external subprograms",
+        "105 PERFORM statements, no GOTO",
+        "Large table: OCCURS 10000 with PIC X(2500) records",
+        "LINE SEQUENTIAL file organization for output",
+        "REPLACING clause in COPY for parameterized file names",
+        "Japanese EUC-JP encoded comments (latin-1 decoded with mojibake)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "grpsys group prefix on COPY line (ORCA-specific pattern)",
+        "Record size 2500 bytes for receipt data"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese, appearing as mojibake. This is standard for ORCA COBOL sources. Source truncated to first 16000 chars; full file is 85KB/1959 lines. The program is clearly production-grade medical billing software maintained over many years (2003-2017) by NACL developers for JMA."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11111,
+      "completion_tokens": 714,
+      "total_tokens": 11825,
+      "cost": 0.044043,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.044043,
+        "upstream_inference_prompt_cost": 0.033333,
+        "upstream_inference_completions_cost": 0.01071
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.58,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:15:28Z"
+}

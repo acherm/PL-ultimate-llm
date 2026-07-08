@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c700e3d3d223620fbbda6978c109eb9bf60330c6",
+    "sha1_git": "c700e3d3d223620fbbda6978c109eb9bf60330c6",
+    "filename": "/pw03241r.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 47137,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c700e3d3d223620fbbda6978c109eb9bf60330c6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c700e3d3d223620fbbda6978c109eb9bf60330c6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 47137,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 925,
+    "blank_lines": 96,
+    "comment_lines": 41,
+    "code_lines": 788,
+    "comment_ratio": 0.049,
+    "max_line_length": 211,
+    "avg_line_length": 50.0,
+    "long_lines_over_72": 255,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW03241R"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 43,
+    "call_count": 8,
+    "perform_count": 100,
+    "goto_count": 0,
+    "pic_count": 113,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with free-format source directives ($set sourceformat\"free\"), htmlpp preprocessor, external-form CGI linkage, and OO repository clause (class Utils). Likely running under Micro Focus Visual COBOL or Net Express targeting a web/CGI environment. Portuguese-language Brazilian business system (PW prefix suggests Prowork/EFD-style ERP).",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "$set constant PadraoCSV",
+          "$if PadraoCSV defined / $end",
+          "external-form",
+          "identified by",
+          "repository. class Utils as \"PY990004\"",
+          "local-storage section"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian ERP/distribution system - report of unfactured comodatos (loan equipment not yet billed) for a given period, with CSV export capability. Likely part of a Prowork or similar Brazilian ERP suite.",
+        "summary": "This program (PW03241R) generates a report of 'Comodatos não Faturados' (loan items not billed in the period). It reads indexed files for clients, sectors, items, fiscal notes, and comodato records, then produces a formatted report and/or CSV output listing unbilled comodato items with date, client, item, quantity, and reason codes.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "$set compiler directives (Micro Focus)",
+        "htmlpp preprocessor directive",
+        "external-form CGI input section",
+        "repository clause with OO class reference",
+        "local-storage section",
+        "conditional compilation ($if/$end)",
+        "CSV export support with delimiter constants",
+        "43 COPY statements for modular file/record definitions",
+        "decimal-point is comma (Brazilian locale)",
+        "88-level condition names for motivo codes",
+        "Portuguese-language comments and field names"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; procedure division body not visible beyond section header. Program is clearly part of a larger Brazilian ERP system with consistent naming conventions (PW/PC prefixes). The 'online-cics' program_type is approximate - this is actually a CGI web program (external-form, htmlpp), not CICS, but no better enum value exists. File decoded with latin-1 due to Portuguese characters (ã, ç, etc.)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6447,
+      "completion_tokens": 591,
+      "total_tokens": 7038,
+      "cost": 0.028206,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028206,
+        "upstream_inference_prompt_cost": 0.019341,
+        "upstream_inference_completions_cost": 0.008865
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:03:47Z"
+}

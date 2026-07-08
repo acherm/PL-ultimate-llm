@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3569e0efb829ddf10d81960d202084512f56bb4c",
+    "sha1_git": "3569e0efb829ddf10d81960d202084512f56bb4c",
+    "filename": "/ORCR0460.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 171194,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3569e0efb829ddf10d81960d202084512f56bb4c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3569e0efb829ddf10d81960d202084512f56bb4c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 171194,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3680,
+    "blank_lines": 1,
+    "comment_lines": 938,
+    "code_lines": 2741,
+    "comment_ratio": 0.255,
+    "max_line_length": 114,
+    "avg_line_length": 45.5,
+    "long_lines_over_72": 38,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0460"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 18,
+    "call_count": 2,
+    "perform_count": 203,
+    "goto_count": 10,
+    "pic_count": 333,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING using // delimiters typical of GnuCOBOL/MF style",
+        "evidence": [
+          "PROGRAM-ID ORCR0460",
+          "COPY with // REPLACING delimiter",
+          "SELECT ... ASSIGN RECE01PARA style",
+          "No EXEC CICS/SQL",
+          "Copyright JMA (Japan Medical Association) ORCA project",
+          "ORGANIZATION IS INDEXED with FILE STATUS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - monthly billing detail file creation for outpatient/self-pay receipts (外来・自費レセプト明細書ファイル作成)",
+        "summary": "ORCR0460 is a batch program in the JMA ORCA medical receipt software system. It creates monthly billing detail files for medical insurance receipts, handling point-score editing, examination counts, drug/device entries, and various medical procedure codes. The program reads indexed files (RECE41, RECE44, RECE45, RECE46) and produces formatted receipt detail output with extensive business logic for Japanese medical billing rules.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file organization with DYNAMIC and SEQUENTIAL access modes",
+        "COPY with REPLACING using // delimiter syntax",
+        "18 COPY statements for modular copybook inclusion",
+        "Extensive Japanese-language comments (EUC-JP/latin-1 encoded)",
+        "203 PERFORM statements indicating complex procedural logic",
+        "10 GOTO statements",
+        "No EXEC SQL or EXEC CICS",
+        "Error file (RECEERR-FILE) for error reporting",
+        "OCCURS clauses for table handling",
+        "Multiple file status fields"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (garbled in latin-1 view). This is part of the well-known open-source JMA ORCA (日医標準レセプトソフト) system. Source is truncated at 16000 chars out of 171194 bytes total. The // REPLACING delimiter and overall structure are consistent with GnuCOBOL/OpenCOBOL compilation on Linux."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11821,
+      "completion_tokens": 594,
+      "total_tokens": 12415,
+      "cost": 0.044373,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.044373,
+        "upstream_inference_prompt_cost": 0.035463,
+        "upstream_inference_completions_cost": 0.00891
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:53:58Z"
+}

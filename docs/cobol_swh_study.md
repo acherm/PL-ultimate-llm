@@ -14,8 +14,9 @@ by dialect family, language standard, source format, program type, business
 domain, and maturity. Across 653 judged files (plus a 1,000-content
 reclassifier sweep) we find that the SWH COBOL extension space is
 (a) **heavily contaminated** — a content-based estimate on 1,000 uniform-random
-contents puts **~46 % as not COBOL** (95 % CI 42–49 %), ~41 % of it a single
-family of synthetic placeholder files, with the lowercase `.cbl` space
+contents puts **~46 % as not COBOL** (95 % CI 42–49 %; independently confirmed
+by LLM judging at 47 %, §8.6), ~41 % of it a single family of synthetic
+placeholder files, with the lowercase `.cbl` space
 additionally colliding with Calibre comic-book libraries and editor artefacts;
 and (b) **strongly bimodal** — the uppercase
 `.CBL` archive is dominated (83 % of a clean slice) by one open-source
@@ -549,6 +550,45 @@ snippets with too little evidence to pin a compiler. This is a direct
 measurement of file-level vs project-level sampling bias: the *typical COBOL
 file* in SWH belongs to a big production repo, but the *typical COBOL project*
 is a student's first program.
+
+### 8.6 The uniform-random sample, LLM-judged: the file-level truth + contamination validated
+
+The §8.3 sweep classified a uniform-random 1,000 with the *reclassifier*; here
+we LLM-judge that same sample (gate=2 → the real-COBOL half; the WBC/noise half
+is skipped for free). **526 judged, 474 gated, $14.88.**
+
+**Contamination — two independent methods agree.** The gate+judge finds
+**53 % COBOL / 47 % not**, versus the reclassifier's **54.4 % / 45.6 %** (§8.3)
+— within 1.4 points, from completely different mechanisms. And of the 526
+judged, **525 are confirmed COBOL** by the LLM (1 false) — the gate's selection
+holds up.
+
+**Three sampling frames, one table.** This is the only *uniform-random* sample;
+placing it beside the curated by-file (`main`) and by-repo (`div`) frames shows
+exactly how the frame shapes the story:
+
+| | **1k — random (file-level)** | main — by-file, WBC-excluded | div — by-repo |
+|---|---:|---:|---:|
+| healthcare-medical | 40 % | 49 % | ~0 % |
+| education-tutorial | 19 % | 14 % | 48 % |
+| production-like | 65 % | 77 % | 14 % |
+| student-exercise | 24 % | 17 % | 60 % |
+| median code lines | 382 | 596 | 48 |
+| GnuCOBOL | 65 % | 70 % | 41 % |
+| COBOL-85 | 98 % | 98 % | 96 % |
+
+![Sampling frame comparison](assets/cobol/fig_div_vs_main.png)
+
+The random file-level sample is **production/ORCA-heavy** (healthcare 40 %,
+production-like 65 %) — because at the *file* level, big production repos
+genuinely dominate the population (ORCA alone contributes thousands of files).
+It sits between `main` (which excluded WBC and over-sampled a few big systems)
+and `div` (one file per repo). The reconciling statement: **the typical
+archived COBOL *file* is a production program (65 % production-like), but the
+typical COBOL *project* is a student exercise (60 % student, §8.5)** — both true,
+of different populations, and only separable once you have origins. COBOL-85
+(~98 %) is invariant across all three frames — the one property that doesn't
+depend on how you sample.
 
 ## 9. Reproducibility & artefacts
 

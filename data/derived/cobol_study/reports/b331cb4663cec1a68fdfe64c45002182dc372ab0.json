@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b331cb4663cec1a68fdfe64c45002182dc372ab0",
+    "sha1_git": "b331cb4663cec1a68fdfe64c45002182dc372ab0",
+    "filename": "/SOKATU4400.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 68811,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b331cb4663cec1a68fdfe64c45002182dc372ab0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b331cb4663cec1a68fdfe64c45002182dc372ab0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 68811,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1579,
+    "blank_lines": 3,
+    "comment_lines": 620,
+    "code_lines": 956,
+    "comment_ratio": 0.393,
+    "max_line_length": 74,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU4400"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 43,
+    "perform_count": 59,
+    "goto_count": 3,
+    "pic_count": 56,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Japan Medical Association open-source receipt system), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "Project code name ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY directives with .INC extensions typical of ORCA",
+          "CALL ORCSJOB",
+          "COMMON-SPA copybook",
+          "CPORCSPRT.INC, CPORCSLNK.INC etc.",
+          "No EXEC CICS/SQL, file-based batch structure"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt) processing system - monthly aggregate/summary report for medical claims (診療報酬総括表)",
+        "summary": "SOKATU4400 is a batch program in the JMA ORCA medical receipt software suite. It generates a monthly aggregate summary report (総括表) for medical insurance claims, reading from a temporary indexed file and producing an update file and error file. It handles hospital information lookup, date conversion, and multi-page printing logic.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "26 COPY statements referencing ORCA-specific copybooks (.INC)",
+        "43 CALL statements including ORCSJOB and other ORCA subsystem routines",
+        "INDEXED file with DYNAMIC access mode",
+        "UNSTRING of COMMAND-PARAM for parameter passing",
+        "REDEFINES usage for hospital name/address fields",
+        "SPA-AREA (scratchpad area) initialization",
+        "Japanese text in comments (EUC-JP or Shift-JIS encoded, rendered as latin-1 mojibake)",
+        "Revision history embedded in comments with version numbers",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file contains Japanese text encoded in EUC-JP or Shift-JIS, decoded as latin-1 resulting in mojibake in comments. This is clearly part of the well-known JMA ORCA open-source medical receipt system. Source truncated at 16000 chars out of 68811 bytes total; full program logic not visible but structure is clear. Fixed format with a few lines slightly over 72 chars (5 long lines noted)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8709,
+      "completion_tokens": 571,
+      "total_tokens": 9280,
+      "cost": 0.034692,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034692,
+        "upstream_inference_prompt_cost": 0.026127,
+        "upstream_inference_completions_cost": 0.008565
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.33,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:25:20Z"
+}

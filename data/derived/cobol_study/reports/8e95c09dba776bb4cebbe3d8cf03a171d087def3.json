@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8e95c09dba776bb4cebbe3d8cf03a171d087def3",
+    "sha1_git": "8e95c09dba776bb4cebbe3d8cf03a171d087def3",
+    "filename": "/ORCGP02A.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 29128,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8e95c09dba776bb4cebbe3d8cf03a171d087def3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8e95c09dba776bb4cebbe3d8cf03a171d087def3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 29128,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 774,
+    "blank_lines": 0,
+    "comment_lines": 284,
+    "code_lines": 490,
+    "comment_ratio": 0.367,
+    "max_line_length": 74,
+    "avg_line_length": 36.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGP02A"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 7,
+    "perform_count": 36,
+    "goto_count": 3,
+    "pic_count": 25,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト); GnuCOBOL/OpenCOBOL-based, uses MCP framework with MCPAREA/LINKAGE SECTION pattern typical of ORCA",
+        "evidence": [
+          "COPY \"MCPAREA\"",
+          "COPY \"ORCA-SPA\"",
+          "COPY \"LINKAREA\"",
+          "PERFORM 910-DBSELECT-SEC",
+          "MCP-STATUS / MCP-EVENT / MCP-FUNC / MCP-TABLE",
+          "CALL \"ORCSDAY\" / CALL \"ORCSPTID\" / CALL \"ORCSADDSIGN\"",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software – patient registration duplicate-check screen (二重登録疑い一覧画面 P02A)",
+        "summary": "This program implements the duplicate patient registration check list screen (P02A) for the JMA ORCA medical receipt system. It searches the patient information table (tbl_ptinf) for potential duplicate registrations based on kana name, sex, and birthdate criteria, then populates a screen area with matching candidates for operator review. It handles initial display, screen transitions, and confirmation dialog flows.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (28 copybooks) for screen and SPA areas",
+        "MCP framework calls (DBSELECT, PUTG/CLICKED event handling) – ORCA-specific middleware",
+        "CALL to ORCSDAY (date conversion), ORCSPTID (patient ID conversion), ORCSADDSIGN (search string normalization)",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA – subprogram called by MCP runtime",
+        "Japanese comments encoded in Latin-1 (EUC-JP or Shift-JIS garbled)",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen control",
+        "STRING statement for address concatenation",
+        "No EXEC SQL or EXEC CICS – uses proprietary MCP DB abstraction"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source contains Japanese text comments encoded in a multibyte encoding (likely EUC-JP) decoded as Latin-1, causing mojibake in the displayed text. File is truncated at 16000 chars but sufficient structure is visible. Program is a subprogram called by the ORCA MCP runtime, not a standalone batch program; classified as online-cics by analogy since it is event-driven screen-handling code within the ORCA GUI framework."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8217,
+      "completion_tokens": 679,
+      "total_tokens": 8896,
+      "cost": 0.034836,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034836,
+        "upstream_inference_prompt_cost": 0.024651,
+        "upstream_inference_completions_cost": 0.010185
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.5,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:23:14Z"
+}

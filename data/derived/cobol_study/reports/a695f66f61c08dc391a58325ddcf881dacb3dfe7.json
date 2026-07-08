@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a695f66f61c08dc391a58325ddcf881dacb3dfe7",
+    "sha1_git": "a695f66f61c08dc391a58325ddcf881dacb3dfe7",
+    "filename": "/cbp105.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15932,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a695f66f61c08dc391a58325ddcf881dacb3dfe7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a695f66f61c08dc391a58325ddcf881dacb3dfe7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15932,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 364,
+    "blank_lines": 20,
+    "comment_lines": 75,
+    "code_lines": 269,
+    "comment_ratio": 0.218,
+    "max_line_length": 72,
+    "avg_line_length": 41.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBP105"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 17,
+    "call_count": 10,
+    "perform_count": 41,
+    "goto_count": 0,
+    "pic_count": 33,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with Dialog System (DSRUN) for GUI screens; uses COMP-X, COMP-5, object references (OO extensions), and Micro Focus-style COPY with quoted filenames and .CPB/.CPY/.MF extensions",
+        "evidence": [
+          "CALL \"DSRUN\" USING DS-CONTROL-BLOCK",
+          "DS-PUSH-SET, DS-QUIT-SET (Dialog System constructs)",
+          "COPY \"DS-CNTRL.MF\"",
+          "pic 9(08) comp-x",
+          "pic 9(09) comp-5",
+          "invoke Window \"fromHandleWithClass\"",
+          "object reference keyword",
+          "COPY with quoted filenames like \"CBP105.CPB\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Brazilian accounts payable / check (cheque) issuance system; handles both sight (à vista) and post-dated (pré-datado) checks, updating a check register (talão de cheques)",
+        "summary": "CBP105 is a check-issuance program that allows users to emit sight or post-dated checks. It validates the check number against a check register (CBD100), reads bank and supplier/payee data, optionally prints the check via CBP200, and records the check with its status (2=sight, 3=post-dated). It integrates with accounts-payable data (CPD020, currently commented out).",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Micro Focus Dialog System (DSRUN) GUI framework",
+        "Object-oriented COBOL extensions (invoke, object reference)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "Window class instantiation via 'fromHandleWithClass'",
+        "17 COPY statements including .MF and .CPY/.CPB files",
+        "Large commented-out block for accounts-payable list-box population",
+        "CANCEL after each subprogram CALL (dynamic loading)",
+        "Brazilian Portuguese comments and variable names",
+        "Date handling via GRIDAT1/GRIDAT2 utility calls",
+        "class-control paragraph defining Window OO class"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program authored by Mareli Amancio Volpato, dated 30/10/1998. Brazilian Portuguese throughout. The program_type is effectively an online/GUI batch program driven by Micro Focus Dialog System rather than CICS; 'online-cics' is the closest enum but it is actually a Dialog System GUI app. Several sections related to accounts-payable verification are commented out, suggesting the feature was deferred or removed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 7871,
+      "completion_tokens": 633,
+      "total_tokens": 8504,
+      "cost": 0.033108,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033108,
+        "upstream_inference_prompt_cost": 0.023613,
+        "upstream_inference_completions_cost": 0.009495
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.74,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:12:24Z"
+}

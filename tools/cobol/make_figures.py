@@ -218,31 +218,39 @@ def main():
     # Fig 10 — origin-diverse (by-repo) vs by-file sampling
     divp = STUDY / "summary_div.json"
     scap = STUDY / "summary_scaled.json"
+    onek = STUDY / "summary_1k.json"
     if divp.exists() and scap.exists():
         dv = json.loads(divp.read_text()); sc = json.loads(scap.read_text())
+        ok = json.loads(onek.read_text()) if onek.exists() else None
         def _pctd(dist):
             t = sum(dist.values()) or 1
             return {k: 100 * v / t for k, v in dist.items()}
-        fig, axes = plt.subplots(1, 2, figsize=(10.5, 3.8))
+        # series: (label, summary, colour) — random / by-file / by-repo
+        series = []
+        if ok:
+            series.append((f"1k random (n={ok['n_judged']})", ok, "#2e7d32"))
+        series.append((f"main by-file (n={sc['n_judged']})", sc, UP))
+        series.append((f"div by-repo (n={dv['n_judged']})", dv, LO))
+        fig, axes = plt.subplots(1, 2, figsize=(11, 4))
         for ax, (title, key, keys) in zip(axes, [
             ("Maturity", "judge_maturity",
              ["production-like", "student-exercise", "toy-or-hello-world", "snippet"]),
             ("Domain", "judge_domain",
              ["healthcare-medical", "education-tutorial", "demo-example",
               "banking-finance", "accounting-erp"])]):
-            dp, sp = _pctd(dv.get(key, {})), _pctd(sc.get(key, {}))
-            y = range(len(keys)); h = .38
-            ax.barh([i + h/2 for i in y], [dp.get(k, 0) for k in keys], h, color=LO,
-                    label=f"div by-repo (n={dv['n_judged']})")
-            ax.barh([i - h/2 for i in y], [sp.get(k, 0) for k in keys], h, color=UP,
-                    label=f"main by-file (n={sc['n_judged']})")
+            y = range(len(keys)); m = len(series); h = .8 / m
+            for si, (lab, summ, col) in enumerate(series):
+                pv = _pctd(summ.get(key, {}))
+                off = (si - (m - 1) / 2) * h
+                ax.barh([i - off for i in y], [pv.get(k, 0) for k in keys], h,
+                        color=col, label=lab)
             ax.set_yticks(list(y)); ax.set_yticklabels(keys, fontsize=8)
             ax.invert_yaxis(); ax.set_xlabel("%"); ax.set_title(title, fontweight="bold")
             ax.legend(fontsize=7, loc="lower right")
-        fig.suptitle("Project-level (by-repo) vs file-level (by-file) sampling",
+        fig.suptitle("Sampling frame: random (file) vs curated by-file vs by-repo",
                      fontweight="bold")
         fig.tight_layout(); fig.savefig(OUT / "fig_div_vs_main.png"); plt.close(fig)
-        print("wrote fig_div_vs_main.png")
+        print("wrote fig_div_vs_main.png (3-way)")
 
     print(f"\next-split: .CBL judged={nU} gated={up_g} | .cbl judged={nL} gated={lo_g}")
 

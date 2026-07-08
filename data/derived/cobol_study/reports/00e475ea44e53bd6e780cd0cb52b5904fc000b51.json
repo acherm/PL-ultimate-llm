@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:00e475ea44e53bd6e780cd0cb52b5904fc000b51",
+    "sha1_git": "00e475ea44e53bd6e780cd0cb52b5904fc000b51",
+    "filename": "/BANK2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6033,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:00e475ea44e53bd6e780cd0cb52b5904fc000b51/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:00e475ea44e53bd6e780cd0cb52b5904fc000b51/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6033,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 187,
+    "blank_lines": 40,
+    "comment_lines": 3,
+    "code_lines": 144,
+    "comment_ratio": 0.02,
+    "max_line_length": 68,
+    "avg_line_length": 31.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BANK2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 6,
+    "pic_count": 28,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) targeting a screen-based ATM application; uses COB_SCREEN_EXCEPTIONS environment variable, SCREEN SECTION with BACKGROUND-COLOR/FOREGROUND-COLOR, CRT STATUS, and indexed file with VALUE OF FILE-ID — all characteristic of GnuCOBOL",
+        "evidence": [
+          "SET ENVIRONMENT 'COB_SCREEN_EXCEPTIONS' TO 'Y'",
+          "CRT STATUS IS KEYBOARD-STATUS",
+          "SCREEN SECTION with BACKGROUND-COLOR/FOREGROUND-COLOR",
+          "VALUE OF FILE-ID IS \"movimientos.ubd\"",
+          "ASSIGN TO DISK",
+          "level-78 color constants",
+          "*> comment style"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "ATM (Cajero Automatico) balance inquiry module for a fictional UnizarBank; reads indexed transaction file to find latest balance for a given card number",
+        "summary": "This subprogram accepts a card number (TNUM) via LINKAGE SECTION, opens an indexed file of bank transactions, scans for the most recent transaction matching the card, and displays the current balance on a terminal screen. It handles the case of no prior transactions and shows an error screen on file I/O failures.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "SCREEN SECTION with color attributes (BACKGROUND-COLOR, FOREGROUND-COLOR)",
+        "CRT STATUS / keyboard function-key detection (PGUP, PGDN, arrow keys)",
+        "LINKAGE SECTION parameter (TNUM) — called as subprogram",
+        "FUNCTION CURRENT-DATE usage",
+        "SET ENVIRONMENT for GnuCOBOL screen exceptions",
+        "Level-78 color constants",
+        "INDEXED file with DYNAMIC access and FILE STATUS",
+        "Spanish-language comments and display text",
+        "GO TO used for flow control (6 occurrences)",
+        "PERFORM THRU used once"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program appears to be a student project (UnizarBank likely references Universidad de Zaragoza). Spanish comments and UI text. No COMP-3, no SQL, no CICS. Fixed format confirmed by max line length <=72 and mechanical indicator. The PERFORM IMPRIMIR-CABECERA THRU IMPRIMIR-CABECERA pattern is unusual but valid in GnuCOBOL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4285,
+      "completion_tokens": 588,
+      "total_tokens": 4873,
+      "cost": 0.021675,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021675,
+        "upstream_inference_prompt_cost": 0.012855,
+        "upstream_inference_completions_cost": 0.00882
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.52,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:32:14Z"
+}

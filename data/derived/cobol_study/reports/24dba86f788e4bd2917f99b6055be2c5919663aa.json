@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:24dba86f788e4bd2917f99b6055be2c5919663aa",
+    "sha1_git": "24dba86f788e4bd2917f99b6055be2c5919663aa",
+    "filename": "/3-MAL.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 19603,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:24dba86f788e4bd2917f99b6055be2c5919663aa/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:24dba86f788e4bd2917f99b6055be2c5919663aa/raw/"
+  },
+  "indicators": {
+    "bytes_len": 19603,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 623,
+    "blank_lines": 97,
+    "comment_lines": 32,
+    "code_lines": 494,
+    "comment_ratio": 0.061,
+    "max_line_length": 72,
+    "avg_line_length": 29.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "3-MAL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 35,
+    "call_count": 13,
+    "perform_count": 74,
+    "goto_count": 0,
+    "pic_count": 30,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "AcuCOBOL-GT / ACUCOBOL environment: uses ACCEPT with TAB UPDATE NO BEEP CURSOR, CONTROL 'UPPER', C$RERR runtime call, screen-oriented ACCEPT/DISPLAY with LINE/POSITION/SIZE clauses, and .MML form files typical of AcuCOBOL",
+        "evidence": [
+          "CALL \"C$RERR\" USING EXTENDED-STATUS",
+          "ACCEPT ... LINE ... POSITION ... SIZE ... TAB UPDATE NO BEEP CURSOR",
+          "CONTROL \"UPPER\"",
+          "COPY \"FORM80.FC\"",
+          "FORM-EXTENSION PIC X(4) VALUE \".MML\"",
+          "CALL \"P080\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Belgian/French-language HR system: illness/sick-leave register (LIVRE DE MALADIE) for employees, tracking presence, career records, and printing sick-leave forms per person per year",
+        "summary": "Program 3-MAL manages a sick-leave register (livre de maladie) for a company HR system. It reads employee registry, career, presence, and contract records, accumulates monthly hours, and prints formatted sick-leave forms via a P080 print module. The program supports interactive screen navigation with function-key control.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ACCEPT with LINE/POSITION/SIZE/TAB UPDATE NO BEEP CURSOR (AcuCOBOL screen I/O)",
+        "CALL \"C$RERR\" for extended file error handling (AcuCOBOL runtime)",
+        "Heavy use of COPY statements (35 copybooks) for record layouts",
+        "PROCEDURE DIVISION USING LINK-V with LINKAGE SECTION",
+        "USE AFTER ERROR PROCEDURE declaratives",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "EVALUATE used extensively for screen field dispatch",
+        "French/Belgian HR domain: MATERNITE, LIVRE DE MALADIE, FIRME, PERSONNE"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is in French (Belgian HR context). Latin-1 encoding with box-drawing characters in comments. Program name starts with digit (3-MAL) which is valid in AcuCOBOL. No COMP-3 usage; numeric formatting uses Z-picture display items. Source truncated at 16000 chars but sufficient evidence present."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8036,
+      "completion_tokens": 602,
+      "total_tokens": 8638,
+      "cost": 0.033138,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033138,
+        "upstream_inference_prompt_cost": 0.024108,
+        "upstream_inference_completions_cost": 0.00903
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.52,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:03:13Z"
+}

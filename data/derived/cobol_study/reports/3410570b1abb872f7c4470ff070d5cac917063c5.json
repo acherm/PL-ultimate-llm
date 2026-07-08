@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3410570b1abb872f7c4470ff070d5cac917063c5",
+    "sha1_git": "3410570b1abb872f7c4470ff070d5cac917063c5",
+    "filename": "/ORCGK05.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 286760,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3410570b1abb872f7c4470ff070d5cac917063c5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3410570b1abb872f7c4470ff070d5cac917063c5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 286760,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6800,
+    "blank_lines": 0,
+    "comment_lines": 1962,
+    "code_lines": 4838,
+    "comment_ratio": 0.289,
+    "max_line_length": 76,
+    "avg_line_length": 41.2,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGK05"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 59,
+    "call_count": 48,
+    "perform_count": 353,
+    "goto_count": 63,
+    "pic_count": 228,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - GnuCOBOL/OpenCOBOL based system used in Japanese medical clinics",
+        "evidence": [
+          "PROGRAM-ID ORCGK05",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "file paths /var/tmp/ indicating Unix/Linux environment",
+          "COPY directives referencing .INC files like CPK02SPASCR.INC",
+          "no COMP-3 usage, no EXEC CICS/SQL",
+          "SELECT ASSIGN FILE-NAME style typical of GnuCOBOL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) processing system - specifically diagnostic procedure set input (診療行為セット入力) component of the JMA ORCA standard receipt software",
+        "summary": "ORCGK05 is a component of the JMA ORCA medical receipt software system handling diagnostic procedure set input (診療行為セット入力). It manages screen-based entry of medical procedures, sets, and quantities for Japanese medical billing/receipt processing. The program handles file I/O for parameter and SPA screen data, with extensive screen navigation and input validation logic.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "59 COPY statements referencing shared copybooks (.INC files)",
+        "48 CALL statements to external subprograms",
+        "353 PERFORM statements indicating structured procedural logic",
+        "63 GOTO statements",
+        "Unix/Linux file paths (/var/tmp/)",
+        "Japanese EUC-encoded comments (latin-1 decoded with mojibake)",
+        "Large working storage with extensive flag and index areas",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "MAX-LINE-VALUE 400 indicating large data processing capacity",
+        "SPA (scratchpad area) pattern typical of ORCA screen programs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is 6800 lines, 286KB - a substantial production program. Comments are in Japanese EUC encoding but decoded as latin-1 causing mojibake display. The ORCA system is a well-known open-source Japanese medical receipt software maintained by JMA. Source truncated at 16000 chars but enough structure is visible to classify confidently. Version history in comments shows evolution from 2000 to 2009."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10187,
+      "completion_tokens": 594,
+      "total_tokens": 10781,
+      "cost": 0.039471,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039471,
+        "upstream_inference_prompt_cost": 0.030561,
+        "upstream_inference_completions_cost": 0.00891
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.04,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:49:55Z"
+}

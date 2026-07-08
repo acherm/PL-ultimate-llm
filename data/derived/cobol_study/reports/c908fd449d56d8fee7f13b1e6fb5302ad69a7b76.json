@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c908fd449d56d8fee7f13b1e6fb5302ad69a7b76",
+    "sha1_git": "c908fd449d56d8fee7f13b1e6fb5302ad69a7b76",
+    "filename": "/ORCR0300.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 399807,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c908fd449d56d8fee7f13b1e6fb5302ad69a7b76/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c908fd449d56d8fee7f13b1e6fb5302ad69a7b76/raw/"
+  },
+  "indicators": {
+    "bytes_len": 399807,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 8562,
+    "blank_lines": 2,
+    "comment_lines": 2238,
+    "code_lines": 6322,
+    "comment_ratio": 0.261,
+    "max_line_length": 116,
+    "avg_line_length": 45.7,
+    "long_lines_over_72": 80,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0300"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 55,
+    "call_count": 21,
+    "perform_count": 641,
+    "goto_count": 29,
+    "pic_count": 531,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCR0300 creates CSV-format electronic receipt claim files.",
+        "evidence": [
+          "PROGRAM-ID. ORCR0300",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "JMA standard receipt software",
+          "JMA Open Source License",
+          "no EXEC CICS / no EXEC SQL",
+          "55 COPY statements typical of ORCA codebase",
+          "fixed-format source"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) electronic claim file creation in CSV format for the JMA ORCA medical billing system",
+        "summary": "ORCR0300 generates electronic medical insurance claim (receipt) data files in CSV format for the JMA ORCA system. It processes patient visit records, insurance information, diagnosis codes, procedures, medications, and special equipment charges, writing structured claim records according to Japanese national health insurance billing rules. The program has an extensive revision history spanning 2003–2007 covering numerous regulatory changes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "55 COPY statements indicating heavy use of shared copybooks",
+        "641 PERFORM statements indicating complex procedural logic",
+        "29 GOTO statements",
+        "No COMP-3 usage (unusual for financial calculations)",
+        "No EXEC SQL or EXEC CICS",
+        "Extensive Japanese-language comments in EUC-JP encoding (decoded as latin-1)",
+        "Long revision history with version numbers (01.00.01 through 04.01.01) spanning 2003-2007",
+        "Fixed-format source with some lines exceeding 72 columns (80 long lines)",
+        "Large program: ~8500 lines, ~400KB"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains EUC-JP encoded Japanese text in comments, causing mojibake in the displayed content. This is the standard ORCA codebase encoding. The program is clearly production medical billing software for the Japanese national health insurance system. No COMP-3 is notable given financial calculations are present; arithmetic may use DISPLAY or COMP fields instead."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 16028,
+      "completion_tokens": 555,
+      "total_tokens": 16583,
+      "cost": 0.056409,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.056409,
+        "upstream_inference_prompt_cost": 0.048084,
+        "upstream_inference_completions_cost": 0.008325
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.65,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:36:25Z"
+}

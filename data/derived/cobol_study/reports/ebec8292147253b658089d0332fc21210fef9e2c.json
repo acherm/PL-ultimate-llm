@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ebec8292147253b658089d0332fc21210fef9e2c",
+    "sha1_git": "ebec8292147253b658089d0332fc21210fef9e2c",
+    "filename": "/ORCGI02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 54347,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ebec8292147253b658089d0332fc21210fef9e2c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ebec8292147253b658089d0332fc21210fef9e2c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 54347,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1481,
+    "blank_lines": 1,
+    "comment_lines": 536,
+    "code_lines": 944,
+    "comment_ratio": 0.362,
+    "max_line_length": 74,
+    "avg_line_length": 35.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 10,
+    "perform_count": 83,
+    "goto_count": 8,
+    "pic_count": 41,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY-heavy structure with MCP (Message Control Program) table access pattern typical of JMA ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCGI02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY MCPAREA / CPORCMCP.INC / MCPDATA.INC",
+          "PERFORM 900-TBL-SELECT-SEC / 900-TBL-CLOSE-SEC",
+          "EXEC SQL absent, EXEC CICS absent",
+          "MCP-STATUS / MCP-EVENT EVALUATE pattern"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - inpatient history display/management screen (入院歴表示, ORCGI02). Handles patient admission/discharge records, ward/room information, disease name lists, and inpatient charge calculation.",
+        "summary": "This program is part of the JMA ORCA medical receipt system and implements the inpatient history display screen (入院歴表示). It retrieves and displays patient admission records (PTNYUINRRK), ward/room information, disease names (PTBYOMEI), and other-hospital admission supplementary data (PTTAINFUKA). It handles screen initialization, data editing, and GUI widget state management via the MCP interface.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (28 copybooks) for JMA ORCA shared data structures",
+        "MCP-based table access (PERFORM 900-TBL-SELECT-SEC, 900-TBL-CLOSE-SEC) replacing EXEC SQL",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT for event-driven screen handling",
+        "LINKAGE SECTION with MCPAREA, SPAAREA, LINKAREA, SCRAREA for GUI integration",
+        "Japanese text in comments (EUC-JP encoded, rendered as latin-1 mojibake)",
+        "WIDGET-NORMAL / WIDGET-INSENSITIVE GUI state constants",
+        "No COMP-3 usage despite numeric fields",
+        "Fixed-format source with max line length 74"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file is encoded in EUC-JP but decoded as latin-1, causing Japanese comments to appear as mojibake. The program is part of the well-known open-source JMA ORCA medical receipt system (circa 2002). The 'online-cics' program_type is used loosely - this is actually an event-driven GUI program using JMA's own MCP framework rather than CICS, but it is the closest enum match for an interactive screen-handling program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8752,
+      "completion_tokens": 706,
+      "total_tokens": 9458,
+      "cost": 0.036846,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036846,
+        "upstream_inference_prompt_cost": 0.026256,
+        "upstream_inference_completions_cost": 0.01059
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.68,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:39:37Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7801d9c5792cc78819e6df105c2f3c9aa2e6b74a",
+    "sha1_git": "7801d9c5792cc78819e6df105c2f3c9aa2e6b74a",
+    "filename": "/ORCSNYURECEDEN.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 246190,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7801d9c5792cc78819e6df105c2f3c9aa2e6b74a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7801d9c5792cc78819e6df105c2f3c9aa2e6b74a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 246190,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5026,
+    "blank_lines": 1,
+    "comment_lines": 1079,
+    "code_lines": 3946,
+    "comment_ratio": 0.215,
+    "max_line_length": 78,
+    "avg_line_length": 48.0,
+    "long_lines_over_72": 17,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSNYURECEDEN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 21,
+    "call_count": 28,
+    "perform_count": 348,
+    "goto_count": 6,
+    "pic_count": 199,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), developed by NACL for Japan Medical Association. GnuCOBOL/OpenCOBOL target typical of ORCA project.",
+        "evidence": [
+          "PROGRAM-ID ORCSNYURECEDEN",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "NACL developer attribution",
+          "no EXEC CICS/SQL, fixed format, COPY count 21, CALL count 28"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing system (receipt/claim processing) - inpatient accounting sub-module for the JMA ORCA system. Handles hospitalization fee calculation including special admission fees, meal management, nursing care additions, etc.",
+        "summary": "This program is a subprogram within the JMA ORCA medical receipt software system that handles inpatient (nyuin) accounting data retrieval and calculation. It processes hospitalization fee components including various addition/deduction rules for Japanese medical insurance billing, meal management fees, and special care additions. It is called as part of the receipt claim generation workflow.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Large working-storage with many OCCURS tables for daily hospitalization tracking (up to 31 days)",
+        "21 COPY statements indicating heavy use of shared copybooks",
+        "28 CALL statements to other ORCA subprograms",
+        "348 PERFORM statements indicating structured procedural logic",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded with mojibake)",
+        "No EXEC SQL or EXEC CICS - file-based batch processing",
+        "REDEFINES usage for code/numeric dual access",
+        "Detailed revision history in comments (versions 01.00.01 through 01.00.12)",
+        "Multiple specialized work tables for food/meal fee calculations (WRK-SKJ series)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source comments are in Japanese encoded as EUC-JP or Shift-JIS but decoded as latin-1, resulting in mojibake. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. File truncated at 16000 chars out of 246190 bytes (5026 lines total), so only DATA DIVISION working-storage is visible in the excerpt; PROCEDURE DIVISION not shown but confirmed present per mechanical indicators."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10903,
+      "completion_tokens": 601,
+      "total_tokens": 11504,
+      "cost": 0.041724,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.041724,
+        "upstream_inference_prompt_cost": 0.032709,
+        "upstream_inference_completions_cost": 0.009015
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:53:15Z"
+}

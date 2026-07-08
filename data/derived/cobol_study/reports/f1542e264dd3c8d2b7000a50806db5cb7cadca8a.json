@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f1542e264dd3c8d2b7000a50806db5cb7cadca8a",
+    "sha1_git": "f1542e264dd3c8d2b7000a50806db5cb7cadca8a",
+    "filename": "/ECS029E.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 58666,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f1542e264dd3c8d2b7000a50806db5cb7cadca8a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f1542e264dd3c8d2b7000a50806db5cb7cadca8a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 58666,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 753,
+    "blank_lines": 2,
+    "comment_lines": 23,
+    "code_lines": 728,
+    "comment_ratio": 0.031,
+    "max_line_length": 80,
+    "avg_line_length": 76.9,
+    "long_lines_over_72": 733,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ECS029E"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 28,
+    "goto_count": 37,
+    "pic_count": 164,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL, converted by COBOL Conversion Aid PO 5785-ABJ (IBM product), fixed format, VMOD=2.011, authored by Logic Inc., Dallas TX. Uses BLOCK CONTAINS 0, RECORDING MODE F, INDEXED file with FILE STATUS, EJECT directives, and COMP/COMP-3 fields typical of IBM mainframe environment.",
+        "evidence": [
+          "COBOL CONVERSION AID PO 5785-ABJ",
+          "RECORDING MODE F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "ORGANIZATION INDEXED",
+          "FILE STATUS REIN-FILE-STATUS",
+          "RECORD KEY RE-CONTROL-PRIMARY",
+          "COMP VALUE",
+          "COMP-3 (comp3_count=2)",
+          "EJECT directive",
+          "SELECT ASSIGN TO SYS018 style"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Reinsurance claims register printing - prints claim register of reinsured claims (ITD/YTD/MTD paid claims) for insurance carrier companies",
+        "summary": "ECS029E prints a Reinsured Claims Register report. It reads claim extract files, sorts them, looks up reinsurance company table data, and produces formatted printed reports showing paid reinsured claims filtered by inception-to-date, year-to-date, or month-to-date based on a program parameter (DTE-PGM-PIC 029).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file access with FILE STATUS",
+        "SORT work file (SD CLM-SRT)",
+        "COPY statements for FD definitions (ECSEXTFD, ECSEXT01, ELCDTEFD, ELCPRTFD, ELCFCHFD, ERCREIN)",
+        "COMP and COMP-3 usage",
+        "EJECT directives",
+        "BLANK WHEN ZERO on numeric edited fields",
+        "Reinsurance company table with OCCURS 1500 TIMES",
+        "Year 2000 compliance review noted in comments",
+        "LCP date handling structures (LCP-CURRENT-DATE-68, LCP-DATE-NEW-74)",
+        "37 GOTO statements indicating older structured style"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full PROCEDURE DIVISION not visible but mechanical indicators show 753 lines total with 28 PERFORMs and 37 GOTOs suggesting a substantial batch report program. Program was converted from an older COBOL dialect by IBM COBOL Conversion Aid in 1996 and reviewed for Y2K compliance. The 'ECS' prefix and Logic Inc. authorship suggest a commercial insurance software package."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6437,
+      "completion_tokens": 652,
+      "total_tokens": 7089,
+      "cost": 0.029091,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029091,
+        "upstream_inference_prompt_cost": 0.019311,
+        "upstream_inference_completions_cost": 0.00978
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.49,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:27:08Z"
+}

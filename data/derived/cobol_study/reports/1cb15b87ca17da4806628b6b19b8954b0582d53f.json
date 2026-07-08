@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1cb15b87ca17da4806628b6b19b8954b0582d53f",
+    "sha1_git": "1cb15b87ca17da4806628b6b19b8954b0582d53f",
+    "filename": "/SEIKYU2407.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 127597,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1cb15b87ca17da4806628b6b19b8954b0582d53f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1cb15b87ca17da4806628b6b19b8954b0582d53f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 127597,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2917,
+    "blank_lines": 0,
+    "comment_lines": 1099,
+    "code_lines": 1818,
+    "comment_ratio": 0.377,
+    "max_line_length": 83,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 34,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU2407"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 40,
+    "call_count": 45,
+    "perform_count": 88,
+    "goto_count": 9,
+    "pic_count": 236,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (open-cobol/GnuCOBOL), explicitly mentions open-cobol1.0 compatibility in revision history",
+        "evidence": [
+          "Project code name ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "open-cobol1.0ÂÐ±þ in revision comment",
+          "COPY directives with .INC files typical of ORCA",
+          "SELECT ... ORGANIZATION IS INDEXED / LINE SEQUENTIAL",
+          "no COMP-3, no EXEC CICS/SQL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/seikyu) system - specifically triple-burden and area public expense receipt list (161,162,163,164,165 receipt types)",
+        "summary": "SEIKYU2407 is a batch report program in the JMA ORCA medical receipt software suite. It generates a list/summary of receipts for local government public expense subsidies (chihou kouhi), handling triple-burden and area-specific receipt categories. It reads an indexed file of aggregated receipt data, processes insurance and public expense combinations, and prints formatted output.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file with DYNAMIC access (MF100-FILE)",
+        "40 COPY statements referencing ORCA-specific .INC copybooks",
+        "45 CALL statements to external subprograms",
+        "REDEFINES usage for hospital name/address fields",
+        "OCCURS tables for insurance combinations and public expense targets",
+        "Extensive Japanese-language comments (EUC-JP encoded, rendered as latin-1 mojibake)",
+        "Detailed revision history spanning 2010-2017",
+        "Program option handling for print order and target public expense codes",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP but decoded as latin-1, causing all Japanese text to appear as mojibake. Source is truncated at 16000 chars out of 127597 bytes (2917 lines total). Content is clearly production ORCA system code with multi-year revision history. No COMP-3 usage despite financial calculations - amounts stored as PIC 9 fields."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12020,
+      "completion_tokens": 557,
+      "total_tokens": 12577,
+      "cost": 0.044415,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.044415,
+        "upstream_inference_prompt_cost": 0.03606,
+        "upstream_inference_completions_cost": 0.008355
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.6,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:11:23Z"
+}

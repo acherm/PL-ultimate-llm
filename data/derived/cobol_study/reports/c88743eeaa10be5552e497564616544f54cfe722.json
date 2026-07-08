@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c88743eeaa10be5552e497564616544f54cfe722",
+    "sha1_git": "c88743eeaa10be5552e497564616544f54cfe722",
+    "filename": "/A00000C115.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 70681,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c88743eeaa10be5552e497564616544f54cfe722/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c88743eeaa10be5552e497564616544f54cfe722/raw/"
+  },
+  "indicators": {
+    "bytes_len": 70681,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1791,
+    "blank_lines": 1,
+    "comment_lines": 507,
+    "code_lines": 1283,
+    "comment_ratio": 0.283,
+    "max_line_length": 86,
+    "avg_line_length": 38.5,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "A00000C115"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 37,
+    "call_count": 27,
+    "perform_count": 118,
+    "goto_count": 6,
+    "pic_count": 136,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); comment history references open-cobol 1.0 compatibility fix, consistent with GnuCOBOL/OpenCOBOL target",
+        "evidence": [
+          "Project code name ORCA",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "open-cobol1.0対応 in revision history",
+          "COPY directives with .INC extensions typical of ORCA",
+          "CALL \"ORCSJOB\" and similar ORCS* subprogram calls",
+          "No EXEC CICS / EXEC SQL",
+          "STOP RUN in main section"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical insurance receipt (レセプト) processing system — monthly report of inpatient patient counts by age group",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software. It generates a monthly statistical report of inpatient patient counts broken down by age group (年齢別入院患者数集計表). It initialises data areas, queries patient and insurance master records via subprogram calls, accumulates counts, and produces printed output and optionally a CSV file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "37 COPY statements referencing ORCA-specific .INC copybooks",
+        "27 CALL statements to ORCA subprograms (ORCSJOB, ORCSPRT, ORCSDAY, etc.)",
+        "LINKAGE SECTION with A00000C100-LNK parameter block",
+        "OCCURS 1000 tables for date-indexed accumulation",
+        "CSV output capability added in revision 01.00.03",
+        "No COMP-3 usage despite financial/count data",
+        "No EXEC SQL or EXEC CICS — DB access via subprogram calls (MCP pattern)",
+        "Japanese text in comments and data literals (latin-1 encoded Shift-JIS/EUC-JP mojibake)",
+        "Revision history spanning 2004–2016"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is decoded as latin-1 but Japanese comments appear as mojibake (likely EUC-JP or Shift-JIS original encoding). Source is truncated to 16000 chars out of 70681 bytes; procedure division logic is only partially visible but enough structure is present for confident classification. Program is a well-maintained production component of the open-source JMA ORCA system."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9526,
+      "completion_tokens": 616,
+      "total_tokens": 10142,
+      "cost": 0.037818,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037818,
+        "upstream_inference_prompt_cost": 0.028578,
+        "upstream_inference_completions_cost": 0.00924
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:23:13Z"
+}

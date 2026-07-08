@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6f2bcabbcc991b2e6b4e6f45a97120a162cef725",
+    "sha1_git": "6f2bcabbcc991b2e6b4e6f45a97120a162cef725",
+    "filename": "/LDBS2650.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 18294,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6f2bcabbcc991b2e6b4e6f45a97120a162cef725/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6f2bcabbcc991b2e6b4e6f45a97120a162cef725/raw/"
+  },
+  "indicators": {
+    "bytes_len": 18294,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 602,
+    "blank_lines": 111,
+    "comment_lines": 48,
+    "code_lines": 443,
+    "comment_ratio": 0.098,
+    "max_line_length": 72,
+    "avg_line_length": 29.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LDBS2650"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 56,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Italian insurance/financial system (NEWLIFE project) using DB2 embedded SQL with EXEC SQL INCLUDE copybooks; fixed format with max line length 72; Italian comments and variable names suggest mainframe IBM environment",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC SQL INCLUDE IDSV0003 END-EXEC",
+          "EXEC SQL DECLARE C-NST CURSOR FOR",
+          "PROGRAM-ID. LDBS2650 IS INITIAL",
+          "DECIMAL-POINT IS COMMA",
+          "max_line_length=72 fixed format",
+          "Italian comments: PROGETTO NEWLIFE, MODULO AD HOC PER ACCESSO RISORSE DB"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Italian insurance system (NEWLIFE project) - DB2 database access module for movement/transaction records (MOVI table) with filtering by object type, movement type, and effective date range",
+        "summary": "This is a DB2 database access subprogram for the NEWLIFE insurance project. It provides SELECT, OPEN/CLOSE CURSOR, and FETCH operations on a MOVI (movements/transactions) table, supporting three treatment modes: by effect date (WC-EFF), by competence date (WC-CPZ), and without historicization (WC-NST). The program acts as a data access layer called via a service interface (IDSV0003).",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC SQL embedded DB2 (DECLARE CURSOR, OPEN, CLOSE, FETCH, SELECT INTO)",
+        "EXEC SQL INCLUDE for multiple copybooks (SQLCA, IDSV0003, IDBDMOV0, IDBVMOV1-3, LDBV2651)",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "IS INITIAL clause on PROGRAM-ID",
+        "NULL indicator variables (IND-MOV-* = -1 checks)",
+        "COMP-3 usage",
+        "Structured service interface pattern with return codes and operation type flags",
+        "Italian-language comments and variable naming"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars (602 total lines, ~443 code lines). The program is part of a larger Italian insurance system framework. The '10819X' sequence numbers visible in SQL WHERE clauses appear to be sequence number artifacts in fixed-format source. The WC-EFF and WC-CPZ sections appear to be stubs (SET IDSV0003-INVALID-OPER TO TRUE) while WC-NST is fully implemented."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8062,
+      "completion_tokens": 645,
+      "total_tokens": 8707,
+      "cost": 0.033861,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033861,
+        "upstream_inference_prompt_cost": 0.024186,
+        "upstream_inference_completions_cost": 0.009675
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.47,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:28:13Z"
+}

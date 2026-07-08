@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e99ab43a6549201881f9edf9ddd7d5f3f9e79e71",
+    "sha1_git": "e99ab43a6549201881f9edf9ddd7d5f3f9e79e71",
+    "filename": "/ORCGW12.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 95578,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e99ab43a6549201881f9edf9ddd7d5f3f9e79e71/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e99ab43a6549201881f9edf9ddd7d5f3f9e79e71/raw/"
+  },
+  "indicators": {
+    "bytes_len": 95578,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2205,
+    "blank_lines": 0,
+    "comment_lines": 554,
+    "code_lines": 1651,
+    "comment_ratio": 0.251,
+    "max_line_length": 82,
+    "avg_line_length": 42.3,
+    "long_lines_over_72": 11,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW12"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 42,
+    "call_count": 8,
+    "perform_count": 143,
+    "goto_count": 29,
+    "pic_count": 129,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "PROGRAM-ID ORCGW12",
+          "COPY 'COMMON-SPA'",
+          "COPY 'W01COMMON-SPA'",
+          "COPY 'ENUM-VALUE'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "no EXEC CICS/SQL",
+          "fixed format with Japanese EUC comments"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) printing/configuration settings for the JMA ORCA medical billing system, specifically the W12 screen for receipt print information settings",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It handles system management information settings related to receipt printing (レセプト印刷情報), including disease name classification, transfer classification, national health insurance/social insurance receipt classification, printer settings, and related configuration options. It appears to be a screen-based configuration program managing SPA (screen parameter area) data for receipt output settings.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (42 copybooks)",
+        "Japanese EUC-encoded comments throughout",
+        "SPA (Screen Parameter Area) pattern typical of ORCA window-based programs",
+        "OCCURS clauses for classification list arrays",
+        "No COMP-3 usage despite financial domain",
+        "No EXEC SQL or EXEC CICS (uses ORCA middleware instead)",
+        "Extensive revision history in comments (2000-2004)",
+        "WRK-MCP-WIDGET field suggesting MCP/GTK widget integration"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but contains Japanese EUC-JP encoded text in comments (garbled in latin-1 view). The program is part of the well-known open-source JMA ORCA medical receipt system. The online-cics program_type is approximate; ORCA uses its own MCP middleware rather than CICS, but the pattern is similar screen-based transaction processing. Source truncated at 16000 chars out of 95578 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8467,
+      "completion_tokens": 565,
+      "total_tokens": 9032,
+      "cost": 0.033876,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033876,
+        "upstream_inference_prompt_cost": 0.025401,
+        "upstream_inference_completions_cost": 0.008475
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.72,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:10:12Z"
+}

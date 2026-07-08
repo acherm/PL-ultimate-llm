@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:06760f584229a78e3183d4b1d1eeffeebe654c5a",
+    "sha1_git": "06760f584229a78e3183d4b1d1eeffeebe654c5a",
+    "filename": "/ORCHCN03V02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 71753,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:06760f584229a78e3183d4b1d1eeffeebe654c5a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:06760f584229a78e3183d4b1d1eeffeebe654c5a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 71753,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1777,
+    "blank_lines": 1,
+    "comment_lines": 518,
+    "code_lines": 1258,
+    "comment_ratio": 0.292,
+    "max_line_length": 76,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCHCN03V02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 36,
+    "call_count": 40,
+    "perform_count": 83,
+    "goto_count": 5,
+    "pic_count": 69,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), GnuCOBOL/OpenCOBOL dialect used in Japanese medical billing system",
+        "evidence": [
+          "PROGRAM-ID ORCHCN03V02",
+          "COPY directives with .INC files (CPCOMMONPRT.INC, CPSYUNOU.INC, etc.)",
+          "CALL 'ORCMCPSUB'",
+          "CALL 'ORCSPRTNM'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "ORCA-DBPATH copybook",
+          "MCP-FUNC / MCPAREA pattern typical of JMA ORCA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (shinryou-hoshuu) billing system - inpatient claim/receipt printing component (nyuuin seikyuusho print, HCN03V02)",
+        "summary": "This program is a subprogram within the JMA ORCA medical receipt software system that handles printing of inpatient medical claim receipts (nyuuin seikyuusho). It reads patient information, insurance data, hospitalization records, and payment/collection data via the ORCA MCP database interface, then formats and outputs print data for inpatient billing receipts. It iterates over a set of records passed via LINKAGE SECTION and produces formatted print output.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "36 COPY statements referencing JMA ORCA-specific copybooks (.INC files)",
+        "40 CALL statements including ORCMCPSUB (MCP database interface) and ORCSPRTNM",
+        "LINKAGE SECTION with ORCHCN03AREA parameter",
+        "PROCEDURE DIVISION USING clause (called as subprogram)",
+        "Japanese text in comments (Shift-JIS/EUC-JP encoded, rendered as latin-1 mojibake)",
+        "File output via SELECT PRT-FILE with LINE SEQUENTIAL organization",
+        "REDEFINES usage for Japanese numeric character table",
+        "OCCURS clause for self-pay item accumulation",
+        "No EXEC SQL or EXEC CICS (uses proprietary ORCA MCP layer instead)",
+        "Version history comments showing multiple revisions 2004-2007"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comment text is Japanese encoded in EUC-JP or Shift-JIS but decoded as latin-1, resulting in mojibake. The file is part of the well-known open-source JMA ORCA medical receipt system. Program name ORCHCN03V02 and copybook HCN03V02A.INC confirm this is version 02 of the HCN03 inpatient receipt print component. Source is truncated at 16000 chars out of 71753 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9659,
+      "completion_tokens": 700,
+      "total_tokens": 10359,
+      "cost": 0.039477,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039477,
+        "upstream_inference_prompt_cost": 0.028977,
+        "upstream_inference_completions_cost": 0.0105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.66,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:16:36Z"
+}

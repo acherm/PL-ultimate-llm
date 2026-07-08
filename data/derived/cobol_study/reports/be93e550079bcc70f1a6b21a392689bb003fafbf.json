@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:be93e550079bcc70f1a6b21a392689bb003fafbf",
+    "sha1_git": "be93e550079bcc70f1a6b21a392689bb003fafbf",
+    "filename": "/pw01431r.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 30943,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:be93e550079bcc70f1a6b21a392689bb003fafbf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:be93e550079bcc70f1a6b21a392689bb003fafbf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 30943,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 661,
+    "blank_lines": 82,
+    "comment_lines": 41,
+    "code_lines": 538,
+    "comment_ratio": 0.071,
+    "max_line_length": 221,
+    "avg_line_length": 45.8,
+    "long_lines_over_72": 140,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW01431R"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 10,
+    "perform_count": 52,
+    "goto_count": 0,
+    "pic_count": 95,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and $set sourceformat\"free\" directive; Brazilian Portuguese business application (JMA ORCA-style or similar Brazilian ERP/WMS system). Uses $set, $if/$end conditional compilation, external-form, local-storage section.",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "$set constant PadraoCSV",
+          "$if PadraoCSV defined",
+          "local-storage section",
+          "is external-form",
+          "value delimitador-csv",
+          "copy PCW0007.CPY"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Multi-CDD (Centro de Distribuição) warehouse/distribution center sector report for a Brazilian logistics/ERP system. Generates a report of sectors associated with multi-CDD continuous distribution units.",
+        "summary": "This program generates a report called 'Relatório de Setores Multi-CDD Contínuo' (Multi-CDD Continuous Sectors Report). It reads sector, warehouse, corporate company, and multi-CDD data files, sorts them, and outputs either a formatted print report or CSV export listing origin/destination distribution units with their associated sectors and warehouses.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$set preprocessor directives (htmlpp, sourceformat, constant)",
+        "$if/$end conditional compilation for CSV output",
+        "external-form CGI input (web-based report invocation)",
+        "local-storage section",
+        "SORT with INPUT/OUTPUT PROCEDURE",
+        "26 COPY statements for modular copybook structure",
+        "CSV output support via PadraoCSV conditional",
+        "Brazilian Portuguese identifiers and comments",
+        "decimal-point is comma (Brazilian locale)",
+        "No COMP-3 usage despite numeric fields"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars; full file is 661 lines. The htmlpp preprocessor and CGI external-form pattern suggest this is part of a Brazilian web-based ERP/WMS system. Program name PW01431R with version 'd' and OPC comment 01.04.29.04 suggest a versioned production system. All four COBOL divisions are present."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6417,
+      "completion_tokens": 550,
+      "total_tokens": 6967,
+      "cost": 0.027501,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027501,
+        "upstream_inference_prompt_cost": 0.019251,
+        "upstream_inference_completions_cost": 0.00825
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:20:51Z"
+}

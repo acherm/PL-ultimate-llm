@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:967eb01ea7b610adf411002b72b0c11447ec5c8a",
+    "sha1_git": "967eb01ea7b610adf411002b72b0c11447ec5c8a",
+    "filename": "/SAM2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6226,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:967eb01ea7b610adf411002b72b0c11447ec5c8a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:967eb01ea7b610adf411002b72b0c11447ec5c8a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6226,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 161,
+    "blank_lines": 15,
+    "comment_lines": 27,
+    "code_lines": 119,
+    "comment_ratio": 0.185,
+    "max_line_length": 72,
+    "avg_line_length": 37.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SAM2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 9,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL, copyright IBM Corporation 2018, authored by Doug Stout. Uses COMP-3, COMP, GOBACK, COPY with REPLACING, and LINKAGE SECTION with PROCEDURE DIVISION USING — all consistent with IBM Enterprise COBOL.",
+        "evidence": [
+          "LICENSED MATERIALS - PROPERTY OF IBM",
+          "(C) COPYRIGHT IBM CORPORATION 2018",
+          "COMP-3",
+          "COMP",
+          "GOBACK",
+          "COPY CUSTCOPY REPLACING ==:TAG:== BY ==CUST==",
+          "PROCEDURE DIVISION USING"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer record update processing — handles UPDATE transactions modifying customer name, account balance, and year-to-date orders, plus a CPU crunch simulation routine",
+        "summary": "SAM2 is a subprogram that processes UPDATE transactions against customer records. It validates the transaction code, field name, and action code, then applies changes to customer name, account balance, or orders YTD. It also includes a CPU-intensive loop (CRUNCH) for performance testing purposes.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal fields",
+        "LINKAGE SECTION with 4 parameters (customer record, transaction record, tran-ok flag, message)",
+        "COPY with REPLACING using tag substitution (==:TAG:== BY ==CUST==)",
+        "EVALUATE with multiple WHEN clauses (fall-through)",
+        "PERFORM VARYING loop over 12 months",
+        "GOBACK statement",
+        "CPU crunch simulation loop (300-PROCESS-CPU-CRUNCH)",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "All 4 COBOL divisions present, fixed format confirmed (max line length 72, no lines over 72). The program is clearly a called subprogram (no file I/O, uses LINKAGE SECTION). The CRUNCH routine appears to be a deliberate CPU load generator for benchmarking or demo purposes. IBM copyright 2018 suggests this is part of an IBM training or demo package (possibly IBM Z learning materials)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4083,
+      "completion_tokens": 535,
+      "total_tokens": 4618,
+      "cost": 0.020274,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020274,
+        "upstream_inference_prompt_cost": 0.012249,
+        "upstream_inference_completions_cost": 0.008025
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.58,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:35:20Z"
+}

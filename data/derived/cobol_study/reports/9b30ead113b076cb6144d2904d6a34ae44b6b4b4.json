@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9b30ead113b076cb6144d2904d6a34ae44b6b4b4",
+    "sha1_git": "9b30ead113b076cb6144d2904d6a34ae44b6b4b4",
+    "filename": "/ORCGW01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 122169,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9b30ead113b076cb6144d2904d6a34ae44b6b4b4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9b30ead113b076cb6144d2904d6a34ae44b6b4b4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 122169,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2775,
+    "blank_lines": 1,
+    "comment_lines": 808,
+    "code_lines": 1966,
+    "comment_ratio": 0.291,
+    "max_line_length": 81,
+    "avg_line_length": 43.0,
+    "long_lines_over_72": 19,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 33,
+    "call_count": 11,
+    "perform_count": 126,
+    "goto_count": 30,
+    "pic_count": 168,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY copybooks named COMMON-SPA and W01COMMON-SPA, no EXEC CICS/SQL, GUI widget references (WRK-MCP-WIDGET) suggest ORCA's MCP/GTK frontend integration.",
+        "evidence": [
+          "PROGRAM-ID ORCGW01",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"W01COMMON-SPA\"",
+          "WRK-MCP-WIDGET PIC X(64)",
+          "no EXEC CICS, no EXEC SQL",
+          "fixed-format source with Japanese EUC comments"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - system management information settings screen (W01). Manages medical institution information, classification codes, period settings, printer assignments, and various system parameters for Japanese medical billing.",
+        "summary": "This program implements the system management information settings screen (ORCGW01) for the JMA ORCA medical receipt system. It handles display and editing of various system configuration items including medical institution info, diagnosis settings, receipt printing parameters, and classification codes. It is a long-lived production program with an extensive revision history spanning 2000-2015.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "33 COPY statements referencing external copybooks",
+        "Extensive Japanese EUC-encoded comments (latin-1 decoded)",
+        "Long revision history (2000-2015) with named developers",
+        "OCCURS tables for period/classification code management",
+        "WRK-MCP-WIDGET field suggesting GTK/MCP GUI integration",
+        "No COMP-3 usage",
+        "No EXEC SQL or EXEC CICS",
+        "126 PERFORM statements, 30 GOTO statements indicating complex flow"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is encoded in EUC-JP Japanese but decoded as latin-1, causing mojibake in comment text. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Truncated at 16000 chars out of 122169 bytes total; full procedure division not visible but structural indicators confirm complete COBOL program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12275,
+      "completion_tokens": 589,
+      "total_tokens": 12864,
+      "cost": 0.04566,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04566,
+        "upstream_inference_prompt_cost": 0.036825,
+        "upstream_inference_completions_cost": 0.008835
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.93,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:38:42Z"
+}

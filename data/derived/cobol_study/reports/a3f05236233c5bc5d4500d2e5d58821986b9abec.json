@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a3f05236233c5bc5d4500d2e5d58821986b9abec",
+    "sha1_git": "a3f05236233c5bc5d4500d2e5d58821986b9abec",
+    "filename": "/2-CANDID.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10211,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a3f05236233c5bc5d4500d2e5d58821986b9abec/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a3f05236233c5bc5d4500d2e5d58821986b9abec/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10211,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 322,
+    "blank_lines": 53,
+    "comment_lines": 17,
+    "code_lines": 252,
+    "comment_ratio": 0.063,
+    "max_line_length": 70,
+    "avg_line_length": 29.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "2-CANDID"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 4,
+    "perform_count": 20,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Likely Micro Focus COBOL or compatible (e.g., GnuCOBOL) targeting a character-mode screen application; French-language program with box-drawing characters in comments, DECIMAL-POINT IS COMMA, ACCEPT/DISPLAY with LINE/POSITION/SIZE/CONTROL clauses typical of Micro Focus screen I/O extensions",
+        "evidence": [
+          "ACCEPT ... LINE ... POSITION ... SIZE ... TAB UPDATE NO BEEP CURSOR",
+          "CONTROL \"UPPER\"",
+          "CONTROL \"REVERSE\"",
+          "DISPLAY ... LINE ... POSITION ... LOW",
+          "DISPLAY ... REVERSE",
+          "DECIMAL-POINT IS COMMA",
+          "COPY directives with .CPY files",
+          "PROCEDURE DIVISION USING LINK-V LINK-RECORD"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Candidate/personnel search application — likely part of an HR or staffing management system. French-language ('RECHERCHE CANDIDATS' = candidate search).",
+        "summary": "This program (2-CANDID) implements a candidate search/browse screen. It reads candidate records via a called subprogram (6-CANDID), displays them on a character-mode screen with person details (name, birth date, start/end dates), and allows the user to select a candidate by number or matchcode. It handles paging, function-key navigation, and returns the selected candidate record to the caller.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "ACCEPT/DISPLAY with LINE/POSITION/SIZE extensions (screen I/O)",
+        "REDEFINES used for multi-length numeric input parsing (CHOIX-A1 through CHOIX-A6)",
+        "OCCURS array HE-REG for storing displayed record keys",
+        "INSPECT TALLYING for input length detection",
+        "EVALUATE for function-key dispatch",
+        "Multiple COPY directives (9 copybooks)",
+        "French-language identifiers and comments",
+        "Box-drawing characters in comment headers (CP850/latin-1)",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "File decoded as latin-1; box-drawing characters in comments suggest CP850 encoding (French DOS/Windows environment). The program is part of a larger multi-program system (calls 6-CANDID, 6-PERSON, 4-PRNOM). Dialect is ambiguous between Micro Focus and GnuCOBOL; the screen I/O extensions and CONTROL clause are consistent with both. No long lines over 72 columns confirms fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5897,
+      "completion_tokens": 634,
+      "total_tokens": 6531,
+      "cost": 0.027201,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027201,
+        "upstream_inference_prompt_cost": 0.017691,
+        "upstream_inference_completions_cost": 0.00951
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.33,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:51:05Z"
+}

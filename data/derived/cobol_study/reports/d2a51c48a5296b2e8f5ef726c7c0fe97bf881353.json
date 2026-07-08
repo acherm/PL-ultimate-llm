@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d2a51c48a5296b2e8f5ef726c7c0fe97bf881353",
+    "sha1_git": "d2a51c48a5296b2e8f5ef726c7c0fe97bf881353",
+    "filename": "/db2pgm.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 593,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d2a51c48a5296b2e8f5ef726c7c0fe97bf881353/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d2a51c48a5296b2e8f5ef726c7c0fe97bf881353/raw/"
+  },
+  "indicators": {
+    "bytes_len": 593,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 17,
+    "blank_lines": 0,
+    "comment_lines": 1,
+    "code_lines": 16,
+    "comment_ratio": 0.059,
+    "max_line_length": 71,
+    "avg_line_length": 33.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DB2PGM"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM DB2 COBOL program using EXEC SQL with DBRM (Database Request Module) processing; references zappbuild overrides for DBRM deployment, suggesting IBM z/OS build tooling (zAppBuild)",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC SQL INCLUDE ORG END-EXEC",
+          "SELECT DEPTNAME INTO :DEPTNAME FROM Q.org",
+          "zappbuild overrides (testing dbrm dp)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "IBM DB2 sample/test program querying the classic Q.ORG sample table (IBM DB2 sample database)",
+        "summary": "A minimal DB2 COBOL program that selects DEPTNAME from the classic IBM sample table Q.ORG where DEPTNUMB=15 and displays the result. It appears to be a test/demo program used to validate DBRM deployment in a zAppBuild pipeline, as indicated by the version comment and DISPLAY statements with version numbers.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "EXEC SQL embedded SQL (DB2)",
+        "EXEC SQL INCLUDE SQLCA (SQL Communications Area)",
+        "EXEC SQL INCLUDE ORG (host structure copybook)",
+        "References zAppBuild DBRM deployment testing",
+        "Classic IBM Q.ORG sample table query"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "Very short program (17 lines) with version markers (v3.a in comment, v6.4 in DISPLAY) suggesting iterative test artifact. No PIC clauses present because host variable structure is pulled in via EXEC SQL INCLUDE ORG. The Q.ORG table is the canonical IBM DB2 sample database table, strongly indicating this is a build/deployment test rather than production code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2411,
+      "completion_tokens": 466,
+      "total_tokens": 2877,
+      "cost": 0.014223,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014223,
+        "upstream_inference_prompt_cost": 0.007233,
+        "upstream_inference_completions_cost": 0.00699
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.24,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:29:32Z"
+}

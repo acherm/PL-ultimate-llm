@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fbb476223a13d5657b76ca475f875486673c7798",
+    "sha1_git": "fbb476223a13d5657b76ca475f875486673c7798",
+    "filename": "/ricalimp-art.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11176,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fbb476223a13d5657b76ca475f875486673c7798/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fbb476223a13d5657b76ca475f875486673c7798/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11176,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 319,
+    "blank_lines": 40,
+    "comment_lines": 18,
+    "code_lines": 261,
+    "comment_ratio": 0.065,
+    "max_line_length": 72,
+    "avg_line_length": 34.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "ricalimp-art"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 23,
+    "call_count": 2,
+    "perform_count": 38,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Italian ERP/order management system, likely GnuCOBOL or similar open-source COBOL on Linux; uses pipe-character inline comments (|...) which is a GnuCOBOL/OpenCOBOL extension; Italian-language identifiers and remarks; references to 'GORDCVAR' and 'CBLCONFI' suggest a specific Italian ERP framework",
+        "evidence": [
+          "pipe-character inline comments '|...' typical of GnuCOBOL",
+          "SPECIAL-NAMES decimal-point is comma",
+          "Italian remarks and variable names (impegnato, evasione, ordini)",
+          "copy files with .sl and .fd extensions",
+          "cancel 'wprogmag' after call",
+          "PROGRAM-ID ricalimp-art"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Italian order management and warehouse commitment recalculation system; recalculates committed quantities (impegnato) from unfulfilled orders and uninvoiced credit notes for specific articles passed via linkage",
+        "summary": "This program recalculates warehouse commitment quantities (impegnato) for specific articles passed in the linkage section. It zeroes out existing commitment records in PROGMAG, then recomputes from master orders (MTORDINI/MRORDINI) and unfulfilled/uninvoiced orders (TORDINI/RORDINI). It is called exclusively from GORDCVAR when a flag in CBLCONFI is set to 'S'.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "pipe-character inline comments (GnuCOBOL extension)",
+        "DECLARATIVES section with USE AFTER ERROR for file locking",
+        "SPECIAL-NAMES decimal-point is comma (European locale)",
+        "LINKAGE SECTION with array of articles passed from caller",
+        "SET condition-name TO TRUE/FALSE pattern",
+        "SEARCH statement on linkage array",
+        "UNLOCK statement for record locking",
+        "23 COPY statements for file definitions",
+        "Italian-language identifiers and comments",
+        "Environment variable check via ACCEPT FROM ENVIRONMENT"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "The pipe-character (|) used as inline comment delimiter is a GnuCOBOL/OpenCOBOL extension not standard COBOL; this strongly suggests GnuCOBOL dialect. The program is part of a larger Italian ERP system for order/warehouse management. LUBEXX-prefixed comment lines suggest version-specific annotations. The .sl and .fd copy file extensions are consistent with GnuCOBOL SELECT/FD copybook conventions."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5315,
+      "completion_tokens": 638,
+      "total_tokens": 5953,
+      "cost": 0.025515,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025515,
+        "upstream_inference_prompt_cost": 0.015945,
+        "upstream_inference_completions_cost": 0.00957
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.86,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:08:54Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d24ef951694638c02d105ef26589bd42c548577f",
+    "sha1_git": "d24ef951694638c02d105ef26589bd42c548577f",
+    "filename": "/tempcbl.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9534,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d24ef951694638c02d105ef26589bd42c548577f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d24ef951694638c02d105ef26589bd42c548577f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9534,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 225,
+    "blank_lines": 0,
+    "comment_lines": 39,
+    "code_lines": 186,
+    "comment_ratio": 0.173,
+    "max_line_length": 75,
+    "avg_line_length": 41.4,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TREI0012"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 10,
+    "pic_count": 31,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Mainframe-style COBOL with RECORDING MODE F, LABEL RECORD STANDARD, ASSIGN TO UT-S-DISKFILJ style DDnames, and DECIMAL-POINT IS COMMA; likely IBM z/OS or compatible environment",
+        "evidence": [
+          "RECORDING MODE F",
+          "LABEL RECORD STANDARD",
+          "ASSIGN TO UT-S-DISKFILJ",
+          "DECIMAL-POINT IS COMMA",
+          "FILE STATUS two-character codes '00'/'10'"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "File conversion/distribution utility reading a sequential SAM file and writing records to both an ISAM file and a DISKFIL output file, splitting fields between the two outputs",
+        "summary": "TREI0012 reads records from a sequential SAM file (SAMFILE) and distributes/splits the data into two output files: an ISAM file and a DISKFIL. It counts records processed and displays a summary report at end of job.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "RECORDING MODE F on all FDs",
+        "LABEL RECORD STANDARD",
+        "GO TO used for error handling (ERROR-ROUTINE pattern)",
+        "Two-character FILE STATUS checks",
+        "DISPLAY-based end-of-job report",
+        "One long line over 72 chars (stray comment fragment in DISPLAY statement)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "Author comment in Portuguese-style naming (W. B. RIBEIRO)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "The program has a minor bug: in 035-RCORD-DISKFIL the file status check uses WS-FS-ISAMFLE instead of WS-FS-DKFIL. One DISPLAY line exceeds 72 characters with what appears to be a stray comment fragment '        -*'. The author name and date comments suggest Brazilian origin (rewritten 2020, originally 2013). Dialect is assessed as IBM mainframe style but could also run under GnuCOBOL with minor adjustments."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5218,
+      "completion_tokens": 534,
+      "total_tokens": 5752,
+      "cost": 0.023664,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023664,
+        "upstream_inference_prompt_cost": 0.015654,
+        "upstream_inference_completions_cost": 0.00801
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.15,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:54:37Z"
+}

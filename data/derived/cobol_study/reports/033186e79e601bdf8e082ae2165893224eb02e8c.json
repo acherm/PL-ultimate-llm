@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:033186e79e601bdf8e082ae2165893224eb02e8c",
+    "sha1_git": "033186e79e601bdf8e082ae2165893224eb02e8c",
+    "filename": "/SSGROLE.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 24631,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:033186e79e601bdf8e082ae2165893224eb02e8c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:033186e79e601bdf8e082ae2165893224eb02e8c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 24631,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 827,
+    "blank_lines": 43,
+    "comment_lines": 0,
+    "code_lines": 784,
+    "comment_ratio": 0.0,
+    "max_line_length": 67,
+    "avg_line_length": 28.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 2,
+    "program_ids": [
+      "SSGROLE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 25,
+    "perform_count": 99,
+    "goto_count": 44,
+    "pic_count": 54,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Appears to be part of the JMA ORCA or similar Spanish-language open-source ERP/management system; uses GnuCOBOL extensions such as COMP-X, IGNORE LOCK, UNLOCK, and IS EXTERNAL clauses. Spanish identifiers and comments throughout.",
+        "evidence": [
+          "COMP-X usage (PIC 9 COMP-X)",
+          "IS EXTERNAL clause on working-storage items",
+          "UNLOCK FSGROLE statement",
+          "READ ... WITH IGNORE LOCK",
+          "CALL 'Leer', CALL 'Escribir', CALL 'CogeTrabajo' - runtime helper pattern typical of GnuCOBOL open-source systems",
+          "Spanish identifiers: ESCRIBIBLE, USUARIO, ERRORES, NOMBREFSGROLE, ABIERTO"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Server-side file handler for an ISAM/indexed file named FSGROLE (likely a roles/security table in a Spanish ERP or management system). Acts as a subprogram server dispatching CRUD and navigation operations on the file.",
+        "summary": "SSGROLE is a subprogram that acts as a file-server for the indexed file FSGROLE, handling open/close, read, write, rewrite, delete, start (sequential positioning), next/previous record navigation, and bulk get/set operations. It communicates via a pipe-delimited protocol (ESCRIBIBLE flag selects between pipe calls and SYSIN/SYSOUT). It also supports audit tracing via SRUTRAZA.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "IS EXTERNAL working-storage items (ESCRIBIBLE, USUARIO)",
+        "COMP-X numeric usage",
+        "UNLOCK statement for record locking",
+        "READ ... WITH IGNORE LOCK",
+        "UNSTRING with pipe-delimited protocol",
+        "CALL 'SRUTRAZA' for audit tracing",
+        "COPY directives for file SELECT and FD (FSGROLE-SEL, FSGROLE-FD)",
+        "Spanish-language identifiers throughout",
+        "EVALUATE dispatch on operation codes (TODOS, REA, WRI, REW, DEL, NEX, PRE, etc.)",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source truncated at 16000 chars; full file is 827 lines. No PROCEDURE DIVISION header visible (only PROGRAMA SECTION), which is unusual but valid in some dialects. Zero comment lines is suspicious but consistent with the mechanical scan. Dialect assigned as gnucobol based on COMP-X and IGNORE LOCK, but could be Micro Focus; Spanish context and open-source ERP pattern lean toward GnuCOBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7685,
+      "completion_tokens": 678,
+      "total_tokens": 8363,
+      "cost": 0.033225,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033225,
+        "upstream_inference_prompt_cost": 0.023055,
+        "upstream_inference_completions_cost": 0.01017
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.87,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:13:01Z"
+}

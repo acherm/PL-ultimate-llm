@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0765059e443b710ce96017f8e4195ba32ca657bf",
+    "sha1_git": "0765059e443b710ce96017f8e4195ba32ca657bf",
+    "filename": "/CWXTCOB.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 23185,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0765059e443b710ce96017f8e4195ba32ca657bf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0765059e443b710ce96017f8e4195ba32ca657bf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 23185,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 529,
+    "blank_lines": 5,
+    "comment_lines": 16,
+    "code_lines": 508,
+    "comment_ratio": 0.031,
+    "max_line_length": 72,
+    "avg_line_length": 42.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CWXTCOB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 5,
+    "perform_count": 24,
+    "goto_count": 0,
+    "pic_count": 57,
+    "comp3_count": 7,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Compuware XPEDITER/TSO demo program (CWXTCOB); uses LINKAGE SECTION with PARMINFO, LABEL RECORDS, BLOCK CONTAINS, RECORDING MODE IS F, COMP-3, 88-level condition names, SET index statements — all classic IBM mainframe COBOL conventions",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "LABEL RECORDS ARE STANDARD",
+          "COMP-3 usage",
+          "LINKAGE SECTION with PARM-LTH PIC S9(4) COMP",
+          "GOBACK statement",
+          "CALL 'CWXTDATE' / CALL 'CWXTSUBC'",
+          "COPY EMPFILE / COPY RPTEMP / COPY RPTREGN"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Compuware XPEDITER/TSO training/demo — processes employee wage data (hourly, sales, management) and produces an Employee Compensation Report and a Regional Sales Report",
+        "summary": "CWXTCOB is the standard Compuware XPEDITER/TSO COBOL demo program used in training sessions. It reads an employee file containing hourly, sales, and management records, calculates compensation (wages, overtime, commissions), stores results in a hold table, and prints two reports: an Employee Compensation Report and a Regional Sales Report. It also demonstrates common abend scenarios (S0C7, table overflow) controlled via a PARM field.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed-decimal fields for accumulators and totals",
+        "Two-dimensional OCCURS table (HOLD-TABLE) with SET/indexed access",
+        "LINKAGE SECTION PARM processing with length field PIC S9(4) COMP",
+        "CALL to external subprograms CWXTSUBC (commission calc) and CWXTDATE (date/service calc)",
+        "COPY statements for EMPFILE, RPTEMP, RPTREGN copybooks",
+        "88-level condition names extensively used",
+        "REDEFINES for date fields and region name table",
+        "Intentional error scenarios (S0C7, table overflow) for debugger training",
+        "GOBACK instead of STOP RUN"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (529 total lines); the PROCEDURE DIVISION is partially visible but the overall structure is clear. This is a well-known Compuware XPEDITER demo program widely distributed with mainframe debugging tools. Fixed format confirmed by max_line_length=72 and no lines over 72."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7205,
+      "completion_tokens": 652,
+      "total_tokens": 7857,
+      "cost": 0.031395,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031395,
+        "upstream_inference_prompt_cost": 0.021615,
+        "upstream_inference_completions_cost": 0.00978
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.99,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:28:38Z"
+}

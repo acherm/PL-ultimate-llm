@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e46833d6011bf69a466ae188f280d9f7f62b76d0",
+    "sha1_git": "e46833d6011bf69a466ae188f280d9f7f62b76d0",
+    "filename": "/prog.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2315,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e46833d6011bf69a466ae188f280d9f7f62b76d0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e46833d6011bf69a466ae188f280d9f7f62b76d0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2315,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 71,
+    "blank_lines": 11,
+    "comment_lines": 8,
+    "code_lines": 52,
+    "comment_ratio": 0.133,
+    "max_line_length": 72,
+    "avg_line_length": 31.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "prog"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (OpenCOBOL) based on EXEC SQL syntax with CONNECT ... IDENTIFIED BY ... USING and placeholder tokens; could also be Oracle Pro*COBOL style",
+        "evidence": [
+          "EXEC SQL BEGIN DECLARE SECTION END-EXEC",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME",
+          "DISCONNECT ALL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Database connectivity test using SQL CONNECT and DISCONNECT with placeholder credentials",
+        "summary": "This program tests SQL database connection and disconnection. It attempts to connect using parameterized credentials (with template placeholders like <|DB_NAME|>), then disconnects, then retries with invalid credentials, displaying SQLCODE and SQLSTATE after each operation.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "EXEC SQL BEGIN DECLARE SECTION / END DECLARE SECTION",
+        "EXEC SQL INCLUDE SQLCA",
+        "EXEC SQL CONNECT ... IDENTIFIED BY ... USING (Oracle-style syntax)",
+        "EXEC SQL DISCONNECT ALL",
+        "Template placeholder tokens in string literals (<|DB_NAME|>, <|DB_HOST|>, etc.)",
+        "DISPLAY SQLCODE / SQLSTATE for status checking"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The presence of template placeholder tokens like <|DB_NAME|>, <|DB_HOST|>, <|DB_PORT|>, <|DB_USER|>, <|DB_PASSWORD|> suggests this is a generated or templated test/demo program, possibly from a tutorial or automated test harness. The Oracle-style CONNECT syntax (IDENTIFIED BY ... USING) is notable. No ENVIRONMENT DIVISION present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2773,
+      "completion_tokens": 442,
+      "total_tokens": 3215,
+      "cost": 0.014949,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014949,
+        "upstream_inference_prompt_cost": 0.008319,
+        "upstream_inference_completions_cost": 0.00663
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.1,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:30:41Z"
+}

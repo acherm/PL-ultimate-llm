@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:547ff928a04b4676f83269cd97235baaecb9f8cd",
+    "sha1_git": "547ff928a04b4676f83269cd97235baaecb9f8cd",
+    "filename": "/PW04267R.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 56553,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:547ff928a04b4676f83269cd97235baaecb9f8cd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:547ff928a04b4676f83269cd97235baaecb9f8cd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 56553,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1095,
+    "blank_lines": 54,
+    "comment_lines": 46,
+    "code_lines": 995,
+    "comment_ratio": 0.044,
+    "max_line_length": 240,
+    "avg_line_length": 50.6,
+    "long_lines_over_72": 158,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PW04267R"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 45,
+    "call_count": 12,
+    "perform_count": 91,
+    "goto_count": 5,
+    "pic_count": 135,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and free-format source; Brazilian ERP/fiscal system (Nota Fiscal de Serviço). Uses $set preprocess(htmlpp) and $set sourceformat\"free\" compiler directives typical of GnuCOBOL-based web/CGI COBOL systems. CGI external-form linkage pattern with PCW9xx copybooks.",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "cgi-input is external-form",
+          "identified by \"opcaoRel\"",
+          "copy PCW900.CPY",
+          "copy PCW990.CPY",
+          "value of file-id is wid-arqwor",
+          "lock mode is manual"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian fiscal/tax reporting - Nota Fiscal de Serviço (Service Invoice) report with tax breakdowns (ICMS, IRRF, PIS, COFINS, ISS, CSLL)",
+        "summary": "This program generates a Service Invoice (Nota Fiscal de Serviço) report for a Brazilian ERP system. It processes service invoice data including tax values (ICMS, IRRF, PIS, COFINS, ISS, CSLL) and produces paginated output with filtering by supplier, operation, CFO code, and date range. It supports consolidation views and multiple report grouping options (general, by supplier, by operation).",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "$set preprocess(htmlpp) CGI preprocessor directive",
+        "$set sourceformat free",
+        "external-form CGI input section with 'identified by' HTML field mapping",
+        "45 COPY statements for modular copybook architecture",
+        "decimal-point is comma (Brazilian locale)",
+        "indexed file with dynamic access and manual lock mode",
+        "local-storage section",
+        "linkage section with lnk-par",
+        "Brazilian tax fields: ICMS, IRRF, PIS, COFINS, ISS, CSLL",
+        "Portuguese-language identifiers and comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars; full program is 1095 lines. The htmlpp preprocessor and external-form CGI pattern are characteristic of a Brazilian GnuCOBOL web application framework (likely the same family as JMA ORCA or a Brazilian ERP vendor). No EXEC CICS present; 'online' classification is based on CGI/web interaction pattern rather than CICS. Decoded as latin-1 due to Portuguese accented characters (e.g. 'Ítens', 'inválido')."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7001,
+      "completion_tokens": 658,
+      "total_tokens": 7659,
+      "cost": 0.030873,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030873,
+        "upstream_inference_prompt_cost": 0.021003,
+        "upstream_inference_completions_cost": 0.00987
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.74,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:31:31Z"
+}

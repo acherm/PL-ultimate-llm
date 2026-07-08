@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:356f96dca2d4b573f6624c1022216db7bad157e3",
+    "sha1_git": "356f96dca2d4b573f6624c1022216db7bad157e3",
+    "filename": "/ORCR0840.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 635807,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:356f96dca2d4b573f6624c1022216db7bad157e3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:356f96dca2d4b573f6624c1022216db7bad157e3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 635807,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 13080,
+    "blank_lines": 0,
+    "comment_lines": 2135,
+    "code_lines": 10945,
+    "comment_ratio": 0.163,
+    "max_line_length": 80,
+    "avg_line_length": 47.6,
+    "long_lines_over_72": 57,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0840"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 49,
+    "call_count": 9,
+    "perform_count": 550,
+    "goto_count": 4,
+    "pic_count": 566,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), developed by NaCl for Japan Medical Association. Compiled with GnuCOBOL/OpenCOBOL on Linux. No COMP-3, no EXEC SQL/CICS, uses INDEXED files with DYNAMIC access.",
+        "evidence": [
+          "PROGRAM-ID ORCR0840",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "SELECT ... ASSIGN ... ORGANIZATION IS INDEXED ACCESS MODE IS DYNAMIC",
+          "no COMP-3, no EXEC SQL, no EXEC CICS",
+          "49 COPY statements typical of GnuCOBOL ORCA codebase"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - specifically point-score aggregation for hospitalization (入院) claims including nursing care and self-pay categories",
+        "summary": "ORCR0840 is a large batch program in the JMA ORCA medical receipt software suite. It processes and aggregates diagnosis/treatment point scores by category for inpatient (hospitalization) medical insurance claims. The program handles complex Japanese medical billing rules including nursing care fees, self-pay calculations, and various special treatment codes across many revision cycles from 2003 to 2013.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "49 COPY statements indicating heavy use of shared copybooks",
+        "550 PERFORM statements indicating structured procedural decomposition",
+        "INDEXED files with DYNAMIC access mode (ISAM-style)",
+        "No COMP-3 packed decimal (uses standard numeric PIC)",
+        "No EXEC SQL or EXEC CICS",
+        "Extensive Japanese-language comments (EUC-JP/latin-1 encoded)",
+        "Long revision history spanning 2003-2013 with named developers (NACL team)",
+        "4 GOTO statements (minimal)",
+        "13080 lines - large production program"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments contain Japanese text encoded in EUC-JP (multibyte characters appear as latin-1 sequences). This is the JMA ORCA open-source medical receipt system, well-known in Japanese healthcare IT. The program name ORCR0840 follows the ORCA naming convention. Source is fixed-format COBOL with lines up to 80 characters (57 lines exceed column 72, likely due to long data names or comments)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 16448,
+      "completion_tokens": 616,
+      "total_tokens": 17064,
+      "cost": 0.058584,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.058584,
+        "upstream_inference_prompt_cost": 0.049344,
+        "upstream_inference_completions_cost": 0.00924
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.85,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:30:51Z"
+}

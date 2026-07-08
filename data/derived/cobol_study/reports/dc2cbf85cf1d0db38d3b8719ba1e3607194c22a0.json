@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dc2cbf85cf1d0db38d3b8719ba1e3607194c22a0",
+    "sha1_git": "dc2cbf85cf1d0db38d3b8719ba1e3607194c22a0",
+    "filename": "/ORCGQAPI01S02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 58596,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dc2cbf85cf1d0db38d3b8719ba1e3607194c22a0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dc2cbf85cf1d0db38d3b8719ba1e3607194c22a0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 58596,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1501,
+    "blank_lines": 1,
+    "comment_lines": 429,
+    "code_lines": 1071,
+    "comment_ratio": 0.286,
+    "max_line_length": 74,
+    "avg_line_length": 38.0,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGQAPI01S02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 21,
+    "perform_count": 73,
+    "goto_count": 0,
+    "pic_count": 51,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA (Japan Medical Association standard receipt software) - GnuCOBOL-based medical billing system, program ORCGQAPI01S02 is a patient search API subprogram",
+        "evidence": [
+          "PROGRAM-ID ORCGQAPI01S02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY CPORCSCOMMON.INC",
+          "CALL ORCSMCNDATE",
+          "CALL ORCSNUM",
+          "COPY CPFINDV3RES.INC",
+          "COPY CPFINDV3REQ.INC",
+          "COPY COMMON-SPA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt/billing software - patient search API module (patient inquiry via API interface)",
+        "summary": "This is a subprogram in the JMA ORCA medical receipt system that implements a patient search API (patient inquiry). It validates API parameters, checks patient records, handles range-based pagination of results, and formats XML response data for the FindV3 API interface.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "29 COPY statements referencing ORCA-specific copybooks",
+        "21 CALL statements to ORCA utility subprograms (ORCSMCNDATE, ORCSNUM, etc.)",
+        "LINKAGE SECTION with SCRAREA, XML-FINDV3REQ, SPA-AREA parameters",
+        "FUNCTION TRIM usage (COBOL-2002 intrinsic function)",
+        "XML response formatting via CPFINDV3RES.INC",
+        "Japanese comments encoded in latin-1 (Shift-JIS/EUC-JP garbled)",
+        "No EXEC SQL or EXEC CICS - file-based database access via subprogram calls",
+        "Range-based pagination logic (RANGE-FROM, RANGE-TO)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Source is truncated at 16000 chars out of 58596 bytes total (1501 lines)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8106,
+      "completion_tokens": 572,
+      "total_tokens": 8678,
+      "cost": 0.032898,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032898,
+        "upstream_inference_prompt_cost": 0.024318,
+        "upstream_inference_completions_cost": 0.00858
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:50:36Z"
+}

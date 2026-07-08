@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9e94a9429e02b3eb142826f6e21d9ac23dd48f17",
+    "sha1_git": "9e94a9429e02b3eb142826f6e21d9ac23dd48f17",
+    "filename": "/FCBOOK.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1591,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9e94a9429e02b3eb142826f6e21d9ac23dd48f17/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9e94a9429e02b3eb142826f6e21d9ac23dd48f17/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1591,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 47,
+    "blank_lines": 6,
+    "comment_lines": 3,
+    "code_lines": 38,
+    "comment_ratio": 0.073,
+    "max_line_length": 71,
+    "avg_line_length": 32.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 1,
+    "program_ids": [
+      "FCBOOK"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 9,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/TS program using EXEC CICS GET CONTAINER/CHANNEL (CICS channels and containers API, introduced in CICS TS 3.1+), COMP-5 SYNC data items typical of IBM Enterprise COBOL",
+        "evidence": [
+          "EXEC CICS GET CONTAINER",
+          "EXEC CICS READ FILE",
+          "EXEC CICS PUT CONTAINER",
+          "CHANNEL('QUARY-BOOK')",
+          "COMP-5 SYNC",
+          "RESP(RESP-CODE)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Book data retrieval and storage via CICS channels/containers, likely a demo or tutorial for CICS-Java interoperability",
+        "summary": "This CICS online program retrieves book data from a CICS container/channel (passed from a Java program), reads a corresponding record from a VSAM file named BOOK using the book ID as the key, then puts the retrieved data back into a CICS container. It appears to be a simple demonstration of CICS channel-based Java-to-COBOL interoperability.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS GET CONTAINER / CHANNEL (CICS TS 3.1+ channels and containers API)",
+        "EXEC CICS READ FILE (VSAM file access)",
+        "EXEC CICS PUT CONTAINER",
+        "COMP-5 SYNC (IBM-specific binary data type)",
+        "RESP condition handling",
+        "Comment noting LINK FROM JAVA PROGRAM"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "Only PROCEDURE DIVISION is flagged as present by mechanical indicators, but the source clearly contains all four divisions. The program is very short (47 lines) and appears to be a demo/tutorial for CICS Java interoperability. The RESP2-CODE and RESP2-STR fields are declared but never used. Hardcoded MOVE 1234 TO PAGECOUNT suggests demo/test code rather than production."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2695,
+      "completion_tokens": 502,
+      "total_tokens": 3197,
+      "cost": 0.015615,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015615,
+        "upstream_inference_prompt_cost": 0.008085,
+        "upstream_inference_completions_cost": 0.00753
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.24,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:44:49Z"
+}

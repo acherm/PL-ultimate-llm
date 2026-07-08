@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:12cf47bb5a32421e3d1e33cc1e0dde16f7fb5024",
+    "sha1_git": "12cf47bb5a32421e3d1e33cc1e0dde16f7fb5024",
+    "filename": "/SOKATU3415.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 99560,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:12cf47bb5a32421e3d1e33cc1e0dde16f7fb5024/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:12cf47bb5a32421e3d1e33cc1e0dde16f7fb5024/raw/"
+  },
+  "indicators": {
+    "bytes_len": 99560,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2408,
+    "blank_lines": 0,
+    "comment_lines": 869,
+    "code_lines": 1539,
+    "comment_ratio": 0.361,
+    "max_line_length": 77,
+    "avg_line_length": 40.3,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU3415"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 9,
+    "perform_count": 136,
+    "goto_count": 2,
+    "pic_count": 123,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with .INC copybooks and MCPAREA/MCPDATA patterns typical of ORCA",
+        "evidence": [
+          "PROGRAM-ID SOKATU3415",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY CPRCF010.INC / CPCOMMONSHELL.INC / MCPAREA / MCPDATA.INC",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "SELECT ... ASSIGN RECEUPD ORGANIZATION IS LINE SEQUENTIAL",
+          "no EXEC CICS / no EXEC SQL / no COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) processing for Hiroshima/広域連合 regional federation; generates claim submission documents (診療報酬請求書)",
+        "summary": "SOKATU3415 is a batch program in the JMA ORCA medical receipt system that aggregates and prints insurance claim summary reports for the Hiroshima wide-area federation (広域連合). It reads receipt update files, accumulates counts and amounts by insurance category (公費, 後期高齢者, 福祉, etc.), and writes formatted output records for claim submission.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "29 COPY statements referencing ORCA-specific .INC copybooks",
+        "LINKAGE SECTION with COMMAND-PARAM (called as subprogram from shell)",
+        "OCCURS tables for insurance category aggregation (SUM-KOH-TBL OCCURS 100)",
+        "REDEFINES on hospital name/address fields",
+        "Extensive Japanese-language comments (EUC-JP encoded, decoded as latin-1)",
+        "Version history spanning 2008-2016 with named authors",
+        "PERFORM...UNTIL main loop structure",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (appears garbled in latin-1 view). This is standard for JMA ORCA source files. The program is part of a well-known open-source Japanese medical billing system. Source truncated at 16000 chars; full file is 2408 lines / ~99KB."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10068,
+      "completion_tokens": 627,
+      "total_tokens": 10695,
+      "cost": 0.039609,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039609,
+        "upstream_inference_prompt_cost": 0.030204,
+        "upstream_inference_completions_cost": 0.009405
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.23,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:17:50Z"
+}

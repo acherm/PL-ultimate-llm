@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:92d614f19e151e5720e7c7fe9fac290cbaf6e54a",
+    "sha1_git": "92d614f19e151e5720e7c7fe9fac290cbaf6e54a",
+    "filename": "/ORCR0104.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 248748,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:92d614f19e151e5720e7c7fe9fac290cbaf6e54a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:92d614f19e151e5720e7c7fe9fac290cbaf6e54a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 248748,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5633,
+    "blank_lines": 3,
+    "comment_lines": 1234,
+    "code_lines": 4396,
+    "comment_ratio": 0.219,
+    "max_line_length": 116,
+    "avg_line_length": 43.2,
+    "long_lines_over_72": 33,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0104"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 43,
+    "call_count": 89,
+    "perform_count": 232,
+    "goto_count": 20,
+    "pic_count": 312,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCR0104 creates receipt print files for health insurance billing.",
+        "evidence": [
+          "PROGRAM-ID ORCR0104",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY directives with .INC copybooks (CPRCF002.INC, CPCOMMONSHELL.INC, HCM09V02.INC etc.)",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "No EXEC CICS or EXEC SQL",
+          "Fixed-format source with Japanese EUC-JP encoded comments"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) billing system — creates print files for health insurance claim submissions (医保レセプト印刷用ファイル作成)",
+        "summary": "ORCR0104 is a batch program in the JMA ORCA standard medical receipt software system. It reads multiple indexed receipt data files (RECE02, RECE031, RECE061, RECE09, RECE11) and generates output files used for printing health insurance claim receipts (レセプト). It handles various insurance types, continuation sheets, and customization items.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "43 COPY statements referencing .INC copybooks",
+        "89 CALL statements indicating heavy subprogram use",
+        "232 PERFORM statements",
+        "ORGANIZATION IS INDEXED with DYNAMIC access on multiple files",
+        "Japanese EUC-JP encoded comments throughout",
+        "REPLACING clause used extensively in COPY statements",
+        "No COMP-3 usage despite financial calculations",
+        "Error file (RECEERR) for logging",
+        "OCCURS tables for insurance history and prefecture codes"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (garbled in latin-1 view). This is part of the well-known open-source JMA ORCA (日医標準レセプトソフト) system. Source is truncated at 16000 chars out of 248748 bytes total. No COMP-3 is unusual for financial data but consistent with ORCA codebase style. Long lines (33 over 72) suggest some free-form extensions or comments but mechanical indicator says fixed format."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10389,
+      "completion_tokens": 615,
+      "total_tokens": 11004,
+      "cost": 0.040392,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040392,
+        "upstream_inference_prompt_cost": 0.031167,
+        "upstream_inference_completions_cost": 0.009225
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.15,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:15:34Z"
+}

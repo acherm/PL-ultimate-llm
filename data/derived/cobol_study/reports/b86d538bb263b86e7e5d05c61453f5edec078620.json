@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b86d538bb263b86e7e5d05c61453f5edec078620",
+    "sha1_git": "b86d538bb263b86e7e5d05c61453f5edec078620",
+    "filename": "/ph070064.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10727,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b86d538bb263b86e7e5d05c61453f5edec078620/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b86d538bb263b86e7e5d05c61453f5edec078620/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10727,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 236,
+    "blank_lines": 32,
+    "comment_lines": 31,
+    "code_lines": 173,
+    "comment_ratio": 0.152,
+    "max_line_length": 187,
+    "avg_line_length": 44.5,
+    "long_lines_over_72": 60,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PH070064"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 13,
+    "call_count": 1,
+    "perform_count": 18,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor and OO-style REPOSITORY clause (class EscreveJson as 'PY990002', class Utils as 'PY990004'); part of the Promax retail/distribution system (Brazilian Portuguese). Uses $set preprocess(htmlpp) and EXEC HTML directives for web UI generation.",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "exec html ... end-exec",
+          "class EscreveJson as \"PY990002\"",
+          "copy PCW900.CPY. *> Work do Sistema Promax",
+          "decimal-point is comma"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian retail/distribution system (Promax) - PDV (Point of Sale) segmentation module for beer/beverage route sales management",
+        "summary": "This program implements a web-based screen (via htmlpp preprocessor) for PDV (Point of Sale) segmentation in the Promax retail distribution system. It reads corporate branch data and beer quantity parameters, then renders an HTML form allowing users to import a CSV file of small PDVs and trigger recalculation of PDV segmentation based on average sales over the last 3 closed months. It distinguishes between 'PDV Pequeno' (small) and 'PDV Grande' (large) outlets served by route sectors.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC HTML ... END-EXEC (htmlpp preprocessor for web UI generation)",
+        "REPOSITORY clause with OO class references (EscreveJson, Utils)",
+        "$set compiler directives (GnuCOBOL)",
+        "13 COPY statements for modular copybook architecture",
+        "decimal-point is comma (Brazilian locale)",
+        "external-form CGI input section",
+        "JavaScript integration via EXEC HTML",
+        "Portuguese-language comments and UI text",
+        "78-level constant for version",
+        "CALL with dynamic program name (f-call-retorno)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program_type is set to 'online-cics' as the closest match for a web/CGI online program; it is actually a CGI/htmlpp web program, not CICS. The EXEC HTML blocks are processed by the htmlpp preprocessor, not a CICS translator. Long lines (60 over 72 chars) are consistent with free-format source. Brazilian Portuguese throughout. Part of the Promax commercial distribution system."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4826,
+      "completion_tokens": 611,
+      "total_tokens": 5437,
+      "cost": 0.023643,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023643,
+        "upstream_inference_prompt_cost": 0.014478,
+        "upstream_inference_completions_cost": 0.009165
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.73,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:06:09Z"
+}

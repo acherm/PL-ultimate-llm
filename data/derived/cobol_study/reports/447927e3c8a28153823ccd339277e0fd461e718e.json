@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:447927e3c8a28153823ccd339277e0fd461e718e",
+    "sha1_git": "447927e3c8a28153823ccd339277e0fd461e718e",
+    "filename": "/ORCR0035.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 29501,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:447927e3c8a28153823ccd339277e0fd461e718e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:447927e3c8a28153823ccd339277e0fd461e718e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 29501,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 702,
+    "blank_lines": 0,
+    "comment_lines": 239,
+    "code_lines": 463,
+    "comment_ratio": 0.34,
+    "max_line_length": 74,
+    "avg_line_length": 41.0,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0035"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 12,
+    "call_count": 9,
+    "perform_count": 28,
+    "goto_count": 0,
+    "pic_count": 28,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING, INDEXED files, LINKAGE SECTION with COMMAND-PARAM, and CALL to ORCSJOB subprogram",
+        "evidence": [
+          "PROGRAM-ID ORCR0035",
+          "COPY 'CPRCF002.INC'",
+          "COPY 'COMMON-SPA'",
+          "CALL 'ORCSJOB'",
+          "SELECT RECE02-FILE ASSIGN RECE01PARA ORGANIZATION IS INDEXED",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software — public health insurance claim point calculation and separation processing",
+        "summary": "This program (ORCR0035) performs public-expense (公費) point separation and determination for medical insurance claims. It reads receipt intermediate files (RECE02, RECE04, RECE05), calculates public-expense separation indices, rewrites RECE04 records, and edits RECE05 records. It is part of the JMA ORCA open-source receipt billing system used by Japanese medical institutions.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file I/O with DYNAMIC access and START/READ NEXT",
+        "COPY with REPLACING for file parameter area reuse",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "CALL to ORCSJOB job-management subprogram",
+        "CALL to MCP (MCPDATA/CPORCMCP) DB access layer",
+        "Cancellation check loop (CNT-IN-CANCEL = 50)",
+        "Japanese comments encoded in EUC-JP (latin-1 decoded as mojibake)",
+        "PERFORM VARYING with complex UNTIL conditions",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP DB layer"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source comments are in Japanese EUC-JP encoding, decoded here as latin-1 producing mojibake. The program is part of the well-known open-source JMA ORCA receipt system. Source is truncated at 16000 chars (~55% of file); remaining code likely contains additional section logic. No COMP-3 usage detected despite financial calculations — points may be stored as display numerics."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8570,
+      "completion_tokens": 640,
+      "total_tokens": 9210,
+      "cost": 0.03531,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03531,
+        "upstream_inference_prompt_cost": 0.02571,
+        "upstream_inference_completions_cost": 0.0096
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:13:20Z"
+}

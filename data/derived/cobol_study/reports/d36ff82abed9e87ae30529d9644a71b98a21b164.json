@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d36ff82abed9e87ae30529d9644a71b98a21b164",
+    "sha1_git": "d36ff82abed9e87ae30529d9644a71b98a21b164",
+    "filename": "/ORCGW24.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 114417,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d36ff82abed9e87ae30529d9644a71b98a21b164/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d36ff82abed9e87ae30529d9644a71b98a21b164/raw/"
+  },
+  "indicators": {
+    "bytes_len": 114417,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2989,
+    "blank_lines": 2,
+    "comment_lines": 911,
+    "code_lines": 2076,
+    "comment_ratio": 0.305,
+    "max_line_length": 74,
+    "avg_line_length": 37.3,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGW24"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 42,
+    "call_count": 11,
+    "perform_count": 170,
+    "goto_count": 72,
+    "pic_count": 73,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCGW24 handles hospital admission basic information settings.",
+        "evidence": [
+          "PROGRAM-ID ORCGW24",
+          "COPY 'COMMON-SPA'",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "EXEC SQL absent, EXEC CICS absent",
+          "fixed format, max line 74"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (claims) processing system - hospital/clinic admission basic information settings screen (W24)",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It handles the screen logic for hospital admission basic information settings (入院基本情報設定), managing combo-box initialization, screen transitions, data entry validation, and SPA (scratchpad area) management for the W24 screen window.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "42 COPY statements referencing ORCA-specific copybooks (MCPAREA, ORCA-SPA, LINKAREA, W01-W27 screen areas)",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA parameters",
+        "EVALUATE MCP-STATUS/MCP-EVENT for event-driven screen handling",
+        "Japanese comments encoded in EUC-JP/latin-1",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP (Medical Care Platform) interface",
+        "170 PERFORM statements indicating structured procedural logic",
+        "OCCURS tables for medical procedure codes (CONST-NYUKSN-SRYCD-OCC OCCURS 20)",
+        "EXIT PROGRAM as subprogram return"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually EUC-JP encoded Japanese text (appears garbled in latin-1). This is a subprogram called via CALL/LINK mechanism using MCP-STATUS/MCP-EVENT event model characteristic of JMA ORCA. The program_type is listed as online-cics as the closest analog to the event-driven screen handling, though ORCA uses its own MCP framework rather than CICS."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8353,
+      "completion_tokens": 609,
+      "total_tokens": 8962,
+      "cost": 0.034194,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034194,
+        "upstream_inference_prompt_cost": 0.025059,
+        "upstream_inference_completions_cost": 0.009135
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.78,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:04:06Z"
+}

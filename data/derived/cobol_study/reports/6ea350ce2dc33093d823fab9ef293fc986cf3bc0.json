@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6ea350ce2dc33093d823fab9ef293fc986cf3bc0",
+    "sha1_git": "6ea350ce2dc33093d823fab9ef293fc986cf3bc0",
+    "filename": "/STMF03.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 112100,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6ea350ce2dc33093d823fab9ef293fc986cf3bc0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6ea350ce2dc33093d823fab9ef293fc986cf3bc0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 112100,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2916,
+    "blank_lines": 167,
+    "comment_lines": 392,
+    "code_lines": 2357,
+    "comment_ratio": 0.143,
+    "max_line_length": 73,
+    "avg_line_length": 36.4,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "STMF03"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 63,
+    "call_count": 34,
+    "perform_count": 138,
+    "goto_count": 115,
+    "pic_count": 382,
+    "comp3_count": 22,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL (likely Personal COBOL or Net Express) indicated by $SET LINKCOUNT directive, COMP-5 usage, CRT STATUS, CURSOR IS, CONSOLE IS CRT, and screen-oriented features. Program by J W Lemmon (APAC) - a South African accounting/ERP package.",
+        "evidence": [
+          "$SET LINKCOUNT\"512\" compiler directive",
+          "COMP-5 usage throughout",
+          "CRT STATUS IS KEY-STATUS",
+          "CURSOR IS CSTART",
+          "CONSOLE IS CRT",
+          "LINAGE 51 on report file",
+          "COPY *.SL and *.FDE and *.ID copybook naming conventions"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Accounts Receivable debtor statements module for a South African ERP/accounting system (APAC). Prints debtor statements with ageing analysis, transaction history, and balance forward details.",
+        "summary": "STMF03 is a batch debtor statements printing program for an accounts receivable system. It reads debtor master records, transaction history, and control files to produce formatted statements with ageing buckets (current, 1 month, 2 months, 3 months, interest). It supports printing statements for a range of debtor accounts and can create duplicate archive files (AR_Ayymm, AR_Tyymm).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$SET LINKCOUNT compiler directive (Micro Focus)",
+        "COMP-5 binary fields throughout",
+        "CRT STATUS / CURSOR IS / CONSOLE IS CRT (interactive screen support)",
+        "LINAGE clause on report FD",
+        "63 COPY statements for modular copybook architecture",
+        "COMP-3 packed decimal for GST rate",
+        "WS-CHECK field with encoded author name ('aeWlimemnomLalismJ')",
+        "Ageing analysis: current/1mth/2mths/3mths/interest buckets",
+        "Archive file naming AR_Ayymm/AR_Tyymm for copy statements",
+        "GNU GPL license notice embedded in SECURITY paragraph",
+        "34 CALL statements, 138 PERFORMs, 115 GOTOs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars of a 112100-byte file (2916 lines total). Fixed format with a few lines slightly over 72 chars (4 long lines). Decoded as latin-1 suggesting possible extended ASCII box-drawing characters (e.g. VALUE X\"B3\", VALUE \"³\"). Program is part of a larger APAC accounting suite, version 9.00.00 August 2012, originally written October 1989 by J W Lemmon."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8733,
+      "completion_tokens": 668,
+      "total_tokens": 9401,
+      "cost": 0.036219,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.036219,
+        "upstream_inference_prompt_cost": 0.026199,
+        "upstream_inference_completions_cost": 0.01002
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:57:50Z"
+}

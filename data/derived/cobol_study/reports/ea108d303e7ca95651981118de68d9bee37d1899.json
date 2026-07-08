@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ea108d303e7ca95651981118de68d9bee37d1899",
+    "sha1_git": "ea108d303e7ca95651981118de68d9bee37d1899",
+    "filename": "/Program1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4858,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ea108d303e7ca95651981118de68d9bee37d1899/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ea108d303e7ca95651981118de68d9bee37d1899/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4858,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 134,
+    "blank_lines": 17,
+    "comment_lines": 0,
+    "code_lines": 117,
+    "comment_ratio": 0.0,
+    "max_line_length": 69,
+    "avg_line_length": 34.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Program10"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 38,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL or similar open-source COBOL targeting Windows filesystem paths; uses FUNCTION CURRENT-DATE and END-READ/END-EVALUATE/END-PERFORM which are COBOL-85 features; GOBACK used as main program terminator",
+        "evidence": [
+          "FUNCTION CURRENT-DATE",
+          "END-READ",
+          "END-EVALUATE",
+          "END-PERFORM",
+          "GOBACK",
+          "organization is line sequential",
+          "Windows-style file paths C:\\Data\\"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Payroll report generation: reads employee payroll records and produces a territory-level salary summary report with company totals",
+        "summary": "This program reads a payroll input file containing employee records with salary and territory information, accumulates total salaries by territory using a control-break technique, and writes a formatted report with headings, territory totals, and a company-wide grand total. It uses FUNCTION CURRENT-DATE to stamp the report with the current date.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "FUNCTION CURRENT-DATE for date stamping",
+        "Control-break processing by territory",
+        "EVALUATE TRUE construct",
+        "PERFORM UNTIL with inline END-READ",
+        "WRITE AFTER ADVANCING for report formatting",
+        "Windows-style absolute file paths in SELECT",
+        "GOBACK as program terminator",
+        "No COMP-3 usage despite numeric accumulation"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program-ID is 'Program10' and filename is 'Program1.cbl' — minor mismatch suggesting a student exercise series. No COMP-3 for numeric fields is unusual for production payroll code. Control-break logic has a subtle bug: ws-terr-hold is never updated after a break, but this is consistent with student-level code. No comments present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3447,
+      "completion_tokens": 457,
+      "total_tokens": 3904,
+      "cost": 0.017196,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017196,
+        "upstream_inference_prompt_cost": 0.010341,
+        "upstream_inference_completions_cost": 0.006855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.55,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:43:21Z"
+}

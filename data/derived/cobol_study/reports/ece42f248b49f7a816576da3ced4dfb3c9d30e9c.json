@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ece42f248b49f7a816576da3ced4dfb3c9d30e9c",
+    "sha1_git": "ece42f248b49f7a816576da3ced4dfb3c9d30e9c",
+    "filename": "/ORCSNYUACCT.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 196968,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ece42f248b49f7a816576da3ced4dfb3c9d30e9c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ece42f248b49f7a816576da3ced4dfb3c9d30e9c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 196968,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4352,
+    "blank_lines": 0,
+    "comment_lines": 1083,
+    "code_lines": 3269,
+    "comment_ratio": 0.249,
+    "max_line_length": 85,
+    "avg_line_length": 44.3,
+    "long_lines_over_72": 16,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSNYUACCT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 24,
+    "call_count": 36,
+    "perform_count": 300,
+    "goto_count": 30,
+    "pic_count": 126,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with REPLACING, LINKAGE SECTION with USING, and typical ORCA coding conventions.",
+        "evidence": [
+          "PROGRAM-ID ORCSNYUACCT",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with REPLACING //NACCT-// BY //HZN-NACCT-//",
+          "CALL 'ORCSMCNDATE' USING",
+          "CALL 'ORCSEIYOUKKS' USING",
+          "COPY 'MCPDATA.INC'",
+          "COPY 'COMMON-SPA'",
+          "no EXEC CICS / EXEC SQL",
+          "no COMP-3 usage"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) system — inpatient accounting sub-program (入院会計作成サブ)",
+        "summary": "This subprogram (ORCSNYUACCT) is part of the JMA ORCA medical receipt software system. It creates/updates inpatient accounting records (入院会計), calculating hospitalization fees, meal charges, selected medical fees, and handling date-range logic for inpatient stays. It is called with a linkage area containing patient and treatment parameters and performs multiple CALLs to other ORCA subsystem modules.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "24 COPY statements including REPLACING clauses",
+        "36 CALL statements to other ORCA subsystem modules",
+        "300 PERFORM statements indicating complex procedural logic",
+        "LINKAGE SECTION with SPA-AREA and ORCSNYUACCT-AREA",
+        "Japanese EUC/Shift-JIS encoded comments (decoded as latin-1)",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 fields despite financial calculations",
+        "OCCURS tables for inpatient treatment data",
+        "Date arithmetic for hospitalization period calculations"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but comments are actually Japanese (EUC-JP or Shift-JIS), appearing as mojibake. This is a well-known open-source Japanese medical system (JMA ORCA). The program is a large (4352 lines) production subprogram. Source truncated at 16000 chars; full analysis based on visible structure and mechanical indicators."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10265,
+      "completion_tokens": 628,
+      "total_tokens": 10893,
+      "cost": 0.040215,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040215,
+        "upstream_inference_prompt_cost": 0.030795,
+        "upstream_inference_completions_cost": 0.00942
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.85,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:10:56Z"
+}

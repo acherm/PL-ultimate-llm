@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:95d0dc2dd72400b360c177ceb0bba808abbdcc14",
+    "sha1_git": "95d0dc2dd72400b360c177ceb0bba808abbdcc14",
+    "filename": "/ORCR0470.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 25495,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:95d0dc2dd72400b360c177ceb0bba808abbdcc14/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:95d0dc2dd72400b360c177ceb0bba808abbdcc14/raw/"
+  },
+  "indicators": {
+    "bytes_len": 25495,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 595,
+    "blank_lines": 0,
+    "comment_lines": 212,
+    "code_lines": 383,
+    "comment_ratio": 0.356,
+    "max_line_length": 74,
+    "avg_line_length": 39.5,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0470"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 3,
+    "perform_count": 20,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY with REPLACING, INDEXED files, LINKAGE SECTION with COMMAND-PARAM, and CALL to ORCA subsystem routines",
+        "evidence": [
+          "PROGRAM-ID ORCR0470",
+          "COPY 'CPRCF046.INC' / 'CPRCF047.INC'",
+          "CALL 'ORCSGETTEMP'",
+          "SELECT ... ASSIGN RECE46PARA ORGANIZATION IS INDEXED",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "STOP RUN / EXIT PROGRAM conditional on SHELLID",
+          "Japanese comments and JMA copyright header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — specifically the workers' compensation and automobile liability (労災・自賠責) monthly receipt detail file creation and摘要欄 (remarks column) sort/edit processing",
+        "summary": "ORCR0470 is a batch program in the JMA ORCA medical receipt system that reads an indexed receipt detail file (RECE46), transforms and sorts the remarks-column (摘要欄) entries for workers' compensation and automobile liability receipts, and writes the results to another indexed file (RECE47). It handles diagnosis classification codes, cancellation processing, and various receipt format variants.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file I/O with SEQUENTIAL and DYNAMIC access modes",
+        "COPY with REPLACING for record layout reuse",
+        "UNSTRING for command-line parameter parsing",
+        "LINKAGE SECTION / USING COMMAND-PARAM (called as subprogram or standalone)",
+        "Conditional STOP RUN vs EXIT PROGRAM based on SHELLID",
+        "Japanese multi-byte characters in comments and literals (UTF-8)",
+        "14 COPY statements for modular include files",
+        "Job management subsystem calls (ORCSJOBKANRI)",
+        "Temporary directory resolution via ORCSGETTEMP"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars (~27% of file); remaining procedure division not visible but mechanical indicators confirm full 4-division structure. Long lines slightly exceed 72 cols (5 lines) but format is otherwise fixed. No EXEC SQL or EXEC CICS. COMP-3 absent despite financial/medical domain — likely handled in copybooks."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7746,
+      "completion_tokens": 628,
+      "total_tokens": 8374,
+      "cost": 0.032658,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032658,
+        "upstream_inference_prompt_cost": 0.023238,
+        "upstream_inference_completions_cost": 0.00942
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.2,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:16:47Z"
+}

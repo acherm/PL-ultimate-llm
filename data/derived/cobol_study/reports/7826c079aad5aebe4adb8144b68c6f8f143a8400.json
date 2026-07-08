@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7826c079aad5aebe4adb8144b68c6f8f143a8400",
+    "sha1_git": "7826c079aad5aebe4adb8144b68c6f8f143a8400",
+    "filename": "/ORCGU02.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 232299,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7826c079aad5aebe4adb8144b68c6f8f143a8400/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7826c079aad5aebe4adb8144b68c6f8f143a8400/raw/"
+  },
+  "indicators": {
+    "bytes_len": 232299,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5522,
+    "blank_lines": 0,
+    "comment_lines": 1514,
+    "code_lines": 4008,
+    "comment_ratio": 0.274,
+    "max_line_length": 86,
+    "avg_line_length": 41.1,
+    "long_lines_over_72": 11,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGU02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 46,
+    "call_count": 65,
+    "perform_count": 321,
+    "goto_count": 53,
+    "pic_count": 110,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY includes with .INC extension, /var/tmp/ paths, shell script references",
+        "evidence": [
+          "PROGRAM-ID ORCGU02",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'ENUM-VALUE', COPY 'COMMON-SPA', COPY 'CPUKETUKE.INC'",
+          "FILE-NAME1 PIC X(09) VALUE '/var/tmp/'",
+          "CLAIM-FILE VALUE 'scripts/claim/HL01.sh'",
+          "no EXEC CICS, no EXEC SQL, no COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA outpatient reception (Raiin Uketsuke) subsystem - patient reception, appointment, insurance confirmation, and claim processing for Japanese medical clinics",
+        "summary": "This program implements the outpatient reception (U02) component of the JMA ORCA medical receipt system. It handles patient reception, appointment management, insurance combination verification, diagnosis history, and CLAIM processing. It coordinates with numerous master files (patient info, insurance, appointments) and subprograms for date conversion, locking, and user program invocation.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "46 COPY statements referencing .INC copybooks",
+        "65 CALL statements to subprograms",
+        "321 PERFORM statements",
+        "53 GOTO statements",
+        "Japanese comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
+        "Shell script invocation for CLAIM processing (HL01.sh)",
+        "File paths referencing /var/tmp/ (Linux environment)",
+        "REDEFINES usage",
+        "OCCURS table for sort (200 entries)",
+        "Extensive revision history in comments spanning 2000-2006"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source comments are in Japanese but decoded as latin-1, causing mojibake in the displayed text. The actual encoding is likely EUC-JP or Shift-JIS. The program is part of the well-known open-source JMA ORCA project. Source truncated at 16000 chars out of 232299 bytes total; full procedure division not visible but indicators confirm substantial production code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11464,
+      "completion_tokens": 591,
+      "total_tokens": 12055,
+      "cost": 0.043257,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.043257,
+        "upstream_inference_prompt_cost": 0.034392,
+        "upstream_inference_completions_cost": 0.008865
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.34,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:22:32Z"
+}

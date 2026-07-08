@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4b3f9c0998bc57afb1da1bb0eb844c6f105779d2",
+    "sha1_git": "4b3f9c0998bc57afb1da1bb0eb844c6f105779d2",
+    "filename": "/ORCHCN31.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 86799,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4b3f9c0998bc57afb1da1bb0eb844c6f105779d2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4b3f9c0998bc57afb1da1bb0eb844c6f105779d2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 86799,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2197,
+    "blank_lines": 0,
+    "comment_lines": 693,
+    "code_lines": 1504,
+    "comment_ratio": 0.315,
+    "max_line_length": 74,
+    "avg_line_length": 38.5,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCHCN31"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 28,
+    "call_count": 21,
+    "perform_count": 142,
+    "goto_count": 9,
+    "pic_count": 100,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY includes with .INC extension, CALL to ORCA runtime subprograms (ORCSMKPASS, ORCSGETTEMP, ORCSPRGOPTION), and file assignment via ASGNPARA pattern typical of ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCHCN31",
+          "COPY CPCOMMONPRT.INC / CPASGNPARA.INC / MCPAREA / MCPDATA.INC",
+          "CALL ORCSMKPASS / ORCSGETTEMP / ORCSPRGOPTION",
+          "SELECT PRT-FILE ASSIGN ASGNPARA",
+          "Copyright JMA Japan Medical Association 2002",
+          "LINKAGE SECTION with SPA-AREA ONPRTDATA",
+          "no EXEC CICS / no EXEC SQL / no COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA Japanese medical receipt (Yakujo/prescription) printing system - specifically a drug prescription list print component (HCN31, 6-item display for prescription list printing)",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It generates printed output for a drug prescription (Yakujo) list, formatting patient information, drug names, dosage, comments, and hospital details into a print layout. It reads master data (hospital info, staff info, drug masters, point masters) and formats them for output via a print file.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "28 COPY statements for modular include files (.INC pattern)",
+        "21 CALL statements to ORCA runtime subprograms",
+        "LINKAGE SECTION with SPA-AREA (session/state area) and ONPRTDATA",
+        "REDEFINES used for address/name splitting and numeric decomposition",
+        "OCCURS clauses for multi-line drug/comment arrays",
+        "Image file handling (medimage directory, transparent.jpg, CPORCSMIAREA.INC)",
+        "Temporary file name acquisition via ORCSGETTEMP",
+        "Program option parameter retrieval via ORCSPRGOPTION",
+        "Japanese text in comments (EUC-JP or Shift-JIS encoded, rendered as latin-1 mojibake)",
+        "Fixed-format source with max line length 74"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comment text is Japanese encoded in EUC-JP (or possibly Shift-JIS), decoded as latin-1 producing mojibake. Source is truncated at 16000 chars out of 86799 bytes total. The file is clearly part of the well-known open-source JMA ORCA medical receipt system used widely in Japanese medical clinics. Version history shows revisions from 2009 through 2014 (v04.08.01)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9893,
+      "completion_tokens": 721,
+      "total_tokens": 10614,
+      "cost": 0.040494,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040494,
+        "upstream_inference_prompt_cost": 0.029679,
+        "upstream_inference_completions_cost": 0.010815
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.28,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:29:04Z"
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0160017975433ecabb97b20886cef81413d0509d",
+    "sha1_git": "0160017975433ecabb97b20886cef81413d0509d",
+    "filename": "/ORCBM032.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 57794,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0160017975433ecabb97b20886cef81413d0509d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0160017975433ecabb97b20886cef81413d0509d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 57794,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1322,
+    "blank_lines": 0,
+    "comment_lines": 387,
+    "code_lines": 935,
+    "comment_ratio": 0.293,
+    "max_line_length": 79,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCBM032"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 24,
+    "call_count": 6,
+    "perform_count": 65,
+    "goto_count": 0,
+    "pic_count": 92,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); uses GnuCOBOL/OpenCOBOL conventions with COPY replacing, LINKAGE SECTION parameters, grpsys-prefixed lines, and COMMON-SPA copybook typical of the ORCA system",
+        "evidence": [
+          "PROGRAM-ID ORCBM032",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY \"MCPAREA\"",
+          "COPY \"COMMON-SPA\"",
+          "grpsys COPY",
+          "CALL \"ORCSDAY\"",
+          "PROCEDURE DIVISION USING SUM-AREA WRK-PARA WRK-SYOKBN WRK-PRTFLG SPA-AREA LNK-RECEERR"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software - monthly billing/receipt aggregation for social insurance and public expense claims (医科・入院外)",
+        "summary": "ORCBM032 is a subprogram within the JMA ORCA medical receipt system that generates monthly receipt claim reports for medical insurance (社保・診療報酬請求書, 医科・入院外). It retrieves hospital/facility information, processes summary tables of treatment counts, days, and fees by insurance category, and formats print output for submission to insurers.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with multiple passed areas (SUM-AREA, WRK-PARA, SPA-AREA)",
+        "Large OCCURS tables for insurance summary aggregation (SUM-TABLE-OCC OCCURS 100, nested OCCURS)",
+        "24 COPY statements for modular copybook inclusion",
+        "REDEFINES usage (WRK-HOSPNAME-R, WRK-HOSPADRS-R)",
+        "Japanese text in comments and string literals (latin-1 encoded Shift-JIS/EUC-JP mojibake)",
+        "grpsys-prefixed lines indicating group/system conditional compilation",
+        "No EXEC SQL or EXEC CICS",
+        "CALL to ORCSDAY date conversion subprogram",
+        "Revision history with dated change log in comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is encoded in latin-1 but contains Japanese text that appears as mojibake (likely original encoding was EUC-JP or Shift-JIS). File is truncated at 16000 chars out of 57794 bytes total. The grpsys prefix on some lines may be a conditional compilation or group-system marker specific to the ORCA build system. No COMP-3 usage detected despite financial calculations, which is consistent with GnuCOBOL ORCA style using PIC 9 fields."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9360,
+      "completion_tokens": 699,
+      "total_tokens": 10059,
+      "cost": 0.038565,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038565,
+        "upstream_inference_prompt_cost": 0.02808,
+        "upstream_inference_completions_cost": 0.010485
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.78,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:47:29Z"
+}

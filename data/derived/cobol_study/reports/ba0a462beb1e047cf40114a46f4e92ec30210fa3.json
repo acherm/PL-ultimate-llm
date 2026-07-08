@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ba0a462beb1e047cf40114a46f4e92ec30210fa3",
+    "sha1_git": "ba0a462beb1e047cf40114a46f4e92ec30210fa3",
+    "filename": "/ORCR0420.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 310958,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ba0a462beb1e047cf40114a46f4e92ec30210fa3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ba0a462beb1e047cf40114a46f4e92ec30210fa3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 310958,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 6218,
+    "blank_lines": 1,
+    "comment_lines": 1203,
+    "code_lines": 5014,
+    "comment_ratio": 0.194,
+    "max_line_length": 79,
+    "avg_line_length": 49.0,
+    "long_lines_over_72": 63,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0420"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 35,
+    "call_count": 2,
+    "perform_count": 177,
+    "goto_count": 2,
+    "pic_count": 331,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses .INC copybooks with REPLACING, INDEXED files with DYNAMIC/SEQUENTIAL access",
+        "evidence": [
+          "PROGRAM-ID ORCR0420",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with REPLACING //token// BY //token// syntax",
+          "SELECT ... ASSIGN RECE41PARA ORGANIZATION IS INDEXED ACCESS MODE IS DYNAMIC",
+          "FILE STATUS clauses",
+          "no EXEC CICS / EXEC SQL",
+          "fixed format, max line 79"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — monthly billing detail file creation and point aggregation for outpatient/self-pay claims (外来・自費)",
+        "summary": "ORCR0420 is a batch program in the JMA ORCA medical receipt system that creates monthly business detail files for outpatient and self-pay insurance claims and aggregates diagnostic category point totals. It reads and writes multiple INDEXED files (RECE41, RECE44, RECE45, RECE4A, RECE4B) and an error file, performing complex medical fee calculation and comment editing logic.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "35 COPY statements with REPLACING //token// BY //token// pseudo-text delimiter syntax",
+        "Multiple INDEXED files with both DYNAMIC and SEQUENTIAL access modes on same physical file (dual SELECT)",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded, garbled)",
+        "Large program: 6218 lines, 177 PERFORMs, 331 PIC clauses",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "Extensive revision history in comments spanning 2002–2007",
+        "Error file (RECEERR) for batch error reporting"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in Japanese (EUC-JP or Shift-JIS) but the file was decoded as latin-1, resulting in garbled multi-byte characters. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars; full file is 310958 bytes / 6218 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12036,
+      "completion_tokens": 599,
+      "total_tokens": 12635,
+      "cost": 0.045093,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.045093,
+        "upstream_inference_prompt_cost": 0.036108,
+        "upstream_inference_completions_cost": 0.008985
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.69,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:14:36Z"
+}

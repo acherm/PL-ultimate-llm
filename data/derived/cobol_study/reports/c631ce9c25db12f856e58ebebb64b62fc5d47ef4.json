@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c631ce9c25db12f856e58ebebb64b62fc5d47ef4",
+    "sha1_git": "c631ce9c25db12f856e58ebebb64b62fc5d47ef4",
+    "filename": "/ixread01.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5150,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c631ce9c25db12f856e58ebebb64b62fc5d47ef4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c631ce9c25db12f856e58ebebb64b62fc5d47ef4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5150,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 142,
+    "blank_lines": 4,
+    "comment_lines": 35,
+    "code_lines": 103,
+    "comment_ratio": 0.254,
+    "max_line_length": 87,
+    "avg_line_length": 34.3,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ixread01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 9,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) with GCSORT test suite by Sauro Menna; compiler options reference cobc with -fbinary-size, -fnotrunc, -fbinary-byteorder flags",
+        "evidence": [
+          "cobc -x -t compiler option in comments",
+          "GCSORT Tests in header",
+          "GNU Lesser General Public License, LGPL, 3.0",
+          "COLLATING SEQUENCE OF ... IS ASCII / IS EBCDIC (GnuCOBOL extension)",
+          "ACCEPT ... FROM ENVIRONMENT env-pgm (GnuCOBOL style)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "GCSORT indexed file read test - reads an indexed VSAM-like file by primary and alternate keys",
+        "summary": "This program opens an indexed file (masterseqfile) and reads all records sequentially via both the primary key (msr-01) and an alternate key (msr-99), displaying each record. It is part of a GCSORT test suite authored by Sauro Menna to test Sort/Merge and indexed file handling under GnuCOBOL.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "INDEXED file with ALTERNATE RECORD KEY WITH DUPLICATES",
+        "COLLATING SEQUENCE per key (ASCII and EBCDIC)",
+        "ACCESS IS DYNAMIC with START and sequential READ NEXT",
+        "COMP-3 usage for recordsize",
+        "ACCEPT FROM ENVIRONMENT for environment variable lookup",
+        "RETURN-CODE and GOBACK for error exit",
+        "GO TO used for error branching (lb-50)",
+        "Mixed tab/space indentation visible in source"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "Source contains a tab character in the IDENTIFICATION DIVISION line and in some PROCEDURE DIVISION lines, which is slightly irregular for fixed format but consistent with GnuCOBOL tolerance. The program is a self-contained test/demo for indexed file reading, not production code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3544,
+      "completion_tokens": 498,
+      "total_tokens": 4042,
+      "cost": 0.018102,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018102,
+        "upstream_inference_prompt_cost": 0.010632,
+        "upstream_inference_completions_cost": 0.00747
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.86,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:24:18Z"
+}

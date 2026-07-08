@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ae04571a152bf757e6f01173f2f1560be30dc757",
+    "sha1_git": "ae04571a152bf757e6f01173f2f1560be30dc757",
+    "filename": "/ORCGP02H.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 25183,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ae04571a152bf757e6f01173f2f1560be30dc757/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ae04571a152bf757e6f01173f2f1560be30dc757/raw/"
+  },
+  "indicators": {
+    "bytes_len": 25183,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 701,
+    "blank_lines": 0,
+    "comment_lines": 280,
+    "code_lines": 421,
+    "comment_ratio": 0.399,
+    "max_line_length": 74,
+    "avg_line_length": 34.9,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGP02H"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 41,
+    "call_count": 5,
+    "perform_count": 33,
+    "goto_count": 2,
+    "pic_count": 28,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日医標準レセプトソフト) - screen handler for P02H window, patient registration subsystem",
+        "evidence": [
+          "PROGRAM-ID ORCGP02H",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA pattern",
+          "MCP-STATUS / MCP-EVENT / MCP-WIDGET usage",
+          "COPY P02H.INC and many P02*.INC screen copybooks",
+          "Copyright 2002 JMA (Japan Medical Association)",
+          "EXEC CICS/SQL absent; GnuCOBOL/OpenCOBOL MCP framework"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system - patient registration screen P02H, handling insurance number selection list",
+        "summary": "This program is a screen handler (P02H window) within the JMA ORCA medical receipt software system. It manages a list-selection screen for insurance numbers (保険番号) in the patient registration (患者登録) subsystem. It handles initialization, screen editing, cursor positioning, and user input events such as row selection from a list widget.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (41 copybooks) for screen layouts and shared areas",
+        "MCP framework (MCP-STATUS, MCP-EVENT, MCP-WIDGET) - ORCA GUI middleware",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA",
+        "EVALUATE on MCP-STATUS/MCP-EVENT for event-driven screen handling",
+        "Japanese comments encoded in Latin-1 (EUC-JP or Shift-JIS garbled)",
+        "SPA (Scratch Pad Area) pattern for state persistence across screen transitions",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP database access"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Japanese comments are garbled due to Latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The file is part of the well-known open-source JMA ORCA (日医標準レセプトソフト) system. Program type classified as online-cics by analogy since it uses an event-driven GUI middleware (MCP) rather than CICS, but the pattern is equivalent. Five lines slightly exceed column 72 (long_lines_over_72=5), consistent with fixed format with minor overruns."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7917,
+      "completion_tokens": 624,
+      "total_tokens": 8541,
+      "cost": 0.033111,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033111,
+        "upstream_inference_prompt_cost": 0.023751,
+        "upstream_inference_completions_cost": 0.00936
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.56,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:29:38Z"
+}

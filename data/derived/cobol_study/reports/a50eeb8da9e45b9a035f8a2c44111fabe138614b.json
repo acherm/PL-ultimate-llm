@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a50eeb8da9e45b9a035f8a2c44111fabe138614b",
+    "sha1_git": "a50eeb8da9e45b9a035f8a2c44111fabe138614b",
+    "filename": "/apply.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 687,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a50eeb8da9e45b9a035f8a2c44111fabe138614b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a50eeb8da9e45b9a035f8a2c44111fabe138614b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 687,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 28,
+    "blank_lines": 6,
+    "comment_lines": 2,
+    "code_lines": 20,
+    "comment_ratio": 0.091,
+    "max_line_length": 66,
+    "avg_line_length": 23.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "apply"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 1,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Uses GnuCOBOL/OpenCOBOL-style compiler directive '$set callfh\"pqfh\"' to set file handler; likely GnuCOBOL with PQFH (PostgreSQL file handler) or similar",
+        "evidence": [
+          "$ set callfh\"pqfh\"",
+          "copy sp01a03.sel",
+          "copy sp01a03.fd",
+          "PROGRAM-ID. apply"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "File-based data utility; applies a changelog to an indexed file (sp01a03), likely part of a file synchronization or migration tool",
+        "summary": "Opens an indexed file (sp01a03), calls an external subprogram 'apply_changelog' to apply changes, then closes the file. Uses COPY statements for file SELECT and FD entries. A second file (sp01a04) is commented out.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "GnuCOBOL compiler directive '$set callfh' for custom file handler (pqfh)",
+        "COPY statements for SELECT and FD entries (sp01a03.sel, sp01a03.fd)",
+        "CALL to external subprogram 'apply_changelog'",
+        "Commented-out second file (sp01a04) suggesting work-in-progress",
+        "Relative path file assignment '../../arq/sp01a03'"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "Very small program (28 lines). The '$set callfh\"pqfh\"' directive strongly suggests GnuCOBOL with a PostgreSQL or custom file handler. The program is incomplete or a minimal driver; actual logic is delegated to 'apply_changelog'. Second file sp01a04 is commented out, suggesting this is a work-in-progress or test harness."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2442,
+      "completion_tokens": 469,
+      "total_tokens": 2911,
+      "cost": 0.014361,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014361,
+        "upstream_inference_prompt_cost": 0.007326,
+        "upstream_inference_completions_cost": 0.007035
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.85,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:54:35Z"
+}

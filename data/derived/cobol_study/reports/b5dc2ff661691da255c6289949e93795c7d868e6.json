@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b5dc2ff661691da255c6289949e93795c7d868e6",
+    "sha1_git": "b5dc2ff661691da255c6289949e93795c7d868e6",
+    "filename": "/BANK1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10159,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b5dc2ff661691da255c6289949e93795c7d868e6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b5dc2ff661691da255c6289949e93795c7d868e6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10159,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 340,
+    "blank_lines": 71,
+    "comment_lines": 0,
+    "code_lines": 269,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 28.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BANK1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 8,
+    "perform_count": 6,
+    "goto_count": 30,
+    "pic_count": 38,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) targeting screen section with CRT STATUS, SET ENVIRONMENT for COB_SCREEN_EXCEPTIONS/COB_SCREEN_ESC, VALUE OF FILE-ID, and .ubd file extensions typical of GnuCOBOL indexed file usage",
+        "evidence": [
+          "SET ENVIRONMENT 'COB_SCREEN_EXCEPTIONS' TO 'Y'",
+          "SET ENVIRONMENT 'COB_SCREEN_ESC' TO 'Y'",
+          "VALUE OF FILE-ID IS \"tarjetas.ubd\"",
+          "CRT STATUS IS KEYBOARD-STATUS",
+          "78 level constants (ACUCOBOL/GnuCOBOL extension)",
+          "SCREEN SECTION with BACKGROUND-COLOR/FOREGROUND-COLOR",
+          "SECURE clause on ACCEPT"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "ATM (Cajero Automatico) simulation for a fictional bank called UnizarBank, likely a university project",
+        "summary": "This program implements the main login and menu controller for an ATM system called UnizarBank. It handles card number and PIN entry with attempt tracking, then dispatches to subprograms (BANK2-BANK9) for operations like balance inquiry, withdrawals, deposits, transfers, and PIN change.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SCREEN SECTION with color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR)",
+        "CRT STATUS for keyboard exception handling",
+        "SET ENVIRONMENT for GnuCOBOL screen control",
+        "78-level color constants",
+        "Indexed file I-O with FILE STATUS",
+        "CALL to external subprograms BANK2 through BANK9",
+        "Heavy use of GO TO for flow control (30 GOTOs)",
+        "SECURE clause for PIN masking",
+        "VALUE OF FILE-ID for file assignment",
+        "Attempt counter logic with REWRITE"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program appears to be a student project from Universidad de Zaragoza (Unizar). The code is incomplete at the bottom — the DISPARAR paragraph references F-DIFERIDAS and FSD which are not declared in the DATA DIVISION, suggesting truncation or incomplete development. No COMP-3 usage. Spanish-language display strings throughout."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5575,
+      "completion_tokens": 564,
+      "total_tokens": 6139,
+      "cost": 0.025185,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025185,
+        "upstream_inference_prompt_cost": 0.016725,
+        "upstream_inference_completions_cost": 0.00846
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.99,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:26:25Z"
+}

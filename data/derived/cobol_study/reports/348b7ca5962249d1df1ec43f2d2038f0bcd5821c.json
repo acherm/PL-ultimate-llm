@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:348b7ca5962249d1df1ec43f2d2038f0bcd5821c",
+    "sha1_git": "348b7ca5962249d1df1ec43f2d2038f0bcd5821c",
+    "filename": "/log4mas.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 15103,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:348b7ca5962249d1df1ec43f2d2038f0bcd5821c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:348b7ca5962249d1df1ec43f2d2038f0bcd5821c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 15103,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 397,
+    "blank_lines": 39,
+    "comment_lines": 12,
+    "code_lines": 346,
+    "comment_ratio": 0.034,
+    "max_line_length": 72,
+    "avg_line_length": 37.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "log4mas"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 18,
+    "call_count": 2,
+    "perform_count": 24,
+    "goto_count": 0,
+    "pic_count": 21,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (likely compiled with cobc); Italian-language business application using COMP-1 for NARG, C$NARG intrinsic, DECIMAL-POINT IS COMMA, and Italian text throughout. Possibly targeting a Linux/Windows environment with file-based indexed files.",
+        "evidence": [
+          "CALL \"C$NARG\" USING NARGS",
+          "77 nargs pic 99 comp-1",
+          "DECIMAL-POINT IS COMMA",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "no EXEC CICS/SQL",
+          "copy copybooks with .sl/.fd/.def/.cpy extensions",
+          "goback used"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Italian wholesale/distribution: logs articles with stock level 4 (scorta 4), checks committed quantities (impegnato GDO/TRAD), and exports open master orders to a CSV file for analysis.",
+        "summary": "This batch program (log4mas) scans an articles file for items at stock level 4, checks their committed quantities in a warehouse master file, then iterates open customer orders (mrordini/mtordini) to produce a CSV report and a log file. It handles file locking via a 'geslock' subprogram and supports both scheduled and interactive invocation.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECLARATIVES section with USE AFTER ERROR for file error handling",
+        "CALL \"C$NARG\" for argument count (GnuCOBOL extension)",
+        "COMP-1 usage for nargs",
+        "DECIMAL-POINT IS COMMA (Italian locale)",
+        "78-level constant (titolo)",
+        "88-level condition RichiamoSchedulato with FALSE clause",
+        "Italian-language variable names and display messages",
+        "CSV file generation with configurable separator",
+        "GOBACK in main and EXIT-PGM",
+        "18 COPY statements for copybooks (.sl, .fd, .def, .cpy)",
+        "STRING with LOW-VALUE delimiter for path construction",
+        "ACCEPT from ENVIRONMENT for runtime configuration",
+        "geslock subprogram for file locking with retry/ignore/terminate logic"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program is entirely in Italian and targets an Italian retail/distribution domain. The use of C$NARG and COMP-1 for nargs strongly suggests GnuCOBOL. The copybook-heavy structure (.sl for SELECT, .fd for FD, .def for working-storage) is consistent with a modular production codebase. No ENVIRONMENT DIVISION header is present (only FILE-CONTROL under INPUT-OUTPUT SECTION), which is slightly unusual but valid. Max line length is exactly 72, confirming fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5740,
+      "completion_tokens": 658,
+      "total_tokens": 6398,
+      "cost": 0.02709,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02709,
+        "upstream_inference_prompt_cost": 0.01722,
+        "upstream_inference_completions_cost": 0.00987
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.48,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:23:32Z"
+}

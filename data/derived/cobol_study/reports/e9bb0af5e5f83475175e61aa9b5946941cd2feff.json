@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e9bb0af5e5f83475175e61aa9b5946941cd2feff",
+    "sha1_git": "e9bb0af5e5f83475175e61aa9b5946941cd2feff",
+    "filename": "/ORCMUP0091.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 31799,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e9bb0af5e5f83475175e61aa9b5946941cd2feff/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e9bb0af5e5f83475175e61aa9b5946941cd2feff/raw/"
+  },
+  "indicators": {
+    "bytes_len": 31799,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 820,
+    "blank_lines": 0,
+    "comment_lines": 278,
+    "code_lines": 542,
+    "comment_ratio": 0.339,
+    "max_line_length": 74,
+    "avg_line_length": 37.8,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCMUP0091"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 1,
+    "perform_count": 45,
+    "goto_count": 7,
+    "pic_count": 53,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses MCPAREA/MCPDATA copybooks and ORCDBMAIN call pattern typical of JMA ORCA",
+        "evidence": [
+          "PROGRAM-ID ORCMUP0091",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY MCPAREA / MCPDATA.INC",
+          "PERFORM 900-ORCDBMAIN-SEC",
+          "MCP-FUNC DBSELECT/DBINSERT",
+          "path /var/lib/jma-receipt/master/",
+          "COPY CPMUPLINK.INC",
+          "LINE SEQUENTIAL files"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA medical insurance subscriber (hknjainf) master update processing — inserts, updates, and deletes insured-person records in the tbl_hknjainf database table",
+        "summary": "This program is a batch subprogram in the JMA ORCA medical receipt system that processes insured-person (hknjainf) master file updates. It reads an input file of change records, evaluates the operation type (Insert/Update/Delete), performs the corresponding DB operation via the ORCDBMAIN interface, and writes error and proof-list output files.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with LNK-AREA (called as subprogram)",
+        "COPY-based record definitions (CPHKNJAINFWK.INC, CPHKNJAINF.INC, CPSK1001.INC, CPJOBKANRI.INC, MCPAREA, MCPDATA.INC, CPMUPLINK.INC, CPORCSNUM.INC)",
+        "MCP-FUNC DB interface (DBSELECT, DBINSERT) via ORCDBMAIN",
+        "LINE SEQUENTIAL file I/O for input, error, and proof-list files",
+        "Japanese comments encoded in latin-1 (EUC-JP or Shift-JIS garbled)",
+        "grpsys-prefixed lines (conditional compilation or group marker)",
+        "STRING verb for dynamic file path construction",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Japanese comments are garbled due to latin-1 decoding of what is likely EUC-JP or Shift-JIS encoding. The 'grpsys' prefix on some lines appears to be a source-level group/conditional marker used in the JMA ORCA build system. File is truncated at 16000 chars but enough structure is visible for confident classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8486,
+      "completion_tokens": 680,
+      "total_tokens": 9166,
+      "cost": 0.035658,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035658,
+        "upstream_inference_prompt_cost": 0.025458,
+        "upstream_inference_completions_cost": 0.0102
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.28,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:02:35Z"
+}

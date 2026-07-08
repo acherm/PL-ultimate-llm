@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:217c653440c4c9978e515dd87970562f06064a75",
+    "sha1_git": "217c653440c4c9978e515dd87970562f06064a75",
+    "filename": "/ADETAKT.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2375,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:217c653440c4c9978e515dd87970562f06064a75/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:217c653440c4c9978e515dd87970562f06064a75/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2375,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 71,
+    "blank_lines": 5,
+    "comment_lines": 0,
+    "code_lines": 66,
+    "comment_ratio": 0.0,
+    "max_line_length": 59,
+    "avg_line_length": 32.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ADETAKT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 5,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "rm-cobol",
+        "standard": "COBOL-85",
+        "detail": "RM/COBOL as indicated by SOURCE-COMPUTER and OBJECT-COMPUTER set to RMCOBOL; uses DECIMAL-POINT IS COMMA (Turkish locale), LINKAGE SECTION with DEPENDING ON for argument passing typical of RM/COBOL runtime",
+        "evidence": [
+          "SOURCE-COMPUTER. RMCOBOL",
+          "OBJECT-COMPUTER. RMCOBOL",
+          "DECIMAL-POINT IS COMMA",
+          "MAIN-ARGUMENT-SIZE PIC 9(4) BINARY",
+          "PIC X OCCURS 1 TO 100 DEPENDING ON MAIN-ARGUMENT-SIZE"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Stock/inventory management system - Turkish language identifiers (STOK=stock, ADET=quantity/count, DEPO=warehouse, GIR=entry, CIK=exit). Processes batch operations (insert/update/delete) on stock quantity records.",
+        "summary": "This program reads an input file of stock quantity operation records and applies insert, update, or delete operations to a stock file (STOKADET). It is called as a subprogram receiving a filename argument via LINKAGE SECTION, opens the file, processes each record by operation code (0=delete, 1=insert, 2=update), then closes files and exits.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA (Turkish locale)",
+        "LINKAGE SECTION with variable-length argument (DEPENDING ON)",
+        "5 COPY statements including fileop.cpy with REPLACING clause",
+        "ORGANIZATION LINE SEQUENTIAL file",
+        "RM/COBOL-specific SOURCE/OBJECT-COMPUTER entries",
+        "GO TO used for loop control (GO DOSYA-OKU)",
+        "EXIT PROGRAM followed by STOP RUN pattern"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Turkish-language identifiers throughout (STOK, ADET, DEPO, GIR, CIK, YIL, KATNO, STNO). The COPY fileop.cpy uses REPLACING with both == == and quoted delimiters. Tab character visible before 'copy fileop.var' line suggesting minor formatting inconsistency. No SQL or CICS. Part of a larger stock management system with shared copybooks."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3062,
+      "completion_tokens": 570,
+      "total_tokens": 3632,
+      "cost": 0.017736,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017736,
+        "upstream_inference_prompt_cost": 0.009186,
+        "upstream_inference_completions_cost": 0.00855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.11,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:05:10Z"
+}

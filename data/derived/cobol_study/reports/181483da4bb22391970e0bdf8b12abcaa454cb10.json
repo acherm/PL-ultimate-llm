@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:181483da4bb22391970e0bdf8b12abcaa454cb10",
+    "sha1_git": "181483da4bb22391970e0bdf8b12abcaa454cb10",
+    "filename": "/ORCGI20.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 123549,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:181483da4bb22391970e0bdf8b12abcaa454cb10/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:181483da4bb22391970e0bdf8b12abcaa454cb10/raw/"
+  },
+  "indicators": {
+    "bytes_len": 123549,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3091,
+    "blank_lines": 1,
+    "comment_lines": 841,
+    "code_lines": 2249,
+    "comment_ratio": 0.272,
+    "max_line_length": 94,
+    "avg_line_length": 39.0,
+    "long_lines_over_72": 20,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI20"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 34,
+    "call_count": 34,
+    "perform_count": 163,
+    "goto_count": 41,
+    "pic_count": 116,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses /var/tmp/ paths and shell scripts, typical of ORCA open-source deployment",
+        "evidence": [
+          "PROGRAM-ID ORCGI20",
+          "COPY \"COMMON-SPA\"",
+          "COPY MCPAREA",
+          "COPY \"ORCA-SPA\"",
+          "COPY \"ORCA-DBPATH\"",
+          "SELECT BI201-FILE ASSIGN PRFNAME",
+          "VALUE \"/var/tmp/\"",
+          "CONST-SHELNAME VALUE \"scripts/allways/orcbi201.sh\"",
+          "LINKAGE SECTION with MCPAREA SPAAREA LINKAREA SCRAREA",
+          "no EXEC CICS or EXEC SQL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt software - inpatient patient search/inquiry subsystem (I20 screen group)",
+        "summary": "This program implements the inpatient patient search screen (component I20, subsystem code ORCGI20) of the JMA ORCA medical receipt system. It handles screen navigation, patient record lookup, condition-based filtering (name, age, address, birthday), and output to CSV/print via shell script ORCBI201. It is a screen-driven batch/online hybrid subprogram called via MCP linkage.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "34 COPY statements for modular copybook includes",
+        "MCP linkage area pattern (MCPAREA, SPAAREA, LINKAREA, SCRAREA)",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT dispatch pattern",
+        "Dynamic SQL string construction (WRK-SQL PIC X(15000))",
+        "Katakana/Japanese character data in FILLER VALUE literals (EUC-JP encoding)",
+        "Shell script invocation via CONST-SHELNAME",
+        "File output to /var/tmp/ with dynamic filename construction",
+        "REDEFINES used extensively for data overlays",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP DB access layer",
+        "Age calculation and Japanese era date conversion subroutines"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is encoded in EUC-JP (decoded as latin-1), causing garbled display of Japanese comments and string literals. This is a production component of the open-source JMA ORCA medical receipt system. The file is 3091 lines with high comment ratio (27%) and extensive modular structure indicating mature production code. Truncated at 16000 chars but enough structure is visible for confident classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9355,
+      "completion_tokens": 654,
+      "total_tokens": 10009,
+      "cost": 0.037875,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037875,
+        "upstream_inference_prompt_cost": 0.028065,
+        "upstream_inference_completions_cost": 0.00981
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.88,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:20:10Z"
+}

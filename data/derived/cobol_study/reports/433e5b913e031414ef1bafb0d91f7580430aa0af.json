@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:433e5b913e031414ef1bafb0d91f7580430aa0af",
+    "sha1_git": "433e5b913e031414ef1bafb0d91f7580430aa0af",
+    "filename": "/CobDB2_Curs.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13690,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:433e5b913e031414ef1bafb0d91f7580430aa0af/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:433e5b913e031414ef1bafb0d91f7580430aa0af/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13690,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 326,
+    "blank_lines": 25,
+    "comment_lines": 0,
+    "code_lines": 301,
+    "comment_ratio": 0.0,
+    "max_line_length": 80,
+    "avg_line_length": 40.0,
+    "long_lines_over_72": 71,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": false
+    },
+    "n_divisions": 0,
+    "program_ids": [
+      "ADSD225"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 34,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe DB2 COBOL program, edited in ISPF editor (ADS02.ADS0205.SRC dataset). Uses EXEC SQL with DB2 cursor, SQLCA, DCLGEN-generated host variable structures (DCLTARTICL, TLIGCOM). French-language comments suggest French IBM mainframe shop.",
+        "evidence": [
+          "EXEC SQL DECLARE CURS1 CURSOR FOR",
+          "EXEC SQL INCLUDE SQLCA",
+          "EXEC SQL INCLUDE TARTICL",
+          "DCLTARTICL.CDNUMART host variable references",
+          "ISPF editor header: ADS02.ADS0205.SRC(ADSD225)",
+          "GOBACK statement",
+          "EVALUATE TRUE ... END-EVALUATE",
+          "DECIMAL-POINT IS COMMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Inventory/stock management: identifies articles present in stock but never sold (not in order lines table TLIGCOM), to mark them for clearance sale.",
+        "summary": "Program ADSD225 opens a DB2 cursor (CURS1) that selects articles from TARTICL that have no matching rows in TLIGCOM (order lines), i.e. articles never sold. It fetches each row and displays a formatted table of article code, label, price, and quantity. Handles SQL errors and warnings separately.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL cursor (DECLARE, OPEN, FETCH, CLOSE)",
+        "EXEC SQL INCLUDE TARTICL / TLIGCOM (DCLGEN copybooks)",
+        "EXEC SQL INCLUDE SQLCA",
+        "SQLCODE-based EVALUATE for error handling",
+        "DECIMAL-POINT IS COMMA (European numeric format)",
+        "GOBACK instead of STOP RUN for main termination",
+        "Correlated subquery NOT EXISTS in cursor SELECT",
+        "ISPF editor metadata visible in source (screen capture artifact)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The file appears to be a screen capture or paste from an ISPF editor session; the ISPF menu bar, command line, and function key lines are included at top and bottom of the file but are outside the actual COBOL source lines (they appear as non-COBOL text). The actual COBOL source (lines 000001-000312) is valid. Line numbers are ISPF sequence numbers. The program is a teaching/exercise example (placeholder names like XXXXXXXX, French academic-style comments, simple structure) likely from a French COBOL/DB2 training course."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6015,
+      "completion_tokens": 631,
+      "total_tokens": 6646,
+      "cost": 0.02751,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02751,
+        "upstream_inference_prompt_cost": 0.018045,
+        "upstream_inference_completions_cost": 0.009465
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.21,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:06:50Z"
+}

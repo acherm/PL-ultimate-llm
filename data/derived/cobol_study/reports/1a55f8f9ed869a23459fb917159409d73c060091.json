@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1a55f8f9ed869a23459fb917159409d73c060091",
+    "sha1_git": "1a55f8f9ed869a23459fb917159409d73c060091",
+    "filename": "/ORCR0690.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 209922,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1a55f8f9ed869a23459fb917159409d73c060091/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1a55f8f9ed869a23459fb917159409d73c060091/raw/"
+  },
+  "indicators": {
+    "bytes_len": 209922,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4470,
+    "blank_lines": 2,
+    "comment_lines": 1069,
+    "code_lines": 3399,
+    "comment_ratio": 0.239,
+    "max_line_length": 114,
+    "avg_line_length": 46.0,
+    "long_lines_over_72": 32,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0690"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 20,
+    "call_count": 2,
+    "perform_count": 266,
+    "goto_count": 17,
+    "pic_count": 334,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux; uses INDEXED files with DYNAMIC/SEQUENTIAL access, COPY with REPLACING using // delimiters",
+        "evidence": [
+          "PROGRAM-ID ORCR0690",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY with // REPLACING delimiter (GnuCOBOL style)",
+          "SELECT ... ASSIGN RECE01PARA ORGANIZATION IS INDEXED",
+          "no EXEC CICS / EXEC SQL",
+          "COPY 'CPRCF062.INC' style copybook names"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA inpatient receipt (Nyuin receipt) claim data editing and compilation — processes receipt files RECE62/64/65/66 to build claim line items for Japanese medical insurance billing",
+        "summary": "ORCR0690 is a batch program in the JMA ORCA medical receipt system that edits and compiles inpatient (Nyuin) claim detail rows. It reads multiple indexed receipt data files (RECE62, RECE64, RECE65, RECE66), applies various business rules (point/count editing, special receipt item editing, bundling checks), and writes output claim lines and error records for Japanese health insurance receipt submission.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED files with DYNAMIC and SEQUENTIAL access modes",
+        "COPY with REPLACING using // delimiter syntax",
+        "20 COPY statements referencing .INC copybooks",
+        "Large working-storage tables (OCCURS 100) for special receipt item editing",
+        "Extensive Japanese-language comments (Shift-JIS/EUC encoded, rendered as latin-1 mojibake)",
+        "266 PERFORM statements indicating structured procedural decomposition",
+        "17 GOTO statements",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source comments are in Japanese encoded as EUC-JP or Shift-JIS but decoded as latin-1, producing mojibake. File is 4470 lines and clearly production-grade JMA ORCA software. Truncated at 16000 chars but enough structure is visible to classify confidently. The // REPLACING delimiter is characteristic of GnuCOBOL/OpenCOBOL rather than IBM mainframe COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 12292,
+      "completion_tokens": 614,
+      "total_tokens": 12906,
+      "cost": 0.046086,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.046086,
+        "upstream_inference_prompt_cost": 0.036876,
+        "upstream_inference_completions_cost": 0.00921
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.55,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:03:30Z"
+}

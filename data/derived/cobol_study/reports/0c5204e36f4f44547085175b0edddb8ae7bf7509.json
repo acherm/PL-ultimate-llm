@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0c5204e36f4f44547085175b0edddb8ae7bf7509",
+    "sha1_git": "0c5204e36f4f44547085175b0edddb8ae7bf7509",
+    "filename": "/ORCR0035.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 23892,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0c5204e36f4f44547085175b0edddb8ae7bf7509/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0c5204e36f4f44547085175b0edddb8ae7bf7509/raw/"
+  },
+  "indicators": {
+    "bytes_len": 23892,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 580,
+    "blank_lines": 0,
+    "comment_lines": 209,
+    "code_lines": 371,
+    "comment_ratio": 0.36,
+    "max_line_length": 74,
+    "avg_line_length": 40.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0035"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 12,
+    "call_count": 7,
+    "perform_count": 24,
+    "goto_count": 0,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト); likely compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "PROGRAM-ID ORCR0035",
+          "COPY directives with .INC extensions",
+          "ASSIGN RECE01PARA style file assignment",
+          "CALL 'ORCSJOB'",
+          "JMA Open Source License header",
+          "no EXEC CICS/SQL",
+          "LINKAGE SECTION with COMMAND-PARAM USING"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) processing system — public cost-sharing point determination (公費分点数判定)",
+        "summary": "This program processes medical receipt intermediate files (RECE02, RECE04, RECE05) to determine public expense (公費) separation points (公費分離区分) for insurance claims. It reads RECE02 records, computes insurance combination indices, and rewrites RECE04/RECE05 records with updated cost-sharing split flags.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY with REPLACING for file parameter reuse (CPCOMMONDAT2.INC)",
+        "INDEXED file I/O with DYNAMIC access and START/READ NEXT",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "Job management via CALL 'ORCSJOB'",
+        "Heavy use of COPY copybooks (.INC files, 12 total)",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "Commented-out EVALUATE block replaced by PERFORM VARYING loop",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (580 lines total). Comments contain Japanese text encoded in EUC-JP, decoded here as latin-1 producing mojibake — content is still identifiable. The file is part of the well-known open-source JMA ORCA receipt software suite."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8227,
+      "completion_tokens": 533,
+      "total_tokens": 8760,
+      "cost": 0.032676,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032676,
+        "upstream_inference_prompt_cost": 0.024681,
+        "upstream_inference_completions_cost": 0.007995
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.0,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:53:31Z"
+}

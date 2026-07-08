@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:60f2f508de840d6c5f1d2058764fe98e9ae7dbf6",
+    "sha1_git": "60f2f508de840d6c5f1d2058764fe98e9ae7dbf6",
+    "filename": "/MAKEFORM.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 27843,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:60f2f508de840d6c5f1d2058764fe98e9ae7dbf6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:60f2f508de840d6c5f1d2058764fe98e9ae7dbf6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 27843,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 931,
+    "blank_lines": 0,
+    "comment_lines": 72,
+    "code_lines": 859,
+    "comment_ratio": 0.077,
+    "max_line_length": 126,
+    "avg_line_length": 27.9,
+    "long_lines_over_72": 37,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "MAKEFORM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 1,
+    "perform_count": 68,
+    "goto_count": 33,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with @OPTIONS compiler directive (ALPHAL(WORD)); web/CGI framework using COBW3 linkage section; GPL-licensed, authored by Federico Priolo / TP ONE SRL, 2022",
+        "evidence": [
+          "@OPTIONS ALPHAL(WORD) compiler directive",
+          "COPY 'COBW3.CBL' in LINKAGE SECTION",
+          "CALL 'COBW3_PUT_TEXT'",
+          "FUNCTION UPPER-CASE / FUNCTION LOWER-CASE intrinsic functions",
+          "PERFORM VARYING ... END-PERFORM structured syntax",
+          "GNU General Public License header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Web/CGI template engine: reads a web page definition file, processes HTML templates with variable substitution ({NAME} placeholders and <COBOL>VAR</COBOL> tags), and outputs HTML via the COBW3 web framework",
+        "summary": "MAKEFORM is a COBOL-based HTML template processor/form generator. It reads a web page script file (ARKWEB), opens named HTML template files under a TEMPLATE\\ directory, substitutes named parameters and COBOL data variables into the template, and writes the resulting HTML output via the COBW3_PUT_TEXT web interface. It supports debug mode, table-section filtering, and multi-pass template expansion.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "@OPTIONS ALPHAL(WORD) GnuCOBOL compiler directive",
+        "COBW3 web CGI linkage section (COBW3_PUT_TEXT CALL)",
+        "14 COPY statements for modular file definitions",
+        "FUNCTION UPPER-CASE / FUNCTION LOWER-CASE intrinsic functions",
+        "Template variable substitution using {NAME} and <COBOL>VAR</COBOL> syntax",
+        "DECLARATIVES section with USE AFTER STANDARD ERROR",
+        "PERFORM VARYING with END-PERFORM (COBOL-85 structured)",
+        "INSPECT TALLYING / REPLACING for string parsing",
+        "UNSTRING for parameter parsing",
+        "88-level condition names for SW-TABLE and DEBUG flags"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to ~16000 of 27843 bytes; PROCEDURE DIVISION header is present but the mechanical indicator shows 'procedure: false' likely due to the DECLARATIVES structure. The program is clearly production-quality GPL-licensed software from TP ONE SRL. Italian-language comments throughout. No EXEC SQL or EXEC CICS."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8842,
+      "completion_tokens": 627,
+      "total_tokens": 9469,
+      "cost": 0.035931,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035931,
+        "upstream_inference_prompt_cost": 0.026526,
+        "upstream_inference_completions_cost": 0.009405
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.89,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:21:06Z"
+}

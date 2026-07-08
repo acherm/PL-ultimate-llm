@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6a01789e9fa26f6f33139e1a52eef8cdd26146d6",
+    "sha1_git": "6a01789e9fa26f6f33139e1a52eef8cdd26146d6",
+    "filename": "/ORCSYAKINTOKU.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 18279,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6a01789e9fa26f6f33139e1a52eef8cdd26146d6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6a01789e9fa26f6f33139e1a52eef8cdd26146d6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 18279,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 428,
+    "blank_lines": 0,
+    "comment_lines": 182,
+    "code_lines": 246,
+    "comment_ratio": 0.425,
+    "max_line_length": 75,
+    "avg_line_length": 41.7,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSYAKINTOKU"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 5,
+    "call_count": 3,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software); uses GnuCOBOL/OpenCOBOL conventions with COPY includes (.INC files), LINKAGE SECTION parameters, MCP database access pattern typical of ORCA",
+        "evidence": [
+          "PROGRAM-ID ORCSYAKINTOKU",
+          "COPY CPSK5001.INC",
+          "COPY MCPDATA.INC",
+          "COPY MCPAREA",
+          "COPY CPORCSYAKINTOKU.INC",
+          "COPY COMMON-SPA",
+          "MCP-TABLE, MCP-PATHNAME, MCP-RC pattern",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "PERFORM 910-DBSELECT-SEC / 920-DBFETCH-SEC / 990-DBCLOSE-SEC"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt) system - ORCA; subprogram to retrieve special late-night hospitalization basic fee codes (夜勤時間特別入院基本料コード取得)",
+        "summary": "This subprogram is part of the JMA ORCA medical receipt system. It retrieves and maps special late-night hospitalization basic fee codes based on the calculation year-month and hospital settings. It performs database lookups against the system management table (tbl_syskanri) and then applies code substitution rules for various disease categories (general, tuberculosis, psychiatric) across different revision periods (Heisei 28/30 revisions).",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with COPY-based parameter passing",
+        "MCP database access pattern (DBSELECT/DBFETCH/DBCLOSE) typical of ORCA",
+        "Large EVALUATE statement for medical fee code mapping",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)",
+        "Date-based branching on Japanese fiscal year revisions (201604, 201804)",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP middleware",
+        "5 COPY includes for shared data structures"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are in Japanese EUC-JP encoding but the file was decoded as latin-1, resulting in garbled multi-byte characters. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Source is truncated at 16000 chars but enough structure is visible to classify confidently."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10958,
+      "completion_tokens": 618,
+      "total_tokens": 11576,
+      "cost": 0.042144,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.042144,
+        "upstream_inference_prompt_cost": 0.032874,
+        "upstream_inference_completions_cost": 0.00927
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:37:43Z"
+}

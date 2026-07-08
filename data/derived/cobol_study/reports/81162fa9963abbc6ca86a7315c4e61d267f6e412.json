@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:81162fa9963abbc6ca86a7315c4e61d267f6e412",
+    "sha1_git": "81162fa9963abbc6ca86a7315c4e61d267f6e412",
+    "filename": "/EL6401.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 194312,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:81162fa9963abbc6ca86a7315c4e61d267f6e412/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:81162fa9963abbc6ca86a7315c4e61d267f6e412/raw/"
+  },
+  "indicators": {
+    "bytes_len": 194312,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3941,
+    "blank_lines": 24,
+    "comment_lines": 493,
+    "code_lines": 3424,
+    "comment_ratio": 0.126,
+    "max_line_length": 72,
+    "avg_line_length": 48.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "00689",
+      "EL6401",
+      "PIC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 29,
+    "perform_count": 23,
+    "goto_count": 87,
+    "pic_count": 1342,
+    "comp3_count": 204,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS online program, converted by COBOL Conversion Aid PO 5785-ABJ on 02/12/96; authored by Logic, Inc., Dallas TX. Uses EXEC CICS, COMP-3, COMP fields, and classic IBM BMS map/mapset naming conventions.",
+        "evidence": [
+          "EXEC CICS present (has_exec_cics=true)",
+          "MAP-NAME EL6401A / MAPSET-NAME EL6401S (BMS map conventions)",
+          "TRANS-ID EXC2 (CICS transaction)",
+          "XCTL/LINK to EL005, EL010, EL626, EL001, EL004 (CICS program control)",
+          "COMP-3 usage throughout",
+          "COBOL Conversion Aid PO 5785-ABJ comment",
+          "DFH-START PIC X(04) (DFHCOMMAREA pattern)",
+          "SC-COMM-LENGTH PIC S9(4) VALUE +144 COMP (CICS commarea length field)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Account billing / statement display for an insurance or healthcare billing system (ERBILL file, ELCNTL file, carrier/group/account structure, credit and claims authorization codes)",
+        "summary": "EL6401 is a CICS online transaction program (transaction EXC2) that handles account billing statement display. It reads ERBILL and ELCNTL VSAM files, performs security checking, and displays billing/statement information on a BMS map. It was authored by Logic, Inc. of Dallas, TX and converted from an earlier COBOL dialect in 1996.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (BMS maps, XCTL, LINK, program control)",
+        "COMP-3 packed decimal fields (204 occurrences)",
+        "Inline-expanded copybooks (ELCSCTM, ELCSCRTY, ELCDATE)",
+        "Date conversion routine (ELDATCV) with extensive option codes including Y2K handling",
+        "Security control area with credit and claims authorization arrays",
+        "ERBILL and ELCNTL VSAM file access",
+        "87 GOTO statements indicating older structured style",
+        "Change log with dated change requests (CR2011120900003, CR2021021600001)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 3941 lines. Copybooks were inlined at conversion time rather than using COPY statements (copy_count=0). The program_ids list includes '00689' and 'PIC' as false positives from the mechanical parser. Decoded as latin-1. Max line length exactly 72 confirms fixed-format columns 7-72."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7744,
+      "completion_tokens": 697,
+      "total_tokens": 8441,
+      "cost": 0.033687,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033687,
+        "upstream_inference_prompt_cost": 0.023232,
+        "upstream_inference_completions_cost": 0.010455
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.16,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:04:50Z"
+}

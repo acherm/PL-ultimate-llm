@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:698ae6dc9c009b1932b1b4c35062837f35846abd",
+    "sha1_git": "698ae6dc9c009b1932b1b4c35062837f35846abd",
+    "filename": "/7-HPJ.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28818,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:698ae6dc9c009b1932b1b4c35062837f35846abd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:698ae6dc9c009b1932b1b4c35062837f35846abd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28818,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 867,
+    "blank_lines": 99,
+    "comment_lines": 29,
+    "code_lines": 739,
+    "comment_ratio": 0.038,
+    "max_line_length": 72,
+    "avg_line_length": 31.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "7-HPJ"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 32,
+    "call_count": 20,
+    "perform_count": 67,
+    "goto_count": 0,
+    "pic_count": 44,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely ACUCOBOL-GT or compatible (e.g., Micro Focus with ACUCOBOL extensions): uses ACCEPT/DISPLAY with LINE/POSITION/SIZE/TAB/UPDATE/NO BEEP/CURSOR/CONTROL clauses, EXC-KEY, CALL 'C$RERR', fixed-format with box-drawing characters in comments (CP850/latin-1). French-language variable names and comments suggest Belgian or French enterprise system.",
+        "evidence": [
+          "CALL \"C$RERR\" USING EXTENDED-STATUS",
+          "ACCEPT ... LINE ... POSITION ... SIZE ... TAB UPDATE NO BEEP CURSOR",
+          "CONTROL \"UPPER\"",
+          "EXC-KEY, EXC-KFR, EXC-KEY-FUN",
+          "box-drawing chars in comments (CP850)",
+          "DECIMAL-POINT IS COMMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Hospital/healthcare personnel management system - transferring work schedule plan (plan de travail) to hours records per cost center/service (postes de frais / netto-service). French: 'HOPJOUR' = hôpital jours (hospital days).",
+        "summary": "Program 7-HPJ transfers work schedule plan data into hours records for hospital cost centers and services. It processes employee records, calculates worked hours including night-rate tariffs, manages absences, and writes/deletes records in HEURES (hours) and JOURS (days) files. It includes an interactive screen for selecting parameters such as employee group, cost center, and detail options.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ACUCOBOL-style ACCEPT/DISPLAY screen I/O with LINE/POSITION/SIZE/TAB/UPDATE/NO BEEP/CURSOR",
+        "CALL 'C$RERR' for extended file error handling",
+        "DECIMAL-POINT IS COMMA (European numeric convention)",
+        "32 COPY statements for modular record/file definitions",
+        "COMP-3 packed decimal fields",
+        "USE AFTER ERROR PROCEDURE declaratives",
+        "REDEFINES clauses",
+        "Night-rate tariff calculation logic (CCOL-TARIF-NUIT)",
+        "French-language identifiers and comments",
+        "Box-drawing characters in comments (IBM CP850 encoding)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars out of 28818 bytes (867 lines total). File decoded as latin-1 with CP850 box-drawing characters in comments. Program is part of a larger hospital HR/payroll system with many copybooks (32 COPYs) and called subprograms (20 CALLs). French/Belgian healthcare context strongly suggested by naming conventions (HOPJOUR, HEURES, JOURS, postes de frais, netto-service)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8071,
+      "completion_tokens": 698,
+      "total_tokens": 8769,
+      "cost": 0.034683,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034683,
+        "upstream_inference_prompt_cost": 0.024213,
+        "upstream_inference_completions_cost": 0.01047
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.89,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:01:44Z"
+}

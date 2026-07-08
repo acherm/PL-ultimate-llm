@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7936514f69883ef3cc7fc7385f145d0ac92b6997",
+    "sha1_git": "7936514f69883ef3cc7fc7385f145d0ac92b6997",
+    "filename": "/ORCR0500.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 87609,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7936514f69883ef3cc7fc7385f145d0ac92b6997/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7936514f69883ef3cc7fc7385f145d0ac92b6997/raw/"
+  },
+  "indicators": {
+    "bytes_len": 87609,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1871,
+    "blank_lines": 1,
+    "comment_lines": 448,
+    "code_lines": 1422,
+    "comment_ratio": 0.24,
+    "max_line_length": 89,
+    "avg_line_length": 45.8,
+    "long_lines_over_72": 15,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0500"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 111,
+    "call_count": 8,
+    "perform_count": 62,
+    "goto_count": 3,
+    "pic_count": 58,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt printing system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with quoted filenames (.INC), SELECT ASSIGN to symbolic names, and grpsys-prefixed lines typical of ORCA codebase.",
+        "evidence": [
+          "PROGRAM-ID. ORCR0500",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"CPCOMMONPRT.INC\"",
+          "SELECT PRT-FILE ASSIGN HC01PARA",
+          "grpsys prefix on COPY lines",
+          "JMA Open Source License header",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) printing subsystem for the JMA ORCA standard receipt software. Handles monthly receipt printing for various insurance types including inpatient/outpatient, self-pay, and industrial accident categories.",
+        "summary": "ORCR0500 is a batch program that generates printed medical receipt (レセプト) output files for the JMA ORCA system. It reads print job parameters, selects the appropriate receipt form layout (from numerous COPY-included INC files for different receipt types/versions), and writes formatted print data to an output file. It supports multiple receipt form types (HCM/HCN series) covering various insurance and admission categories.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "111 COPY statements for receipt form layout includes (HCM/HCN series)",
+        "Sequential file I/O with LINE SEQUENTIAL organization",
+        "REDEFINES usage for renumber editing area",
+        "Large PRT-PRTDATA field (PIC X(20000))",
+        "Error file (RECEERR-FILE) for error logging",
+        "Japanese EUC-JP encoded comments (latin-1 decoded with mojibake)",
+        "grpsys-prefixed COPY lines (ORCA-specific build convention)",
+        "PERFORM count of 62, GOTO count of 3",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP but decoded as latin-1, causing mojibake in Japanese comments. Content is clearly identifiable as JMA ORCA medical receipt printing software. Source is truncated at 16000 chars out of 87609 bytes total. The 111 COPY statements reference versioned receipt form layout copybooks (.INC files) for different Japanese health insurance receipt formats."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10494,
+      "completion_tokens": 625,
+      "total_tokens": 11119,
+      "cost": 0.040857,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.040857,
+        "upstream_inference_prompt_cost": 0.031482,
+        "upstream_inference_completions_cost": 0.009375
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.12,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:36:58Z"
+}

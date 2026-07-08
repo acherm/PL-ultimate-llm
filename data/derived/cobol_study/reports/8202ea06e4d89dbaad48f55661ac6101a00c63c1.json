@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8202ea06e4d89dbaad48f55661ac6101a00c63c1",
+    "sha1_git": "8202ea06e4d89dbaad48f55661ac6101a00c63c1",
+    "filename": "/DCCVTCLPT.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3837,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8202ea06e4d89dbaad48f55661ac6101a00c63c1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8202ea06e4d89dbaad48f55661ac6101a00c63c1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3837,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 145,
+    "blank_lines": 40,
+    "comment_lines": 0,
+    "code_lines": 105,
+    "comment_ratio": 0.0,
+    "max_line_length": 70,
+    "avg_line_length": 25.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DCCVTCLP"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style: RECORDING MODE F, LABEL RECORDS STANDARD, BLOCK CONTAINS 0 RECORDS, EJECT directive, GOBACK, COPY statements (ERCEXTD, ERCPNDC)",
+        "evidence": [
+          "RECORDING MODE F",
+          "LABEL RECORDS STANDARD",
+          "BLOCK CONTAINS 0 RECORDS",
+          "EJECT",
+          "GOBACK",
+          "COPY ERCEXTD",
+          "COPY ERCPNDC"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Insurance pending claims processing - references PC-CERT-NO, PC-RESERVES, PC-CC-CLP-STATE, PC-RECORD-TYPE suggesting claims/policy data conversion",
+        "summary": "DCCVTCLP is a batch file conversion/fix-up program that reads an extract file (VALT-IN), inspects pending claims records, conditionally corrects a CLP state field (PC-CC-CLP-STATE) for specific certificate numbers, and writes corrected records to an output file (VALT-OUT). It reports counts of records read, written, fixed, skipped, and CO-fixed.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EJECT directive for listing control",
+        "COPY ERCEXTD and COPY ERCPNDC copybooks (not expanded in source)",
+        "88-level condition name END-OF-VALT",
+        "PERFORM THRU pattern with EXIT paragraphs",
+        "GOBACK instead of STOP RUN",
+        "Working-storage sentinel FILLER strings for dump identification",
+        "Hardcoded certificate number '0008834576' check"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Two COPY statements (ERCEXTD, ERCPNDC) are not expanded, so the full record layout and pending-claims structure are not visible. Domain inferred from field names (PC-CERT-NO, PC-RESERVES, PC-CC-CLP-STATE). Dialect is likely IBM mainframe but could be another mainframe vendor supporting RECORDING MODE F syntax."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3479,
+      "completion_tokens": 513,
+      "total_tokens": 3992,
+      "cost": 0.018132,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018132,
+        "upstream_inference_prompt_cost": 0.010437,
+        "upstream_inference_completions_cost": 0.007695
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.5,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:25:08Z"
+}

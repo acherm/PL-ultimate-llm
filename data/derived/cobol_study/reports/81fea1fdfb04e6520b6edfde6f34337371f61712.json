@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:81fea1fdfb04e6520b6edfde6f34337371f61712",
+    "sha1_git": "81fea1fdfb04e6520b6edfde6f34337371f61712",
+    "filename": "/A00000D123.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 168051,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:81fea1fdfb04e6520b6edfde6f34337371f61712/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:81fea1fdfb04e6520b6edfde6f34337371f61712/raw/"
+  },
+  "indicators": {
+    "bytes_len": 168051,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 4047,
+    "blank_lines": 2,
+    "comment_lines": 966,
+    "code_lines": 3079,
+    "comment_ratio": 0.239,
+    "max_line_length": 80,
+    "avg_line_length": 40.5,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "A00000D123"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 48,
+    "call_count": 77,
+    "perform_count": 143,
+    "goto_count": 6,
+    "pic_count": 234,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (Japan Medical Association open-source clinic system); changelog mentions 'open-cobol1.0' compatibility (GnuCOBOL predecessor)",
+        "evidence": [
+          "PROGRAM-ID A00000D123",
+          "COPY CPCOMMONSHELL.INC / CPRECEERR.INC / CPCOMMONDAT2.INC / CPSHELLTBL.INC",
+          "comment references 'open-cobol1.0ÂÐ±þ'",
+          "ORGANIZATION INDEXED / ACCESS MODE DYNAMIC",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed format max 80 cols"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-hoshuu) software — monthly outpatient/inpatient billing summary report with CSV export capability",
+        "summary": "This program (A00000D123) is part of the JMA ORCA open-source medical receipt system. It processes patient visit and insurance billing data to produce a monthly aggregate billing report (月次帳票/月計表), iterating over patient records from an indexed file and accumulating totals by department, physician, and insurance category. It also supports CSV file output of the summary data.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "48 COPY statements referencing JMA ORCA-specific copybooks (.INC files)",
+        "77 CALL statements indicating heavy use of shared subroutines",
+        "ORGANIZATION INDEXED with DYNAMIC access mode",
+        "CSV output area (WRK-CSVDATA PIC X(20000))",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded with mojibake)",
+        "OCCURS tables for monthly/departmental summaries (SUM-MONTH-TBL OCCURS 26, SUM-YOSO-TBL OCCURS 48)",
+        "No COMP-3 usage despite financial calculations",
+        "Signed numeric fields using S9 PIC clauses",
+        "Error file (RECEERR-FILE) for audit/error logging",
+        "Version history embedded in comments spanning 2004–2014"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP or Shift-JIS but decoded as latin-1, causing mojibake in Japanese comment text. Content is clearly identifiable as JMA ORCA production code. Source truncated at 16000 chars out of 168051 bytes (4047 lines total); full procedure division not visible but structural indicators (143 PERFORMs, 77 CALLs, 6 GOTOs) confirm substantial production logic."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9886,
+      "completion_tokens": 655,
+      "total_tokens": 10541,
+      "cost": 0.039483,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039483,
+        "upstream_inference_prompt_cost": 0.029658,
+        "upstream_inference_completions_cost": 0.009825
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.18,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:34:07Z"
+}

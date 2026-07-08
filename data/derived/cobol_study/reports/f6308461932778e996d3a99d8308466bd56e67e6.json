@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f6308461932778e996d3a99d8308466bd56e67e6",
+    "sha1_git": "f6308461932778e996d3a99d8308466bd56e67e6",
+    "filename": "/code_sample_2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8642,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f6308461932778e996d3a99d8308466bd56e67e6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f6308461932778e996d3a99d8308466bd56e67e6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8642,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 298,
+    "blank_lines": 65,
+    "comment_lines": 1,
+    "code_lines": 232,
+    "comment_ratio": 0.004,
+    "max_line_length": 76,
+    "avg_line_length": 28.0,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DueSubsRpt"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 76,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Uses '$ SET SOURCEFORMAT\"FREE\"' compiler directive typical of Micro Focus COBOL; free-format source despite fixed-format indicators in mechanical scan. Academic exercise by Michael Coughlan (University of Limerick COBOL course materials).",
+        "evidence": [
+          "$ SET SOURCEFORMAT\"FREE\" directive",
+          "LINE SEQUENTIAL organization",
+          "SEARCH ALL with INDEXED BY",
+          "SORT...INPUT PROCEDURE...GIVING",
+          "88-level condition names on file records"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University COBOL course exercise (CS4321-96) producing a due subscriptions report for a fictional NETNEWS service",
+        "summary": "Batch report program that reads a due subscriptions file, sorts records by country and customer name, looks up country names and exchange rates from a country table, and produces a formatted report showing subscription amounts by payment method (Visa, Access, AmExpress, Cheque) with subtotals per country and final totals.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$ SET SOURCEFORMAT FREE compiler directive",
+        "SORT verb with INPUT PROCEDURE and GIVING",
+        "SEARCH ALL (binary search) on indexed table",
+        "OCCURS with ASCENDING KEY and INDEXED BY",
+        "EVALUATE TRUE with 88-level condition names",
+        "Multiple output report lines with editing PIC clauses ($$,$$$,$$9, BBZZ,ZZZ,ZZ9)",
+        "Exchange rate currency conversion computation",
+        "MethodTable and FreqTable lookup arrays"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The mechanical indicator reports source_format_guess as 'fixed' and long_lines_over_72 as 3, but the '$ SET SOURCEFORMAT\"FREE\"' directive at line 1 explicitly sets free format. The program is clearly an academic exercise from Michael Coughlan's COBOL course at University of Limerick (CS4321-96 exam reference). No COMP-3, no EXEC SQL/CICS, no COPY statements."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5606,
+      "completion_tokens": 498,
+      "total_tokens": 6104,
+      "cost": 0.024288,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024288,
+        "upstream_inference_prompt_cost": 0.016818,
+        "upstream_inference_completions_cost": 0.00747
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.02,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:30:36Z"
+}

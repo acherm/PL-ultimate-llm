@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:64abffec295e5c4c97a80585cdc57fc3bc8cd094",
+    "sha1_git": "64abffec295e5c4c97a80585cdc57fc3bc8cd094",
+    "filename": "/read-score-to-grade_20220809144627.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1844,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:64abffec295e5c4c97a80585cdc57fc3bc8cd094/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:64abffec295e5c4c97a80585cdc57fc3bc8cd094/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1844,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 55,
+    "blank_lines": 4,
+    "comment_lines": 0,
+    "code_lines": 51,
+    "comment_ratio": 0.0,
+    "max_line_length": 69,
+    "avg_line_length": 32.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "READ-SCORE-TO-GREADE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL; uses LINE SEQUENTIAL, HIGH-VALUE 88-level sentinel, GOBACK, and EVALUATE TRUE — all standard COBOL-85 features common in GnuCOBOL student exercises",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "88 END-OF-SCORE-FILE VALUE HIGH-VALUE",
+          "EVALUATE TRUE",
+          "GOBACK",
+          "SET END-OF-SCORE-FILE TO TRUE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise reading exam scores from a file and computing letter grades",
+        "summary": "Reads student score records (student ID, midterm, final, project scores) from a sequential file, computes the total score, and evaluates it against grade thresholds (A, B+, B, C+, C, D+, D, F) using an EVALUATE TRUE construct. Displays each student ID and total score.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "88-level sentinel value using HIGH-VALUE for end-of-file detection",
+        "EVALUATE TRUE with range conditions for grade assignment",
+        "PERFORM THRU with explicit EXIT paragraph",
+        "GOBACK instead of STOP RUN",
+        "Logic bug: D+ and D thresholds both use SUM-SCORE>=60 (same as C), and F uses >=50 which is unreachable"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program contains a clear logic bug in the EVALUATE block: the WHEN conditions for D+, D, and F use incorrect or duplicate thresholds, making those grades unreachable. The PROGRAM-ID has a typo ('GREADE' instead of 'GRADE'). Author name 'SITTHICHAI' suggests a Thai student. Filename timestamp suggests 2022-08-09."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2865,
+      "completion_tokens": 465,
+      "total_tokens": 3330,
+      "cost": 0.01557,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01557,
+        "upstream_inference_prompt_cost": 0.008595,
+        "upstream_inference_completions_cost": 0.006975
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.1,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:44:05Z"
+}

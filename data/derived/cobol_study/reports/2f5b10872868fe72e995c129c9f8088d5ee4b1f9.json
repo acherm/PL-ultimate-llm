@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2f5b10872868fe72e995c129c9f8088d5ee4b1f9",
+    "sha1_git": "2f5b10872868fe72e995c129c9f8088d5ee4b1f9",
+    "filename": "/ORCGR01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 98900,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2f5b10872868fe72e995c129c9f8088d5ee4b1f9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2f5b10872868fe72e995c129c9f8088d5ee4b1f9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 98900,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2436,
+    "blank_lines": 3,
+    "comment_lines": 721,
+    "code_lines": 1712,
+    "comment_ratio": 0.296,
+    "max_line_length": 88,
+    "avg_line_length": 39.6,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGR01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 38,
+    "call_count": 39,
+    "perform_count": 98,
+    "goto_count": 36,
+    "pic_count": 87,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY includes with .INC extension, LINKAGE SECTION with MCP/SPA/LINK areas typical of ORCA middleware.",
+        "evidence": [
+          "PROGRAM-ID. ORCGR01",
+          "COPY \"MCPAREA\"",
+          "COPY \"ORCA-SPA\"",
+          "COPY \"LINKAREA\"",
+          "PROCEDURE DIVISION USING MCPAREA SPAAREA LINKAREA SCRAREA",
+          "COPY \"ORCA-DBPATH\"",
+          "SELECT RECEERR-FILE ASSIGN RECEERR",
+          "no EXEC CICS or EXEC SQL",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (レセプト) creation system - individual instruction screen (R01). Part of JMA ORCA standard medical billing/receipt software used by Japanese clinics.",
+        "summary": "This program implements the receipt creation individual-instruction screen (ORCGR01) for the JMA ORCA medical billing system. It handles screen navigation, data entry, and processing for creating medical receipts (レセプト), including patient information lookup, insurance combination checks, and job management DB interactions. It is a subprogram called via the ORCA middleware framework using MCP/SPA/LINK areas.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with MCP/SPA/LINK/SCRAREA pattern (ORCA middleware)",
+        "38 COPY statements referencing .INC copybooks",
+        "39 CALL statements",
+        "EVALUATE MCP-STATUS ALSO MCP-EVENT pattern",
+        "SPA (Scratchpad Area) usage for screen state management",
+        "Japanese EUC-encoded comments (latin-1 decoded as mojibake)",
+        "File SELECT for error file (RECEERR-FILE)",
+        "No EXEC SQL or EXEC CICS",
+        "OCCURS 100 tables for screen list management",
+        "Revision history spanning 2000-2002"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are in Japanese EUC encoding, decoded as latin-1 resulting in mojibake. The file is part of the open-source JMA ORCA medical receipt system, a well-known production COBOL system used in Japanese medical practices. Source truncated at 16000 chars out of ~98900 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10095,
+      "completion_tokens": 626,
+      "total_tokens": 10721,
+      "cost": 0.039675,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.039675,
+        "upstream_inference_prompt_cost": 0.030285,
+        "upstream_inference_completions_cost": 0.00939
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.43,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:10:13Z"
+}

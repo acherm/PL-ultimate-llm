@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0bf7cd1defb5fd850466bfed6441e6b33bcdd85b",
+    "sha1_git": "0bf7cd1defb5fd850466bfed6441e6b33bcdd85b",
+    "filename": "/ORCR0105.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 584177,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0bf7cd1defb5fd850466bfed6441e6b33bcdd85b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0bf7cd1defb5fd850466bfed6441e6b33bcdd85b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 584177,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 12436,
+    "blank_lines": 5,
+    "comment_lines": 2156,
+    "code_lines": 10275,
+    "comment_ratio": 0.173,
+    "max_line_length": 116,
+    "avg_line_length": 46.0,
+    "long_lines_over_72": 73,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0105"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 68,
+    "call_count": 81,
+    "perform_count": 625,
+    "goto_count": 59,
+    "pic_count": 536,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCR0105 is part of the Japanese Medical Association open-source receipt billing system.",
+        "evidence": [
+          "PROGRAM-ID. ORCR0105",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "JMA Open Source License",
+          "SELECT RECE02-FILE ASSIGN RECE01PARA",
+          "ORGANIZATION IS INDEXED ACCESS MODE IS DYNAMIC",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed format, 68 COPY statements, 81 CALLs"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) billing system — creates print files for medical insurance claim receipts (レセプト印刷用ファイル作成) for the national health insurance (国保/社保) system, handling various insurance combinations, disaster relief, and regional public expense billing.",
+        "summary": "ORCR0105 generates output files for printing Japanese medical insurance claim receipts (レセプト). It processes patient insurance data, calculates claim points and co-payments across multiple insurance types (national health, social insurance, public expense subsidies), and writes formatted records for downstream printing. The program handles numerous special cases including disaster relief, elderly patient rules, and regional public expense variations.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file organization with DYNAMIC access (RECE02-FILE, RECE02X-FILE)",
+        "68 COPY statements indicating heavy use of shared copybooks",
+        "81 CALL statements to external subprograms",
+        "625 PERFORM statements indicating structured procedural logic",
+        "59 GO TO statements",
+        "No COMP-3 usage (all numeric fields in display or binary)",
+        "Extensive Japanese-language comments in EUC-JP/latin-1 encoding",
+        "Very large single program (~584 KB, 12436 lines)",
+        "Detailed revision history spanning 2008–2018 (versions 04.02 through 05.00)",
+        "No EXEC SQL or EXEC CICS — pure batch file I/O"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is encoded in EUC-JP decoded as latin-1, causing mojibake in Japanese comment text. The program is genuine production COBOL from the JMA ORCA open-source medical receipt system, maintained over many years (2008–2018). Truncated at 16000 chars; full file is ~584 KB with 12436 lines. No COMP-3 fields detected despite financial calculations — likely uses DISPLAY or BINARY numerics throughout."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 15795,
+      "completion_tokens": 665,
+      "total_tokens": 16460,
+      "cost": 0.05736,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.05736,
+        "upstream_inference_prompt_cost": 0.047385,
+        "upstream_inference_completions_cost": 0.009975
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.34,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:09:00Z"
+}

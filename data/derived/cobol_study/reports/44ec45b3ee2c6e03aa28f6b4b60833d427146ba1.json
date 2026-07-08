@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:44ec45b3ee2c6e03aa28f6b4b60833d427146ba1",
+    "sha1_git": "44ec45b3ee2c6e03aa28f6b4b60833d427146ba1",
+    "filename": "/irsdfltLD.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 17548,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:44ec45b3ee2c6e03aa28f6b4b60833d427146ba1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:44ec45b3ee2c6e03aa28f6b4b60833d427146ba1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 17548,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 456,
+    "blank_lines": 0,
+    "comment_lines": 190,
+    "code_lines": 266,
+    "comment_ratio": 0.417,
+    "max_line_length": 105,
+    "avg_line_length": 37.5,
+    "long_lines_over_72": 38,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "irsdfltLD"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 6,
+    "perform_count": 35,
+    "goto_count": 9,
+    "pic_count": 35,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source; part of the ACAS (Applewood Computers Accounting System) v3.02 by Vincent Bryan Coen. Uses MySQL/MariaDB via embedded SQL and direct CALL to MySQL_rollback/MySQL_commit. Compiler directive '>>source free' confirms GnuCOBOL.",
+        "evidence": [
+          ">>source free directive",
+          "*> comment style (GnuCOBOL free-format)",
+          "call \"MySQL_rollback\" / call \"MySQL_commit\"",
+          "binary-char data type",
+          "EXEC SQL present",
+          "copy copybooks with .cob extension",
+          "program-id irsdfltLD"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "ACAS (Applewood Computers Accounting System) IRS (Inland Revenue System?) default table loader; loads IRS default records from a flat file into a MySQL/MariaDB RDB table.",
+        "summary": "This batch program loads IRS default records from a sequential flat file into a MySQL relational database table. It handles duplicate key detection by performing a rewrite instead of a write, and calls supporting modules acasirsub3 and irsdfltMT for file and table access. It is part of the ACAS v3.02 accounting system.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        ">>source free compiler directive (GnuCOBOL)",
+        "EXEC SQL (MySQL/MariaDB via esql)",
+        "Direct CALL to MySQL_rollback and MySQL_commit",
+        "9 COPY statements for modular copybook structure",
+        "Duplicate key handling via SQL-State '23000' and SQL-Err '1062'/'1022'",
+        "call to acas-get-params for reading acas.param configuration file",
+        "SO-Print 160-char sysout buffer replacing DISPLAY",
+        "WS-RDB-Vars block for RDB connection parameters",
+        "Free-format source with *> comments throughout"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; remaining ~1548 chars not shown but program structure is clear. High comment ratio (41.7%) reflects extensive change log and copyright header. The program is clearly production-grade open-source accounting software by a named author under GPL v3."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7275,
+      "completion_tokens": 572,
+      "total_tokens": 7847,
+      "cost": 0.030405,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030405,
+        "upstream_inference_prompt_cost": 0.021825,
+        "upstream_inference_completions_cost": 0.00858
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.68,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:36:08Z"
+}

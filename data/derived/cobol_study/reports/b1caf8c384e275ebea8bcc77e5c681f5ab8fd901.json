@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b1caf8c384e275ebea8bcc77e5c681f5ab8fd901",
+    "sha1_git": "b1caf8c384e275ebea8bcc77e5c681f5ab8fd901",
+    "filename": "/Z95644.CBL(COBHW02).cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4570,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b1caf8c384e275ebea8bcc77e5c681f5ab8fd901/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b1caf8c384e275ebea8bcc77e5c681f5ab8fd901/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4570,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 112,
+    "blank_lines": 0,
+    "comment_lines": 30,
+    "code_lines": 82,
+    "comment_ratio": 0.268,
+    "max_line_length": 70,
+    "avg_line_length": 39.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COBHW02"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style with RECORDING MODE F, RETURN-CODE special register, and file status handling typical of z/OS batch COBOL",
+        "evidence": [
+          "RECORDING MODE F",
+          "SELECT ... ASSIGN ... STATUS",
+          "RETURN-CODE",
+          "FUNCTION INTEGER-OF-DATE",
+          "88-level condition names with VALUE 00 97"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Account record processing with date difference calculation; Turkish field names (AD=name, SOYAD=surname, DTAR=birth date) suggest student exercise",
+        "summary": "Reads account records from an input file (ACCTREC), computes the difference in days between two dates (ACCT-DTAR and ACCT-TODAY) using INTEGER-OF-DATE, and writes the results including the date difference (FARK) to a print output file (PRTLINE).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "FUNCTION INTEGER-OF-DATE for date arithmetic",
+        "RECORDING MODE F on FD entries",
+        "File status checking with 88-level condition names",
+        "RETURN-CODE used for error propagation",
+        "Turkish field naming convention (AD, SOYAD, DTAR, FARK)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Turkish field names (AD=first name, SOYAD=surname, DTAR=birth date, FARK=difference) strongly suggest a student exercise by a Turkish-speaking author (MERT MUSA TEMEL). The program is syntactically complete and well-structured but simple in scope. There is a minor bug: the second IF check in H100-OPEN-FILES tests ACCT-ST instead of PRT-ST for the 97 condition."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3748,
+      "completion_tokens": 438,
+      "total_tokens": 4186,
+      "cost": 0.017814,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017814,
+        "upstream_inference_prompt_cost": 0.011244,
+        "upstream_inference_completions_cost": 0.00657
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.57,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:31:56Z"
+}

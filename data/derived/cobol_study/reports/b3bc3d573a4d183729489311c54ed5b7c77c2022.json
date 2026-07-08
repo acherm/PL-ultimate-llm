@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b3bc3d573a4d183729489311c54ed5b7c77c2022",
+    "sha1_git": "b3bc3d573a4d183729489311c54ed5b7c77c2022",
+    "filename": "/SOKATU1700.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 73757,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b3bc3d573a4d183729489311c54ed5b7c77c2022/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b3bc3d573a4d183729489311c54ed5b7c77c2022/raw/"
+  },
+  "indicators": {
+    "bytes_len": 73757,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1794,
+    "blank_lines": 3,
+    "comment_lines": 515,
+    "code_lines": 1276,
+    "comment_ratio": 0.288,
+    "max_line_length": 79,
+    "avg_line_length": 40.1,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU1700"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 33,
+    "call_count": 33,
+    "perform_count": 67,
+    "goto_count": 5,
+    "pic_count": 67,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with string replacement, LINKAGE SECTION with COMMAND-PARAM, and CALL to ORCA subsystem routines (ORCSJOB, ORCSDAY).",
+        "evidence": [
+          "PROGRAM-ID SOKATU1700",
+          "COPY with REPLACING using // delimiters",
+          "CALL \"ORCSJOB\" USING",
+          "CALL \"ORCSDAY\" USING",
+          "LINKAGE SECTION with COMMAND-PARAM PIC X(256)",
+          "SELECT ... ORGANIZATION IS INDEXED",
+          "Copyright(C) 2002 JMA (Japan Medical Association)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) processing system - specifically national health insurance (国保) aggregate/summary report generation (国保総括表 SOKATU1700)",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It processes national health insurance (Kokuho) claim data to generate aggregate summary reports (総括表) for monthly billing. It reads claim temporary files, updates receipt DB files, and produces printed output via ORCA subsystem calls.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "33 COPY statements referencing ORCA-specific copybooks (CPPTINF, CPHKNJAINF, CPHKNNUM, etc.)",
+        "33 CALL statements to ORCA subsystem routines (ORCSJOB, ORCSDAY, etc.)",
+        "LINKAGE SECTION with COMMAND-PARAM for shell invocation",
+        "UNSTRING COMMAND-PARAM DELIMITED BY comma for parameter parsing",
+        "INDEXED file organization with DYNAMIC access",
+        "Japanese text in comments (EUC-JP encoding rendered as latin-1 mojibake)",
+        "SPA-AREA (scratchpad area) pattern typical of ORCA",
+        "REDEFINES usage for hospital name/address fields",
+        "No EXEC SQL or EXEC CICS - uses ORCA's own DB abstraction layer"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source file is encoded in EUC-JP but decoded as latin-1, causing Japanese comments to appear as mojibake. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Truncated at 16000 chars but enough structure is visible to classify confidently. No COMP-3 usage despite financial calculations - likely uses display numerics throughout."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9094,
+      "completion_tokens": 648,
+      "total_tokens": 9742,
+      "cost": 0.037002,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037002,
+        "upstream_inference_prompt_cost": 0.027282,
+        "upstream_inference_completions_cost": 0.00972
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.84,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:49:50Z"
+}

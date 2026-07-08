@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f9dd9e44c917d552b0ee170e5d4aea6e461bf50d",
+    "sha1_git": "f9dd9e44c917d552b0ee170e5d4aea6e461bf50d",
+    "filename": "/rdab0258.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 34821,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f9dd9e44c917d552b0ee170e5d4aea6e461bf50d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f9dd9e44c917d552b0ee170e5d4aea6e461bf50d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 34821,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 477,
+    "blank_lines": 92,
+    "comment_lines": 128,
+    "code_lines": 257,
+    "comment_ratio": 0.332,
+    "max_line_length": 72,
+    "avg_line_length": 72.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "RDAB0258"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 1,
+    "perform_count": 24,
+    "goto_count": 0,
+    "pic_count": 42,
+    "comp3_count": 4,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Brazilian IBM mainframe batch program developed by BRQ IT Services, dated November 2014. Uses RECORDING MODE F, BLOCK CONTAINS 0, COMP-3, DECIMAL-POINT IS COMMA (Brazilian locale), and COPY books with naming conventions typical of Brazilian mainframe shops.",
+        "evidence": [
+          "RECORDING MODE F",
+          "BLOCK CONTAINS 0",
+          "COMP-3",
+          "DECIMAL-POINT IS COMMA",
+          "LABEL RECORD STANDARD",
+          "COPY 'I#BRAD7C'",
+          "COPY 'I#RDAB01'",
+          "COPY 'I#RDAB15'",
+          "FILE STATUS clause",
+          "SECTION-based PROCEDURE DIVISION"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Brazilian bank (likely Bradesco based on 'BRAD7100' and 'I#BRAD7C' copybook references) — processes telephone registration records and installment/due-date records, performing a balance-line match to separate accepted from rejected records.",
+        "summary": "Batch balance-line program that reads two sequential input files (ENTRAD1: telephone registration data, ENTRAD2: due/upcoming installment data), matches them by a composite key (bank+agency+account+origin indicator), and writes accepted records to ACEITE and rejected records to DESPZD. Counters track records read and written for each file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Balance-line algorithm with two input files",
+        "COMP-3 accumulators for record counts",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "FILE STATUS checking on all files",
+        "REDEFINES used for signed/unsigned key field conversion",
+        "Multiple COPY books (I#BRAD7C, I#RDAB01, I#RDAB15)",
+        "SECTION-based PROCEDURE DIVISION",
+        "No EXEC SQL or EXEC CICS — pure batch sequential"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; PROCEDURE DIVISION logic is partially visible but the balance-line matching pattern is clear from structure. Program name RDAB0258 and copybook prefix I#BRAD suggest Bradesco (major Brazilian bank). Author and analyst names are Brazilian, consistent with BRQ IT Services, a well-known Brazilian IT outsourcer."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5601,
+      "completion_tokens": 570,
+      "total_tokens": 6171,
+      "cost": 0.025353,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025353,
+        "upstream_inference_prompt_cost": 0.016803,
+        "upstream_inference_completions_cost": 0.00855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:38:27Z"
+}

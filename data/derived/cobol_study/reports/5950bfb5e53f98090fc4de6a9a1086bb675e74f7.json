@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5950bfb5e53f98090fc4de6a9a1086bb675e74f7",
+    "sha1_git": "5950bfb5e53f98090fc4de6a9a1086bb675e74f7",
+    "filename": "/ORCR0410.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 147697,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5950bfb5e53f98090fc4de6a9a1086bb675e74f7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5950bfb5e53f98090fc4de6a9a1086bb675e74f7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 147697,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3210,
+    "blank_lines": 0,
+    "comment_lines": 774,
+    "code_lines": 2436,
+    "comment_ratio": 0.241,
+    "max_line_length": 78,
+    "avg_line_length": 45.0,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0410"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 7,
+    "perform_count": 255,
+    "goto_count": 3,
+    "pic_count": 142,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCR0410 handles monthly insurance claim (receipt) file creation for outpatient/self-pay billing.",
+        "evidence": [
+          "PROGRAM-ID ORCR0410",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "COPY directives with .INC files (CPRCF040.INC, CPRCF041.INC, CPRECEDAT1.INC)",
+          "ASSIGN RECE40PARA style (GnuCOBOL/OpenCOBOL environment variable assignment)",
+          "No EXEC CICS or EXEC SQL",
+          "Fixed format, max line 78"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt/レセプト) processing system - monthly outpatient and self-pay receipt detail file creation and insurance information editing",
+        "summary": "ORCR0410 is part of the JMA ORCA standard medical receipt software system. It processes monthly insurance claim (receipt) files for outpatient and self-pay (自費) billing, creating and editing receipt detail files and insurance information. The program reads indexed receipt files (RECE40/RECE41), performs calculations for medical fees, consumption tax, and various insurance categories, and writes output including error files.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "29 COPY statements with .INC copybooks",
+        "REPLACING clause on COPY for record renaming (RECE41 -> RECE412)",
+        "INDEXED file organization with DYNAMIC and SEQUENTIAL access modes",
+        "Extensive Japanese-language comments (EUC-JP/latin-1 encoded)",
+        "Long revision history spanning 2002-2013",
+        "OCCURS tables for daily count arrays and institution tables",
+        "No COMP-3 usage despite financial calculations",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP (Japanese) decoded as latin-1, causing mojibake in comments. The source is clearly production-grade JMA ORCA medical receipt software, a well-known open-source Japanese medical billing system. Truncated at 16000 chars out of 147697 bytes (3210 lines total), so only the header and data division are visible."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 10995,
+      "completion_tokens": 607,
+      "total_tokens": 11602,
+      "cost": 0.04209,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.04209,
+        "upstream_inference_prompt_cost": 0.032985,
+        "upstream_inference_completions_cost": 0.009105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.84,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:52:57Z"
+}

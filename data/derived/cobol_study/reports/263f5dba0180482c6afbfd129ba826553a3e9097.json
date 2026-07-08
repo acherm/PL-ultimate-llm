@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:263f5dba0180482c6afbfd129ba826553a3e9097",
+    "sha1_git": "263f5dba0180482c6afbfd129ba826553a3e9097",
+    "filename": "/PEMGRC1.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3893,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:263f5dba0180482c6afbfd129ba826553a3e9097/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:263f5dba0180482c6afbfd129ba826553a3e9097/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3893,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 147,
+    "blank_lines": 39,
+    "comment_lines": 0,
+    "code_lines": 108,
+    "comment_ratio": 0.0,
+    "max_line_length": 70,
+    "avg_line_length": 25.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PEMGRC1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 12,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style with RECORDING MODE F, LABEL RECORDS STANDARD, BLOCK CONTAINS 0, EJECT directive, GOBACK, and COPY of a copybook (ECSGAP01)",
+        "evidence": [
+          "RECORDING MODE F",
+          "LABEL RECORDS STANDARD",
+          "BLOCK CONTAINS 0 RECORDS",
+          "EJECT",
+          "GOBACK",
+          "COPY ECSGAP01",
+          "COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "GAAP (Generally Accepted Accounting Principles) record processing — filters and writes GAAP records based on state grouping and type counts (LF and AH types, max 5 per state)",
+        "summary": "PEMGRC1 reads GAAP input records, filters them by state and record type (LF/AH), limiting to 5 records per type per state, and writes qualifying records to an output file. It tracks counts of records read, written, and fixed, displaying totals at end of run.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal counters",
+        "88-level condition names (END-OF-INPUT, WRITE-REC)",
+        "PERFORM THRU paragraph pattern",
+        "EJECT directive",
+        "COPY ECSGAP01 for input record layout",
+        "GOBACK instead of STOP RUN",
+        "Working-storage sentinel FILLER markers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The COPY ECSGAP01 copybook is not included so the full input record layout (GR-REIN, GR-STATE, GR-LFTYP, GR-AHTYP, GAAP-RECORD) is inferred from field references. No SQL or CICS. Author listed as PABLO. The nested IF without explicit END-IF for the outer GR-REIN check relies on the final END-IF, which is valid COBOL-85 structured syntax."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3516,
+      "completion_tokens": 494,
+      "total_tokens": 4010,
+      "cost": 0.017958,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017958,
+        "upstream_inference_prompt_cost": 0.010548,
+        "upstream_inference_completions_cost": 0.00741
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.48,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:45:23Z"
+}

@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a764c549761a82fb84012430119ea481bf25e30e",
+    "sha1_git": "a764c549761a82fb84012430119ea481bf25e30e",
+    "filename": "/cgi-edit-user.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14356,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a764c549761a82fb84012430119ea481bf25e30e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a764c549761a82fb84012430119ea481bf25e30e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14356,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 410,
+    "blank_lines": 79,
+    "comment_lines": 44,
+    "code_lines": 287,
+    "comment_ratio": 0.133,
+    "max_line_length": 69,
+    "avg_line_length": 34.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "ELSE",
+      "END-IF",
+      "FROM",
+      "MOVE",
+      "NOT",
+      "PIC",
+      "TO",
+      "WHERE"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 15,
+    "perform_count": 12,
+    "goto_count": 0,
+    "pic_count": 38,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL CGI web application using EXEC SQL (likely with ocesql or similar precompiler), Swedish-language comments and string literals, custom CGI library calls (wui-print-header, wui-start-html, get-post-value, etc.)",
+        "evidence": [
+          "*> comment style (GnuCOBOL free-form comments)",
+          "GOBACK statement",
+          "EXEC SQL CONNECT :wc-username IDENTIFIED BY :wc-passwd USING :wc-database",
+          "COPY setupenv_openjensen",
+          "CALL 'wui-print-header'",
+          "Swedish text in PIC X literals e.g. 'Uppdatera användare'"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "CGI web application for user management in a system called 'openjensen'; edits/updates user records in a database table tbl_user",
+        "summary": "This program is a CGI handler that processes an HTTP POST request to edit/update a user record in a database. It reads POST parameters (firstname, lastname, email, phone, username, password, program), validates the user ID exists in tbl_user, compares new values against existing ones, and issues a SQL UPDATE followed by COMMIT. It wraps output in HTML via custom CGI library calls.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL embedded SQL (SELECT, UPDATE, COMMIT, CONNECT, DISCONNECT)",
+        "EXEC SQL INCLUDE SQLCA",
+        "CGI web interface via custom library calls (wui-print-header, wui-start-html, get-post-value)",
+        "Swedish-language string literals and comments",
+        "COPY copybooks (setupenv_openjensen, z0100-error-routine)",
+        "88-level condition names for switches",
+        "FUNCTION NUMVAL usage",
+        "No COMP-3 usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "The program-id parsing by the mechanical indicator is garbled (picking up keywords as program IDs), but the actual PROGRAM-ID is 'cgi-edit-user'. The dialect is likely GnuCOBOL given the *> comment style and CGI context, but could be another COBOL supporting this syntax. The SQL precompiler target is unclear (could be ocesql, Pro*COBOL, or similar). Swedish locale evident from string literals."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6368,
+      "completion_tokens": 590,
+      "total_tokens": 6958,
+      "cost": 0.027954,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027954,
+        "upstream_inference_prompt_cost": 0.019104,
+        "upstream_inference_completions_cost": 0.00885
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.32,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:18:51Z"
+}

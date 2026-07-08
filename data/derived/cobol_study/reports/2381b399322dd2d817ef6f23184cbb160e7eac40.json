@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2381b399322dd2d817ef6f23184cbb160e7eac40",
+    "sha1_git": "2381b399322dd2d817ef6f23184cbb160e7eac40",
+    "filename": "/ORCR0730.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 606643,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2381b399322dd2d817ef6f23184cbb160e7eac40/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2381b399322dd2d817ef6f23184cbb160e7eac40/raw/"
+  },
+  "indicators": {
+    "bytes_len": 606643,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 12893,
+    "blank_lines": 4,
+    "comment_lines": 2148,
+    "code_lines": 10741,
+    "comment_ratio": 0.167,
+    "max_line_length": 116,
+    "avg_line_length": 46.1,
+    "long_lines_over_72": 77,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0730"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 69,
+    "call_count": 86,
+    "perform_count": 632,
+    "goto_count": 47,
+    "pic_count": 534,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY with .INC copybooks, ASSIGN to symbolic names, INDEXED files with FILE STATUS — typical ORCA/NACL coding style.",
+        "evidence": [
+          "PROGRAM-ID ORCR0730",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY 'CPRCF062.INC'",
+          "SELECT ... ASSIGN RECE62PARA",
+          "ORGANIZATION IS INDEXED",
+          "FILE STATUS IS STS-RECE62",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed-format source with Japanese EUC comments"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance receipt (レセプト) processing system — inpatient (入院) receipt print file creation, part of the JMA ORCA open-source medical billing system",
+        "summary": "ORCR0730 creates print files for inpatient medical insurance receipts (入院レセプト印刷用ファイル作成). It reads multiple indexed RECE6x files, processes insurance history, co-payment amounts, special notes, and regional public-expense data, then writes formatted output for receipt printing. The program has an extensive revision history spanning 2008–2014 covering numerous Japanese regional insurance rule changes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Large production program: ~12,893 lines, 606 KB",
+        "69 COPY statements referencing .INC copybooks",
+        "86 CALL statements to external subprograms",
+        "632 PERFORM statements, 47 GO TO",
+        "Multiple INDEXED files with SEQUENTIAL and DYNAMIC access",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "Extensive revision history with named developers (NACL-Fujiwara, NACL-Kadowaki)",
+        "No EXEC SQL or EXEC CICS — pure file-based batch",
+        "No COMP-3 usage despite financial calculations"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is encoded in EUC-JP (Japanese) but decoded as latin-1, causing mojibake in comments. The program is clearly part of the well-known JMA ORCA open-source medical receipt system used widely in Japanese clinics. File name ORCR0730.CBL and program-id ORCR0730 are consistent with ORCA naming conventions. The absence of COMP-3 is unusual for financial data but consistent with ORCA's GnuCOBOL usage patterns."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 14311,
+      "completion_tokens": 650,
+      "total_tokens": 14961,
+      "cost": 0.052683,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.052683,
+        "upstream_inference_prompt_cost": 0.042933,
+        "upstream_inference_completions_cost": 0.00975
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.14,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:39:14Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9dd4da118aff1a0aa4c45eb624c7a1b25994a596",
+    "sha1_git": "9dd4da118aff1a0aa4c45eb624c7a1b25994a596",
+    "filename": "/OPENMOCA.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6425,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9dd4da118aff1a0aa4c45eb624c7a1b25994a596/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9dd4da118aff1a0aa4c45eb624c7a1b25994a596/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6425,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 198,
+    "blank_lines": 0,
+    "comment_lines": 31,
+    "code_lines": 167,
+    "comment_ratio": 0.157,
+    "max_line_length": 117,
+    "avg_line_length": 30.4,
+    "long_lines_over_72": 12,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "OPENMOCA"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 5,
+    "call_count": 0,
+    "perform_count": 24,
+    "goto_count": 8,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL-based web application framework (OpenMOCA / TP ONE SRL), GPL-licensed, uses COPY-heavy structure with web/view/caus/dato file abstractions",
+        "evidence": [
+          "GPL license header by Federico Priolo / TP ONE SRL",
+          "GOBACK statement",
+          "COPY 'COBW3.CBL', 'GLOBALS.CBL', 'IMAGES.CBL'",
+          "PERFORM ... THRU pattern throughout",
+          "STRING ... DELIMITED BY SIZE",
+          "fixed-format line numbering 000010-001631"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Web-based COBOL CGI/template framework (OpenMOCA) for managing 'causali' (accounting/business cause codes) via HTML templates",
+        "summary": "OPENMOCA opens web, causale, and dato files, reads an MK-ITEM key from a web request, retrieves the corresponding causale record, loads view variables from a dato file loop, and renders an HTML template (TEMPLATE/INSECAUS.HTM) for a variation/edit form. It is part of the OpenMOCA COBOL web framework by TP ONE SRL.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Heavy use of COPY statements (5 in FILE-CONTROL, multiple in DATA and PROCEDURE)",
+        "STRING ... DELIMITED BY SIZE for URL/template path construction",
+        "PERFORM ... THRU paragraph pattern extensively used",
+        "GO TO used for loop control and error exits",
+        "GOBACK for program termination",
+        "Italian-language comments and variable names",
+        "HTML template rendering via MAKE-WEB",
+        "checked='true' attribute injection for HTML checkboxes"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "No PIC clauses visible (all in copybooks); no EXEC SQL or EXEC CICS; dialect inferred as GnuCOBOL from GPL license and OpenMOCA project context. Standard inferred as COBOL-85 from syntax style. Some lines exceed 72 columns (long_lines_over_72=12) but numbering scheme is classic fixed-format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4753,
+      "completion_tokens": 536,
+      "total_tokens": 5289,
+      "cost": 0.022299,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022299,
+        "upstream_inference_prompt_cost": 0.014259,
+        "upstream_inference_completions_cost": 0.00804
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.38,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:29:47Z"
+}

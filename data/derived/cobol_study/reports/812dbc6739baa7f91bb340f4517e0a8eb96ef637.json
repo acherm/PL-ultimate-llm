@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:812dbc6739baa7f91bb340f4517e0a8eb96ef637",
+    "sha1_git": "812dbc6739baa7f91bb340f4517e0a8eb96ef637",
+    "filename": "/GABDEBIT.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16453,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:812dbc6739baa7f91bb340f4517e0a8eb96ef637/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:812dbc6739baa7f91bb340f4517e0a8eb96ef637/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16453,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 384,
+    "blank_lines": 0,
+    "comment_lines": 16,
+    "code_lines": 368,
+    "comment_ratio": 0.042,
+    "max_line_length": 72,
+    "avg_line_length": 41.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "GABDEBIT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 29,
+    "perform_count": 18,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with $SET directive (LINKCOUNT, ANS85, BOUND, AUTOLOCK), screen AT coordinates, HIGHLIGHT/REVERSE-VIDEO/FOREGROUND-COLOR clauses, UNLOCK statement, READ PREVIOUS — typical of Micro Focus Personal COBOL or similar PC-based Micro Focus product",
+        "evidence": [
+          "$SET LINKCOUNT\"128\" ANS85\"SYNTAX\" BOUND AUTOLOCK",
+          "DISPLAY ... AT 2401 (screen position syntax)",
+          "HIGHLIGHT, REVERSE-VIDEO, FOREGROUND-COLOR clauses",
+          "READ DEBITOR PREVIOUS NO LOCK",
+          "UNLOCK DEBITOR",
+          "DECL-D SECTION. USE AFTER ERROR PROCEDURE ON DEBITOR"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Accounts receivable / debtor master file maintenance (Kundendatei = customer file) for a German-language accounting or ERP system; includes payment terms (Zahlungskonditionen), VAT (USt/UID), and address management",
+        "summary": "GABDEBIT is an interactive screen program for creating, modifying, and deleting customer (debtor) master records. It handles address entry, salutation, short name, VAT status, UID number, payment conditions (discount tiers), invoice-to account, and telephone number. It is called as a subprogram (EXIT PROGRAM) with a call-code parameter (WL-CA 60/61).",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "$SET compiler directive (Micro Focus)",
+        "Screen DISPLAY AT with HIGHLIGHT, REVERSE-VIDEO, FOREGROUND-COLOR",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "UNSTRING for address line splitting",
+        "REDEFINES for packed condition code (WH-KK/WR-KK)",
+        "USE AFTER ERROR PROCEDURE declarative",
+        "READ PREVIOUS NO LOCK (Micro Focus ISAM)",
+        "UNLOCK statement",
+        "EVALUATE for USt display",
+        "Multiple COPY statements (GABSEDEB.CPY, GABDEBIT.CPY, WHCREG.CPY, GABEXT.CPY)",
+        "German-language UI strings and comments",
+        "88-level condition names ANLAGE/AEND on same item"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (384 lines total, procedure division not detected by mechanical scan likely because DECL-D SECTION and STEUER SECTION replace standard PROCEDURE DIVISION header). The program is clearly part of a larger German-language accounting package (FIBU/GAB prefix). Encoding is latin-1 with German special characters (ä, ö, ü, ß visible as artifacts)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8607,
+      "completion_tokens": 672,
+      "total_tokens": 9279,
+      "cost": 0.035901,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035901,
+        "upstream_inference_prompt_cost": 0.025821,
+        "upstream_inference_completions_cost": 0.01008
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:31:24Z"
+}

@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b8dda69ffa59fe8312a1d6320b642b6f192362a7",
+    "sha1_git": "b8dda69ffa59fe8312a1d6320b642b6f192362a7",
+    "filename": "/SEIKYU0609.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 147969,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b8dda69ffa59fe8312a1d6320b642b6f192362a7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b8dda69ffa59fe8312a1d6320b642b6f192362a7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 147969,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3386,
+    "blank_lines": 1,
+    "comment_lines": 1336,
+    "code_lines": 2049,
+    "comment_ratio": 0.395,
+    "max_line_length": 76,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 8,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEIKYU0609"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 31,
+    "call_count": 68,
+    "perform_count": 158,
+    "goto_count": 5,
+    "pic_count": 165,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (open-cobol/GnuCOBOL), Japanese medical billing system. Comment references 'open-cobol1.0' compatibility fix.",
+        "evidence": [
+          "PROGRAM-ID SEIKYU0609",
+          "COPY directives with .INC files",
+          "comment '01.00.10 open-cobol1.0ÂÐ±þ'",
+          "COPY 'COMMON-SPA'",
+          "COPY 'CPORCSPRTLNK.INC'",
+          "no EXEC CICS/SQL",
+          "fixed format max 76 chars"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance billing (receipt/seikyu) system - JMA ORCA standard receipt software, handling local public expense (chihou kouhi) receipt forms 182,282,183,283,184",
+        "summary": "This program is part of the JMA ORCA standard medical receipt software system. It processes and prints local public expense (chihou kouhi) medical billing receipts for specific form types. It reads patient and receipt data files, formats disease name (byomei) fields, and outputs printed receipt documents.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "31 COPY statements referencing .INC copybooks",
+        "68 CALL statements indicating heavy subprogram use",
+        "158 PERFORM statements",
+        "Japanese EUC-encoded comments (latin-1 decoded)",
+        "REDEFINES usage",
+        "OCCURS tables",
+        "No COMP-3 usage",
+        "No EXEC SQL or EXEC CICS",
+        "SPA-AREA (screen/parameter area) usage",
+        "Version history comments spanning 2005-2012"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but contains Japanese EUC-JP encoded text in comments and string literals, causing mojibake in the decoded view. This is confirmed JMA ORCA open-source medical receipt software. Source is truncated at 16000 chars out of ~148KB total. The program name SEIKYU0609 suggests it is the 6th form type, 9th variant of a billing (seikyu) program series."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9944,
+      "completion_tokens": 542,
+      "total_tokens": 10486,
+      "cost": 0.037962,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037962,
+        "upstream_inference_prompt_cost": 0.029832,
+        "upstream_inference_completions_cost": 0.00813
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.12,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:37:48Z"
+}

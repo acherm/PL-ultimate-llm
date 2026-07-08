@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3465e06476f52a40765bebb3787eff5dcaff127c",
+    "sha1_git": "3465e06476f52a40765bebb3787eff5dcaff127c",
+    "filename": "/ORCXRMST1.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 22970,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3465e06476f52a40765bebb3787eff5dcaff127c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3465e06476f52a40765bebb3787eff5dcaff127c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 22970,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 595,
+    "blank_lines": 0,
+    "comment_lines": 210,
+    "code_lines": 385,
+    "comment_ratio": 0.353,
+    "max_line_length": 74,
+    "avg_line_length": 37.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCXRMST1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 1,
+    "perform_count": 38,
+    "goto_count": 0,
+    "pic_count": 46,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software); uses GnuCOBOL with Linux file paths and COPY directives typical of ORCA",
+        "evidence": [
+          "PROGRAM-ID ORCXRMST1",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY \"COMMON-SPA\"",
+          "COPY \"CPDBKANRI.INC\"",
+          "COPY \"CPMSTKANRI.INC\"",
+          "COPY \"MCPAREA\"",
+          "COPY \"MCPDATA.INC\"",
+          "/var/lib/jma-receipt/master/ path",
+          "LINE SEQUENTIAL organization",
+          "INDEXED DBR-IDX with SEARCH"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - master management update processing",
+        "summary": "This program reads a parameter/input file listing master record versions (ORCADBR-2.DAT) and compares them against the current DB management and master management table versions. It then writes an output file (ORCADBR.OUT) listing masters that need updating, and updates the MSTKANRI (master management) table in the database accordingly.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with PARA-REC (called as subprogram via STOP RUN pattern)",
+        "SEARCH with INDEXED table (WRK-TBL-DBRVERSION OCCURS 100 INDEXED DBR-IDX)",
+        "STRING with DELIMITED BY SIZE for path construction",
+        "LINE SEQUENTIAL file organization",
+        "COPY directives for ORCA-specific includes (CPDBKANRI.INC, CPMSTKANRI.INC, MCPAREA, MCPDATA.INC)",
+        "MCP (Message Control Program) database access pattern typical of ORCA",
+        "Japanese comments encoded in Latin-1 (actually EUC-JP or Shift-JIS)",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP DB interface"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File contains Japanese text comments encoded as Latin-1 (likely EUC-JP misidentified); this is part of the well-known open-source JMA ORCA medical receipt system. The program is a subprogram (uses LINKAGE SECTION and STOP RUN) called with hospital number, supervisor flag, and DB file name parameters. Source truncated at 16000 chars but structure is clear."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8416,
+      "completion_tokens": 621,
+      "total_tokens": 9037,
+      "cost": 0.034563,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034563,
+        "upstream_inference_prompt_cost": 0.025248,
+        "upstream_inference_completions_cost": 0.009315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.21,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:46:27Z"
+}

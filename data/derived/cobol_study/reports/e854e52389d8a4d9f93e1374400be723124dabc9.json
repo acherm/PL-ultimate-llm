@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e854e52389d8a4d9f93e1374400be723124dabc9",
+    "sha1_git": "e854e52389d8a4d9f93e1374400be723124dabc9",
+    "filename": "/cobranza.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 74871,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e854e52389d8a4d9f93e1374400be723124dabc9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e854e52389d8a4d9f93e1374400be723124dabc9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 74871,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1667,
+    "blank_lines": 89,
+    "comment_lines": 40,
+    "code_lines": 1538,
+    "comment_ratio": 0.025,
+    "max_line_length": 83,
+    "avg_line_length": 42.9,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "PAGO-CLIENTES"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 73,
+    "call_count": 8,
+    "perform_count": 82,
+    "goto_count": 0,
+    "pic_count": 158,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL (OpenCOBOL) on a PC/DOS or Windows environment; uses SCREEN SECTION with BACKGROUND/FOREGROUND colors, WINDOW-CREATE/WINDOW-REMOVE CONTROL strings, LINKAGE SECTION for NUMERO-CAJA and NOMBRE-USUARIO, and DOS-style backslash paths in COPY statements (e.g. DATOS\\COMPROBA.FCN). Spanish-language identifiers and UI text suggest Latin American business software.",
+        "evidence": [
+          "SCREEN SECTION with BACKGROUND IS BLUE FOREGROUND IS WHITE",
+          "CONTROL \"WINDOW-CREATE, BCOLOR = BLACK, FCOLOR = WHITE\"",
+          "COPY \"DATOS\\COMPROBA.FCN\" (DOS backslash paths)",
+          "PROCEDURE DIVISION USING NUMERO-CAJA NOMBRE-USUARIO",
+          "LINKAGE SECTION with 77-level items",
+          "Spanish identifiers: PAGO-CLIENTES, REG-COBROS, REG-CLIENTES"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Accounts receivable / customer payment collection module for a small business ERP system, likely Argentine or Latin American. Handles receipts (recibos), payment forms (formas de pago), cheques, cash register (caja), and customer ledger.",
+        "summary": "This program (PAGO-CLIENTES) manages customer payment collection. It allows a cashier to enter customer invoices/vouchers to be paid, records payment details including cash, cheques, and other payment forms, and prints a receipt. It interacts with multiple indexed files for customers, vouchers, payments, cheques, bank accounts, and cash register movements.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "SCREEN SECTION with color attributes and WINDOW-CREATE/WINDOW-REMOVE controls",
+        "73 COPY statements referencing external copybooks (file control, file status, screen, error handlers)",
+        "LINKAGE SECTION used for inter-program parameter passing (NUMERO-CAJA, NOMBRE-USUARIO)",
+        "DECLARATIVES section with per-file error handlers via COPY",
+        "Spanish-language UI and identifiers throughout",
+        "DOS/Windows backslash paths in COPY statements",
+        "No EXEC SQL or EXEC CICS; uses native COBOL indexed file I/O",
+        "PROCEDURE DIVISION USING clause indicating subprogram/called module",
+        "Large number of PERFORM statements (82) indicating structured modular design",
+        "Fixed-format source with occasional lines slightly over 72 chars"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source truncated to first 16000 chars; DATA DIVISION not detected by mechanical scan (likely because it is entirely composed of COPY statements). The program is a called subprogram (EXIT PROGRAM at end of INICIALIZO). Dialect is assessed as GnuCOBOL/OpenCOBOL based on SCREEN SECTION syntax and CONTROL string style, but could also be Micro Focus or ACU given the Windows-style paths; GnuCOBOL is most likely given the open-source context. Decoded with latin-1 which is consistent with Spanish special characters (e.g. 'Recib¡ de')."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8488,
+      "completion_tokens": 789,
+      "total_tokens": 9277,
+      "cost": 0.037299,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037299,
+        "upstream_inference_prompt_cost": 0.025464,
+        "upstream_inference_completions_cost": 0.011835
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 22.06,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:01:54Z"
+}

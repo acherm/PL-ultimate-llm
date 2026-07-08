@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6fc98b74f5c626481788e9f0c856f582b3b25b69",
+    "sha1_git": "6fc98b74f5c626481788e9f0c856f582b3b25b69",
+    "filename": "/BANK2.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5639,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6fc98b74f5c626481788e9f0c856f582b3b25b69/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6fc98b74f5c626481788e9f0c856f582b3b25b69/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5639,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 174,
+    "blank_lines": 36,
+    "comment_lines": 0,
+    "code_lines": 138,
+    "comment_ratio": 0.0,
+    "max_line_length": 68,
+    "avg_line_length": 30.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BANK2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 6,
+    "pic_count": 28,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) with screen section, CRT STATUS, BACKGROUND-COLOR/FOREGROUND-COLOR clauses, SET ENVIRONMENT for COB_SCREEN_EXCEPTIONS, and VALUE OF FILE-ID syntax typical of GnuCOBOL",
+        "evidence": [
+          "SET ENVIRONMENT 'COB_SCREEN_EXCEPTIONS' TO 'Y'",
+          "CRT STATUS IS KEYBOARD-STATUS",
+          "BACKGROUND-COLOR IS RED",
+          "VALUE OF FILE-ID IS \"movimientos.ubd\"",
+          "SCREEN SECTION with BLANK SCREEN",
+          "78 level constants"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "ATM (cajero automatico) balance inquiry for UnizarBank, a university banking demo system",
+        "summary": "This program implements a balance inquiry screen for an ATM system called UnizarBank. It reads an indexed file of transactions (movimientos) to find the most recent record for a given card number (TNUM passed via LINKAGE), then displays the current balance on a terminal screen. It handles the case of no transactions and system errors with Spanish-language messages.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "SCREEN SECTION with color attributes (FOREGROUND-COLOR, BACKGROUND-COLOR)",
+        "CRT STATUS for keyboard input handling",
+        "78-level constants for color values",
+        "LINKAGE SECTION with TNUM parameter (called as subprogram)",
+        "Indexed file with DYNAMIC access mode",
+        "PERFORM THRU for error handler",
+        "GO TO used for flow control (6 occurrences)",
+        "Spanish-language UI strings",
+        "FUNCTION CURRENT-DATE usage"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is clearly a student exercise for a university banking simulation (UnizarBank likely refers to Universidad de Zaragoza). Uses GnuCOBOL-specific extensions. No COMP-3 usage. Fixed format confirmed by max line length 68 and no lines over 72."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4046,
+      "completion_tokens": 497,
+      "total_tokens": 4543,
+      "cost": 0.019593,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019593,
+        "upstream_inference_prompt_cost": 0.012138,
+        "upstream_inference_completions_cost": 0.007455
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.09,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:31:41Z"
+}

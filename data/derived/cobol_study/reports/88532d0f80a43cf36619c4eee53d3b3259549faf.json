@@ -1,0 +1,132 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:88532d0f80a43cf36619c4eee53d3b3259549faf",
+    "sha1_git": "88532d0f80a43cf36619c4eee53d3b3259549faf",
+    "filename": "/FunDeclareWithExec.rdz.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9103,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:88532d0f80a43cf36619c4eee53d3b3259549faf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:88532d0f80a43cf36619c4eee53d3b3259549faf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9103,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 315,
+    "blank_lines": 64,
+    "comment_lines": 87,
+    "code_lines": 164,
+    "comment_ratio": 0.347,
+    "max_line_length": 87,
+    "avg_line_length": 27.9,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "PGM1",
+      "PersonService",
+      "a02a7aa5",
+      "a0508f35",
+      "cd991005",
+      "efd9419f",
+      "f6b6da00"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 14,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 46,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "TypeCobol/RDz-generated code (IBM Rational Developer for z Systems extension with TypeCobol function declarations). The .rdz.cbl extension and 'declare procedure' comment syntax, PROCEDURE-POINTER usage, and generated UUID-like program IDs (a02a7aa5, efd9419f, etc.) are characteristic of TypeCobol tooling on IBM mainframe.",
+        "evidence": [
+          "PROGRAM-ID with UUID-like names: a02a7aa5, efd9419f, f6b6da00, cd991005",
+          "PROCEDURE-POINTER data item",
+          "EXEC SQL ... END-EXEC (DB2)",
+          "IS COMMON nested programs",
+          "declare procedure comments (TypeCobol syntax)",
+          "filename .rdz.cbl extension",
+          "CALL 'zcallpgm' TypeCobol runtime helper",
+          "TC- prefixed variables typical of TypeCobol generated code"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "TypeCobol demonstration/generated code showing function declarations with EXEC SQL and nested program structure; references a PersonService with GetPersonByName/GetPersonById procedures querying a TERILOT table",
+        "summary": "A TypeCobol-generated COBOL program (PGM1) demonstrating function/procedure declarations with EXEC SQL DB2 queries. It contains multiple nested common programs (generated stubs with UUID names) that implement declared procedures including check, checkName, and GetPersonByName, dispatching calls via a function-code mechanism. The SQL queries select from a TERILOT table.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "EXEC SQL DB2 embedded SQL (SELECT from TERILOT)",
+        "TypeCobol 'declare procedure' comment syntax",
+        "Multiple nested COMMON programs with UUID-style PROGRAM-IDs",
+        "PROCEDURE-POINTER data items",
+        "TC- prefixed generated dispatcher variables",
+        "ENTRY statements for dynamic dispatch",
+        "CALL 'zcallpgm' TypeCobol runtime helper",
+        "IS COMMON nested program structure",
+        "Generated code with compiler warning comment at top"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "This is TypeCobol-generated COBOL source code, as evidenced by the .rdz.cbl filename, UUID-like program IDs, 'declare procedure' comment annotations, TC- variable prefixes, and CALL 'zcallpgm'. The file contains a compiler warning comment at line 1. The SQL references TERILOT table with LOT_SOC column suggesting some logistics or lot-tracking domain context, but the primary purpose appears to be a TypeCobol feature demonstration."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5118,
+      "completion_tokens": 629,
+      "total_tokens": 5747,
+      "cost": 0.024789,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024789,
+        "upstream_inference_prompt_cost": 0.015354,
+        "upstream_inference_completions_cost": 0.009435
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.66,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:42:48Z"
+}

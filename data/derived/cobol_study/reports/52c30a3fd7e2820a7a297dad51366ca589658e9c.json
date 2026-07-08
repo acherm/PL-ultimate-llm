@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:52c30a3fd7e2820a7a297dad51366ca589658e9c",
+    "sha1_git": "52c30a3fd7e2820a7a297dad51366ca589658e9c",
+    "filename": "/ORCGI47.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 124528,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:52c30a3fd7e2820a7a297dad51366ca589658e9c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:52c30a3fd7e2820a7a297dad51366ca589658e9c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 124528,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3087,
+    "blank_lines": 1,
+    "comment_lines": 821,
+    "code_lines": 2265,
+    "comment_ratio": 0.266,
+    "max_line_length": 74,
+    "avg_line_length": 39.3,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI47"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 31,
+    "call_count": 16,
+    "perform_count": 196,
+    "goto_count": 26,
+    "pic_count": 313,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCGI47 handles ADL classification and medical classification input for inpatient accounting.",
+        "evidence": [
+          "PROGRAM-ID ORCGI47",
+          "COPY 'ENUM-VALUE'",
+          "COPY 'COMMON-SPA'",
+          "COPY 'I4COMMON-SPA'",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "Project code name ORCA",
+          "no EXEC CICS/SQL",
+          "fixed format max line 74"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical receipt (shinryo-hoshuu) billing system - inpatient accounting, ADL classification and medical classification daily input screen",
+        "summary": "ORCGI47 is a component of the JMA ORCA standard medical receipt software system. It handles ADL (Activities of Daily Living) classification and medical classification input for inpatient accounting (nyuin kaikei). The program manages screen SPA areas, day-by-day treatment flags, and therapy/care code lists for inpatient billing.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "31 COPY statements referencing ORCA-specific copybooks (ENUM-VALUE, COMMON-SPA, I4COMMON-SPA)",
+        "Large OCCURS tables for 31-day monthly treatment tracking",
+        "REDEFINES used for constant lookup tables",
+        "Japanese text in comments (EUC-JP encoding rendered as latin-1 mojibake)",
+        "No EXEC SQL or EXEC CICS despite online-style SPA pattern",
+        "196 PERFORM statements indicating structured procedural logic",
+        "Hardcoded medical procedure codes (e.g. 190121310, 820000057)",
+        "SPA (Scratchpad Area) pattern typical of ORCA/OpenCOBOL screen programs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comment text is Japanese encoded in EUC-JP but decoded as latin-1, producing mojibake. The file is part of the well-known open-source JMA ORCA medical receipt system. No EXEC CICS found but the SPA-based architecture and widget references suggest an ORCA-specific online screen framework rather than raw CICS. Source truncated at 16000 chars; full file is 3087 lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7885,
+      "completion_tokens": 605,
+      "total_tokens": 8490,
+      "cost": 0.03273,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03273,
+        "upstream_inference_prompt_cost": 0.023655,
+        "upstream_inference_completions_cost": 0.009075
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.6,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:21:23Z"
+}

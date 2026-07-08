@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1af4fd81ae0ce07733a47e9eda9c0b7dd00e8901",
+    "sha1_git": "1af4fd81ae0ce07733a47e9eda9c0b7dd00e8901",
+    "filename": "/ORCSCHKTCHK.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 114034,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1af4fd81ae0ce07733a47e9eda9c0b7dd00e8901/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1af4fd81ae0ce07733a47e9eda9c0b7dd00e8901/raw/"
+  },
+  "indicators": {
+    "bytes_len": 114034,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2593,
+    "blank_lines": 0,
+    "comment_lines": 631,
+    "code_lines": 1962,
+    "comment_ratio": 0.243,
+    "max_line_length": 74,
+    "avg_line_length": 43.0,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCSCHKTCHK"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 17,
+    "call_count": 7,
+    "perform_count": 196,
+    "goto_count": 1,
+    "pic_count": 91,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), developed by NACL for Japan Medical Association. Uses GnuCOBOL conventions with COPY includes (.INC files) and MCP (Message Control Program) database interface typical of JMA ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCSCHKTCHK",
+          "COPY 'CPK02SPASCR.INC'",
+          "COPY 'CPORCSCHKTCHK.INC'",
+          "COPY 'MCPAREA'",
+          "COPY 'MCPDATA.INC'",
+          "MCP-TABLE / MCP-PATHNAME / MCP-RC pattern",
+          "Project code name ORCA, Copyright(C) 2002 JMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical insurance claim (receipt) processing system - comprehensive diagnosis/treatment act bundling check (Houkatu Shinryo Koi check) for outpatient and inpatient billing",
+        "summary": "This program is a subprogram within the JMA ORCA medical receipt software that performs bundling/comprehensive medical treatment act checks (Houkatu check) for insurance claim calculation. It validates treatment codes against bundling rules, checks inpatient fee calculation periods, and handles automatic generation checks. It is called with various processing modes (1=full check, 2=auto-generation, 3=error delete, 5=inpatient fee check, 6=inpatient fee period/bundling check).",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "COPY includes with .INC extension (JMA ORCA style)",
+        "MCP database interface (tbl_syskanri, DBSELECT pattern)",
+        "LINKAGE SECTION with multiple SPA (screen parameter area) parameters",
+        "OCCURS tables for treatment code bundling rules (up to 200 entries)",
+        "Japanese EUC-encoded comments (latin-1 decoded, garbled)",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP middleware",
+        "EVALUATE for processing mode dispatch",
+        "17 COPY statements, 7 CALLs, 196 PERFORMs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are in Japanese EUC encoding, decoded as latin-1 resulting in garbled characters. File is part of the well-known open-source JMA ORCA (Orca Project) Japanese medical receipt software. Source truncated at 16000 chars out of 114034 bytes total. The MCP interface is the ORCA-specific database middleware layer replacing direct SQL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9715,
+      "completion_tokens": 641,
+      "total_tokens": 10356,
+      "cost": 0.03876,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03876,
+        "upstream_inference_prompt_cost": 0.029145,
+        "upstream_inference_completions_cost": 0.009615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.52,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:16:06Z"
+}

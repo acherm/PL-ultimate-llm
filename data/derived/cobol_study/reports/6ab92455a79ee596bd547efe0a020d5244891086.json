@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6ab92455a79ee596bd547efe0a020d5244891086",
+    "sha1_git": "6ab92455a79ee596bd547efe0a020d5244891086",
+    "filename": "/write-post-string.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5372,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6ab92455a79ee596bd547efe0a020d5244891086/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6ab92455a79ee596bd547efe0a020d5244891086/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5372,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 153,
+    "blank_lines": 39,
+    "comment_lines": 26,
+    "code_lines": 88,
+    "comment_ratio": 0.228,
+    "max_line_length": 79,
+    "avg_line_length": 34.1,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "write-post-string"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL/OpenCOBOL style; uses *> inline comments, IS INITIAL clause, FUNCTION NUMVAL, LINE SEQUENTIAL organization, and ACCEPT FROM ENVIRONMENT — all characteristic of GnuCOBOL CGI scripting patterns",
+        "evidence": [
+          "*> comment style",
+          "IS INITIAL",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ACCEPT wc-env-length FROM ENVIRONMENT 'CONTENT_LENGTH'",
+          "FUNCTION NUMVAL",
+          "EXIT PROGRAM"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "CGI web utility: reads HTTP POST data from STDIN (via KEYBOARD assignment), parses URL-encoded name=value pairs, and writes them to a sequential data file",
+        "summary": "This program is a CGI helper subprogram that reads the HTTP POST body from standard input using the CONTENT_LENGTH environment variable, parses the URL-encoded name=value pairs delimited by '&', and writes each pair to a sequential output file at ../data/postfile.dat. It is called with a return code linkage parameter.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "ACCEPT FROM ENVIRONMENT for CGI CONTENT_LENGTH",
+        "ASSIGN TO KEYBOARD for reading STDIN",
+        "LINE SEQUENTIAL file organization",
+        "FUNCTION NUMVAL for string-to-numeric conversion",
+        "INSPECT TALLYING to count '&' delimiters",
+        "UNSTRING with POINTER for iterative parsing",
+        "IS INITIAL program attribute",
+        "PROCEDURE DIVISION USING linkage section parameter"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Dialect is inferred as GnuCOBOL based on coding style and CGI usage pattern; no explicit compiler directives present. The program is a CGI subprogram for web form processing. Fixed format is indicated by column alignment though *> comments suggest COBOL-85 or later."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3647,
+      "completion_tokens": 471,
+      "total_tokens": 4118,
+      "cost": 0.018006,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018006,
+        "upstream_inference_prompt_cost": 0.010941,
+        "upstream_inference_completions_cost": 0.007065
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.43,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:00:29Z"
+}

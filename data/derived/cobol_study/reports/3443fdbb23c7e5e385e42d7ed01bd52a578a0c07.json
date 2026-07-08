@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3443fdbb23c7e5e385e42d7ed01bd52a578a0c07",
+    "sha1_git": "3443fdbb23c7e5e385e42d7ed01bd52a578a0c07",
+    "filename": "/ORCR0810.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 85731,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3443fdbb23c7e5e385e42d7ed01bd52a578a0c07/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3443fdbb23c7e5e385e42d7ed01bd52a578a0c07/raw/"
+  },
+  "indicators": {
+    "bytes_len": 85731,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1950,
+    "blank_lines": 0,
+    "comment_lines": 468,
+    "code_lines": 1482,
+    "comment_ratio": 0.24,
+    "max_line_length": 76,
+    "avg_line_length": 43.0,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCR0810"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 42,
+    "perform_count": 131,
+    "goto_count": 3,
+    "pic_count": 70,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses ORCMCPSUB/ORCSJOB call conventions typical of JMA ORCA system.",
+        "evidence": [
+          "PROGRAM-ID ORCR0810",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "CALL 'ORCMCPSUB'",
+          "CALL 'ORCSJOB'",
+          "COPY 'MCPDATA.INC'",
+          "COPY 'CPORCMCP.INC'",
+          "COPY 'MCPAREA'",
+          "COPY 'COMMON-SPA'",
+          "SELECT ... ASSIGN RECE82PARA ORGANIZATION IS INDEXED"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt billing system - monthly batch processing for workers' accident insurance (Rousai) and self-pay (Jibai) receipt detail file creation and patient extraction",
+        "summary": "This program is part of the JMA ORCA medical receipt software system. It performs monthly batch processing to create receipt detail files and extract target patients for workers' accident (Rousai) and automobile liability (Jibai) insurance claims. It reads indexed receipt files, processes insurance combination records, and writes output receipt detail and error files.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "29 COPY statements referencing JMA ORCA-specific copybooks (CPRCF082.INC, CPSRYACCT.INC, CPNYUINACCT.INC, etc.)",
+        "42 CALL statements including ORCMCPSUB (MCP database access) and ORCSJOB (job management)",
+        "LINKAGE SECTION with COMMAND-PARAM for parameter passing",
+        "INDEXED file organization with DYNAMIC and SEQUENTIAL access modes",
+        "Japanese text in comments (EUC-JP or Shift-JIS encoded, rendered as latin-1 mojibake)",
+        "Job management/step control via ORCSJOB calls",
+        "Insurance combination table processing (HKNCOMBI)",
+        "No EXEC SQL or EXEC CICS - uses proprietary MCP database layer"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source comments and data names contain Japanese text encoded in EUC-JP (decoded as latin-1, producing mojibake). File is truncated at 16000 chars out of 85731 bytes total. The MCP (Message Control Program) database abstraction layer is characteristic of JMA ORCA. Program handles Rousai (workers' accident) insurance code 971 and Jibai (automobile liability) insurance code 973."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9337,
+      "completion_tokens": 670,
+      "total_tokens": 10007,
+      "cost": 0.038061,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038061,
+        "upstream_inference_prompt_cost": 0.028011,
+        "upstream_inference_completions_cost": 0.01005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.44,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:41:45Z"
+}

@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fde9090ee87af7b0b2e5165708cfbcb8d254926d",
+    "sha1_git": "fde9090ee87af7b0b2e5165708cfbcb8d254926d",
+    "filename": "/CUSTCTRL.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7127,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fde9090ee87af7b0b2e5165708cfbcb8d254926d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fde9090ee87af7b0b2e5165708cfbcb8d254926d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7127,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 250,
+    "blank_lines": 74,
+    "comment_lines": 24,
+    "code_lines": 152,
+    "comment_ratio": 0.136,
+    "max_line_length": 78,
+    "avg_line_length": 27.5,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CUSTCTRL"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 51,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/VSAM online program, CBL CICS('SP,EDF') compiler directive, IBM-370 source/object computer, DB2 SQLCA commented out but host variables present",
+        "evidence": [
+          "CBL CICS('SP,EDF')",
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
+          "EXEC CICS READ FILE('CUSTOMER')",
+          "EXEC CICS RETURN",
+          "EXEC CICS ASKTIME",
+          "EXEC CICS FORMATTIME",
+          "DFHRESP(NORMAL)",
+          "DFHRESP(SYSIDERR)",
+          "DFHCOMMAREA",
+          "(c) Copyright IBM Corp. 2018,2020"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Customer control record retrieval from a VSAM CUSTOMER file, likely part of IBM's CICS banking demo (COBOL Banking Application)",
+        "summary": "CUSTCTRL is a CICS online program that reads a customer control record from a VSAM file ('CUSTOMER') to retrieve the number of customers for a given sort code. It handles SYSIDERR retries and returns the result via DFHCOMMAREA. It appears to be part of IBM's sample/demo banking application.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS READ with RESP/RESP2 error handling",
+        "SYSIDERR retry loop with EXEC CICS DELAY",
+        "EXEC CICS RETURN",
+        "EXEC CICS ASKTIME / FORMATTIME",
+        "DFHCOMMAREA linkage",
+        "COPY SORTCODE / COPY CUSTCTRL / COPY ABNDINFO copybooks",
+        "COMP-3 usage (WS-U-TIME)",
+        "DB2 SQLCA INCLUDE commented out but host variables (HV-*) present",
+        "LOCAL-STORAGE SECTION",
+        "CBL CICS compiler directive"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is clearly part of IBM's publicly available CICS banking demo application (copyright IBM 2018-2020). The DB2 SQLCA is commented out but host variables remain, suggesting DB2 path was removed or not yet implemented. One line slightly exceeds 72 columns (long_lines_over_72=1). The POPULATE-TIME-DATE section is defined but never PERFORMed in the visible code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4596,
+      "completion_tokens": 595,
+      "total_tokens": 5191,
+      "cost": 0.022713,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022713,
+        "upstream_inference_prompt_cost": 0.013788,
+        "upstream_inference_completions_cost": 0.008925
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.03,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:35:59Z"
+}

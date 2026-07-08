@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e20a974fbf8ccbd14351442a6f2b595b1b340a3c",
+    "sha1_git": "e20a974fbf8ccbd14351442a6f2b595b1b340a3c",
+    "filename": "/CT900.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 224997,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e20a974fbf8ccbd14351442a6f2b595b1b340a3c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e20a974fbf8ccbd14351442a6f2b595b1b340a3c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 224997,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5147,
+    "blank_lines": 332,
+    "comment_lines": 1198,
+    "code_lines": 3617,
+    "comment_ratio": 0.249,
+    "max_line_length": 167,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 278,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CT900"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 44,
+    "call_count": 2,
+    "perform_count": 309,
+    "goto_count": 95,
+    "pic_count": 774,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) targeting Brazilian SPED/ECD (Escrituração Contábil Digital) electronic accounting export; uses *> inline comments, VALUE x'7C', z-string literals, and DECIMAL-POINT IS COMMA — all GnuCOBOL/OpenCOBOL idioms; developed by pBranaSoftware.com",
+        "evidence": [
+          "*> inline comments (GnuCOBOL style)",
+          "VALUE x'7C' hex literal",
+          "z'00000000' null-terminated string literals",
+          "DECIMAL-POINT IS COMMA",
+          "78 level constants (PIPE, dialog-system)",
+          "LINE SEQUENTIAL organization",
+          "no COMP-3, no EXEC CICS/SQL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Brazilian SPED ECD (Escrituração Contábil Digital / Livro de Escrituração Contábil Digital) — mandatory electronic accounting bookkeeping export for Brazilian federal tax authority (Receita Federal)",
+        "summary": "CT900 generates the electronic accounting export file (ECD/LECD) required by the Brazilian SPED system. It reads from multiple accounting data files (chart of accounts, cost centers, ledger entries, balances, etc.) and writes pipe-delimited records conforming to the LECD layout specification. The program handles company identification (CNPJ, state registration), account plans, journal entries, and balance records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "44 COPY statements for modular file definitions",
+        "78-level constants (PIPE character, dialog-system name)",
+        "z-string (null-terminated) literals for numeric fields",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "REDEFINES used extensively for numeric/alphanumeric dual access",
+        "Variable-length records up to 6000 characters",
+        "Pipe-delimited output format for SPED ECD",
+        "No COMP-3 usage despite financial application",
+        "GOTO count of 95 alongside 309 PERFORMs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full file is ~225KB/5147 lines. Program is clearly a real production accounting export utility for Brazilian regulatory compliance. GnuCOBOL dialect confirmed by *> comments and z-string literals. No COMP-3 is unusual for financial COBOL but consistent with GnuCOBOL practice on this platform."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7950,
+      "completion_tokens": 626,
+      "total_tokens": 8576,
+      "cost": 0.03324,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.03324,
+        "upstream_inference_prompt_cost": 0.02385,
+        "upstream_inference_completions_cost": 0.00939
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.66,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:12:26Z"
+}

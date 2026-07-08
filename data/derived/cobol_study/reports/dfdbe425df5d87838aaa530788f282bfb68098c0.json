@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dfdbe425df5d87838aaa530788f282bfb68098c0",
+    "sha1_git": "dfdbe425df5d87838aaa530788f282bfb68098c0",
+    "filename": "/Z95768.CBL(DAYCALC).cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3220,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dfdbe425df5d87838aaa530788f282bfb68098c0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dfdbe425df5d87838aaa530788f282bfb68098c0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3220,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 94,
+    "blank_lines": 7,
+    "comment_lines": 3,
+    "code_lines": 84,
+    "comment_ratio": 0.034,
+    "max_line_length": 70,
+    "avg_line_length": 33.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DAYCALC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style; uses RECORDING MODE F, RETURN-CODE special register, GOBACK, and STATUS codes typical of z/OS batch COBOL",
+        "evidence": [
+          "RECORDING MODE F",
+          "RETURN-CODE",
+          "GOBACK",
+          "STATUS ST-DATE-REC / ST-PRINT-LINE",
+          "ASSIGN TO PRTLINE / DATEREC (DD name style)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Date difference calculator: reads records with two dates, computes the number of days between them using FUNCTION INTEGER-OF-DATE, and writes results to a print file",
+        "summary": "DAYCALC reads input records containing an ID, name, surname, and two dates. It computes the integer difference between the two dates using the FUNCTION INTEGER-OF-DATE intrinsic function and writes the result along with the original fields to an output print file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "FUNCTION INTEGER-OF-DATE (COBOL-85 intrinsic function)",
+        "RECORDING MODE F on both FD entries",
+        "RETURN-CODE special register usage",
+        "88-level condition DATE-REC-EOF VALUE 10",
+        "STATUS file status fields",
+        "GOBACK statement",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Dialect is likely IBM mainframe z/OS based on RECORDING MODE F and RETURN-CODE usage, but could also be GnuCOBOL or another COBOL-85 compiler. No compiler directives present to confirm vendor. Program is small but structurally complete and follows production coding conventions."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3408,
+      "completion_tokens": 421,
+      "total_tokens": 3829,
+      "cost": 0.016539,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016539,
+        "upstream_inference_prompt_cost": 0.010224,
+        "upstream_inference_completions_cost": 0.006315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.63,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:05:22Z"
+}

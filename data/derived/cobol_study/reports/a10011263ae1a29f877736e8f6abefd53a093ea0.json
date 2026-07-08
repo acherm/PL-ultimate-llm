@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a10011263ae1a29f877736e8f6abefd53a093ea0",
+    "sha1_git": "a10011263ae1a29f877736e8f6abefd53a093ea0",
+    "filename": "/ORCGX01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 60923,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a10011263ae1a29f877736e8f6abefd53a093ea0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a10011263ae1a29f877736e8f6abefd53a093ea0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 60923,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1541,
+    "blank_lines": 2,
+    "comment_lines": 464,
+    "code_lines": 1075,
+    "comment_ratio": 0.301,
+    "max_line_length": 74,
+    "avg_line_length": 38.5,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGX01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 24,
+    "call_count": 16,
+    "perform_count": 70,
+    "goto_count": 35,
+    "pic_count": 59,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (日本医師会標準レセプトソフト); likely compiled with GnuCOBOL/OpenCOBOL on Linux. Uses COPY-based screen/linkage areas typical of ORCA architecture.",
+        "evidence": [
+          "PROGRAM-ID ORCGX01",
+          "COPY 'COMMON-SPA'",
+          "COPY 'MCPAREA'",
+          "COPY 'ORCA-SPA'",
+          "COPY 'LINKAREA'",
+          "COPY 'X01.INC'",
+          "MCP-STATUS / MCP-EVENT / MCP-WIDGET linkage pattern",
+          "Copyright JMA 2002",
+          "no EXEC CICS / no EXEC SQL",
+          "fixed format max 74 cols"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (レセプト) software — check-master (チェックマスタ) information settings screen X01, handling drug/diagnosis check-type master maintenance",
+        "summary": "This program implements the check-master information settings screen (ORCGX01/X01) within the JMA ORCA medical receipt system. It handles screen initialization, entry processing, search, confirmation, and list printing for check-type master records linking drug codes and diagnosis codes with validity periods. It is driven by an MCP event/widget dispatch model with SPA (scratchpad area) state management.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "MCP event-driven screen dispatch (MCP-STATUS/MCP-EVENT/MCP-WIDGET)",
+        "SPA (scratchpad area) pattern with COPY-based shared areas",
+        "24 COPY statements for modular include files",
+        "OCCURS 100 tables for check-master list",
+        "Japanese EUC/Shift-JIS encoded comments (latin-1 decoded, garbled)",
+        "LINKAGE SECTION with multiple COPY-defined areas",
+        "EVALUATE ALSO construct for multi-condition dispatch",
+        "No EXEC SQL or EXEC CICS — uses proprietary MCP DB access layer",
+        "PERFORM-heavy structure (70 PERFORMs, 35 GOTOs)",
+        "Validity period (有効期間) editing logic"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are Japanese encoded in EUC-JP or Shift-JIS but decoded as latin-1, resulting in garbled display. Source is truncated to first 16000 chars (~26% of 60923 bytes); full program likely contains additional sections. The 'online-cics' program_type is used loosely — this is not CICS but an ORCA MCP windowing framework analogous to online transaction processing."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8579,
+      "completion_tokens": 669,
+      "total_tokens": 9248,
+      "cost": 0.035772,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035772,
+        "upstream_inference_prompt_cost": 0.025737,
+        "upstream_inference_completions_cost": 0.010035
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:49:02Z"
+}

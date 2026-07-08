@@ -1,0 +1,117 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:098c8e1bd1afca5ec49cabc0b760117c18efaa63",
+    "sha1_git": "098c8e1bd1afca5ec49cabc0b760117c18efaa63",
+    "filename": "/sendhtml.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 872,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:098c8e1bd1afca5ec49cabc0b760117c18efaa63/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:098c8e1bd1afca5ec49cabc0b760117c18efaa63/raw/"
+  },
+  "indicators": {
+    "bytes_len": 872,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 34,
+    "blank_lines": 10,
+    "comment_lines": 2,
+    "code_lines": 22,
+    "comment_ratio": 0.083,
+    "max_line_length": 65,
+    "avg_line_length": 24.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "sendhtml_http"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Subprogram that sends HTTP response headers and file content; no vendor-specific extensions visible, but HTTP utility calls suggest a web-serving framework possibly GnuCOBOL or Micro Focus",
+        "evidence": [
+          "LINKAGE SECTION with response-data structure",
+          "CALL 'sendheader_http' / CALL 'sendfile_http'",
+          "EXIT PROGRAM",
+          "END PROGRAM sendhtml_http"
+        ],
+        "confidence": "low"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "HTTP response sending utility; part of a COBOL-based web server or CGI framework",
+        "summary": "This subprogram sends an HTTP response by calling two helper routines: one to send the HTTP response header and one to send a file as the response body. It accepts a response-data structure, a connection handle, and a filename via the LINKAGE SECTION.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with OCCURS clause for response headers",
+        "BY CONTENT parameter passing",
+        "HTTP-related CALLs (sendheader_http, sendfile_http)",
+        "No EXEC CICS or EXEC SQL"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "Very small program (34 lines). The HTTP utility calls suggest a custom COBOL web framework. No compiler directives or vendor-specific syntax to pin down the dialect precisely. Could be GnuCOBOL given the open-source web server context implied by the filename."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2448,
+      "completion_tokens": 372,
+      "total_tokens": 2820,
+      "cost": 0.012924,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.012924,
+        "upstream_inference_prompt_cost": 0.007344,
+        "upstream_inference_completions_cost": 0.00558
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.73,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:35:33Z"
+}

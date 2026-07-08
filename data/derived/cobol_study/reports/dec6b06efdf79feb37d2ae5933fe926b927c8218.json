@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dec6b06efdf79feb37d2ae5933fe926b927c8218",
+    "sha1_git": "dec6b06efdf79feb37d2ae5933fe926b927c8218",
+    "filename": "/ORCGI41.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 456715,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dec6b06efdf79feb37d2ae5933fe926b927c8218/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dec6b06efdf79feb37d2ae5933fe926b927c8218/raw/"
+  },
+  "indicators": {
+    "bytes_len": 456715,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 9955,
+    "blank_lines": 1,
+    "comment_lines": 2307,
+    "code_lines": 7647,
+    "comment_ratio": 0.232,
+    "max_line_length": 101,
+    "avg_line_length": 44.9,
+    "long_lines_over_72": 63,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI41"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 63,
+    "call_count": 94,
+    "perform_count": 541,
+    "goto_count": 106,
+    "pic_count": 229,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCGI41 is the inpatient accounting card input component (入院会計カード入力 I41).",
+        "evidence": [
+          "PROGRAM-ID. ORCGI41",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY \"ENUM-VALUE\", COPY \"COMMON-SPA\", COPY \"I4COMMON-SPA\"",
+          "no EXEC CICS / EXEC SQL",
+          "fixed format, no IBM-specific COMP-3 usage",
+          "JMA Open Source License reference"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Japanese medical institution inpatient billing/accounting system (入院会計カード入力). Part of the JMA ORCA standard receipt software used by Japanese clinics and hospitals for medical fee calculation and billing.",
+        "summary": "ORCGI41 is the inpatient accounting card input program (入院会計カード入力 I41) within the JMA ORCA medical receipt system. It handles entry and calculation of inpatient hospitalization fees, special admission charges, meal charges, and related billing items, producing monthly accounting records for inpatient stays. The program manages complex Japanese medical fee rules including specific admission fee types, psychiatric emergency fees, rehabilitation fees, and various add-on charges.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Large program (~10k lines, 456KB)",
+        "63 COPY statements referencing ORCA-specific copybooks",
+        "94 CALL statements to subprograms",
+        "541 PERFORM statements",
+        "106 GOTO statements",
+        "Japanese EUC/Latin-1 encoded comments throughout",
+        "REDEFINES usage for date/numeric fields",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage (unusual for billing system)",
+        "Extensive revision history in comments spanning 2002-2010"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1 but comments are actually Japanese EUC-JP encoded, causing mojibake in the transcription. Source is truncated at 16000 chars out of ~456KB total. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. Fixed-format COBOL with lines occasionally exceeding column 72 (63 such lines) suggesting some free-form identifiers or long literals."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11959,
+      "completion_tokens": 615,
+      "total_tokens": 12574,
+      "cost": 0.045102,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.045102,
+        "upstream_inference_prompt_cost": 0.035877,
+        "upstream_inference_completions_cost": 0.009225
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.56,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:32:31Z"
+}

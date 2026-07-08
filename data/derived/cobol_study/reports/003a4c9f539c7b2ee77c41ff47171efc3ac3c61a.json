@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:003a4c9f539c7b2ee77c41ff47171efc3ac3c61a",
+    "sha1_git": "003a4c9f539c7b2ee77c41ff47171efc3ac3c61a",
+    "filename": "/SOKATU2705.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 81579,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:003a4c9f539c7b2ee77c41ff47171efc3ac3c61a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:003a4c9f539c7b2ee77c41ff47171efc3ac3c61a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 81579,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1978,
+    "blank_lines": 0,
+    "comment_lines": 664,
+    "code_lines": 1314,
+    "comment_ratio": 0.336,
+    "max_line_length": 77,
+    "avg_line_length": 40.2,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SOKATU2705"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 29,
+    "call_count": 9,
+    "perform_count": 133,
+    "goto_count": 3,
+    "pic_count": 107,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (open-cobol/GnuCOBOL); comment explicitly mentions open-cobol1.0 compatibility fix in revision history",
+        "evidence": [
+          "open-cobol1.0ÂÐ±þ comment in revision history",
+          "COPY copybooks with .INC extension typical of ORCA/GnuCOBOL",
+          "PERFORM...UNTIL construct",
+          "LINKAGE SECTION with COMMAND-PARAM",
+          "no COMP-3, no EXEC CICS/SQL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (shinryo-hoshu seikyu) software - specifically Osaka/wide-area federation diagnosis report billing request (inner division) monthly aggregation print program",
+        "summary": "SOKATU2705 is a batch program in the JMA ORCA medical receipt system that aggregates and prints monthly billing request reports for the Osaka wide-area federation (Kochi-Rengo) insurer category. It reads receipt update files, accumulates counts and amounts by insurer/public-expense category, and writes formatted output records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Heavy use of COPY copybooks (29 COPY statements) for record layouts",
+        "UNSTRING of COMMAND-PARAM for parameter passing",
+        "LINKAGE SECTION with COMMAND-PARAM (called as subprogram or shell-invoked)",
+        "OCCURS tables for insurer and public-expense aggregation (SUM-KOH-TBL OCCURS 100, WRK-2007-TBL OCCURS 100)",
+        "REDEFINES clauses for hospital name/address splitting",
+        "No COMP-3 usage despite financial amounts",
+        "Version history with 10 revisions spanning 2008-2014",
+        "Japanese EUC-JP encoded comments (decoded as latin-1 garbled)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is encoded in EUC-JP (Japanese); decoded as latin-1 causing garbled comment text. Program is part of the well-known open-source JMA ORCA medical receipt system. Source truncated at 16000 chars out of 81579 bytes (1978 lines total), but enough structure is visible for confident classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9657,
+      "completion_tokens": 572,
+      "total_tokens": 10229,
+      "cost": 0.037551,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037551,
+        "upstream_inference_prompt_cost": 0.028971,
+        "upstream_inference_completions_cost": 0.00858
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.79,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:42:24Z"
+}

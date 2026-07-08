@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c68b32dc6067fbdd17a90a0867eb5b6b63c888ca",
+    "sha1_git": "c68b32dc6067fbdd17a90a0867eb5b6b63c888ca",
+    "filename": "/sl020.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 35708,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c68b32dc6067fbdd17a90a0867eb5b6b63c888ca/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c68b32dc6067fbdd17a90a0867eb5b6b63c888ca/raw/"
+  },
+  "indicators": {
+    "bytes_len": 35708,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1030,
+    "blank_lines": 0,
+    "comment_lines": 332,
+    "code_lines": 698,
+    "comment_ratio": 0.322,
+    "max_line_length": 130,
+    "avg_line_length": 33.7,
+    "long_lines_over_72": 61,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "sl020"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 14,
+    "call_count": 4,
+    "perform_count": 33,
+    "goto_count": 49,
+    "pic_count": 148,
+    "comp3_count": 4,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (Open COBOL) v3.x, part of the Applewood Computers Accounting System (ACAS) by Vincent B Coen. Uses >>source free directive, binary-long, binary-char unsigned, and GnuCOBOL-style compiler directives.",
+        "evidence": [
+          ">>source free",
+          "binary-long",
+          "binary-char unsigned",
+          "call \"CBL_CHECK_FILE_EXIST\"",
+          "set ENVIRONMENT",
+          "Migration to Open Cobol v3.00.00 in changelog",
+          "prog-name value \"SL020 (3.02.14)\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Sales Ledger Enquiry module of the Applewood Computers Accounting System (ACAS). Displays customer account details, invoice history, balances, and aging analysis.",
+        "summary": "This program implements a Sales Ledger Enquiry function for the ACAS accounting system. It reads sales, invoice, and open-item data, builds a work file of active invoices and credit notes by customer, and displays or prints customer account details including balances, YTD figures, credit limits, and aged debt analysis (current, 30, 60, 90+ days).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        ">>source free directive (GnuCOBOL free format)",
+        "COMP-3 packed decimal for monetary amounts",
+        "binary-long and binary-char unsigned data types",
+        "OCCURS 100 for screen line table",
+        "Indexed work file with composite key (customer + invoice)",
+        "14 COPY statements for modular copybook structure",
+        "Linkage section with multiple passed parameters (ws-calling-data, system-record, to-day, file-defs)",
+        "CBL_CHECK_FILE_EXIST intrinsic call",
+        "COB_SCREEN_EXCEPTIONS / COB_SCREEN_ESC environment settings",
+        "Aged debt balances (0/30/60/90 days)",
+        "Date format support for UK/USA/International",
+        "GPL v2 licensed open-source accounting system"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full procedure division not visible but enough context exists for confident classification. Program is part of a long-running (1976-2023) open-source accounting system with extensive changelog. Uses GnuCOBOL-specific extensions throughout."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7803,
+      "completion_tokens": 598,
+      "total_tokens": 8401,
+      "cost": 0.032379,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032379,
+        "upstream_inference_prompt_cost": 0.023409,
+        "upstream_inference_completions_cost": 0.00897
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.02,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:39:02Z"
+}

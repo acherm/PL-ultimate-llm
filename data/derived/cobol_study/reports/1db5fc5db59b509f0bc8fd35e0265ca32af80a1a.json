@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1db5fc5db59b509f0bc8fd35e0265ca32af80a1a",
+    "sha1_git": "1db5fc5db59b509f0bc8fd35e0265ca32af80a1a",
+    "filename": "/finana.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 257020,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1db5fc5db59b509f0bc8fd35e0265ca32af80a1a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1db5fc5db59b509f0bc8fd35e0265ca32af80a1a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 257020,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 5809,
+    "blank_lines": 511,
+    "comment_lines": 529,
+    "code_lines": 4769,
+    "comment_ratio": 0.1,
+    "max_line_length": 182,
+    "avg_line_length": 42.2,
+    "long_lines_over_72": 37,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FINANA"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 41,
+    "call_count": 47,
+    "perform_count": 418,
+    "goto_count": 10,
+    "pic_count": 393,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL (likely RM-COBOL or Micro Focus for PC/workstation); Italian-language ERP/accounting system by PRAGMA; uses LOCK MODE IS MANUAL WITH ROLLBACK, CRT STATUS, EVENT STATUS, DECIMAL-POINT IS COMMA, and EXEC SQL — consistent with Micro Focus or ACU dialect on PC platform. SOURCE-COMPUTER TI-990-10 / OBJECT-COMPUTER PCI-5H are nominal entries.",
+        "evidence": [
+          "LOCK MODE IS MANUAL WITH ROLLBACK",
+          "CRT STATUS IS crt-status",
+          "EVENT STATUS IS event-status",
+          "DECIMAL-POINT IS COMMA",
+          "EXEC SQL present",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS DYNAMIC",
+          "COPY statements with .sel/.lib/.ws extensions",
+          "PROGRAM-ID FINANA, AUTHOR PRAGMA"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Italian ERP/accounting system — anagrafica (master data) search program for clients, suppliers, and chart-of-accounts (CLI/FOR/P.CONTI). Part of PRAGMA financial/accounting software suite.",
+        "summary": "FINANA is a batch/interactive program that searches and manages master-data records (anagrafica) for clients, suppliers, and account codes in an Italian accounting/ERP system. It handles indexed file I/O with SQL, supports multiple search criteria (province, agent, channel, category), and maintains extensive customer/supplier fields including VAT, payment terms, bank details, and commission data.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL (embedded SQL / DB2-style database access)",
+        "41 COPY statements (heavy use of copybooks for file definitions and working storage)",
+        "47 CALL statements",
+        "418 PERFORM statements",
+        "LOCK MODE IS MANUAL WITH ROLLBACK (Micro Focus/RM-COBOL file locking)",
+        "CRT STATUS and EVENT STATUS (screen handling)",
+        "DECIMAL-POINT IS COMMA (European numeric format)",
+        "Italian-language variable names and comments",
+        "Large record layout (~2000 bytes, APPO-AN-REC-BACKUP PIC X(2000)",
+        "Conditional compilation indicators (C94, AB, MAR10 in area A)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars of a 257KB / 5809-line file. Italian-language program from PRAGMA software house, dated April 2001. No COMP-3 usage detected despite financial domain — may use display numerics or SQL for arithmetic. Dialect is most likely Micro Focus COBOL for PC (possibly ACU); RM-COBOL also possible given LOCK MODE syntax. The SOURCE-COMPUTER TI-990-10 entry appears vestigial/nominal."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8040,
+      "completion_tokens": 685,
+      "total_tokens": 8725,
+      "cost": 0.034395,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034395,
+        "upstream_inference_prompt_cost": 0.02412,
+        "upstream_inference_completions_cost": 0.010275
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.93,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:43:30Z"
+}

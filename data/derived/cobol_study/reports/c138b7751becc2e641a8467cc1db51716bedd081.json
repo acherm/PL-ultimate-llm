@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c138b7751becc2e641a8467cc1db51716bedd081",
+    "sha1_git": "c138b7751becc2e641a8467cc1db51716bedd081",
+    "filename": "/EL565.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 28635,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c138b7751becc2e641a8467cc1db51716bedd081/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c138b7751becc2e641a8467cc1db51716bedd081/raw/"
+  },
+  "indicators": {
+    "bytes_len": 28635,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 367,
+    "blank_lines": 0,
+    "comment_lines": 25,
+    "code_lines": 342,
+    "comment_ratio": 0.068,
+    "max_line_length": 80,
+    "avg_line_length": 77.0,
+    "long_lines_over_72": 367,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EL565"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 18,
+    "goto_count": 11,
+    "pic_count": 21,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Logic Inc. insurance/compensation system converted by COBOL Conversion Aid PO 5785-ABJ on 02/12/96; Year 2000 reviewed; VMOD=2.008. Uses IBM-style ASSIGN clauses (SYSxxx-FBA1-...), COMP fields, DISPLAY UPON CONSOLE, GOBACK, and EJECT directives typical of IBM mainframe COBOL.",
+        "evidence": [
+          "ASSIGN TO SYS019-FBA1-S-SYS019",
+          "DISPLAY ... UPON CONSOLE",
+          "GOBACK",
+          "EJECT",
+          "PIC S999 COMP",
+          "COBOL CONVERSION AID PO 5785-ABJ",
+          "FILE STATUS IS ...",
+          "START ... KEY NOT LESS THAN"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Insurance compensation processing — reads a Compensation Master file and creates General Agent payment/adjustment records for agents with outstanding balances.",
+        "summary": "EL565 reads the ERCOMP (Compensation Master) indexed file and a control file (ELCNTL), then writes payment and adjustment records (ERPYAJ) for each General Agent or account with a negative ending balance. It is part of a larger insurance back-office compensation and payment system authored by Logic Inc. of Dallas, Texas.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Indexed file I/O with FILE STATUS checks (ERCOMP, ELCNTL, ERPYAJ)",
+        "DYNAMIC access with START ... KEY NOT LESS THAN",
+        "Multiple COPY statements for file descriptors and date routines (ELCDTEFD, ERCCOMP, ELCCNTL, ERCPYAJ, ELCDATE, ELCDTECX, ELCDTEVR, ELCDTERX)",
+        "ACCEPT ... FROM TIME for timestamp generation",
+        "COMPUTE with arithmetic negation",
+        "88-level condition names for check-number method",
+        "DISPLAY UPON CONSOLE for error messaging",
+        "ABEND-PGM paragraph for controlled abend",
+        "Year 2000 compliance review noted in comments",
+        "EJECT directives throughout"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars (~204 of 367 lines). All four COBOL divisions are present. No EXEC SQL or EXEC CICS. COPY statements reference external copybooks not shown. The program appears to be a converted (from an older dialect) IBM mainframe batch program for an insurance compensation system."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6117,
+      "completion_tokens": 621,
+      "total_tokens": 6738,
+      "cost": 0.027666,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027666,
+        "upstream_inference_prompt_cost": 0.018351,
+        "upstream_inference_completions_cost": 0.009315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.39,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:44:11Z"
+}

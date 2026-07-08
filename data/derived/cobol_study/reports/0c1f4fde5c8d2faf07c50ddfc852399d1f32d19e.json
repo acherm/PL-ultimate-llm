@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0c1f4fde5c8d2faf07c50ddfc852399d1f32d19e",
+    "sha1_git": "0c1f4fde5c8d2faf07c50ddfc852399d1f32d19e",
+    "filename": "/ORCGI41.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 443341,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0c1f4fde5c8d2faf07c50ddfc852399d1f32d19e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0c1f4fde5c8d2faf07c50ddfc852399d1f32d19e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 443341,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 9917,
+    "blank_lines": 1,
+    "comment_lines": 2383,
+    "code_lines": 7533,
+    "comment_ratio": 0.24,
+    "max_line_length": 89,
+    "avg_line_length": 43.7,
+    "long_lines_over_72": 41,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGI41"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 68,
+    "call_count": 68,
+    "perform_count": 582,
+    "goto_count": 111,
+    "pic_count": 268,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (JMA standard receipt software), compiled with GnuCOBOL/OpenCOBOL on Linux. Program ORCGI41 handles inpatient accounting card input (Nyuin Kaikei Card Nyuryoku).",
+        "evidence": [
+          "PROGRAM-ID ORCGI41",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "COPY directives for ENUM-VALUE, COMMON-SPA, I4COMMON-SPA, I4SCR-SPA",
+          "no EXEC CICS / EXEC SQL",
+          "fixed format, no IBM-specific COMP-3 usage",
+          "filename pattern ORCGI41.CBL consistent with ORCA naming conventions"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt system – inpatient accounting/billing card data entry module (Nyuin Kaikei Card Nyuryoku, component I41)",
+        "summary": "This program implements the inpatient accounting card input screen for the JMA ORCA medical receipt system. It manages entry and calculation of inpatient billing data including hospitalization fees, special admission charges, meal/food charges, and various insurance combinations. It is a large, production-quality interactive batch/screen program with extensive revision history spanning 2002–2014.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "68 COPY statements referencing ORCA-specific copybooks (ENUM-VALUE, COMMON-SPA, I4COMMON-SPA, I4SCR-SPA, etc.)",
+        "68 CALL statements to subprograms",
+        "582 PERFORM statements indicating complex procedural logic",
+        "111 GOTO statements",
+        "REDEFINES clauses used for numeric/alphanumeric overlays",
+        "Extensive Japanese-language comments (EUC-JP encoded, displayed as latin-1 mojibake)",
+        "No EXEC SQL or EXEC CICS – uses ORCA's own DB abstraction via CALL",
+        "Large program: ~9900 lines, 443KB",
+        "Detailed revision history with version numbers and dates from 2002 to 2014"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments are encoded in EUC-JP but the file was decoded as latin-1, resulting in mojibake in the comment text. The program is clearly part of the well-known open-source JMA ORCA medical receipt system. No COMP-3 usage detected despite being a financial/billing program, consistent with GnuCOBOL ORCA style. Source is truncated at 16000 chars but sufficient evidence is present for high-confidence classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 11941,
+      "completion_tokens": 657,
+      "total_tokens": 12598,
+      "cost": 0.045678,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.045678,
+        "upstream_inference_prompt_cost": 0.035823,
+        "upstream_inference_completions_cost": 0.009855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.1,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:50:48Z"
+}

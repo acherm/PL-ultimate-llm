@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:61038d4dcc884e05d972d27c270bb2f5db0792c2",
+    "sha1_git": "61038d4dcc884e05d972d27c270bb2f5db0792c2",
+    "filename": "/PGMDBZ.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 32515,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:61038d4dcc884e05d972d27c270bb2f5db0792c2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:61038d4dcc884e05d972d27c270bb2f5db0792c2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 32515,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 721,
+    "blank_lines": 23,
+    "comment_lines": 0,
+    "code_lines": 698,
+    "comment_ratio": 0.0,
+    "max_line_length": 80,
+    "avg_line_length": 44.1,
+    "long_lines_over_72": 21,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": false
+    },
+    "n_divisions": 0,
+    "program_ids": [
+      "PGMDBZ33"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 20,
+    "goto_count": 0,
+    "pic_count": 174,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL with DB2 embedded SQL (EXEC SQL INCLUDE SQLCA, DECLARE CURSOR), COMP-3 usage, RECORDING MODE IS F, fixed-format with sequence numbers. Spanish-language identifiers suggest Latin American (likely Argentine) banking system.",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA",
+          "EXEC SQL INCLUDE TBCUENT",
+          "EXEC SQL DECLARE CUENTA_CURSOR CURSOR",
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "USAGE COMP-3",
+          "DECIMAL-POINT IS COMMA",
+          "sequence numbers in columns 1-6"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Argentine banking system - client and account listing report. References table ITPFBIO.TBCUENTAS with fields TIPO_CUENTA, NRO_CUENTA, MONEDA, CBU, NRO_CLIENTE, SALDO_ACTUAL, FECHA_ACTUAL, FECHA_ULTIMO_CIERRE.",
+        "summary": "Batch report program that reads a CLIENTE sequential file and for each client queries a DB2 table (TBCUENTAS) via cursor to retrieve associated accounts. It produces a formatted printed listing (SALIDA) showing client details alongside their account information including balances and dates.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL embedded DB2 with DECLARE CURSOR",
+        "EXEC SQL INCLUDE SQLCA and TBCUENT copybook",
+        "COMP-3 packed decimal fields",
+        "DECIMAL-POINT IS COMMA (European/Latin American numeric format)",
+        "Fixed-format with 6-digit sequence numbers",
+        "Formatted report output with pipe-delimited columns",
+        "Spanish-language data names and comments",
+        "Label 'CIELO' on line 000081 (paragraph-level label in working storage area)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars (300 of 721 lines shown); PROCEDURE DIVISION is visible but most logic is cut off. Program ID is PGMDBZ33. The label 'CIELO' in column 1-6 area on line 000081 is unusual - it appears in the sequence number area of a working-storage item, possibly a student identifier or marker. No comment lines detected despite comment-style lines with asterisks (they may be counted differently). Zero GOTO count and structured PERFORM usage suggest well-structured code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7769,
+      "completion_tokens": 609,
+      "total_tokens": 8378,
+      "cost": 0.032442,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032442,
+        "upstream_inference_prompt_cost": 0.023307,
+        "upstream_inference_completions_cost": 0.009135
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.4,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:50:15Z"
+}

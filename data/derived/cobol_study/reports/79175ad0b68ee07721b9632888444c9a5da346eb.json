@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:79175ad0b68ee07721b9632888444c9a5da346eb",
+    "sha1_git": "79175ad0b68ee07721b9632888444c9a5da346eb",
+    "filename": "/ORCGU01.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 87736,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:79175ad0b68ee07721b9632888444c9a5da346eb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:79175ad0b68ee07721b9632888444c9a5da346eb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 87736,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2149,
+    "blank_lines": 0,
+    "comment_lines": 658,
+    "code_lines": 1491,
+    "comment_ratio": 0.306,
+    "max_line_length": 74,
+    "avg_line_length": 39.8,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCGU01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 30,
+    "call_count": 17,
+    "perform_count": 107,
+    "goto_count": 11,
+    "pic_count": 122,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt software (日医標準レセプトソフト) - Japanese Medical Association open source system, compiled with GnuCOBOL/OpenCOBOL on Linux",
+        "evidence": [
+          "PROGRAM-ID ORCGU01",
+          "COPY MCPAREA / ORCA-SPA / LINKAREA pattern typical of JMA ORCA",
+          "EXEC SQL absent, MCP-STATUS/MCP-EVENT window management pattern",
+          "Copyright 2002 JMA (Japan Medical Association)",
+          "COPY U01.INC / U012.INC screen copybooks",
+          "no COMP-3, no IBM-specific extensions"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (resepto) software - reception/patient registration list screen (受付一覧 U01)",
+        "summary": "This program implements the patient reception list screen (U01) for the JMA ORCA medical receipt system. It manages display and navigation of a list of up to 400 registered patients per page, handling screen initialization, entry, and screen transitions via MCP window management calls. It reads patient master, reception, insurance combination, and system management data to populate the list.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "MCP-STATUS/MCP-EVENT window management (ORCA-specific middleware, not CICS)",
+        "30 COPY statements for copybooks (CPUKETUKE.INC, CPPTINF.INC, CPHKNCOMBI.INC, etc.)",
+        "OCCURS 400 table for patient list with dual-page buffering (OCCURS 2)",
+        "Japanese EUC-encoded comments throughout (latin-1 decoded as mojibake)",
+        "LINKAGE SECTION with MCPAREA/SPAAREA/LINKAREA/SCRAREA parameters",
+        "No COMP-3 usage; no EXEC SQL or EXEC CICS",
+        "REDEFINES usage for age display formatting",
+        "17 CALL statements to ORCA subroutines"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 but comments are actually Japanese EUC-JP encoding, appearing as mojibake. This is a well-known open-source Japanese medical system (JMA ORCA). The program is a subprogram called by the ORCA MCP middleware framework, functioning similarly to an online transaction program. Source is truncated at 16000 chars out of 87736 bytes total."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9567,
+      "completion_tokens": 621,
+      "total_tokens": 10188,
+      "cost": 0.038016,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.038016,
+        "upstream_inference_prompt_cost": 0.028701,
+        "upstream_inference_completions_cost": 0.009315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 20.87,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:54:15Z"
+}

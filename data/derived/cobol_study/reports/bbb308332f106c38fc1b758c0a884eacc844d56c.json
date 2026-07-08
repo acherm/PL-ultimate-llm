@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bbb308332f106c38fc1b758c0a884eacc844d56c",
+    "sha1_git": "bbb308332f106c38fc1b758c0a884eacc844d56c",
+    "filename": "/AVG-SCI-GRADE.cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2396,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bbb308332f106c38fc1b758c0a884eacc844d56c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bbb308332f106c38fc1b758c0a884eacc844d56c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2396,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 67,
+    "blank_lines": 3,
+    "comment_lines": 0,
+    "code_lines": 64,
+    "comment_ratio": 0.0,
+    "max_line_length": 68,
+    "avg_line_length": 34.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "AVG-SCI-GRADE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used; no vendor-specific extensions visible. Could be GnuCOBOL or similar open-source compiler given LINE SEQUENTIAL and GOBACK usage.",
+        "evidence": [
+          "EVALUATE TRUE",
+          "END-EVALUATE",
+          "END-READ",
+          "END-PERFORM",
+          "88 END-OF-MYGRADE-FILE VALUE HIGH-VALUE",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Academic grade calculation - computes average science grade from a student grade file using weighted units",
+        "summary": "Reads student subject records (ID, name, units, letter grade) from a file, converts letter grades to numeric equivalents, computes a weighted average science grade, and writes the result to an output file. Displays the average grade to the screen.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EVALUATE TRUE for letter-grade to numeric conversion",
+        "88-level condition name with HIGH-VALUE for EOF detection",
+        "LINE SEQUENTIAL file organization",
+        "Weighted GPA calculation using COMPUTE",
+        "PERFORM UNTIL with inline READ/AT END pattern"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Simple student exercise computing a weighted average grade. Author field 'AKAI' suggests a student. No COMP-3, no SQL, no CICS. The AVG-GRADE field in WORKING-STORAGE is declared but never used (only AVG-SCI-GRADE in AVG-DETAILS is computed). Minor code quality issues consistent with student work."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3113,
+      "completion_tokens": 389,
+      "total_tokens": 3502,
+      "cost": 0.015174,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015174,
+        "upstream_inference_prompt_cost": 0.009339,
+        "upstream_inference_completions_cost": 0.005835
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:33:01Z"
+}

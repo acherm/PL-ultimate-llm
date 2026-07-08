@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b5911d599291692eed8ebc6d4aaeaf75fb742743",
+    "sha1_git": "b5911d599291692eed8ebc6d4aaeaf75fb742743",
+    "filename": "/Z95636.CBL(UNIFY01).cbl",
+    "source_csv": "cbl_files_lowercase.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8283,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b5911d599291692eed8ebc6d4aaeaf75fb742743/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b5911d599291692eed8ebc6d4aaeaf75fb742743/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8283,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 190,
+    "blank_lines": 1,
+    "comment_lines": 56,
+    "code_lines": 133,
+    "comment_ratio": 0.296,
+    "max_line_length": 80,
+    "avg_line_length": 41.2,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PBEG005"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 10,
+    "goto_count": 0,
+    "pic_count": 25,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe-style COBOL with RECORDING MODE F, COMP-3, RETURN-CODE special register, and indexed file handling; Turkish-language comments suggest educational context possibly on IBM z/OS or compatible environment",
+        "evidence": [
+          "RECORDING MODE F",
+          "COMP-3",
+          "RETURN-CODE",
+          "ORGANIZATION INDEXED",
+          "ACCESS RANDOM",
+          "FUNCTION NUMVAL",
+          "FUNCTION INTEGER-OF-DAY",
+          "FUNCTION DATE-OF-INTEGER"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Currency account balance processing with TRY/USD/EUR currency codes (949=TRY, 840=USD, 978=EUR ISO codes) and customer account records",
+        "summary": "Reads an input file of ID/division-code pairs, looks up each record in an indexed file, converts Julian dates to Gregorian, applies a currency-specific balance adjustment based on ISO currency codes, and writes formatted output records. Turkish comments explain each paragraph.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "INDEXED file with RANDOM access and composite key (IDX-KEY)",
+        "COMP-3 packed decimal fields for ID, DATE, BALLANCE",
+        "RECORDING MODE F on sequential files",
+        "FUNCTION NUMVAL for string-to-numeric conversion",
+        "FUNCTION INTEGER-OF-DAY / DATE-OF-INTEGER for date conversion",
+        "88-level condition names for file status codes",
+        "RETURN-CODE special register usage",
+        "Turkish-language inline comments throughout",
+        "ISO 4217 currency codes used as numeric division codes (949 TRY, 840 USD, 978 EUR)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "All comments are in Turkish, suggesting this is a student or training exercise by author Yasar Okten. The program logic is straightforward and educational in nature. The HEADER 01-level under OUT-FILE FD appears to be defined but unused. Minor structural oddity: 03-level PROGRAM-ST under 01 WS-WORK-AREA (should be 05 level) suggests a student error."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5095,
+      "completion_tokens": 509,
+      "total_tokens": 5604,
+      "cost": 0.02292,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02292,
+        "upstream_inference_prompt_cost": 0.015285,
+        "upstream_inference_completions_cost": 0.007635
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.72,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T09:06:35Z"
+}

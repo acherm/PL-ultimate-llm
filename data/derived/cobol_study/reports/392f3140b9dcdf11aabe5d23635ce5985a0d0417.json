@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:392f3140b9dcdf11aabe5d23635ce5985a0d0417",
+    "sha1_git": "392f3140b9dcdf11aabe5d23635ce5985a0d0417",
+    "filename": "/ORCXRMST3.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 23170,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:392f3140b9dcdf11aabe5d23635ce5985a0d0417/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:392f3140b9dcdf11aabe5d23635ce5985a0d0417/raw/"
+  },
+  "indicators": {
+    "bytes_len": 23170,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 601,
+    "blank_lines": 0,
+    "comment_lines": 211,
+    "code_lines": 390,
+    "comment_ratio": 0.351,
+    "max_line_length": 74,
+    "avg_line_length": 37.6,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ORCXRMST3"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 6,
+    "call_count": 2,
+    "perform_count": 38,
+    "goto_count": 0,
+    "pic_count": 34,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "JMA ORCA medical receipt system (JMA standard receipt software), likely compiled with GnuCOBOL/OpenCOBOL on Linux; uses COPY copybooks like COMMON-SPA, CPDBKANRI.INC, CPMSTKANRI.INC, MCPAREA, MCPDATA.INC, ENUM-VALUE, CPORCSGETTEMP.INC",
+        "evidence": [
+          "COPY \"COMMON-SPA\"",
+          "COPY \"CPDBKANRI.INC\"",
+          "COPY \"CPMSTKANRI.INC\"",
+          "COPY \"MCPAREA\"",
+          "COPY \"MCPDATA.INC\"",
+          "CALL \"ORCSGETTEMP\"",
+          "/var/lib/jma-receipt/master/ path",
+          "Copyright(C) 2002 JMA (Japan Medical Association)",
+          "LINE SEQUENTIAL organization",
+          "grpsys prefix on COPY lines"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "JMA ORCA standard medical receipt (claims) software - master management update file creation processing",
+        "summary": "This program (ORCXRMST3) is part of the JMA ORCA medical receipt system. It reads a parameter input file listing master record versions, compares them against DB management and master management table versions, and writes an output file listing masters that need updating. It also updates the master management table (tbl_mstkanri) in the database for records that have been flagged for update.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with PARA-REC (called as subprogram)",
+        "CALL \"ORCSGETTEMP\" for temp directory resolution",
+        "SEARCH with INDEXED BY (table search for DBR version)",
+        "STRING with DELIMITED BY for file path construction",
+        "COPY copybooks with grpsys conditional prefix",
+        "LINE SEQUENTIAL file organization",
+        "No EXEC SQL or EXEC CICS - uses MCP (middleware) DB access pattern",
+        "MCP-TABLE / MCP-PATHNAME pattern for database access",
+        "OCCURS 100 INDEXED DBR-IDX table for master version tracking"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source contains Japanese EUC-JP or Shift-JIS encoded comments rendered as Latin-1 mojibake. The 'grpsys' prefix on some COPY and MOVE lines appears to be a conditional compilation tag or group system marker used in the ORCA build system. File truncated at 16000 chars but sufficient content visible for classification."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8291,
+      "completion_tokens": 625,
+      "total_tokens": 8916,
+      "cost": 0.034248,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034248,
+        "upstream_inference_prompt_cost": 0.024873,
+        "upstream_inference_completions_cost": 0.009375
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.65,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T08:37:19Z"
+}

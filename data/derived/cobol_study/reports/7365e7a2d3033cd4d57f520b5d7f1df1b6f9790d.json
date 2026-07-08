@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7365e7a2d3033cd4d57f520b5d7f1df1b6f9790d",
+    "sha1_git": "7365e7a2d3033cd4d57f520b5d7f1df1b6f9790d",
+    "filename": "/6-FIRMES.CBL",
+    "source_csv": "CBL_files.csv",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3142,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7365e7a2d3033cd4d57f520b5d7f1df1b6f9790d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7365e7a2d3033cd4d57f520b5d7f1df1b6f9790d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3142,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 113,
+    "blank_lines": 27,
+    "comment_lines": 4,
+    "code_lines": 82,
+    "comment_ratio": 0.047,
+    "max_line_length": 71,
+    "avg_line_length": 25.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "6-FIRMES"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 3,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "AcuCOBOL-GT / ACUCOBOL dialect indicated by COMP-1 usage for numeric key, 'C$RERR' runtime call for extended file status, 'NO LOCK' clause on READ, and PREVIOUS phrase on READ — all characteristic of ACUCOBOL/AcuCOBOL-GT",
+        "evidence": [
+          "CALL \"C$RERR\" USING EXTENDED-STATUS",
+          "READ FIRME PREVIOUS NO LOCK",
+          "READ FIRME NEXT NO LOCK",
+          "COMP-1 on EXC-KEY",
+          "REWRITE ... INVALID CONTINUE END-REWRITE"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "General ledger / firm (company) master file management module, likely part of an accounting or ERP system managing company records (FIRMES = firms/companies in French)",
+        "summary": "This is a subprogram module (6-FIRMES) that handles general read/write operations on a FIRME (firm/company) indexed file. It supports forward and backward sequential navigation (START/READ NEXT/PREVIOUS), direct key reads, and write-or-rewrite logic, passing records back via linkage section. It also calls a SQL-related subprogram (9-FIRME) conditionally.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "COMP-1 used for numeric key (ACUCOBOL style)",
+        "C$RERR call for extended file status error handling",
+        "READ ... PREVIOUS NO LOCK (ACUCOBOL extension)",
+        "READ ... NEXT NO LOCK (ACUCOBOL extension)",
+        "DECLARATIVES with USE AFTER ERROR PROCEDURE",
+        "EVALUATE on numeric key codes (65=A, 66=B ASCII)",
+        "Conditional CALL to SQL subprogram 9-FIRME",
+        "4 COPY statements for file control and linkage",
+        "French-language comments and naming (FIRMES, programme)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File uses latin-1 encoding with box-drawing characters in header comment. French naming conventions suggest Belgian or French origin. The program-id '6-FIRMES' with numeric prefix suggests a numbered module in a larger application suite. COMP-1 for a 4-digit key is unusual and strongly points to ACUCOBOL where COMP-1 is a floating-point type — this may be intentional or a dialect quirk."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3234,
+      "completion_tokens": 605,
+      "total_tokens": 3839,
+      "cost": 0.018777,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018777,
+        "upstream_inference_prompt_cost": 0.009702,
+        "upstream_inference_completions_cost": 0.009075
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.22,
+    "raw": null
+  },
+  "generated_at": "2026-07-08T07:58:08Z"
+}

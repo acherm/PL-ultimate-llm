@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0aca69a384623dbbbc8963b18d25cb5fd61d137e",
+    "sha1_git": "0aca69a384623dbbbc8963b18d25cb5fd61d137e",
+    "filename": "/ZFAMPLT.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6686,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0aca69a384623dbbbc8963b18d25cb5fd61d137e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0aca69a384623dbbbc8963b18d25cb5fd61d137e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6686,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 168,
+    "blank_lines": 32,
+    "comment_lines": 41,
+    "code_lines": 95,
+    "comment_ratio": 0.301,
+    "max_line_length": 71,
+    "avg_line_length": 37.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ZFAMPLT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/TS COBOL; CBL CICS(SP) compiler option indicates IBM Enterprise COBOL with CICS translator. Part of zFAM (z/OS File Access Manager) open-source project by Rich Jackson and Randy Frerking.",
+        "evidence": [
+          "CBL CICS(SP) compiler directive",
+          "EXEC CICS INQUIRE URIMAP",
+          "EXEC CICS START TRANSID",
+          "EXEC CICS WRITEQ TD",
+          "EXEC CICS WRITE OPERATOR",
+          "DFHRESP(NORMAL)",
+          "DFHCOMMAREA",
+          "EIBRESP"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "zFAM (z/OS File Access Manager) - a CICS-based file access manager utility. This program runs in the CICS PLT (Program List Table) at startup.",
+        "summary": "This program runs as a CICS PLT (Program List Table) initialization program for zFAM. It browses all URIMAP definitions, identifies those with an 'FA' prefix, and issues a CICS START command for the corresponding zFAM expiration task (FX##) for each one. It also writes a log message to a TD queue (CSSL) and issues a WTO operator message for each started task.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS INQUIRE URIMAP (browse/start/next/end pattern)",
+        "EXEC CICS START TRANSID for expiration tasks",
+        "EXEC CICS WRITEQ TD (transient data queue logging)",
+        "EXEC CICS WRITE OPERATOR (WTO equivalent)",
+        "CBL CICS(SP) compiler option",
+        "PLT (Program List Table) startup program",
+        "DFHRESP/EIBRESP condition handling with NOHANDLE",
+        "No COPY statements - self-contained"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Part of the open-source zFAM project. No COPY statements used; all storage is self-contained. The CSSL TDQ name appears to be a placeholder token '@tdq@' suggesting possible template substitution at build time. No COMP-3 usage; TD-LENGTH uses COMP (BINARY)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3812,
+      "completion_tokens": 572,
+      "total_tokens": 4384,
+      "cost": 0.020016,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020016,
+        "upstream_inference_prompt_cost": 0.011436,
+        "upstream_inference_completions_cost": 0.00858
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.98,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:02:45Z"
+}

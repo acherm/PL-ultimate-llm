@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bea1b9135d97b5c82af37b293f771c4bfc83ac6f",
+    "sha1_git": "bea1b9135d97b5c82af37b293f771c4bfc83ac6f",
+    "filename": "/ClaveAlterVector.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8275,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bea1b9135d97b5c82af37b293f771c4bfc83ac6f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bea1b9135d97b5c82af37b293f771c4bfc83ac6f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8275,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 236,
+    "blank_lines": 23,
+    "comment_lines": 6,
+    "code_lines": 207,
+    "comment_ratio": 0.028,
+    "max_line_length": 72,
+    "avg_line_length": 33.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "YOUR-PROGRAM-NAME"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 42,
+    "goto_count": 1,
+    "pic_count": 51,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) student exercise; uses Windows-style relative path '..\\socios.dat' suggesting a Windows/GnuCOBOL environment; template PROGRAM-ID left as YOUR-PROGRAM-NAME",
+        "evidence": [
+          "Tectonics: cobc in header comment",
+          "ASSIGN TO \"..\\socios.dat\" Windows path",
+          "OCCURS 1 to 9999 DEPENDING on largo",
+          "DECIMAL-POINT IS COMMA",
+          "END PROGRAM YOUR-PROGRAM-NAME"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise implementing an indexed-file member/socio lookup system with search by number and by name using a dynamic vector",
+        "summary": "This program opens an indexed COBOL file of club members ('socios'), presents a menu to search by member number or by name, and displays formatted member details. It also builds an in-memory vector of matching records when searching by name to allow the user to select among duplicates.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ORGANIZATION INDEXED with ALTERNATE RECORD KEY WITH DUPLICATES",
+        "OCCURS DEPENDING ON (ODO) for dynamic vector",
+        "START with KEY IS = for alternate key navigation",
+        "DECIMAL-POINT IS COMMA in SPECIAL-NAMES",
+        "Windows-style relative file path in ASSIGN",
+        "PERFORM THRU with EXIT paragraph",
+        "88-level condition names for flags",
+        "Formatted display lines with FILLER VALUE ALL"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "PROGRAM-ID is the template placeholder 'YOUR-PROGRAM-NAME', confirming this is a student/tutorial exercise. The file path uses Windows backslash notation consistent with GnuCOBOL on Windows. Logic in 395-VALIDO-CODIGO has a subtle bug (loop condition checks no-encontre=1 but should loop while NOT found), typical of student code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4965,
+      "completion_tokens": 478,
+      "total_tokens": 5443,
+      "cost": 0.022065,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022065,
+        "upstream_inference_prompt_cost": 0.014895,
+        "upstream_inference_completions_cost": 0.00717
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.23,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:50:18Z"
+}

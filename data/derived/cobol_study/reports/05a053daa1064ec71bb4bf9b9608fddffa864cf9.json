@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:05a053daa1064ec71bb4bf9b9608fddffa864cf9",
+    "sha1_git": "05a053daa1064ec71bb4bf9b9608fddffa864cf9",
+    "filename": "/DF27TEST.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5016,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:05a053daa1064ec71bb4bf9b9608fddffa864cf9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:05a053daa1064ec71bb4bf9b9608fddffa864cf9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5016,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 117,
+    "blank_lines": 28,
+    "comment_lines": 15,
+    "code_lines": 74,
+    "comment_ratio": 0.169,
+    "max_line_length": 72,
+    "avg_line_length": 40.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DF27TEST"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 36,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe-style COBOL; uses GOBACK, INDEXED BY, SET index, END-PERFORM, UPON CONSOLE, REDEFINES with OCCURS — all consistent with IBM Enterprise COBOL or similar mainframe dialect",
+        "evidence": [
+          "GOBACK statement",
+          "DISPLAY ... UPON CONSOLE",
+          "INDEXED BY clause",
+          "SET RD-YYY-SUB TO RD-XXX-SUB",
+          "END-PERFORM",
+          "REDEFINES with OCCURS table"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Defect demonstration/test snippet showing a bug fix for array index handling in WORKING-STORAGE table moves",
+        "summary": "This program (DF27TEST) is a test/demonstration snippet created to illustrate a specific COBOL defect (snippet 27): moving values between two indexed tables where the receiving array index was not being set. It shows both the buggy code (commented out) and the corrected code using SET to synchronize the receiving index before the MOVE.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "REDEFINES used to overlay flat table with OCCURS/INDEXED structure",
+        "INDEXED BY with SET statement to synchronize indices",
+        "Commented-out 'before' code showing the defect alongside 'after' corrected code",
+        "GOBACK instead of STOP RUN",
+        "DISPLAY UPON CONSOLE",
+        "No file I/O despite FILE-CONTROL section present",
+        "Duplicate data-name WS-XXX-PRODUCT-CODE-4 (likely intentional defect artifact)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "Program is explicitly a defect demonstration snippet (REMARKS states 'COBOL SOURCE CODE FOR SNIPPLET 27 DEFECT'). The commented-out block shows the problematic code; the active block shows the fix. There is a duplicate field name WS-XXX-PRODUCT-CODE-4 which may be intentional or a typo in the test data. No COMP-3, no SQL, no CICS. Dialect is likely IBM mainframe but could compile under other dialects supporting these features."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4103,
+      "completion_tokens": 524,
+      "total_tokens": 4627,
+      "cost": 0.020169,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020169,
+        "upstream_inference_prompt_cost": 0.012309,
+        "upstream_inference_completions_cost": 0.00786
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.79,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:08:40Z"
+}

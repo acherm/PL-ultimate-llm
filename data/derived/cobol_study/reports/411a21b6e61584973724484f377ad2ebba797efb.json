@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:411a21b6e61584973724484f377ad2ebba797efb",
+    "sha1_git": "411a21b6e61584973724484f377ad2ebba797efb",
+    "filename": "/cobol.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2145,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:411a21b6e61584973724484f377ad2ebba797efb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:411a21b6e61584973724484f377ad2ebba797efb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2145,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 62,
+    "blank_lines": 4,
+    "comment_lines": 7,
+    "code_lines": 51,
+    "comment_ratio": 0.121,
+    "max_line_length": 121,
+    "avg_line_length": 33.6,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PGMMP1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/BMS online program targeting z/OS or similar mainframe environment; uses BMS map handling with EXEC CICS RECEIVE/SEND/RETURN",
+        "evidence": [
+          "EXEC CICS RECEIVE",
+          "EXEC CICS SEND",
+          "EXEC CICS RETURN",
+          "COPY MS0001 (BMS copybook)",
+          "MAPSET/MAP references",
+          "WS-CICS-RET PIC S9(4) COMP",
+          "IBMUSER default credentials"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "CICS online transaction - simple login/authentication screen handler using BMS maps",
+        "summary": "This is a CICS online program (PGMMP1) that receives input from a BMS map (CF00M), checks a hardcoded username and password (IBMUSER/IBMUSER), and sends back a SUCCESS or FAILED message on the same map. It is a minimal login validation screen program.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS RECEIVE with MAPSET/MAP/INTO/RESP",
+        "EXEC CICS SEND with DATAONLY",
+        "EXEC CICS RETURN",
+        "BMS map copybook (COPY MS0001)",
+        "Hardcoded credentials (IBMUSER/IBMUSER)",
+        "PIC S9(4) COMP for CICS response code"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Hardcoded credentials and minimal logic strongly suggest a tutorial or student exercise for learning CICS BMS programming. The program has all four divisions and is syntactically complete. Long lines (up to 121 chars) exceed the standard 72-column fixed format but are within the 80-column or extended fixed format used by some IBM compilers."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2834,
+      "completion_tokens": 458,
+      "total_tokens": 3292,
+      "cost": 0.015372,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015372,
+        "upstream_inference_prompt_cost": 0.008502,
+        "upstream_inference_completions_cost": 0.00687
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.0,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:34:05Z"
+}

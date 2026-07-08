@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6c0ee55a5ccc81b687c2afbe8e88bc1788fdb5da",
+    "sha1_git": "6c0ee55a5ccc81b687c2afbe8e88bc1788fdb5da",
+    "filename": "/gestor_archivo.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7082,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6c0ee55a5ccc81b687c2afbe8e88bc1788fdb5da/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6c0ee55a5ccc81b687c2afbe8e88bc1788fdb5da/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7082,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 167,
+    "blank_lines": 3,
+    "comment_lines": 42,
+    "code_lines": 122,
+    "comment_ratio": 0.256,
+    "max_line_length": 72,
+    "avg_line_length": 41.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "gestor_archivo"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL subprogram compiled with 'cobc -x principal.cbl gestor_archivo.cbl -o subprogramas.exe' as shown in the first comment line",
+        "evidence": [
+          "cobc -x principal.cbl gestor_archivo.cbl",
+          "GOBACK used as subprogram return",
+          "PROCEDURE DIVISION USING",
+          "ORGANIZATION IS INDEXED",
+          "ACCESS IS DYNAMIC"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "File management subprogram for an indexed customer (CLIENTES.BIN) file, likely part of a larger client management system",
+        "summary": "This is a COBOL subprogram that manages CRUD operations on an indexed sequential file of customer records (CLIENTES.BIN). It accepts an operation code (O=open, A=open I-O, C=close, R=read, W=write, U=rewrite, D=delete) and a customer record via the LINKAGE SECTION, performing the corresponding file operation and returning a file status code.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with operation dispatch pattern",
+        "EVALUATE on operation code for CRUD routing",
+        "ORGANIZATION IS INDEXED with DYNAMIC access",
+        "GOBACK used as subprogram return in each paragraph",
+        "Commented-out DISPLAY debug statements throughout",
+        "Duplicate field names resolved with OF qualifier",
+        "LABEL RECORD STANDARD clause"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Spanish-language identifiers and comments (gestor_archivo = file manager, clientes = clients, operacion = operation) suggest a Latin American student or academic project. The compile command in the first comment line confirms GnuCOBOL. No COMP-3, no SQL, no CICS. The pattern of commented-out DISPLAY statements is typical of student debugging."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3991,
+      "completion_tokens": 466,
+      "total_tokens": 4457,
+      "cost": 0.018963,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018963,
+        "upstream_inference_prompt_cost": 0.011973,
+        "upstream_inference_completions_cost": 0.00699
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.55,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:06:38Z"
+}

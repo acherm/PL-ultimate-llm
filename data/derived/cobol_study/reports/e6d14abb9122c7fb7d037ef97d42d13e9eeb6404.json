@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e6d14abb9122c7fb7d037ef97d42d13e9eeb6404",
+    "sha1_git": "e6d14abb9122c7fb7d037ef97d42d13e9eeb6404",
+    "filename": "/HWORK3.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7254,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e6d14abb9122c7fb7d037ef97d42d13e9eeb6404/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e6d14abb9122c7fb7d037ef97d42d13e9eeb6404/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7254,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 207,
+    "blank_lines": 17,
+    "comment_lines": 6,
+    "code_lines": 184,
+    "comment_ratio": 0.032,
+    "max_line_length": 71,
+    "avg_line_length": 34.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ODEV003"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 21,
+    "goto_count": 0,
+    "pic_count": 38,
+    "comp3_count": 6,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe-style COBOL with VSAM KSDS indexed files, COMP-3 packed decimal, RECORDING MODE F, RETURN-CODE special register, and GOBACK. Turkish field names (Tarih=date, Tutar=amount, Ad=name, Soyad=surname, DVZ=currency/division) suggest a Turkish banking or financial application possibly running on IBM z/OS.",
+        "evidence": [
+          "COMP-3 packed decimal usage",
+          "RECORDING MODE F on FD",
+          "RETURN-CODE special register",
+          "GOBACK statement",
+          "VSAM KSDS with ORGANIZATION INDEXED and STATUS codes",
+          "FUNCTION NUMVAL-C, FUNCTION INTEGER-OF-DAY, FUNCTION DATE-OF-INTEGER (COBOL-85 intrinsic functions)",
+          "88-level condition names with multiple values (VALUE 00 97)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Currency/account balance lookup and reporting; Turkish field names (DVZ=döviz/currency, Tutar=amount, Tarih=date) suggest foreign currency account processing",
+        "summary": "The program reads sequential account records (ACCT-REC), looks up matching records in a VSAM indexed file (IDX-FILE) by account ID and division/currency code, retrieves currency name from a currency database (DVZDB-FILE), converts Julian dates to Gregorian, updates balances, and writes formatted output to a print file. It is a batch reporting/update program for account balance processing.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "VSAM KSDS indexed file access (ORGANIZATION INDEXED, ACCESS RANDOM)",
+        "COMP-3 packed decimal fields",
+        "RECORDING MODE F on sequential files",
+        "FUNCTION NUMVAL-C and FUNCTION NUMVAL for string-to-numeric conversion",
+        "FUNCTION INTEGER-OF-DAY and FUNCTION DATE-OF-INTEGER for date conversion",
+        "RETURN-CODE special register for error propagation",
+        "GOBACK statement",
+        "Turkish language identifiers and display messages",
+        "88-level condition names with multiple values (00 97 for success)",
+        "Multiple indexed file lookups with INVALID KEY handling"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Turkish field names and display messages (Ad, Soyad, Tarih, Tutar, DVZ=döviz) strongly suggest a Turkish educational or training exercise, possibly from a university course on COBOL/mainframe programming. The program structure is functional but has some rough edges (e.g., DISPLAY 'ID : ' IDX-LNAME instead of IDX-ID, DVZDB-FILE not closed in H999). Filename HWORK3.cbl suggests 'homework 3'. No EXEC SQL or EXEC CICS present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4686,
+      "completion_tokens": 680,
+      "total_tokens": 5366,
+      "cost": 0.024258,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024258,
+        "upstream_inference_prompt_cost": 0.014058,
+        "upstream_inference_completions_cost": 0.0102
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.15,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:40:08Z"
+}

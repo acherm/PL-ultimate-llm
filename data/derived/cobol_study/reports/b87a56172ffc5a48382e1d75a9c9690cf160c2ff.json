@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b87a56172ffc5a48382e1d75a9c9690cf160c2ff",
+    "sha1_git": "b87a56172ffc5a48382e1d75a9c9690cf160c2ff",
+    "filename": "/cobpg.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3285,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b87a56172ffc5a48382e1d75a9c9690cf160c2ff/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b87a56172ffc5a48382e1d75a9c9690cf160c2ff/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3285,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 106,
+    "blank_lines": 0,
+    "comment_lines": 2,
+    "code_lines": 104,
+    "comment_ratio": 0.019,
+    "max_line_length": 68,
+    "avg_line_length": 30.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COBPG"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 9,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) with libpq PostgreSQL bindings; compile command in comments references 'cobc -Xref -P -Tcobpg.txt --tlines=0 --tsymbols -lpq -x cobpg.cbl'",
+        "evidence": [
+          "cobc compiler directive in comment",
+          "USAGE POINTER",
+          "PICTURE x(80) based",
+          "SET ADDRESS OF resstr TO resptr",
+          "STOP RUN RETURNING 1",
+          "x\"00\" null terminator usage",
+          "BY VALUE for pointer passing"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "PostgreSQL database query utility demonstrating libpq C API calls from COBOL",
+        "summary": "A demonstration/example program that connects to a PostgreSQL database using the libpq library, executes a SELECT query, and iterates over the result set displaying row and column values. It calls PQconnectdb, PQexec, PQntuples, PQnfields, PQgetvalue, PQclear, and PQfinish directly via CALL statements.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "USAGE POINTER for C pointer interop",
+        "BASED item (resstr) with SET ADDRESS OF",
+        "Direct libpq C API calls (PQconnectdb, PQexec, PQntuples, PQnfields, PQgetvalue, PQclear, PQfinish)",
+        "Null-terminated string construction with x\"00\"",
+        "BY VALUE pointer passing",
+        "STOP RUN RETURNING integer exit code",
+        "Compile command embedded in comments"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "This is clearly a GnuCOBOL example/tutorial program by Thomas Schilling demonstrating PostgreSQL access via libpq. The compile command is embedded as a comment. Credentials are placeholder (xxx/yyy/zzz). The program is a self-contained demonstration rather than production code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3317,
+      "completion_tokens": 492,
+      "total_tokens": 3809,
+      "cost": 0.017331,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017331,
+        "upstream_inference_prompt_cost": 0.009951,
+        "upstream_inference_completions_cost": 0.00738
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.43,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:25:00Z"
+}

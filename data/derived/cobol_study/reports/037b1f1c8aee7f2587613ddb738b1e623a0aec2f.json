@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:037b1f1c8aee7f2587613ddb738b1e623a0aec2f",
+    "sha1_git": "037b1f1c8aee7f2587613ddb738b1e623a0aec2f",
+    "filename": "/Program1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5800,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:037b1f1c8aee7f2587613ddb738b1e623a0aec2f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:037b1f1c8aee7f2587613ddb738b1e623a0aec2f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5800,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 160,
+    "blank_lines": 21,
+    "comment_lines": 23,
+    "code_lines": 116,
+    "comment_ratio": 0.165,
+    "max_line_length": 116,
+    "avg_line_length": 34.3,
+    "long_lines_over_72": 27,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 12,
+    "goto_count": 0,
+    "pic_count": 11,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Appears to be GnuCOBOL or Micro Focus style with Screen Section, LINE SEQUENTIAL, and EXEC SQL (likely targeting a Windows environment with SQL Server via ODBC/ADO connection string). The file path and SQL Server connection string suggest a student project on Windows.",
+        "evidence": [
+          "organization is Line Sequential",
+          "Screen section with background-color/foreground-color",
+          "EXEC SQL INCLUDE SQLCA/SQLDA",
+          "SQL Server connection string with System.Data.SqlClient",
+          "end program Program1",
+          "Program1 as \"AppliBanqueSession18.Program1\""
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Banking account management application (Gestion Bancaire) with menus for importing client accounts from CSV, listing banks, listing accounts, RIB key control, and client management",
+        "summary": "A banking management menu-driven program that reads client account data from a CSV file and provides options for importing accounts, listing banks/accounts, RIB key validation, and client management. It includes SQL database connectivity to a SQL Server instance. Most sub-procedures are stubs (empty or CONTINUE).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL INCLUDE SQLCA",
+        "EXEC SQL INCLUDE SQLDA",
+        "Screen Section with foreground/background color control",
+        "LINE SEQUENTIAL file organization",
+        "SQL Server ODBC/ADO connection string in MOVE statement",
+        "accept DateSysteme from date",
+        "record varying from 0 to 255",
+        "Incomplete/stub procedures (ListeBanque, ListeCompte, ControleCleRib, GestionClient are empty)",
+        "Malformed IDENTIFICATION DIVISION header (prog    r am-id)",
+        "Duplicate END-EXEC in source"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The IDENTIFICATION DIVISION header is malformed ('prog    r am-id.' with spaces in the keyword), suggesting a corrupted or hand-edited file. Several procedures are empty stubs. The SQL connection string is embedded in a MOVE statement that appears truncated/incomplete. The file is a student exercise for a banking session (Session 18). Dialect is ambiguous between GnuCOBOL and Micro Focus due to Screen Section and SQL usage; the Windows file path and .NET SqlClient factory suggest a GnuCOBOL or Micro Focus environment on Windows."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3602,
+      "completion_tokens": 576,
+      "total_tokens": 4178,
+      "cost": 0.019446,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019446,
+        "upstream_inference_prompt_cost": 0.010806,
+        "upstream_inference_completions_cost": 0.00864
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.0,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:36:45Z"
+}

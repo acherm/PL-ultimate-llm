@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5c0e415ae1d751f9ba7eba4217f22a4e6769c412",
+    "sha1_git": "5c0e415ae1d751f9ba7eba4217f22a4e6769c412",
+    "filename": "/TESTPRG.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8781,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5c0e415ae1d751f9ba7eba4217f22a4e6769c412/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5c0e415ae1d751f9ba7eba4217f22a4e6769c412/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8781,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 254,
+    "blank_lines": 22,
+    "comment_lines": 3,
+    "code_lines": 229,
+    "comment_ratio": 0.013,
+    "max_line_length": 71,
+    "avg_line_length": 33.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BATCHPROCESS"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 36,
+    "goto_count": 0,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Uses ZUTZCWS and ZUTZCPD COPYBOOKs which are part of the ZUTZCOB unit testing framework for GnuCOBOL/OpenCOBOL",
+        "evidence": [
+          "COPY ZUTZCWS",
+          "COPY ZUTZCPD",
+          "UT-INITIALIZE",
+          "UT-ASSERT-EQUAL",
+          "UT-NORMAL-COMPARE",
+          "UT-COMPARE-DEFAULT",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "END-PERFORM",
+          "END-IF",
+          "END-READ"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Banking transaction processing: reading transactions from file, searching/creating bank and account records, updating account balances (saldo)",
+        "summary": "This is a test suite (TESTPRG.CBL) for a batch banking transaction processor called BATCHPROCESS. It tests reading transaction lines from a file, searching for bank IDs and account IDs, creating new entries when not found, and adding amounts to account balances. Uses the ZUTZCOB unit testing framework for GnuCOBOL.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "ZUTZCOB unit testing framework (COPY ZUTZCWS, COPY ZUTZCPD)",
+        "OCCURS clause with two-dimensional table (BANK/ACCOUNT)",
+        "LINE SEQUENTIAL file organization",
+        "German comment ('Implementation des TIC TACT TOE Spiels' - misleading comment, actual code is banking)",
+        "SECTION-based paragraph structure",
+        "No COMP-3 usage",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The comment says 'Implementation des TIC TACT TOE Spiels' (Tic Tac Toe game implementation) but the actual code implements a banking transaction batch processor - the comment is clearly wrong/copy-pasted. The program uses the ZUTZCOB framework (UT-* variables and paragraphs) which is a well-known unit testing framework for GnuCOBOL. This appears to be a student exercise for a banking/COBOL course."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5033,
+      "completion_tokens": 536,
+      "total_tokens": 5569,
+      "cost": 0.023139,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023139,
+        "upstream_inference_prompt_cost": 0.015099,
+        "upstream_inference_completions_cost": 0.00804
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.59,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:42:06Z"
+}

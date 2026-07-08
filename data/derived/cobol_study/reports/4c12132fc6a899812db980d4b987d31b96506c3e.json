@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4c12132fc6a899812db980d4b987d31b96506c3e",
+    "sha1_git": "4c12132fc6a899812db980d4b987d31b96506c3e",
+    "filename": "/COBLSC05.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 19424,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4c12132fc6a899812db980d4b987d31b96506c3e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4c12132fc6a899812db980d4b987d31b96506c3e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 19424,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 498,
+    "blank_lines": 57,
+    "comment_lines": 23,
+    "code_lines": 418,
+    "comment_ratio": 0.052,
+    "max_line_length": 72,
+    "avg_line_length": 37.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COBLSC05"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 19,
+    "goto_count": 12,
+    "pic_count": 136,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL or similar PC-based COBOL (file paths use Windows backslash C:\\IHCC\\COBOL\\, LINAGE clause, FUNCTION CURRENT-DATE, EVALUATE, 88-level condition names with VALUE THRU). Student assignment context suggests a PC COBOL environment such as GnuCOBOL or Micro Focus Personal COBOL.",
+        "evidence": [
+          "ASSIGN TO 'C:\\IHCC\\COBOL\\COBLSC05\\CBLPOPSL.DAT'",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "FUNCTION CURRENT-DATE",
+          "EVALUATE I-TEAM",
+          "88 VAL-STATE VALUE 'IA' 'IL' 'MI' 'MO' 'NE' 'WI'",
+          "LINAGE IS 60 WITH FOOTING AT 56",
+          "AT EOP PERFORM"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student programming assignment for Iowa Hills Community College (IHCC) COBOL course; generates a pop (soda) sales report for the Albia Soccer Club fundraiser",
+        "summary": "This program reads a sequential file of pop sales records for the Albia Soccer Club fundraiser, validates each record (checking name, address, state, zip, pop type, quantity, and team), and produces two reports: a valid sales report with deposit and total calculations per record, and an error report for invalid records. It also prints grand totals by pop type and by team.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINAGE clause with AT EOP for page overflow handling",
+        "FUNCTION CURRENT-DATE for dynamic date stamping",
+        "EVALUATE statement for pop type and team branching",
+        "88-level condition names with VALUE THRU ranges",
+        "Validation routine using GO TO exit pattern (PERFORM THRU 2100-X)",
+        "Multiple output files (valid report + error report)",
+        "Deposit calculation varies by state (IA/NE/WI vs MI vs others)",
+        "No COMP-3 usage despite numeric accumulators"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at ~16000 chars; the last visible line is a partial MOVE statement ('MO'). The IHCC in the file path likely refers to Iowa Hills Community College. Tab characters appear in the COMPANY-TITLE-LINE and ERR-COMPANY-TITLE-LINE sections (mixed indentation), but overall format is fixed-column COBOL-85."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7907,
+      "completion_tokens": 620,
+      "total_tokens": 8527,
+      "cost": 0.033021,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033021,
+        "upstream_inference_prompt_cost": 0.023721,
+        "upstream_inference_completions_cost": 0.0093
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.24,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:20:15Z"
+}

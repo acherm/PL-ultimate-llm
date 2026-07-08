@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:05ede0b52a95f6bda76561dd30c54ce8fe02def4",
+    "sha1_git": "05ede0b52a95f6bda76561dd30c54ce8fe02def4",
+    "filename": "/candy_sale.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1853,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:05ede0b52a95f6bda76561dd30c54ce8fe02def4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:05ede0b52a95f6bda76561dd30c54ce8fe02def4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1853,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 50,
+    "blank_lines": 2,
+    "comment_lines": 0,
+    "code_lines": 48,
+    "comment_ratio": 0.0,
+    "max_line_length": 71,
+    "avg_line_length": 36.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CANDY-SALE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used; no vendor-specific extensions visible. LINE SEQUENTIAL and 88-level condition with HIGH-VALUE are common across GnuCOBOL and IBM.",
+        "evidence": [
+          "LINE SEQUENTIAL",
+          "88 END-OF-SALES-FILE VALUE HIGH-VALUE",
+          "END-READ",
+          "END-PERFORM",
+          "PERFORM VARYING ... UNTIL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Candy shop sales reporting by state",
+        "summary": "Reads a sequential file of branch candy sales records, accumulates totals into a state-indexed table (50 states), then displays formatted sales totals per state. Simple batch report program for a fictional candy retailer called YoreCandyShoppe.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OCCURS 50 TIMES table for state sales totals",
+        "88-level condition on file record for EOF detection",
+        "Edited picture clause $$$,$$$,$$9.99 for formatted output",
+        "LINE SEQUENTIAL file organization",
+        "PERFORM VARYING loop over table"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Small 50-line program with AUTHOR field 'Rattasart', likely a student exercise. No COMP-3, no COPY statements, no CALLs. The 88-level item END-OF-SALES-FILE is defined under BRANCH-SALE-REC but used as an EOF flag, which is a common student pattern. No truncation issues observed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2791,
+      "completion_tokens": 381,
+      "total_tokens": 3172,
+      "cost": 0.014088,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014088,
+        "upstream_inference_prompt_cost": 0.008373,
+        "upstream_inference_completions_cost": 0.005715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.28,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T20:45:39Z"
+}

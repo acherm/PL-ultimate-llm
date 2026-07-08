@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a4b1dbc856e6c267ed7b840be8eff21dc667acba",
+    "sha1_git": "a4b1dbc856e6c267ed7b840be8eff21dc667acba",
+    "filename": "/sys.d.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1042,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a4b1dbc856e6c267ed7b840be8eff21dc667acba/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a4b1dbc856e6c267ed7b840be8eff21dc667acba/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1042,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 32,
+    "blank_lines": 3,
+    "comment_lines": 10,
+    "code_lines": 19,
+    "comment_ratio": 0.345,
+    "max_line_length": 62,
+    "avg_line_length": 31.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": false
+    },
+    "n_divisions": 0,
+    "program_ids": [
+      "Console-Display",
+      "To-String"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "unknown",
+        "detail": "Uses non-standard 'export-module' directive and 'pic X(n)' / 'S9(n)V9(n)' placeholder syntax suggesting a custom or experimental COBOL dialect or type-declaration stub file. Multiple PROCEDURE DIVISION entries within a single program-id block is non-standard.",
+        "evidence": [
+          "export-module. Sys.",
+          "pic X(n)",
+          "pic S9(n)V9(n) Comp-4",
+          "Comp-2 usage",
+          "multiple data/procedure division blocks under one program-id"
+        ],
+        "confidence": "low"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "System module type declarations for a 'Sys' module, providing string formatting and console display subprograms",
+        "summary": "This file contains type/interface declarations for a 'Sys' module, defining two subprograms: 'To-String' (formats primitive values as strings, with overloads for Comp-2 and Comp-4 types) and 'Console-Display' (prints a string to the output terminal). The syntax appears to be a stub or declaration file rather than fully executable COBOL.",
+        "program_type": "copybook"
+      },
+      "notable_features": [
+        "Non-standard 'export-module' directive",
+        "Placeholder PIC clauses using 'n' (e.g. pic X(n))",
+        "Multiple DATA/PROCEDURE DIVISION blocks under a single PROGRAM-ID",
+        "Comp-2 (floating point) usage",
+        "RETURNING phrase in PROCEDURE DIVISION",
+        "Appears to be a type declaration or interface stub file"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "low",
+      "notes": "The file uses highly non-standard syntax (export-module, pic X(n) with literal 'n', multiple division blocks per program-id) suggesting it is either a stub/declaration file for a custom COBOL-like system, a template, or an experimental dialect. No standard COBOL divisions are detected at the top level. The program_ids were mechanically detected but the structure is atypical. Overall confidence is low due to the non-standard nature of the code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2498,
+      "completion_tokens": 509,
+      "total_tokens": 3007,
+      "cost": 0.015129,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015129,
+        "upstream_inference_prompt_cost": 0.007494,
+        "upstream_inference_completions_cost": 0.007635
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.83,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:42:37Z"
+}

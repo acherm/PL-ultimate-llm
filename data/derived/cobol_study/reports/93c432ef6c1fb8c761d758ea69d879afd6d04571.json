@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:93c432ef6c1fb8c761d758ea69d879afd6d04571",
+    "sha1_git": "93c432ef6c1fb8c761d758ea69d879afd6d04571",
+    "filename": "/DHWSAVE.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 30731,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:93c432ef6c1fb8c761d758ea69d879afd6d04571/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:93c432ef6c1fb8c761d758ea69d879afd6d04571/raw/"
+  },
+  "indicators": {
+    "bytes_len": 30731,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 793,
+    "blank_lines": 45,
+    "comment_lines": 226,
+    "code_lines": 522,
+    "comment_ratio": 0.302,
+    "max_line_length": 71,
+    "avg_line_length": 36.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "DHWSAVE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 31,
+    "goto_count": 33,
+    "pic_count": 76,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Enterprise COBOL v6.3 for z/OS, explicitly stated in program header and opening screen display",
+        "evidence": [
+          "PROGRAM-ID. DHWSAVE",
+          "FUNCTION TEST-NUMVAL",
+          "FUNCTION NUMVAL",
+          "in Enterprise COBOL v6.3 for z/OS",
+          "EVALUATE TRUE ... END-EVALUATE",
+          "PIC X(9) USER-INPUT"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Domestic hot water energy savings calculator — computes water usage, energy consumption (BTUs), fuel consumption, and cost for initial vs. new shower conditions, then reports savings",
+        "summary": "DHWSAVE is an interactive batch program that prompts the user for cold water temperature, fuel type (electric/natural gas/propane), hot water temperature, flow rate, shower time, and combustion efficiency for both initial and new conditions. It calculates water usage, energy in BTUs, fuel consumed, and cost for each scenario, then displays a savings report comparing the two.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "FUNCTION TEST-NUMVAL and FUNCTION NUMVAL for numeric input validation (COBOL intrinsic functions)",
+        "EVALUATE TRUE used extensively for menu-driven input validation",
+        "GO TO used for input retry loops (33 occurrences)",
+        "No EXEC CICS or EXEC SQL",
+        "No COPY statements",
+        "Detailed WORKING-STORAGE with conversion factors for electricity/natural gas/propane",
+        "Edited PIC clauses with $, Z, + signs for formatted output",
+        "PERFORM-based structured main flow with numbered paragraph names"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (793 total lines); the procedure division paragraphs for new-conditions data entry and report display sections are cut off. Dialect is unambiguous — author explicitly states Enterprise COBOL v6.3 for z/OS in both comments and a DISPLAY statement. No ENVIRONMENT DIVISION present (no file I/O needed for this interactive calculator)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6941,
+      "completion_tokens": 506,
+      "total_tokens": 7447,
+      "cost": 0.028413,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028413,
+        "upstream_inference_prompt_cost": 0.020823,
+        "upstream_inference_completions_cost": 0.00759
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:59:12Z"
+}

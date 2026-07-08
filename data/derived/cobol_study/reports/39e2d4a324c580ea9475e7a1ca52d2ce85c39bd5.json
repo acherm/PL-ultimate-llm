@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:39e2d4a324c580ea9475e7a1ca52d2ce85c39bd5",
+    "sha1_git": "39e2d4a324c580ea9475e7a1ca52d2ce85c39bd5",
+    "filename": "/eco9ban.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 77863,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:39e2d4a324c580ea9475e7a1ca52d2ce85c39bd5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:39e2d4a324c580ea9475e7a1ca52d2ce85c39bd5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 77863,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 2124,
+    "blank_lines": 234,
+    "comment_lines": 210,
+    "code_lines": 1680,
+    "comment_ratio": 0.111,
+    "max_line_length": 255,
+    "avg_line_length": 35.7,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 2,
+    "program_ids": [],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 83,
+    "perform_count": 168,
+    "goto_count": 0,
+    "pic_count": 83,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL (likely RM/COBOL or Micro Focus Visual COBOL) targeting Windows; uses CALL-CONVENTION 66 IS WINAPI, COMP-5, COMP-X, 78-level constants, screenset/DS-CONTROL-BLOCK pattern, and COPY with .MF/.LKG/.CPY/.SEL/.FD extensions typical of Micro Focus A3 ERP suite",
+        "evidence": [
+          "CALL-CONVENTION 66 IS WINAPI",
+          "COMP-5",
+          "COMP-X",
+          "78 Max-Bancos value 99",
+          "COPY \"DS-CNTRL.MF\"",
+          "COPY \"MIRAERR.CBL\" REPLACING",
+          "DS-PUSH-SET / DS-QUIT-SET screenset pattern",
+          "CANCEL \"STAPOSIC\"",
+          "DECIMAL-POINT IS COMMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "A3ECO Spanish accounting/ERP system - bank parameterization module for clients/suppliers (cli/pro). Manages bank accounts (CCC - Código Cuenta Cliente), electronic banking configuration, and IBAN calculation.",
+        "summary": "ECO9BAN is a bank parameterization module within the A3ECO Spanish accounting ERP system. It handles CRUD operations (alta/baja/modificar) for bank records associated with companies, including CCC account validation, electronic banking setup, IBAN calculation, and integration with various submodules (STABANCO, STABANEL, FEEEEVAR, ECOMCTA). It operates as a screenset-driven interactive program passing data via linkage section.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "CALL-CONVENTION 66 IS WINAPI (Windows API calling convention)",
+        "Micro Focus screenset/DS-CONTROL-BLOCK UI framework",
+        "26 COPY statements for modular copybook architecture",
+        "83 CALL statements indicating heavy subprogram delegation",
+        "DECIMAL-POINT IS COMMA (Spanish locale)",
+        "78-level figurative constants",
+        "COMP-5 and COMP-X binary types",
+        "IBAN calculation (PERFORM Calcular-IBan)",
+        "CCC (Código Cuenta Cliente) Spanish bank account validation",
+        "Electronic banking (banca electrónica) configuration",
+        "LINKAGE SECTION with multiple parameters",
+        "Spanish-language comments and variable names"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is truncated to first 16000 chars of 77863 bytes; full PROCEDURE DIVISION logic not visible but structure is clearly production ERP code. Encoded in latin-1 with Spanish special characters (ó shown as ¢). Part of the A3ECO commercial Spanish accounting software suite. Only DATA and PROCEDURE divisions present (no IDENTIFICATION/ENVIRONMENT divisions shown) suggesting this may be a partial compilation unit or the header divisions are in a separate copybook."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7276,
+      "completion_tokens": 709,
+      "total_tokens": 7985,
+      "cost": 0.032463,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032463,
+        "upstream_inference_prompt_cost": 0.021828,
+        "upstream_inference_completions_cost": 0.010635
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.51,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:03:35Z"
+}

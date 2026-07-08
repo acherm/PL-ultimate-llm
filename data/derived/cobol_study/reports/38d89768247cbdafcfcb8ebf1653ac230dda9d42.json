@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:38d89768247cbdafcfcb8ebf1653ac230dda9d42",
+    "sha1_git": "38d89768247cbdafcfcb8ebf1653ac230dda9d42",
+    "filename": "/TESTVSC2.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 30383,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:38d89768247cbdafcfcb8ebf1653ac230dda9d42/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:38d89768247cbdafcfcb8ebf1653ac230dda9d42/raw/"
+  },
+  "indicators": {
+    "bytes_len": 30383,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 710,
+    "blank_lines": 32,
+    "comment_lines": 301,
+    "code_lines": 377,
+    "comment_ratio": 0.444,
+    "max_line_length": 71,
+    "avg_line_length": 41.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": false
+    },
+    "n_divisions": 0,
+    "program_ids": [
+      "TESTVSC2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 19,
+    "goto_count": 15,
+    "pic_count": 71,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "z390 COBOL emulator/assembler package by Don Higgins (Automated Software Tools Corporation); CICS online program using EXEC CICS commands, DFHEIBLK, DFHCOMMAREA",
+        "evidence": [
+          "EXEC CICS READ FILE",
+          "EXEC CICS STARTBR",
+          "EXEC CICS HANDLE CONDITION",
+          "PROCEDURE DIVISION USING DFHEIBLK DFHCOMMAREA",
+          "Copyright 2006 Automated Software Tools Corporation",
+          "z390 assembler/emulator package"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "z390 CICS/VSAM test program exercising RRDS (Relative Record Data Set) file operations including READ, STARTBR, READNEXT, READPREV, RESETBR with both fixed and variable length records",
+        "summary": "TESTVSC2 is a CICS online test program that exercises VSAM RRDS file operations (READ, STARTBR, READNEXT, READPREV, RESETBR) against two test files (MYFILE06 fixed, MYFILE07 variable). It tests normal reads by RRN, error conditions (NOTFND, ILLOGIC, LENGERR, ENDFILE), and forward/backward browse operations, sending results to the 3270 terminal screen. It is part of the z390 assembler/emulator test suite.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS READ/STARTBR/READNEXT/READPREV/RESETBR with RRN and RBA options",
+        "EXEC CICS HANDLE CONDITION for NOTFND, LENGERR, ENDFILE, ILLOGIC",
+        "PROCEDURE DIVISION USING DFHEIBLK DFHCOMMAREA",
+        "3270 SBA (Set Buffer Address) hex literals in PIC X(4) fields for screen positioning",
+        "GO TO DEPENDING ON for condition handler dispatch",
+        "EXEC CICS SEND for terminal output",
+        "VSAM RRDS fixed and variable record testing",
+        "High comment ratio with inline assembler pseudo-comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars of a 30383-byte file (710 lines total). No COMP-3 usage detected. The program contains many commented-out assembler instructions (BAL, MVC, LH, etc.) alongside equivalent COBOL statements, reflecting a direct translation from assembler to COBOL within the z390 test suite. All four DIVISION keywords are present in the source despite the mechanical indicator showing divisions_present all false (likely a parser limitation)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8531,
+      "completion_tokens": 669,
+      "total_tokens": 9200,
+      "cost": 0.035628,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.035628,
+        "upstream_inference_prompt_cost": 0.025593,
+        "upstream_inference_completions_cost": 0.010035
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.55,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:55:53Z"
+}

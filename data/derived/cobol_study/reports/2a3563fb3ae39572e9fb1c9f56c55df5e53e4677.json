@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2a3563fb3ae39572e9fb1c9f56c55df5e53e4677",
+    "sha1_git": "2a3563fb3ae39572e9fb1c9f56c55df5e53e4677",
+    "filename": "/ALUNO-PEGA.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 725,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2a3563fb3ae39572e9fb1c9f56c55df5e53e4677/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2a3563fb3ae39572e9fb1c9f56c55df5e53e4677/raw/"
+  },
+  "indicators": {
+    "bytes_len": 725,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 25,
+    "blank_lines": 4,
+    "comment_lines": 0,
+    "code_lines": 21,
+    "comment_ratio": 0.0,
+    "max_line_length": 71,
+    "avg_line_length": 27.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "ALUNO-PEGA"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Simple subprogram, likely compiled with GnuCOBOL or similar free compiler given Portuguese-language identifiers and Brazilian academic context",
+        "evidence": [
+          "PROGRAM-ID. ALUNO-PEGA",
+          "LINKAGE SECTION with USING clause",
+          "END-IF",
+          "OCCURS 20 TIMES",
+          "UTF-8 encoded Portuguese string 'posição inválida!'"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian student exercise dealing with a list of students (alunos); retrieves a student name from a list by position",
+        "summary": "This is a subprogram that receives a position index, a total student count, and a student list. It calls another subprogram to check if the position is occupied, then displays the student name at that position or an error message if invalid.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with three parameters",
+        "CALL to external subprogram 'ALUNO-IS-POSICAO-OCUPADA'",
+        "OCCURS clause for student array",
+        "Portuguese-language identifiers and string literals (UTF-8)",
+        "EXIT PROGRAM outside of paragraph structure (potential logic issue)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The EXIT PROGRAM statement appears outside any paragraph and before the PEGA paragraph, which means it would execute after the PERFORM PEGA and exit before PEGA is defined — this is a likely student coding error. The file is very small (25 lines) and clearly an academic exercise in Portuguese (Brazilian context)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2508,
+      "completion_tokens": 392,
+      "total_tokens": 2900,
+      "cost": 0.013404,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013404,
+        "upstream_inference_prompt_cost": 0.007524,
+        "upstream_inference_completions_cost": 0.00588
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.73,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:27:26Z"
+}

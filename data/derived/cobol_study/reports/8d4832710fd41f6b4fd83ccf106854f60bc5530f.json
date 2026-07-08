@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8d4832710fd41f6b4fd83ccf106854f60bc5530f",
+    "sha1_git": "8d4832710fd41f6b4fd83ccf106854f60bc5530f",
+    "filename": "/PAY9.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12043,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8d4832710fd41f6b4fd83ccf106854f60bc5530f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8d4832710fd41f6b4fd83ccf106854f60bc5530f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12043,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 320,
+    "blank_lines": 29,
+    "comment_lines": 16,
+    "code_lines": 275,
+    "comment_ratio": 0.055,
+    "max_line_length": 71,
+    "avg_line_length": 36.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PAY4"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 17,
+    "goto_count": 0,
+    "pic_count": 74,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "IBM-PC targeted COBOL, likely Micro Focus Personal COBOL or similar PC COBOL compiler; SOURCE-COMPUTER/OBJECT-COMPUTER set to IBM-PC, LINE SEQUENTIAL files, PRINTER keyword in SELECT",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-PC",
+          "OBJECT-COMPUTER. IBM-PC",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SELECT OUTPUT-FILE ASSIGN TO PRINTER",
+          "C01 IS NEW-PAGE in SPECIAL-NAMES",
+          "COMP (binary) without COMP-3"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Employee payroll processing: reads payroll data file, calculates gross pay, tax (25%), super (6%), union and mortgage deductions, prints per-employee lines and summary totals",
+        "summary": "Reads employee payroll records from a disc file (PAY4DATA), calculates gross pay by multiplying hours by rate, deducts tax (25%), superannuation (6%), union fees, and mortgage payments to arrive at net pay. Prints a formatted payroll listing with headings and end-of-run totals including exceptions for employees where deductions exceeded net pay.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SECTION-based PROCEDURE DIVISION with explicit EXIT paragraphs",
+        "REDEFINES used for OR-UNION-X and OR-MORTGAGE-X to allow asterisk override",
+        "88-level condition names for EOF and deduction exception indicators",
+        "BLANK WHEN ZERO on output fields",
+        "WRITE ... AFTER NEW-PAGE using SPECIAL-NAMES mnemonic C01",
+        "COMP binary fields for counters and totals (no COMP-3)",
+        "Reference to WF-SUPER in PROCEDURE DIVISION but no corresponding WS definition visible (possible bug/truncation)",
+        "PERFORM 4D-ACCUM-TOTALS calls paragraph named 4D but accumulation section is 4C (likely bug)",
+        "Trailing 'Page 6' text at end of file suggesting copy-paste from a word-processed document"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The file is named PAY9.CBL but PROGRAM-ID is PAY4, suggesting it is one of several versions of a student payroll exercise. There is a reference to WF-SUPER in 4A-CALC-VALUES but no PIC clause for it in WORKING-STORAGE (probable bug or truncated listing). The accumulation section is named 4C but is called as 4D-ACCUM-TOTALS in 3A, and 4D is used for print-totals — likely a student error. The trailing 'Page 6' line at the end appears to be a word-processor page marker included accidentally. Overall this is a student payroll exercise, likely from a PC COBOL course."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6414,
+      "completion_tokens": 679,
+      "total_tokens": 7093,
+      "cost": 0.029427,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029427,
+        "upstream_inference_prompt_cost": 0.019242,
+        "upstream_inference_completions_cost": 0.010185
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.9,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:03:11Z"
+}

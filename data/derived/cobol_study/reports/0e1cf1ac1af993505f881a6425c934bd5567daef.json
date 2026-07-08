@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0e1cf1ac1af993505f881a6425c934bd5567daef",
+    "sha1_git": "0e1cf1ac1af993505f881a6425c934bd5567daef",
+    "filename": "/MARBLE03.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 37422,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0e1cf1ac1af993505f881a6425c934bd5567daef/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0e1cf1ac1af993505f881a6425c934bd5567daef/raw/"
+  },
+  "indicators": {
+    "bytes_len": 37422,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 462,
+    "blank_lines": 0,
+    "comment_lines": 175,
+    "code_lines": 287,
+    "comment_ratio": 0.379,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 462,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MARBLE03"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 21,
+    "goto_count": 0,
+    "pic_count": 35,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/DB2 online transaction program; uses EXEC CICS and EXEC SQL (DB2) embedded in fixed-format COBOL. Transaction ID MB03, likely z/OS or CICS TS environment. Build tooling references 'gulp build' suggesting a modern DevOps pipeline (e.g., IBM Z Open Editor / Zowe).",
+        "evidence": [
+          "EXEC SQL DECLARE EVENT.MARBLE TABLE",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC CICS (has_exec_cics=true)",
+          "PROGRAM-ID. MARBLE03",
+          "PIC S9(4) COMP",
+          "PIC S9(4) COMP-3",
+          "fixed format, all lines 80 chars",
+          "gulp build --source marbles.cbl"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Marble inventory management demo application (EVENT.MARBLE and EVENT.COLOR tables), likely used as a teaching/demo system for IBM Z CICS/DB2 development",
+        "summary": "MARBLE03 is a CICS online transaction (MB03) that allows users to CREATE, UPDATE, or DELETE marble color records in a DB2 table (EVENT.MARBLE). It validates input verbs and colors, performs SQL DML operations, and returns success or structured error codes (MARB001E-MARB005E) to the terminal.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL with DB2 (DECLARE TABLE, INCLUDE SQLCA)",
+        "EXEC CICS for terminal I/O",
+        "COMP-3 (packed decimal) usage",
+        "88-level condition names for result flags",
+        "REDEFINES for output area (success vs error overlay)",
+        "Structured error code scheme (MARB001E-MARB005E)",
+        "Modern build tooling referenced in comments (gulp)",
+        "No COPY statements or external subprogram calls"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars out of 37422 bytes; the PROCEDURE DIVISION logic is partially visible but the pattern is clear. The 'gulp build' reference in comments suggests this is part of a modern IBM Z demo/tutorial project (possibly IBM's 'Marbles' sample application for z/OS). Despite demo context, the code structure is production-quality with proper error handling and SQL table declarations."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5263,
+      "completion_tokens": 590,
+      "total_tokens": 5853,
+      "cost": 0.024639,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024639,
+        "upstream_inference_prompt_cost": 0.015789,
+        "upstream_inference_completions_cost": 0.00885
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.68,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:55:03Z"
+}

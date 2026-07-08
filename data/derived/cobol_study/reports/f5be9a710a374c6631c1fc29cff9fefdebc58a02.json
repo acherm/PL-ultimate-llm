@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f5be9a710a374c6631c1fc29cff9fefdebc58a02",
+    "sha1_git": "f5be9a710a374c6631c1fc29cff9fefdebc58a02",
+    "filename": "/Principal.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11953,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f5be9a710a374c6631c1fc29cff9fefdebc58a02/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f5be9a710a374c6631c1fc29cff9fefdebc58a02/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11953,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 359,
+    "blank_lines": 67,
+    "comment_lines": 0,
+    "code_lines": 292,
+    "comment_ratio": 0.0,
+    "max_line_length": 69,
+    "avg_line_length": 32.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TP2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 4,
+    "perform_count": 29,
+    "goto_count": 0,
+    "pic_count": 42,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL or similar open-source COBOL compiler; student project from Argentina (2do cuatrimestre 2011, Grupo 5); uses LINE SEQUENTIAL, SORT with INPUT/OUTPUT PROCEDURE, INDEXED files, FUNCTION CURRENT-DATE",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SORT ORD-ARCH ON ASCENDING KEY",
+          "INPUT PROCEDURE IS ProcesarEntrada",
+          "OUTPUT PROCEDURE IS ProcesarSalida",
+          "FUNCTION CURRENT-DATE",
+          "COPY \"Asignaciones-FD.cbl\"",
+          "COPY \"Clientes-REG.cbl\"",
+          "CALL \"ClientesLib\""
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Client assignment/billing report generation with discount calculation; Argentine business context (CUIT tax ID, cuatrimestre academic term)",
+        "summary": "This program reads an assignments flat file, sorts records by client CUIT and date, looks up client data via an external subprogram (ClientesLib), and produces a paginated billing/assignment report per client per date. It also maintains a running total in an indexed file (ASIG-ARCH) for each client-date combination.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT with INPUT PROCEDURE and OUTPUT PROCEDURE",
+        "INDEXED file with DYNAMIC access mode and FILE STATUS",
+        "CALL to external subprogram ClientesLib with BY CONTENT/BY REFERENCE",
+        "COPY copybooks for FD and working-storage records",
+        "FUNCTION CURRENT-DATE for report date",
+        "LINE SEQUENTIAL organization",
+        "RETURN statement for sort output",
+        "REWRITE and WRITE to indexed file",
+        "Nested PERFORM UNTIL loops for multi-level grouping",
+        "No COMP-3 usage"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is clearly a student assignment (Grupo 5, 2do cuatrimestre 2011). Uses Argentine tax identifier CUIT. Dialect is likely GnuCOBOL based on open-source features and academic context, but could also be Micro Focus; no compiler-specific directives present to distinguish definitively. Two COPY statements reference external copybooks not shown."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6270,
+      "completion_tokens": 544,
+      "total_tokens": 6814,
+      "cost": 0.02697,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02697,
+        "upstream_inference_prompt_cost": 0.01881,
+        "upstream_inference_completions_cost": 0.00816
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.25,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:00:10Z"
+}

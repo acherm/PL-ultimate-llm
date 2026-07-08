@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:781ebf5a4d7ff55d4320930e1414ad47a85cdbd0",
+    "sha1_git": "781ebf5a4d7ff55d4320930e1414ad47a85cdbd0",
+    "filename": "/assignment3.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4104,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:781ebf5a4d7ff55d4320930e1414ad47a85cdbd0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:781ebf5a4d7ff55d4320930e1414ad47a85cdbd0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4104,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 112,
+    "blank_lines": 11,
+    "comment_lines": 20,
+    "code_lines": 81,
+    "comment_ratio": 0.198,
+    "max_line_length": 72,
+    "avg_line_length": 35.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ASSIGN2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features; LINE SEQUENTIAL organization suggests GnuCOBOL or similar open-source/PC compiler rather than IBM mainframe",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "OPEN I-O MASTER-FILE",
+          "REWRITE MASTER-REC",
+          "88-level condition names",
+          "END-READ, END-ADD, END-EVALUATE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student assignment for a COBOL course, updating and deleting master file records using a transaction file",
+        "summary": "This program reads a transaction file and applies updates or deletions to a sequential master file in place. For each transaction record, it locates the matching master record by account number and either adds the transaction amount (UPDATE) or marks the record inactive (DELETE). It handles unmatched transaction records with an error display.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OPEN I-O for in-place REWRITE",
+        "88-level condition names (ACTIVE, NOT-ACTIVE, UPDATE-R, DELETE-R)",
+        "EVALUATE TRUE construct",
+        "HIGH-VALUES sentinel for end-of-file detection",
+        "ON SIZE ERROR clause on ADD",
+        "LINE SEQUENTIAL file organization",
+        "Sequential file matching algorithm (master/transaction merge)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "PROGRAM-ID is ASSIGN2 but filename is assignment3.cbl, suggesting a minor naming inconsistency typical of student work. The code is well-structured for a student exercise with comments, dated August 9, 2013, authored by Joel Murphy. No COMP-3, no COPY statements, no CALL statements — consistent with a standalone student assignment."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3308,
+      "completion_tokens": 423,
+      "total_tokens": 3731,
+      "cost": 0.016269,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016269,
+        "upstream_inference_prompt_cost": 0.009924,
+        "upstream_inference_completions_cost": 0.006345
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.01,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:01:29Z"
+}

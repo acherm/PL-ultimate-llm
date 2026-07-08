@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7daf50655504990979b813b675f071baa074cfda",
+    "sha1_git": "7daf50655504990979b813b675f071baa074cfda",
+    "filename": "/RANDOM01.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1918,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7daf50655504990979b813b675f071baa074cfda/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7daf50655504990979b813b675f071baa074cfda/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1918,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 54,
+    "blank_lines": 0,
+    "comment_lines": 21,
+    "code_lines": 33,
+    "comment_ratio": 0.389,
+    "max_line_length": 72,
+    "avg_line_length": 34.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "RANDOM01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 9,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) subprogram for random number generation, authored 2016",
+        "evidence": [
+          "Tectonics: cobc",
+          "LINKAGE SECTION with LS-PARMS/LS-RETURN-AREA pattern",
+          "PROCEDURE DIVISION USING LS-VARIABLES",
+          "END PROGRAM RANDOM01"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Random number generation utility subprogram",
+        "summary": "A subprogram that generates a pseudo-random number based on the current system time. It accepts the current time, performs arithmetic to derive a random-like value, and returns a 9-digit number to the calling module via the LINKAGE SECTION.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with parameter passing",
+        "ACCEPT ... FROM TIME for system time",
+        "Arithmetic-based pseudo-random number generation",
+        "COMP field in linkage (LS-LENGTH PIC S9(04) COMP)",
+        "No PERFORM or CALL statements — single flat procedure"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "High comment ratio (39%) with decorative comment lines. The random number algorithm is simplistic (time-based arithmetic). The LS-DATA PIC X field in the linkage section is unused in the procedure, suggesting incomplete or tutorial-level code. Author and date are clearly identified in the header."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2884,
+      "completion_tokens": 365,
+      "total_tokens": 3249,
+      "cost": 0.014127,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014127,
+        "upstream_inference_prompt_cost": 0.008652,
+        "upstream_inference_completions_cost": 0.005475
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T16:34:31Z"
+}

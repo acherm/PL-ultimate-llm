@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6b9f0d730b80d139a48f170ffe438a6d7f544efc",
+    "sha1_git": "6b9f0d730b80d139a48f170ffe438a6d7f544efc",
+    "filename": "/COBOLCaesarCipher.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8265,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6b9f0d730b80d139a48f170ffe438a6d7f544efc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6b9f0d730b80d139a48f170ffe438a6d7f544efc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8265,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 279,
+    "blank_lines": 38,
+    "comment_lines": 57,
+    "code_lines": 184,
+    "comment_ratio": 0.237,
+    "max_line_length": 102,
+    "avg_line_length": 28.6,
+    "long_lines_over_72": 4,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DECRYPT",
+      "ENCRYPT",
+      "IDEONE",
+      "SOLVE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 3,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 58,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Uses '$ SET SOURCEFORMAT \"FREE\"' compiler directive typical of Micro Focus/Visual COBOL; authored on Ideone which supports GnuCOBOL but directive syntax leans Micro Focus",
+        "evidence": [
+          "$ SET SOURCEFORMAT \"FREE\"",
+          "PROGRAM-ID. IDEONE",
+          "*> comment style",
+          "Function ORD / Function CHAR / Function UPPER-CASE / Function LENGTH",
+          "nested OCCURS with INDEXED BY"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Caesar cipher encryption/decryption demonstration written as a student exercise",
+        "summary": "Implements a Caesar cipher in COBOL with three subprograms: ENCRYPT shifts each uppercase letter by a given amount, DECRYPT reverses the shift, and SOLVE brute-forces all 26 possible shifts. The main program IDEONE iterates over a table of test strings and calls each subprogram in turn.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "$ SET SOURCEFORMAT FREE compiler directive",
+        "Multiple nested PROGRAM-ID / END PROGRAM blocks (nested/contained programs)",
+        "Use of intrinsic functions: ORD, CHAR, UPPER-CASE, LENGTH",
+        "OCCURS with INDEXED BY and REDEFINES for string table",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING",
+        "Shift-by-1 Caesar cipher with wrap-around logic using ASCII ordinal values",
+        "Heavy use of inline comments with *> style"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The $ SET SOURCEFORMAT directive is Micro Focus syntax but the code was likely compiled on Ideone (GnuCOBOL). The data structure for eTestStrTable has a PIC clause on the 01 level alongside 02-level children, which is a structural oddity. The program has several commented-out lines and debug DISPLAYs, consistent with a student learning exercise. Author and date are explicitly stated in the source."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5697,
+      "completion_tokens": 489,
+      "total_tokens": 6186,
+      "cost": 0.024426,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024426,
+        "upstream_inference_prompt_cost": 0.017091,
+        "upstream_inference_completions_cost": 0.007335
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.53,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:48:51Z"
+}

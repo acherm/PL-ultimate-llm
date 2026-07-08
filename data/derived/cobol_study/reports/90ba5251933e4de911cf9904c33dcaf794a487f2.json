@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:90ba5251933e4de911cf9904c33dcaf794a487f2",
+    "sha1_git": "90ba5251933e4de911cf9904c33dcaf794a487f2",
+    "filename": "/PROG0010.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8090,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:90ba5251933e4de911cf9904c33dcaf794a487f2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:90ba5251933e4de911cf9904c33dcaf794a487f2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8090,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 194,
+    "blank_lines": 24,
+    "comment_lines": 14,
+    "code_lines": 156,
+    "comment_ratio": 0.082,
+    "max_line_length": 72,
+    "avg_line_length": 40.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PROG0010"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 72,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe-style COBOL, likely compiled with IBM COBOL for z/OS or compatible; uses GOBACK, BLOCK CONTAINS 0 RECORDS, and IBM-3083 as SOURCE/OBJECT-COMPUTER. File paths suggest PC/Windows environment (G:\\cobol\\archivos\\), possibly a student exercise targeting IBM dialect.",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-3083",
+          "OBJECT-COMPUTER. IBM-3083",
+          "GOBACK",
+          "BLOCK CONTAINS 0 RECORDS",
+          "PERFORM ... THRU ... pattern"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Banking/HR context (Banco de los Lagos employee file processing), but structured as a student exercise at a training center (CENTRO DE CAPACITACION)",
+        "summary": "Reads an employee flat file (EMPLEADO.TXT) and produces a formatted report (REPORTE.TXT) listing employee number, name, status, department, position, and salary. Prints totals for records read, records printed, and sum of salaries at the end.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "WRITE ... AFTER ADVANCING PAGE for report formatting",
+        "Hardcoded date values in LK-FECHA (commented-out LINKAGE SECTION used as working storage)",
+        "PERFORM ... THRU ... EXIT pattern for paragraph grouping",
+        "Edited PIC clauses: Z,ZZZ,ZZ9.99 and $$$,$$$,$$9.99",
+        "Windows file paths in SELECT ASSIGN",
+        "No COMP-3 usage despite numeric accumulation",
+        "VALUES (plural) used instead of VALUE in several FILLER clauses"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The LINKAGE SECTION is commented out but the 01-level LK-FECHA is declared directly in WORKING-STORAGE, which is unusual and suggests a student adaptation. The plural 'VALUES' keyword used in several FILLER clauses is non-standard but accepted by some compilers. The program is dated 02/08/18 and attributed to author CABARZA at Banco de los Lagos, consistent with a training exercise."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5091,
+      "completion_tokens": 536,
+      "total_tokens": 5627,
+      "cost": 0.023313,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023313,
+        "upstream_inference_prompt_cost": 0.015273,
+        "upstream_inference_completions_cost": 0.00804
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.02,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T20:39:17Z"
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bb99440ad5462356df5bcfd20257fe21bf5e5d53",
+    "sha1_git": "bb99440ad5462356df5bcfd20257fe21bf5e5d53",
+    "filename": "/test9014.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6148,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bb99440ad5462356df5bcfd20257fe21bf5e5d53/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bb99440ad5462356df5bcfd20257fe21bf5e5d53/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6148,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 177,
+    "blank_lines": 1,
+    "comment_lines": 0,
+    "code_lines": 176,
+    "comment_ratio": 0.0,
+    "max_line_length": 65,
+    "avg_line_length": 33.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "test9014",
+      "test9014a",
+      "test9014a1",
+      "test9014a2",
+      "test9014b",
+      "test9014b1",
+      "test9014b2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 24,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 18,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar COBOL-85+ compiler supporting nested programs, GLOBAL data items, and qualified data-name references. The nested program structure with END PROGRAM markers and GLOBAL clause are COBOL-85 features.",
+        "evidence": [
+          "GLOBAL clause on 01 GLOBAL-AREAS",
+          "Nested programs with END PROGRAM markers",
+          "CALL PGM3 OF JKL and CALL PGM3 OF GHI OF DEF OF ABC (qualified data-name in CALL)",
+          "SET condition-name TO TRUE",
+          "Multiple PROGRAM-ID entries in single file"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Compiler/runtime test for nested program scoping, GLOBAL data visibility, qualified data-name references in CALL statements, and condition-name (88-level) usage in CALL targets",
+        "summary": "A test program (test9014) containing multiple nested subprograms (test9014a, test9014a1, test9014a2, test9014b, test9014b1, test9014b2) that exercise COBOL nested program features including GLOBAL data sharing, qualified data-name references in CALL statements, and 88-level condition names used as CALL targets. The file appears to be part of a compiler or runtime test suite validating scoping rules.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "GLOBAL clause on 01-level group item",
+        "Nested programs with END PROGRAM delimiters",
+        "Qualified data-name references in CALL (e.g., CALL PGM3 OF JKL)",
+        "88-level condition names used as CALL targets via SET ... TO TRUE",
+        "COMP-3 usage",
+        "Multiple SELECT/ASSIGN entries with various assign formats (UT-S-, S-, bare, literal)",
+        "24 CALL statements across nested programs",
+        "No PERFORM statements - all control flow via CALL and EXIT PROGRAM"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The file is clearly a test suite program designed to exercise nested program scoping and GLOBAL data visibility rules. The assign names include nonsense words (BEEP, ABORT, ASCII, EBCDIC, MAGIC, CLAMBAKE, ASCDIC, EBCII, BLURN, BLERGH) suggesting deliberate test data rather than production code. No comments present. The qualified CALL targets (CALL PGM3 OF JKL) are unusual and likely testing a specific compiler feature."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4290,
+      "completion_tokens": 615,
+      "total_tokens": 4905,
+      "cost": 0.022095,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022095,
+        "upstream_inference_prompt_cost": 0.01287,
+        "upstream_inference_completions_cost": 0.009225
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.14,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:43:28Z"
+}

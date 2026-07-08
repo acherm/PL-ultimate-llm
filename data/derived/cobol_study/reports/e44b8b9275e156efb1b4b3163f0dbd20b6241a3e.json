@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e44b8b9275e156efb1b4b3163f0dbd20b6241a3e",
+    "sha1_git": "e44b8b9275e156efb1b4b3163f0dbd20b6241a3e",
+    "filename": "/epsmlist.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7888,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e44b8b9275e156efb1b4b3163f0dbd20b6241a3e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e44b8b9275e156efb1b4b3163f0dbd20b6241a3e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7888,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 224,
+    "blank_lines": 28,
+    "comment_lines": 18,
+    "code_lines": 178,
+    "comment_ratio": 0.092,
+    "max_line_length": 70,
+    "avg_line_length": 34.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EPSMLIST"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 7,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/COBOL for mainframe or IBM Flex-ES emulator; part of the IBM EPSDEMOS 2008 sample application suite",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-FLEX-ES",
+          "OBJECT-COMPUTER. IBM-FLEX-ES",
+          "EXEC CICS STARTBR DATASET",
+          "EXEC CICS READNEXT FILE",
+          "EXEC CICS LINK PROGRAM",
+          "COPY DFHAID",
+          "EIBCALEN",
+          "EIBAID",
+          "DFHRESP(NORMAL)",
+          "DFHRESP(ENDFILE)",
+          "(C) 2008 IBM"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Mortgage comparison listing; part of IBM EPSDEMOS sample CICS application",
+        "summary": "EPSMLIST is a CICS online program that reads a mortgage company file (EPSMORTF) and displays a list of mortgage companies whose loan limits and interest rates match criteria supplied via a communication area. For each matching record it calls EPSCSMRT to calculate the monthly payment and populates a BMS map (EPSMLIS) for display.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (STARTBR, READNEXT, ENDBR, SEND MAP, LINK, RETURN)",
+        "BMS map handling with ERASE and DATAONLY patterns",
+        "REDEFINES used for map overlay (OUTMAP REDEFINES EPSMLISI)",
+        "OCCURS 8 TIMES for repeating map rows",
+        "DFHCOMMAREA linkage with multiple COPY EPSMTCOM inclusions",
+        "COPY DFHAID for AID key handling",
+        "EIBCALEN/EIBAID pseudo-conversational logic",
+        "EXEC CICS LINK to subprogram EPSCSMRT for mortgage calculation",
+        "No EXEC SQL; pure CICS file control (VSAM RBA access)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is a well-known IBM sample/demo application (EPSDEMOS 2008) distributed with IBM CICS tutorials. It is production-quality in structure but is a demo/educational sample. The COPY DFHEIBLK is commented out, which is normal for CICS programs that rely on the translator to insert it. No truncation issues observed; max line length 70 fits fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4742,
+      "completion_tokens": 599,
+      "total_tokens": 5341,
+      "cost": 0.023211,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023211,
+        "upstream_inference_prompt_cost": 0.014226,
+        "upstream_inference_completions_cost": 0.008985
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.15,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:39:23Z"
+}

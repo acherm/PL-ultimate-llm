@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4d2204e40c7b81d6e3733e03c687a911a7091df3",
+    "sha1_git": "4d2204e40c7b81d6e3733e03c687a911a7091df3",
+    "filename": "/CADDDB2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 22696,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4d2204e40c7b81d6e3733e03c687a911a7091df3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4d2204e40c7b81d6e3733e03c687a911a7091df3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 22696,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 503,
+    "blank_lines": 20,
+    "comment_lines": 90,
+    "code_lines": 393,
+    "comment_ratio": 0.186,
+    "max_line_length": 73,
+    "avg_line_length": 44.1,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CADDDB2"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 9,
+    "pic_count": 156,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "OS/VS COBOL compiler noted in comments; uses EXEC CICS and EXEC SQL (DB2) embedded commands; DFHBMSCA and DFHAID inline (not copied); CICS transaction AXDB; map BADDB2; typical IBM mainframe CICS/DB2 online program structure",
+        "evidence": [
+          "EXEC CICS HANDLE CONDITION",
+          "EXEC CICS SEND MAP('BADDB2')",
+          "EXEC CICS RETURN TRANSID('AXDB')",
+          "EXEC SQL INCLUDE SQLCA",
+          "EXEC SQL DECLARE PERSONFL TABLE",
+          "DFHBMSCA inline",
+          "DFHAID inline",
+          "comment: THIS PROGRAM IS WRITTEN FOR THE OS/VS COBOL COMPILER",
+          "PIC S9(4) COMP",
+          "EIBCALEN"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Personnel/person record management system; CICS online add-record screen for a PERSONFL DB2 table containing person number, name, address, salary",
+        "summary": "CADDDB2 is a CICS online program that handles the Add Record function for a personnel file (PERSONFL) stored in DB2. It sends and receives a BMS map (BADDB2), edits screen input, and inserts a new person record into the DB2 table, handling duplicate record conditions and returning to a main menu on PF3.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2) with DECLARE TABLE and INCLUDE SQLCA",
+        "EXEC CICS (BMS map send/receive, HANDLE CONDITION, HANDLE AID, ASKTIME, FORMATTIME, RETURN with COMMAREA)",
+        "Inline DFHBMSCA and DFHAID copybook substitutes (commented-out COPY statements)",
+        "Commented-out DLI GU call suggesting possible IMS heritage or migration",
+        "EIBCALEN check for pseudo-conversational pattern",
+        "CICS pseudo-conversational design with COMMAREA",
+        "BMS map BADD400I/BADD400O with attribute bytes (L/F/A/I field pattern)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; PROCEDURE DIVISION cut off mid-paragraph at 0500-EDIT-SCREEN. Commented-out COPY statements (BADDB2, DFHBMSCA) replaced with inline definitions. Commented-out EXEC DLI suggests possible IMS-to-DB2 migration. One line slightly over 72 chars. Program comment says OS/VS COBOL but structure is consistent with VS COBOL II or COBOL/370 on IBM mainframe."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7452,
+      "completion_tokens": 671,
+      "total_tokens": 8123,
+      "cost": 0.032421,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.032421,
+        "upstream_inference_prompt_cost": 0.022356,
+        "upstream_inference_completions_cost": 0.010065
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.58,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:50:57Z"
+}

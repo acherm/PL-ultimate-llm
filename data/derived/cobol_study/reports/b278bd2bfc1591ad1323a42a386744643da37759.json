@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b278bd2bfc1591ad1323a42a386744643da37759",
+    "sha1_git": "b278bd2bfc1591ad1323a42a386744643da37759",
+    "filename": "/DECODE04.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8084,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b278bd2bfc1591ad1323a42a386744643da37759/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b278bd2bfc1591ad1323a42a386744643da37759/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8084,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 224,
+    "blank_lines": 53,
+    "comment_lines": 52,
+    "code_lines": 119,
+    "comment_ratio": 0.304,
+    "max_line_length": 73,
+    "avg_line_length": 34.1,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DECODE04"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL subprogram using BINARY-LONG SYNC, FUNCTION ALL INTRINSIC, ANY LENGTH, and COBDUMP utility call; Japanese comments encoded in Shift-JIS/latin-1 suggest Japanese development environment, possibly JMA ORCA or similar",
+        "evidence": [
+          "BINARY-LONG SYNC",
+          "FUNCTION ALL INTRINSIC in REPOSITORY",
+          "ANY LENGTH on linkage item",
+          "CALL 'COBDUMP'",
+          "OCCURS 65536 PIC X(001)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Binary file record decoder/splitter that processes a binary buffer and extracts fixed-length records delimited by X'0D0A' (CRLF), returning them one at a time to a calling program",
+        "summary": "DECODE04 is a subprogram that scans a binary input buffer (LI-BUF1) for CRLF-delimited records and extracts them into an output buffer (LI-BUF2). It uses a state machine via LI-SHORI ('FIRST','COND ','READ ','END  ') to handle records that span multiple calls. It validates record boundaries and terminates on X'FF'.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "BINARY-LONG SYNC index variables",
+        "FUNCTION ALL INTRINSIC in REPOSITORY",
+        "ANY LENGTH linkage item",
+        "State-machine control via LI-SHORI parameter",
+        "OCCURS 65536 output buffer",
+        "CALL 'COBDUMP' for hex dump diagnostics",
+        "Japanese comments (Shift-JIS encoded, rendered as latin-1 garbage)",
+        "Reference modification arithmetic on variable-length buffers"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Comments are in Japanese encoded as Shift-JIS but decoded as latin-1, resulting in mojibake. The program logic is non-trivial and production-quality. Dialect is likely GnuCOBOL based on BINARY-LONG and FUNCTION ALL INTRINSIC usage, but could also be Micro Focus; no definitive compiler directive present. The first comment line appears to be a garbled Japanese title."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5404,
+      "completion_tokens": 551,
+      "total_tokens": 5955,
+      "cost": 0.024477,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024477,
+        "upstream_inference_prompt_cost": 0.016212,
+        "upstream_inference_completions_cost": 0.008265
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.12,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:25:58Z"
+}

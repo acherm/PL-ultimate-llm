@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5e9e5dbcf02cce601eae919539af0b4524bcc926",
+    "sha1_git": "5e9e5dbcf02cce601eae919539af0b4524bcc926",
+    "filename": "/control-break3.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3676,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5e9e5dbcf02cce601eae919539af0b4524bcc926/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5e9e5dbcf02cce601eae919539af0b4524bcc926/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3676,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 115,
+    "blank_lines": 14,
+    "comment_lines": 0,
+    "code_lines": 101,
+    "comment_ratio": 0.0,
+    "max_line_length": 71,
+    "avg_line_length": 31.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CONTORL-BREAK3"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 33,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses GOBACK, LINE SEQUENTIAL, 88-level condition on group item, structured PERFORM UNTIL with compound conditions",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SET END-OF-INPUT1-FILE TO TRUE",
+          "GOBACK",
+          "END-READ",
+          "PERFORM ... UNTIL with compound OR conditions"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Control-break report generation exercise with three-level grouping (COL-A, COL-B, COL-C)",
+        "summary": "A three-level control-break program that reads records from a sequential file and produces a hierarchical summary report with subtotals at each break level (A, B, C) and a grand total. It is a classic COBOL control-break exercise.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Three-level control-break logic using nested PERFORM UNTIL",
+        "88-level condition name on group item (END-OF-INPUT1-FILE VALUE HIGH-VALUE)",
+        "LINE SEQUENTIAL file organization",
+        "GOBACK instead of STOP RUN",
+        "PIC BBX(2) for blank-padded display fields",
+        "ZZZ9 numeric editing for totals",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "PROGRAM-ID has a typo: 'CONTORL-BREAK3' (should be CONTROL-BREAK3). Author name present (NARANYA BOONMEE). The 88-level condition is defined on a group item (INPUT-BUFFER), which is non-standard but accepted by GnuCOBOL. No long lines over 72 columns confirms fixed format. Dialect is uncertain between GnuCOBOL and Micro Focus; LINE SEQUENTIAL is common to both."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3659,
+      "completion_tokens": 475,
+      "total_tokens": 4134,
+      "cost": 0.018102,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018102,
+        "upstream_inference_prompt_cost": 0.010977,
+        "upstream_inference_completions_cost": 0.007125
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:38:43Z"
+}

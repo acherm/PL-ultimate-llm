@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:564ec8b55f20cd628b775a35503dbf90ec33f00e",
+    "sha1_git": "564ec8b55f20cd628b775a35503dbf90ec33f00e",
+    "filename": "/CCP0001.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 93312,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:564ec8b55f20cd628b775a35503dbf90ec33f00e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:564ec8b55f20cd628b775a35503dbf90ec33f00e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 93312,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1152,
+    "blank_lines": 0,
+    "comment_lines": 223,
+    "code_lines": 929,
+    "comment_ratio": 0.194,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 1152,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CMCD2NER"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 4,
+    "perform_count": 73,
+    "goto_count": 1,
+    "pic_count": 190,
+    "comp3_count": 43,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe batch program, likely running on IBM z/OS or compatible. Uses RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, COMP-3, DECIMAL-POINT IS COMMA, and sequence numbers in columns 73-80. Associated with Banco Bradesco S/A (Brazilian bank) CMCD collection system.",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-3 usage throughout",
+          "sequence numbers in columns 73-80 (e.g. 00000100)",
+          "DECIMAL-POINT IS COMMA",
+          "ASSIGN TO UT-S-ARCBCA09 (JCL DD-name style)",
+          "LABEL RECORD IS STANDARD"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Banco Bradesco S/A - Brazilian bank billing/collections system (CMCD - COBRANCA - CONVIVENCIA E MIGRACAO). Generates a report from table CBCAB009 containing payment media parameters.",
+        "summary": "Batch report program that reads a sequential input file (ARCBCA09) containing an image of table CBCAB009 and produces a formatted printed report (RECBCA09) with payment media parameters. It calls POOL7600 for current date/time and CMCD2N0F for processing statistics display.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal fields (43 occurrences)",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "FILE STATUS checking with named condition variables",
+        "RECORDING MODE IS F with BLOCK CONTAINS 0 RECORDS",
+        "Sequence numbers in columns 73-80",
+        "COPY statement for statistics area (CMCDWES1)",
+        "CALL to POOL7600 for date/time retrieval",
+        "CALL to CMCD2N0F for statistics display",
+        "Report formatting with page headers and counters",
+        "88-level condition name (WRK-ABENDAR)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars (about 200 lines of 1152 total). All four COBOL divisions are present. The program is clearly a production batch report program from Banco Bradesco's collections system, developed in April 2011 by Henrique Mandrote under analyst Carlos at DEDIC GPTI. Line at 00014700 and 00015200 starts with '-' in column 7 (continuation indicator) but appears to be blank continuation lines used as separators."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5722,
+      "completion_tokens": 636,
+      "total_tokens": 6358,
+      "cost": 0.026706,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026706,
+        "upstream_inference_prompt_cost": 0.017166,
+        "upstream_inference_completions_cost": 0.00954
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.54,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:09:50Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a86fc233715ed971c6719f42c8420f6045b02885",
+    "sha1_git": "a86fc233715ed971c6719f42c8420f6045b02885",
+    "filename": "/Desafio.Loteria.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14977,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a86fc233715ed971c6719f42c8420f6045b02885/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a86fc233715ed971c6719f42c8420f6045b02885/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14977,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 354,
+    "blank_lines": 65,
+    "comment_lines": 40,
+    "code_lines": 249,
+    "comment_ratio": 0.138,
+    "max_line_length": 148,
+    "avg_line_length": 40.3,
+    "long_lines_over_72": 43,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Desafio"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 22,
+    "goto_count": 0,
+    "pic_count": 37,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source with $set sourceformat\"free\" directive; uses FUNCTION RANDOM and FUNCTION CURRENT-DATE which are COBOL-85/2002 intrinsic functions; Portuguese-language comments and identifiers suggest Brazilian GnuCOBOL usage",
+        "evidence": [
+          "$set sourceformat\"free\"",
+          "function random(ws-semente)",
+          "function current-date(9:6)",
+          "accept ws-semente from time",
+          "decimal-point is comma"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Lottery simulation (Loteria) challenge/exercise - simulates a lottery draw and checks user-picked numbers against randomly generated ones",
+        "summary": "This program simulates a lottery game where the user enters 10 numbers (1-60), then the program randomly draws 6 numbers using a time-seeded random function. It repeatedly draws until all 6 drawn numbers match numbers in the user's selection, counting attempts and measuring elapsed time.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "$set sourceformat free compiler directive",
+        "FUNCTION RANDOM with time-based seed",
+        "FUNCTION CURRENT-DATE for elapsed time calculation",
+        "ACCEPT FROM TIME for seeding randomness",
+        "Deeply nested IF statements for number comparison",
+        "Portuguese-language identifiers and comments",
+        "PERFORM UNTIL loop for repeated lottery draws",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "File uses latin-1 encoding with Portuguese accented characters in comments (e.g. randômica, sorteio). The $set directive overrides the mechanical fixed-format guess; source is genuinely free-format. The time-difference calculation in temp-sorteando appears to have the subtraction operands reversed (start minus end instead of end minus start), suggesting a student-level exercise. Program-id contains a dot which is unusual."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6346,
+      "completion_tokens": 476,
+      "total_tokens": 6822,
+      "cost": 0.026178,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026178,
+        "upstream_inference_prompt_cost": 0.019038,
+        "upstream_inference_completions_cost": 0.00714
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.12,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:58:24Z"
+}

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5791d08c1673f74e092e8afdb2e883553b651366",
+    "sha1_git": "5791d08c1673f74e092e8afdb2e883553b651366",
+    "filename": "/epsmpmt.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5905,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5791d08c1673f74e092e8afdb2e883553b651366/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5791d08c1673f74e092e8afdb2e883553b651366/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5905,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 155,
+    "blank_lines": 6,
+    "comment_lines": 33,
+    "code_lines": 116,
+    "comment_ratio": 0.221,
+    "max_line_length": 72,
+    "avg_line_length": 37.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EPSMPMT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 30,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM Enterprise COBOL; CBL compiler options NUMPROC(MIG),FLAG(I,W),RENT; FLEX-ES (Fundamental Software emulator of IBM mainframe); part of IBM COBOL demo/tutorial suite by Jim Hildner 2008",
+        "evidence": [
+          "CBL NUMPROC(MIG),FLAG(I,W),RENT",
+          "SOURCE-COMPUTER. FLEX-ES",
+          "OBJECT-COMPUTER. FLEX-ES",
+          "COPY EPSPDATA",
+          "PROCEDURE DIVISION USING EPSPDATA",
+          "GOBACK",
+          "COMP-1 usage",
+          "Function Annuity intrinsic function"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "IBM COBOL tutorial/demo suite (EPS - Enterprise COBOL for z/OS sample programs); calculates monthly loan payment amounts",
+        "summary": "EPSMPMT is a called subprogram that receives loan parameters (principal, interest rate, years/months indicator) via a linkage section copybook (EPSPDATA), validates the inputs, and computes the monthly payment using the standard amortization formula. It returns either the computed monthly payment or an error message text.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "CBL compiler options directive (NUMPROC(MIG),FLAG(I,W),RENT)",
+        "COMP-1 (single-precision floating point) for interest calculation",
+        "FUNCTION ANNUITY intrinsic function used in dead-code section A300-TRY2",
+        "REDEFINES with OCCURS table for error messages",
+        "COPY EPSPDATA linkage section copybook",
+        "GOBACK statement",
+        "Exponentiation operator ** used in payment formula",
+        "Commented-out dead code preserved for testing"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is part of the well-known IBM Enterprise COBOL for z/OS sample application (EPS suite). FLEX-ES is a Fundamental Software IBM mainframe emulator. The program is production-quality in structure despite being a demo/tutorial artifact. A300-TRY2 is explicitly marked as dead code used for testing. Copyright 2008 IBM, author Jim Hildner."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4110,
+      "completion_tokens": 543,
+      "total_tokens": 4653,
+      "cost": 0.020475,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020475,
+        "upstream_inference_prompt_cost": 0.01233,
+        "upstream_inference_completions_cost": 0.008145
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.79,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:43:13Z"
+}

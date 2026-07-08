@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2ca9a7376a4f87339001fb99ddfed75800fb9de1",
+    "sha1_git": "2ca9a7376a4f87339001fb99ddfed75800fb9de1",
+    "filename": "/SAM1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 20211,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2ca9a7376a4f87339001fb99ddfed75800fb9de1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2ca9a7376a4f87339001fb99ddfed75800fb9de1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 20211,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 482,
+    "blank_lines": 40,
+    "comment_lines": 52,
+    "code_lines": 390,
+    "comment_ratio": 0.118,
+    "max_line_length": 72,
+    "avg_line_length": 40.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SAM1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 4,
+    "call_count": 1,
+    "perform_count": 31,
+    "goto_count": 0,
+    "pic_count": 87,
+    "comp3_count": 15,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL; uses RECORDING MODE IS V/F, BLOCK CONTAINS 0 RECORDS, COMP-3, RETURN-CODE special register, GOBACK, ACCEPT FROM DATE/TIME, and COPY with REPLACING - all characteristic of IBM Enterprise COBOL on z/OS",
+        "evidence": [
+          "RECORDING MODE IS V",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-3",
+          "RETURN-CODE",
+          "GOBACK",
+          "ACCEPT CURRENT-DATE FROM DATE",
+          "COPY CUSTCOPY REPLACING ==:TAG:== BY ==CUST==",
+          "FILE STATUS clauses",
+          "LICENSED MATERIALS - PROPERTY OF IBM copyright header"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer file maintenance - reads sequential transaction file and applies updates (ADD, UPDATE, DELETE) to a sorted sequential customer file with account balance and monthly order data",
+        "summary": "SAM1 reads a sequential transaction file and applies ADD, UPDATE, and DELETE operations to a sorted sequential customer master file, writing an updated output file and a transaction report. It calls subroutine SAM2 to apply field-level updates to customer records. The program is part of an IBM educational/lab sample suite (Doug Stout, IBM 2021) used for fault analysis training.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal fields for counters",
+        "COPY with REPLACING pseudo-text (==:TAG:==) for record reuse",
+        "CALL to SAM2 subprogram for field-level updates",
+        "RECORDING MODE IS V (variable-length records)",
+        "PERFORM TEST AFTER VARYING loop",
+        "FILE STATUS checking on all four files",
+        "RETURN-CODE special register usage",
+        "GOBACK statement",
+        "Report generation with formatted headers and statistics",
+        "TODO comment tag in source"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (482 total lines); the full file likely contains additional I/O paragraphs (730-READ-CUSTOMER-FILE, 740-WRITE-CUSTOUT-FILE, 800-INIT-REPORT, 830-REPORT-TRAN-PROCESSED, 850-REPORT-TRAN-STATS, 790-CLOSE-FILES). This is an IBM-authored sample/lab program (copyright IBM 2021, author Doug Stout) intended for fault analysis training, but it is written in production style with full error handling and reporting."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7427,
+      "completion_tokens": 603,
+      "total_tokens": 8030,
+      "cost": 0.031326,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031326,
+        "upstream_inference_prompt_cost": 0.022281,
+        "upstream_inference_completions_cost": 0.009045
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.13,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:55:17Z"
+}

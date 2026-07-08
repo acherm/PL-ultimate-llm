@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:acab36eec2b22d946defdcbbdb4585256e234928",
+    "sha1_git": "acab36eec2b22d946defdcbbdb4585256e234928",
+    "filename": "/MONTHINC.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1639,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:acab36eec2b22d946defdcbbdb4585256e234928/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:acab36eec2b22d946defdcbbdb4585256e234928/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1639,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 58,
+    "blank_lines": 7,
+    "comment_lines": 0,
+    "code_lines": 51,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 27.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MONTH-INCOME"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 style with GOBACK, 88-level condition names, and PERFORM THRU EXIT pattern. No vendor-specific extensions visible.",
+        "evidence": [
+          "GOBACK",
+          "88 FILE-OK VALUE '00'",
+          "88 FILE-AT-END VALUE '10'",
+          "PERFORM 1000-INITIAL THRU 1000-EXIT",
+          "BLOCK CONTAINS 0 RECORDS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Simple file-reading exercise reading a sequential file PROV.DAT and counting records",
+        "summary": "This program opens a sequential input file (PROV.DAT), reads all records one by one displaying each, counts the total number of records read, then closes the file and displays the count. It is a straightforward file-processing skeleton, likely a student exercise.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "PERFORM THRU EXIT paragraph pattern",
+        "88-level condition names for file status",
+        "GOBACK instead of STOP RUN",
+        "Typo in DISPLAY message: 'RECOEDS' instead of 'RECORDS'",
+        "8000-READ paragraph has EXIT before READ — likely a logic bug"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program contains a notable bug: the 8000-READ paragraph label is placed before 8000-EXIT, meaning the EXIT statement executes before the READ, making the READ unreachable in normal flow. This strongly suggests a student exercise. The AUTHOR field 'Patchara L.' and the typo 'RECOEDS' further support this classification."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2790,
+      "completion_tokens": 407,
+      "total_tokens": 3197,
+      "cost": 0.014475,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014475,
+        "upstream_inference_prompt_cost": 0.00837,
+        "upstream_inference_completions_cost": 0.006105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.34,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:01:09Z"
+}

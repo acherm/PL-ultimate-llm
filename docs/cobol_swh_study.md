@@ -515,6 +515,41 @@ CSV but only **21 name the same repo** — the other 39 point to a different
 SWH's global content dedup (one blob, many origins). The review app shows both
 and flags where they differ.
 
+### 8.5 Project-level vs file-level: an origin-diverse sample
+
+With origins known (§8.4) we can sample by *repository* instead of by *file*.
+`sample_diverse.py` draws **1,000 contents from 1,000 distinct origins** (≤1
+file per repo, across `.cbl`+`.CBL`) out of the **6,278** COBOL-containing
+origins in SWH, so no single project dominates (the WBC fixture contributes 1,
+not 40%; ORCA 1, not the bulk). 896 judged, 104 gated, $15.61.
+
+The picture of *what COBOL projects exist* on public forges flips completely:
+
+| | by-file (`main`, n=317) | **by-repo (`div`, n=896)** |
+|---|---:|---:|
+| production-like | 77 % | **14 %** |
+| student-exercise | 17 % | **60 %** |
+| toy / hello-world | 3 % | **21 %** |
+| healthcare-medical (domain) | 49 % | **~0 %** |
+| education-tutorial | 14 % | **48 %** |
+| demo-example | 7 % | **25 %** |
+| median code lines | 596 | **48** |
+| COPY (copybooks) | 69 % | **13 %** |
+| GnuCOBOL dialect | 70 % | 41 % (unknown 37 %) |
+
+![Project-level vs file-level sampling](assets/cobol/fig_div_vs_main.png)
+
+**Interpretation.** The by-file view was dominated by a few large production
+systems (ORCA above all), each contributing hundreds of files; by-repo sampling
+neutralises that. What emerges is that **public-forge COBOL is overwhelmingly
+small learner code** — 60 % student exercises + 21 % toy, median 48 code lines,
+copybooks rare (13 %) — with production systems a ~14 % minority. COBOL-85 still
+dominates (96 %); the higher `unknown` dialect (37 % vs 10 %) reflects tiny
+snippets with too little evidence to pin a compiler. This is a direct
+measurement of file-level vs project-level sampling bias: the *typical COBOL
+file* in SWH belongs to a big production repo, but the *typical COBOL project*
+is a student's first program.
+
 ## 9. Reproducibility & artefacts
 
 **Commands**
@@ -528,6 +563,8 @@ OPENROUTER_API_KEY=… python3 -m tools.cobol.eval_reclassify --tail-all   # §8
 python3 -m tools.cobol.corpus_estimate --worklist worklist_1k.csv        # §8.3 sweep (no key)
 python3 -m tools.cobol.corpus_estimate --report               # §8.3 aggregate + CIs
 python3 -m tools.cobol.recover_origins                         # §8.4 origin recovery (needs gh auth)
+python3 -m tools.cobol.sample_diverse --n 1000 --seed 5        # §8.5 origin-diverse worklist
+OPENROUTER_API_KEY=… python3 -m tools.cobol.run_study --judge --judge-min-divisions 2 --worklist data/derived/cobol_study/worklist_div.csv --tag div
 python3 -m tools.cobol.make_figures                            # figures → docs/assets/cobol/
 ```
 

@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:adefcc93583dd3371f181892e6c304a518b1be02",
+    "sha1_git": "adefcc93583dd3371f181892e6c304a518b1be02",
+    "filename": "/WRITERES.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 77116,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:adefcc93583dd3371f181892e6c304a518b1be02/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:adefcc93583dd3371f181892e6c304a518b1be02/raw/"
+  },
+  "indicators": {
+    "bytes_len": 77116,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1154,
+    "blank_lines": 24,
+    "comment_lines": 276,
+    "code_lines": 854,
+    "comment_ratio": 0.244,
+    "max_line_length": 145,
+    "avg_line_length": 65.8,
+    "long_lines_over_72": 775,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "WRITERES"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 9,
+    "perform_count": 61,
+    "goto_count": 3,
+    "pic_count": 61,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "HP-3000 (MPE/iX) COBOL with embedded DB2-style SQL (EXEC SQL), Italian retail/fashion domain. SOURCE-COMPUTER and OBJECT-COMPUTER both declare HP-3000. Uses HP-specific file commands (FILE WRITE=XESTERO.ESTERO;ACC=APPEND;SHR). Later comments suggest migration toward Linux ('conv' sections, sleep command, LINE SEQUENTIAL).",
+        "evidence": [
+          "SOURCE-COMPUTER. HP-3000",
+          "OBJECT-COMPUTER. HP-3000",
+          "FILE WRITE=XESTERO.ESTERO;ACC=APPEND;SHR",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "DECIMAL-POINT IS COMMA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Italian fashion/retail chain store management system - writes movement/residual records for stores including foreign (ESTERO), MAXIMA, and outlet stores. Handles currency (EURO/LIRE conversion), store codes, and merchandise data.",
+        "summary": "WRITERES is a batch subprogram in an Italian retail fashion management system that writes transaction/movement records to various output files (WRITE, DANEG, MERCFR) depending on the destination store type (foreign stores, MAXIMA, residual). It handles Euro/Lire currency conversion, extended size tables, and exclusive file access control. It has evolved over many years (1998-2018) with multiple named change sets.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC SQL with INCLUDE of SQL copybooks (CONTESTE.IF, INDNEG.IF, SQLCA)",
+        "HP-3000 MPE/iX file system commands embedded as PIC X literals",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "SELECT OPTIONAL with LINE SEQUENTIAL organization",
+        "Multiple REDEFINES for date and currency fields",
+        "LINKAGE SECTION indicating called subprogram",
+        "7 COPY statements for shared data structures",
+        "Euro/Lire currency conversion logic",
+        "Multi-year change history with named change tags (CODI, EURO, MAXIMA, ACQUO, ESTETA, REC01)",
+        "Linux migration artifacts (sleep command, conv sections)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars out of 77116 bytes / 1154 lines. The program shows clear production heritage spanning 1998-2018 with named change sets. HP-3000 origin with evidence of Linux migration ('conv' comment blocks). Italian language comments throughout. The file uses fixed format but has some free-format comment lines mixed in (lines without column 7 indicator), likely due to the HP-3000 COBOL dialect permitting this or editor artifacts."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6060,
+      "completion_tokens": 685,
+      "total_tokens": 6745,
+      "cost": 0.028455,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028455,
+        "upstream_inference_prompt_cost": 0.01818,
+        "upstream_inference_completions_cost": 0.010275
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.58,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:01:40Z"
+}

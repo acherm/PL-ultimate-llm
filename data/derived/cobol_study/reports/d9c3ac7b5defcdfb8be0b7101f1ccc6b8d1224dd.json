@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d9c3ac7b5defcdfb8be0b7101f1ccc6b8d1224dd",
+    "sha1_git": "d9c3ac7b5defcdfb8be0b7101f1ccc6b8d1224dd",
+    "filename": "/BVZZ1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10574,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d9c3ac7b5defcdfb8be0b7101f1ccc6b8d1224dd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d9c3ac7b5defcdfb8be0b7101f1ccc6b8d1224dd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10574,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 347,
+    "blank_lines": 29,
+    "comment_lines": 137,
+    "code_lines": 181,
+    "comment_ratio": 0.431,
+    "max_line_length": 77,
+    "avg_line_length": 29.5,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BVZZ1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 19,
+    "call_count": 3,
+    "perform_count": 5,
+    "goto_count": 6,
+    "pic_count": 28,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM AS/400 (iSeries) COBOL, part of a CSC (Computer Sciences Corporation) insurance/life system framework using MAINB batch driver pattern with BUPA/BSSC/BPRD/BSPR linkage records",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-AS400",
+          "OBJECT-COMPUTER. IBM-AS400",
+          "COPY MAINB",
+          "LSAA-BSSCREC PIC X(1024)",
+          "COMP-3 usage",
+          "COPY BATCDORREC, COPY BATCUPREC",
+          "Copyright 1986-2020, Computer Sciences Corporation"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Life insurance policy administration - generates data to file ZZZ1PF based on CHDRLNB (contract header line) records filtered by account type and validity flags",
+        "summary": "Batch subprogram that reads CHDRLNB (contract header line) records, filters them by status code and validity flag from parameter input (PVZZ2PAR), reads associated HPAD (header property/address) records, and writes output records to ZZZ1PF file. Part of a CSC life insurance system batch framework driven by MAINB.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "IBM AS/400 target platform",
+        "MAINB batch driver framework via COPY MAINB",
+        "19 COPY statements for skeleton/schema copybooks",
+        "COMP-3 packed decimal fields",
+        "LINKAGE SECTION with 4 x 1024-byte parameter records",
+        "BUPA/BSSC/BPRD/BSPR standard CSC framework records",
+        "PVZZ2PAR parameter copybook",
+        "Multiple IO calls: CHDRLNBIO, HPADIO, ZZZ1IO",
+        "BEGN/NEXTR/READR/WRITR/ENDP function code pattern",
+        "Soft-lock record pattern referenced in comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "High comment ratio (43%) largely due to amendment history header and commented-out printer file sections. The program follows a well-established CSC Life insurance batch framework pattern. The ZZZ1/PVZZ2 naming suggests a custom extract/migration utility within the broader system."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5730,
+      "completion_tokens": 571,
+      "total_tokens": 6301,
+      "cost": 0.025755,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025755,
+        "upstream_inference_prompt_cost": 0.01719,
+        "upstream_inference_completions_cost": 0.008565
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.63,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T20:36:41Z"
+}

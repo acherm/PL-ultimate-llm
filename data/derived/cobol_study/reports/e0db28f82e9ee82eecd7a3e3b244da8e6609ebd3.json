@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e0db28f82e9ee82eecd7a3e3b244da8e6609ebd3",
+    "sha1_git": "e0db28f82e9ee82eecd7a3e3b244da8e6609ebd3",
+    "filename": "/covid.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3670,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e0db28f82e9ee82eecd7a3e3b244da8e6609ebd3/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e0db28f82e9ee82eecd7a3e3b244da8e6609ebd3/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3670,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 110,
+    "blank_lines": 16,
+    "comment_lines": 15,
+    "code_lines": 79,
+    "comment_ratio": 0.16,
+    "max_line_length": 80,
+    "avg_line_length": 31.4,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBLCOVID"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style; references Openmainframe challenge, uses RECORDING MODE V for variable-length PDS dataset, ASSIGN TO ddname style file assignment",
+        "evidence": [
+          "RECORDING MODE V",
+          "ASSIGN TO COVIDIN (ddname style)",
+          "FD IN001 RECORDING MODE V",
+          "Openmainframe challenge reference in comments",
+          "PDS with V record length mentioned"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Openmainframe Project challenge 3.2 - reads a COVID-19 CSV dataset from a mainframe PDS and displays statistics",
+        "summary": "Reads a COVID-19 CSV data file from a variable-length sequential dataset, parses each record using UNSTRING on comma delimiters, formats numeric fields with edit pictures, and displays country-level COVID statistics (confirmed cases, deaths, recoveries) to the console.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "UNSTRING with comma delimiter for CSV parsing",
+        "RECORDING MODE V (variable-length records)",
+        "Numeric display formatting with Z-edit pictures (ZZZ,999 etc.)",
+        "Reference string subscripting for timestamp display (UCR-TIMESTAMP(1:10))",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is a student/hobbyist exercise for the Openmainframe Project challenge. IBM mainframe dialect is inferred from RECORDING MODE V and ddname-style file assignment, but could compile under GnuCOBOL as well. No compiler directives present to confirm exact dialect."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3424,
+      "completion_tokens": 410,
+      "total_tokens": 3834,
+      "cost": 0.016422,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016422,
+        "upstream_inference_prompt_cost": 0.010272,
+        "upstream_inference_completions_cost": 0.00615
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 162.54,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:44:28Z"
+}

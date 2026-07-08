@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a5627ec6a0eba980e14d2e8bac9d2fbf04ff6523",
+    "sha1_git": "a5627ec6a0eba980e14d2e8bac9d2fbf04ff6523",
+    "filename": "/RHBCLI01.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 56070,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a5627ec6a0eba980e14d2e8bac9d2fbf04ff6523/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a5627ec6a0eba980e14d2e8bac9d2fbf04ff6523/raw/"
+  },
+  "indicators": {
+    "bytes_len": 56070,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 1250,
+    "blank_lines": 42,
+    "comment_lines": 53,
+    "code_lines": 1155,
+    "comment_ratio": 0.044,
+    "max_line_length": 72,
+    "avg_line_length": 42.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "RHBCLI01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 26,
+    "call_count": 12,
+    "perform_count": 58,
+    "goto_count": 3,
+    "pic_count": 277,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL for PC/Windows environment; uses COMP-X, LINE SEQUENTIAL, VALUE OF FILE-ID, and PC-AT computer names; Brazilian Portuguese variable naming and path conventions (C:\\HBSIS\\FTT\\)",
+        "evidence": [
+          "COMP-X usage",
+          "SOURCE-COMPUTER. PC-AT",
+          "OBJECT-COMPUTER. PC-AT",
+          "VALUE OF FILE-ID IS",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO PRINTER",
+          "ASSIGN TO DISK",
+          "C:\\HBSIS\\FTT\\ paths in COPY statements"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Brazilian commercial system (HBSIS) - customer report generation with multi-currency support (Real, Dollar, Euro, Marco) and geographic coordinates (latitude/longitude); likely a freight/logistics or import-export trading company",
+        "summary": "RHBCLI01 is a batch report program that reads customer data files, sorts them, and produces a printed or HTML customer report. It handles multiple currencies (BRL, USD, EUR, DEM), geographic coordinates, and supports output to printer, screen, email, or HTML file. The program is part of the HBSIS commercial system developed by Odair Garcia Arouca.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT with SD and SORTWK1",
+        "Multiple COPY statements referencing external copybooks (26 total)",
+        "Multi-currency fields (Real, Dollar, Euro, Marco/DEM)",
+        "Geographic coordinates (Latitude/Longitude) in sort record",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "Output modes: printer, video, email, HTML (88-level condition names)",
+        "COMP-X data items (Micro Focus extension)",
+        "LINE SEQUENTIAL file organization",
+        "HTML output support with <PRE> tag",
+        "Month names in English despite Brazilian Portuguese variable names",
+        "REDEFINES used extensively for date/time formatting",
+        "VALUE OF FILE-ID for sort work file"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 1250 lines. Latin-1 encoding with IBM box-drawing characters in SECURITY paragraph. Brazilian Portuguese naming conventions throughout. The HBSIS path suggests a specific commercial ERP/logistics software suite. No EXEC SQL or EXEC CICS found, confirming pure batch processing."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8369,
+      "completion_tokens": 580,
+      "total_tokens": 8949,
+      "cost": 0.033807,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033807,
+        "upstream_inference_prompt_cost": 0.025107,
+        "upstream_inference_completions_cost": 0.0087
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.87,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:38:13Z"
+}

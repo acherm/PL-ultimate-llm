@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bb2c3a879fe991be045cea7e7f250adfab73af52",
+    "sha1_git": "bb2c3a879fe991be045cea7e7f250adfab73af52",
+    "filename": "/CADTIPO.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13507,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bb2c3a879fe991be045cea7e7f250adfab73af52/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bb2c3a879fe991be045cea7e7f250adfab73af52/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13507,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 351,
+    "blank_lines": 59,
+    "comment_lines": 28,
+    "code_lines": 264,
+    "comment_ratio": 0.096,
+    "max_line_length": 81,
+    "avg_line_length": 37.5,
+    "long_lines_over_72": 28,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "CADtipo"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 38,
+    "goto_count": 0,
+    "pic_count": 33,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL or similar open-source COBOL targeting disk-based indexed files; uses SCREEN SECTION with LINE/COL, ACCEPT/DISPLAY with AT coordinates, VALUE OF FILE-ID, and Decimal-point is comma (Brazilian Portuguese locale). Could also be Micro Focus or ACU, but the VALUE OF FILE-ID and ASSIGN TO DISK pattern is common in GnuCOBOL/older PC COBOL.",
+        "evidence": [
+          "ASSIGN TO DISK",
+          "VALUE OF FILE-ID IS \"TIPOS.DAT\"",
+          "Decimal-point is comma",
+          "SCREEN SECTION with LINE/COL",
+          "ACCEPT ... AT nnnn",
+          "DISPLAY erase at 0101",
+          "FUNCTION CURRENT-DATE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Asset/patrimony type registration system for a small company (SEMI-PARCAS CORP.), managing categories of assets such as furniture, electronics, IT equipment, and telephony.",
+        "summary": "This program is a menu-driven CRUD application for maintaining a file of asset types (TIPOS.DAT). It supports inclusion, alteration, exclusion, and two types of consultation (by code and by description) of asset type records, organized by class and sequence number.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SCREEN SECTION with LINE/COL display",
+        "ACCEPT/DISPLAY with AT screen coordinates",
+        "Indexed sequential file (ISAM) with alternate key",
+        "VALUE OF FILE-ID for file naming",
+        "Decimal-point is comma (Brazilian Portuguese locale)",
+        "FUNCTION CURRENT-DATE for system date",
+        "EVALUATE statement",
+        "OCCURS table for month and class names",
+        "Portuguese-language identifiers and messages",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "File decoded with latin-1 encoding; contains Portuguese characters (e.g., MARÇO). The IDENTIFICATION DIVISION header is missing (only Program-Id present without the division header), which is unusual but valid in some compilers. The program appears to be a student or small-business exercise for a Brazilian context. The EXCLUSAO paragraph has a STOP ' ' before PERFORM CONTINUA, which would prevent the continue loop from executing — likely a bug. Overall structure suggests a student project."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6157,
+      "completion_tokens": 568,
+      "total_tokens": 6725,
+      "cost": 0.026991,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026991,
+        "upstream_inference_prompt_cost": 0.018471,
+        "upstream_inference_completions_cost": 0.00852
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.39,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:22:16Z"
+}

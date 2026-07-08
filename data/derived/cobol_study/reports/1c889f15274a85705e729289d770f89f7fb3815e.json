@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1c889f15274a85705e729289d770f89f7fb3815e",
+    "sha1_git": "1c889f15274a85705e729289d770f89f7fb3815e",
+    "filename": "/github-cicsplex-name-detector-source.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 39528,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1c889f15274a85705e729289d770f89f7fb3815e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1c889f15274a85705e729289d770f89f7fb3815e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 39528,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1013,
+    "blank_lines": 187,
+    "comment_lines": 211,
+    "code_lines": 615,
+    "comment_ratio": 0.255,
+    "max_line_length": 78,
+    "avg_line_length": 38.0,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SM540API"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 31,
+    "goto_count": 0,
+    "pic_count": 277,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/CICSPlex SM (CPSM) program targeting CPSM version 0540 (5.4), compiled with PROCESS CICS and CBL CICS('SP,EDF,CPSM') directives. Uses EXEC CICS and CICSPlex SM API calls.",
+        "evidence": [
+          "PROCESS CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD)",
+          "CBL CICS('SP,EDF,CPSM')",
+          "PROGRAM-ID. SM540API",
+          "WS-CPSM-VERSION VALUE '0540'",
+          "EXEC CICS present",
+          "IBM-370 SOURCE/OBJECT-COMPUTER",
+          "EYU- prefixed fields (CICSPlex SM resource table fields)",
+          "Copyright IBM Corp. 2018"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "IBM CICSPlex SM (CPSM) infrastructure utility for dynamically detecting the CICSplex name at runtime, avoiding hardcoded CICSplex names in application source code",
+        "summary": "SM540API is an IBM CICS online program that uses the CICSPlex SM API to dynamically derive the CICSplex name of the current environment. It queries CMASPLEX and CICSRGN resource tables via CPSM threads to obtain the CICSplex name, storing it in WS-SAVED-CICSPLEXNAME, eliminating the need to hardcode CICSplex names when moving code between test and production environments.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS commands",
+        "CICSPlex SM (CPSM) API usage via EXEC CICS CPSM",
+        "PROCESS CICS and CBL CICS compiler directives",
+        "Inline CICSRGN resource table definition (normally a COPY book from SEYUCOB library)",
+        "NSYMBOL(NATIONAL) and TRUNC(STD) compiler options",
+        "USAGE BINARY and USAGE PACKED-DECIMAL fields",
+        "IBM copyright 2018",
+        "No COPY statements (resource table inlined for demonstration)",
+        "31 PERFORM statements, no GOTO"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars out of 39528 bytes total; the PROCEDURE DIVISION and CPSM API call logic are not visible in the excerpt but the program structure, comments, and data division are clearly production-quality IBM mainframe CICS code. The CICSRGN record layout is explicitly noted as normally being a COPY book from the SEYUCOB library at CPSM 5.4."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7803,
+      "completion_tokens": 671,
+      "total_tokens": 8474,
+      "cost": 0.033474,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033474,
+        "upstream_inference_prompt_cost": 0.023409,
+        "upstream_inference_completions_cost": 0.010065
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.23,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T20:41:30Z"
+}

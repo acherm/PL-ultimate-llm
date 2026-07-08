@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:df43ecc94fb4b7826de884d36b30dbde7dd8d182",
+    "sha1_git": "df43ecc94fb4b7826de884d36b30dbde7dd8d182",
+    "filename": "/PRUEBA-SORT-ID.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10834,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:df43ecc94fb4b7826de884d36b30dbde7dd8d182/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:df43ecc94fb4b7826de884d36b30dbde7dd8d182/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10834,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 311,
+    "blank_lines": 81,
+    "comment_lines": 23,
+    "code_lines": 207,
+    "comment_ratio": 0.1,
+    "max_line_length": 72,
+    "avg_line_length": 33.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CCCACT2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 90,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with SORT verb, SD, INPUT/OUTPUT PROCEDURE; Spanish-language identifiers and comments suggest Latin American or Spanish educational/training context. DECIMAL-POINT IS COMMA indicates European/Latin American locale. No vendor-specific extensions detected.",
+        "evidence": [
+          "SORT verb with INPUT PROCEDURE / OUTPUT PROCEDURE",
+          "SD ORDENADO",
+          "DECIMAL-POINT IS COMMA",
+          "RECORDING MODE IS F",
+          "ACCEPT ... FROM DATE YYYYMMDD",
+          "END-PERFORM, END-RETURN, END-IF structured delimiters"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Bank account transaction listing for 'BANCO: GALICIA' - reads transaction records (client, branch, code, date/time, amount, type), sorts by client code, and writes a formatted report.",
+        "summary": "Reads a fixed-format transaction file (ENTRADATXT.TXT), sorts records by client code using the COBOL SORT verb with an SD file, then writes a formatted report (SALIDA-CCCACT.TXT) with headers, column titles, and transaction detail lines. The program is named CCCACT2 and appears to process current account (cuenta corriente) movements for Banco Galicia.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with INPUT PROCEDURE and OUTPUT PROCEDURE",
+        "SD (Sort Description) file section",
+        "DECIMAL-POINT IS COMMA for European/Latin American numeric formatting",
+        "ACCEPT FROM DATE YYYYMMDD for system date",
+        "RELEASE and RETURN verbs for sort I/O",
+        "88-level condition names for file status",
+        "Formatted monetary output with $ZZZ.ZZZ.ZZZ.Z99,9999 picture",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Spanish-language variable names and comments (ENTRADA, SALIDA, CLIENTE, SUCURSAL, IMPORTE, etc.) strongly suggest a student exercise from a Spanish-speaking country, likely Argentina given 'BANCO: GALICIA'. The filename 'PRUEBA-SORT-ID' ('prueba' means 'test/exercise' in Spanish) further supports this. Logic is straightforward with some structural issues (CLOSE inside main paragraph after SORT, output procedure reuses EOF flag set in input procedure)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5676,
+      "completion_tokens": 585,
+      "total_tokens": 6261,
+      "cost": 0.025803,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025803,
+        "upstream_inference_prompt_cost": 0.017028,
+        "upstream_inference_completions_cost": 0.008775
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.33,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:37:40Z"
+}

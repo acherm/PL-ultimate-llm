@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:57b19b2f37468bd93eb3ad2b6585b55fac6cdf7e",
+    "sha1_git": "57b19b2f37468bd93eb3ad2b6585b55fac6cdf7e",
+    "filename": "/Loteria.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 24240,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:57b19b2f37468bd93eb3ad2b6585b55fac6cdf7e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:57b19b2f37468bd93eb3ad2b6585b55fac6cdf7e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 24240,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 482,
+    "blank_lines": 79,
+    "comment_lines": 65,
+    "code_lines": 338,
+    "comment_ratio": 0.161,
+    "max_line_length": 138,
+    "avg_line_length": 48.3,
+    "long_lines_over_72": 109,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Loteria"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 29,
+    "goto_count": 0,
+    "pic_count": 40,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL free-format source indicated by '$set sourceformat\"free\"' compiler directive; Portuguese-language identifiers and comments suggest Brazilian developer",
+        "evidence": [
+          "$set sourceformat\"free\"",
+          "function random(ws-semente)",
+          "accept ws-semente from time",
+          "perform delay-sorteio",
+          "88-level condition names with Portuguese labels (acertou1, errou1)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Brazilian lottery (Loteria) simulation - user picks 6-10 numbers from 1-60, program randomly draws 6 numbers and counts attempts until they match",
+        "summary": "A lottery simulation program where the user bets 6 to 10 numbers between 1 and 60. The program then repeatedly draws 6 random numbers using FUNCTION RANDOM seeded from the system clock until all 6 drawn numbers match the user's bet, counting the number of attempts and tracking elapsed time.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "$set sourceformat free compiler directive (GnuCOBOL)",
+        "FUNCTION RANDOM for random number generation",
+        "ACCEPT FROM TIME for clock-based seeding",
+        "88-level condition names used as boolean flags",
+        "Screen positioning with AT row/col in DISPLAY/ACCEPT",
+        "Portuguese-language variable names and comments",
+        "Elapsed time tracking with ws-tempo-inicio/ws-tempo-final",
+        "EVALUATE with numeric comparisons for bet size selection"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; the verification section (verificacao) and finalization logic are not visible but the overall structure is clear. File decoded as latin-1 due to Portuguese accented characters in comments. The program has a potential infinite loop design (repeating until random draw matches bet) which is characteristic of a student exercise rather than production code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6360,
+      "completion_tokens": 467,
+      "total_tokens": 6827,
+      "cost": 0.026085,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026085,
+        "upstream_inference_prompt_cost": 0.01908,
+        "upstream_inference_completions_cost": 0.007005
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.92,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:36:59Z"
+}

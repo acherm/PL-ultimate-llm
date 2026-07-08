@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f88c9ea5035b289f333d5c3cecf432f546010d94",
+    "sha1_git": "f88c9ea5035b289f333d5c3cecf432f546010d94",
+    "filename": "/Program8.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1265,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f88c9ea5035b289f333d5c3cecf432f546010d94/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f88c9ea5035b289f333d5c3cecf432f546010d94/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1265,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 52,
+    "blank_lines": 12,
+    "comment_lines": 6,
+    "code_lines": 34,
+    "comment_ratio": 0.15,
+    "max_line_length": 62,
+    "avg_line_length": 23.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Lista4E8"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Student exercise likely compiled with GnuCOBOL on PC; Portuguese-language comments and Brazilian locale (decimal-point is comma, R$ currency display)",
+        "evidence": [
+          "decimal-point is comma",
+          "installation. \"PC\"",
+          "program-id. \"Lista4E8\"",
+          "Portuguese comments: 'divisao de configuracao do ambiente', 'declaracao de variaveis'"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian student exercise computing a travel pass cost based on distance input",
+        "summary": "Prompts the user to enter a distance, computes a fare (wk-passe) by multiplying distance by 50 then overwriting with distance * 40, and displays the resulting cost in Brazilian Reais. The program appears to be an incomplete or buggy student exercise (the first COMPUTE result is immediately overwritten).",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "decimal-point is comma (Brazilian locale)",
+        "Portuguese-language comments and display strings",
+        "R$ currency in DISPLAY",
+        "Logic bug: first COMPUTE wk-passe = wk-dist * 050 is immediately overwritten by second COMPUTE",
+        "Redundant nested IF (else branch checks same condition as if)",
+        "77-level working-storage variables only"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Small 52-line student program with a clear logic bug (two sequential COMPUTEs overwrite each other). Author name and date suggest a university assignment dated 26/09/2022. No COPY, CALL, or PERFORM statements used."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2591,
+      "completion_tokens": 401,
+      "total_tokens": 2992,
+      "cost": 0.013788,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013788,
+        "upstream_inference_prompt_cost": 0.007773,
+        "upstream_inference_completions_cost": 0.006015
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.57,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:36:49Z"
+}

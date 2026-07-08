@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1115d93ad85ba3c0df11f50db264df3709a70ec4",
+    "sha1_git": "1115d93ad85ba3c0df11f50db264df3709a70ec4",
+    "filename": "/FINALEX.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 26369,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1115d93ad85ba3c0df11f50db264df3709a70ec4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1115d93ad85ba3c0df11f50db264df3709a70ec4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 26369,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 650,
+    "blank_lines": 87,
+    "comment_lines": 89,
+    "code_lines": 474,
+    "comment_ratio": 0.158,
+    "max_line_length": 79,
+    "avg_line_length": 39.6,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FINALEX"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 6,
+    "perform_count": 37,
+    "goto_count": 6,
+    "pic_count": 85,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe-style COBOL with RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, LABEL RECORDS ARE STANDARD, and GOBACK; likely compiled with IBM Enterprise COBOL or similar. Source contains a git merge conflict marker (<<<<<<< HEAD / =======) indicating collaborative student work.",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "LABEL RECORDS ARE STANDARD",
+          "BLOCK CONTAINS 0 RECORDS",
+          "GOBACK",
+          "FILE STATUS IS",
+          "COMP field usage",
+          "COPY copybooks pattern"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Automotive parts supplier data processing — validates and processes parts, supplier addresses, and purchase orders for vehicle manufacturers (Chrysler, Ford, GM, Volkswagen, Toyota, Jaguar, Peugeot, BMW)",
+        "summary": "FINALEX is a batch COBOL program that reads a PARTSUPPIN file containing part-supplier-address-purchase-order records and a STATEZIP reference file, validates the data by calling subprograms PARTEDIT and ADDREDIT, and writes error records to an ERRORFILE. It loads a state/zip code table at startup and processes each input record through edit checks.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY copybooks (PARTS, PARTSUB, PRCHSORD, SUPADDRS, SUPPLIER, ERRORS, STATEZIP)",
+        "CALL to external subprograms PARTEDIT and ADDREDIT",
+        "OCCURS 3 TIMES INDEXED BY for address and purchase order arrays",
+        "88-level condition names for vehicle makes and supplier types",
+        "Git merge conflict markers present in source (<<<<<<< HEAD / =======)",
+        "COMP field workaround with auxiliary variable WS-WEEKS-LEAD-AUX",
+        "File status checking on open/read/write",
+        "GOBACK statement",
+        "Inline comments with date stamps (9/16, 9/17, 9/18, 9/20)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The source file contains an unresolved git merge conflict (<<<<<<< HEAD ... =======) between two student branches (Fabio and Ivanna), making the file syntactically invalid as-is. The program is clearly a student final exercise (filename FINALEX, comments referencing student names and dates). The truncated source cuts off mid-record-description. Despite the merge conflict, the COBOL structure and intent are clear."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7501,
+      "completion_tokens": 608,
+      "total_tokens": 8109,
+      "cost": 0.031623,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031623,
+        "upstream_inference_prompt_cost": 0.022503,
+        "upstream_inference_completions_cost": 0.00912
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.63,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:57:49Z"
+}

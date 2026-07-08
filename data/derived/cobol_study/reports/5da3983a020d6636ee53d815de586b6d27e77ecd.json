@@ -1,0 +1,133 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5da3983a020d6636ee53d815de586b6d27e77ecd",
+    "sha1_git": "5da3983a020d6636ee53d815de586b6d27e77ecd",
+    "filename": "/run_game.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9012,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5da3983a020d6636ee53d815de586b6d27e77ecd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5da3983a020d6636ee53d815de586b6d27e77ecd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9012,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 261,
+    "blank_lines": 74,
+    "comment_lines": 13,
+    "code_lines": 174,
+    "comment_ratio": 0.07,
+    "max_line_length": 125,
+    "avg_line_length": 33.5,
+    "long_lines_over_72": 6,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "run-game"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 18,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 17,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) - uses COB_SCREEN_EXCEPTIONS, COB_SCREEN_ESC, COB_EXIT_WAIT environment variables, COB-SCR-F12, COB-SCR-ESC screen status constants, and cob-color-* constants typical of GnuCOBOL screen handling",
+        "evidence": [
+          "set environment \"COB_SCREEN_EXCEPTIONS\" to 'Y'",
+          "set environment \"COB_SCREEN_ESC\" to 'Y'",
+          "set environment \"COB_EXIT_WAIT\" to 'NO'",
+          "COB-SCR-F12",
+          "COB-SCR-ESC",
+          "cob-color-green",
+          "cob-color-red",
+          "cob-color-yellow",
+          "cob-color-black",
+          "cob-color-white",
+          "copy \"screenio.cpy\"",
+          "function all intrinsic"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Wordle-style word guessing game implemented in COBOL",
+        "summary": "This program implements the core game loop for a Wordle-like word guessing game. It accepts a selected word and word list via linkage, displays a screen interface, accepts player guesses, validates them against the word list, and provides color-coded feedback (green for correct position, yellow for wrong position, black/white for not present). The game allows up to 6 tries to guess a 5-letter word.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "SCREEN SECTION with copybooks for screen definitions",
+        "LOCAL-STORAGE SECTION usage",
+        "LINKAGE SECTION with occurs clause referencing working-storage constant",
+        "SET ENVIRONMENT statements for GnuCOBOL screen control",
+        "INSPECT TALLYING for letter frequency counting",
+        "88-level condition names for state machine (puzzle-solved/not-solved/in-progress)",
+        "SEARCH with AT END clause",
+        "String reference modification (ls-current-word-attempt(ls-idx:1))",
+        "FUNCTION UPPER-CASE and FUNCTION ALL INTRINSIC",
+        "CONCAT function usage",
+        "CRT STATUS clause",
+        "Multiple CALL statements to helper subprograms (logger, display-info-text, update-remaining-letters, etc.)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "This is a COBOL implementation of a Wordle clone, authored by Erik Eriksen in April 2022. The code is well-structured with clear separation of concerns via subprogram calls. The duplicate SPECIAL-NAMES paragraph (appears twice) is a minor anomaly. The program is a subprogram called with USING, returning via GOBACK. Maturity is assessed as student-exercise/hobby project rather than production code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4531,
+      "completion_tokens": 674,
+      "total_tokens": 5205,
+      "cost": 0.023703,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023703,
+        "upstream_inference_prompt_cost": 0.013593,
+        "upstream_inference_completions_cost": 0.01011
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.6,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:49:12Z"
+}

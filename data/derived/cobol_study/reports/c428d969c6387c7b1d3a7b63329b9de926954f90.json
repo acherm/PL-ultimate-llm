@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c428d969c6387c7b1d3a7b63329b9de926954f90",
+    "sha1_git": "c428d969c6387c7b1d3a7b63329b9de926954f90",
+    "filename": "/Z95644.CBL(COBHW03).cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4738,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c428d969c6387c7b1d3a7b63329b9de926954f90/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c428d969c6387c7b1d3a7b63329b9de926954f90/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4738,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 132,
+    "blank_lines": 0,
+    "comment_lines": 14,
+    "code_lines": 118,
+    "comment_ratio": 0.106,
+    "max_line_length": 57,
+    "avg_line_length": 34.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COBHW03"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 15,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style with VSAM KSDS indexed file, RECORDING MODE F, COMP-3, RETURN-CODE special register, and FUNCTION NUMVAL usage consistent with IBM Enterprise COBOL",
+        "evidence": [
+          "ORGANIZATION INDEXED ACCESS RANDOM RECORD ACCT-KEY STATUS",
+          "RECORDING MODE F",
+          "COMP-3",
+          "RETURN-CODE",
+          "FUNCTION NUMVAL",
+          "SELECT ACCT-REC ASSIGN TO ACCTREC"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Account record lookup: reads an index file of account IDs and currency codes, performs random reads against a VSAM KSDS account master file, and writes matched records to a print output file",
+        "summary": "COBHW03 reads sequential index records containing account ID and currency code, uses them as keys to randomly access a VSAM indexed account master file, and writes matching account details (ID, currency, name, surname) to a print output file. Invalid key conditions are reported via DISPLAY.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "VSAM KSDS indexed file with ORGANIZATION INDEXED and RANDOM access",
+        "COMP-3 packed decimal key field",
+        "FUNCTION NUMVAL for string-to-numeric conversion",
+        "RECORDING MODE F on sequential files",
+        "RETURN-CODE special register used for error propagation",
+        "88-level condition names for file status codes including 97",
+        "INVALID KEY phrase on READ"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The AUTHOR field names an individual (Mert Musa TEMEL) and the program name COBHW03 suggests a homework assignment (HW=homework, 03=third exercise). Logic is functional but has a minor bug: the OPEN OUTPUT PRINT-LINE status check tests ACCT-ST instead of PRT-ST. No COPY statements or CALLs. Dialect is likely IBM mainframe based on VSAM and RECORDING MODE F but could also compile under GnuCOBOL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3864,
+      "completion_tokens": 503,
+      "total_tokens": 4367,
+      "cost": 0.019137,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019137,
+        "upstream_inference_prompt_cost": 0.011592,
+        "upstream_inference_completions_cost": 0.007545
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.31,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:57:56Z"
+}

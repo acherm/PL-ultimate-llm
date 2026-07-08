@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:cd4005fee9652551991c35a52e901e07ea81f17d",
+    "sha1_git": "cd4005fee9652551991c35a52e901e07ea81f17d",
+    "filename": "/CALL370.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1116,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:cd4005fee9652551991c35a52e901e07ea81f17d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:cd4005fee9652551991c35a52e901e07ea81f17d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1116,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 25,
+    "blank_lines": 0,
+    "comment_lines": 3,
+    "code_lines": 22,
+    "comment_ratio": 0.12,
+    "max_line_length": 70,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "CALL370"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 4,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL/OpenCOBOL test program; filename CALL370.CBL and reference to TEST370.BIN suggest GnuCOBOL compiled binary subprogram testing",
+        "evidence": [
+          "CALL370.CBL filename convention",
+          "reference to TEST370.BIN in DISPLAY",
+          "RETURN-CODE usage",
+          "COMP-3 and COMP usage",
+          "EXIT PROGRAM followed by STOP RUN"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Unit/integration test harness for a subprogram named TEST370, likely testing date-field passing conventions across different PIC/USAGE types",
+        "summary": "CALL370 is a test driver program that calls the subprogram TEST370 twice, passing date values in four different data formats (numeric, alphanumeric, COMP-3, COMP). It displays the return code after each call to verify correct behavior.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal date field",
+        "COMP binary date field",
+        "RETURN-CODE special register",
+        "Calls same subprogram twice to test repeated invocation",
+        "Tests four different PIC/USAGE combinations for parameter passing"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "No IDENTIFICATION DIVISION keyword on first line (indented oddly but present). The program is clearly a test harness for subprogram parameter-passing, likely part of a GnuCOBOL or similar open-source COBOL test suite. The '370' suffix may reference IBM System/370 compatibility testing."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2548,
+      "completion_tokens": 405,
+      "total_tokens": 2953,
+      "cost": 0.013719,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013719,
+        "upstream_inference_prompt_cost": 0.007644,
+        "upstream_inference_completions_cost": 0.006075
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.74,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:10:17Z"
+}

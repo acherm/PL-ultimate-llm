@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:98dc927190c3c4ea73546f0b2c43ee97abe2f12d",
+    "sha1_git": "98dc927190c3c4ea73546f0b2c43ee97abe2f12d",
+    "filename": "/custmgmt.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16087,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:98dc927190c3c4ea73546f0b2c43ee97abe2f12d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:98dc927190c3c4ea73546f0b2c43ee97abe2f12d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16087,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 491,
+    "blank_lines": 85,
+    "comment_lines": 41,
+    "code_lines": 365,
+    "comment_ratio": 0.101,
+    "max_line_length": 66,
+    "avg_line_length": 31.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CUSTMGMT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 104,
+    "goto_count": 0,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) — uses CBL_CHECK_FILE_EXIST built-in library call, INDEXED file with DYNAMIC access, INSPECT CONVERTING; no COMP-3, no CICS/SQL; style consistent with GnuCOBOL tutorials",
+        "evidence": [
+          "CALL \"CBL_CHECK_FILE_EXIST\"",
+          "ORGANIZATION IS INDEXED",
+          "ACCESS MODE IS DYNAMIC",
+          "INSPECT ... CONVERTING LOWER-ALPHA TO UPPER-ALPHA",
+          "COMP (binary) fields in FILE-INFO",
+          "no EXEC CICS / EXEC SQL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Customer database management — add, delete, change, inquire customer records stored in an indexed sequential file",
+        "summary": "CUSTMGMT is an interactive batch-style program that manages a flat indexed customer file. It presents a menu allowing the user to add, delete, change, or inquire customer records. It uses CBL_CHECK_FILE_EXIST to create the file if it does not exist.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "CBL_CHECK_FILE_EXIST GnuCOBOL library call",
+        "INDEXED file with DYNAMIC access mode",
+        "INSPECT CONVERTING for case conversion",
+        "88-level condition name for menu validation",
+        "EVALUATE for menu dispatch",
+        "No COMP-3 packed decimal",
+        "No EXEC SQL or EXEC CICS",
+        "Commented-out COPY statements (CUSTFC.CBL)",
+        "Source truncated — DELETE statement cut off at end"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at the very end (DELETE-CUSTOMER-RECORD paragraph cut off mid-statement). The CBL_CHECK_FILE_EXIST call and overall coding style strongly suggest GnuCOBOL. The program is a well-structured tutorial/student exercise for learning indexed file I/O in COBOL."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6782,
+      "completion_tokens": 490,
+      "total_tokens": 7272,
+      "cost": 0.027696,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027696,
+        "upstream_inference_prompt_cost": 0.020346,
+        "upstream_inference_completions_cost": 0.00735
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:29:47Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4c4b0a140c5876c593cd9a7ef2e6238bf9a18a64",
+    "sha1_git": "4c4b0a140c5876c593cd9a7ef2e6238bf9a18a64",
+    "filename": "/Program1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9332,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4c4b0a140c5876c593cd9a7ef2e6238bf9a18a64/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4c4b0a140c5876c593cd9a7ef2e6238bf9a18a64/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9332,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 231,
+    "blank_lines": 28,
+    "comment_lines": 3,
+    "code_lines": 200,
+    "comment_ratio": 0.015,
+    "max_line_length": 72,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COBTPG01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 91,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with a PC-based COBOL compiler (e.g., Micro Focus or GnuCOBOL) given Windows-style file paths (C:\\COBOL\\). No strong vendor-specific extensions visible.",
+        "evidence": [
+          "ASSIGN TO 'C:\\COBOL\\PAINTTEST.DAT' (Windows path)",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "LINAGE IS 60 WITH FOOTING AT 56",
+          "FUNCTION CURRENT-DATE",
+          "AFTER ADVANCING PAGE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Paint job cost estimation report for a student/educational exercise",
+        "summary": "This program reads paint job records from a sequential input file, calculates paint gallons needed, paint cost, labor cost, and total cost for each job, then writes a formatted report to a print output file. It includes page headings, detail lines, and a grand total line.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINAGE clause with FOOTING for page overflow handling",
+        "FUNCTION CURRENT-DATE for system date retrieval",
+        "AT EOP clause triggering heading reprint",
+        "Windows-style file paths in ASSIGN clauses",
+        "Malformed PIC clause: 'PIC ZZ9.???' in GT-LINE (likely a typo/bug)",
+        "Indentation inconsistency in WORKING-STORAGE (nested 05 inside 05)",
+        "WRITE ... AFTER ADVANCING PAGE",
+        "No COMP-3 usage despite numeric calculations"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program has a clear student exercise character: authored by 'TYLER GRAHAM' dated 12/8/2019, uses Windows paths, has a notable bug with 'PIC ZZ9.???' in GT-LINE which would fail to compile, and has a structural indentation error in WORKING-STORAGE where a 05-level item is nested inside another 05-level item. Overall logic is coherent for a paint estimator report program."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5480,
+      "completion_tokens": 495,
+      "total_tokens": 5975,
+      "cost": 0.023865,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023865,
+        "upstream_inference_prompt_cost": 0.01644,
+        "upstream_inference_completions_cost": 0.007425
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.06,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:05:08Z"
+}

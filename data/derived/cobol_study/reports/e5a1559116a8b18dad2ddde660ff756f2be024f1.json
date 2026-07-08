@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e5a1559116a8b18dad2ddde660ff756f2be024f1",
+    "sha1_git": "e5a1559116a8b18dad2ddde660ff756f2be024f1",
+    "filename": "/TRTMNTR.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 72305,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e5a1559116a8b18dad2ddde660ff756f2be024f1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e5a1559116a8b18dad2ddde660ff756f2be024f1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 72305,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 906,
+    "blank_lines": 2,
+    "comment_lines": 104,
+    "code_lines": 800,
+    "comment_ratio": 0.115,
+    "max_line_length": 80,
+    "avg_line_length": 77.8,
+    "long_lines_over_72": 854,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TRTMNTR"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 8,
+    "perform_count": 20,
+    "goto_count": 42,
+    "pic_count": 79,
+    "comp3_count": 10,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL targeting IBM-390; uses RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, VSAM INDEXED file with FILE STATUS, EXEC SQL, and UT-S- ASSIGN clauses typical of IBM OS/VS COBOL or VS COBOL II / Enterprise COBOL",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-390",
+          "OBJECT-COMPUTER. IBM-390",
+          "RECORDING MODE IS F",
+          "ASSIGN TO UT-S-SYSOUT",
+          "ORGANIZATION IS INDEXED / ACCESS MODE IS RANDOM / RECORD KEY",
+          "EXEC SQL present",
+          "COMP-3 usage",
+          "COPY TREATMNT / COPY PATMSTR"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Inpatient hospital treatment transaction editing; processes daily treatment records for all patients, validates against a VSAM patient master file, and produces edited output and error files",
+        "summary": "TRTMNTR edits a daily inpatient treatment transaction file (TRMTDATA) produced by CICS data-entry operators. It validates each record against a VSAM patient master file (PATMSTR), writes passing records to an edited output file (TRMTEDIT), routes failing records to an error file (TRMTERR), and balances final totals including medication, pharmacy, and ancillary charges.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2 embedded SQL)",
+        "VSAM INDEXED file with RANDOM access and FILE STATUS",
+        "RECORDING MODE IS F with BLOCK CONTAINS 0 RECORDS (IBM mainframe FD clauses)",
+        "COMP-3 packed-decimal fields",
+        "COPY statements (TREATMNT, PATMSTR)",
+        "88-level condition names for file status codes",
+        "GOTO-heavy procedural flow (42 GOTOs)",
+        "SECURITY clause: CONFIDENTIAL PATIENT DATA",
+        "Trailer record balance checking (medication, pharmacy, ancillary charges)",
+        "DUMP-LOCATOR paragraph-pointer diagnostic area in working storage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars (~906 total lines); the PROCEDURE DIVISION is not visible in the excerpt but mechanical indicators confirm 800 code lines, 42 GOTOs, 20 PERFORMs, and 8 CALLs, consistent with a substantial production batch program. The EXEC SQL presence alongside VSAM suggests hybrid DB2+VSAM data access. Author is Jon Sayles, a known COBOL educator/author, so this may be a teaching example modeled on production patterns."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5985,
+      "completion_tokens": 647,
+      "total_tokens": 6632,
+      "cost": 0.02766,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02766,
+        "upstream_inference_prompt_cost": 0.017955,
+        "upstream_inference_completions_cost": 0.009705
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.89,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:40:59Z"
+}

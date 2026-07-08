@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6c90c26db9e900db6a9267066a80582f558a962a",
+    "sha1_git": "6c90c26db9e900db6a9267066a80582f558a962a",
+    "filename": "/file.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6352,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6c90c26db9e900db6a9267066a80582f558a962a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6c90c26db9e900db6a9267066a80582f558a962a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6352,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 145,
+    "blank_lines": 0,
+    "comment_lines": 6,
+    "code_lines": 139,
+    "comment_ratio": 0.041,
+    "max_line_length": 72,
+    "avg_line_length": 42.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COBSAMP"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM DB2 COBOL Stored Procedure using EXEC SQL with DECLARE CURSOR WITH RETURN WITH HOLD, SQLCA, and VARCHAR-style level-49 structures typical of IBM DB2 stored procedures on z/OS or iSeries",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "DECLARE C1 CURSOR WITH RETURN WITH HOLD FOR",
+          "SAMPLE.COBSAMP program name",
+          "level 49 VAR-LEN/VAR-TEXT pattern for DB2 VARCHAR host variables",
+          "INSERT INTO SAMPLE.CITYTABLE",
+          "GOBACK statement"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "IBM DB2 sample stored procedure operating on SAMPLE.CITYTABLE, a well-known IBM DB2 sample database table",
+        "summary": "This is a COBOL stored procedure (SAMPLE.COBSAMP) that accepts Action, City, Country, and Response parameters and performs SELECT, INSERT, or DELETE operations on the SAMPLE.CITYTABLE DB2 table based on the Action parameter. It returns result sets via cursors WITH RETURN for SELECT operations and populates a Response string with success or failure messages including SQLCODE on error.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC SQL INCLUDE SQLCA",
+        "DECLARE CURSOR WITH RETURN WITH HOLD (DB2 stored procedure result set pattern)",
+        "Level-49 VAR-LEN/VAR-TEXT VARCHAR host variable structures",
+        "EVALUATE TRUE ALSO TRUE (nested condition evaluation)",
+        "Function UPPER-CASE (intrinsic function)",
+        "PROCEDURE DIVISION USING with linkage parameters",
+        "GOBACK",
+        "PIC +++999 sign-edited numeric for SQLCODE display",
+        "Multiple DECLARE CURSOR statements (C1-C4) for conditional query filtering"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The PIC X9(8) / PIC X9(32) / PIC X9(80) patterns for VAR-TEXT are unusual (typically PIC X(n)) but appear intentional for this IBM DB2 VARCHAR level-49 pattern. This matches the IBM DB2 sample database stored procedure example distributed with DB2 for LUW or z/OS. No COPY statements or CALL statements present; self-contained stored procedure."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3857,
+      "completion_tokens": 574,
+      "total_tokens": 4431,
+      "cost": 0.020181,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020181,
+        "upstream_inference_prompt_cost": 0.011571,
+        "upstream_inference_completions_cost": 0.00861
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:51:27Z"
+}

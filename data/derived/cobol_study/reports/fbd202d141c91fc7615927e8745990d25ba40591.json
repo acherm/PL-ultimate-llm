@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fbd202d141c91fc7615927e8745990d25ba40591",
+    "sha1_git": "fbd202d141c91fc7615927e8745990d25ba40591",
+    "filename": "/esdumpsplitter.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9096,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fbd202d141c91fc7615927e8745990d25ba40591/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fbd202d141c91fc7615927e8745990d25ba40591/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9096,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 262,
+    "blank_lines": 46,
+    "comment_lines": 4,
+    "code_lines": 212,
+    "comment_ratio": 0.019,
+    "max_line_length": 98,
+    "avg_line_length": 33.7,
+    "long_lines_over_72": 5,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ESDumpSplitter"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 25,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus GnuCOBOL-compatible; uses $set sourceformat\"variable\", COMP-X, COMP-5, BINARY-LONG, CBL_RENAME_FILE runtime library call, and 78-level constants — all characteristic of Micro Focus COBOL",
+        "evidence": [
+          "$set sourceformat\"variable\"",
+          "pic x comp-x",
+          "pic s9(9) comp-5",
+          "binary-long",
+          "78  78-table-max",
+          "call \"CBL_RENAME_FILE\"",
+          "call \"CBL_DEBUGBREAK\" (commented out)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Enterprise Server (ES) dump file processing utility — splits a multi-dump text file into individual dump files and generates a control block memory map",
+        "summary": "ESDumpSplitter reads a Micro Focus Enterprise Server text-format storage dump file from the command line, splits it into separate output files per dump (named using date/time tokens from the dump header), builds a sorted table of control block entries, appends a memory map to each output file, and renames any output file where potential shared-memory corruption is detected.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$set sourceformat directive (Micro Focus variable format)",
+        "BINARY-LONG data item",
+        "COMP-X and COMP-5 usage",
+        "78-level constant (78-table-max value 2000000)",
+        "ODO (OCCURS DEPENDING ON) table up to 2,000,000 entries",
+        "SORT on table (SORT ws-control-block)",
+        "STRING/UNSTRING for filename construction",
+        "INSPECT TALLYING for pattern detection",
+        "CBL_RENAME_FILE runtime call",
+        "CBL_DEBUGBREAK commented-out call",
+        "88-level condition names for flags",
+        "ACCEPT from COMMAND-LINE",
+        "File status with REDEFINES for char1/char2 decomposition"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program targets Micro Focus Enterprise Server dump analysis. The $set directive and CBL_ runtime calls are definitive Micro Focus indicators. GnuCOBOL also supports some of these features so cannot fully exclude it, but the CBL_RENAME_FILE call and overall style strongly suggest Micro Focus. The commented-out CBL_DEBUGBREAK line is a developer debug aid left in source."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4609,
+      "completion_tokens": 580,
+      "total_tokens": 5189,
+      "cost": 0.022527,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022527,
+        "upstream_inference_prompt_cost": 0.013827,
+        "upstream_inference_completions_cost": 0.0087
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.45,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:53:59Z"
+}

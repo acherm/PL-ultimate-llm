@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6839d2b172da6457b99f0753b52689c1ead3b93c",
+    "sha1_git": "6839d2b172da6457b99f0753b52689c1ead3b93c",
+    "filename": "/TEST1.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3848,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6839d2b172da6457b99f0753b52689c1ead3b93c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6839d2b172da6457b99f0753b52689c1ead3b93c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3848,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 130,
+    "blank_lines": 11,
+    "comment_lines": 3,
+    "code_lines": 116,
+    "comment_ratio": 0.025,
+    "max_line_length": 78,
+    "avg_line_length": 28.6,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TEST1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 5,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "fujitsu-nec",
+        "standard": "COBOL-85",
+        "detail": "Likely JMA ORCA or similar Japanese medical/business web-COBOL framework using MONFUNC, MCPAREA, SPAAREA, LINKAREA, SCRAREA conventions; SCR-HTTP-METHOD and SCR-HTTP-STATUS suggest a web/HTTP-oriented COBOL runtime (possibly Fujitsu NetCOBOL or similar Japanese vendor framework)",
+        "evidence": [
+          "CALL 'MONFUNC'",
+          "MCPAREA",
+          "SPAAREA",
+          "LINKAREA",
+          "SCRAREA",
+          "SCR-HTTP-METHOD",
+          "SCR-HTTP-STATUS",
+          "SCR-BODY",
+          "MCP-FUNC",
+          "MCP-TABLE",
+          "MCP-PATHNAME",
+          "COPY \"DB-BLOB\"",
+          "COPY \"DB-FETCH\"",
+          "COPY \"DB-MA\""
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Web-oriented COBOL application using HTTP method dispatch (GET/POST) with database fetch operations via a proprietary MONFUNC interface; likely part of a Japanese business web-COBOL framework",
+        "summary": "This program dispatches on HTTP method (GET or POST) received via a screen/linkage area. On GET, it opens a message context, selects rows from 'tbl_fetch_test', fetches them in a loop writing to a 'ma' table, then closes and returns the result in SCR-BODY. On POST, it returns a 404 status.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "HTTP method dispatch via EVALUATE SCR-HTTP-METHOD",
+        "Proprietary MONFUNC call interface for DB operations (MSGOPEN, DBSELECT, DBFETCH, MSGWRITE, MSGCLOSE)",
+        "7 COPY statements for DB and linkage areas",
+        "PERFORM UNTIL loop for fetch iteration",
+        "BINARY PIC S9(9) for return code",
+        "SCR-HTTP-STATUS and SCR-BODY suggest web/HTTP response handling",
+        "No EXEC SQL or EXEC CICS - uses proprietary DB abstraction"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "The MONFUNC/MCPAREA/SCRAREA pattern is characteristic of Japanese web-COBOL frameworks (possibly JMA ORCA medical system or Fujitsu NetCOBOL web framework). Dialect confidence is medium because the specific vendor cannot be confirmed without seeing the copybooks. The program is a test/demo program (PROGRAM-ID TEST1) but has production-like structure."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3364,
+      "completion_tokens": 614,
+      "total_tokens": 3978,
+      "cost": 0.019302,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019302,
+        "upstream_inference_prompt_cost": 0.010092,
+        "upstream_inference_completions_cost": 0.00921
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.0,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:41:07Z"
+}

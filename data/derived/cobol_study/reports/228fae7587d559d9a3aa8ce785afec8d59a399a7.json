@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:228fae7587d559d9a3aa8ce785afec8d59a399a7",
+    "sha1_git": "228fae7587d559d9a3aa8ce785afec8d59a399a7",
+    "filename": "/Sedalia.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 24540,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:228fae7587d559d9a3aa8ce785afec8d59a399a7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:228fae7587d559d9a3aa8ce785afec8d59a399a7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 24540,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 715,
+    "blank_lines": 192,
+    "comment_lines": 100,
+    "code_lines": 423,
+    "comment_ratio": 0.191,
+    "max_line_length": 72,
+    "avg_line_length": 33.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FTB86994"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 29,
+    "goto_count": 0,
+    "pic_count": 133,
+    "comp3_count": 5,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL, likely VS COBOL II or COBOL/370; uses RECORDING MODE V, COMP-3, indexed file organization with FILE STATUS, SORT with INPUT/OUTPUT PROCEDURE, and SEARCH ALL with ODO tables. SOURCE-COMPUTER IBM-370.",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
+          "RECORDING MODE V",
+          "COMP-3",
+          "ORGANIZATION IS INDEXED",
+          "RECORD IS VARYING IN SIZE FROM 1 TO 3996 DEPENDING ON RECORD-LENGTH",
+          "SORT SORT-FILE ASCENDING KEY ... INPUT PROCEDURE ... OUTPUT PROCEDURE",
+          "SEARCH ALL CARD-TABLE"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Mercantile Bank of St. Louis N.A. - deconversion/decommission of Chase card accounts sold to another bank; identifies card relationships for accounts being sold and produces output files/reports for cards that are 'only' sold or 'plus' (mixed) sold.",
+        "summary": "This batch program (SEDALIA/FTB86994) processes a bank card deconversion: it loads a table of decommissioned account numbers, cross-references them against a card cross-reference file, and produces two output files and two reports. Cards linked solely to sold accounts are flagged for deactivation ('ONLY'), while cards with mixed relationships have the sold account relationship removed ('PLUS').",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal counters and record-length",
+        "OCCURS DEPENDING ON (ODO) for variable-length account and card tables up to 15000/35000 entries",
+        "SEARCH ALL on sorted in-memory table (binary search)",
+        "SORT with INPUT PROCEDURE / OUTPUT PROCEDURE",
+        "Indexed file access with DYNAMIC mode and FILE STATUS",
+        "RECORD IS VARYING IN SIZE DEPENDING ON clause",
+        "Multiple report headers with formatted date/time fields",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; PROCEDURE DIVISION is partially visible. Program ID is FTB86994, internal name SEDALIA, written March 1996 by Ted Barstow (Preferred Resources Inc.) for Mercantile Bank of St. Louis. The truncated SEARCH ALL paragraph ends mid-statement ('PERF') but this is an artifact of truncation, not a code defect. All four divisions present; clearly production banking code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7341,
+      "completion_tokens": 616,
+      "total_tokens": 7957,
+      "cost": 0.031263,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031263,
+        "upstream_inference_prompt_cost": 0.022023,
+        "upstream_inference_completions_cost": 0.00924
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.41,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:04:36Z"
+}

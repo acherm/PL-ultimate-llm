@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:88944ac93a19ac2966607646f90fa0fb40865a85",
+    "sha1_git": "88944ac93a19ac2966607646f90fa0fb40865a85",
+    "filename": "/cblgrph.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13853,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:88944ac93a19ac2966607646f90fa0fb40865a85/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:88944ac93a19ac2966607646f90fa0fb40865a85/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13853,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 271,
+    "blank_lines": 0,
+    "comment_lines": 57,
+    "code_lines": 214,
+    "comment_ratio": 0.21,
+    "max_line_length": 71,
+    "avg_line_length": 49.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBLGRPH"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 101,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Classic IBM mainframe-style COBOL with RECORDING MODE, ACCEPT FROM DATE (2-digit year), GOBACK, and carriage-control conventions. No EXEC SQL/CICS. Likely compiled under IBM Enterprise COBOL or compatible.",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "ACCEPT TODAYS-DATE FROM DATE (2-digit year YY)",
+          "GOBACK",
+          "AFTER ADVANCING PAGE / LINE-SPACEING",
+          "TOP-OF-PAGE / carriage control fields",
+          "UNSTRING ... DELIMITED BY ','"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "COVID-19 USA historical data reporting — reads a CSV file of US COVID-19 statistics (cases, hospitalizations, ICU, ventilator, deaths) and produces a printed bar-graph report showing death-rate percentage over time.",
+        "summary": "CBLGRPH reads a comma-delimited USA COVID-19 historical data file (USAHIST), computes the death rate as a percentage of positive cases, and prints a character-based horizontal bar graph on a print file. Each record produces one line with a '*' plotted at the computed percentage position along a 110-character graph axis.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "UNSTRING with comma delimiter to parse CSV input",
+        "Character-based horizontal bar graph using OCCURS 110 TIMES array",
+        "Reference modification: WS-GRAPH-PNT-X(WS-PNT2:1)",
+        "ACCEPT FROM DATE for today's date (2-digit year)",
+        "Carriage-control fields (TOP-OF-PAGE, SINGLE-SPACE, DOUBLE-SPACE, TRIPLE-SPACE, OVERPRINT)",
+        "RECORDING MODE F on both files",
+        "Commented-out FD record layout replaced by UNSTRING parsing",
+        "Error line for values exceeding 10% threshold",
+        "Page heading with ruler line showing percentage scale 0-100"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The 2-digit year from ACCEPT FROM DATE is a minor Y2K-era artifact. The commented-out FD record layout suggests iterative development. The program is self-contained with no COPY or CALL statements. Domain is clearly COVID-19 data (field names: UHR-CASE-POSITIVE, UHR-DEATH, UHR-ICU, UHR-VENT, etc.), suggesting a personal or educational project written during the pandemic era."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6388,
+      "completion_tokens": 606,
+      "total_tokens": 6994,
+      "cost": 0.028254,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028254,
+        "upstream_inference_prompt_cost": 0.019164,
+        "upstream_inference_completions_cost": 0.00909
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.54,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:03:57Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:46f99d3c8edce9564fdbddd3043927751edf2351",
+    "sha1_git": "46f99d3c8edce9564fdbddd3043927751edf2351",
+    "filename": "/modemp.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9192,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:46f99d3c8edce9564fdbddd3043927751edf2351/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:46f99d3c8edce9564fdbddd3043927751edf2351/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9192,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 193,
+    "blank_lines": 2,
+    "comment_lines": 17,
+    "code_lines": 174,
+    "comment_ratio": 0.089,
+    "max_line_length": 74,
+    "avg_line_length": 45.6,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MODEMP"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 58,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with SORT, INDEXED file with ALTERNATE RECORD KEY, and inline END-READ/END-IF scope terminators. No vendor-specific extensions visible. Could be GnuCOBOL or similar open-source compiler given file-based assignments.",
+        "evidence": [
+          "END-READ scope terminator",
+          "END-IF scope terminator",
+          "ALTERNATE RECORD KEY",
+          "88-level condition names",
+          "SORT...USING...GIVING",
+          "FILE STATUS clauses"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Employee reporting system generating group-wise employee lists by location for a company (Capgemini Global Solutions mentioned in heading)",
+        "summary": "MODEMP sorts an employee input file by location code, then reads through employees and a location indexed file to produce a formatted report listing employees grouped by location and group. The report includes headings with company name, location, group, and detail lines with employee code, name, and designation.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with USING/GIVING",
+        "INDEXED file with ALTERNATE RECORD KEY (LOC-CITY)",
+        "SD (Sort Description) for work file",
+        "Multiple FILE STATUS fields with 88-level conditions",
+        "WRITE...AFTER PAGE for page eject",
+        "ACCEPT for CITY-NAME input",
+        "Commented-out LABEL RECORDS and BLOCK CONTAINS clauses"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The program has some structural issues suggesting a student exercise: PROCESS-PARA and READ-EMP-PARA call each other recursively which could cause stack overflow; multiple 88-level conditions named OPEN-SUCCESS on separate 01-level items; GROUP-CHANGE-PARA and LOC-CHANGE-PARA logic appears incomplete. The company name 'CAPGEMINI GLOBAL SOLUTIONS' in the heading suggests a training/exercise context. Two lines slightly exceed column 72 (long_lines_over_72=2)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4983,
+      "completion_tokens": 488,
+      "total_tokens": 5471,
+      "cost": 0.022269,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022269,
+        "upstream_inference_prompt_cost": 0.014949,
+        "upstream_inference_completions_cost": 0.00732
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.92,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:51:27Z"
+}

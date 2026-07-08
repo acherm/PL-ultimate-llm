@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f254c26d3586bacb495dec2a4584cd80866104da",
+    "sha1_git": "f254c26d3586bacb495dec2a4584cd80866104da",
+    "filename": "/MAIN.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9620,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f254c26d3586bacb495dec2a4584cd80866104da/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f254c26d3586bacb495dec2a4584cd80866104da/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9620,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 159,
+    "blank_lines": 33,
+    "comment_lines": 2,
+    "code_lines": 124,
+    "comment_ratio": 0.016,
+    "max_line_length": 72,
+    "avg_line_length": 59.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MAIN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 30,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL; uses null-terminated string literal z'...' syntax (GnuCOBOL extension), EXTERNAL clause, GOBACK, BY CONTENT/BY REFERENCE",
+        "evidence": [
+          "z'CAS001: Starting program' (null-terminated literal, GnuCOBOL extension)",
+          "EXTERNAL clause on EXTERN-TITLE",
+          "GOBACK statement",
+          "BY CONTENT / BY REFERENCE in CALL",
+          "END-IF structured syntax"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Report generation or batch data processing with record formatting and logging; program name prefix 'CAS' may indicate a case/claims processing system",
+        "summary": "MAIN is a batch driver program that initializes by reading and formatting header records, then loops reading and formatting detail records (up to 40 per page before printing footer/header), and finally performs termination processing. It delegates all I/O and formatting to subprograms (GETREC, RPTREC, FMTREC4, LOGGER).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Null-terminated string literals z'...' (GnuCOBOL extension)",
+        "EXTERNAL data item (EXTERN-TITLE)",
+        "High CALL count (30) with no COPY statements",
+        "RETURN-CODE used as loop termination condition",
+        "Page-break logic with 40-record counter triggering GET-FOOTER/GET-HEADER",
+        "LOGGER subprogram calls for tracing"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Dialect is medium-confidence GnuCOBOL due to z'' literal syntax; could also be Micro Focus which supports similar syntax. The file has no COPY statements and minimal data definitions, suggesting most logic is in called subprograms. Indentation is slightly inconsistent (some paragraphs at column 8, some at column 9) but all lines fit within 72 columns confirming fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3874,
+      "completion_tokens": 505,
+      "total_tokens": 4379,
+      "cost": 0.019197,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019197,
+        "upstream_inference_prompt_cost": 0.011622,
+        "upstream_inference_completions_cost": 0.007575
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.0,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:07:54Z"
+}

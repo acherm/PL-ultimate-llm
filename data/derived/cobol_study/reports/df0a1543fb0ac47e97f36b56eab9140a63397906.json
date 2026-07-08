@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:df0a1543fb0ac47e97f36b56eab9140a63397906",
+    "sha1_git": "df0a1543fb0ac47e97f36b56eab9140a63397906",
+    "filename": "/jtvrpt.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11325,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:df0a1543fb0ac47e97f36b56eab9140a63397906/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:df0a1543fb0ac47e97f36b56eab9140a63397906/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11325,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 466,
+    "blank_lines": 147,
+    "comment_lines": 46,
+    "code_lines": 273,
+    "comment_ratio": 0.144,
+    "max_line_length": 80,
+    "avg_line_length": 23.3,
+    "long_lines_over_72": 14,
+    "source_format_guess": "unknown",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "JTVRPT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 5,
+    "perform_count": 11,
+    "goto_count": 1,
+    "pic_count": 31,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "Digital Equipment Corporation (DEC) COBOL for DECSYSTEM-20; uses DEC-specific extensions including DISPLAY-7 usage clause, RMS INDEXED file organization, COMP-1 floating point, and DIL (Data Interchange Library) interface routines for VAX/DEC-20 interoperability",
+        "evidence": [
+          "SOURCE-COMPUTER. DECSYSTEM-20",
+          "OBJECT-COMPUTER. DECSYSTEM-20",
+          "ORGANIZATION IS RMS INDEXED",
+          "USAGE DISPLAY-7",
+          "COMP-1 (single-precision floating point)",
+          "COPY DIX OF \"SYS:DIL.LIB\"",
+          "CALL DILINI, CALL ROPEN, CALL RCLOSE, CALL RWRITE, CALL CVGEN",
+          "DIX-SYS-10-20, DIX-DT-SIXBIT, DIX-DT-ASCII-7"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "DEC DIL (Data Interchange Library) Load Test sample application; reads a local RMS indexed file on DEC-20 and writes a remote sequential ASCII file on a VAX system via DAP (Data Access Protocol) network routines",
+        "summary": "JTVRPT is a DEC-20 COBOL program that is part of the DIL Load Test sample application. It opens a local RMS indexed job-ticket file, reads records sequentially, converts each record from SIXBIT to ASCII-7 using the DIL CVGEN routine, and writes the converted records to a remote sequential file on a VAX system via network DAP calls (ROPEN/RWRITE/RCLOSE). It includes detailed error handling for both DIL and DIX status codes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "USAGE DISPLAY-7 (DEC-specific 7-bit ASCII usage clause)",
+        "COMP-1 floating point fields (DEC single-precision)",
+        "RMS INDEXED file organization with RECORD KEY",
+        "COPY from SYS:DIL.LIB (DIX, DIT, DIL copybooks)",
+        "CALL to DIL routines: DILINI, ROPEN, RCLOSE, RWRITE, CVGEN",
+        "Data conversion between SIXBIT (DEC-10/20) and ASCII-7 (VAX)",
+        "Network remote file access via DAP protocol",
+        "Detailed DIL/DIX error message handling sections",
+        "OCCURS 10 in file record for detail lines",
+        "VALUE OF IDENTIFICATION IS file label clause"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is a well-documented DEC COBOL sample/test application from 1982-1984 with a full edit history. The source format appears fixed-column but the mechanical indicator says 'unknown' likely due to tab indentation in some areas. The program contains a commented-out line ('*    PERFORM OPEN-REMOTE-FILE') and a 'perform main' that references a MAIN SECTION, suggesting the open/write flow was restructured during development. The DIX-C-IMPOSSIBLE message contains an expletive in the display string, consistent with internal DEC engineering code of the era."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6503,
+      "completion_tokens": 772,
+      "total_tokens": 7275,
+      "cost": 0.031089,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031089,
+        "upstream_inference_prompt_cost": 0.019509,
+        "upstream_inference_completions_cost": 0.01158
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.97,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:08:10Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ffbbce6a14cd9e10f0cdffb29482553565bc9def",
+    "sha1_git": "ffbbce6a14cd9e10f0cdffb29482553565bc9def",
+    "filename": "/Program1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 841,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ffbbce6a14cd9e10f0cdffb29482553565bc9def/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ffbbce6a14cd9e10f0cdffb29482553565bc9def/raw/"
+  },
+  "indicators": {
+    "bytes_len": 841,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 32,
+    "blank_lines": 11,
+    "comment_lines": 0,
+    "code_lines": 21,
+    "comment_ratio": 0.0,
+    "max_line_length": 60,
+    "avg_line_length": 25.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 2,
+    "program_ids": [
+      "Program1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-2002",
+        "detail": "Micro Focus Visual COBOL / COBOL for .NET using $SET ILUSING directives, OO .NET interop with 'type', 'string', and interface types",
+        "evidence": [
+          "$SET ILUSING\"Demo.Net\"",
+          "$SET ILUSING\"Demo.Cobol.Interfaces\"",
+          "program-id. Program1 as \"CobolProgram.Program1\"",
+          "01 logger type ICobolLogger",
+          "01 guid string",
+          "set logger to new NetLogger",
+          "logger::Warning(...)",
+          "type Console::ReadKey()"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Demonstration of Micro Focus COBOL .NET interop using a logger interface",
+        "summary": "A small demo program that instantiates a .NET logger object via a COBOL interface, sets a user ID, logs warnings and errors using .NET-style method invocations, and waits for a keypress before exiting.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "$SET ILUSING compiler directives for .NET namespace imports",
+        "OO .NET interop: 'type', 'string' as native types",
+        "Method invocation via :: syntax (logger::Warning, logger::Error)",
+        "'set ... to new' object instantiation",
+        "program-id AS clause for .NET assembly naming",
+        "No PIC clauses - uses .NET string type directly"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "This is clearly Micro Focus Visual COBOL targeting the .NET CLR. The absence of IDENTIFICATION DIVISION header and PIC clauses is consistent with modern Micro Focus free-form OO COBOL. The $SET ILUSING directives are Micro Focus-specific compiler directives for importing .NET namespaces."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2428,
+      "completion_tokens": 443,
+      "total_tokens": 2871,
+      "cost": 0.013929,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013929,
+        "upstream_inference_prompt_cost": 0.007284,
+        "upstream_inference_completions_cost": 0.006645
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 32.87,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:09:40Z"
+}

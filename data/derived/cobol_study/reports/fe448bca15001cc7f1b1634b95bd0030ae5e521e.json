@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fe448bca15001cc7f1b1634b95bd0030ae5e521e",
+    "sha1_git": "fe448bca15001cc7f1b1634b95bd0030ae5e521e",
+    "filename": "/snake.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14502,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fe448bca15001cc7f1b1634b95bd0030ae5e521e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fe448bca15001cc7f1b1634b95bd0030ae5e521e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14502,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 374,
+    "blank_lines": 48,
+    "comment_lines": 52,
+    "code_lines": 274,
+    "comment_ratio": 0.16,
+    "max_line_length": 143,
+    "avg_line_length": 37.8,
+    "long_lines_over_72": 38,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "GC99SNAKE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 6,
+    "perform_count": 14,
+    "goto_count": 1,
+    "pic_count": 32,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL 3.1+ free-format source; uses pdcurses via CALL static 'curs_set', COB_SCREEN_EXCEPTIONS/COB_SCREEN_ESC environment variables, COB_MOUSE_FLAGS, and calls GC01BOX.DLL for box drawing. Compile: cobc -x GC99SNAKE.COB -lpdcurses",
+        "evidence": [
+          ">> SOURCE FORMAT IS FREE",
+          "program-id. GC99SNAKE",
+          "Tectonics: cobc -x GC99SNAKE.COB -lpdcurses",
+          "call static \"curs_set\"",
+          "set environment 'COB_SCREEN_EXCEPTIONS'",
+          "COB_MOUSE_FLAGS",
+          "binary-short signed",
+          "REPLACE ==:BCOL:== BY ==with BACKGROUND-COLOR=="
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Terminal-based Snake game using GnuCOBOL screen I/O and pdcurses",
+        "summary": "Implements a classic Snake game on a 13x20 grid using GnuCOBOL screen handling and pdcurses. The player controls the snake with cursor keys; eating food grows the snake and increments the score; hitting itself ends the game. Demonstrates GnuCOBOL screen I/O, mouse flags, and external DLL calls.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        ">> SOURCE FORMAT IS FREE compiler directive",
+        "REPLACE directive for BACKGROUND-COLOR/FOREGROUND-COLOR macros",
+        "CALL static 'curs_set' for cursor visibility via pdcurses",
+        "COB_MOUSE_FLAGS and mouse event constants",
+        "SET ENVIRONMENT for COB_SCREEN_EXCEPTIONS and COB_SCREEN_ESC",
+        "COPY 'GC01BOX.CPY' for external box-drawing subprogram",
+        "78-level constants for color values and key codes",
+        "OCCURS table for snake body segments",
+        "binary-short signed data item",
+        "Leftover dead code paragraphs (get-next-pos-left/down/right) after END PROGRAM"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The file contains dead code paragraphs (get-next-pos-left, get-next-pos-down, get-next-pos-right) after the 'End program GC99SNAKE.' statement, which are remnants of the original ncurses-based version. The program is a recreational demo/example rather than production code. Food spawning uses unseeded FUNCTION RANDOM, acknowledged in comments."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 7167,
+      "completion_tokens": 638,
+      "total_tokens": 7805,
+      "cost": 0.031071,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031071,
+        "upstream_inference_prompt_cost": 0.021501,
+        "upstream_inference_completions_cost": 0.00957
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:09:13Z"
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bcec4fd2de0fad2413e58faa9269df5a8a3d8e35",
+    "sha1_git": "bcec4fd2de0fad2413e58faa9269df5a8a3d8e35",
+    "filename": "/Program1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16017,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bcec4fd2de0fad2413e58faa9269df5a8a3d8e35/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bcec4fd2de0fad2413e58faa9269df5a8a3d8e35/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16017,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 383,
+    "blank_lines": 71,
+    "comment_lines": 5,
+    "code_lines": 307,
+    "comment_ratio": 0.016,
+    "max_line_length": 93,
+    "avg_line_length": 39.8,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "home"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 26,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (OpenCOBOL) targeting a PC/Linux environment with indexed files on DISK, SCREEN SECTION, LOCK MODE IS MANUAL, and Portuguese-language identifiers. Could also be Micro Focus or ACU on PC, but GnuCOBOL is most consistent with the feature set and open-source context.",
+        "evidence": [
+          "SELECT ... ASSIGN TO DISK",
+          "ORGANIZATION IS INDEXED",
+          "LOCK MODE IS MANUAL",
+          "SCREEN SECTION with BACKGROUND-COLOR/FOREGROUND-COLOR",
+          "VALUE OF FILE-ID IS 'CLIENTE'",
+          "RECORDING MODE IS F",
+          "ACCEPT ... UPPER AT nnnn",
+          "Portuguese identifiers (ARQ-CLIENTE, FD-CNPJ, FD-RAZAO-SOCIAL)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer and salesperson registration system for a company called 'EMPRESA INSTALACOES S.A.', managing client (CNPJ, razao social, latitude/longitude) and vendor records with CSV export capability.",
+        "summary": "A menu-driven interactive COBOL program that manages customer and salesperson records stored in indexed files. It provides options for registration (create/update/delete), reporting, and execution, with a full-screen TUI using the SCREEN SECTION. The program handles client records including geolocation (latitude/longitude) and CNPJ (Brazilian tax ID).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SCREEN SECTION with full TUI (BACKGROUND-COLOR, FOREGROUND-COLOR, LINE/COL positioning)",
+        "Indexed file I/O with ALTERNATE RECORD KEY (CNPJ)",
+        "LOCK MODE IS MANUAL on indexed files",
+        "VALUE OF FILE-ID for file assignment",
+        "ACCEPT ... UPPER AT nnnn for uppercase input",
+        "Geolocation fields (latitude/longitude) with +ZZZ,ZZZZZZZ9 mask",
+        "Brazilian business context (CNPJ, razao social)",
+        "COPY copybooks for CLIENTE and VENDEDOR record layouts",
+        "CSV output file",
+        "Truncated source - ends with 'en' (likely 'end program')"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Source is truncated at 16000 chars, ending mid-word ('en' likely 'end program home'). IDENTIFICATION DIVISION is absent (only program-id present inline). The program has an incomplete WHEN 2 branch in 0002-CADASTRAR and an empty 0010-ALTERAR paragraph, suggesting work-in-progress. Decoded with latin-1 due to accented characters (e.g., 'Ã' used as box-drawing character). Portuguese language throughout suggests Brazilian origin."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7162,
+      "completion_tokens": 673,
+      "total_tokens": 7835,
+      "cost": 0.031581,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031581,
+        "upstream_inference_prompt_cost": 0.021486,
+        "upstream_inference_completions_cost": 0.010095
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.09,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:08:03Z"
+}

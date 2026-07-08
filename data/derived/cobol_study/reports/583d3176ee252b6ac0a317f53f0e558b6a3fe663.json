@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:583d3176ee252b6ac0a317f53f0e558b6a3fe663",
+    "sha1_git": "583d3176ee252b6ac0a317f53f0e558b6a3fe663",
+    "filename": "/SP2TEST.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5360,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:583d3176ee252b6ac0a317f53f0e558b6a3fe663/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:583d3176ee252b6ac0a317f53f0e558b6a3fe663/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5360,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 120,
+    "blank_lines": 16,
+    "comment_lines": 15,
+    "code_lines": 89,
+    "comment_ratio": 0.144,
+    "max_line_length": 146,
+    "avg_line_length": 43.7,
+    "long_lines_over_72": 9,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MAIN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 6,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus COBOL with SP2 GUI library (screen painting toolkit); uses COMP-5, POINTER, SET ADDRESS OF, REDEFINES on POINTER, and REPOSITORY paragraph — typical of Micro Focus Object COBOL or Net Express era. Program alias 'GSSERP.SP2TEST' and CALL 'GSSERP.SP2' suggest a namespace convention used in Micro Focus or similar vendor environment.",
+        "evidence": [
+          "COMP-5 usage",
+          "POINTER data item",
+          "SET CP-SP2-P2 TO ADDRESS OF",
+          "PROGRAM-ID. MAIN AS \"GSSERP.SP2TEST\"",
+          "CALL \"GSSERP.SP2\"",
+          "REPOSITORY paragraph in CONFIGURATION SECTION",
+          "ON OVERFLOW on CALL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "SP2 GUI screen panel test program — exercises the SP2 windowing/screen library with panel ITS014",
+        "summary": "A test/demo program that exercises the SP2 GUI screen library. It opens a window using SP2-OPEN-WINDOW, displays panel ITS014, converses with the user, and exits when the user presses Escape or closes the window. It wraps SP2 calls via a common COMPROC-CALL-SP2 paragraph using pointer-based parameter passing.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "POINTER data item with REDEFINES to S9(9) COMP-5",
+        "SET ... TO ADDRESS OF (address manipulation)",
+        "PROGRAM-ID alias string 'GSSERP.SP2TEST'",
+        "SP2 GUI library calls (SP2-OPEN-WINDOW, SP2-CONVERSE-PANEL, SP2-CLOSE-WINDOW)",
+        "COPY directives for SP2.CPY and ITS014.SP2",
+        "88-level condition names for screen state flags",
+        "ON OVERFLOW on CALL with CONTINUE",
+        "REPOSITORY paragraph (OO/extended COBOL feature)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "The file is a self-contained test driver for the SP2 screen library. Dialect is inferred from COMP-5, POINTER, SET ADDRESS OF, and the PROGRAM-ID alias syntax — all consistent with Micro Focus COBOL. The REPOSITORY paragraph is present but empty, suggesting OO-capable compiler. No EXEC CICS/SQL. Two COPY files (SP2.CPY, ITS014.SP2) are not shown, so full data structure context is unavailable."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3795,
+      "completion_tokens": 621,
+      "total_tokens": 4416,
+      "cost": 0.0207,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0207,
+        "upstream_inference_prompt_cost": 0.011385,
+        "upstream_inference_completions_cost": 0.009315
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:48:25Z"
+}

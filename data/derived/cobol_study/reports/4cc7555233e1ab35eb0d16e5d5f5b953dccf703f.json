@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4cc7555233e1ab35eb0d16e5d5f5b953dccf703f",
+    "sha1_git": "4cc7555233e1ab35eb0d16e5d5f5b953dccf703f",
+    "filename": "/LGICDB01.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11462,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4cc7555233e1ab35eb0d16e5d5f5b953dccf703f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4cc7555233e1ab35eb0d16e5d5f5b953dccf703f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11462,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 260,
+    "blank_lines": 26,
+    "comment_lines": 90,
+    "code_lines": 144,
+    "comment_ratio": 0.385,
+    "max_line_length": 72,
+    "avg_line_length": 43.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LGICDB01"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 1,
+    "call_count": 1,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/DB2 program, part of IBM CB12 sample application (Insurance Application). Uses EXEC CICS and EXEC SQL with DB2 SQLCA. Typical IBM Enterprise COBOL conventions.",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC CICS ABEND ABCODE",
+          "EXEC CICS RETURN END-EXEC",
+          "EXEC CICS LINK PROGRAM",
+          "EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN (CICS EIB fields)",
+          "COPY LGPOLICY",
+          "LICENSED MATERIALS - PROPERTY OF IBM CB12"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "IBM CB12 Insurance Application - customer inquiry. Retrieves customer details from a DB2 CUSTOMER table based on a customer number passed via CICS COMMAREA.",
+        "summary": "LGICDB01 is a CICS online subprogram that accepts a customer number via COMMAREA, queries the DB2 CUSTOMER table for personal details (name, address, contact info), and returns the results to the caller. It includes error handling with TDQ logging via LGSTSQ.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL SELECT with host variables (DB2)",
+        "EXEC CICS RETURN, ABEND, LINK, ASKTIME, FORMATTIME",
+        "DFHCOMMAREA with EXEC SQL INCLUDE LGCMAREA",
+        "COPY LGPOLICY copybook",
+        "SQLCA included via EXEC SQL INCLUDE",
+        "EIB field usage (EIBTRNID, EIBTRMID, EIBTASKN, EIBCALEN)",
+        "Error logging to TDQ via CICS LINK to LGSTSQ",
+        "EVALUATE on SQLCODE"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is part of the well-known IBM CB12 (CICS TS Insurance Application) sample/lab application. Despite being a sample, it follows production-level coding patterns. The comment 'remoive codereview' and DISPLAY statements for code coverage testing suggest it may be a slightly modified version used for training or testing purposes."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4985,
+      "completion_tokens": 565,
+      "total_tokens": 5550,
+      "cost": 0.02343,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02343,
+        "upstream_inference_prompt_cost": 0.014955,
+        "upstream_inference_completions_cost": 0.008475
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.43,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:06:19Z"
+}

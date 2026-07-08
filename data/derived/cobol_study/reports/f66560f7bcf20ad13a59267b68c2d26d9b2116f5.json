@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f66560f7bcf20ad13a59267b68c2d26d9b2116f5",
+    "sha1_git": "f66560f7bcf20ad13a59267b68c2d26d9b2116f5",
+    "filename": "/LGACDB01.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14798,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f66560f7bcf20ad13a59267b68c2d26d9b2116f5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f66560f7bcf20ad13a59267b68c2d26d9b2116f5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14798,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 350,
+    "blank_lines": 38,
+    "comment_lines": 94,
+    "code_lines": 218,
+    "comment_ratio": 0.301,
+    "max_line_length": 72,
+    "avg_line_length": 41.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LGACDB01"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 1,
+    "call_count": 1,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 46,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/DB2 application, part of IBM's LGXX sample insurance application (CB12 product code, copyright IBM Corp. 2011-2013). Uses EXEC CICS and EXEC SQL with DB2 host variables, SQLCA, DFHCOMMAREA, EIB fields.",
+        "evidence": [
+          "EXEC CICS ABEND ABCODE",
+          "EXEC CICS LINK Program",
+          "EXEC SQL INSERT INTO CUSTOMER",
+          "INCLUDE SQLCA",
+          "EIBTRNID EIBTRMID EIBTASKN EIBCALEN",
+          "DFHRESP(NORMAL)",
+          "EXEC CICS Get Counter",
+          "IBM copyright CB12 2011-2013"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "IBM LGTESTAPP insurance sample application - adds a new customer record to a DB2 CUSTOMER table, obtaining a customer number via CICS named counter (GENA pool) or DB2 IDENTITY_VAL_LOCAL()",
+        "summary": "LGACDB01 is a CICS online subprogram that adds a new customer entry to a DB2 CUSTOMER table. It obtains a customer number from a CICS named counter pool, inserts the customer's name, address, date of birth and contact details, then links to LGACVS01 (VSAM) and LGACDB02 (security) programs. Error handling writes diagnostic messages to a TDQ via LGSTSQ.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL DB2 INSERT with host variables",
+        "EXEC CICS LINK to multiple programs (LGACDB02, LGACVS01, LGSTSQ)",
+        "EXEC CICS Get Counter (named counter service for customer number generation)",
+        "DB2 IDENTITY_VAL_LOCAL() fallback when named counter unavailable",
+        "SQLCA included via EXEC SQL INCLUDE",
+        "DFHCOMMAREA defined via EXEC SQL INCLUDE LGCMAREA",
+        "COPY LGPOLICY copybook",
+        "EXEC CICS ASKTIME/FORMATTIME for error logging",
+        "Hardcoded password string in working storage (security concern)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is part of the well-known IBM LGTESTAPP (Life and General insurance) sample CICS application shipped with IBM CICS TS. The comment 'RLAM 06/04/2021 10:11 Test Code Coverage' suggests it was modified for code coverage testing. The hardcoded password '5732fec825535eeafb8fac50fee3a8aa' in working storage is notable. Max line length of 72 confirms strict fixed-format COBOL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6003,
+      "completion_tokens": 680,
+      "total_tokens": 6683,
+      "cost": 0.028209,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028209,
+        "upstream_inference_prompt_cost": 0.018009,
+        "upstream_inference_completions_cost": 0.0102
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.35,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:49:44Z"
+}

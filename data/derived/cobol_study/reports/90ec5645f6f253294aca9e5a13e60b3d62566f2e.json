@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:90ec5645f6f253294aca9e5a13e60b3d62566f2e",
+    "sha1_git": "90ec5645f6f253294aca9e5a13e60b3d62566f2e",
+    "filename": "/Program1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8270,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:90ec5645f6f253294aca9e5a13e60b3d62566f2e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:90ec5645f6f253294aca9e5a13e60b3d62566f2e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8270,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 258,
+    "blank_lines": 45,
+    "comment_lines": 0,
+    "code_lines": 213,
+    "comment_ratio": 0.0,
+    "max_line_length": 101,
+    "avg_line_length": 31.1,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Program1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 14,
+    "goto_count": 0,
+    "pic_count": 56,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL or a PC-based COBOL (e.g., OpenCOBOL/GnuCOBOL) given Windows-style file paths (C:\\), 'assign to disk', 'organization is line sequential', and tab-indented source. Spanish-language identifiers suggest Latin American (likely Argentine) academic context.",
+        "evidence": [
+          "assign to disk \"C:\\CONSOR-1.txt\"",
+          "organization is line sequential",
+          "file status is fs-CONSOR-1",
+          "accept WS-YYYY-MM-DD from date yyyymmdd",
+          "88 eof-CONSOR-1 value \"10\"",
+          "end program Program1"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Argentine student exercise dealing with consortium (consorcios) management - processing multiple sorted input files to produce a listing of deregistered consortiums with their accounts",
+        "summary": "This program merges three sorted consortium input files (CONSOR-1, CONSOR-2, CONSOR-3) with an accounts file (CUENTAS) using a multi-way merge algorithm. It identifies consortiums with status=2 (baja/deregistered), counts them, and prints a paginated report. It also loads a status lookup table from a ESTADO file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multi-way merge of 3 sorted input files",
+        "OCCURS table for status lookup (tablaEstado occurs 30 times)",
+        "MOVE CORRESPONDING REG_ESTADO to tablaEstado(indice)",
+        "88-level condition names for file status",
+        "Paginated report with page counter and line counter",
+        "ACCEPT from DATE YYYYMMDD",
+        "Windows-style hardcoded file paths",
+        "Spanish-language data names and business domain",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Tab-indented source with mixed indentation styles. Hardcoded Windows paths (C:\\) and Spanish identifiers (CUIT, CONSORCIOS, BAJAS, NOVEDADES) strongly suggest an Argentine university student exercise. The program-id 'Program1' is a generic placeholder typical of student work. Minor logic issues present (e.g., missing period after first IF in determinarMenor, potential scope issues)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5096,
+      "completion_tokens": 584,
+      "total_tokens": 5680,
+      "cost": 0.024048,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024048,
+        "upstream_inference_prompt_cost": 0.015288,
+        "upstream_inference_completions_cost": 0.00876
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.37,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:06:03Z"
+}

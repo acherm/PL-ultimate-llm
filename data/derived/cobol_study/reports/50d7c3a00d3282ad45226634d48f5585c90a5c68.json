@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:50d7c3a00d3282ad45226634d48f5585c90a5c68",
+    "sha1_git": "50d7c3a00d3282ad45226634d48f5585c90a5c68",
+    "filename": "/DCI8DPGU.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10988,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:50d7c3a00d3282ad45226634d48f5585c90a5c68/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:50d7c3a00d3282ad45226634d48f5585c90a5c68/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10988,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 399,
+    "blank_lines": 93,
+    "comment_lines": 13,
+    "code_lines": 293,
+    "comment_ratio": 0.042,
+    "max_line_length": 72,
+    "avg_line_length": 26.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DCI8DPGU"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 4,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 11,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS online program using BMS maps and DFHBMSCA copybook, typical of IBM mainframe CICS application development",
+        "evidence": [
+          "EXEC CICS HANDLE AID",
+          "EXEC CICS HANDLE CONDITION",
+          "EXEC CICS RECEIVE MAP/MAPSET",
+          "EXEC CICS SEND MAP/MAPSET",
+          "EXEC CICS RETURN TRANSID COMMAREA",
+          "EXEC CICS READ FILE INTO RIDFLD UPDATE",
+          "EXEC CICS REWRITE FILE",
+          "EXEC CICS LINK PROGRAM",
+          "COPY 'DFHBMSCA'",
+          "EIBCALEN",
+          "DFHCOMMAREA",
+          "DFHBMASF",
+          "DFHBMFSE"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Account management system - inquiry and update of customer account records (name, address, credit limit, status) in ACCTFILE",
+        "summary": "This is a CICS online program that allows users to inquire on and update customer account records. It reads account data from ACCTFILE using a BMS map interface, validates input, and links to a separate update program (DCI8DPGE) for validation before rewriting the record. It supports inquiry mode and update mode via a commarea switch.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (BMS map send/receive, file I/O, LINK, RETURN with TRANSID/COMMAREA)",
+        "DFHBMSCA copybook for BMS attribute constants",
+        "EIBCALEN check for first-time invocation",
+        "HANDLE AID and HANDLE CONDITION for PF key and error routing",
+        "EXEC CICS LINK to sub-program DCI8DPGE for update validation",
+        "Commarea-based pseudo-conversational state management",
+        "Multiple COPY statements (DCI8DMR, ACCTREC, ACCTDATA, DFHBMSCA)",
+        "GO TO used extensively for flow control (11 occurrences)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program appears to be a student or training exercise (author name present, TODO comments, minor grammatical error in message 'AN NEW ACCOUNT #') but follows production-style CICS pseudo-conversational patterns closely. No COMP-3 usage despite numeric fields. Fixed format confirmed by max line length of 72."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5905,
+      "completion_tokens": 593,
+      "total_tokens": 6498,
+      "cost": 0.02661,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02661,
+        "upstream_inference_prompt_cost": 0.017715,
+        "upstream_inference_completions_cost": 0.008895
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.16,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:01:01Z"
+}

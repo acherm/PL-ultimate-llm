@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:904b8f4b4f262e5a0e12b7786ef994f8634c31cc",
+    "sha1_git": "904b8f4b4f262e5a0e12b7786ef994f8634c31cc",
+    "filename": "/Rockey4Example.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12771,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:904b8f4b4f262e5a0e12b7786ef994f8634c31cc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:904b8f4b4f262e5a0e12b7786ef994f8634c31cc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12771,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 326,
+    "blank_lines": 32,
+    "comment_lines": 55,
+    "code_lines": 239,
+    "comment_ratio": 0.187,
+    "max_line_length": 70,
+    "avg_line_length": 38.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "RockeyExample"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 14,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Uses '$set case' compiler directive, COMP-5, procedure-pointer, hex literals with h\"...\", and string concatenation with '&' — all characteristic of Micro Focus COBOL (or compatible, e.g. AcuCOBOL/GnuCOBOL). The '$set' directive is strongly Micro Focus.",
+        "evidence": [
+          "$set case directive",
+          "COMP-5 usage",
+          "procedure-pointer data item",
+          "hex literals h\"c44c\"",
+          "string concatenation with & x\"00\"",
+          "SET dllHandle TO ENTRY \"Rockey4ND.dll\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Example program demonstrating use of the Rockey4 USB hardware dongle (software protection key) API from Feitian Technologies",
+        "summary": "This program is a demonstration/example that loads the Rockey4ND.dll and exercises the Rockey4 hardware dongle API. It performs find, open, read, write, random number generation, seed generation, user ID read/write, module operations, arithmetic operations, and close operations on the dongle.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "$set compiler directive (Micro Focus style)",
+        "COMP-5 binary items",
+        "procedure-pointer data item for DLL handle",
+        "SET ... TO ENTRY for dynamic DLL loading",
+        "Hex literals using h\"...\" syntax",
+        "String concatenation with & x\"00\"",
+        "14 CALL statements to external DLL function 'Rockey'",
+        "No PERFORM or GO TO — purely sequential inline code",
+        "78-level constants (COBOL-85 figurative constants)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The '$set case' directive at the top is a Micro Focus COBOL compiler directive. The program is a self-contained example/demo shipped with the Feitian Rockey4 dongle SDK for COBOL developers. No ENVIRONMENT DIVISION is present. The program is complete and runnable but is clearly a vendor-supplied example rather than production code."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4897,
+      "completion_tokens": 512,
+      "total_tokens": 5409,
+      "cost": 0.022371,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022371,
+        "upstream_inference_prompt_cost": 0.014691,
+        "upstream_inference_completions_cost": 0.00768
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.78,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:40:34Z"
+}

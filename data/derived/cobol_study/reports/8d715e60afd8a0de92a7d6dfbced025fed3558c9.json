@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:8d715e60afd8a0de92a7d6dfbced025fed3558c9",
+    "sha1_git": "8d715e60afd8a0de92a7d6dfbced025fed3558c9",
+    "filename": "/epscmort.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8834,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:8d715e60afd8a0de92a7d6dfbced025fed3558c9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:8d715e60afd8a0de92a7d6dfbced025fed3558c9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8834,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 251,
+    "blank_lines": 19,
+    "comment_lines": 52,
+    "code_lines": 180,
+    "comment_ratio": 0.224,
+    "max_line_length": 71,
+    "avg_line_length": 34.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "EPSCMORT"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 5,
+    "call_count": 5,
+    "perform_count": 10,
+    "goto_count": 0,
+    "pic_count": 14,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/COBOL program targeting IBM Flex-ES (mainframe emulator); part of the EPSDEMOS 2008 / IBM demo suite by Jim Hildner. Uses EXEC CICS and commented-out EXEC SQL (DB2) blocks.",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-FLEX-ES",
+          "OBJECT-COMPUTER. IBM-FLEX-ES",
+          "EXEC CICS LINK / SEND / RECEIVE / RETURN",
+          "COPY DFHAID",
+          "EIBCALEN, EIBAID, DFHCLEAR, DFHPF3, DFHENTER",
+          "commented EXEC SQL with SYSIBM.SYSDUMMY1 (DB2)",
+          "(C) 2017 IBM - JIM HILDNER"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "IBM CICS mortgage calculator demo (EPSDEMOS suite); demonstrates CICS debugging and mortgage payment calculation via linked subprograms",
+        "summary": "EPSCMORT is a CICS online program that presents a mortgage calculation screen (BMS map EPMENU/EPSMORT), receives loan principal, years, and interest rate from the user, validates numeric input via a called subprogram (EPSNBRVL), then links to EPSCSMRT to compute the monthly payment. It is part of the IBM EPSDEMOS demonstration suite and also demonstrates CICS debugging techniques.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS SEND MAP / RECEIVE MAP (BMS)",
+        "EXEC CICS LINK to subprograms (EPSCSMRT, EPSMLIST)",
+        "EXEC CICS RETURN with TRANSID and COMMAREA",
+        "Commented-out EXEC SQL DB2 block (SYSIBM.SYSDUMMY1)",
+        "COPY DFHAID, COPY EPSMORT, COPY EPSMTCOM, COPY EPSNBRPM",
+        "88-level condition names for send-flag control",
+        "REDEFINES for numeric conversion",
+        "LINKAGE SECTION with DFHCOMMAREA",
+        "EVALUATE TRUE for AID key dispatch",
+        "DISPLAY statement for CI testing"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The SQL section is entirely commented out, suggesting it was included for demonstration of DB2 capability but disabled. The program is clearly part of the well-known IBM EPSDEMOS CICS sample suite. No lines exceed 72 characters confirming fixed format. Overall confidence is high."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4949,
+      "completion_tokens": 628,
+      "total_tokens": 5577,
+      "cost": 0.024267,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024267,
+        "upstream_inference_prompt_cost": 0.014847,
+        "upstream_inference_completions_cost": 0.00942
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.61,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:34:54Z"
+}

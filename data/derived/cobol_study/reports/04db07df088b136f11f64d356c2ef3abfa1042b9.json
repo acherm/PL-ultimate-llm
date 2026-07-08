@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:04db07df088b136f11f64d356c2ef3abfa1042b9",
+    "sha1_git": "04db07df088b136f11f64d356c2ef3abfa1042b9",
+    "filename": "/calc-expenses.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2439,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:04db07df088b136f11f64d356c2ef3abfa1042b9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:04db07df088b136f11f64d356c2ef3abfa1042b9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2439,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 80,
+    "blank_lines": 16,
+    "comment_lines": 0,
+    "code_lines": 64,
+    "comment_ratio": 0.0,
+    "max_line_length": 64,
+    "avg_line_length": 29.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CALC-EXPENSES"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 33,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses LINE SEQUENTIAL organization and CSV file handling typical of GnuCOBOL; SD for sort file defined but SORT verb not used",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SELECT TP ASSIGN TO TEMP",
+          "SD TP",
+          "CSV file paths in ASSIGN clauses"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Expense report processing - reads CSV expense reports for a location called CASABLANCA and writes sorted output",
+        "summary": "Reads expense records from a CSV file (CASABLANCA.csv) and writes them to a sorted output CSV file. The program opens input and output files, reads records in a loop, and writes each record to the output file. A sort file (SD) is defined but the SORT verb is not actually used.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SD sort file descriptor defined but SORT verb not invoked",
+        "LINE SEQUENTIAL organization for CSV files",
+        "PERFORM UNTIL loop with EOF flag",
+        "No COMP-3 usage despite numeric fields",
+        "Incomplete sort implementation - SD defined without SORT verb"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The program defines an SD (sort description) file TP but never uses a SORT verb, suggesting incomplete or abandoned sort logic. The WRITE with AFTER ADVANCING on a LINE SEQUENTIAL file may cause issues depending on compiler. The record layout for IN-REC appears to be a flat fixed-length record rather than CSV-delimited, which may not correctly parse CSV input. Overall appears to be a student exercise or early-stage development."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3070,
+      "completion_tokens": 416,
+      "total_tokens": 3486,
+      "cost": 0.01545,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01545,
+        "upstream_inference_prompt_cost": 0.00921,
+        "upstream_inference_completions_cost": 0.00624
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.79,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:14:32Z"
+}

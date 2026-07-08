@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:292dfbd7c7ab0fcb4177d52b71b04d48a62b5894",
+    "sha1_git": "292dfbd7c7ab0fcb4177d52b71b04d48a62b5894",
+    "filename": "/subprog.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1651,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:292dfbd7c7ab0fcb4177d52b71b04d48a62b5894/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:292dfbd7c7ab0fcb4177d52b71b04d48a62b5894/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1651,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 34,
+    "blank_lines": 5,
+    "comment_lines": 4,
+    "code_lines": 25,
+    "comment_ratio": 0.138,
+    "max_line_length": 68,
+    "avg_line_length": 47.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "SUBPROG"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "CICS subprogram using DFHCOMMAREA linkage, consistent with IBM mainframe CICS environment; FUNCTION TEST-NUMVAL and FUNCTION NUMVAL are COBOL-85 intrinsic functions",
+        "evidence": [
+          "EXEC CICS RETURN END-EXEC",
+          "DFHCOMMAREA",
+          "PROCEDURE DIVISION USING DFHCOMMAREA",
+          "FUNCTION TEST-NUMVAL",
+          "FUNCTION NUMVAL",
+          "USAGE IS COMP-2"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "CICS online transaction subprogram, part of a larger application (mapkalkp) likely a calculator or numeric input validation screen",
+        "summary": "A CICS subprogram named SUBPROG that validates whether an input string (INPUT-VAR) is a valid numeric value. If valid, it computes the numeric value into OUTPUT-VAR and sets SUBPROG-STATUS to 'N'; otherwise sets SUBPROG-STATUS to '9'. It is called as a subroutine of a CICS map program named MAPKALKP.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "EXEC CICS RETURN END-EXEC",
+        "DFHCOMMAREA linkage section",
+        "FUNCTION TEST-NUMVAL (intrinsic function)",
+        "FUNCTION NUMVAL (intrinsic function)",
+        "USAGE IS COMP-2 for floating-point output",
+        "ON SIZE ERROR / NOT ON SIZE ERROR in COMPUTE",
+        "GOBACK statement"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Small 34-line subprogram with no COPY statements or PERFORM paragraphs. The comment references 'mapkalkp' suggesting it is part of a student or tutorial CICS calculator application. COMP-2 (IEEE double) usage is somewhat unusual for typical mainframe COBOL but valid."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2593,
+      "completion_tokens": 470,
+      "total_tokens": 3063,
+      "cost": 0.014829,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014829,
+        "upstream_inference_prompt_cost": 0.007779,
+        "upstream_inference_completions_cost": 0.00705
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.57,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:33:37Z"
+}

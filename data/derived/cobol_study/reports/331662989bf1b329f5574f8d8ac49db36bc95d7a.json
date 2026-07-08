@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:331662989bf1b329f5574f8d8ac49db36bc95d7a",
+    "sha1_git": "331662989bf1b329f5574f8d8ac49db36bc95d7a",
+    "filename": "/SUBPROGR.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10518,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:331662989bf1b329f5574f8d8ac49db36bc95d7a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:331662989bf1b329f5574f8d8ac49db36bc95d7a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10518,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 253,
+    "blank_lines": 0,
+    "comment_lines": 36,
+    "code_lines": 217,
+    "comment_ratio": 0.142,
+    "max_line_length": 72,
+    "avg_line_length": 40.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 1,
+    "program_ids": [
+      "SUBPROGR"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 28,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 6,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 subprogram with LINKAGE SECTION, GOBACK, COMP-3, indexed file I/O; Turkish-language comments suggest a student or academic project possibly targeting IBM or compatible mainframe/midrange environment",
+        "evidence": [
+          "PROCEDURE DIVISION USING WS-SUB-AREA",
+          "GOBACK",
+          "COMP-3",
+          "ORGANIZATION INDEXED ACCESS RANDOM RECORD KEY",
+          "88-level condition names",
+          "EVALUATE TRUE",
+          "FUNCTION REVERSE",
+          "INSPECT TALLYING FOR LEADING SPACES"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise implementing a generic CRUD subprogram for an indexed file; Turkish comments explain logic decisions, authored by Burak Ozdemir",
+        "summary": "A called subprogram (SUBPROGR) that performs CRUD operations (Write, Read, Update, Delete) on an indexed VSAM-style file. It accepts a function code and key via LINKAGE SECTION and returns status/data to the calling program. The update logic includes a vowel-substitution transformation on the last name portion of the record.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with function-dispatch pattern",
+        "COMP-3 packed-decimal fields",
+        "Indexed file with composite key (IDX-ID + IDX-DVZ)",
+        "EVALUATE TRUE for function dispatch",
+        "FUNCTION REVERSE for trailing-space detection",
+        "INSPECT TALLYING and REPLACING for vowel substitution",
+        "Turkish-language inline comments",
+        "GOBACK used for subprogram return",
+        "88-level condition names for file status and flags",
+        "REWRITE called twice (likely a bug)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Turkish comments throughout confirm this is a student/academic exercise by author Burak Ozdemir. The double REWRITE IDX-RECORD in UPT-PROCESS appears to be a bug. The mechanical indicator shows only PROCEDURE DIVISION present but the source clearly contains all four divisions; the indicator likely missed the others. Max line length is 72 consistent with fixed format. No EXEC SQL or EXEC CICS present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5749,
+      "completion_tokens": 531,
+      "total_tokens": 6280,
+      "cost": 0.025212,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025212,
+        "upstream_inference_prompt_cost": 0.017247,
+        "upstream_inference_completions_cost": 0.007965
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.37,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:36:32Z"
+}

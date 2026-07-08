@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:92b92399f463d0a78e3b2b9d62c05467b51b3372",
+    "sha1_git": "92b92399f463d0a78e3b2b9d62c05467b51b3372",
+    "filename": "/f-ckdate.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2288,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:92b92399f463d0a78e3b2b9d62c05467b51b3372/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:92b92399f463d0a78e3b2b9d62c05467b51b3372/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2288,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 86,
+    "blank_lines": 21,
+    "comment_lines": 9,
+    "code_lines": 56,
+    "comment_ratio": 0.138,
+    "max_line_length": 75,
+    "avg_line_length": 25.6,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "F-CKDATE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Likely IBM mainframe or similar; uses LINKAGE SECTION with PROCEDURE DIVISION USING, EVALUATE, 88-level condition names, REDEFINES, OCCURS. Tab-indented source mixed with fixed-format conventions. Author note 'VAN TZE SHAN' and date '5/8/19' suggest a Southeast Asian shop (possibly Singapore/Malaysia).",
+        "evidence": [
+          "PROCEDURE DIVISION USING LINK-TYPE, LINK-DDMMYYYY, LINK-ERROR-CODE",
+          "EVALUATE LINK-TYPE WHEN 'D' WHEN 'Y'",
+          "88 VALID-MONTH VALUE 1 THRU 12",
+          "88 LEAP-YEAR VALUE 0",
+          "REDEFINES DAYS PIC 9(02) OCCURS 12",
+          "EXIT PROGRAM / STOP RUN"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Date validation subprogram supporting both DDMMYYYY and YYYYMMDD formats",
+        "summary": "A called subprogram (F-CKDATE) that validates a date passed via linkage. It accepts a type indicator ('D' for DDMMYYYY or 'Y' for YYYYMMDD) and an 8-digit date, checks month validity, day range (using a packed days-per-month table), and leap year, returning an error code of 100020 if invalid.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with PROCEDURE DIVISION USING",
+        "EVALUATE for dispatch on date format type",
+        "REDEFINES with OCCURS for days-per-month table",
+        "88-level condition names for leap year and valid month",
+        "PERFORM THRU paragraph range pattern",
+        "Leap year check via DIVIDE remainder into same field (destructive)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source uses tab characters for indentation mixed with fixed-format column conventions, causing some lines to exceed column 72 (4 long lines noted). The leap year check is a simplified modulo-4 only (no century correction). The DIVIDE overwrites WS-YYYY with the remainder, which is intentional but unusual. Overall structure is consistent with a small production utility subprogram."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3203,
+      "completion_tokens": 553,
+      "total_tokens": 3756,
+      "cost": 0.017904,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017904,
+        "upstream_inference_prompt_cost": 0.009609,
+        "upstream_inference_completions_cost": 0.008295
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.43,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:50:23Z"
+}

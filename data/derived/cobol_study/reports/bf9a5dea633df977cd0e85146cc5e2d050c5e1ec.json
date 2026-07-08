@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bf9a5dea633df977cd0e85146cc5e2d050c5e1ec",
+    "sha1_git": "bf9a5dea633df977cd0e85146cc5e2d050c5e1ec",
+    "filename": "/DB2PGM3.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6323,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bf9a5dea633df977cd0e85146cc5e2d050c5e1ec/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bf9a5dea633df977cd0e85146cc5e2d050c5e1ec/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6323,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 201,
+    "blank_lines": 2,
+    "comment_lines": 59,
+    "code_lines": 140,
+    "comment_ratio": 0.296,
+    "max_line_length": 72,
+    "avg_line_length": 30.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBCUSINV"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 9,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM DB2 embedded SQL program; uses EXEC SQL INCLUDE for SQLCA and host tables, DECLARE CURSOR WITH HOLD, typical mainframe DB2 conventions",
+        "evidence": [
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC SQL INCLUDE CUSTOMER END-EXEC",
+          "EXEC SQL INCLUDE INVOICE END-EXEC",
+          "DECLARE INVCUR CURSOR WITH HOLD FOR",
+          "FETCH INVCUR INTO :INVCUST,:INVNO,:INVDATE,:INVTOTAL",
+          "SQLCODE NOT = 100"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer invoice inquiry system; retrieves customer and invoice records from DB2 tables CUST and INV",
+        "summary": "An interactive batch program that accepts a customer number from the user, retrieves customer name from a CUST table, then opens a DB2 cursor to fetch and display all invoices for that customer from an INV table. It accumulates invoice totals and counts, displaying a summary sales report at the end.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL embedded DB2",
+        "EXEC SQL INCLUDE SQLCA",
+        "EXEC SQL INCLUDE for host-variable copybooks (CUSTOMER, INVOICE)",
+        "DECLARE CURSOR WITH HOLD",
+        "SQLCODE checking after each SQL operation",
+        "COMP-3 numeric accumulator fields",
+        "88-level condition names for switches",
+        "ACCEPT/DISPLAY for interactive I/O"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program authored by Sandeep Prajapati on 20-06-2020; appears to be a learning/tutorial exercise demonstrating DB2 embedded SQL in COBOL. No file I/O sections used; relies entirely on DB2 tables. All lines within 72-column fixed format. No COPY statements in source (host variable structures come via EXEC SQL INCLUDE)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4216,
+      "completion_tokens": 477,
+      "total_tokens": 4693,
+      "cost": 0.019803,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019803,
+        "upstream_inference_prompt_cost": 0.012648,
+        "upstream_inference_completions_cost": 0.007155
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.31,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:01:45Z"
+}

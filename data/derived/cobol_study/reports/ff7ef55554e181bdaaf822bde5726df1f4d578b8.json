@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ff7ef55554e181bdaaf822bde5726df1f4d578b8",
+    "sha1_git": "ff7ef55554e181bdaaf822bde5726df1f4d578b8",
+    "filename": "/TEST01.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7614,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ff7ef55554e181bdaaf822bde5726df1f4d578b8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ff7ef55554e181bdaaf822bde5726df1f4d578b8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7614,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 220,
+    "blank_lines": 43,
+    "comment_lines": 37,
+    "code_lines": 140,
+    "comment_ratio": 0.209,
+    "max_line_length": 70,
+    "avg_line_length": 31.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TEST01"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 6,
+    "perform_count": 10,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or Fujitsu/NEC COBOL on Linux/Unix; uses BINARY-LONG SYNC, COMP-X, RECORD BINARY SEQUENTIAL, and Japanese comments/half-width katakana display strings. Could also be Fujitsu NetCOBOL.",
+        "evidence": [
+          "BINARY-LONG SYNC",
+          "COMP-X",
+          "ORGANIZATION IS RECORD BINARY SEQUENTIAL",
+          "Japanese comments (Shift-JIS/UTF-8 katakana)",
+          "COPY CPFILEDUMP / CPDATETIME with REPLACING",
+          "CALL \"DATETIME\" / CALL \"FILEDUMP\""
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "File I/O test utility that reads a binary sequential input file and writes all 256 byte values (0x00-0xFF) to an output file, with file dump and datetime logging via external subprograms.",
+        "summary": "TEST01 opens an input binary sequential file (PIN1-F) and reads through it logging records via a FILEDUMP subprogram. It then writes all 256 possible single-byte values (0x00-0xFF) each followed by CR+LF to an output file (POT1-F). The program is used to test binary sequential file I/O behavior, particularly around special byte values like 0x0D and 0x0A.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ORGANIZATION IS RECORD BINARY SEQUENTIAL (non-standard clause)",
+        "BINARY-LONG SYNC (GnuCOBOL/Fujitsu extension)",
+        "COMP-X usage for halfword arithmetic",
+        "Japanese comments and half-width katakana in DISPLAY statements",
+        "COPY with REPLACING using == == delimiter pattern",
+        "External subprogram calls: FILEDUMP, DATETIME",
+        "Hex literal moves: X\"0D\", X\"0A\"",
+        "REDEFINES used for byte-level access (PIC-Halfword REDEFINES PIC-XX)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source contains Japanese text (UTF-8 encoded half-width katakana and full-width hiragana in comments/display). The ORGANIZATION IS RECORD BINARY SEQUENTIAL clause and BINARY-LONG SYNC suggest a Japanese vendor COBOL (Fujitsu NetCOBOL or GnuCOBOL). The file references COBSAM06.POT1 suggesting this is part of a sample/test suite. No EXEC SQL or EXEC CICS present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4741,
+      "completion_tokens": 643,
+      "total_tokens": 5384,
+      "cost": 0.023868,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023868,
+        "upstream_inference_prompt_cost": 0.014223,
+        "upstream_inference_completions_cost": 0.009645
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.39,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:02:10Z"
+}

@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a8a0a8d0a162f954745d0b1f84fe382037e2e652",
+    "sha1_git": "a8a0a8d0a162f954745d0b1f84fe382037e2e652",
+    "filename": "/amfbprint-rev-prod.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 623708,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a8a0a8d0a162f954745d0b1f84fe382037e2e652/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a8a0a8d0a162f954745d0b1f84fe382037e2e652/raw/"
+  },
+  "indicators": {
+    "bytes_len": 623708,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 9243,
+    "blank_lines": 478,
+    "comment_lines": 551,
+    "code_lines": 8214,
+    "comment_ratio": 0.063,
+    "max_line_length": 134,
+    "avg_line_length": 65.5,
+    "long_lines_over_72": 830,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "AMOFLPRG"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 99,
+    "perform_count": 403,
+    "goto_count": 7,
+    "pic_count": 1688,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "NEASI-WEBER ADMARC system (Advertising Management and Accounts Receivable Control), customized for New York Times. Uses vendor-specific COPY members (AMZFSTD, AMZRSEL, AMZMCOMP, etc.). Likely runs on a mid-range or PC-based COBOL environment given LINE SEQUENTIAL organization and no COMP-3 usage.",
+        "evidence": [
+          "PROGRAM-ID AMOFLPRG",
+          "COPY AMZMCOMP",
+          "COPY AMZFSTD",
+          "COPY AMZRSEL",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SELECT optional CONTROL-FILE",
+          "NEASI-WEBER INC. copyright 1980",
+          "NYT change markers in column 73"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Advertising billing and accounts receivable for New York Times newspaper. Prints invoices from a select file of work orders, groups open items by account, and produces lockbox, settlement, credit card, FTP, and mag-tape output files.",
+        "summary": "AMOFLPRG is the invoice printing program of the ADMARC advertising management system, customized for the New York Times. It reads a select file of work order records (produced by a selection program), groups them by account, and prints invoices while also generating lockbox, settlement, credit card, FTP transfer, and magnetic tape output files. It includes ACR (accounts receivable control) include/exclude logic and handles unpaid/pending work orders.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Large production program (~9200 lines, 623KB)",
+        "Multiple output file types: lockbox, settlement, credit card reports, FTP, mag-tape, invoice",
+        "Indexed file access (Cc-Det-Bin-File with RECORD KEY)",
+        "ORGANIZATION IS LINE SEQUENTIAL throughout",
+        "COPY-based configuration (AMZMCOMP, AMZMSPEC, AMZFSTD, AMZRSEL, etc.)",
+        "Change log with programmer initials in column 73 (NYT convention)",
+        "99 CALL statements indicating heavy subprogram use",
+        "403 PERFORM statements",
+        "No EXEC SQL or EXEC CICS",
+        "No COMP-3 usage despite financial application",
+        "Euro currency input/output (EUROR-INP, NEWT-OUT)",
+        "Optional file selects (CONTROL-FILE, DIR-FILE, NEWT-OUT)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars out of 623KB/9243 lines. The change log references releases from 1983-1985 through at least 2007 (CTS changes), indicating decades of maintenance. Sequence numbers in columns 1-6 are non-standard (e.g. 'AL-03', 'DW-08', 'FXC---') used as change tags rather than numeric sequence numbers, which is unusual but consistent with a heavily modified legacy system. No COMP-3 is notable for a financial system; numeric fields use display or COMP binary."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6375,
+      "completion_tokens": 744,
+      "total_tokens": 7119,
+      "cost": 0.030285,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030285,
+        "upstream_inference_prompt_cost": 0.019125,
+        "upstream_inference_completions_cost": 0.01116
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.2,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:26:36Z"
+}

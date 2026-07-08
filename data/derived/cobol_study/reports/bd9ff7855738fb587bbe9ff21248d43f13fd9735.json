@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bd9ff7855738fb587bbe9ff21248d43f13fd9735",
+    "sha1_git": "bd9ff7855738fb587bbe9ff21248d43f13fd9735",
+    "filename": "/super_security_storage.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3507,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bd9ff7855738fb587bbe9ff21248d43f13fd9735/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bd9ff7855738fb587bbe9ff21248d43f13fd9735/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3507,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 178,
+    "blank_lines": 24,
+    "comment_lines": 0,
+    "code_lines": 154,
+    "comment_ratio": 0.0,
+    "max_line_length": 97,
+    "avg_line_length": 18.7,
+    "long_lines_over_72": 2,
+    "source_format_guess": "unknown",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "Security-storage"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 6,
+    "goto_count": 1,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL; uses GOBACK, 88-level condition names, REDEFINES, and CALL 'system' with shell command typical of GnuCOBOL on Linux",
+        "evidence": [
+          "CALL \"system\" USING \"cat /root/storage/storage.txt\"",
+          "GOBACK",
+          "SECURITY paragraph with freeform text",
+          "88-level condition names",
+          "REDEFINES clause"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "mixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "A toy security/login simulation program with a hidden VIP escalation backdoor",
+        "summary": "A simple interactive menu-driven program simulating a user authentication and profile storage system. Users can register (stub), login with hardcoded credentials ('test'/'test'), view/change profile info, and open a 'storage' file if they have admin+VIP access. A secret menu option (9) sets VIP=1, enabling privilege escalation.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "SECURITY paragraph with nonsense passphrase",
+        "CALL 'system' to execute shell command (cat /root/storage/storage.txt)",
+        "REDEFINES used to alias a group item as a flat PIC X",
+        "88-level condition names for menu choices",
+        "Hidden backdoor via SECRET menu option setting VIP=1",
+        "GOBACK statement",
+        "Mixed tab/space indentation"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The SECURITY paragraph content is a nonsense string, used as a joke/placeholder. The program has a deliberate security vulnerability (secret option 9 grants VIP). Mixed tab and space indentation causes the source_format to be ambiguous; mechanical indicator reports 'unknown'. The CALL 'system' pattern is characteristic of GnuCOBOL on Unix/Linux."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3647,
+      "completion_tokens": 454,
+      "total_tokens": 4101,
+      "cost": 0.017751,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017751,
+        "upstream_inference_prompt_cost": 0.010941,
+        "upstream_inference_completions_cost": 0.00681
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.18,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:58:43Z"
+}

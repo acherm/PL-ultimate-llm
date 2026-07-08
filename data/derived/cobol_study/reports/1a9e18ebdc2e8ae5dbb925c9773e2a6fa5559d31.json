@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1a9e18ebdc2e8ae5dbb925c9773e2a6fa5559d31",
+    "sha1_git": "1a9e18ebdc2e8ae5dbb925c9773e2a6fa5559d31",
+    "filename": "/MPCITI06.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 27330,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1a9e18ebdc2e8ae5dbb925c9773e2a6fa5559d31/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1a9e18ebdc2e8ae5dbb925c9773e2a6fa5559d31/raw/"
+  },
+  "indicators": {
+    "bytes_len": 27330,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 599,
+    "blank_lines": 99,
+    "comment_lines": 163,
+    "code_lines": 337,
+    "comment_ratio": 0.326,
+    "max_line_length": 80,
+    "avg_line_length": 43.6,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MPCITI06"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 18,
+    "goto_count": 0,
+    "pic_count": 50,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe batch COBOL, ISBAN/Santander banking environment, developed by Viewnext. Uses IBM-3270 as SOURCE/OBJECT-COMPUTER, RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, COMP-3, and DECIMAL-POINT IS COMMA (Spanish locale).",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-3270",
+          "OBJECT-COMPUTER. IBM-3270",
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "USAGE COMP-3",
+          "DECIMAL-POINT IS COMMA",
+          "LABEL RECORD ARE STANDARD",
+          "COPY MPYITI02 / COPY MPYITI06"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "ISBAN (Santander banking IT) daily operations batch processing; reads daily operations file (MPCITIE1, 400 chars) and writes CSV-format output file (MPCITIS1, 350 chars).",
+        "summary": "Batch program MPCITI06 reads a fixed-format input file containing daily banking operations (MPCITIE1) and converts/writes the records to a CSV-format output file (MPCITIS1). It includes standard error handling, file status checking, and end-of-run statistics output. Developed by Viewnext for ISBAN in June 2017.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "DECIMAL-POINT IS COMMA (Spanish locale)",
+        "COMP-3 counters for records read/written",
+        "88-level condition names for EOF switch",
+        "COPY statements for input/output record layouts (MPYITI02, MPYITI06)",
+        "Structured error-handling via WK-CANCELACION-BATCH area",
+        "Statistics/header writing to output",
+        "No EXEC SQL or EXEC CICS",
+        "Fixed-format records (400 and 350 characters)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; PROCEDURE DIVISION is partially visible but structure is clear. The program follows standard ISBAN/Santander COBOL conventions with a well-defined cancellation/error framework. COPY members MPYITI02 and MPYITI06 define the actual record layouts and are not shown."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6279,
+      "completion_tokens": 572,
+      "total_tokens": 6851,
+      "cost": 0.027417,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027417,
+        "upstream_inference_prompt_cost": 0.018837,
+        "upstream_inference_completions_cost": 0.00858
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.91,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:33:49Z"
+}

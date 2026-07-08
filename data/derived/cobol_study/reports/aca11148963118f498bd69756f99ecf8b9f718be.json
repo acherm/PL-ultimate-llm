@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:aca11148963118f498bd69756f99ecf8b9f718be",
+    "sha1_git": "aca11148963118f498bd69756f99ecf8b9f718be",
+    "filename": "/Minesweeper.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13833,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:aca11148963118f498bd69756f99ecf8b9f718be/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:aca11148963118f498bd69756f99ecf8b9f718be/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13833,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 389,
+    "blank_lines": 9,
+    "comment_lines": 16,
+    "code_lines": 364,
+    "comment_ratio": 0.042,
+    "max_line_length": 72,
+    "avg_line_length": 34.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "mineswpr"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 37,
+    "goto_count": 0,
+    "pic_count": 53,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 style; no vendor-specific extensions detected. Uses FUNCTION RANDOM, EVALUATE, PERFORM VARYING with TEST AFTER — all COBOL-85 features. Likely compiled with GnuCOBOL or similar open-source compiler given the game context.",
+        "evidence": [
+          "FUNCTION RANDOM(SEED)",
+          "EVALUATE ... WHEN ... END-EVALUATE",
+          "PERFORM WITH TEST AFTER UNTIL",
+          "PERFORM VARYING ... FROM ... BY ... UNTIL",
+          "INITIALIZE",
+          "no EXEC CICS/SQL, no COMP-3, no vendor directives"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Text-based Minesweeper game implemented in COBOL",
+        "summary": "A fully playable text-based Minesweeper game. The program initialises a minefield of configurable size (beginner/intermediate/veteran), randomly places mines, accepts player commands to open/flag/suspect cells, checks for win/lose conditions, and displays the board to the terminal.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "FUNCTION RANDOM used for mine placement with time-based seed",
+        "Stack-based flood-fill algorithm (CHK-STACK) for opening empty cells",
+        "OCCURS clauses for 2D grid representation",
+        "EVALUATE for command dispatch and level selection",
+        "PERFORM VARYING nested loops",
+        "DEBUG SECTION with commented-out mine display",
+        "No EXEC SQL, no EXEC CICS, no COMP-3"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is a self-contained Minesweeper game, clearly a student or hobbyist exercise. The filename and PROGRAM-ID 'mineswpr' confirm this. The flood-fill uses a manual stack (CHK-STACK) with up to 200 entries, which may overflow on large boards. The edge-detection logic only marks one edge per axis (not both), which could be a bug for non-edge cells. No ENVIRONMENT DIVISION is present. The comment 'COINBOLLER' in the welcome message appears to be a playful name for the game."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 7305,
+      "completion_tokens": 522,
+      "total_tokens": 7827,
+      "cost": 0.029745,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029745,
+        "upstream_inference_prompt_cost": 0.021915,
+        "upstream_inference_completions_cost": 0.00783
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.61,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:08:45Z"
+}

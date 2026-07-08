@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d299ff58ac9b26825ad1a8f83f9c06ed1cb72a4b",
+    "sha1_git": "d299ff58ac9b26825ad1a8f83f9c06ed1cb72a4b",
+    "filename": "/Z95619.CBL(PBEGIDX).cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7901,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d299ff58ac9b26825ad1a8f83f9c06ed1cb72a4b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d299ff58ac9b26825ad1a8f83f9c06ed1cb72a4b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7901,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 209,
+    "blank_lines": 0,
+    "comment_lines": 17,
+    "code_lines": 192,
+    "comment_ratio": 0.081,
+    "max_line_length": 72,
+    "avg_line_length": 35.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PBEGIDX"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style VSAM KSDS indexed file I/O subprogram; uses RETURN-CODE special register, GOBACK, COMP-3, fixed format, typical of IBM Enterprise COBOL",
+        "evidence": [
+          "ORGANIZATION IS INDEXED with VSAM comment",
+          "COMP-3 usage",
+          "RETURN-CODE special register",
+          "GOBACK statement",
+          "PROCEDURE DIVISION USING (subprogram linkage)",
+          "Fixed format, max line length 72"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Customer record management with ID, currency, name, birthday, and balance fields suggesting a banking or financial account system",
+        "summary": "A subprogram (PBEGIDX) that provides VSAM KSDS indexed file I/O services (open, read, update, write, delete, close) dispatched via a function code passed in the linkage section. It supports reading customer records by key, updating names with character transformations, writing new records, and deleting records.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "VSAM KSDS indexed file with composite key (IDX-ID + IDX-CURRENCY)",
+        "COMP-3 packed decimal fields for ID, birthday, balance",
+        "LINKAGE SECTION with function-code dispatch pattern",
+        "INSPECT REPLACING for name transformation",
+        "STRING DELIMITED BY SIZE",
+        "REWRITE and DELETE for VSAM record maintenance",
+        "RETURN-CODE special register usage",
+        "88-level condition names for function codes and file status"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Author name 'TOLGA KAYIS' is hardcoded in H700-WRITE as the written record value, suggesting this is a student exercise or personal learning project. The H300-INVALID-KEY and H250-VALID-KEY paragraphs have identical logic which may be intentional for the exercise. Dialect is likely IBM mainframe based on VSAM usage and RETURN-CODE, but could also compile under GnuCOBOL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4670,
+      "completion_tokens": 504,
+      "total_tokens": 5174,
+      "cost": 0.02157,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02157,
+        "upstream_inference_prompt_cost": 0.01401,
+        "upstream_inference_completions_cost": 0.00756
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.19,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T20:37:27Z"
+}

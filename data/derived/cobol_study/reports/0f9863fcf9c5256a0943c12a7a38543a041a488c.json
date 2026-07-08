@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0f9863fcf9c5256a0943c12a7a38543a041a488c",
+    "sha1_git": "0f9863fcf9c5256a0943c12a7a38543a041a488c",
+    "filename": "/FACTURAS.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13784,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0f9863fcf9c5256a0943c12a7a38543a041a488c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0f9863fcf9c5256a0943c12a7a38543a041a488c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13784,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 332,
+    "blank_lines": 59,
+    "comment_lines": 3,
+    "code_lines": 270,
+    "comment_ratio": 0.011,
+    "max_line_length": 128,
+    "avg_line_length": 40.5,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "facturas"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 0,
+    "perform_count": 56,
+    "goto_count": 10,
+    "pic_count": 24,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "rm-cobol",
+        "standard": "COBOL-85",
+        "detail": "RM/COBOL-85 indicated by 'rmc85' source/object computer names and use of rmpanels screen handling library (rmp-- prefixed procedures)",
+        "evidence": [
+          "Source-computer. rmc85",
+          "Object-computer. rmc85",
+          "copy rmpanels.ws",
+          "rmp--da-fact, rmp--ee-fact, rmp--dp-fact patterns",
+          "decimal-point is comma"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Invoice (factura) maintenance system with client (clientes) file integration, tracking invoice amounts, VAT, discounts, and payment status",
+        "summary": "This program maintains an indexed invoice file (facturas) linked to a clients file (clientes). It allows users to display, enter, save, and delete invoices with fields for NIF, date, situation, amounts, VAT calculation, and discount. It updates client billing totals when invoices are saved or deleted.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Indexed file organization with alternate record key (fa-nif)",
+        "Screen handling via rmpanels library (rmp-- prefixed performs)",
+        "COPY statements for panels, working storage, error and message handling",
+        "14-element table for invoice line items (cantidad, concepto, precio)",
+        "VAT (IVA) calculation with rounding",
+        "decimal-point is comma (European locale)",
+        "Dynamic file access mode",
+        "WRITE with invalid key REWRITE pattern",
+        "Spanish-language identifiers and messages"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1 which is consistent with Spanish characters (e.g. '¨' used as inverted question mark substitute). The rmpanels library is characteristic of RM/COBOL screen I/O. The program references copybooks (fact.ws, erro.ws, msg.ws, fact.prc, erro.prc, msg.prc) not shown here. The 14-times perform for line items suggests a fixed-size invoice detail table defined in copybooks."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6206,
+      "completion_tokens": 508,
+      "total_tokens": 6714,
+      "cost": 0.026238,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026238,
+        "upstream_inference_prompt_cost": 0.018618,
+        "upstream_inference_completions_cost": 0.00762
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.61,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:04:16Z"
+}

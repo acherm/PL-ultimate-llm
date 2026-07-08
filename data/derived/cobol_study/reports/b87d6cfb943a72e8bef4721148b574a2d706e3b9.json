@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b87d6cfb943a72e8bef4721148b574a2d706e3b9",
+    "sha1_git": "b87d6cfb943a72e8bef4721148b574a2d706e3b9",
+    "filename": "/READ-VSAM.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 851,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b87d6cfb943a72e8bef4721148b574a2d706e3b9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b87d6cfb943a72e8bef4721148b574a2d706e3b9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 851,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 38,
+    "blank_lines": 5,
+    "comment_lines": 0,
+    "code_lines": 33,
+    "comment_ratio": 0.0,
+    "max_line_length": 42,
+    "avg_line_length": 21.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "unknown",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "READ-VSAM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 5,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Generic COBOL with VSAM-style indexed file access; no vendor-specific extensions visible. RECORDING MODE IS F and LABEL RECORDS ARE OMITTED suggest IBM-mainframe heritage but could be educational/demo code.",
+        "evidence": [
+          "ORGANIZATION IS INDEXED",
+          "RECORD KEY IS INPUT-KEY",
+          "ACCESS MODE IS SEQUENTIAL",
+          "RECORDING MODE IS F",
+          "LABEL RECORDS ARE OMITTED",
+          "READ INPUT-FILE KEY IS WS-KEY",
+          "AT END / NOT AT END",
+          "END-PERFORM"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "tab",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Demonstrates reading a VSAM-style indexed sequential file in COBOL",
+        "summary": "A simple program that opens an indexed file (simulating VSAM), reads records sequentially using a key, and displays the INPUT-FIELD for each record found until end-of-file. It is a minimal demonstration of VSAM/indexed file access in COBOL.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "ORGANIZATION IS INDEXED with RECORD KEY",
+        "ACCESS MODE IS SEQUENTIAL with KEY IS clause on READ (mixing sequential and keyed read)",
+        "RECORDING MODE IS F",
+        "LABEL RECORDS ARE OMITTED",
+        "Tab-indented source format",
+        "Logic inconsistency: WS-FOUND is never set to Y before the IF check, suggesting incomplete/demo code"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Source is tab-indented rather than fixed-column, which is unusual. The program has a logical bug: WS-FOUND is initialized to nothing meaningful and only set to 'N' on NOT AT END, so the IF WS-FOUND = 'Y' block can never be true as written. This strongly suggests a student exercise or demo snippet rather than production code. The file is only 38 lines and 851 bytes. No EXEC CICS or EXEC SQL present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2561,
+      "completion_tokens": 466,
+      "total_tokens": 3027,
+      "cost": 0.014673,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014673,
+        "upstream_inference_prompt_cost": 0.007683,
+        "upstream_inference_completions_cost": 0.00699
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.46,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:42:24Z"
+}

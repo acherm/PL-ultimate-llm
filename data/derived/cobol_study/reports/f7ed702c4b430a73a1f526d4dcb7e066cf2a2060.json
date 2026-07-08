@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f7ed702c4b430a73a1f526d4dcb7e066cf2a2060",
+    "sha1_git": "f7ed702c4b430a73a1f526d4dcb7e066cf2a2060",
+    "filename": "/lldemo1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7603,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f7ed702c4b430a73a1f526d4dcb7e066cf2a2060/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f7ed702c4b430a73a1f526d4dcb7e066cf2a2060/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7603,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 228,
+    "blank_lines": 39,
+    "comment_lines": 49,
+    "code_lines": 140,
+    "comment_ratio": 0.259,
+    "max_line_length": 71,
+    "avg_line_length": 32.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "lldemo1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 20,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Explicitly mentions GnuCOBOL (formerly OpenCOBOL 1.1) in comments; uses BASED keyword for dynamic allocation which is a GnuCOBOL feature. Also notes IBM Enterprise COBOL compatibility difference (no BASED keyword).",
+        "evidence": [
+          "BASED keyword on CURR-NODE and WORK-NODE",
+          "ALLOCATE ... INITIALIZED RETURNING",
+          "FREE CURR-NODE-PTR",
+          "comment: 'OpenCOBOL 1.1 (now GnuCOBOL) requires these dynamically allocated items be defined with the BASED keyword'"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Demonstration of doubly-linked list data structure implementation in COBOL",
+        "summary": "This program demonstrates allocation, traversal, and deallocation of a doubly-linked list using COBOL pointer variables and dynamic memory allocation. It builds a 5-node list, then removes nodes from the tail, head, and middle, finally freeing all remaining nodes.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "BASED keyword for dynamic memory allocation",
+        "ALLOCATE ... INITIALIZED RETURNING syntax",
+        "FREE statement for deallocation",
+        "POINTER data items and SET ADDRESS OF",
+        "Doubly-linked list implementation with PREV-NODE-PTR and NEXT-NODE-PTR",
+        "No EXEC SQL, no EXEC CICS, no COPY statements",
+        "Extensive inline comments explaining linked list pointer logic"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is clearly a pedagogical/demo example by Craig Schneiderwent (MIT license, 2021). The BASED keyword usage and explicit comment about GnuCOBOL vs IBM Enterprise COBOL differences strongly indicate GnuCOBOL as the primary target dialect. COBOL-2002 or later standard features (ALLOCATE/FREE) are used, though classified as COBOL-85 base with extensions."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4779,
+      "completion_tokens": 493,
+      "total_tokens": 5272,
+      "cost": 0.021732,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021732,
+        "upstream_inference_prompt_cost": 0.014337,
+        "upstream_inference_completions_cost": 0.007395
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:52:58Z"
+}

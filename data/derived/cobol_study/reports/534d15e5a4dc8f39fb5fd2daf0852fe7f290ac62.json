@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:534d15e5a4dc8f39fb5fd2daf0852fe7f290ac62",
+    "sha1_git": "534d15e5a4dc8f39fb5fd2daf0852fe7f290ac62",
+    "filename": "/PBOOKDB2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 27278,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:534d15e5a4dc8f39fb5fd2daf0852fe7f290ac62/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:534d15e5a4dc8f39fb5fd2daf0852fe7f290ac62/raw/"
+  },
+  "indicators": {
+    "bytes_len": 27278,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 678,
+    "blank_lines": 81,
+    "comment_lines": 169,
+    "code_lines": 428,
+    "comment_ratio": 0.283,
+    "max_line_length": 73,
+    "avg_line_length": 39.2,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PBOOKDB2"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 8,
+    "call_count": 15,
+    "perform_count": 27,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS TS with DB2 (z/OS Connect / BAQ Host API); CBL CICS('COBOL3') compiler directive; uses BAQHAREC/BAQHCONC copybooks for z/OS Connect API Requester",
+        "evidence": [
+          "CBL CICS('COBOL3') APOST",
+          "EXEC CICS GET CONTAINER / PUT CONTAINER",
+          "EXEC SQL INCLUDE SQLCA",
+          "CALL BAQ-INIT-NAME USING BAQ-ZCONNECT-AREA",
+          "COPY BAQHAREC / BAQHCONC",
+          "DFHRESP(NORMAL)",
+          "EIBTRNID"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "CICS TS sample/example application — Phone Book with DB2 backend and z/OS Connect API integration",
+        "summary": "PBOOKDB2 is the controller module for a CICS Phone Book sample application. It receives commands via a CICS channel/container (JSONCHANNEL), dispatches to DB2 CRUD operations (SELECT, UPDATE, DELETE, INSERT) on a CONTACTS table, and on delete also calls an external REST API via the z/OS Connect BAQ Host API Requester. Results are returned in output containers.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2) — SELECT, UPDATE, DELETE",
+        "EXEC CICS GET/PUT CONTAINER with named channel (JSONCHANNEL)",
+        "z/OS Connect BAQ Host API Requester (BAQHAREC, BAQHCONC, BAQINIT, BAQEXEC)",
+        "CICS channel/container programming model",
+        "COPY copybooks: PBOOKCIN, PBOOKCO1, PBOOKCO2, BAQHAREC, BAQHCONC, API00I01, API00Q01, API00P01",
+        "Hardcoded basic-auth credentials (MY-USER/MY-PSWD)",
+        "EVALUATE on SQLCODE for DB2 error handling",
+        "FUNCTION UPPER-CASE usage",
+        "Mixed French/English comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; C-PROCESS section is cut off mid-line. Comments contain French text and some encoding artifacts (©, Û) suggesting UTF-8 re-encoding of an EBCDIC source. The program is a well-structured IBM sample/demo but exhibits production-level patterns (error handling, API integration, DB2 CRUD). Hardcoded credentials are a concern but common in sample code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6130,
+      "completion_tokens": 647,
+      "total_tokens": 6777,
+      "cost": 0.028095,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028095,
+        "upstream_inference_prompt_cost": 0.01839,
+        "upstream_inference_completions_cost": 0.009705
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:52:08Z"
+}

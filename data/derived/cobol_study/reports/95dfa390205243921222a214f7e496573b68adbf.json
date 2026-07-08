@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:95dfa390205243921222a214f7e496573b68adbf",
+    "sha1_git": "95dfa390205243921222a214f7e496573b68adbf",
+    "filename": "/Grade.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3677,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:95dfa390205243921222a214f7e496573b68adbf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:95dfa390205243921222a214f7e496573b68adbf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3677,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 110,
+    "blank_lines": 12,
+    "comment_lines": 0,
+    "code_lines": 98,
+    "comment_ratio": 0.0,
+    "max_line_length": 70,
+    "avg_line_length": 32.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "GRADE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used; no vendor-specific extensions. Likely compiled with GnuCOBOL or similar open-source compiler given LINE SEQUENTIAL and GOBACK usage in a simple academic context.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "EVALUATE TRUE ... END-EVALUATE",
+          "PERFORM UNTIL ... END-PERFORM",
+          "GOBACK",
+          "88-level condition name with HIGH-VALUE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Academic grade point average (GPA) calculator reading subject grades from a file and computing overall, science, and computer science GPAs",
+        "summary": "This program reads a grade file containing subject IDs, names, units, and letter grades, converts letter grades to grade points, and computes weighted GPA averages for all subjects, science subjects, and computer science subjects. Results are written to an output file and displayed to the screen.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "88-level condition name used as EOF flag with HIGH-VALUE",
+        "EVALUATE TRUE for grade-to-point conversion",
+        "PERFORM THRU with EXIT paragraphs",
+        "GOBACK instead of STOP RUN",
+        "Nested IF inside EVALUATE for subject-type filtering based on SUBJECT-ID prefix"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program has an author name 'RENU' suggesting a student assignment. The logic for filtering science vs computer science subjects by checking first character of SUBJECT-ID ('3') and first two characters ('31') is a heuristic that suggests a specific course numbering scheme. The 002-AVG paragraph is called after AT END which means it computes averages after each EOF detection rather than once at the end, which may be a logic bug. No error handling for division by zero."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3544,
+      "completion_tokens": 448,
+      "total_tokens": 3992,
+      "cost": 0.017352,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017352,
+        "upstream_inference_prompt_cost": 0.010632,
+        "upstream_inference_completions_cost": 0.00672
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:49:47Z"
+}

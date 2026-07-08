@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:88077ce3198af969c62306ec5e8575fc9b08844c",
+    "sha1_git": "88077ce3198af969c62306ec5e8575fc9b08844c",
+    "filename": "/GETLOAN.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3100,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:88077ce3198af969c62306ec5e8575fc9b08844c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:88077ce3198af969c62306ec5e8575fc9b08844c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3100,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 97,
+    "blank_lines": 21,
+    "comment_lines": 30,
+    "code_lines": 46,
+    "comment_ratio": 0.395,
+    "max_line_length": 72,
+    "avg_line_length": 31.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "GETLOAN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 6,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS COBOL sample from IBM Redbooks CICS Asynchronous API internet banking example, circa 2017. Uses PROCESS compiler directive with CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD).",
+        "evidence": [
+          "PROCESS CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD)",
+          "EXEC CICS DELAY FOR SECONDS(7) END-EXEC",
+          "EXEC CICS GET CONTAINER",
+          "EXEC CICS PUT CONTAINER",
+          "EXEC CICS RETURN",
+          "Copyright IBM Corp. 2017"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "CICS Asynchronous API internet banking example - personalised loan rate lookup service",
+        "summary": "GETLOAN is a CICS online program that simulates a personalised loan rate service. It introduces a variable delay (4 or 7 seconds based on current time) to simulate an unreliable service, retrieves an account number from a CICS container, and returns a hardcoded loan rate back via another container.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS DELAY FOR SECONDS - simulated variable response time",
+        "EXEC CICS GET CONTAINER / PUT CONTAINER - CICS asynchronous API container usage",
+        "PROCESS compiler directive with CICS,NODYNAM,NSYMBOL(NATIONAL),TRUNC(STD)",
+        "FUNCTION CURRENT-DATE used for pseudo-random delay selection",
+        "No PERFORM or CALL statements - single mainline section",
+        "LINKAGE SECTION present but empty"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is an IBM-supplied sample program from the CICS Asynchronous API Redbooks internet banking example (copyright IBM 2017). The loan rate logic is intentionally simplified/hardcoded for demonstration purposes. Max line length is exactly 72, consistent with fixed-format COBOL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3090,
+      "completion_tokens": 505,
+      "total_tokens": 3595,
+      "cost": 0.016845,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016845,
+        "upstream_inference_prompt_cost": 0.00927,
+        "upstream_inference_completions_cost": 0.007575
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.04,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:04:54Z"
+}

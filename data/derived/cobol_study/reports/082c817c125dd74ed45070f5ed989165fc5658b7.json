@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:082c817c125dd74ed45070f5ed989165fc5658b7",
+    "sha1_git": "082c817c125dd74ed45070f5ed989165fc5658b7",
+    "filename": "/chall.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8797,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:082c817c125dd74ed45070f5ed989165fc5658b7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:082c817c125dd74ed45070f5ed989165fc5658b7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8797,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 235,
+    "blank_lines": 29,
+    "comment_lines": 5,
+    "code_lines": 201,
+    "comment_ratio": 0.024,
+    "max_line_length": 72,
+    "avg_line_length": 36.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBLCHALL1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 15,
+    "perform_count": 8,
+    "goto_count": 0,
+    "pic_count": 14,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Uses Micro Focus intrinsic routines CBL_CREATE_FILE, CBL_OPEN_FILE, CBL_CLOSE_FILE, CBL_COPY_FILE; also calls POSIX-style 'malloc', 'free', 'read', 'write' directly. Likely GnuCOBOL or Micro Focus compatible.",
+        "evidence": [
+          "CBL_CREATE_FILE",
+          "CBL_OPEN_FILE",
+          "CBL_CLOSE_FILE",
+          "CBL_COPY_FILE",
+          "CALL \"malloc\"",
+          "CALL \"free\"",
+          "CALL \"read\"",
+          "CALL \"write\"",
+          "USAGE POINTER",
+          "HIGH-VALUES level-88 ENDLOOP"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "CTF (Capture The Flag) challenge program — filename is 'chall.cbl' and PROGRAM-ID is CBLCHALL1, implementing a menu-driven file manager with intentional security vulnerabilities (buffer management issues, fd manipulation).",
+        "summary": "A menu-driven interactive program that allows creating, opening, reading, writing, closing, and copying files. It manages up to 16 file slots with malloc-allocated buffers and uses raw POSIX read/write calls alongside Micro Focus CBL_ file routines. The code contains deliberate security weaknesses (e.g., fd right-shift trick, unchecked buffer sizes) consistent with a CTF pwn challenge.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "CALL 'malloc'/'free' for heap allocation",
+        "CALL 'read'/'write' POSIX syscall wrappers",
+        "CBL_CREATE_FILE / CBL_OPEN_FILE / CBL_CLOSE_FILE / CBL_COPY_FILE Micro Focus routines",
+        "USAGE POINTER in OCCURS table",
+        "Level-88 condition name used as loop terminator (ENDLOOP VALUE HIGH-VALUES)",
+        "DIVIDE 256 INTO ffd(fidx) GIVING tfd — intentional fd bit-shift trick",
+        "No EXEC SQL or EXEC CICS",
+        "Fixed-format source with continuation lines using '-' in column 7"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The filename 'chall.cbl' and the deliberate security anti-patterns (heap buffer with unchecked size, fd manipulation via integer division) strongly suggest this is a CTF pwn/exploitation challenge. The dialect is ambiguous between GnuCOBOL and Micro Focus since both support CBL_ routines; GnuCOBOL is slightly more likely for a CTF context. No lines exceed 72 characters confirming fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4540,
+      "completion_tokens": 647,
+      "total_tokens": 5187,
+      "cost": 0.023325,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023325,
+        "upstream_inference_prompt_cost": 0.01362,
+        "upstream_inference_completions_cost": 0.009705
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:06:52Z"
+}

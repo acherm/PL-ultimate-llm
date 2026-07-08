@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:bbb76b32087ad60917fb686bdf3ff2fdaa1e10bf",
+    "sha1_git": "bbb76b32087ad60917fb686bdf3ff2fdaa1e10bf",
+    "filename": "/fuente.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4106,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:bbb76b32087ad60917fb686bdf3ff2fdaa1e10bf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:bbb76b32087ad60917fb686bdf3ff2fdaa1e10bf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4106,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 131,
+    "blank_lines": 22,
+    "comment_lines": 6,
+    "code_lines": 103,
+    "comment_ratio": 0.055,
+    "max_line_length": 72,
+    "avg_line_length": 30.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "INICIO"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 2,
+    "pic_count": 22,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) indicated by 'Tectonics: cobc' comment; uses DISPLAY LINE/COL screen extensions common in GnuCOBOL",
+        "evidence": [
+          "Tectonics: cobc",
+          "DISPLAY ... LINE 10 COL 5",
+          "SELECT OPTIONAL",
+          "DECIMAL-POINT IS COMMA",
+          "ALTERNATE KEY ... WITH DUPLICATES"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer file management with sales tracking by month and day; appears to be a small business client/customer database",
+        "summary": "This program manages an indexed customer file (clientes.dat) with fields for ID, balance, name, address, postal code, category, and monthly sales totals. It includes routines to open/close the file, write and read records, and display customer data on screen. The procedure division appears to be a work-in-progress or teaching example with some unresolved references (FACT-FECHA).",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "INDEXED file with ALTERNATE KEYs and DUPLICATES",
+        "DISPLAY LINE/COL screen positioning (GnuCOBOL extension)",
+        "OCCURS 12 TIMES for monthly sales, nested OCCURS 31 TIMES for daily values",
+        "DECIMAL-POINT IS COMMA (European locale)",
+        "SALDO-ZZ with floating minus sign PIC -------9,99",
+        "Unresolved reference to FACT-FECHA (likely incomplete/snippet)",
+        "GO TO used for error retry loops"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The PROCEDURE DIVISION references FACT-FECHA which is not defined in WORKING-STORAGE or FILE SECTION, suggesting this is an incomplete example or teaching snippet. The program structure has paragraphs that are never PERFORMed from MAIN-PROCEDURE, indicating it is likely a demonstration or exercise rather than production code. Spanish-language identifiers and comments suggest Latin American or Spanish origin."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3587,
+      "completion_tokens": 496,
+      "total_tokens": 4083,
+      "cost": 0.018201,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018201,
+        "upstream_inference_prompt_cost": 0.010761,
+        "upstream_inference_completions_cost": 0.00744
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.45,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:48:01Z"
+}

@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dac4010795c6c2053e9c4c09b3a8eaa1f5ae9054",
+    "sha1_git": "dac4010795c6c2053e9c4c09b3a8eaa1f5ae9054",
+    "filename": "/Program2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6361,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dac4010795c6c2053e9c4c09b3a8eaa1f5ae9054/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dac4010795c6c2053e9c4c09b3a8eaa1f5ae9054/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6361,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 159,
+    "blank_lines": 26,
+    "comment_lines": 57,
+    "code_lines": 76,
+    "comment_ratio": 0.429,
+    "max_line_length": 72,
+    "avg_line_length": 39.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PROGRAM2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 18,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with FUNCTION CURRENT-DATE (intrinsic function introduced in COBOL-85 addendum); file path syntax suggests PC/Windows environment, possibly GnuCOBOL or Micro Focus on Windows",
+        "evidence": [
+          "FUNCTION CURRENT-DATE",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO UT-SYS-INVFILE with PIC X(60) VALUE 'C:\\COBOL'",
+          "No COMP-3, no EXEC SQL, no vendor-specific extensions"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise processing a stock market input file to compute price-to-earnings (P/E) ratios",
+        "summary": "Reads stock records from a line-sequential input file containing stock code, name, price per share, and earnings per share. Computes the P/E ratio by dividing price per share by earnings per share. Writes an output sequential file with the original fields plus the current date and computed P/E ratio.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "FUNCTION CURRENT-DATE intrinsic function",
+        "ORGANIZATION IS LINE SEQUENTIAL for input",
+        "File paths hardcoded as C:\\COBOL in WORKING-STORAGE",
+        "EOF-flag pattern using PIC XXX VALUE 'NO'",
+        "DIVIDE ... GIVING for P/E ratio calculation",
+        "No COMP-3 or packed decimal usage"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author and date-written fields present (Derek R Schultz, 2/28/2018). Several typos in comments and variable names (e.g. 'EARININGS', 'EARINGINS', 'copmute', 'reconds'). The date output layout in comments (MMDDYYYY) does not match the record layout order (CUR-DAY, CUR-MONTH, CUR-YEAR = DDMMYYYY). FUNCTION CURRENT-DATE returns an 8-char date as YYYYMMDD, so the mapping to OUT-CUR-DATE fields is also inconsistent with the comment. These are typical student-level oversights."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3996,
+      "completion_tokens": 532,
+      "total_tokens": 4528,
+      "cost": 0.019968,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019968,
+        "upstream_inference_prompt_cost": 0.011988,
+        "upstream_inference_completions_cost": 0.00798
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.02,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:51:39Z"
+}

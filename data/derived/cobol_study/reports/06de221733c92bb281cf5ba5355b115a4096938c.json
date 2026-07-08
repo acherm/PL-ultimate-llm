@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:06de221733c92bb281cf5ba5355b115a4096938c",
+    "sha1_git": "06de221733c92bb281cf5ba5355b115a4096938c",
+    "filename": "/datetime.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2821,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:06de221733c92bb281cf5ba5355b115a4096938c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:06de221733c92bb281cf5ba5355b115a4096938c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2821,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 85,
+    "blank_lines": 13,
+    "comment_lines": 20,
+    "code_lines": 52,
+    "comment_ratio": 0.278,
+    "max_line_length": 68,
+    "avg_line_length": 32.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DATETIME"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Written to run under both GnuCOBOL (cobc -std=ibm) and RainCode COBOL; comments explicitly reference both compilers. IBM-compatible fixed format.",
+        "evidence": [
+          "cobc -std=ibm -Wcolumn-overflow -Wall -Wterminator",
+          "cobrc :StrictIBM=TRUE",
+          "ACCEPT ... FROM DAY-OF-WEEK",
+          "END-ACCEPT used (IBM extension noted in comments)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Date and time display utility showing current date/time in English and French formats",
+        "summary": "A small demonstration program that reads the system date, time, and day-of-week, then formats and displays them in both English (British) and French using copybook-supplied weekday and month name tables. Originally by Bill Rogers, modified by Bernard Tatin as a learning exercise.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "ACCEPT FROM DAY-OF-WEEK / DATE / TIME (system date-time intrinsics)",
+        "COPY directives for SysDate.cpy, FRDate, GBDate copybooks",
+        "Bilingual output (English and French)",
+        "Comments referencing both GnuCOBOL and RainCode compiler options",
+        "END-ACCEPT scope terminator (IBM extension)",
+        "No PIC clauses in main file (all in copybooks)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "No PIC clauses visible because all data definitions are in the three COPYed copybooks. The file is a learning/tutorial exercise explicitly stated in comments. Max line length is 68, well within fixed-format column 72 limit."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3153,
+      "completion_tokens": 432,
+      "total_tokens": 3585,
+      "cost": 0.015939,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015939,
+        "upstream_inference_prompt_cost": 0.009459,
+        "upstream_inference_completions_cost": 0.00648
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.39,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:14:44Z"
+}

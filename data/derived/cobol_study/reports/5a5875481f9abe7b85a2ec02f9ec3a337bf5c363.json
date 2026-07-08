@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5a5875481f9abe7b85a2ec02f9ec3a337bf5c363",
+    "sha1_git": "5a5875481f9abe7b85a2ec02f9ec3a337bf5c363",
+    "filename": "/Z95642.CBL(CBLWRK2).cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3932,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5a5875481f9abe7b85a2ec02f9ec3a337bf5c363/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5a5875481f9abe7b85a2ec02f9ec3a337bf5c363/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3932,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 109,
+    "blank_lines": 4,
+    "comment_lines": 19,
+    "code_lines": 86,
+    "comment_ratio": 0.181,
+    "max_line_length": 80,
+    "avg_line_length": 35.1,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBLWRK2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style with RECORDING MODE F, RETURN-CODE special register, and FILE STATUS usage; Turkish-language comments suggest student/educational context possibly on IBM z/OS or compatible environment",
+        "evidence": [
+          "RECORDING MODE F",
+          "RETURN-CODE special register",
+          "FILE STATUS with 88-level condition names",
+          "FUNCTION INTEGER-OF-DATE (COBOL-85 intrinsic function)",
+          "SELECT ... ASSIGN TO ... STATUS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise reading account records (account number, name, surname, birth date, today's date) and writing a print file with computed age difference in days; Turkish comments throughout",
+        "summary": "Reads account records from a sequential file (ACCTREC), computes the difference in days between a birth date and a reference date using INTEGER-OF-DATE, then writes formatted output to a print file (PRTLINE). Turkish-language comments indicate this is a student exercise.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "FUNCTION INTEGER-OF-DATE intrinsic function",
+        "RECORDING MODE F on FD",
+        "FILE STATUS with 88-level condition names (ACCT-EOF, ACCT-SUCCESS, PRT-SUCCESS)",
+        "RETURN-CODE special register used for error propagation",
+        "Turkish-language comments (transliterated)",
+        "Reference modification MOVE SPACES TO PRINT-REC(5:2)",
+        "INITIALIZE statement on record area"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Turkish comments (e.g., 'Yazdiracagimiz dosyaya verileri aktarmak icin degiskenleri tanimladik') confirm student/educational origin. Minor bug visible: H200-PROCESS checks PRT-NAME/PRT-BDATE before MOVE from ACCT fields. No COPY statements or CALL statements. Author name 'Burak Kozluca' present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3657,
+      "completion_tokens": 478,
+      "total_tokens": 4135,
+      "cost": 0.018141,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018141,
+        "upstream_inference_prompt_cost": 0.010971,
+        "upstream_inference_completions_cost": 0.00717
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.29,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:34:41Z"
+}

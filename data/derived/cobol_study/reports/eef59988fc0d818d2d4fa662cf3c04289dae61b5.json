@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:eef59988fc0d818d2d4fa662cf3c04289dae61b5",
+    "sha1_git": "eef59988fc0d818d2d4fa662cf3c04289dae61b5",
+    "filename": "/CBSRGDBB.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6296,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:eef59988fc0d818d2d4fa662cf3c04289dae61b5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:eef59988fc0d818d2d4fa662cf3c04289dae61b5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6296,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 178,
+    "blank_lines": 7,
+    "comment_lines": 19,
+    "code_lines": 152,
+    "comment_ratio": 0.111,
+    "max_line_length": 67,
+    "avg_line_length": 34.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBSRGDBB"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 12,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS/DB2 program; uses SYSIBM.SYSDUMMY1 (DB2-specific), EXEC CICS RETURN, DFHCOMMAREA, and SQLCA include — classic IBM CICS/DB2 pattern",
+        "evidence": [
+          "EXEC CICS RETURN END-EXEC",
+          "DFHCOMMAREA",
+          "EXEC SQL INCLUDE SQLCA",
+          "SYSIBM.SYSDUMMY1",
+          "EXEC SQL SELECT CURRENT TIME/DATE",
+          "EVALUATE SQLCODE WHEN 0 / WHEN 100"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Core Banking System (CBS) — account registration/activation module. Checks if an account exists in CBS_ACCT_MSTR_DTL and activates it from INACTIVE to ACTIVE status.",
+        "summary": "This CICS online program (CBSRGDBB) handles customer account registration in a core banking system. It validates an account number via DB2 SQL, checks the account status, and if INACTIVE updates it to ACTIVE. It communicates results back via DFHCOMMAREA messages.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2) with SYSIBM.SYSDUMMY1 for CURRENT TIME/DATE",
+        "EXEC CICS RETURN for CICS transaction control",
+        "DFHCOMMAREA with REDEFINES for request/response communication",
+        "EXEC SQL INCLUDE CBSMST and SQLCA",
+        "STRING verb for message construction",
+        "EVALUATE on SQLCODE (0, 100, OTHER)",
+        "Multiple PERFORM THRU patterns with EXIT paragraphs"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program appears to be part of a CBS (Core Banking System) suite — program name prefix 'CBS' and table name CBS_ACCT_MSTR_DTL confirm this. Hardcoded UPD_USERID='NAGARAJPK' suggests development/test stage rather than fully production-ready. COPY members CSRGREQ and CSRGRES are referenced but not shown. No COMP-3 usage despite numeric fields."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4341,
+      "completion_tokens": 544,
+      "total_tokens": 4885,
+      "cost": 0.021183,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021183,
+        "upstream_inference_prompt_cost": 0.013023,
+        "upstream_inference_completions_cost": 0.00816
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.66,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:19:48Z"
+}

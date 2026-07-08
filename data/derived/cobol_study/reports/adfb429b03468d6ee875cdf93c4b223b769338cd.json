@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:adfb429b03468d6ee875cdf93c4b223b769338cd",
+    "sha1_git": "adfb429b03468d6ee875cdf93c4b223b769338cd",
+    "filename": "/Final.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 816,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:adfb429b03468d6ee875cdf93c4b223b769338cd/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:adfb429b03468d6ee875cdf93c4b223b769338cd/raw/"
+  },
+  "indicators": {
+    "bytes_len": 816,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 30,
+    "blank_lines": 3,
+    "comment_lines": 0,
+    "code_lines": 27,
+    "comment_ratio": 0.0,
+    "max_line_length": 52,
+    "avg_line_length": 26.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FANAL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Simple student exercise; LINE SEQUENTIAL and GOBACK suggest GnuCOBOL or Micro Focus compatible, but no definitive vendor markers",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "88 END-OF-TRADER-FILE VALUE HIGH-VALUE",
+          "PERFORM UNTIL ... END-PERFORM",
+          "END-READ"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise reading a trader data file with province and credit fields",
+        "summary": "A minimal COBOL program that opens a sequential file of trader records, reads through all records until end-of-file, then closes the file and returns. The procedure body is incomplete as it performs no processing on the records read.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "88-level condition name on record for EOF detection using HIGH-VALUE",
+        "GOBACK instead of STOP RUN",
+        "No PIC clause spacing (PICX(12) missing space — likely typo)",
+        "No actual record processing logic"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The code has a syntax error: 'PICX(12)' is missing a space (should be 'PIC X(12)'). The AT END clause inside READ uses the condition name rather than SET statement, which is non-standard. The program reads records but does nothing with them, strongly suggesting an incomplete student exercise. File is only 30 lines with no real business logic."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2468,
+      "completion_tokens": 371,
+      "total_tokens": 2839,
+      "cost": 0.012969,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.012969,
+        "upstream_inference_prompt_cost": 0.007404,
+        "upstream_inference_completions_cost": 0.005565
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.37,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:52:26Z"
+}

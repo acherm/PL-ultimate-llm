@@ -1,0 +1,129 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f40955fad9ab300bac081fbd7e25d62681ab7481",
+    "sha1_git": "f40955fad9ab300bac081fbd7e25d62681ab7481",
+    "filename": "/ZFAM005.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 23056,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f40955fad9ab300bac081fbd7e25d62681ab7481/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f40955fad9ab300bac081fbd7e25d62681ab7481/raw/"
+  },
+  "indicators": {
+    "bytes_len": 23056,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 555,
+    "blank_lines": 104,
+    "comment_lines": 93,
+    "code_lines": 358,
+    "comment_ratio": 0.206,
+    "max_line_length": 71,
+    "avg_line_length": 39.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ZFAM005"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 27,
+    "goto_count": 0,
+    "pic_count": 81,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/z/OS COBOL; uses EXEC CICS commands, DFHCOMMAREA, EIBTRNID, EIBRESP, DFHRESP, CBL CICS(SP) compiler option, GETMAIN, STARTBR/READPREV file browse — classic IBM mainframe CICS online program",
+        "evidence": [
+          "CBL CICS(SP)",
+          "EXEC CICS READ FILE(FK-FCT)",
+          "EXEC CICS STARTBR",
+          "EXEC CICS READPREV",
+          "EXEC CICS GETMAIN",
+          "DFHCOMMAREA",
+          "EIBTRNID",
+          "EIBRESP",
+          "DFHRESP(NORMAL)",
+          "COMP-3",
+          "USAGE POINTER"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "zFAM (z/OS File Access Manager) — a CICS-based HTTP file access middleware layer running on z/OS",
+        "summary": "ZFAM005 is a CICS online program that handles HTTP GET requests with LE (less-than-or-equal) or LT (less-than) query string parameters for the zFAM file access manager. It browses a key store backward using CICS STARTBR/READPREV commands, reads corresponding data segments from a file/data store, and returns the matching record as an HTTP response. It is invoked via XCTL from ZFAM002.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (STARTBR, READPREV, READ, GETMAIN, XCTL pattern)",
+        "CBL CICS(SP) compiler option",
+        "DFHCOMMAREA linkage",
+        "USAGE POINTER with REDEFINES for address arithmetic",
+        "COPY ZFAMFKC / COPY ZFAMFFC copybooks",
+        "HTTP status code handling (200, 201, 204, 400, 401, 503)",
+        "Multi-segment record reassembly via GETMAIN",
+        "COMP-3 usage for TD-ABS",
+        "zFAM-specific containers and channels (ZFAM_CONTAINER, ZFAM_CHANNEL)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; full program is 555 lines. The program is part of the open-source zFAM (z/OS File Access Manager) project by Rich Jackson and Randy Frerking. No SQL. Fixed format confirmed by max line length 71 and zero lines over 72."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6655,
+      "completion_tokens": 646,
+      "total_tokens": 7301,
+      "cost": 0.029655,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029655,
+        "upstream_inference_prompt_cost": 0.019965,
+        "upstream_inference_completions_cost": 0.00969
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.89,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T20:43:35Z"
+}

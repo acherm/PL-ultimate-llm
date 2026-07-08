@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:689d41e8e2b13ea538d8ee61c3d8f3e6e89dabec",
+    "sha1_git": "689d41e8e2b13ea538d8ee61c3d8f3e6e89dabec",
+    "filename": "/tempo.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 11721,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:689d41e8e2b13ea538d8ee61c3d8f3e6e89dabec/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:689d41e8e2b13ea538d8ee61c3d8f3e6e89dabec/raw/"
+  },
+  "indicators": {
+    "bytes_len": 11721,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 293,
+    "blank_lines": 29,
+    "comment_lines": 27,
+    "code_lines": 237,
+    "comment_ratio": 0.102,
+    "max_line_length": 108,
+    "avg_line_length": 39.0,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "tempo"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 66,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (cobc) as stated in the Tectonics comment; uses USAGE IS COMPUTATIONAL, USAGE IS INDEX, USAGE IS DISPLAY, OCCURS, REDEFINES, EVALUATE TRUE ALSO TRUE — all standard COBOL-85 features",
+        "evidence": [
+          "Tectonics: cobc",
+          "USAGE IS COMPUTATIONAL",
+          "USAGE IS INDEX",
+          "EVALUATE TRUE ALSO TRUE",
+          "OCCURS ... TIMES",
+          "REDEFINES",
+          "LINE SEQUENTIAL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "French residential electricity billing analysis — EDF Tempo tariff (Rouge/Blanc/Bleu day classification with HP/HC peak hours)",
+        "summary": "Reads a CSV file of hourly electricity consumption data (RFC3339 timestamps and Wh values), classifies each hour into one of 7 Tempo tariff buckets (Base, Rouge HP/HC, Blanc HP/HC, Bleu HP/HC), accumulates totals, then reports costs and savings compared to the flat Base tariff for 2022 and 2023 French EDF tariff rates.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EVALUATE TRUE ALSO TRUE with 88-level condition names",
+        "USAGE IS COMPUTATIONAL on large data structures",
+        "REDEFINES used for both table overlay and numeric overlay (CTotalWh/CTotalKWh)",
+        "OCCURS on both data and cost tables",
+        "UNSTRING for CSV parsing",
+        "88-level conditions for day colour (JourRouge/JourBlanc/JourBleu) and peak hour (IsHP)",
+        "Hardcoded 2022/2023 EDF Tempo tariff rates",
+        "French electricity domain (Tempo tariff classification)",
+        "No COPY, no CALL, no EXEC SQL/CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is a personal utility for analysing French EDF Tempo electricity tariff billing. The SetCouleurJour paragraph hardcodes specific calendar days for 2022 only, so it is not fully general but is functionally complete for its stated purpose. Comments at the end are in French listing the Jours Rouges/Blancs. No truncation issues observed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6164,
+      "completion_tokens": 558,
+      "total_tokens": 6722,
+      "cost": 0.026862,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026862,
+        "upstream_inference_prompt_cost": 0.018492,
+        "upstream_inference_completions_cost": 0.00837
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.69,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:43:22Z"
+}

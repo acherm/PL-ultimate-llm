@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:4961b321b2856925f9256c8f235cb614acdaf19f",
+    "sha1_git": "4961b321b2856925f9256c8f235cb614acdaf19f",
+    "filename": "/LOADACCT.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5788,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:4961b321b2856925f9256c8f235cb614acdaf19f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:4961b321b2856925f9256c8f235cb614acdaf19f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5788,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 179,
+    "blank_lines": 36,
+    "comment_lines": 27,
+    "code_lines": 116,
+    "comment_ratio": 0.189,
+    "max_line_length": 78,
+    "avg_line_length": 31.3,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LOADACCT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 36,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM IMS/DL-I batch program using CBLTDLI interface and DLITCBL entry point; CBL compiler options directive at top (LIST,MAP,XREF,FLAG(I)) typical of IBM Enterprise COBOL",
+        "evidence": [
+          "CBL LIST,MAP,XREF,FLAG(I) compiler directive",
+          "ENTRY \"DLITCBL\"",
+          "CALL \"CBLTDLI\"",
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "COMP-5 usage",
+          "PCB structures (IOPCB, DBPCB) typical of IMS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Loads account records from a flat CSV file into an IMS database; account segment contains ACCID, ACCTYPE, BALANCE, LASTTXID fields suggesting a banking account ledger",
+        "summary": "LOADACCT reads a CSV-formatted flat file of account records, parses each record using UNSTRING, converts text fields to numeric, and inserts each account segment into an IMS database via CBLTDLI ISRT calls. It tracks total records processed and reports progress every 1000 records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "CBLTDLI IMS DL/I call interface",
+        "ENTRY DLITCBL IMS entry point",
+        "COMP-5 binary fields for account IDs",
+        "COMP-3 packed decimal for BALANCE",
+        "UNSTRING with multiple delimiters for CSV parsing",
+        "FUNCTION NUMVAL for text-to-numeric conversion",
+        "FUNCTION MOD for progress reporting",
+        "Multiple POINTER fields in LINKAGE SECTION for PCB addresses",
+        "SET ADDRESS OF for pointer-based PCB addressing",
+        "CBL compiler options directive"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The program is clearly an IBM IMS batch loader. The CBL directive at line 1 is IBM-specific. COMP-5 is IBM/Micro Focus extension but combined with IMS structures strongly indicates IBM mainframe. One line exceeds 72 characters (the UNSTRING statement). Several DISPLAY statements are commented out, suggesting development/debug traces were left in commented form."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4086,
+      "completion_tokens": 541,
+      "total_tokens": 4627,
+      "cost": 0.020373,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020373,
+        "upstream_inference_prompt_cost": 0.012258,
+        "upstream_inference_completions_cost": 0.008115
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.63,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:16:05Z"
+}

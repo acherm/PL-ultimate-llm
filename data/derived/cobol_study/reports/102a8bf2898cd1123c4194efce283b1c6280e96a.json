@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:102a8bf2898cd1123c4194efce283b1c6280e96a",
+    "sha1_git": "102a8bf2898cd1123c4194efce283b1c6280e96a",
+    "filename": "/TP08-CALC-SAL-LIQUIDO.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2985,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:102a8bf2898cd1123c4194efce283b1c6280e96a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:102a8bf2898cd1123c4194efce283b1c6280e96a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2985,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 75,
+    "blank_lines": 10,
+    "comment_lines": 9,
+    "code_lines": 56,
+    "comment_ratio": 0.138,
+    "max_line_length": 70,
+    "avg_line_length": 38.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TP08-CALC-SAL-LIQUIDO"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Brazilian Portuguese COBOL student exercise, likely compiled with GnuCOBOL; uses DECIMAL-POINT IS COMMA with comma as decimal separator in numeric literals (e.g. 2112,00), consistent with Brazilian GnuCOBOL usage",
+        "evidence": [
+          "DECIMAL-POINT IS COMMA",
+          "numeric literals with comma decimal separator: 2112,00 / 0,075 / 158,40",
+          "AUTHOR with accented character (UTF-8): ÉRICA",
+          "DATE-WRITTEN 20/11/2023",
+          "LINKAGE SECTION with PROCEDURE DIVISION USING"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Brazilian payroll IRRF (Imposto de Renda Retido na Fonte) income tax withholding calculation on net salary",
+        "summary": "This subprogram calculates the net salary (salário líquido) by applying Brazilian IRRF income tax brackets to a reference salary. It determines the applicable tax rate and deduction based on five IRRF brackets, computes the IRRF discount, then subtracts it from the reference salary to produce the net salary.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with PROCEDURE DIVISION USING — called as subprogram",
+        "DECIMAL-POINT IS COMMA with comma-decimal numeric literals",
+        "88-level condition names for IRRF tax brackets",
+        "EXIT PROGRAM to return to caller",
+        "No COPY statements, no EXEC SQL/CICS",
+        "Brazilian tax law IRRF brackets (2023 table)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "File is a student exercise dated 20/11/2023 by a named Brazilian author. The use of DECIMAL-POINT IS COMMA and comma-separated numeric literals is standard Brazilian GnuCOBOL practice. The 88-level VALUE ranges use comma as decimal point (e.g. VALUE 2112,01 THRU 2826,65). No truncation detected; all 4 divisions present and complete."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3276,
+      "completion_tokens": 518,
+      "total_tokens": 3794,
+      "cost": 0.017598,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017598,
+        "upstream_inference_prompt_cost": 0.009828,
+        "upstream_inference_completions_cost": 0.00777
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.65,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:57:20Z"
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3d7e1dd95c04f1e1f0d1ad5f088b69bdb2c44f9a",
+    "sha1_git": "3d7e1dd95c04f1e1f0d1ad5f088b69bdb2c44f9a",
+    "filename": "/ONLINE1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9381,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3d7e1dd95c04f1e1f0d1ad5f088b69bdb2c44f9a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3d7e1dd95c04f1e1f0d1ad5f088b69bdb2c44f9a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9381,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 295,
+    "blank_lines": 51,
+    "comment_lines": 45,
+    "code_lines": 199,
+    "comment_ratio": 0.184,
+    "max_line_length": 72,
+    "avg_line_length": 29.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ONLINE1"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS/DB2 online program; uses COMP-4 SYNC, EXEC CICS, EXEC SQL, DFHCOMMAREA, DFHAID copybook, EIB fields — classic IBM CICS/DB2 style",
+        "evidence": [
+          "EXEC CICS ADDRESS TCTUA",
+          "EXEC CICS RETURN TRANSID COMMAREA",
+          "EXEC CICS SEND MAP MAPSET FREEKB CURSOR ERASE",
+          "EXEC SQL INCLUDE SQLCA",
+          "EXEC SQL WHENEVER SQLERROR GOTO",
+          "COMP-4 SYNC",
+          "DFHCOMMAREA",
+          "EIBCALEN EIBFN EIBAID EIBTIME",
+          "COPY DFHAID SUPPRESS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Demo online CICS transaction program (comment says 'Programme demo ONLINE'); interacts with a DB2 table VTBMSGA and a message-retrieval subprogram CALLMSG",
+        "summary": "A CICS online transaction program named ONLINE1 that handles a BMS map (ONLINEF/ONLINE1), performs first-pass and second-pass screen logic, validates input, optionally queries a DB2 table, and returns to transaction TRA1. It is explicitly described as a demo program in the source comments.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (BMS map send/receive, XCTL, LINK, RETURN with TRANSID/COMMAREA, ABEND, SYNCPOINT, ADDRESS TCTUA)",
+        "EXEC SQL (INCLUDE SQLCA, INCLUDE table, WHENEVER SQLERROR GOTO, SELECT commented out)",
+        "DFHCOMMAREA with OCCURS DEPENDING ON EIBCALEN",
+        "COPY DFHAID SUPPRESS",
+        "TCTUA addressing via ADDRESS OF TUA-ZONE",
+        "COMP-4 SYNC for index/length fields",
+        "French-language comments and variable names (W-JOUR, W-MOIS, W-ANNEE, 1ER-PASSAGE, 2EME-PASSAGE)",
+        "HEX80 sentinel value using latin-1 character",
+        "REDEFINES for date and time overlays"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded with latin-1; French comments and identifiers suggest a French-speaking development shop. The SQL SELECT is commented out, suggesting the DB2 logic is partially stubbed. Max line length is exactly 72, confirming fixed-format. Program is labelled 'demo' in comments but the structure and coding style are production-quality."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5067,
+      "completion_tokens": 657,
+      "total_tokens": 5724,
+      "cost": 0.025056,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.025056,
+        "upstream_inference_prompt_cost": 0.015201,
+        "upstream_inference_completions_cost": 0.009855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.04,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:55:20Z"
+}

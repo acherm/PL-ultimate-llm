@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:465c7a0fb93dfc0c6789a9f71b931f99a5066492",
+    "sha1_git": "465c7a0fb93dfc0c6789a9f71b931f99a5066492",
+    "filename": "/TAXCAL.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3705,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:465c7a0fb93dfc0c6789a9f71b931f99a5066492/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:465c7a0fb93dfc0c6789a9f71b931f99a5066492/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3705,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 111,
+    "blank_lines": 8,
+    "comment_lines": 10,
+    "code_lines": 93,
+    "comment_ratio": 0.097,
+    "max_line_length": 77,
+    "avg_line_length": 31.4,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "STDRPT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style indicated by RECORDING MODE IS F, LABEL RECORDS STANDARD, BLOCK CONTAINS 0 RECORDS clauses; COBOL-85 features used (EVALUATE, END-IF, END-READ, END-PERFORM, 88-level condition, SET ... TO TRUE)",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "LABEL RECORDS STANDARD",
+          "BLOCK CONTAINS 0 RECORDS",
+          "EVALUATE TRUE",
+          "SET WS-EOF-INP-YES TO TRUE",
+          "END-READ",
+          "END-PERFORM",
+          "GOBACK"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "government-public",
+        "domain_detail": "Indian income tax calculation based on tax slabs (PAN number, salary, HRA, LTA, savings deductions — Indian tax system terminology)",
+        "summary": "Reads an income details file containing PAN number, salary, other income, savings, HRA, and LTA fields. Calculates gross salary, deductions, and taxable salary, then applies Indian income tax slab rates (0%, 5%, 20%). Writes the PAN number and computed income tax to an output file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EVALUATE TRUE for tax slab logic",
+        "88-level condition name for EOF flag",
+        "PERFORM UNTIL with inline END-PERFORM",
+        "RECORDING MODE IS F / LABEL RECORDS STANDARD (IBM mainframe FD clauses)",
+        "Indian tax domain: PAN number, HRA, LTA, savings deduction cap of 250000",
+        "GOBACK instead of STOP RUN",
+        "PERFORM ... THRU paragraph-EXIT pattern"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program ID is STDRPT but filename is TAXCAL.cbl — minor inconsistency. Tax slab logic is simplified (only two non-zero brackets at 5% and 20%) and does not reflect full Indian IT Act complexity, consistent with a student exercise. One line slightly exceeds column 72 (max_line_length 77)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3415,
+      "completion_tokens": 499,
+      "total_tokens": 3914,
+      "cost": 0.01773,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01773,
+        "upstream_inference_prompt_cost": 0.010245,
+        "upstream_inference_completions_cost": 0.007485
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.69,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:01:56Z"
+}

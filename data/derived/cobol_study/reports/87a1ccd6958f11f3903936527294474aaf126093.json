@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:87a1ccd6958f11f3903936527294474aaf126093",
+    "sha1_git": "87a1ccd6958f11f3903936527294474aaf126093",
+    "filename": "/demo_report.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16553,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:87a1ccd6958f11f3903936527294474aaf126093/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:87a1ccd6958f11f3903936527294474aaf126093/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16553,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 524,
+    "blank_lines": 126,
+    "comment_lines": 42,
+    "code_lines": 356,
+    "comment_ratio": 0.106,
+    "max_line_length": 72,
+    "avg_line_length": 30.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DEMO-REPORT"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 42,
+    "goto_count": 0,
+    "pic_count": 48,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with OcesSQL (Open COBOL ESQL) for PostgreSQL connectivity; uses *> comment style, EXEC SQL with PostgreSQL-specific connection string format 'postgres@db:5432'",
+        "evidence": [
+          "*> comment style (GnuCOBOL extension)",
+          "EXEC SQL CONNECT :USERNAME IDENTIFIED BY :PASSWD USING :DBNAME",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "PostgreSQL connection string 'postgres@db:5432'",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ocesql declarations comment"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Demonstration report generator reading from a PostgreSQL database table and writing a formatted text report file",
+        "summary": "DEMO-REPORT reads records from a PostgreSQL database table (demo_table) for the current date and writes a formatted text report to a file. It supports command-line arguments to switch between live and test database connections, and includes built-in unit and integration test workflows.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL (OcesSQL/PostgreSQL): CONNECT, DECLARE CURSOR, OPEN, FETCH, INSERT, DELETE, DISCONNECT",
+        "Command-line argument parsing via ACCEPT FROM COMMAND-LINE",
+        "Built-in unit and integration test framework with pass/fail counters",
+        "88-level condition names for flags",
+        "FUNCTION CURRENT-DATE usage",
+        "STRING verb for date formatting",
+        "LINE SEQUENTIAL file output",
+        "SQLCA included via EXEC SQL INCLUDE",
+        "No COPY statements or CALL statements",
+        "PERFORM UNTIL loop with cursor fetch pattern"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars but the structure is clear. The program is a well-structured demo/example with embedded test harness. OcesSQL is an open-source ESQL preprocessor for GnuCOBOL targeting PostgreSQL. No COMP-3 usage, consistent with GnuCOBOL/open-source style. The filename 'demo_report.cbl' and PROGRAM-ID 'DEMO-REPORT' confirm demo/example nature."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7321,
+      "completion_tokens": 540,
+      "total_tokens": 7861,
+      "cost": 0.030063,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030063,
+        "upstream_inference_prompt_cost": 0.021963,
+        "upstream_inference_completions_cost": 0.0081
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.26,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:19:30Z"
+}

@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d5b47652ee513c002dc1d70b370944967792c5a9",
+    "sha1_git": "d5b47652ee513c002dc1d70b370944967792c5a9",
+    "filename": "/parsetst1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6662,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d5b47652ee513c002dc1d70b370944967792c5a9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d5b47652ee513c002dc1d70b370944967792c5a9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6662,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 188,
+    "blank_lines": 39,
+    "comment_lines": 16,
+    "code_lines": 133,
+    "comment_ratio": 0.107,
+    "max_line_length": 86,
+    "avg_line_length": 33.4,
+    "long_lines_over_72": 14,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PARSETST"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 13,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 26,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT / Micro Focus ACUCOBOL dialect: uses DISPLAY OMITTED BLANK SCREEN COLOR, SET CONFIGURATION 'DLL-CONVENTION', MB-OK/MB-ERROR-ICON message box syntax, C$MEMCPY, SIGNED-LONG, POINTER, and XFD (eXtended File Descriptor) file parsing — all characteristic of ACUCOBOL-GT runtime",
+        "evidence": [
+          "DISPLAY OMITTED BLANK SCREEN COLOR 1",
+          "SET CONFIGURATION \"DLL-CONVENTION\" TO 0",
+          "display message box ... type is MB-OK, icon is MB-ERROR-ICON",
+          "CALL \"C$MEMCPY\"",
+          "SIGNED-LONG",
+          "POINTER",
+          "copy \"bacu/acugui.def\"",
+          "copy \"bacu/parsexfd.ws\"",
+          "XFD file parsing (aivenfcp.xfd)",
+          "ORGANIZATION LINE SEQUENTIAL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "XFD (eXtended File Descriptor) file parser test — reads an ACUCOBOL XFD metadata file, extracts field definitions, builds a CSV/text representation, computes an MD5 hash, and writes output to a JSON-named text file",
+        "summary": "This program tests an XFD parser library by loading an XFD file for a data file, iterating over all field definitions, assembling field metadata into a delimited string, computing an MD5 hash of the result, and optionally writing the output to a file. It exercises several custom shared libraries (libmd5.so, libparsexfd.so) and ACUCOBOL runtime extensions.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "ACUCOBOL XFD file parsing via shared library (libparsexfd.so)",
+        "MD5 hashing via shared library (libmd5.so)",
+        "C$MEMCPY built-in for pointer-based memory copy",
+        "POINTER data type usage",
+        "SIGNED-LONG data type",
+        "SET CONFIGURATION DLL-CONVENTION",
+        "Message box GUI dialogs (MB-OK, MB-ERROR-ICON)",
+        "DISPLAY OMITTED BLANK SCREEN COLOR",
+        "Dead code after STOP RUN (unreachable CALL statements)",
+        "COPY of ACUCOBOL-specific copybooks (acugui.def, parsexfd.ws)",
+        "STRING with X\"00\" null terminator for C interop"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The program has dead code after the first STOP RUN (several CALL statements and file I/O that are never reached). This appears to be a developer test/prototype for an XFD parsing utility, not production code. The filename 'parsetst1.cbl' and program-id 'PARSETST' confirm test intent. Brazilian Portuguese context suggested by variable names (AQRUIVO=arquivo, vendas, multidad)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4562,
+      "completion_tokens": 717,
+      "total_tokens": 5279,
+      "cost": 0.024441,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024441,
+        "upstream_inference_prompt_cost": 0.013686,
+        "upstream_inference_completions_cost": 0.010755
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.16,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:44:06Z"
+}

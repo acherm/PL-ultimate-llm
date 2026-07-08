@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:60194f119510d65d97123b80c3bbad1769d72c01",
+    "sha1_git": "60194f119510d65d97123b80c3bbad1769d72c01",
+    "filename": "/G3-CAP1-MONTH-END.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3241,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:60194f119510d65d97123b80c3bbad1769d72c01/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:60194f119510d65d97123b80c3bbad1769d72c01/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3241,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 88,
+    "blank_lines": 1,
+    "comment_lines": 12,
+    "code_lines": 75,
+    "comment_ratio": 0.138,
+    "max_line_length": 72,
+    "avg_line_length": 35.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "G3-CAP1-MONTH-END"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 5,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Student project (Group 3, dated 4/24/2014) using COBOL-85 structured constructs; no vendor-specific extensions visible",
+        "evidence": [
+          "PERFORM UNTIL ... END-PERFORM",
+          "END-READ",
+          "COMPUTE",
+          "IS INITIAL on PROGRAM-ID",
+          "START ... KEY NOT LESS THAN"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Credit card transaction processing - month-end balance recalculation for cardholder accounts",
+        "summary": "This program recalculates month-end totals for credit card accounts. It reads cardholder records, applies withdrawal ('W') and deposit ('D') transactions from a CC-TRAN file to update balances, then deletes all transaction records and writes a dummy sentinel record.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY statements for SELECT, FD, and WS sections (5 total)",
+        "START with KEY NOT LESS THAN for ISAM/VSAM-style keyed file access",
+        "DELETE statement on indexed file",
+        "IS INITIAL clause on PROGRAM-ID",
+        "EXIT PROGRAM used instead of STOP RUN (commented out)",
+        "Sentinel/dummy record written at end of 400-DUMMY-REC"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Clearly a student group project (Group 3, author Jesse Nicholson, dated 2014). Heavy use of COPY statements means key data definitions are not visible in this file. No COMP-3 or SQL. The EXIT PROGRAM with STOP RUN commented out suggests it may be called as a subprogram but is structured as a main program."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3218,
+      "completion_tokens": 414,
+      "total_tokens": 3632,
+      "cost": 0.015864,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015864,
+        "upstream_inference_prompt_cost": 0.009654,
+        "upstream_inference_completions_cost": 0.00621
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.04,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:27:13Z"
+}

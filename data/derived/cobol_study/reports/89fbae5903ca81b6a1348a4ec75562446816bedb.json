@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:89fbae5903ca81b6a1348a4ec75562446816bedb",
+    "sha1_git": "89fbae5903ca81b6a1348a4ec75562446816bedb",
+    "filename": "/scrcall.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4624,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:89fbae5903ca81b6a1348a4ec75562446816bedb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:89fbae5903ca81b6a1348a4ec75562446816bedb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4624,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 133,
+    "blank_lines": 14,
+    "comment_lines": 22,
+    "code_lines": 97,
+    "comment_ratio": 0.185,
+    "max_line_length": 72,
+    "avg_line_length": 32.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "scrcall",
+      "to",
+      "value"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 15,
+    "call_count": 3,
+    "perform_count": 5,
+    "goto_count": 1,
+    "pic_count": 22,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "acucobol",
+        "standard": "COBOL-85",
+        "detail": "ACUCOBOL-GT dialect; uses SOURCE-COMPUTER/OBJECT-COMPUTER set to 'acu-cobol', COMP-4, CHAINING clause, C$CHDIR runtime library call, and window/screen management idioms typical of ACUCOBOL",
+        "evidence": [
+          "source-computer. acu-cobol",
+          "object-computer. acu-cobol",
+          "comp-4",
+          "procedure division chaining",
+          "call \"C$CHDIR\"",
+          "close window w-sv-cur-prg",
+          "copy \"wnscr.cpy\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Italian ERP/business application (Eurosystem); screen/mask launcher for a CRM or business management system (ECOGE product line)",
+        "summary": "A generalized screen-launching stub program ('scrcall') that accepts operator, workstation, and program parameters via CHAINING, sets up environment variables (SCR-DIR, output directory), validates parameters, and then dynamically CALLs the target program. It is part of an Italian ACUCOBOL-based ERP/CRM system by Eurosystem.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "PROCEDURE DIVISION CHAINING (ACUCOBOL parameter passing)",
+        "COMP-4 usage",
+        "C$CHDIR runtime library call",
+        "Dynamic CALL using variable par-prog",
+        "CANCEL after dynamic CALL",
+        "ACCEPT from ENVIRONMENT (SCR-DIR)",
+        "ACCEPT from CENTURY-DATE and TIME",
+        "IS EXTERNAL data items",
+        "DECIMAL-POINT IS COMMA",
+        "Heavy use of COPY statements (15 copybooks)",
+        "Window management (close window w-sv-cur-prg)",
+        "Italian-language comments and string literals"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is clearly part of a larger Italian business application suite (ECOGE/Eurosystem). Author identified as Andrea Parmeggiani - Eurosystem. All 15 COPY statements reference external copybooks not shown. The program_ids array showing 'to' and 'value' is a mechanical parsing artifact from the 78-level constant definition."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3476,
+      "completion_tokens": 541,
+      "total_tokens": 4017,
+      "cost": 0.018543,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018543,
+        "upstream_inference_prompt_cost": 0.010428,
+        "upstream_inference_completions_cost": 0.008115
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.23,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:40:28Z"
+}

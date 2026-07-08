@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:dca70422f989f4ecbee477a2cf7639c1b17fa8db",
+    "sha1_git": "dca70422f989f4ecbee477a2cf7639c1b17fa8db",
+    "filename": "/testingdb2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2644,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:dca70422f989f4ecbee477a2cf7639c1b17fa8db/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:dca70422f989f4ecbee477a2cf7639c1b17fa8db/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2644,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 89,
+    "blank_lines": 20,
+    "comment_lines": 9,
+    "code_lines": 60,
+    "comment_ratio": 0.13,
+    "max_line_length": 74,
+    "avg_line_length": 28.7,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 2,
+    "program_ids": [
+      "TEST"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 0,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM DB2 embedded SQL with QUERYNO clause and ¬= (not-equal) operator typical of IBM mainframe EBCDIC environments",
+        "evidence": [
+          "EXEC SQL ... END-EXEC",
+          "QUERYNO 3676",
+          "QUERYNO 29",
+          "QUERYNO 35",
+          "¬= operator (IBM EBCDIC not-equal)",
+          "FETCH FIRST ROW ONLY",
+          "PROGRAM-ID. TEST DB2"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Retail item/UPC management system; queries and updates tables related to retail sections, UPC codes, corporate item codes, and pricing/label data",
+        "summary": "This program contains embedded DB2 SQL to select retail section and ring data from a UPC/item table, fetch coupon cursor data, and update item attributes such as primary UPC switch, pack retail, label size, and sign indicators. It appears to be a fragment or snippet of a larger batch program dealing with retail item management.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL embedded DB2",
+        "QUERYNO hint clause on multiple SQL statements",
+        "¬= (IBM EBCDIC not-equal operator)",
+        "FETCH FIRST ROW ONLY",
+        "FETCH cursor (COPYUPC_SSCOUPON)",
+        "SQL UPDATE with multiple SET columns",
+        "Missing DATA DIVISION and ENVIRONMENT DIVISION",
+        "Tab-indented paragraphs mixed with fixed format"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "The file is missing ENVIRONMENT DIVISION and DATA DIVISION entirely, and has no PIC clauses or host variable declarations, suggesting this is a code snippet or fragment rather than a complete program. The ¬= operator is characteristic of IBM EBCDIC encoding. Mixed indentation (spaces and tabs) is present. The PROGRAM-ID value 'TEST DB2' contains a space which is non-standard. Overall confidence is medium due to the incomplete nature of the source."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3034,
+      "completion_tokens": 481,
+      "total_tokens": 3515,
+      "cost": 0.016317,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016317,
+        "upstream_inference_prompt_cost": 0.009102,
+        "upstream_inference_completions_cost": 0.007215
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.96,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:41:08Z"
+}

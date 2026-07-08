@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5c60ec6b239bb2a140418146e3f627094af3bc0f",
+    "sha1_git": "5c60ec6b239bb2a140418146e3f627094af3bc0f",
+    "filename": "/MONTHINC.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4472,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5c60ec6b239bb2a140418146e3f627094af3bc0f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5c60ec6b239bb2a140418146e3f627094af3bc0f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4472,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 133,
+    "blank_lines": 17,
+    "comment_lines": 4,
+    "code_lines": 112,
+    "comment_ratio": 0.034,
+    "max_line_length": 72,
+    "avg_line_length": 32.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MONTHINC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 14,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses ORGANIZATION IS LINE SEQUENTIAL (common in GnuCOBOL/open-source), GOBACK, EXIT PERFORM, and INDEXED BY table syntax consistent with COBOL-85",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "EXIT PERFORM",
+          "OCCURS 6 TIMES INDEXED BY WS-IDX-PRO",
+          "88-level condition names with FILE STATUS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Monthly income aggregation by province/region; reads province master data and monthly income records, accumulates totals per province",
+        "summary": "MONTHINC reads a province master file (PROV.DAT) and a monthly income file (MONTHR.DAT), loads province records into a table, then processes monthly income records by matching province codes and accumulating income totals. Finally it displays the income total per province along with record counts.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OCCURS table with INDEXED BY for province lookup",
+        "EXIT PERFORM (COBOL-85 extension)",
+        "ORGANIZATION IS LINE SEQUENTIAL for one file",
+        "88-level condition names for FILE STATUS",
+        "PERFORM THRU paragraph pattern",
+        "No COMP-3 or SQL usage"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is straightforward and small (133 lines), authored by 'NARACHAI', suggesting a student or training exercise. The table size is hardcoded to 6 provinces. No error handling on file status beyond AT-END. Max line length of 72 confirms fixed format."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3876,
+      "completion_tokens": 423,
+      "total_tokens": 4299,
+      "cost": 0.017973,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017973,
+        "upstream_inference_prompt_cost": 0.011628,
+        "upstream_inference_completions_cost": 0.006345
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.21,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:53:37Z"
+}

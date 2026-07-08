@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:fa61b1a0632785e2afb6763e7c2103ea1560036a",
+    "sha1_git": "fa61b1a0632785e2afb6763e7c2103ea1560036a",
+    "filename": "/brainfuck.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5304,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:fa61b1a0632785e2afb6763e7c2103ea1560036a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:fa61b1a0632785e2afb6763e7c2103ea1560036a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5304,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 160,
+    "blank_lines": 24,
+    "comment_lines": 2,
+    "code_lines": 134,
+    "comment_ratio": 0.015,
+    "max_line_length": 98,
+    "avg_line_length": 32.1,
+    "long_lines_over_72": 2,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BrainfuckInterpreter"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 9,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-2002",
+        "detail": "Uses COBOL-2002/2014 features: FUNCTION ALL INTRINSIC, ODO with DEPENDING ON, 88-level conditions on table elements, CONSTANT clause, intrinsic functions CHAR and ORD. Likely GnuCOBOL given open-source/demo nature and feature set.",
+        "evidence": [
+          "function all intrinsic",
+          "01 DataByteUpperBound constant 255",
+          "pic x occurs 1 to 32768 times depending on ProgramLength",
+          "char(DataByte(DataPointer) + 1)",
+          "ord(InputByte)",
+          "88 UpperBoundReached value DataByteUpperBound"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Esoteric programming language interpreter implemented in COBOL as a demonstration/novelty",
+        "summary": "This program implements a Brainfuck esoteric language interpreter in COBOL. It reads a Brainfuck source file from the command line, loads it into memory, and executes the instructions including data pointer movement, byte increment/decrement, I/O, and bracket-based looping. It wraps data values and pointer positions at boundaries.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "FUNCTION ALL INTRINSIC repository clause",
+        "ODO (OCCURS DEPENDING ON) for variable-length program storage",
+        "CONSTANT clause for named constants (DataByteUpperBound, DataByteLowerBound)",
+        "Intrinsic functions CHAR and ORD for ASCII conversion",
+        "88-level conditions on table elements used as instruction dispatch",
+        "DECLARATIVES section for file error handling",
+        "EVALUATE TRUE with 88-level conditions as dispatch table",
+        "No EXEC SQL, no EXEC CICS, no COPY statements"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is a complete, self-contained Brainfuck interpreter. The comment notes that COBOL ASCII codes start at 1 not 0, which is a GnuCOBOL/standard COBOL behavior. The CONSTANT clause is a COBOL-2002 feature. Overall a well-structured novelty/demo program, likely written for educational or entertainment purposes."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3702,
+      "completion_tokens": 543,
+      "total_tokens": 4245,
+      "cost": 0.019251,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019251,
+        "upstream_inference_prompt_cost": 0.011106,
+        "upstream_inference_completions_cost": 0.008145
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.76,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:01:59Z"
+}

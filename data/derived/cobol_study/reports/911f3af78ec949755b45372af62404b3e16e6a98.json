@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:911f3af78ec949755b45372af62404b3e16e6a98",
+    "sha1_git": "911f3af78ec949755b45372af62404b3e16e6a98",
+    "filename": "/ACESSO.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14655,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:911f3af78ec949755b45372af62404b3e16e6a98/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:911f3af78ec949755b45372af62404b3e16e6a98/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14655,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 465,
+    "blank_lines": 90,
+    "comment_lines": 33,
+    "code_lines": 342,
+    "comment_ratio": 0.088,
+    "max_line_length": 101,
+    "avg_line_length": 30.5,
+    "long_lines_over_72": 32,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ACESSO"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 7,
+    "perform_count": 23,
+    "goto_count": 0,
+    "pic_count": 17,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL with htmlpp preprocessor directive ($set preprocess(htmlpp)) and $set sourceformat\"free\"; uses CBL_CREATE_DIR and CBL_CHECK_FILE_EXIST runtime calls typical of GnuCOBOL; Windows path separators suggest development on Windows with GnuCOBOL",
+        "evidence": [
+          "$set preprocess (htmlpp) endp",
+          "$set sourceformat\"free\"",
+          "call \"CBL_CREATE_DIR\"",
+          "call \"CBL_CHECK_FILE_EXIST\"",
+          "78 level constants",
+          "local-storage section",
+          "path-projeto value \"D:\\DEV\\Prova-Cobol\\cobol\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Web CGI login/access control system using HTML preprocessor for COBOL-based web application",
+        "summary": "This is the main access/login program for a COBOL-based web application. It handles user authentication (login/password check), writes login activity to a CSV log file, and renders HTML login forms using the htmlpp preprocessor. On successful login it calls a MENUS subprogram to display the application menu.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC HTML blocks via htmlpp preprocessor (not standard COBOL)",
+        "$set compiler directives for GnuCOBOL",
+        "CBL_CREATE_DIR and CBL_CHECK_FILE_EXIST runtime library calls",
+        "78-level constants for path configuration",
+        "LOCAL-STORAGE SECTION usage",
+        "COPY directives for WS-PADRAO.cpy and LNK.cpy and ROTINAS-PADRAO.cpy",
+        "DISPLAY/ACCEPT of ENVIRONMENT-NAME/ENVIRONMENT-VALUE for CGI REMOTE_ADDR",
+        "CALL 'MENUS' with CANCEL for dynamic subprogram",
+        "CSV log file with date-stamped filename",
+        "Windows-style hardcoded paths (D:\\DEV\\Prova-Cobol)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File decoded as latin-1; contains Portuguese-language identifiers and comments (Brazilian Portuguese). The htmlpp preprocessor embeds HTML directly in COBOL source using EXEC HTML...END-EXEC blocks, which is a GnuCOBOL-specific web CGI pattern. The hardcoded path 'D:\\DEV\\Prova-Cobol\\cobol' suggests a development/student project but the code structure is reasonably mature. COPY count shown as 0 in mechanical indicators but source clearly has COPY statements (likely not resolved at scan time)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5688,
+      "completion_tokens": 639,
+      "total_tokens": 6327,
+      "cost": 0.026649,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026649,
+        "upstream_inference_prompt_cost": 0.017064,
+        "upstream_inference_completions_cost": 0.009585
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.67,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:11:54Z"
+}

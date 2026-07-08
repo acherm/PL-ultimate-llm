@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:c005f9ef14186e846e7d80507a533cf3c6e678c4",
+    "sha1_git": "c005f9ef14186e846e7d80507a533cf3c6e678c4",
+    "filename": "/CUNA_util01.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9442,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:c005f9ef14186e846e7d80507a533cf3c6e678c4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:c005f9ef14186e846e7d80507a533cf3c6e678c4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9442,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 242,
+    "blank_lines": 40,
+    "comment_lines": 35,
+    "code_lines": 167,
+    "comment_ratio": 0.173,
+    "max_line_length": 80,
+    "avg_line_length": 37.0,
+    "long_lines_over_72": 29,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 16,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL targeting file-based batch processing; SOURCE-COMPUTER/OBJECT-COMPUTER set to IBM-370 but uses ACCEPT FROM COMMAND-LINE, LINE SEQUENTIAL files, and a debug comment referencing 'debug\\cobolexec.ctl' (Windows path), suggesting GnuCOBOL on Windows or similar PC environment",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
+          "ACCEPT WS-CONTROL-FILE-PATH FROM COMMAND-LINE",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "debug\\cobolexec.ctl (Windows backslash path in comment)",
+          "COPY FORMCP (local copybook)",
+          "RETURN-CODE used directly"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "CUNA (Credit Union National Association?) mail/document processing utility; reads input records and filters/counts by mail type categories (PRESORTS, RESIDUALS, NO MAILS, HANDSTUFFS, PDF)",
+        "summary": "A batch utility program that reads an input file, processes records looking for a '%FILENAME%' marker, writes matching records to an output file, and counts records by mail processing category (presorts, residuals, no mails, handstuffs, PDF). It reads configuration from a control file passed via command-line argument and logs results to a syslog file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ACCEPT FROM COMMAND-LINE for runtime configuration",
+        "Control file parsing with UNSTRING DELIMITED BY",
+        "LINE SEQUENTIAL file organization",
+        "COPY FORMCP copybook",
+        "RETURN-CODE used as error sentinel (+999)",
+        "Multiple file status checks with STRING error messages",
+        "88-level condition names for EOF flags",
+        "Tab character visible in PROCEDURE DIVISION (mixed indentation)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "The file has mixed line numbering styles (some lines have 6-digit sequence numbers like 000022, others have no sequence numbers), suggesting the code was edited in a non-mainframe editor. A tab character appears in the 200-PROCESS paragraph. The PROGRAM-ID paragraph appears to be missing from the IDENTIFICATION DIVISION. The COPY FORMCP copybook is referenced but not shown, so some working-storage fields (WS-MCP-* variables, WS-CONTROL-FILE-*, WS-SYSLOG-*, EOF-CTL, WS-EOF-CTL) are defined there. IP-FILE1-STATUS is declared in working-storage but appears unused (file status uses WS-MCP-SYSIN1-STATUS from copybook)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4923,
+      "completion_tokens": 657,
+      "total_tokens": 5580,
+      "cost": 0.024624,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024624,
+        "upstream_inference_prompt_cost": 0.014769,
+        "upstream_inference_completions_cost": 0.009855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.28,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:02:51Z"
+}

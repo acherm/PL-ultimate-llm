@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a797f5016909501ef1f5343e6cacb7695cffdf21",
+    "sha1_git": "a797f5016909501ef1f5343e6cacb7695cffdf21",
+    "filename": "/Inventory_Pegging.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4124,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a797f5016909501ef1f5343e6cacb7695cffdf21/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a797f5016909501ef1f5343e6cacb7695cffdf21/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4124,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 119,
+    "blank_lines": 15,
+    "comment_lines": 2,
+    "code_lines": 102,
+    "comment_ratio": 0.019,
+    "max_line_length": 72,
+    "avg_line_length": 33.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Inventory_Pegging"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 32,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL (OpenCOBOL); uses LINE SEQUENTIAL, SET with inline *> comments, COMP with LOW-VALUES, and STOP literal — consistent with GnuCOBOL on Windows. INSTALLATION shows CITI but file paths are Windows local drives.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "set item-eof-flag to 1 *> inline comment",
+          "01 ws-numerics comp value low-values",
+          "stop 'Press <CR> to terminate'",
+          "Windows file paths E:\\MRP_Shampoo\\"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "MRP (Material Requirements Planning) inventory pegging — reads an Item Master file and a Bill of Materials file, displays item and BOM records",
+        "summary": "This program reads an Item Master flat file and a Bill of Materials flat file, then displays each record's fields to the console while counting rows. It is part of an MRP/inventory pegging exercise, likely for a shampoo manufacturing scenario. The BOM reader section is commented out, suggesting work in progress.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "SET statement used for EOF flag",
+        "Inline *> comments",
+        "COMP group item initialized with LOW-VALUES",
+        "STOP literal (non-standard 'Press <CR> to terminate')",
+        "Windows absolute file paths in SELECT clauses",
+        "Continuation line with leading hyphen in PROCEDURE DIVISION display",
+        "BOM processing section commented out — incomplete"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The program has a continuation line syntax anomaly (hyphen in column 7 after DISPLAY TEXT-OUT) that may cause a compile warning. The BOM reader-writer perform is commented out. INSTALLATION shows CITI (Citibank?) but the overall style and Windows paths suggest a personal/educational exercise rather than production mainframe code. No EXEC SQL, no EXEC CICS, no COPY statements."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3596,
+      "completion_tokens": 496,
+      "total_tokens": 4092,
+      "cost": 0.018228,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018228,
+        "upstream_inference_prompt_cost": 0.010788,
+        "upstream_inference_completions_cost": 0.00744
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.11,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:08:27Z"
+}

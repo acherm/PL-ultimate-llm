@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ff531f1d242cdf73f2f7cf49c74c731652a6eb23",
+    "sha1_git": "ff531f1d242cdf73f2f7cf49c74c731652a6eb23",
+    "filename": "/FILETEST.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13936,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ff531f1d242cdf73f2f7cf49c74c731652a6eb23/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ff531f1d242cdf73f2f7cf49c74c731652a6eb23/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13936,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 329,
+    "blank_lines": 0,
+    "comment_lines": 96,
+    "code_lines": 233,
+    "comment_ratio": 0.292,
+    "max_line_length": 72,
+    "avg_line_length": 40.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FILETEST"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 10,
+    "call_count": 0,
+    "perform_count": 17,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "fujitsu-nec",
+        "standard": "COBOL-85",
+        "detail": "Hitachi COBOL (HITAC mainframe/midrange); SOURCE-COMPUTER HITAC, Japanese comments encoded in latin-1/Shift-JIS, PREFIXING clause on COPY, SKIP3 formatting directive",
+        "evidence": [
+          "SOURCE-COMPUTER. HITAC",
+          "AUTHOR. HITACHI",
+          "COPY ... PREFIXING",
+          "SKIP3 page-eject directive",
+          "Japanese text in comments (latin-1/Shift-JIS encoded)",
+          "PATTERN-ID comment"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "File merge/join test utility reading three hierarchical input files (ROOT, SUB, SUB2) and writing merged output plus execution statistics",
+        "summary": "FILETEST reads three input files (FILE-A root, FILE-B sub, FILE-C sub2) in a nested-loop join pattern and writes merged records to an output file. It also records start/end times and record counts to a status output file. The program appears to be a test harness for verifying file processing logic on a Hitachi system.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COPY ... PREFIXING clause (Hitachi/IBM extension)",
+        "SKIP3 formatting directive",
+        "Nested PERFORM UNTIL loops for hierarchical file merge",
+        "ACCEPT ... FROM TIME for elapsed-time measurement",
+        "ORGANIZATION IS LINE SEQUENTIAL on output files",
+        "10 COPY statements with PREFIXING",
+        "Japanese comments (Shift-JIS/latin-1 encoded)",
+        "COMPUTE for elapsed time arithmetic"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Comments contain Japanese text encoded in what appears to be Shift-JIS or a Hitachi-specific encoding, decoded here as latin-1 resulting in mojibake. The first line (000100) contains binary/non-printable characters suggesting a possible file header or watermark. The PREFIXING clause on COPY is a Hitachi/IBM extension not in standard COBOL-85. No COMP-3 usage despite numeric fields, consistent with Hitachi conventions."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6225,
+      "completion_tokens": 519,
+      "total_tokens": 6744,
+      "cost": 0.02646,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02646,
+        "upstream_inference_prompt_cost": 0.018675,
+        "upstream_inference_completions_cost": 0.007785
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.16,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:37:04Z"
+}

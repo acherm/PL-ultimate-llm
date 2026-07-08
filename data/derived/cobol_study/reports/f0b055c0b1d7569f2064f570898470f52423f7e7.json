@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:f0b055c0b1d7569f2064f570898470f52423f7e7",
+    "sha1_git": "f0b055c0b1d7569f2064f570898470f52423f7e7",
+    "filename": "/shop_receipts.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2062,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:f0b055c0b1d7569f2064f570898470f52423f7e7/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:f0b055c0b1d7569f2064f570898470f52423f7e7/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2062,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 59,
+    "blank_lines": 3,
+    "comment_lines": 1,
+    "code_lines": 55,
+    "comment_ratio": 0.018,
+    "max_line_length": 70,
+    "avg_line_length": 33.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SHOP-RECEIPT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 11,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with GOBACK and LINE SEQUENTIAL; likely compiled with GnuCOBOL or similar open-source compiler given the file-based flat-file approach and naming conventions",
+        "evidence": [
+          "GOBACK verb",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SET END-OF-SHOP-RECEIPT-FILE TO TRUE",
+          "88-level condition names with HIGH-VALUES",
+          "END-READ scope terminator"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Shop sales receipt processing: reads a flat file of shop header and sale records, accumulates item totals per shop, and displays formatted sales totals",
+        "summary": "Reads a sequential file of shop receipt records (header and sale lines), groups sales by shop, computes total sales per shop by multiplying item cost by quantity sold, and displays a formatted total line for each shop.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "88-level condition names used for record-type dispatch and EOF detection",
+        "Currency-edited PIC clause ($$$$,$$9.99) for formatted output",
+        "COMPUTE with arithmetic expression",
+        "LINE SEQUENTIAL file organization",
+        "GOBACK instead of STOP RUN",
+        "Typo in data name: SHOP-LAOCATION"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program has a typo ('SHOP-LAOCATION') and a commented-out DISPLAY statement, suggesting a student or learning exercise. The RECORD-TYPE-CODE field is defined in both 01-level records (SHOP-HEADER and SEAL-RECEIPT) which could cause ambiguous reference issues at compile time. No COMP-3, no SQL, no CICS. Dialect is uncertain between GnuCOBOL and generic COBOL-85; no vendor-specific extensions visible."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2958,
+      "completion_tokens": 449,
+      "total_tokens": 3407,
+      "cost": 0.015609,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015609,
+        "upstream_inference_prompt_cost": 0.008874,
+        "upstream_inference_completions_cost": 0.006735
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.55,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:48:26Z"
+}

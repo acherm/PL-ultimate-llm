@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:28e764e46c0a71c6f611a6f4aa6d76235d028316",
+    "sha1_git": "28e764e46c0a71c6f611a6f4aa6d76235d028316",
+    "filename": "/CBL2JAVA.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10104,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:28e764e46c0a71c6f611a6f4aa6d76235d028316/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:28e764e46c0a71c6f611a6f4aa6d76235d028316/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10104,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 280,
+    "blank_lines": 58,
+    "comment_lines": 52,
+    "code_lines": 170,
+    "comment_ratio": 0.234,
+    "max_line_length": 72,
+    "avg_line_length": 35.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CBL2JAVA"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 12,
+    "perform_count": 9,
+    "goto_count": 1,
+    "pic_count": 35,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM Enterprise COBOL for z/OS, likely v6.4 (explicit mention of 'COBOL 6.4 CALL statement'), targeting IMS/TM (DL/I) with JNI integration for Java interop. Uses PGMNAME(LONGMIXED), DLL, THREAD compiler options typical of z/OS LE.",
+        "evidence": [
+          "Process pgmname(longmixed),dll,thread",
+          "Call 'CBLTDLI' using GU-FUNC, IOPCB",
+          "ENTRY 'MYIMSAPP' using IOPCB",
+          "COPY JNI",
+          "Call 'Java.mpr.apps.HelloWorldJava64.sayHello1'",
+          "pic 9(18) comp-5",
+          "Local-Storage Section",
+          "FUNCTION CURRENT-DATE",
+          "GOBACK instead of STOP RUN comment referencing LE enclave"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "IMS/TM transaction processing with Java interoperability via JNI on z/OS",
+        "summary": "An IMS/TM COBOL application (CBL2JAVA) that reads input messages via DL/I GU calls, then invokes Java methods (HelloWorldJava64) both via IBM COBOL 6.4 direct Java CALL syntax and via manual JNI calls (FindClass, GetStaticMethodId, NewDirectByteBuffer, CallStaticVoidMethod). It shares COBOL working storage with Java using a direct ByteBuffer, then inserts a reply message back to IMS.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "IMS DL/I CBLTDLI calls (GU, ISRT, QC, ROLL function codes)",
+        "JNI integration via COPY JNI and manual JNI API calls (FindClass, GetStaticMethodId, NewDirectByteBuffer, CallStaticVoidMethod, ExceptionCheck)",
+        "IBM COBOL 6.4 direct Java CALL syntax: Call 'Java.mpr.apps.HelloWorldJava64.sayHello1'",
+        "Local-Storage Section for thread-safe variables",
+        "COMP-5 64-bit object references (pic 9(18) comp-5)",
+        "PGMNAME(LONGMIXED), DLL, THREAD compiler options",
+        "FUNCTION DISPLAY-OF with national literals and UTF-8 codepage 1208",
+        "IS RECURSIVE program attribute",
+        "NewDirectByteBuffer for zero-copy COBOL/Java memory sharing",
+        "ENTRY statement for IMS entry point"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program type set to online-cics as the closest enum for IMS/TM online transaction processing (no CICS enum available). The code is a demonstration/example of COBOL-to-Java interoperability on z/OS IMS but is written with production-quality patterns including error handling, thread safety via Local-Storage, and proper LE GOBACK usage."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5077,
+      "completion_tokens": 734,
+      "total_tokens": 5811,
+      "cost": 0.026241,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026241,
+        "upstream_inference_prompt_cost": 0.015231,
+        "upstream_inference_completions_cost": 0.01101
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.02,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:36:05Z"
+}

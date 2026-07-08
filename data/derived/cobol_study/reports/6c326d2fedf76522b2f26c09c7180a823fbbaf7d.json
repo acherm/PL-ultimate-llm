@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6c326d2fedf76522b2f26c09c7180a823fbbaf7d",
+    "sha1_git": "6c326d2fedf76522b2f26c09c7180a823fbbaf7d",
+    "filename": "/PIZZA-INVENTORY-PROG.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16438,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6c326d2fedf76522b2f26c09c7180a823fbbaf7d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6c326d2fedf76522b2f26c09c7180a823fbbaf7d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16438,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 516,
+    "blank_lines": 166,
+    "comment_lines": 107,
+    "code_lines": 243,
+    "comment_ratio": 0.306,
+    "max_line_length": 73,
+    "avg_line_length": 29.9,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PIZZA-INVENTORY-PROG"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 19,
+    "goto_count": 0,
+    "pic_count": 70,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with ACCEPT FROM DATE YYYYMMDD extension; SOURCE-COMPUTER/OBJECT-COMPUTER listed as IBMPC suggesting a PC-based compiler (possibly Micro Focus or similar), but no vendor-specific extensions are visible",
+        "evidence": [
+          "SOURCE-COMPUTER. IBMPC",
+          "OBJECT-COMPUTER. IBMPC",
+          "ACCEPT CURRENT-DATE FROM DATE YYYYMMDD",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "EVALUATE TRUE",
+          "PERFORM VARYING ... FROM 1 BY 1 UNTIL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student programming exercise involving a pizza truck inventory report with control-break logic",
+        "summary": "This program reads a flat file containing records for two pizza/treat delivery trucks, processes an array of treat items per record, computes per-item revenue and per-truck totals, and writes a formatted report with headers, detail lines, truck totals, and a grand total. It uses a control-break technique to separate output by truck ID.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OCCURS 3 TIMES array in both FILE SECTION and WORKING-STORAGE",
+        "Control-break logic between two truck IDs",
+        "PERFORM VARYING loop over array subscript",
+        "EVALUATE TRUE for size code expansion (L/M/S to LARGE/MEDIUM/SMALL)",
+        "ACCEPT FROM DATE YYYYMMDD for current date",
+        "Numeric validation with NOT NUMERIC checks",
+        "Edited PIC clauses with $ZZZ,ZZZ.99 for currency output",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "ORGANIZATION IS LINE SEQUENTIAL for input file"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program is clearly a student assignment (AUTHOR field shows a personal name, domain is pizza trucks, comments are explanatory/tutorial in style). The file is truncated at 16000 chars but the truncation appears near the end of the PROCEDURE DIVISION; the core logic is fully visible. No vendor-specific directives present; IBMPC as computer name suggests a PC COBOL compiler environment."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6985,
+      "completion_tokens": 526,
+      "total_tokens": 7511,
+      "cost": 0.028845,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028845,
+        "upstream_inference_prompt_cost": 0.020955,
+        "upstream_inference_completions_cost": 0.00789
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.71,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:08:32Z"
+}

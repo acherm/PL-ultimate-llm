@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2ee70e7da132de9c1359e0d4744480114796802a",
+    "sha1_git": "2ee70e7da132de9c1359e0d4744480114796802a",
+    "filename": "/BAC00110.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1515086,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2ee70e7da132de9c1359e0d4744480114796802a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2ee70e7da132de9c1359e0d4744480114796802a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1515086,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 26272,
+    "blank_lines": 3,
+    "comment_lines": 2132,
+    "code_lines": 24137,
+    "comment_ratio": 0.081,
+    "max_line_length": 115,
+    "avg_line_length": 56.7,
+    "long_lines_over_72": 10197,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BAC00110"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 55,
+    "call_count": 192,
+    "perform_count": 1019,
+    "goto_count": 539,
+    "pic_count": 3165,
+    "comp3_count": 228,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL; uses RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, LABEL RECORDS ARE STANDARD, COMP-3, COMP, ILBOABN0 abend routine, and fixed-format source with sequence numbers. Version tracking comments (e.g. 02.38, 03.66) suggest a long-lived production system. COPY statements reference IBM-style copybooks (KMCADDFO, FDFEICF, FDFEPKG, KMCCRATE, etc.).",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "LABEL RECORDS ARE STANDARD",
+          "COMP-3 usage throughout",
+          "ILBOABN0 abend call",
+          "COPY KMCADDFO / FDFEICF / FDFEPKG",
+          "sequence numbers in columns 1-6",
+          "version annotations like 02.38, 03.66"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Bankcard/merchant transaction processing — preliminary edit and validation of merchant transactions including interchange rate handling, EBT, passthrough, downgrade, reconciliation, and settlement",
+        "summary": "BAC00110 is a large batch program that performs preliminary editing and validation of bankcard merchant transactions. It handles multiple transaction codes (2000, 3000, 3100, 0601-0607, 0701-0707, etc.), applies interchange rate lookups, check-digit validation, plan assignment, reconciliation, and produces multiple report and output files. It calls numerous subprograms for specific validation and processing tasks.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal fields throughout",
+        "Indexed file access (FEICF, FEPKG) with FILE STATUS",
+        "SORT file (SD) usage",
+        "55 COPY statements referencing external copybooks",
+        "192 CALLs to subprograms (BASCKDGT, BACONDEC, DATECONV, BAS10001, BAS110AR, BASCRATE, etc.)",
+        "1019 PERFORMs and 539 GOTOs indicating complex procedural logic",
+        "Version/release tracking in comments (RELEASE VV.LL 03.66)",
+        "Multiple report output files (passthru, downgrade, PBD-EBT, reject, default)",
+        "REDEFINES usage",
+        "Large file: ~26K lines, 1.5MB"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is 1.5MB / 26K lines — only first 16K characters were shown. Program-ID BAC00110 with author PLANET CONSULTING. Version annotation '03.66' in INVENTORY-LEVEL field suggests a mature, versioned production system. No EXEC SQL or EXEC CICS found; purely batch. The ILBOABN0 call is an IBM OS/VS COBOL abend routine, strongly confirming IBM mainframe heritage."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7904,
+      "completion_tokens": 722,
+      "total_tokens": 8626,
+      "cost": 0.034542,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.034542,
+        "upstream_inference_prompt_cost": 0.023712,
+        "upstream_inference_completions_cost": 0.01083
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:01:09Z"
+}

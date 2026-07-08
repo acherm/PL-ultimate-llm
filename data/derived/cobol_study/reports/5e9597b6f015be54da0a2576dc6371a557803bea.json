@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5e9597b6f015be54da0a2576dc6371a557803bea",
+    "sha1_git": "5e9597b6f015be54da0a2576dc6371a557803bea",
+    "filename": "/EXTENSO-FINALIZADO.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 29632,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5e9597b6f015be54da0a2576dc6371a557803bea/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5e9597b6f015be54da0a2576dc6371a557803bea/raw/"
+  },
+  "indicators": {
+    "bytes_len": 29632,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 374,
+    "blank_lines": 0,
+    "comment_lines": 0,
+    "code_lines": 374,
+    "comment_ratio": 0.0,
+    "max_line_length": 286,
+    "avg_line_length": 78.2,
+    "long_lines_over_72": 112,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "EXTENSO-FINALIZADO"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 48,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Brazilian Portuguese student exercise, likely compiled with GnuCOBOL; uses FUNCTION TRIM and reference modification (NUM(5:1)) consistent with COBOL-85/2002 features",
+        "evidence": [
+          "FUNCTION TRIM usage",
+          "reference modification e.g. NUM(5:1)",
+          "OCCURS/REDEFINES table structure",
+          "PIC A and PIC X fields",
+          "Portuguese string literals (REAIS, MIL, etc.)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Brazilian currency amount to words converter (número por extenso em reais)",
+        "summary": "This program accepts an integer up to 6 digits and displays its written-out form in Brazilian Portuguese (e.g. 1234 -> 'MIL, DUZENTOS E TRINTA E QUATRO REAIS'). It uses lookup tables for units, tens, hundreds, and special cases (11-19). It is a classic student exercise for number-to-words conversion in Portuguese.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "FUNCTION TRIM on table elements",
+        "Reference modification for digit extraction (NUM(1:1) etc.)",
+        "REDEFINES with OCCURS for lookup tables",
+        "Portuguese-language string literals",
+        "No ENVIRONMENT DIVISION",
+        "No PERFORM or GOTO - all inline IF/ELSE logic",
+        "Duplicate data-name ESPECIAL-A (likely a typo in student code)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars but the pattern is clear. The program has a duplicate level-05 name 'ESPECIAL-A' which would cause a compile warning/error - consistent with student work. No ENVIRONMENT DIVISION present. Brazilian Portuguese throughout. Long lines (max 286) exceed fixed-format column 72 limit, suggesting free or extended fixed format, but mechanical indicator says fixed."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 8247,
+      "completion_tokens": 473,
+      "total_tokens": 8720,
+      "cost": 0.031836,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031836,
+        "upstream_inference_prompt_cost": 0.024741,
+        "upstream_inference_completions_cost": 0.007095
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:09:46Z"
+}

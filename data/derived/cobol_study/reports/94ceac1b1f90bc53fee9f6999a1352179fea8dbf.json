@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:94ceac1b1f90bc53fee9f6999a1352179fea8dbf",
+    "sha1_git": "94ceac1b1f90bc53fee9f6999a1352179fea8dbf",
+    "filename": "/FinalProject-ValidData.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 12040,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:94ceac1b1f90bc53fee9f6999a1352179fea8dbf/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:94ceac1b1f90bc53fee9f6999a1352179fea8dbf/raw/"
+  },
+  "indicators": {
+    "bytes_len": 12040,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 305,
+    "blank_lines": 5,
+    "comment_lines": 67,
+    "code_lines": 233,
+    "comment_ratio": 0.223,
+    "max_line_length": 71,
+    "avg_line_length": 38.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FinalProject-ValidData"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 53,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Student project likely compiled with GnuCOBOL; uses relative file paths with '../../../data/', line-sequential files, and GOBACK. No IBM-specific extensions detected.",
+        "evidence": [
+          "organization is line sequential",
+          "assign to '../../../data/project6.dat'",
+          "goback",
+          "end program FinalProject-ValidData",
+          "88-level condition name for hyphen check"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University final project for a COBOL course (2022), validating retail transaction records from a flat file",
+        "summary": "Reads transaction records from an input file and validates fields including payment type, transaction code, store number, invoice number format, and SKU code. Valid records are written to a valid output file, invalid records to an invalid output file, and error details to an error report file with totals.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "88-level condition name (input-inv-num-is-hyphen)",
+        "OCCURS clause for error message table (ws-errors occurs 10 times)",
+        "ZZ9 edited numeric fields for totals display",
+        "Substring reference modification: emp-invoice-number(4:6)",
+        "Multiple output files: valid, invalid, error-report",
+        "WRITE ... BEFORE ADVANCING for report formatting",
+        "Duplicate data-name ws-valid-recs (likely a compiler warning)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Duplicate 05-level name 'ws-valid-recs' in ws-error-totals group would cause a compiler warning. The invoice range check 'not invoice-split-num >= 100000 and <= 900000' has a logical ambiguity (AND vs OR precedence). One IF block has misaligned indentation (missing leading space before 'if emp-transac-amount'). These are typical student-level issues. File decoded as latin-1 with no special characters observed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5578,
+      "completion_tokens": 480,
+      "total_tokens": 6058,
+      "cost": 0.023934,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023934,
+        "upstream_inference_prompt_cost": 0.016734,
+        "upstream_inference_completions_cost": 0.0072
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:50:28Z"
+}

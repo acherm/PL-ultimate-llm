@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2cee1f110532c56cffc1b6e1a4fb2d360da59698",
+    "sha1_git": "2cee1f110532c56cffc1b6e1a4fb2d360da59698",
+    "filename": "/input.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14982,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2cee1f110532c56cffc1b6e1a4fb2d360da59698/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2cee1f110532c56cffc1b6e1a4fb2d360da59698/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14982,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 372,
+    "blank_lines": 0,
+    "comment_lines": 1,
+    "code_lines": 371,
+    "comment_ratio": 0.003,
+    "max_line_length": 72,
+    "avg_line_length": 38.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SPGRYNRB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 8,
+    "goto_count": 25,
+    "pic_count": 95,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS online program; SOURCE-COMPUTER IBM-370, OBJECT-COMPUTER IBM-370; uses EXEC CICS PUSH/POP HANDLE, ASKTIME, FORMATTIME, RETURN; COMPUTATIONAL and COMPUTATIONAL-3 usage consistent with IBM mainframe conventions",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-370",
+          "OBJECT-COMPUTER. IBM-370",
+          "EXEC CICS PUSH HANDLE",
+          "EXEC CICS HANDLE ABEND",
+          "EXEC CICS ASKTIME ABSTIME",
+          "EXEC CICS FORMATTIME",
+          "EXEC CICS RETURN",
+          "COMPUTATIONAL-3",
+          "DFHCOMMAREA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Appears to be a French-language banking or financial application (variable names like NCPTEI suggest account/counter numbers, CLRIB0 suggests a Luhn/modulo-97 check digit calculation typical of IBAN or Belgian/French bank account validation); program name SPGRYNRB and constants reference 'DPR' application code",
+        "summary": "This CICS online program validates financial account identifiers using a modulo-97 check digit algorithm (similar to IBAN validation). It receives data via DFHCOMMAREA, validates account codes and counters, computes a check digit by dividing by 97, and returns results. It also performs date format conversion between multiple date representations.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS PUSH HANDLE / POP HANDLE for condition handling",
+        "EXEC CICS HANDLE ABEND with label",
+        "EXEC CICS ASKTIME / FORMATTIME for current date/time retrieval",
+        "EXEC CICS RETURN for transaction return",
+        "Modulo-97 check digit calculation (DIVIDE 97 INTO ... REMAINDER)",
+        "Extensive date format conversion subroutine (F9520) supporting multiple date layouts",
+        "DFHCOMMAREA linkage for data passing",
+        "Heavy use of GO TO for paragraph flow control (25 GOTOs)",
+        "REDEFINES used for overlay of date and working storage areas",
+        "French-language variable and comment naming conventions"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program constants embed a generation date of 28/02/2003 and program identifiers suggesting this is from a French or Belgian financial system (PAC framework, 'DPR' application). The modulo-97 algorithm and field names (NCPTEI, CLRIB0) strongly suggest Belgian/French bank account number validation. No COPY statements present; all logic is self-contained. Comment ratio is very low (1 comment line)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 7893,
+      "completion_tokens": 652,
+      "total_tokens": 8545,
+      "cost": 0.033459,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033459,
+        "upstream_inference_prompt_cost": 0.023679,
+        "upstream_inference_completions_cost": 0.00978
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.86,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:06:19Z"
+}

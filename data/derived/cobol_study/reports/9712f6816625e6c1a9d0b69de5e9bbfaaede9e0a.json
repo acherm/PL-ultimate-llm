@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9712f6816625e6c1a9d0b69de5e9bbfaaede9e0a",
+    "sha1_git": "9712f6816625e6c1a9d0b69de5e9bbfaaede9e0a",
+    "filename": "/test.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 302889,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9712f6816625e6c1a9d0b69de5e9bbfaaede9e0a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9712f6816625e6c1a9d0b69de5e9bbfaaede9e0a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 302889,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 6731,
+    "blank_lines": 335,
+    "comment_lines": 1727,
+    "code_lines": 4669,
+    "comment_ratio": 0.27,
+    "max_line_length": 80,
+    "avg_line_length": 44.0,
+    "long_lines_over_72": 341,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "FH02P0M3"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 52,
+    "call_count": 73,
+    "perform_count": 246,
+    "goto_count": 27,
+    "pic_count": 289,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL, likely compiled with VS COBOL II or IBM COBOL for z/OS (comment *VSCOBII85 suggests VS COBOL II targeting COBOL-85 standard). Part of a large FEP (Federal Employee Program) claims processing system with DB2 embedded SQL and extensive copybook usage.",
+        "evidence": [
+          "*VSCOBII85 comment in identification division",
+          "EXEC SQL present (DB2)",
+          "fixed format with max line length 80",
+          "PROGRAM-ID FH02P0M3 naming convention typical of IBM mainframe",
+          "52 COPY statements, 73 CALLs typical of mainframe production system",
+          "COMP-3 usage",
+          "DATE-COMPILED paragraph"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "insurance",
+        "domain_detail": "Federal Employee Program (FEP) health insurance claims processing - routes claims through benefits administration, pricing, payment calculation, COB (Coordination of Benefits), and subscriber liability processing",
+        "summary": "This is a large production COBOL batch program (FH02P0M3) that routes health insurance claims through benefits administration, pricing, payment calculation, coordination of benefits (COB), and subscriber liability processing. It also performs crossfoot logic and writes supporting history records. It is part of the FEP (Federal Employee Program) NewClaims system, derived from SYSTEM85 program FH02P5M2.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL (DB2) embedded SQL",
+        "52 COPY statements referencing FWG-prefixed copybooks",
+        "73 CALL statements to subprograms (FH02P3M1 through FH02P3MJ etc.)",
+        "246 PERFORM statements",
+        "27 GO TO statements",
+        "COMP-3 packed decimal fields",
+        "Extensive maintenance history spanning 2002-2011+",
+        "COB (Coordination of Benefits) processing",
+        "Dynamic CALL to FX70P2M6 for century date conversion",
+        "Supporting history record writing (N1, H3, K1, L1 record types)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "File is 302KB / 6731 lines, truncated to first 16000 chars for analysis. The comment *VSCOBII85 strongly suggests VS COBOL II compiler targeting COBOL-85. The program has an extensive maintenance history log from 2002 through at least 2011, with many tracked trouble tickets (TT#) and CMRs, indicating a mature production insurance claims system. DB2 SQL is used for claims history storage (CMR387791 DB2 conversion noted). The FEP context refers to the Blue Cross Blue Shield Federal Employee Program."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7269,
+      "completion_tokens": 656,
+      "total_tokens": 7925,
+      "cost": 0.031647,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031647,
+        "upstream_inference_prompt_cost": 0.021807,
+        "upstream_inference_completions_cost": 0.00984
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 357.26,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:51:12Z"
+}

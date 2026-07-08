@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3414c509707d98daec86a1c33842b6d578a34c3e",
+    "sha1_git": "3414c509707d98daec86a1c33842b6d578a34c3e",
+    "filename": "/CALL370.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1091,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3414c509707d98daec86a1c33842b6d578a34c3e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3414c509707d98daec86a1c33842b6d578a34c3e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1091,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 25,
+    "blank_lines": 0,
+    "comment_lines": 3,
+    "code_lines": 22,
+    "comment_ratio": 0.12,
+    "max_line_length": 70,
+    "avg_line_length": 42.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "CALL370"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 4,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 4,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL/OpenCOBOL test program; filename suffix .CBL and reference to TEST370.BIN suggest GnuCOBOL compiled binary subprogram testing",
+        "evidence": [
+          "PROGRAM-ID. CALL370",
+          "CALL \"TEST370\" USING",
+          "RETURN-CODE",
+          "filename CALL370.CBL",
+          "reference to TEST370.BIN in DISPLAY"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Test harness for a subprogram named TEST370, likely testing date-field passing conventions across different USAGE types",
+        "summary": "CALL370 is a test driver that calls the subprogram TEST370 twice, passing date values in four different data formats (numeric, alphanumeric, COMP-3, COMP). It displays the return code after each call to verify correct behavior.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "COMP-3 usage (packed decimal)",
+        "COMP usage (binary)",
+        "RETURN-CODE special register",
+        "Calls same subprogram twice to test repeated invocation",
+        "Four different PIC/USAGE combinations for same date value"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "No IDENTIFICATION DIVISION keyword detected by mechanical scan but it is present in source. The program is clearly a test/demo for subprogram calling conventions, likely used in a GnuCOBOL or similar open-source COBOL tutorial or test suite context."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2548,
+      "completion_tokens": 381,
+      "total_tokens": 2929,
+      "cost": 0.013359,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013359,
+        "upstream_inference_prompt_cost": 0.007644,
+        "upstream_inference_completions_cost": 0.005715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.59,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:35:02Z"
+}

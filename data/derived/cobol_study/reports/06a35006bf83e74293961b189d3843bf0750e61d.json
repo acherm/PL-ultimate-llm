@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:06a35006bf83e74293961b189d3843bf0750e61d",
+    "sha1_git": "06a35006bf83e74293961b189d3843bf0750e61d",
+    "filename": "/IMSCBLJB.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14700,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:06a35006bf83e74293961b189d3843bf0750e61d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:06a35006bf83e74293961b189d3843bf0750e61d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14700,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 361,
+    "blank_lines": 25,
+    "comment_lines": 97,
+    "code_lines": 239,
+    "comment_ratio": 0.289,
+    "max_line_length": 72,
+    "avg_line_length": 39.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "IMSCBLJB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 11,
+    "perform_count": 26,
+    "goto_count": 0,
+    "pic_count": 44,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM Enterprise COBOL for z/OS with OO extensions (INVOKE, object references, REPOSITORY clause with Java class mappings); IMS MPP (Message Processing Program) using CBLTDLI; JNI interop via JNI copybook; CBL DLL,THREAD compiler options indicate z/OS DLL threading model",
+        "evidence": [
+          "CBL dll,thread compiler option",
+          "PROGRAM-ID IMSCBLJB RECURSIVE",
+          "REPOSITORY clause with Java class mappings (com.ibm.jzos.ZUtil, java.lang.String, etc.)",
+          "Invoke ZUtil 'redirectStandardStreams'",
+          "CALL 'CBLTDLI' USING DLI-GET-UNIQUE IO-PCB-MASK",
+          "COPY \"JNI\" SUPPRESS",
+          "object reference stringArray / JavaString / JavaClass",
+          "COMP-3 usage in IO-PCB-MASK",
+          "(c) Copyright IBM Corp. 2021"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "IMS MPP (Message Processing Program) sample demonstrating COBOL-to-Java interoperability via JNI on z/OS",
+        "summary": "This is an IBM sample IMS COBOL MPP program (IMSCBLJB) that reads input messages from the IMS message queue via CBLTDLI calls and invokes Java methods using OO COBOL extensions and JNI. It demonstrates three types of Java calls: a static void method (ZUtil.redirectStandardStreams), the Java main method (JavaSample.main), and a static method returning a String (JavaSample.getResponse), then returns the result as an IMS output message.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "OO COBOL INVOKE statements for Java interoperability",
+        "REPOSITORY clause mapping Java classes to COBOL class names",
+        "JNI direct calls (NewString, GetObjectClass, NewObjectArray, GetStringLength, GetStringChars, ReleaseStringChars, ExceptionOccurred, ExceptionClear)",
+        "COPY \"JNI\" SUPPRESS copybook for JNI interface",
+        "IMS CBLTDLI calls (GU, ISRT) with IO-PCB-MASK linkage",
+        "CBL DLL,THREAD compiler options for z/OS threading",
+        "PROGRAM-ID RECURSIVE clause",
+        "PIC N (national) data items for Unicode string handling",
+        "FUNCTION DISPLAY-OF with CCSID 1140 for EBCDIC conversion",
+        "COMP-3 fields in PCB mask"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is an official IBM sample program (copyright IBM Corp. 2021, Apache License 2.0) demonstrating IMS COBOL-to-Java interoperability. The COPY IMSC2JC copybook (not shown) defines INPUT-MSG/OUTPUT-MSG structures. The JNI copybook is also not shown. Program is well-structured and production-quality despite being a sample/demo."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6142,
+      "completion_tokens": 733,
+      "total_tokens": 6875,
+      "cost": 0.029421,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029421,
+        "upstream_inference_prompt_cost": 0.018426,
+        "upstream_inference_completions_cost": 0.010995
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.97,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:24:40Z"
+}

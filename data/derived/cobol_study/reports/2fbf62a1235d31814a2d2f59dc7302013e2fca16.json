@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2fbf62a1235d31814a2d2f59dc7302013e2fca16",
+    "sha1_git": "2fbf62a1235d31814a2d2f59dc7302013e2fca16",
+    "filename": "/asmzx.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 19166,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2fbf62a1235d31814a2d2f59dc7302013e2fca16/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2fbf62a1235d31814a2d2f59dc7302013e2fca16/raw/"
+  },
+  "indicators": {
+    "bytes_len": 19166,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 496,
+    "blank_lines": 0,
+    "comment_lines": 56,
+    "code_lines": 440,
+    "comment_ratio": 0.113,
+    "max_line_length": 72,
+    "avg_line_length": 37.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "asmxbin",
+      "asmxcasu",
+      "asmxexpn",
+      "asmxglen",
+      "asmxopcd",
+      "asmzx"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 16,
+    "call_count": 9,
+    "perform_count": 56,
+    "goto_count": 0,
+    "pic_count": 34,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL-style multi-program source file using BINARY-CHAR, LINE SEQUENTIAL, SHARING WITH ALL, and COPY with REPLACING; no IBM-specific extensions detected",
+        "evidence": [
+          "usage binary-char",
+          "organization is line sequential",
+          "sharing with all",
+          "copy replacing ==:pref:==",
+          "end program asmzx / end program asmxbin etc.",
+          "no COMP-3, no EXEC CICS/SQL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Assembler/linker toolchain: a two-pass assembler that reads assembly source, resolves defines and symbols, encodes instructions to binary output",
+        "summary": "This program (asmzx) is a COBOL-implemented assembler. It reads an assembly source file (program.asm), processes define and symbol directives, expands macros, parses instructions with up to three operands, and writes symbol/instruction records. Companion sub-programs (asmxbin, asmxopcd, asmxglen, asmxcasu, asmxexpn) handle binary encoding, opcode lookup, instruction length calculation, case conversion, and macro expansion respectively.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple nested programs in a single source file (END PROGRAM boundaries)",
+        "BINARY-CHAR usage clause",
+        "COPY with REPLACING pseudo-text (==:pref:==)",
+        "Indexed file I/O for symbol and define tables",
+        "LINE SEQUENTIAL organization",
+        "SHARING WITH ALL on file open",
+        "88-level condition names for RRRR flag",
+        "No COMP-3, no EXEC SQL, no EXEC CICS",
+        "16 COPY statements across programs",
+        "Custom opcode encoding logic (binary bit manipulation)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source truncated at 16000 chars; the asmxcasu program body is cut off. Dialect is likely GnuCOBOL based on BINARY-CHAR and LINE SEQUENTIAL usage, but no compiler directive confirms this. The assembler appears to target a custom/toy ISA given the simple opcode modes (a-e) and nibble-based encoding."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6936,
+      "completion_tokens": 545,
+      "total_tokens": 7481,
+      "cost": 0.028983,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028983,
+        "upstream_inference_prompt_cost": 0.020808,
+        "upstream_inference_completions_cost": 0.008175
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.92,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:42:08Z"
+}

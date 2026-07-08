@@ -1,0 +1,134 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5f8109779c04178fef77147ed21cbe79f894a8d2",
+    "sha1_git": "5f8109779c04178fef77147ed21cbe79f894a8d2",
+    "filename": "/cow.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14247,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5f8109779c04178fef77147ed21cbe79f894a8d2/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5f8109779c04178fef77147ed21cbe79f894a8d2/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14247,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 544,
+    "blank_lines": 236,
+    "comment_lines": 13,
+    "code_lines": 295,
+    "comment_ratio": 0.042,
+    "max_line_length": 134,
+    "avg_line_length": 25.2,
+    "long_lines_over_72": 18,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "checkfilestatus",
+      "checkquery",
+      "cow",
+      "cowtemplate",
+      "getquery",
+      "showvars"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 5,
+    "perform_count": 17,
+    "goto_count": 0,
+    "pic_count": 79,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Cobol-on-Wheelchair (COW) web framework - a CGI/web framework written in GnuCOBOL. Uses FUNCTION SUBSTITUTE, FUNCTION CONCATENATE, ACCEPT FROM ENVIRONMENT, COMP-5, and line-sequential files typical of GnuCOBOL. Multiple nested programs in a single source file.",
+        "evidence": [
+          "USAGE COMP-5",
+          "FUNCTION SUBSTITUTE",
+          "FUNCTION CONCATENATE",
+          "ACCEPT value-string FROM ENVIRONMENT",
+          "organization is line sequential",
+          "78 level constant (name-count)",
+          "nested END PROGRAM markers",
+          "*> inline comments"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "CGI web framework for COBOL - routes HTTP requests based on URL path patterns, substitutes template variables in HTML view files",
+        "summary": "This is the 'Cobol-on-Wheelchair' (COW) web framework. The main program reads the HTTP PATH_INFO query, matches it against routing patterns, dispatches to handler subprograms, and supports a templating engine that substitutes {{varname}} placeholders in HTML view files. It includes subprograms for query parsing, pattern matching, variable display, template rendering, and file status checking.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple nested programs in single source file (END PROGRAM markers)",
+        "CGI web framework pattern (content-type header output, PATH_INFO parsing)",
+        "FUNCTION SUBSTITUTE for template variable substitution",
+        "FUNCTION CONCATENATE",
+        "ACCEPT FROM ENVIRONMENT for CGI environment variables",
+        "78-level constant",
+        "COMP-5 usage",
+        "UNSTRING for URL path tokenization",
+        "Line sequential file I/O for template reading",
+        "COPY directive for config",
+        "Routing table with pattern matching using % prefix for variable capture",
+        "Mustache-style {{varname}} template syntax"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "This is the well-known open-source 'Cobol-on-Wheelchair' CGI web framework. The file contains 6 nested programs: cow (main dispatcher), getquery, showvars, checkquery, cowtemplate, and checkfilestatus. The cowtemplate program is nested inside itself structurally (checkfilestatus is nested within cowtemplate). The framework is designed to run as a CGI program under Apache or similar web servers."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6203,
+      "completion_tokens": 575,
+      "total_tokens": 6778,
+      "cost": 0.027234,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.027234,
+        "upstream_inference_prompt_cost": 0.018609,
+        "upstream_inference_completions_cost": 0.008625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.86,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:03:17Z"
+}

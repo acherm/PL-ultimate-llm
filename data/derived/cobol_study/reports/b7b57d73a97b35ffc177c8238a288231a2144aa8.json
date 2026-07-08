@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b7b57d73a97b35ffc177c8238a288231a2144aa8",
+    "sha1_git": "b7b57d73a97b35ffc177c8238a288231a2144aa8",
+    "filename": "/JOBI12.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 114700,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b7b57d73a97b35ffc177c8238a288231a2144aa8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b7b57d73a97b35ffc177c8238a288231a2144aa8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 114700,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 3187,
+    "blank_lines": 188,
+    "comment_lines": 340,
+    "code_lines": 2659,
+    "comment_ratio": 0.113,
+    "max_line_length": 75,
+    "avg_line_length": 34.0,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "JOBI12"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 110,
+    "call_count": 7,
+    "perform_count": 164,
+    "goto_count": 95,
+    "pic_count": 333,
+    "comp3_count": 13,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL (OpenCOBOL) with Micro Focus compatibility extensions; uses $SET LINKCOUNT directive, COMP-5, CRT STATUS, CURSOR IS, CONSOLE IS CRT — typical of GnuCOBOL/Micro Focus style. Author J.W. Lemmon (APAC), GPL-licensed, version 8.15.01 August 2011.",
+        "evidence": [
+          "$SET LINKCOUNT\"800\"",
+          "COMP-5 usage throughout",
+          "CRT STATUS IS KEY-STATUS",
+          "CURSOR IS CSTART",
+          "CONSOLE IS CRT",
+          "LINAGE clause on FD",
+          "ORGANIZATION LINE SEQUENTIAL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "accounting-erp",
+        "domain_detail": "Point-of-sale / job costing invoice printing system; prints invoices for jobs including job details, stock items, pricing, tax, discounts, and cash drawer control.",
+        "summary": "JOBI12 is a batch invoice printing program for a job-costing/POS system. It reads job headers, job costs, debtor/customer records, stock items, and transaction data to produce formatted invoice reports. It also handles cash drawer control via a serial port and supports multiple copy types (invoice, credit note).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "$SET LINKCOUNT compiler directive (Micro Focus/GnuCOBOL)",
+        "COMP-5 binary usage throughout",
+        "LINAGE clause for page control on printer FD",
+        "CRT STATUS / CURSOR IS / CONSOLE IS CRT (screen handling)",
+        "110 COPY statements for modular file/data definitions",
+        "Cash drawer hardware control via COM1 serial port",
+        "COMP-3 packed decimal for financial calculations",
+        "REDEFINES used extensively in print record layouts",
+        "GPL license embedded in SECURITY paragraph",
+        "WS-CHECK watermark value 'aeWlimemnomLalismJ' (author name anagram)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 3187 lines. Fixed format with occasional tab characters in comments. Decoded as latin-1. The $SET directive and COMP-5 point strongly to GnuCOBOL or Micro Focus COBOL on a PC/Unix platform. The 110 COPY statements reference an extensive library of copybooks (.SL, .FDE, .ID, .WS suffixes) typical of this author's APAC accounting suite."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 9402,
+      "completion_tokens": 613,
+      "total_tokens": 10015,
+      "cost": 0.037401,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.037401,
+        "upstream_inference_prompt_cost": 0.028206,
+        "upstream_inference_completions_cost": 0.009195
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.6,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:12:29Z"
+}

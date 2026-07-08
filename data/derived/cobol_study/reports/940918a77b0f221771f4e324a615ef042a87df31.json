@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:940918a77b0f221771f4e324a615ef042a87df31",
+    "sha1_git": "940918a77b0f221771f4e324a615ef042a87df31",
+    "filename": "/TEST.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1544,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:940918a77b0f221771f4e324a615ef042a87df31/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:940918a77b0f221771f4e324a615ef042a87df31/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1544,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 44,
+    "blank_lines": 6,
+    "comment_lines": 1,
+    "code_lines": 37,
+    "comment_ratio": 0.026,
+    "max_line_length": 64,
+    "avg_line_length": 34.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PARM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 8,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe batch program using PARM passing convention (PARM-LENGTH/PARM-DATA structure) and CALL to 'GETJOBI' which is a common IBM z/OS job information service routine",
+        "evidence": [
+          "PARM-BUFFER with PIC S9(4) COMP for PARM-LENGTH",
+          "CALL 'GETJOBI' for job information retrieval",
+          "PROCEDURE DIVISION USING PARM-BUFFER",
+          "GOBACK statement",
+          "WS-GETJOBI-JOB-NBR, WS-GETJOBI-PROCSTEP-NAME field naming"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "IBM z/OS job information utility that retrieves and displays job metadata (job name, job number, step name, proc step name) and any passed parameters",
+        "summary": "This program accepts a PARM string from JCL and calls the GETJOBI service routine to retrieve job information. It then displays job name, job number, step name, and proc step name, along with any passed parameter data.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with standard JCL PARM structure (PARM-LENGTH/PARM-DATA)",
+        "CALL to IBM z/OS GETJOBI service routine",
+        "PROCEDURE DIVISION USING clause",
+        "GOBACK statement",
+        "COMP (binary) for PARM-LENGTH",
+        "Conditional display of PARM data only when PARM-LENGTH > 0"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "Small utility/example program demonstrating JCL parameter passing and job information retrieval on IBM z/OS. The GETJOBI call is a well-known IBM mainframe service. The file is named TEST.cbl suggesting it may be a test or demonstration rather than production code, but the patterns are production-like."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2767,
+      "completion_tokens": 474,
+      "total_tokens": 3241,
+      "cost": 0.015411,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015411,
+        "upstream_inference_prompt_cost": 0.008301,
+        "upstream_inference_completions_cost": 0.00711
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.99,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:51:50Z"
+}

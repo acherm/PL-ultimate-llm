@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:49f0872828b6dc8f8a61b96efc0d2b4b6d629f56",
+    "sha1_git": "49f0872828b6dc8f8a61b96efc0d2b4b6d629f56",
+    "filename": "/Z95629.CBL(PBE006HW).cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5418,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:49f0872828b6dc8f8a61b96efc0d2b4b6d629f56/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:49f0872828b6dc8f8a61b96efc0d2b4b6d629f56/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5418,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 148,
+    "blank_lines": 5,
+    "comment_lines": 7,
+    "code_lines": 136,
+    "comment_ratio": 0.049,
+    "max_line_length": 65,
+    "avg_line_length": 35.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PBE006HW"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 10,
+    "goto_count": 0,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe style; RECORDING MODE F, RETURN-CODE special register, fixed format, Turkish comments suggest Turkish IBM mainframe shop",
+        "evidence": [
+          "RECORDING MODE F",
+          "RETURN-CODE special register",
+          "SELECT ... ASSIGN TO ... STATUS",
+          "88-level condition names with multiple values",
+          "EVALUATE/END-EVALUATE",
+          "fixed format, no lines over 72"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "General-purpose index/record lookup harness; calls subprogram PBEGIDX to perform CRUD operations (Read, Update, Write, Delete) on records identified by ID and DVZ fields",
+        "summary": "Reads an input file of records specifying a sub-type (R/U/W/D), ID, and DVZ; calls the subprogram PBEGIDX with a work area; then writes formatted output records to an output file. Acts as a batch driver/harness for the PBEGIDX subprogram. Comments are in Turkish.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "RECORDING MODE F on FD",
+        "CALL with data-name (dynamic CALL to PBEGIDX)",
+        "INSPECT ... REPLACING ALL LOW-VALUES BY SPACES",
+        "EVALUATE for sub-type dispatch",
+        "88-level condition names for file status and function codes",
+        "Turkish-language comments (DOSYASINDAN, KAYITLARIN, OUTFILE, etc.)",
+        "RETURN-CODE special register usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Turkish comments ('DOSYASINDAN GELEN KAYITLARIN HER BIRI ICIN', 'EĞER OUTFILE'A YAZILACAK') indicate a Turkish development shop. The program is a batch harness calling PBEGIDX subprogram dynamically. No EXEC SQL or EXEC CICS. Dialect is likely IBM mainframe based on RECORDING MODE F and RETURN-CODE usage, but could also be Micro Focus; confidence is medium."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4174,
+      "completion_tokens": 497,
+      "total_tokens": 4671,
+      "cost": 0.019977,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019977,
+        "upstream_inference_prompt_cost": 0.012522,
+        "upstream_inference_completions_cost": 0.007455
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.77,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:02:20Z"
+}

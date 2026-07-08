@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:93319fea5d1ab547e68485afa7aa25051f3f5581",
+    "sha1_git": "93319fea5d1ab547e68485afa7aa25051f3f5581",
+    "filename": "/colendar.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7934,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:93319fea5d1ab547e68485afa7aa25051f3f5581/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:93319fea5d1ab547e68485afa7aa25051f3f5581/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7934,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 249,
+    "blank_lines": 34,
+    "comment_lines": 10,
+    "code_lines": 205,
+    "comment_ratio": 0.047,
+    "max_line_length": 72,
+    "avg_line_length": 30.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "colendar"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 24,
+    "goto_count": 0,
+    "pic_count": 38,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Written for IBM COBOL per comment but uses FUNCTION UPPER-CASE, FUNCTION MOD, FUNCTION INTEGER-OF-DATE, FUNCTION CURRENT-DATE, ACCEPT FROM ARGUMENT-VALUE — all standard COBOL-85/2002 intrinsic functions; likely compiled with GnuCOBOL given open-source CLI nature and file-based sort",
+        "evidence": [
+          "ACCEPT ARG FROM ARGUMENT-VALUE",
+          "FUNCTION UPPER-CASE",
+          "FUNCTION MOD",
+          "FUNCTION INTEGER-OF-DATE",
+          "FUNCTION CURRENT-DATE",
+          "SORT ... USING ... GIVING",
+          "LINE SEQUENTIAL"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Personal calendar CLI tool that reads/writes events from a flat text file",
+        "summary": "A command-line calendar utility written in COBOL. It displays a pretty-printed calendar for the current month, lists future events from a text file, and allows adding new events. Events are stored in a sorted flat file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ACCEPT FROM ARGUMENT-VALUE for CLI argument parsing",
+        "FUNCTION UPPER-CASE, FUNCTION MOD, FUNCTION INTEGER-OF-DATE, FUNCTION CURRENT-DATE intrinsic functions",
+        "SORT verb with SD file for sorting events",
+        "LINE SEQUENTIAL file organization",
+        "OPEN EXTEND for appending to file",
+        "Leap year calculation using MOD",
+        "Day-of-week calculation using INTEGER-OF-DATE",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author comment says 'a calendar cli for IBM COBOL' and 'why did i do this', suggesting a personal/hobby project. DATE-WRITTEN 18th August 2023. The program is self-contained with no COPY statements or external CALLs. Maturity is student/hobby level rather than production."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4936,
+      "completion_tokens": 480,
+      "total_tokens": 5416,
+      "cost": 0.022008,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022008,
+        "upstream_inference_prompt_cost": 0.014808,
+        "upstream_inference_completions_cost": 0.0072
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.31,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:43:29Z"
+}

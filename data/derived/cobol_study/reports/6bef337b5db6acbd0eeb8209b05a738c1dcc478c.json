@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:6bef337b5db6acbd0eeb8209b05a738c1dcc478c",
+    "sha1_git": "6bef337b5db6acbd0eeb8209b05a738c1dcc478c",
+    "filename": "/test.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4083,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:6bef337b5db6acbd0eeb8209b05a738c1dcc478c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:6bef337b5db6acbd0eeb8209b05a738c1dcc478c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4083,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 124,
+    "blank_lines": 26,
+    "comment_lines": 4,
+    "code_lines": 94,
+    "comment_ratio": 0.041,
+    "max_line_length": 71,
+    "avg_line_length": 30.9,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "JKEMLISS"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 22,
+    "comp3_count": 8,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS/DB2 program; uses DFHCOMMAREA, EIBCALEN, EXEC CICS, EXEC SQL with DB2 cursor, SQLCA, COMP-3 packed decimal",
+        "evidence": [
+          "EXEC CICS RETURN",
+          "DFHCOMMAREA",
+          "EIBCALEN",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC SQL DECLARE ICURSOR CURSOR FOR",
+          "COMP-3",
+          "COPY MORTGAGE"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Mortgage loan search application; queries a DB2 table JKEMORT.MORTGAGE for matching loan products based on loan amount, interest rate, and term",
+        "summary": "This CICS online program receives mortgage search criteria (loan amount, years, rate) via DFHCOMMAREA, opens a DB2 cursor to query the JKEMORT.MORTGAGE table, fetches up to 8 matching mortgage company records, and returns the results back through DFHCOMMAREA to the calling CICS transaction.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (CICS online program)",
+        "EXEC SQL with DB2 cursor (DECLARE, OPEN, FETCH, CLOSE)",
+        "EXEC SQL INCLUDE SQLCA",
+        "DFHCOMMAREA and EIBCALEN usage",
+        "COMP-3 packed decimal fields",
+        "OCCURS 8 TIMES for output array",
+        "COPY MORTGAGE copybook",
+        "LINKAGE SECTION with DFHCOMMAREA"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program name JKEMLISS and table JKEMORT.MORTGAGE suggest a training or demo environment (JKE is a common IBM sample application), but the code structure is production-quality CICS/DB2 pattern. No truncation observed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3453,
+      "completion_tokens": 473,
+      "total_tokens": 3926,
+      "cost": 0.017454,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017454,
+        "upstream_inference_prompt_cost": 0.010359,
+        "upstream_inference_completions_cost": 0.007095
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.15,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T20:41:02Z"
+}

@@ -1,0 +1,118 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:346969e868f19b7030b763b583a3838d9381e7a1",
+    "sha1_git": "346969e868f19b7030b763b583a3838d9381e7a1",
+    "filename": "/file-exists.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1117,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:346969e868f19b7030b763b583a3838d9381e7a1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:346969e868f19b7030b763b583a3838d9381e7a1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1117,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 55,
+    "blank_lines": 18,
+    "comment_lines": 5,
+    "code_lines": 32,
+    "comment_ratio": 0.135,
+    "max_line_length": 71,
+    "avg_line_length": 19.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "cobmind-file-exists"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 1,
+    "goto_count": 0,
+    "pic_count": 5,
+    "comp3_count": 0,
+    "has_compiler_directives": true
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Uses >>SOURCE FORMAT IS FREE compiler directive typical of GnuCOBOL; program-id 'cobmind-file-exists' suggests the cobmind project/library",
+        "evidence": [
+          ">>source format is free",
+          "*>* comment style",
+          "program-id. cobmind-file-exists",
+          "linkage section with 88-level condition"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "File existence check utility subprogram; part of what appears to be a COBOL utility library named 'cobmind'",
+        "summary": "A subprogram that accepts a filename and a result flag via the LINKAGE SECTION. It attempts to open the file and sets a boolean result ('Y'/'N') based on whether the file status is '00' (success), effectively checking if a file exists.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        ">>SOURCE FORMAT IS FREE compiler directive",
+        "88-level condition with VALUE/FALSE clause (exists/not-exists)",
+        "LINKAGE SECTION parameters (name, result)",
+        "FILE STATUS clause for existence detection",
+        "*> comment style (free-format COBOL comments)"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "Short utility subprogram (55 lines). The 'cobmind' prefix in the program-id suggests it belongs to a larger COBOL utility library. No EXEC SQL or CICS. The technique of opening a file to check existence is a classic COBOL idiom."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2478,
+      "completion_tokens": 381,
+      "total_tokens": 2859,
+      "cost": 0.013149,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013149,
+        "upstream_inference_prompt_cost": 0.007434,
+        "upstream_inference_completions_cost": 0.005715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.12,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:49:22Z"
+}

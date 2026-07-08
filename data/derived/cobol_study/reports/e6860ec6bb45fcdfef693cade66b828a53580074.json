@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e6860ec6bb45fcdfef693cade66b828a53580074",
+    "sha1_git": "e6860ec6bb45fcdfef693cade66b828a53580074",
+    "filename": "/tp2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 17375,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e6860ec6bb45fcdfef693cade66b828a53580074/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e6860ec6bb45fcdfef693cade66b828a53580074/raw/"
+  },
+  "indicators": {
+    "bytes_len": 17375,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 438,
+    "blank_lines": 38,
+    "comment_lines": 47,
+    "code_lines": 353,
+    "comment_ratio": 0.117,
+    "max_line_length": 70,
+    "avg_line_length": 38.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": false,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "TP2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 26,
+    "goto_count": 0,
+    "pic_count": 114,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with a PC/DOS-era COBOL compiler (e.g., Micro Focus Personal COBOL or similar) given ASSIGN TO DISK, ASSIGN TO PRINTER with filename, VALUE OF FILE-ID, and SD sort file usage. Spanish-language identifiers and DECIMAL-POINT IS COMMA suggest Latin American academic environment.",
+        "evidence": [
+          "ASSIGN TO DISK",
+          "ASSIGN TO PRINTER \"LISTADOTP2.DAT\"",
+          "VALUE OF FILE-ID IS \"TimesI.dat\"",
+          "DECIMAL-POINT IS COMMA",
+          "SD ARCHIVO-ORDENADO",
+          "FUNCTION CURRENT-DATE",
+          "88-level condition names with VALUE '00'/'10'/'23'"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University student exercise involving sorted report generation from indexed files (teachers/professors, branches/sucursales, rates/tarifas, time records). Spanish-language identifiers confirm Latin American academic context.",
+        "summary": "Program TP2 reads time records (MAE-TIMES) filtered by CUIT range from a parameters file, looks up professor and branch data, calculates import amounts using tariff rates, sorts the combined data, and produces a formatted printed report grouped by branch and date with subtotals and grand totals.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT with INPUT PROCEDURE and OUTPUT PROCEDURE sections",
+        "Multiple indexed files with FILE STATUS checks",
+        "SD sort work file with RELEASE/RETURN",
+        "CALL to external subprogram for branch lookup",
+        "DECIMAL-POINT IS COMMA (European/Latin American numeric format)",
+        "FUNCTION CURRENT-DATE for report header date",
+        "Structured report with page control (LINEA-A-ESCRIBIR counter)",
+        "88-level condition names for file status codes",
+        "ASSIGN TO PRINTER with explicit filename"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "File is truncated at 16000 chars out of 17375 bytes; the tail of the PROCEDURE DIVISION (paragraphs 1500-1700) is not shown but the overall structure is clear. No DATA DIVISION indicator in mechanical scan is incorrect — the file clearly contains a DATA DIVISION; likely a parser issue. No COMP-3 usage, no SQL or CICS. Spanish identifiers throughout confirm Latin American student assignment context."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7784,
+      "completion_tokens": 569,
+      "total_tokens": 8353,
+      "cost": 0.031887,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031887,
+        "upstream_inference_prompt_cost": 0.023352,
+        "upstream_inference_completions_cost": 0.008535
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.96,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:36:21Z"
+}

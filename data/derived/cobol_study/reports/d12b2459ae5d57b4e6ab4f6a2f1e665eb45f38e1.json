@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d12b2459ae5d57b4e6ab4f6a2f1e665eb45f38e1",
+    "sha1_git": "d12b2459ae5d57b4e6ab4f6a2f1e665eb45f38e1",
+    "filename": "/samplel.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6053,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d12b2459ae5d57b4e6ab4f6a2f1e665eb45f38e1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d12b2459ae5d57b4e6ab4f6a2f1e665eb45f38e1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6053,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 150,
+    "blank_lines": 0,
+    "comment_lines": 0,
+    "code_lines": 150,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 39.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "prog"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 0,
+    "pic_count": 63,
+    "comp3_count": 63,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely a GnuCOBOL test suite sample exercising COMP-3 numeric picture clauses with P scaling, sign options, and V decimal point; filename 'samplel.cbl' and program-id 'prog' are typical of GnuCOBOL test infrastructure",
+        "evidence": [
+          "USAGE COMP-3 throughout",
+          "PIC PP99, SPP99, 99PP, 99P, 99V99 patterns",
+          "SIGN LEADING SEPARATE, SIGN TRAILING SEPARATE clauses",
+          "program-id 'prog' minimal name typical of test suites",
+          "filename samplel.cbl consistent with GnuCOBOL sample/test naming"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Compiler/runtime test for numeric COMP-3 data items with various PIC scaling (P), sign, and decimal (V) combinations",
+        "summary": "This program declares 63 COMP-3 numeric working-storage items covering all combinations of P-scaling (leading and trailing), V decimal, sign options (trailing, leading separate, trailing separate), and signed/unsigned variants. The procedure division simply DISPLAYs each variable to verify correct storage and display behavior.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "All 63 PIC clauses use COMP-3 (packed decimal)",
+        "Extensive use of P scaling character in PIC strings (PP99, 99PP, etc.)",
+        "All sign variants tested: implicit, SIGN TRAILING, SIGN LEADING SEPARATE, SIGN TRAILING SEPARATE",
+        "No PERFORM, CALL, GOTO, or file I/O — pure data declaration and DISPLAY test",
+        "No ENVIRONMENT DIVISION"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "high",
+      "notes": "The file is clearly a test/sample program designed to exercise numeric COMP-3 picture clause variations. The 'samplel' filename (letter l, not number 1) and generic program-id 'prog' are consistent with GnuCOBOL or similar open-source compiler test suites. No ambiguity about it being genuine COBOL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4863,
+      "completion_tokens": 531,
+      "total_tokens": 5394,
+      "cost": 0.022554,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022554,
+        "upstream_inference_prompt_cost": 0.014589,
+        "upstream_inference_completions_cost": 0.007965
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.6,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:07:39Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:a7c044c07cd8b642cc54d3c4ea997146d6d7adb4",
+    "sha1_git": "a7c044c07cd8b642cc54d3c4ea997146d6d7adb4",
+    "filename": "/TP2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10352,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:a7c044c07cd8b642cc54d3c4ea997146d6d7adb4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:a7c044c07cd8b642cc54d3c4ea997146d6d7adb4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10352,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 275,
+    "blank_lines": 18,
+    "comment_lines": 24,
+    "code_lines": 233,
+    "comment_ratio": 0.093,
+    "max_line_length": 72,
+    "avg_line_length": 36.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SUBPGR",
+      "TP2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 2,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 77,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL/OpenCOBOL style with ORGANIZATION IS LINE SEQUENTIAL, VALUE OF FILE-ID, and DECIMAL-POINT IS COMMA; typical of Argentine university assignments compiled with GnuCOBOL",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "VALUE OF FILE-ID IS",
+          "DECIMAL-POINT IS COMMA",
+          "ASSIGN TO DISK",
+          "END PROGRAM TP2 / END PROGRAM SUBPGR nested structure"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University algorithms course (Algoritmos 4) practical assignment TP2, likely Argentine university",
+        "summary": "A main program (TP2) that opens indexed and sequential files for a vehicle rental system (alquileres), writes a report header, and calls a subprogram (SUBPGR) to look up client records by document number. SUBPGR manages a CLIENTES indexed file with open/search/close operations via an operation-code parameter.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Two programs in one file: TP2 (main) and SUBPGR (called subprogram)",
+        "LINKAGE SECTION with PROCEDURE DIVISION USING in SUBPGR",
+        "Multiple indexed files with ALTERNATE KEYs",
+        "FUNCTION CURRENT-DATE usage",
+        "DECIMAL-POINT IS COMMA (European/Latin American locale)",
+        "VALUE OF FILE-ID for file assignment",
+        "88-level condition names reused across multiple 77-level items (potential bug)",
+        "ORGANIZATION IS LINE SEQUENTIAL for report output"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is clearly a student assignment ('TP 2 Algoritmos 4', author Leandro Denis). Three separate 77-level variables all define '88 EOF VALUE SI' which is a likely bug (condition name collision). No COMP-3 usage. The subprogram is nested within the same source file using END PROGRAM / PROGRAM-ID pattern."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5532,
+      "completion_tokens": 502,
+      "total_tokens": 6034,
+      "cost": 0.024126,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024126,
+        "upstream_inference_prompt_cost": 0.016596,
+        "upstream_inference_completions_cost": 0.00753
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:59:37Z"
+}

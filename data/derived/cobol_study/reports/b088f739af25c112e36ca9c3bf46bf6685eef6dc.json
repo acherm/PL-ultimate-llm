@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b088f739af25c112e36ca9c3bf46bf6685eef6dc",
+    "sha1_git": "b088f739af25c112e36ca9c3bf46bf6685eef6dc",
+    "filename": "/ST006.COBOL.LAB(WCSRC).cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16281,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b088f739af25c112e36ca9c3bf46bf6685eef6dc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b088f739af25c112e36ca9c3bf46bf6685eef6dc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16281,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 201,
+    "blank_lines": 17,
+    "comment_lines": 26,
+    "code_lines": 158,
+    "comment_ratio": 0.141,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 201,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "STRLAB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 11,
+    "goto_count": 0,
+    "pic_count": 28,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL, likely compiled under z/OS or MVS given the dataset naming convention (ST006.COBOL.LAB), RECORDING MODE F, and ACCEPT FROM TIME usage",
+        "evidence": [
+          "RECORDING MODE F",
+          "ACCEPT REFMOD-TIME-ITEM FROM TIME",
+          "FUNCTION CURRENT-DATE",
+          "FUNCTION REVERSE",
+          "HLQ ST006 in comments",
+          "PDS member naming (WCSRC)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "University COBOL lab exercise; student ID 1951510, author JIANGWENYUAN, HLQ ST006",
+        "summary": "This program reads lines of text from an input file and performs word-count analysis: counting total words, six-letter words, occurrences of the word 'THE', punctuation characters, and palindromes. Results are written to an output print file with date and time stamps.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "UNSTRING with POINTER for word tokenization",
+        "INSPECT TALLYING for punctuation counting",
+        "INSPECT CONVERTING to strip punctuation",
+        "FUNCTION REVERSE for palindrome detection",
+        "FUNCTION CURRENT-DATE for date stamping",
+        "ACCEPT FROM TIME for time stamping",
+        "88-level condition USTRDONE for loop termination",
+        "Z(6) numeric edit picture for output",
+        "RECORDING MODE F on FD entries"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "File is a PDS member from an IBM mainframe student lab dataset (ST006.COBOL.LAB). All 201 lines are padded to 80 characters (avg_line_length=80.0), consistent with fixed-format mainframe source. Source was truncated at 16000 chars but the visible code appears nearly complete; only the tail of A000-DONE paragraph may be cut off."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5252,
+      "completion_tokens": 464,
+      "total_tokens": 5716,
+      "cost": 0.022716,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022716,
+        "upstream_inference_prompt_cost": 0.015756,
+        "upstream_inference_completions_cost": 0.00696
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 229.36,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:38:43Z"
+}

@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:346b7211a5ceda1b2dedef617c8431dd86ca90df",
+    "sha1_git": "346b7211a5ceda1b2dedef617c8431dd86ca90df",
+    "filename": "/Wanda1.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 49250,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:346b7211a5ceda1b2dedef617c8431dd86ca90df/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:346b7211a5ceda1b2dedef617c8431dd86ca90df/raw/"
+  },
+  "indicators": {
+    "bytes_len": 49250,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1018,
+    "blank_lines": 63,
+    "comment_lines": 127,
+    "code_lines": 828,
+    "comment_ratio": 0.133,
+    "max_line_length": 79,
+    "avg_line_length": 47.4,
+    "long_lines_over_72": 91,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CNF1000E"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 35,
+    "call_count": 16,
+    "perform_count": 77,
+    "goto_count": 0,
+    "pic_count": 69,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe-style COBOL with LINE SEQUENTIAL files, COPY statements with REPLACING, COMP-3, 88-level condition names, and proprietary copybooks (MUDEF, MSTRPL, AHDEF, MSTPMPM, etc.) typical of an IBM mainframe or compatible environment running an Employee Benefit/retirement plan system.",
+        "evidence": [
+          "COMP-3 usage",
+          "LINE SEQUENTIAL file organization",
+          "COPY ... REPLACING LEADING",
+          "EXEC-style copybook patterns (IOPARM, PRMSD, ENVIA, PRMDE)",
+          "88-level condition names",
+          "SKIP2 directive",
+          "program-id CNF1000E"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Employee Benefit Systems - retirement plan remittance confirmation extract. Produces a REMCONF extract file fed to another application to print participant contribution confirmations.",
+        "summary": "Program CNF1000E produces a remittance confirmation extract file (CNFEXT/CNFEXTV) for an Employee Benefit/retirement plan system. It processes participant and plan-level records, accumulates contribution totals by source, and writes output records for both standard and Vista-only confirmations. It calls multiple subprograms to retrieve plan, participant, division, and source control data.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "35 COPY statements with REPLACING clauses",
+        "COMP-3 packed decimal fields",
+        "LINE SEQUENTIAL file organization",
+        "Multiple file status checks",
+        "OCCURS tables for division and source control data",
+        "Vista-only confirmation processing flag (WMS1943)",
+        "Extensive change history spanning 2000-2009",
+        "REDEFINES used for record type switching (detail/summary)",
+        "16 CALL statements to subprograms",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 1018 lines. The program has a long change history (2000-2009) with SMR/CC tracking numbers, indicating a mature production system. Dialect is likely IBM mainframe or a compatible platform given the copybook naming conventions and file handling patterns, but no explicit IBM-specific syntax (e.g., EXEC CICS) is present to confirm with certainty."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7435,
+      "completion_tokens": 570,
+      "total_tokens": 8005,
+      "cost": 0.030855,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030855,
+        "upstream_inference_prompt_cost": 0.022305,
+        "upstream_inference_completions_cost": 0.00855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.74,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:36:07Z"
+}

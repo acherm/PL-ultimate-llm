@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:88b8967569993277c06d6b727942e665dba9b10f",
+    "sha1_git": "88b8967569993277c06d6b727942e665dba9b10f",
+    "filename": "/readData.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2932,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:88b8967569993277c06d6b727942e665dba9b10f/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:88b8967569993277c06d6b727942e665dba9b10f/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2932,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 104,
+    "blank_lines": 19,
+    "comment_lines": 0,
+    "code_lines": 85,
+    "comment_ratio": 0.0,
+    "max_line_length": 62,
+    "avg_line_length": 27.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SEQREAD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 13,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (OpenCOBOL) based on LINE SEQUENTIAL organization, ACCEPT/DISPLAY style, and no mainframe-specific features. Could also be Micro Focus.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ACCEPT WS-INPUT-CHOICE (line input style)",
+          "DISPLAY with NO ADVANCING",
+          "88-level condition names on extra fields for input validation"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Simple employee file reader with menu-driven interface; appears to be a student exercise reading employee records from a sequential file",
+        "summary": "A menu-driven program (SEQREAD) that reads employee records from a LINE SEQUENTIAL file. It offers options to display all records or compute mean salary for a city. The display-mean section appears incomplete/unfinished.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "EVALUATE TRUE nested construct",
+        "88-level condition names for input validation (input-is-ok-1, input-is-ok-2)",
+        "PERFORM WITH TEST AFTER loop",
+        "Incomplete display-mean section (missing logic after WHEN WS-USERCITY NUMERIC)",
+        "ACCEPT used for user input with overflow field technique",
+        "Named SECTIONs in PROCEDURE DIVISION"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The display-mean paragraph is clearly incomplete — the WHEN WS-USERCITY NUMERIC branch has no statements. AUTHOR is 'SHREY', suggesting a personal/student project. The ACCEPT WS-CITY reference does not match the declared field WS-USERCITY (minor bug). No COMP-3, no SQL, no CICS."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3122,
+      "completion_tokens": 437,
+      "total_tokens": 3559,
+      "cost": 0.015921,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015921,
+        "upstream_inference_prompt_cost": 0.009366,
+        "upstream_inference_completions_cost": 0.006555
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.43,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:04:07Z"
+}

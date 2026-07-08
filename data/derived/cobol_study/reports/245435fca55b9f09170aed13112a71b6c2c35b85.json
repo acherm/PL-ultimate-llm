@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:245435fca55b9f09170aed13112a71b6c2c35b85",
+    "sha1_git": "245435fca55b9f09170aed13112a71b6c2c35b85",
+    "filename": "/DAMARP01.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8257,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:245435fca55b9f09170aed13112a71b6c2c35b85/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:245435fca55b9f09170aed13112a71b6c2c35b85/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8257,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 102,
+    "blank_lines": 0,
+    "comment_lines": 6,
+    "code_lines": 96,
+    "comment_ratio": 0.059,
+    "max_line_length": 80,
+    "avg_line_length": 80.0,
+    "long_lines_over_72": 102,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MASD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 2,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 27,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Classic IBM mainframe batch COBOL; uses RECORDING MODE IS F, LABEL RECORDS ARE OMITTED/STANDARD, ASSIGN U-T-SYSOUT/INPUT (JES SYSOUT-style DDnames), GOBACK, and carriage-control output record pattern typical of IBM OS/VS COBOL or VS COBOL II",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "ASSIGN U-T-SYSOUT",
+          "ASSIGN U-T-INPUT",
+          "LABEL RECORDS ARE OMITTED",
+          "LABEL RECORDS ARE STANDARD",
+          "GOBACK",
+          "CARRIAGE-CONTROL PIC X",
+          "RECORD CONTAINS 133 CHARACTERS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Financial reporting — program title 'FINANCIAL REPORT', calls FINARS01 and FINARS02 (likely financial archive/summary routines)",
+        "summary": "Batch report program that reads an 80-byte input file containing financial fields, formats each record into a 132-character print line with numeric editing and a computed total, writes paginated output to SYSOUT with headers, and calls two external financial subroutines (FINARS01, FINARS02) before closing files.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "RECORDING MODE IS F (IBM-specific)",
+        "Carriage-control byte in output record (ASA printer control)",
+        "COPY HEADER1 and COPY PAGING copybooks",
+        "CALL 'FINARS01' and CALL 'FINARS02' external subprogram calls",
+        "88-level condition names for EOF and NEW-PAGE",
+        "ZZ,ZZZ,ZZ9 and ZZZ,ZZZ,ZZZ,ZZZ,ZZ9 numeric edit patterns",
+        "COMPUTE for total calculation",
+        "Line-spacing via CARRIAGE-CONTROL field"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "File is 102 lines, all padded to column 80 (avg_line_length=80.0, all lines over 72), consistent with fixed-format mainframe source. PROGRAM-ID is MASD but filename is DAMARP01.cbl — possible mismatch or the file is a renamed copy. One line in PROCEDURE DIVISION has a trailing **' which may be a comment artifact or source corruption. COPY members HEADER1 and PAGING are not shown; their contents affect full analysis."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3776,
+      "completion_tokens": 601,
+      "total_tokens": 4377,
+      "cost": 0.020343,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020343,
+        "upstream_inference_prompt_cost": 0.011328,
+        "upstream_inference_completions_cost": 0.009015
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.55,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:51:52Z"
+}

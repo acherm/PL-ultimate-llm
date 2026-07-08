@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2ad5cf5d162fcf93fb7cd81361e82c27d34982bc",
+    "sha1_git": "2ad5cf5d162fcf93fb7cd81361e82c27d34982bc",
+    "filename": "/ingramDanielAsst2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6098,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2ad5cf5d162fcf93fb7cd81361e82c27d34982bc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2ad5cf5d162fcf93fb7cd81361e82c27d34982bc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6098,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 190,
+    "blank_lines": 38,
+    "comment_lines": 6,
+    "code_lines": 146,
+    "comment_ratio": 0.039,
+    "max_line_length": 102,
+    "avg_line_length": 31.1,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "InventoryProgram"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 51,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL or similar open-source COBOL; uses LINE SEQUENTIAL organization and standard COBOL-85 constructs. No vendor-specific extensions detected.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "END-READ",
+          "END-COMPUTE",
+          "END-IF",
+          "PERFORM ... UNTIL",
+          "PIC $$$$,$$9.99"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student assignment for an inventory management report program",
+        "summary": "Reads inventory records from a flat file (ASST2.DAT), calculates ending quantities and line totals for each part, flags high-value lines with single or double asterisks, and writes a formatted report to an output file. Accumulates a grand total of all inventory values.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "COMPUTE with ROUNDED",
+        "Nested IF/END-IF for flagging logic",
+        "Edited PIC clauses with $ and Z for formatted output",
+        "AFTER ADVANCING for print control",
+        "Tab-indented WORKING-STORAGE (mixed indentation style)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Filename includes student name and assignment number (ingramDanielAsst2), confirming this is a student exercise. Some lines use tab characters for indentation in WORKING-STORAGE, which is unusual in fixed-format COBOL but common in student work. The output file is assigned to an .xlsx extension but treated as LINE SEQUENTIAL text, which is likely an error or simplification in the assignment. Minor logic bug: the SINGLE-FLAG condition checks W05-LINE-TOTALS (the total line record) instead of W06-LINE-TOTAL."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4492,
+      "completion_tokens": 438,
+      "total_tokens": 4930,
+      "cost": 0.020046,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.020046,
+        "upstream_inference_prompt_cost": 0.013476,
+        "upstream_inference_completions_cost": 0.00657
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.11,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:23:13Z"
+}

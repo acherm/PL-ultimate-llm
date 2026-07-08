@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e3a33b653dd07b29bfeed170032f61e7ac6e17ac",
+    "sha1_git": "e3a33b653dd07b29bfeed170032f61e7ac6e17ac",
+    "filename": "/Custmnt2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 21110,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e3a33b653dd07b29bfeed170032f61e7ac6e17ac/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e3a33b653dd07b29bfeed170032f61e7ac6e17ac/raw/"
+  },
+  "indicators": {
+    "bytes_len": 21110,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 575,
+    "blank_lines": 7,
+    "comment_lines": 80,
+    "code_lines": 488,
+    "comment_ratio": 0.141,
+    "max_line_length": 72,
+    "avg_line_length": 34.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CUSTMNT2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 5,
+    "call_count": 0,
+    "perform_count": 36,
+    "goto_count": 0,
+    "pic_count": 10,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe CICS online program; uses DFHAID, DFHCOMMAREA, DFHRESP, EXEC CICS commands typical of IBM CICS/TS environment",
+        "evidence": [
+          "EXEC CICS XCTL PROGRAM",
+          "EXEC CICS RETURN TRANSID COMMAREA",
+          "EXEC CICS READ FILE RESP",
+          "DFHRESP(NORMAL)",
+          "DFHRESP(NOTFND)",
+          "DFHRESP(DUPREC)",
+          "COPY DFHAID",
+          "EIBCALEN",
+          "EIBAID",
+          "EIBPF3",
+          "DFHPF12",
+          "DFHCLEAR",
+          "DFHPA1"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer master file maintenance (add, change, delete) in a CICS online transaction environment, likely part of an inventory/order management system (INVMENU reference)",
+        "summary": "CUSTMNT2 is a CICS online program that handles customer master record maintenance. It presents two BMS maps (MNTMAP1 for key entry, MNTMAP2 for data entry) and supports add, change, and delete operations on a CUSTMAS VSAM file. The program uses a communication area to maintain context across pseudo-conversational interactions.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS (multiple: XCTL, RETURN, RECEIVE MAP, SEND MAP, READ FILE)",
+        "Pseudo-conversational design using DFHCOMMAREA",
+        "BMS map handling with SEND ERASE/DATAONLY/ALARM options",
+        "EVALUATE TRUE for AID key dispatch",
+        "INSPECT REPLACING for underscore/space conversion",
+        "COPY DFHAID, COPY CUSTMAS, COPY MNTSET2, COPY ATTR, COPY ERRPARM",
+        "DFHRESP condition code checking",
+        "88-level condition names for flags and context"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to 16000 chars but the visible portion is complete enough for confident classification. No SQL. Classic IBM CICS pseudo-conversational pattern. Likely from a COBOL textbook or training course (e.g. Murach's CICS) given the clean structure, but production-quality code."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6657,
+      "completion_tokens": 581,
+      "total_tokens": 7238,
+      "cost": 0.028686,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028686,
+        "upstream_inference_prompt_cost": 0.019971,
+        "upstream_inference_completions_cost": 0.008715
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.06,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:38:08Z"
+}

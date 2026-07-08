@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ecb9d31291215c97deb2c2233c1ed5a96e3cc50c",
+    "sha1_git": "ecb9d31291215c97deb2c2233c1ed5a96e3cc50c",
+    "filename": "/MyGrade.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 4111,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ecb9d31291215c97deb2c2233c1ed5a96e3cc50c/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ecb9d31291215c97deb2c2233c1ed5a96e3cc50c/raw/"
+  },
+  "indicators": {
+    "bytes_len": 4111,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 118,
+    "blank_lines": 12,
+    "comment_lines": 10,
+    "code_lines": 96,
+    "comment_ratio": 0.094,
+    "max_line_length": 71,
+    "avg_line_length": 33.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MYGRADE"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 3,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL based on *> comment style, GOBACK, LINE SEQUENTIAL, and no vendor-specific extensions",
+        "evidence": [
+          "*> comment syntax",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "HIGH-VALUE",
+          "88-level condition on FD record"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student grade calculation program reading subject grades from a file and computing weighted GPA average",
+        "summary": "Reads a file of subject records (ID, name, credit hours, letter grade) and computes a weighted grade point average. Outputs intermediate and final results via DISPLAY and writes to an output file. Appears to be a student exercise for a Thai university course.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "88-level condition names on FD records (unusual pattern)",
+        "Nested IF-ELSE for grade-to-GPA mapping",
+        "PERFORM THRU with EXIT paragraphs",
+        "GOBACK instead of STOP RUN",
+        "*> inline comments throughout",
+        "Unused paragraphs 002-SUM and 002-EXIT"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author name 'SITTHICHAI' suggests Thai student origin. The 88-level conditions on FD 01 records (END-OF-MYGRADE-FILE, END-OF-ABC-DETAIL) is an unconventional but functional pattern. Some working-storage variables (GRADE-CS-*, GRADE-SCI-*) are declared but never used, indicating incomplete development. No COMP-3, no SQL, no CICS."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3674,
+      "completion_tokens": 413,
+      "total_tokens": 4087,
+      "cost": 0.017217,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017217,
+        "upstream_inference_prompt_cost": 0.011022,
+        "upstream_inference_completions_cost": 0.006195
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Amazon Bedrock",
+    "latency_s": 21.66,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:26:12Z"
+}

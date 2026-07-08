@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:290826c91274d4bbcafdbec19471d2fa3aa44fc8",
+    "sha1_git": "290826c91274d4bbcafdbec19471d2fa3aa44fc8",
+    "filename": "/PGFJF005P.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 22660,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:290826c91274d4bbcafdbec19471d2fa3aa44fc8/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:290826c91274d4bbcafdbec19471d2fa3aa44fc8/raw/"
+  },
+  "indicators": {
+    "bytes_len": 22660,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 518,
+    "blank_lines": 76,
+    "comment_lines": 73,
+    "code_lines": 369,
+    "comment_ratio": 0.165,
+    "max_line_length": 86,
+    "avg_line_length": 42.7,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PGFJF005P"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 0,
+    "perform_count": 30,
+    "goto_count": 0,
+    "pic_count": 59,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source/PC COBOL targeting indexed files with LOCK MODE IS MANUAL and LINE SEQUENTIAL organization; Portuguese-language comments suggest Brazilian development environment (possibly OpenCOBOL/GnuCOBOL used in Brazil)",
+        "evidence": [
+          "LOCK MODE IS MANUAL on indexed file",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO DISK",
+          "VALUE OF FILE-ID IS 'ArqCliente'",
+          "DECIMAL-POINT IS COMMA",
+          "SD ARQ-SORT with SORT...INPUT PROCEDURE...OUTPUT PROCEDURE",
+          "COPY LNKG005L linkage section copybook"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Customer report generation system - produces both formatted text report and CSV file of client data including CNPJ (Brazilian tax ID), company name, geolocation (latitude/longitude), and salesperson code",
+        "summary": "PGFJF005P is a batch subprogram that generates a customer report in both formatted text (RELCLIENTE.TXT) and CSV (RELCLIENTE.CSV) formats. It accepts parameters via a LINKAGE SECTION (sort order, classification type, client code, vendor code), validates inputs, optionally looks up a specific client, sorts the customer file by code or company name in ascending or descending order, and writes report lines with headers. Comments are in Brazilian Portuguese.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "SORT with INPUT PROCEDURE and OUTPUT PROCEDURE",
+        "ALTERNATE RECORD KEY on indexed file",
+        "DECIMAL-POINT IS COMMA (Brazilian locale)",
+        "Dual output: formatted text report and CSV file",
+        "LINKAGE SECTION with COPY LNKG005L (parameter passing)",
+        "CNPJ field (Brazilian company tax identifier)",
+        "Geolocation fields (latitude/longitude)",
+        "LOCK MODE IS MANUAL on indexed file",
+        "VALUE OF FILE-ID for file assignment"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars; full PROCEDURE DIVISION not visible but structure is clear. Program uses Brazilian Portuguese comments and CNPJ (14-digit Brazilian tax ID), confirming Brazilian business context. No EXEC SQL or EXEC CICS present. COMP-3 not used despite numeric fields. Dialect is likely GnuCOBOL based on file handling syntax common in Brazilian open-source COBOL environments."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6483,
+      "completion_tokens": 595,
+      "total_tokens": 7078,
+      "cost": 0.028374,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028374,
+        "upstream_inference_prompt_cost": 0.019449,
+        "upstream_inference_completions_cost": 0.008925
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 19.49,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:01:22Z"
+}

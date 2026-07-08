@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:89d369f6526486bdba8de7661bf89929a803588d",
+    "sha1_git": "89d369f6526486bdba8de7661bf89929a803588d",
+    "filename": "/test2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3347,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:89d369f6526486bdba8de7661bf89929a803588d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:89d369f6526486bdba8de7661bf89929a803588d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3347,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 110,
+    "blank_lines": 23,
+    "comment_lines": 2,
+    "code_lines": 85,
+    "comment_ratio": 0.023,
+    "max_line_length": 53,
+    "avg_line_length": 28.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TEST"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL targeting disk files with ASSIGN DISK syntax; Spanish locale evident (AUTHOR Ferran Pegueroles, special characters ñ/ç, decimal-point is comma)",
+        "evidence": [
+          "assign disk",
+          "value of file-id assign-asc",
+          "decimal-point is comma",
+          "copy 'test1.fd'",
+          "ASSIGN DISK sequential organization"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "test-suite",
+        "domain_detail": "Test program that creates sequential ASCII files with various field types to exercise a file descriptor copybook (test1.fd)",
+        "summary": "This program creates two sequential text files ('test-file-3.txt' and 'test-file-4.txt') by writing records with various field types including numeric, alphanumeric, and array fields. It appears to be a test harness for validating a file descriptor defined in a copybook. It exercises both positive and negative numeric values and a large loop writing 10001 records.",
+        "program_type": "test"
+      },
+      "notable_features": [
+        "COPY 'test1.fd' for file descriptor",
+        "decimal-point is comma (European locale)",
+        "ASSIGN DISK syntax",
+        "VALUE OF FILE-ID for dynamic file assignment",
+        "Spanish special characters (ñ, ç) in string literals",
+        "PERFORM VARYING with END-PERFORM",
+        "COMPUTE with decimal comma notation",
+        "SELECT OPTIONAL with FILE STATUS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Dialect is uncertain; ASSIGN DISK and VALUE OF FILE-ID are characteristic of older or non-IBM COBOL (possibly GnuCOBOL or RM-COBOL). The use of comma as decimal point and Spanish characters suggests a Spanish-speaking developer. The file references a companion copybook test1.fd not shown here."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3178,
+      "completion_tokens": 457,
+      "total_tokens": 3635,
+      "cost": 0.016389,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016389,
+        "upstream_inference_prompt_cost": 0.009534,
+        "upstream_inference_completions_cost": 0.006855
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.37,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:07:10Z"
+}

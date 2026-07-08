@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:03a6b109ad0228d50d6da7b99548ccbc8c179f41",
+    "sha1_git": "03a6b109ad0228d50d6da7b99548ccbc8c179f41",
+    "filename": "/location-analysis.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1657,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:03a6b109ad0228d50d6da7b99548ccbc8c179f41/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:03a6b109ad0228d50d6da7b99548ccbc8c179f41/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1657,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 55,
+    "blank_lines": 8,
+    "comment_lines": 3,
+    "code_lines": 44,
+    "comment_ratio": 0.064,
+    "max_line_length": 88,
+    "avg_line_length": 29.1,
+    "long_lines_over_72": 3,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "LOCATION-SUMMARY"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 0,
+    "pic_count": 5,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Uses EXEC SQL with non-standard syntax (no END-EXEC on CONNECT/DISCONNECT, cursor-style FETCH without DECLARE CURSOR). SQL dialect suggests a custom or lightweight embedded SQL environment, not standard DB2/Oracle. OCCURS 8 TIMES but references index 9 which is out of bounds — suggests student/demo quality.",
+        "evidence": [
+          "EXEC SQL CONNECT TO vorpv2",
+          "EXEC SQL FETCH NEXT FROM vorpv2",
+          "EXEC SQL DISCONNECT vorpv2",
+          "PERFORM VARYING ... UNTIL",
+          "END-PERFORM",
+          "ORGANIZATION IS INDEXED"
+        ],
+        "confidence": "low"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Summarizes monetary amounts by location from a bank_users table and predicts next 8 weeks of location-based financial data",
+        "summary": "This program connects to a database, fetches location and money data from a bank_users table, accumulates entry amounts by location, and then attempts to predict the next 8 weeks of data by computing an average. It has notable logic errors (array out-of-bounds at index 9, missing DECLARE CURSOR).",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL embedded SQL (non-standard syntax, no END-EXEC on CONNECT/DISCONNECT)",
+        "ORGANIZATION IS INDEXED file",
+        "OCCURS 8 TIMES but accesses index 9 (out-of-bounds bug)",
+        "No DECLARE CURSOR before FETCH NEXT",
+        "SQL-NOTFOUND used without proper declaration",
+        "SORT within PERFORM loop"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The SQL usage is non-standard: CONNECT, FETCH NEXT, and DISCONNECT lack proper END-EXEC terminators in some cases, and there is no DECLARE CURSOR statement. The OCCURS 8 TIMES table is accessed at index 9, which is an out-of-bounds error. These issues strongly suggest a student exercise or demo rather than production code. Overall confidence is medium because the file is genuine COBOL but the dialect/environment is unclear."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2833,
+      "completion_tokens": 507,
+      "total_tokens": 3340,
+      "cost": 0.016104,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016104,
+        "upstream_inference_prompt_cost": 0.008499,
+        "upstream_inference_completions_cost": 0.007605
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.0,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:41:25Z"
+}

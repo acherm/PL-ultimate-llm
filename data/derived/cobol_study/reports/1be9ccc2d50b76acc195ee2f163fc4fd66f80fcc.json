@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:1be9ccc2d50b76acc195ee2f163fc4fd66f80fcc",
+    "sha1_git": "1be9ccc2d50b76acc195ee2f163fc4fd66f80fcc",
+    "filename": "/autosetup.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7356,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:1be9ccc2d50b76acc195ee2f163fc4fd66f80fcc/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:1be9ccc2d50b76acc195ee2f163fc4fd66f80fcc/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7356,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 204,
+    "blank_lines": 28,
+    "comment_lines": 11,
+    "code_lines": 165,
+    "comment_ratio": 0.062,
+    "max_line_length": 72,
+    "avg_line_length": 35.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "autosetup"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 6,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Micro Focus Visual COBOL / COBOL for Eclipse; uses cblt-fileexist-buf, cblt-rtncode, cblt-x1-compx, CBL_CHECK_FILE_EXIST, CBL-GET-OS-INFO, cblte-osi-* data names, comp-x — all Micro Focus runtime extensions",
+        "evidence": [
+          "usage cblt-fileexist-buf",
+          "usage cblt-rtncode",
+          "cblt-x1-compx",
+          "CBL_CHECK_FILE_EXIST",
+          "CBL-GET-OS-INFO",
+          "cblte-osi-os-type",
+          "cblte-osi-country-id",
+          "comp-x",
+          "copy \"cblproto\""
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Auto-setup/locale detection utility that determines the correct locale/country directory (MFOCALDIR) for a Micro Focus COBOL application by checking environment variables and OS country codes",
+        "summary": "The program checks the MFOCALDIR environment variable for a valid directory; if not found, it queries the OS for country/locale information (Windows country code or Unix LC_MESSAGES) to determine the appropriate locale directory and sets MFOCALDIR, MFOCALCP, and MFOCALHDIR environment variables accordingly. It returns AUTOSETUP-OK on success or AUTOSETUP-FAILED on failure.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "Micro Focus CBL_CHECK_FILE_EXIST runtime call",
+        "Micro Focus CBL-GET-OS-INFO runtime call",
+        "comp-x usage (Micro Focus extension)",
+        "cblt-* and cblte-* Micro Focus data types",
+        "GOBACK RETURNING clause",
+        "COPY with missing copybook (missingcopyexample.cpy — intentional example of missing copybook error)",
+        "Environment variable manipulation via DISPLAY/ACCEPT with ENVIRONMENT-NAME/ENVIRONMENT-VALUE",
+        "Country code to locale mapping (Windows country IDs)",
+        "Duplicate WHEN 351 clauses (apparent bug)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The IDENTIFICATION DIVISION is absent (only PROGRAM-ID present without the division header), which is valid in some Micro Focus dialects. The file contains an intentional missing copybook reference (missingcopyexample.cpy) with a comment explaining it is an example. The duplicate WHEN 351 entries (mapped to pt, fi, tw) appear to be a bug. This looks like part of a real Micro Focus COBOL application's setup/localization infrastructure."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4350,
+      "completion_tokens": 635,
+      "total_tokens": 4985,
+      "cost": 0.022575,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022575,
+        "upstream_inference_prompt_cost": 0.01305,
+        "upstream_inference_completions_cost": 0.009525
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.39,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:36:57Z"
+}

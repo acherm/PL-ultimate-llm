@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:48526674a60f74a77bb5a395fa82f1fe4319d4a9",
+    "sha1_git": "48526674a60f74a77bb5a395fa82f1fe4319d4a9",
+    "filename": "/imsclaim.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16411,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:48526674a60f74a77bb5a395fa82f1fe4319d4a9/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:48526674a60f74a77bb5a395fa82f1fe4319d4a9/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16411,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 343,
+    "blank_lines": 9,
+    "comment_lines": 115,
+    "code_lines": 219,
+    "comment_ratio": 0.344,
+    "max_line_length": 72,
+    "avg_line_length": 46.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "IMSCLAIM"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 5,
+    "call_count": 9,
+    "perform_count": 9,
+    "goto_count": 0,
+    "pic_count": 44,
+    "comp3_count": 3,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM IMS COBOL program using z/OS Connect EE V3 API Requester (BAQCSTUB/BAQCTERM) to call external REST APIs; uses CBLTDLI for IMS DL/I calls; copyright IBM Corp. 2020",
+        "evidence": [
+          "CALL 'CBLTDLI' USING DLI-GET-UNIQUE IO-PCB-MASK",
+          "PROCEDURE DIVISION USING IO-PCB-MASK",
+          "COPY BAQRINFO",
+          "COMM-STUB-PGM-NAME PIC X(8) VALUE 'BAQCSTUB'",
+          "COMM-TERM-PGM-NAME PIC X(8) VALUE 'BAQCTERM'",
+          "BAQ-SUCCESS / BAQ-ERROR-IN-API / BAQ-ERROR-IN-ZCEE",
+          "(c) Copyright IBM Corp. 2020",
+          "INSTALLATION. ESYSMVS1",
+          "COMP-5 SYNC",
+          "COMP-3"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Insurance claims processing — evaluates DRUG, DENTAL, and MEDICAL claims by calling an external REST API via z/OS Connect EE; runs as an IMS MPP/BMP transaction",
+        "summary": "IMSCLAIM is an IMS COBOL program that reads input messages from an IMS message queue, calls an external REST API (via z/OS Connect EE BAQCSTUB) to evaluate insurance claims, and writes the result (ACCEPTED/REJECTED/ERROR) back to the IMS output queue. It handles DRUG, DENTAL, and MEDICAL claim types and includes error handling for API, z/OS Connect EE server, and stub-level failures.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "IMS DL/I calls via CBLTDLI (GU, ISRT)",
+        "z/OS Connect EE API Requester pattern (BAQCSTUB/BAQCTERM)",
+        "PROCEDURE DIVISION USING IO-PCB-MASK (IMS PCB linkage)",
+        "COMP-5 SYNC for binary pointer/length fields",
+        "COMP-3 packed decimal for monetary amount",
+        "COPY copybooks: BAQRINFO, CLAIMREQ, CLAIMRSP, CLAIMINF, IMSCLAIC",
+        "FUNCTION CURRENT-DATE for timestamp formatting",
+        "STRING verb for message construction",
+        "EVALUATE TRUE for multi-condition error dispatch"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program type classified as online-cics enum value but is actually an IMS online MPP transaction (no CICS); 'online-cics' is the closest available enum. Source is truncated at 16000 chars but all major logic is visible. Apache License 2.0 IBM sample code, but structured as a realistic production pattern."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6494,
+      "completion_tokens": 710,
+      "total_tokens": 7204,
+      "cost": 0.030132,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030132,
+        "upstream_inference_prompt_cost": 0.019482,
+        "upstream_inference_completions_cost": 0.01065
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.93,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:39:09Z"
+}

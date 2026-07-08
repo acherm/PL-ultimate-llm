@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:3325a2c939893d72ed1b65d767af6a79327c6680",
+    "sha1_git": "3325a2c939893d72ed1b65d767af6a79327c6680",
+    "filename": "/restaurante.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8977,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:3325a2c939893d72ed1b65d767af6a79327c6680/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:3325a2c939893d72ed1b65d767af6a79327c6680/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8977,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 246,
+    "blank_lines": 4,
+    "comment_lines": 0,
+    "code_lines": 242,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 35.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Restaurante"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 14,
+    "goto_count": 0,
+    "pic_count": 79,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL (open-source) targeting Linux/Windows with LINE SEQUENTIAL files and CSV data sources; Spanish-language identifiers and prompts suggest Latin American academic context",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO literal CSV filenames",
+          "EVALUATE...END-EVALUATE",
+          "PERFORM UNTIL EOF",
+          "no COMP-3, no IBM-specific extensions"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Restaurant management system handling menu (carta), dishes (platillos), waiters (meseros), tables (mesas), and orders (pedidos)",
+        "summary": "A restaurant management program with a main menu offering 10 options: displaying the menu card, listing dishes by type, registering waiters and tables, recording orders, and various reporting functions. It reads and writes CSV files for persistent storage of restaurant data.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "Multiple LINE SEQUENTIAL CSV file I/O (5 files)",
+        "EVALUATE statement for menu dispatch",
+        "Spanish-language identifiers and UI text",
+        "CONTINUE used as line continuation (non-standard usage)",
+        "OPEN OUTPUT overwrites files on each registration (no append)",
+        "Incomplete/buggy code: EOF not declared, SET EOF TO TRUE without 88-level, IF Platillos-Tipo = Platillos-Tipo always true",
+        "END PROGRAM instead of STOP RUN at end",
+        "No COMP-3 or packed decimal usage"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The code has several bugs: EOF is referenced without being declared as an 88-level condition, the condition IF Platillos-Tipo = Platillos-Tipo is a tautology, OPEN OUTPUT is used instead of OPEN EXTEND for appending records, and CONTINUE is misused as a line continuation marker. The program appears to be a student exercise for a restaurant domain, likely written in Spanish-speaking Latin America. The END PROGRAM statement at the end is unusual placement after REGISTER-PEDIDO without a proper paragraph structure."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5713,
+      "completion_tokens": 507,
+      "total_tokens": 6220,
+      "cost": 0.024744,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024744,
+        "upstream_inference_prompt_cost": 0.017139,
+        "upstream_inference_completions_cost": 0.007605
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.5,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:38:54Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:33edbcd136ae0704718a37530eaba2fc7d9c2bc5",
+    "sha1_git": "33edbcd136ae0704718a37530eaba2fc7d9c2bc5",
+    "filename": "/DataType_3_pre.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3387,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:33edbcd136ae0704718a37530eaba2fc7d9c2bc5/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:33edbcd136ae0704718a37530eaba2fc7d9c2bc5/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3387,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 82,
+    "blank_lines": 16,
+    "comment_lines": 7,
+    "code_lines": 59,
+    "comment_ratio": 0.106,
+    "max_line_length": 75,
+    "avg_line_length": 40.3,
+    "long_lines_over_72": 1,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "HELLO"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 29,
+    "comp3_count": 2,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Appears to be a preprocessor-generated or pre-processed COBOL file (filename suffix '_pre.cbl') with inline EXECSQL pseudo-statements (not standard EXEC SQL) and preprocessor comment markers. Italian variable names suggest Italian vendor or custom shop environment. COMP-3 and COMP usage consistent with mainframe or Micro Focus style.",
+        "evidence": [
+          "COMP-3 usage",
+          "COMP usage",
+          "PERFORM WITH TEST AFTER (COBOL-85)",
+          "EXECSQL SQL1/SQL2/SQL3/SQL4 (non-standard pseudo-SQL)",
+          "===PREPROCESSOR==>COPY ... START/END comments",
+          "Italian identifiers: SETTORE-S, NOME-S, PREZZO-S, TAGLIA-S"
+        ],
+        "confidence": "low"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Retail inventory/pricing system with Italian terminology (NEGOZIO=shop, PREZZO=price, SETTORE=sector, TAGLIA=size, BARUNI=barcode unit). Appears to query product/cost tables (ANAMAT_CST).",
+        "summary": "A pre-processed COBOL program that demonstrates data type definitions and performs SQL-based queries against a retail product/cost database. It displays working-storage values and performs SELECT operations on shop category and price tables with error and deadlock handling. The file appears to be a preprocessor input file where EXECSQL tokens are placeholders for actual EXEC SQL blocks.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 (packed decimal) fields",
+        "Non-standard EXECSQL pseudo-statements (preprocessor placeholders)",
+        "Preprocessor comment markers (===PREPROCESSOR==>COPY ... START/END)",
+        "PERFORM WITH TEST AFTER loop with DEADLOCK and NO-MEMORY condition checks",
+        "Italian-language identifiers suggesting Italian business environment",
+        "Mixed working-storage: tutorial-style WS-NUM1/WS-NAME alongside production-like record structures",
+        "SQLCODE handling with MULTIPLE-ROWS, OK, NO-MEMORY, DEADLOCK constants"
+      ],
+      "maturity": "snippet",
+      "overall_confidence": "medium",
+      "notes": "The filename 'DataType_3_pre.cbl' and the mix of simple tutorial-style WS-NUM1/WS-NAME variables with complex production-like SQL record structures suggests this may be a teaching or demonstration file that incorporates real production code fragments. The EXECSQL tokens are non-standard and appear to be preprocessor placeholders rather than standard EXEC SQL ... END-EXEC blocks. The '===PREPROCESSOR==>' comment markers confirm this is a pre-processed source. Dialect confidence is low due to the non-standard SQL embedding approach."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3293,
+      "completion_tokens": 649,
+      "total_tokens": 3942,
+      "cost": 0.019614,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019614,
+        "upstream_inference_prompt_cost": 0.009879,
+        "upstream_inference_completions_cost": 0.009735
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.56,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:07:54Z"
+}

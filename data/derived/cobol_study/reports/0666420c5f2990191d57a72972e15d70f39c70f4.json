@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0666420c5f2990191d57a72972e15d70f39c70f4",
+    "sha1_git": "0666420c5f2990191d57a72972e15d70f39c70f4",
+    "filename": "/ox.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5360,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0666420c5f2990191d57a72972e15d70f39c70f4/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0666420c5f2990191d57a72972e15d70f39c70f4/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5360,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 166,
+    "blank_lines": 8,
+    "comment_lines": 0,
+    "code_lines": 158,
+    "comment_ratio": 0.0,
+    "max_line_length": 71,
+    "avg_line_length": 31.3,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "OX"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 37,
+    "goto_count": 0,
+    "pic_count": 13,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 features used; no vendor-specific extensions visible. Could run on GnuCOBOL or similar open-source compiler.",
+        "evidence": [
+          "PERFORM UNTIL with END-PERFORM",
+          "88-level condition names",
+          "OCCURS with VALUE clause",
+          "GOBACK",
+          "COMPUTE statement",
+          "NO ADVANCING"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Tic-tac-toe (noughts and crosses) game implementation",
+        "summary": "Implements a two-player console-based tic-tac-toe (OX) game on a 3x3 grid. Players alternately input row and column coordinates; the program checks for row, column, and diagonal wins as well as draws after each move.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "2D array using OCCURS within OCCURS (WS-ROW/WS-COL)",
+        "88-level condition names for input validation",
+        "PERFORM VARYING for nested loops",
+        "GOBACK used for program termination",
+        "Anti-diagonal win check using COMPUTE EXTRA-NUM = 5 - 1 - WS-IDX-ROW",
+        "DISPLAY WITH NO ADVANCING for inline board rendering"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The anti-diagonal check uses indices 1,3,2 (EXTRA-NUM = 5-1-WS-IDX-ROW yields 3,2,1) which is correct. The CHECK-WIN logic calls PUT-TABLE again on win which is a minor bug (double-move). No ENVIRONMENT DIVISION present. Authored by 'SON'. Clearly a student exercise implementing a classic game."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4047,
+      "completion_tokens": 424,
+      "total_tokens": 4471,
+      "cost": 0.018501,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.018501,
+        "upstream_inference_prompt_cost": 0.012141,
+        "upstream_inference_completions_cost": 0.00636
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.07,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:59:41Z"
+}

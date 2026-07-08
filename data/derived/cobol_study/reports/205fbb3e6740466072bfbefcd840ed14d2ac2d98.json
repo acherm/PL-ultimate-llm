@@ -1,0 +1,130 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:205fbb3e6740466072bfbefcd840ed14d2ac2d98",
+    "sha1_git": "205fbb3e6740466072bfbefcd840ed14d2ac2d98",
+    "filename": "/PRO201.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 13464,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:205fbb3e6740466072bfbefcd840ed14d2ac2d98/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:205fbb3e6740466072bfbefcd840ed14d2ac2d98/raw/"
+  },
+  "indicators": {
+    "bytes_len": 13464,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 313,
+    "blank_lines": 0,
+    "comment_lines": 0,
+    "code_lines": 313,
+    "comment_ratio": 0.0,
+    "max_line_length": 82,
+    "avg_line_length": 41.0,
+    "long_lines_over_72": 10,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": false
+    },
+    "n_divisions": 0,
+    "program_ids": [
+      "PRO201"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 1,
+    "perform_count": 21,
+    "goto_count": 0,
+    "pic_count": 19,
+    "comp3_count": 5,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM AS/400 (iSeries) COBOL with DDS-based display files, WORKSTATION file, SUBFILE, EXTERNALLY-DESCRIBED-KEY, and ORGANIZATION TRANSACTION — classic AS/400 interactive program pattern",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-AS400",
+          "OBJECT-COMPUTER. IBM-AS400",
+          "ASSIGN WORKSTATION-PRO201D",
+          "ORGANIZATION TRANSACTION",
+          "EXTERNALLY-DESCRIBED-KEY",
+          "COPY DDS-CTL01-O IN PRO201D",
+          "WRITE SUBFILE PRO201D-REC",
+          "READ SUBFILE PRO201D NEXT MODIFIED",
+          "ASSIGN DATABASE-PROVIDE1",
+          "PROCESS APOST"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Provider/supplier maintenance application on IBM AS/400; likely part of a business management or ERP-style system (FORUM AS/400 product)",
+        "summary": "An interactive AS/400 COBOL program (PRO201) that displays a subfile list of providers (PROVIDE1 database file), allows the user to select records with option codes (2=display detail, 5=call ART202), and navigates between a list panel (PNL01) and a detail panel (PNL02). It implements a classic AS/400 subfile browse-and-select pattern with function key handling.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "IBM AS/400 WORKSTATION display file with ORGANIZATION TRANSACTION",
+        "SUBFILE read/write (WRITE SUBFILE, READ SUBFILE NEXT MODIFIED, REWRITE SUBFILE)",
+        "DDS externally-described record formats via COPY DDS-* IN file",
+        "EXTERNALLY-DESCRIBED-KEY on indexed database file",
+        "COMP-3 packed decimal fields",
+        "MOVE CORR / MOVE CORRESPONDING between DDS record formats",
+        "Panel state machine using STEP01/STEP02 variables with single-character codes",
+        "CALL to external program ART202",
+        "PIC 1 boolean indicators (IND-ON/IND-OFF with B'1'/B'0')",
+        "CONTROL-AREA F-KEYS for function key detection",
+        "PROCESS APOST compiler directive"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The sequence numbers in columns 1-6 include a date stamp (161104 = 2016-11-04), consistent with AS/400 source member management. The program is part of a larger application suite (FORUM AS/400). No EXEC CICS — 'online-cics' is used loosely; this is AS/400 interactive (workstation) rather than CICS, but it is the closest enum value for an interactive/online program type."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 6426,
+      "completion_tokens": 672,
+      "total_tokens": 7098,
+      "cost": 0.029358,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029358,
+        "upstream_inference_prompt_cost": 0.019278,
+        "upstream_inference_completions_cost": 0.01008
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.54,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:03:27Z"
+}

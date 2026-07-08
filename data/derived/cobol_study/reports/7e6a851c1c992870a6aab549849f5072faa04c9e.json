@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7e6a851c1c992870a6aab549849f5072faa04c9e",
+    "sha1_git": "7e6a851c1c992870a6aab549849f5072faa04c9e",
+    "filename": "/dressprt.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2910,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7e6a851c1c992870a6aab549849f5072faa04c9e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7e6a851c1c992870a6aab549849f5072faa04c9e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2910,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 94,
+    "blank_lines": 17,
+    "comment_lines": 14,
+    "code_lines": 63,
+    "comment_ratio": 0.182,
+    "max_line_length": 69,
+    "avg_line_length": 30.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "DRESSPRT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 4,
+    "goto_count": 0,
+    "pic_count": 5,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-74",
+        "detail": "ANS COBOL 1972/1974 targeting IBM-360; comment in source explicitly states 'ANS COBOL (1972)'; uses RECORDING MODE, BLOCK CONTAINS, LABEL RECORDS ARE OMITTED, ASSIGN TO UT-S- style DDnames, CONSOLE IS CNSL SPECIAL-NAMES",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM-360",
+          "OBJECT-COMPUTER. IBM-360",
+          "ASSIGN TO UT-S-INFIL",
+          "RECORDING MODE IS F",
+          "LABEL RECORDS ARE OMITTED",
+          "ANS COBOL (1972) comment",
+          "CONSOLE IS CNSL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Mainframe JCL/utility output post-processing; strips ANSI carriage-control characters and page-eject lines from IEBPTPCH print output of a PDS dump",
+        "summary": "DRESSPRT reads an 81-byte file produced by the IBM utility IEBPTPCH (a PDS dump) and removes ANSI carriage-control/page lines, writing the cleaned 80-byte payload to an output file. It filters out records flagged as form-feed (ANSI '1' in column 1) and strips the ANSI control column from all other records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ANSI carriage-control handling via 88-level condition names on CH-PRT-CTL",
+        "RECORDING MODE IS F with explicit BLOCK CONTAINS",
+        "No FILE STATUS clause (noted in comment as ANS COBOL 1972 limitation)",
+        "CONSOLE IS CNSL in SPECIAL-NAMES",
+        "PERFORM ... THROUGH ... EXIT pattern typical of pre-85 COBOL",
+        "No COPY, no CALL, no COMP-3"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is small but complete and clearly production-quality utility code for IBM mainframe environments. The comment explicitly dates it to ANS COBOL 1972 (effectively COBOL-74 standard). No truncation or encoding issues observed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3067,
+      "completion_tokens": 528,
+      "total_tokens": 3595,
+      "cost": 0.017121,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017121,
+        "upstream_inference_prompt_cost": 0.009201,
+        "upstream_inference_completions_cost": 0.00792
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.7,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:48:01Z"
+}

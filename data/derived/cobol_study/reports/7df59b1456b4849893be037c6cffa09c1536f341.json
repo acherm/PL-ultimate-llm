@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7df59b1456b4849893be037c6cffa09c1536f341",
+    "sha1_git": "7df59b1456b4849893be037c6cffa09c1536f341",
+    "filename": "/CWXTCOB.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 23315,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7df59b1456b4849893be037c6cffa09c1536f341/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7df59b1456b4849893be037c6cffa09c1536f341/raw/"
+  },
+  "indicators": {
+    "bytes_len": 23315,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 530,
+    "blank_lines": 5,
+    "comment_lines": 17,
+    "code_lines": 508,
+    "comment_ratio": 0.032,
+    "max_line_length": 72,
+    "avg_line_length": 43.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CWXTCOB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 5,
+    "perform_count": 24,
+    "goto_count": 0,
+    "pic_count": 57,
+    "comp3_count": 7,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Compuware Xpediter/TSO demo program (CWXTCOB), designed for IBM mainframe TSO/batch environment with JCL references and SAMPLIB. Uses LABEL RECORDS, RECORDING MODE IS F, BLOCK CONTAINS 0, LINKAGE SECTION with PARM, GOBACK, and COMP-3.",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "LABEL RECORDS ARE STANDARD",
+          "COMP-3 usage",
+          "GOBACK",
+          "LINKAGE SECTION with PARMINFO PIC S9(4) COMP",
+          "COPY EMPFILE / RPTEMP / RPTREGN",
+          "CALL 'CWXTDATE' / 'CWXTSUBC'",
+          "comment references XPEDITER/TSO SAMPLIB and JCL"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Compuware Xpediter/TSO training and debugging demo program processing employee wage data and producing compensation and regional sales reports",
+        "summary": "CWXTCOB is a Compuware Xpediter/TSO demo/training program that reads an employee file containing hourly, sales, and management records, calculates compensation (including overtime and commission via called subprograms), stores results in a hold table organized by region, and prints an Employee Compensation Report and a Regional Sales Report. It intentionally contains records that cause abends (S0C7) for debugging training purposes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-3 packed decimal fields",
+        "Two-dimensional OCCURS table (HOLD-TABLE) with SET/indexed access",
+        "CALL to external subprograms CWXTSUBC (commission calc) and CWXTDATE (date/service calc)",
+        "LINKAGE SECTION with PARM-LTH/PARM-DATA for JCL PARM processing",
+        "REDEFINES for date fields and region name table",
+        "88-level condition names extensively used",
+        "Intentional bad data records for Xpediter debugging training",
+        "COPY statements for EMPFILE, RPTEMP, RPTREGN copybooks",
+        "GOBACK instead of STOP RUN",
+        "Jenkins 2.360 / CLI 20.10.01 version comments"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (530 total lines); the print sections (6000-PRINT-EMPLOYEE-REPORT, 7000-PRINT-REGION-REPORT) are not visible but referenced. The program is a well-known Compuware Xpediter demo artifact widely distributed with mainframe tooling. Fixed format confirmed by max_line_length=72 and no long lines."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7177,
+      "completion_tokens": 678,
+      "total_tokens": 7855,
+      "cost": 0.031701,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.031701,
+        "upstream_inference_prompt_cost": 0.021531,
+        "upstream_inference_completions_cost": 0.01017
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.74,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:09:12Z"
+}

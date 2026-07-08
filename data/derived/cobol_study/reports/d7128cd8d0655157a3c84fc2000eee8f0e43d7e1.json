@@ -1,0 +1,119 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d7128cd8d0655157a3c84fc2000eee8f0e43d7e1",
+    "sha1_git": "d7128cd8d0655157a3c84fc2000eee8f0e43d7e1",
+    "filename": "/pi.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 2321,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d7128cd8d0655157a3c84fc2000eee8f0e43d7e1/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d7128cd8d0655157a3c84fc2000eee8f0e43d7e1/raw/"
+  },
+  "indicators": {
+    "bytes_len": 2321,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 84,
+    "blank_lines": 0,
+    "comment_lines": 8,
+    "code_lines": 76,
+    "comment_ratio": 0.095,
+    "max_line_length": 54,
+    "avg_line_length": 26.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PI-CALC"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 0,
+    "goto_count": 2,
+    "pic_count": 24,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Classic COBOL with SPECIAL-NAMES CONSOLE IS CRT and screen-buffer technique; no vendor-specific extensions visible. Likely compiled with a PC-era COBOL (possibly Micro Focus or similar) given the CRT console mapping and 1920-byte screen buffer (80x24).",
+        "evidence": [
+          "SPECIAL-NAMES. CONSOLE IS CRT",
+          "PIC X(1920) screen buffer",
+          "GO TO used for loop control",
+          "DISPLAY DI-1 / DISPLAY DI-2 for screen output"
+        ],
+        "confidence": "low"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Mathematical demonstration: computing pi using the Wallis/Leibniz-style series expansion",
+        "summary": "PI-CALC computes an approximation of pi by iteratively summing series terms until convergence (term < 1e-13) or N reaches 100. It displays intermediate terms and the running pi estimate on a character-mapped screen buffer.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "1920-byte screen buffer with REDEFINES for positional display",
+        "SPECIAL-NAMES CONSOLE IS CRT",
+        "GO TO used for loop and halt control",
+        "No PERFORM loops — uses GO TO LOOP / GO TO HALT",
+        "Fixed-point arithmetic with PIC S9V9(14)",
+        "Edited picture PIC -9.9(12) for display formatting"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "No long lines over 72 columns; clean fixed format. Dialect is ambiguous — the CRT console mapping and screen-buffer approach suggest a PC-era COBOL compiler (possibly Micro Focus Personal COBOL or similar), but no definitive vendor markers are present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3121,
+      "completion_tokens": 427,
+      "total_tokens": 3548,
+      "cost": 0.015768,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015768,
+        "upstream_inference_prompt_cost": 0.009363,
+        "upstream_inference_completions_cost": 0.006405
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.26,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:02:34Z"
+}

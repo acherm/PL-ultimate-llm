@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e99d1ca715fdd5db73c87ba632af077579a40c79",
+    "sha1_git": "e99d1ca715fdd5db73c87ba632af077579a40c79",
+    "filename": "/member.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3212,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e99d1ca715fdd5db73c87ba632af077579a40c79/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e99d1ca715fdd5db73c87ba632af077579a40c79/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3212,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 94,
+    "blank_lines": 10,
+    "comment_lines": 0,
+    "code_lines": 84,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 33.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MEMBER-REPORT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with LINE SEQUENTIAL and GOBACK; likely compiled with GnuCOBOL or similar open-source compiler given the file-based I/O and no vendor-specific extensions",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "GOBACK",
+          "88 END-OF-MEMBER-FILE VALUE HIGH-VALUES",
+          "END-READ",
+          "AFTER ADVANCING PAGE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "other",
+        "domain_detail": "Golf club membership management - generates a formatted membership report from a flat file",
+        "summary": "This program reads a sequential member data file (member.dat) and produces a formatted membership report (member.rpt) for 'Rolling Greens Golf Club'. It prints member ID, name, type, and gender with page headers, column headings, and page footers including page numbers, paginating every 40 detail lines.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "88-level condition name for EOF (HIGH-VALUES)",
+        "88-level condition for pagination threshold (NEW-PAGE-REQUIRED VALUE 40 THRU 99)",
+        "AFTER ADVANCING PAGE for form feed",
+        "GOBACK instead of STOP RUN",
+        "Typo in paragraph name: PROCESS-DETALL and PRN-MEMBER-DETATL-LINE"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "No RECORDING MODE or LABEL RECORDS clause on FDs, which is typical of GnuCOBOL/open-source usage. The AUTHOR field 'WIMONSIRI' and the simple structure strongly suggest a student exercise. Minor typos ('DETATL' for 'DETAIL') support this assessment. No COMP-3, no SQL, no CICS."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3286,
+      "completion_tokens": 444,
+      "total_tokens": 3730,
+      "cost": 0.016518,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.016518,
+        "upstream_inference_prompt_cost": 0.009858,
+        "upstream_inference_completions_cost": 0.00666
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.49,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T12:18:21Z"
+}

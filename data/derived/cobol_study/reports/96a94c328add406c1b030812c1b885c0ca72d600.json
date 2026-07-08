@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:96a94c328add406c1b030812c1b885c0ca72d600",
+    "sha1_git": "96a94c328add406c1b030812c1b885c0ca72d600",
+    "filename": "/Registratie_deelnemers.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9380,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:96a94c328add406c1b030812c1b885c0ca72d600/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:96a94c328add406c1b030812c1b885c0ca72d600/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9380,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 289,
+    "blank_lines": 51,
+    "comment_lines": 22,
+    "code_lines": 216,
+    "comment_ratio": 0.092,
+    "max_line_length": 78,
+    "avg_line_length": 31.5,
+    "long_lines_over_72": 4,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Registratie_deelnemers"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 3,
+    "call_count": 6,
+    "perform_count": 19,
+    "goto_count": 0,
+    "pic_count": 22,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL with embedded SQL using JDBC-style connection string (Microsoft SQL Server JDBC driver), Dutch-language identifiers, file names suggest Belgian/Dutch educational context",
+        "evidence": [
+          "EXEC SQL CONNECT TO :JdbcString DRIVER \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"",
+          "ORGANIZATION LINE SEQUENTIAL",
+          "COPY copybooks with .cpy extension",
+          "PROGRAM-ID. Registratie_deelnemers",
+          "Dutch variable names and comments"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Registration system for course/workshop participants (deelnemers = participants, leertraject = learning path), likely a student project for a Belgian/Dutch educational institution",
+        "summary": "This program performs batch registration of users for courses and workshops. It reads a parameter file to get a JDBC connection string and project codes, validates project codes against a database, reads a CSV file of participants, generates passwords via a called subprogram, writes output CSV files, and inserts users into a SQL Server database. It also handles linking existing users to new learning path codes.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL with JDBC-style CONNECT including DRIVER clause (non-standard SQL embedding)",
+        "EXEC SQL BEGIN/END DECLARE SECTION",
+        "SQL operations: SELECT, INSERT, COMMIT, DISCONNECT",
+        "CALL to external subprogram 'PWGenerator' for password generation",
+        "CALL to 'LogHandler' for logging",
+        "REDEFINES on FILE STATUS fields",
+        "88-level condition names on group items",
+        "STRING verb for concatenation",
+        "Dutch-language identifiers and comments",
+        "TODO comments indicating incomplete implementation",
+        "DISPLAY/ACCEPT in batch context (debugging artifacts)"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The JDBC DRIVER clause in EXEC SQL CONNECT is non-standard and unusual; this may be a custom preprocessor or GnuCOBOL with a specific SQL extension. The program has several TODO items indicating incomplete features. Dutch-language naming and Belgian educational context strongly suggest a student project. The file is decoded as latin-1 which is consistent with Dutch text containing accented characters (e.g., geëncrypteerd). Duplicate declaration of JdbcString (once before and once inside DECLARE SECTION) is a potential bug."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4977,
+      "completion_tokens": 572,
+      "total_tokens": 5549,
+      "cost": 0.023511,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023511,
+        "upstream_inference_prompt_cost": 0.014931,
+        "upstream_inference_completions_cost": 0.00858
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.75,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:49:32Z"
+}

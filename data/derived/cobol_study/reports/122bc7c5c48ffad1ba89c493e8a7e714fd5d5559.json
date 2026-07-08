@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:122bc7c5c48ffad1ba89c493e8a7e714fd5d5559",
+    "sha1_git": "122bc7c5c48ffad1ba89c493e8a7e714fd5d5559",
+    "filename": "/MENU.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3623,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:122bc7c5c48ffad1ba89c493e8a7e714fd5d5559/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:122bc7c5c48ffad1ba89c493e8a7e714fd5d5559/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3623,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 87,
+    "blank_lines": 1,
+    "comment_lines": 4,
+    "code_lines": 82,
+    "comment_ratio": 0.047,
+    "max_line_length": 72,
+    "avg_line_length": 39.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "MENU"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": true,
+    "copy_count": 3,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS online transaction program; uses DFHCOMMAREA, DFHAID, DFHBMSCA copybooks and EXEC CICS commands typical of IBM mainframe CICS environment",
+        "evidence": [
+          "EXEC CICS SEND MAP",
+          "EXEC CICS XCTL",
+          "EXEC CICS RETURN TRANSID",
+          "COPY DFHAID",
+          "COPY DFHBMSCA",
+          "EIBCALEN",
+          "EIBAID",
+          "DFHCOMMAREA"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Banking menu program for an ATM/teller system offering options: Withdraw, Deposit, Mini Statement, Enquiry",
+        "summary": "This CICS online program displays a menu map (MENMAP) to the user and routes to different transaction programs based on the user's menu choice. It handles PF3 (back), ESC, ENTER, and invalid key presses, transferring control via XCTL to programs like WITHDRAW, DEPOSIT, MINISTMT, and ENQUERY.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC CICS SEND MAP with BMS mapset",
+        "EXEC CICS XCTL for program transfer",
+        "EXEC CICS RETURN with TRANSID and COMMAREA",
+        "DFHCOMMAREA in LINKAGE SECTION",
+        "EIBCALEN and EIBAID EIB fields",
+        "COPY DFHAID / DFHBMSCA standard CICS copybooks",
+        "EVALUATE on EIBAID for PF key handling",
+        "Typo in source: WS-MEASSAGE instead of WS-MESSAGE",
+        "Missing TO keyword in final MOVE statement"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Contains two apparent coding bugs: 'WS-MEASSAGE' (misspelling of WS-MESSAGE) in ERROR-PARA and a missing 'TO' keyword in the final MOVE statement ('MOVE ... MSGO' instead of 'MOVE ... TO MSGO'). These suggest a student or trainee project rather than fully tested production code, but the overall structure is production-like CICS banking application."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3120,
+      "completion_tokens": 542,
+      "total_tokens": 3662,
+      "cost": 0.01749,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.01749,
+        "upstream_inference_prompt_cost": 0.00936,
+        "upstream_inference_completions_cost": 0.00813
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.71,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:40:08Z"
+}

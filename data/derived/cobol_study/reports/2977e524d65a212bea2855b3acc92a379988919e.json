@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2977e524d65a212bea2855b3acc92a379988919e",
+    "sha1_git": "2977e524d65a212bea2855b3acc92a379988919e",
+    "filename": "/PSPPYRUN.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 72578,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2977e524d65a212bea2855b3acc92a379988919e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2977e524d65a212bea2855b3acc92a379988919e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 72578,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 1757,
+    "blank_lines": 378,
+    "comment_lines": 223,
+    "code_lines": 1156,
+    "comment_ratio": 0.162,
+    "max_line_length": 79,
+    "avg_line_length": 40.3,
+    "long_lines_over_72": 130,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PSPPYRUN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 7,
+    "call_count": 45,
+    "perform_count": 79,
+    "goto_count": 0,
+    "pic_count": 202,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "other-vendor",
+        "standard": "COBOL-85",
+        "detail": "PeopleSoft/Oracle HCM (HR91) payroll batch program - uses PeopleSoft SQL buffer/statement pattern with BIND-SETUP/BIND-DATA/SELECT-SETUP/SELECT-DATA structures and named SQL statements like 'PSPPYRUN_S_RUNCTL'. Copyright Oracle/PeopleSoft 1988-2009.",
+        "evidence": [
+          "PROGRAM-ID. PSPPYRUN",
+          "Copyright (C) 1988, 2009, Oracle and/or its affiliates",
+          "$Release: HR91",
+          "SQL-STMT PIC X(18) VALUE 'PSPPYRUN_S_RUNCTL'",
+          "BIND-SETUP / BIND-DATA / SELECT-SETUP / SELECT-DATA pattern",
+          "NOCBGN/NOCEND directives for conditional compilation (HP90003, FED0999)"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "PeopleSoft HCM payroll calculation batch run control - executes pay calculation for a pay calendar, handling on-cycle and off-cycle payroll runs",
+        "summary": "PSPPYRUN is a PeopleSoft HCM payroll batch program that runs pay calculations. It reads run control parameters (operator ID, batch run ID, company, paygroup, pay end date), iterates over pay calendars, and invokes the pay calculation engine. It also handles process scheduler status updates upon completion.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "PeopleSoft SQL buffer pattern (BIND-SETUP/BIND-DATA/SELECT-SETUP/SELECT-DATA)",
+        "Named SQL statements stored as PIC X(18) literals referencing external SQL repository",
+        "NOCBGN/NOCEND conditional compilation markers for country-specific code (HP90003 FICA credit, FED0999)",
+        "45 CALL statements indicating heavy use of PeopleSoft runtime API",
+        "79 PERFORM statements with structured paragraph design",
+        "No EXEC SQL or EXEC CICS - uses PeopleSoft proprietary SQL abstraction layer",
+        "88-level condition names for run control flags (PROCESS-ON-RUNID, PRELIMINARY-CALC-YES, etc.)",
+        "COMP binary fields for page numbers and return codes"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated to first 16000 chars; full program is 1757 lines. The PeopleSoft SQL buffer pattern (no EXEC SQL) is characteristic of PeopleSoft COBOL programs compiled with the PeopleSoft COBOL preprocessor. NOCBGN/NOCEND are PeopleSoft-specific conditional compilation markers. The program targets HR91 (PeopleSoft HCM 9.1)."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6389,
+      "completion_tokens": 677,
+      "total_tokens": 7066,
+      "cost": 0.029322,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029322,
+        "upstream_inference_prompt_cost": 0.019167,
+        "upstream_inference_completions_cost": 0.010155
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.6,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:07:25Z"
+}

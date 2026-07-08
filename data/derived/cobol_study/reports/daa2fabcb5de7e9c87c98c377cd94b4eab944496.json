@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:daa2fabcb5de7e9c87c98c377cd94b4eab944496",
+    "sha1_git": "daa2fabcb5de7e9c87c98c377cd94b4eab944496",
+    "filename": "/Train.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 16497,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:daa2fabcb5de7e9c87c98c377cd94b4eab944496/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:daa2fabcb5de7e9c87c98c377cd94b4eab944496/raw/"
+  },
+  "indicators": {
+    "bytes_len": 16497,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 218,
+    "blank_lines": 0,
+    "comment_lines": 0,
+    "code_lines": 218,
+    "comment_ratio": 0.0,
+    "max_line_length": 171,
+    "avg_line_length": 74.7,
+    "long_lines_over_72": 218,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": false,
+      "environment": false,
+      "data": false,
+      "procedure": false
+    },
+    "n_divisions": 0,
+    "program_ids": [
+      "TRAIN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 6,
+    "goto_count": 1,
+    "pic_count": 89,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "unknown",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 with intrinsic function CURRENT-DATE; no vendor-specific extensions visible. Likely compiled with GnuCOBOL or similar open-source compiler for a student exercise.",
+        "evidence": [
+          "FUNCTION CURRENT-DATE",
+          "RECORDING MODE IS F",
+          "ORGANIZATION IS INDEXED",
+          "88-level condition names",
+          "END-READ / END-EVALUATE / END-IF scope terminators"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Train schedule lookup and report generation exercise",
+        "summary": "The program reads a sequential file of train numbers, looks each one up in an indexed master file of train schedules, and writes a formatted report (with header, column headings, and detail lines) to a results file. Records not found in the master file are flagged with an error message.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ORGANIZATION IS INDEXED with RANDOM access",
+        "FUNCTION CURRENT-DATE for date/time stamping",
+        "88-level condition names for EOF and FOUND flags",
+        "RECORDING MODE IS F on FD",
+        "GO TO used to branch to FINALIZATION on EOF",
+        "Multi-file I/O: two input files and one output file",
+        "Formatted report header with star-line separators"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "All 218 lines are code lines with zero comments, consistent with a student assignment. The program is attributed to 'AARON' in the report header. Minor logic issue: the COMP-PARA paragraph checks FS3 NOT = 0 before evaluating FOUND/NOT-FOUND, which appears inverted (should likely be = 0 for success). The file was truncated slightly before the end of FINALIZATION but the bulk of the program is visible."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5692,
+      "completion_tokens": 439,
+      "total_tokens": 6131,
+      "cost": 0.023661,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.023661,
+        "upstream_inference_prompt_cost": 0.017076,
+        "upstream_inference_completions_cost": 0.006585
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.41,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:04:01Z"
+}

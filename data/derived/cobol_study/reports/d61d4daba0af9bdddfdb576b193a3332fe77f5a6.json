@@ -1,0 +1,128 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d61d4daba0af9bdddfdb576b193a3332fe77f5a6",
+    "sha1_git": "d61d4daba0af9bdddfdb576b193a3332fe77f5a6",
+    "filename": "/bil02900.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 120605,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d61d4daba0af9bdddfdb576b193a3332fe77f5a6/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d61d4daba0af9bdddfdb576b193a3332fe77f5a6/raw/"
+  },
+  "indicators": {
+    "bytes_len": 120605,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 2523,
+    "blank_lines": 0,
+    "comment_lines": 476,
+    "code_lines": 2047,
+    "comment_ratio": 0.189,
+    "max_line_length": 80,
+    "avg_line_length": 44.8,
+    "long_lines_over_72": 12,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "BIL02900",
+      "bil02900"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 9,
+    "call_count": 2,
+    "perform_count": 127,
+    "goto_count": 18,
+    "pic_count": 364,
+    "comp3_count": 69,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe COBOL migrated to UNIX/GnuCOBOL via DLXMIG (Deluxe Financial Services migration). CBL SQL directive with QUALIFIER CICS BINDFILE indicates DB2 precompiler. DLXMIG comments replace IBM-PC/IBM-370 with UNIX and change PROGRAM-ID quoting style. RSD- file assignments suggest GnuCOBOL/OpenCOBOL RSD convention post-migration.",
+        "evidence": [
+          "CBL SQL('QUALIFIER CICS BINDFILE')",
+          "DLXMIG* OBJECT-COMPUTER. IBM-370",
+          "DLXMIG OBJECT-COMPUTER. UNIX",
+          "DLXMIG PROGRAM-ID. \"bil02900\"",
+          "ASSIGN RSD-I545",
+          "COMP-3 usage",
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Deluxe Financial Services weekly billing report processing - NACHA ACH tape billing, invoice counts, credit reason codes, due-Deluxe totals by ACH tape number",
+        "summary": "Two-pass batch program that creates a weekly billing report for Deluxe Financial Services. Pass 1 reads a 545 billing transaction file and builds a work file; Pass 2 reads the work file along with NACHA parameters (575), invoice files (I8929I/P/E), and produces a 132-character printed report with billing summaries, medium breakdowns, credit analysis, and ACH tape totals.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "EXEC SQL with DB2 QUALIFIER CICS BINDFILE directive",
+        "DLXMIG migration comments replacing IBM mainframe targets with UNIX",
+        "COMP-3 packed decimal fields (69 occurrences)",
+        "Indexed file access (I550 with RECORD KEY and FILE STATUS)",
+        "Multiple COPY statements (9 copybooks: T0545I, T0575I, T0550I, T8929I, T8929O, T8929W, etc.)",
+        "Two-pass batch architecture with intermediate sort work file",
+        "REDEFINES on print line fields",
+        "127 PERFORM statements indicating structured procedural design",
+        "18 GOTO statements",
+        "CSP IS NO-ADVANCE in SPECIAL-NAMES"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source is truncated to first 16000 chars of a 120KB file. The DLXMIG migration markers clearly show this was originally IBM mainframe COBOL adapted for UNIX execution, likely GnuCOBOL. The CBL SQL directive and has_exec_sql=true confirm embedded DB2 SQL. No EXEC CICS despite the BINDFILE reference in the CBL directive. Program is from Deluxe Financial Services (check printing/financial services company), written 1998 with revisions through 2011."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7704,
+      "completion_tokens": 720,
+      "total_tokens": 8424,
+      "cost": 0.033912,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.033912,
+        "upstream_inference_prompt_cost": 0.023112,
+        "upstream_inference_completions_cost": 0.0108
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 18.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:41:42Z"
+}

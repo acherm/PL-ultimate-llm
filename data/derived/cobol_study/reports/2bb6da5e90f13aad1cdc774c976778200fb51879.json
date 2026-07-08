@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:2bb6da5e90f13aad1cdc774c976778200fb51879",
+    "sha1_git": "2bb6da5e90f13aad1cdc774c976778200fb51879",
+    "filename": "/PBSUB.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 7836,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:2bb6da5e90f13aad1cdc774c976778200fb51879/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:2bb6da5e90f13aad1cdc774c976778200fb51879/raw/"
+  },
+  "indicators": {
+    "bytes_len": 7836,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 208,
+    "blank_lines": 10,
+    "comment_lines": 6,
+    "code_lines": 192,
+    "comment_ratio": 0.03,
+    "max_line_length": 71,
+    "avg_line_length": 35.7,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PBSUB"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 18,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 4,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 subprogram with INDEXED file I/O; Turkish-language messages suggest a student or academic project, possibly compiled with GnuCOBOL",
+        "evidence": [
+          "PROCEDURE DIVISION USING WS-SUB-AREA",
+          "LINKAGE SECTION with function codes",
+          "FUNCTION TRIM used",
+          "GOBACK",
+          "INDEXED file with RANDOM access",
+          "Turkish strings: KAYIT BULUNDU, KAYIT EKLENDI"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Student exercise implementing a generic CRUD subprogram for an indexed file, likely a banking or personal records context (name, surname, balance, date fields)",
+        "summary": "PBSUB is a called subprogram that performs CRUD operations (read, write, delete, update) on an indexed VSAM-style file keyed by a numeric ID. It accepts a function code and ID via the LINKAGE SECTION and returns a result code and descriptive message. The update function also performs character substitution on the surname field.",
+        "program_type": "subprogram"
+      },
+      "notable_features": [
+        "LINKAGE SECTION with 88-level function codes for CRUD dispatch",
+        "INDEXED file with RANDOM access and file status checking",
+        "COMP-3 packed-decimal fields (IDX-ID, IDX-DATE, IDM-BALANCE)",
+        "FUNCTION TRIM and STRING statement for log message construction",
+        "Turkish-language status messages",
+        "Character substitution via INSPECT REPLACING in update logic",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Author name 'YUNUS EMRE AKDIK' and Turkish messages strongly suggest a student project. The hardcoded name/date values in H320-WRITE (Yunus Emre, Akdik, 19980409) confirm this is a personal exercise rather than production code. Dialect is likely GnuCOBOL but could be any COBOL-85 compliant compiler."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4843,
+      "completion_tokens": 504,
+      "total_tokens": 5347,
+      "cost": 0.022089,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022089,
+        "upstream_inference_prompt_cost": 0.014529,
+        "upstream_inference_completions_cost": 0.00756
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.03,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T15:08:31Z"
+}

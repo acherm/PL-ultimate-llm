@@ -1,0 +1,127 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:675689e70936a2567429e85c2c380bf139aef063",
+    "sha1_git": "675689e70936a2567429e85c2c380bf139aef063",
+    "filename": "/cgi-list-users.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 17935,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:675689e70936a2567429e85c2c380bf139aef063/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:675689e70936a2567429e85c2c380bf139aef063/raw/"
+  },
+  "indicators": {
+    "bytes_len": 17935,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 472,
+    "blank_lines": 53,
+    "comment_lines": 57,
+    "code_lines": 362,
+    "comment_ratio": 0.136,
+    "max_line_length": 69,
+    "avg_line_length": 36.0,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": false,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "PIC",
+      "WHEN",
+      "cgi-list-users"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": false,
+    "copy_count": 2,
+    "call_count": 5,
+    "perform_count": 23,
+    "goto_count": 0,
+    "pic_count": 58,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL CGI web application using EXEC SQL (likely with ocesql or similar precompiler), Swedish-language comments and data values, targeting a school/education management system called 'openjensen'",
+        "evidence": [
+          "PROGRAM-ID. cgi-list-users",
+          "*> comment style (GnuCOBOL free-form comments)",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "COPY setupenv_openjensen",
+          "CALL 'wui-print-header'",
+          "CALL 'get-post-value'",
+          "Swedish text in comments and literals: 'Saknar ett användattyp id', 'Elev', 'Lärare', 'Administratör'"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "School/education management system ('openjensen') listing users (pupils, teachers, administrators) from a database via a CGI web interface",
+        "summary": "This CGI program retrieves and lists users from a database table (tbl_user) filtered by user type (pupil, teacher, administrator, etc.). It connects to a PostgreSQL/MySQL-like database, fetches lookup data for user types and programs, then outputs an HTML table of users. It is part of a Swedish school management web application.",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL with cursors (DECLARE, OPEN, FETCH, CLOSE)",
+        "CGI web output via DISPLAY of HTML tags",
+        "CALL to external CGI helper routines (wui-print-header, get-post-value, write-post-string, stop-printscr)",
+        "COPY copybook for environment setup (setupenv_openjensen)",
+        "Swedish-language literals and comments",
+        "Indexed table lookups for user types and program names",
+        "EVALUATE used for multi-branch logic",
+        "88-level condition names for switches",
+        "FUNCTION NUMVAL usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "medium",
+      "notes": "Source is truncated at 16000 chars; the full file is 17935 bytes. program_type set to online-cics as the closest enum match for a CGI web program (no CICS is actually used). Dialect family set to gnucobol based on *> comment style and CGI/web context typical of GnuCOBOL projects; could also be Micro Focus. The SQL precompiler is likely ocesql or similar open-source tool."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 6577,
+      "completion_tokens": 605,
+      "total_tokens": 7182,
+      "cost": 0.028806,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.028806,
+        "upstream_inference_prompt_cost": 0.019731,
+        "upstream_inference_completions_cost": 0.009075
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.16,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:34:03Z"
+}

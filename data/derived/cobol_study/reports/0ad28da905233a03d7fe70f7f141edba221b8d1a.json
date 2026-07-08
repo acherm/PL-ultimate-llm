@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0ad28da905233a03d7fe70f7f141edba221b8d1a",
+    "sha1_git": "0ad28da905233a03d7fe70f7f141edba221b8d1a",
+    "filename": "/PROJECT2PAYROLL.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 10501,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0ad28da905233a03d7fe70f7f141edba221b8d1a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0ad28da905233a03d7fe70f7f141edba221b8d1a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 10501,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 259,
+    "blank_lines": 38,
+    "comment_lines": 0,
+    "code_lines": 221,
+    "comment_ratio": 0.0,
+    "max_line_length": 72,
+    "avg_line_length": 39.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PROJECT2PAYROLL"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 24,
+    "goto_count": 0,
+    "pic_count": 79,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 compatible; likely compiled with GnuCOBOL or similar open-source compiler given LINE SEQUENTIAL organization and flat-file I/O to .TXT files. No mainframe-specific extensions.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN to quoted filename strings like 'EMPFILE2.TXT'",
+          "No COMP-3, no EXEC SQL, no EXEC CICS",
+          "READ ... INTO PAYROLL-RECORD with AT END / NOT AT END"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "payroll-hr",
+        "domain_detail": "Employee payroll processing: reads employee records, computes gross pay (with overtime), tax, health, and union deductions, then writes a payroll register report and summary file.",
+        "summary": "Reads employee records from a flat file (EMPFILE2.TXT), computes gross pay including overtime at 1.5x, deducts 20% tax, 2% health, and $20 union dues for union members, then writes a formatted payroll register and a summary totals file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Overtime calculation (hours > 40 at 1.5x rate)",
+        "Union dues conditional on UNION-MEMBER flag",
+        "Two output files: payroll register and summary",
+        "LINE SEQUENTIAL file organization",
+        "Structured paragraph naming convention (100/200/700/1000 levels)",
+        "No COMP-3 or packed decimal usage",
+        "No COPY statements or external subprogram calls"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program authored by two named individuals (MEL SANSCHAGRIN, CHANDLER NEWMAN-REED), named PROJECT2PAYROLL suggesting a course project assignment. Logic is straightforward and complete but lacks error handling, production-grade features, or COMP-3 optimization. Max line length of 72 and fixed format confirmed."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5956,
+      "completion_tokens": 475,
+      "total_tokens": 6431,
+      "cost": 0.024993,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.024993,
+        "upstream_inference_prompt_cost": 0.017868,
+        "upstream_inference_completions_cost": 0.007125
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 17.06,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:09:44Z"
+}

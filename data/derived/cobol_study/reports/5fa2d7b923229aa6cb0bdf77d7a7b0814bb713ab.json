@@ -1,0 +1,125 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5fa2d7b923229aa6cb0bdf77d7a7b0814bb713ab",
+    "sha1_git": "5fa2d7b923229aa6cb0bdf77d7a7b0814bb713ab",
+    "filename": "/MARBLE07.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 37420,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5fa2d7b923229aa6cb0bdf77d7a7b0814bb713ab/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5fa2d7b923229aa6cb0bdf77d7a7b0814bb713ab/raw/"
+  },
+  "indicators": {
+    "bytes_len": 37420,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 463,
+    "blank_lines": 1,
+    "comment_lines": 175,
+    "code_lines": 287,
+    "comment_ratio": 0.379,
+    "max_line_length": 80,
+    "avg_line_length": 79.8,
+    "long_lines_over_72": 462,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MARBLE07"
+    ],
+    "has_exec_sql": true,
+    "has_exec_cics": true,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 21,
+    "goto_count": 0,
+    "pic_count": 35,
+    "comp3_count": 1,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM CICS/DB2 mainframe program; uses EXEC CICS for terminal I/O and EXEC SQL with DB2 table declarations (EVENT.MARBLE, EVENT.COLOR) and SQLCA include",
+        "evidence": [
+          "EXEC SQL DECLARE EVENT.MARBLE TABLE",
+          "EXEC SQL DECLARE EVENT.COLOR TABLE",
+          "EXEC SQL INCLUDE SQLCA END-EXEC",
+          "EXEC CICS",
+          "COMP-3 usage",
+          "PIC S9(4) COMP",
+          "fixed format, max line 80"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Marble inventory management demo application (likely IBM Z/CICS tutorial or hackathon sample); manages marble color inventory via CRE/UPD/DEL CICS transactions against DB2 tables",
+        "summary": "MARBLE07 is a CICS online transaction (MB01) that allows users to create, update, or delete marble color inventory records in a DB2 database. It parses terminal input, validates the verb and color, and performs the corresponding SQL INSERT/UPDATE/DELETE operation, returning SUCCESS or an error code. The program appears to be part of an IBM mainframe tutorial or demo (marbles.cbl build reference).",
+        "program_type": "online-cics"
+      },
+      "notable_features": [
+        "EXEC SQL with DB2 table declarations (EVENT.MARBLE, EVENT.COLOR)",
+        "EXEC CICS for terminal I/O",
+        "EXEC SQL INCLUDE SQLCA",
+        "COMP-3 field (WS-WORK-ROW-COUNT)",
+        "88-level condition names for result routing",
+        "EVALUATE TRUE for verb dispatch",
+        "REDEFINES for output area (success vs error)",
+        "No COPY statements, no CALL statements",
+        "Build comment references gulp build tool (modern dev toolchain)"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Source truncated at 16000 chars (463 total lines); PROCEDURE DIVISION logic is partially visible but structure is clear. The gulp build reference and 'marbles' demo context suggest this is an IBM Z open-source demo/tutorial application rather than a live production system, but the code quality and structure are production-like."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 5260,
+      "completion_tokens": 536,
+      "total_tokens": 5796,
+      "cost": 0.02382,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02382,
+        "upstream_inference_prompt_cost": 0.01578,
+        "upstream_inference_completions_cost": 0.00804
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.36,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:26:56Z"
+}

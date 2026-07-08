@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ada82a806f99f05c9702df12dcc090e5e9f4ad38",
+    "sha1_git": "ada82a806f99f05c9702df12dcc090e5e9f4ad38",
+    "filename": "/BATJSON.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8500,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ada82a806f99f05c9702df12dcc090e5e9f4ad38/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ada82a806f99f05c9702df12dcc090e5e9f4ad38/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8500,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 247,
+    "blank_lines": 41,
+    "comment_lines": 23,
+    "code_lines": 183,
+    "comment_ratio": 0.112,
+    "max_line_length": 72,
+    "avg_line_length": 33.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "COBJSON"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 2,
+    "pic_count": 49,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-2014",
+        "detail": "Uses JSON GENERATE verb with NATIONAL (PIC N) data and FUNCTION DISPLAY-OF with CCSID 1140, strongly suggesting IBM Enterprise COBOL for z/OS",
+        "evidence": [
+          "JSON GENERATE JSON-TEXT FROM AA-REC-TYPE",
+          "PIC N(15000) NATIONAL",
+          "FUNCTION DISPLAY-OF(JSON-TEXT(1:I), 1140)",
+          "JSON-CODE special register",
+          "COPY AALFATS"
+        ],
+        "confidence": "high"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "utility-tooling",
+        "domain_detail": "Reads a flat file containing records of multiple types (AA, HI) and converts them to JSON output using the JSON GENERATE verb",
+        "summary": "This batch program reads an input file containing typed records (AA and HI record types), generates JSON text from each record using the COBOL JSON GENERATE statement, and writes the resulting JSON to an output file. It is a data transformation utility converting flat COBOL records to JSON format.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "JSON GENERATE verb (COBOL-2014 / IBM Enterprise COBOL 6.x)",
+        "PIC N NATIONAL data item for Unicode JSON text",
+        "FUNCTION DISPLAY-OF with CCSID 1140 for EBCDIC conversion",
+        "EVALUATE on RECORD-TYPE for multi-record-type processing",
+        "COPY AALFATS copybook for input record layout",
+        "88-level condition names for file status and EOF control",
+        "REDEFINES for date fields",
+        "FUNCTION CURRENT-DATE usage"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "The use of FUNCTION DISPLAY-OF with codepage 1140 and PIC N NATIONAL strongly indicates IBM Enterprise COBOL for z/OS 6.x. The COPY AALFATS copybook is not shown but presumably defines AA-REC-TYPE, HI-REC-TYPE, and RECORD-TYPE fields. The program appears to be a real utility for converting FATS (possibly a financial or insurance record format) data to JSON."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4977,
+      "completion_tokens": 506,
+      "total_tokens": 5483,
+      "cost": 0.022521,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022521,
+        "upstream_inference_prompt_cost": 0.014931,
+        "upstream_inference_completions_cost": 0.00759
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.09,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:08:02Z"
+}

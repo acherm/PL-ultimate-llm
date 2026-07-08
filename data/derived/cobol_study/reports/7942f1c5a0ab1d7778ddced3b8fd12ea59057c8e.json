@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:7942f1c5a0ab1d7778ddced3b8fd12ea59057c8e",
+    "sha1_git": "7942f1c5a0ab1d7778ddced3b8fd12ea59057c8e",
+    "filename": "/SALEREPORT.CBL",
+    "source_csv": ".CBL",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3046,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:7942f1c5a0ab1d7778ddced3b8fd12ea59057c8e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:7942f1c5a0ab1d7778ddced3b8fd12ea59057c8e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3046,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 103,
+    "blank_lines": 10,
+    "comment_lines": 0,
+    "code_lines": 93,
+    "comment_ratio": 0.0,
+    "max_line_length": 60,
+    "avg_line_length": 28.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "SALEREPORT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 3,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 style with GOBACK, FILE STATUS, 88-level condition names, and PERFORM THRU EXIT pattern typical of IBM mainframe or compatible environments",
+        "evidence": [
+          "GOBACK",
+          "FILE STATUS IS WS-INPUT-FILE-STATUS",
+          "88 FILE-OK VALUE '00'",
+          "88 FILE-AT-END VALUE '10'",
+          "PERFORM 1000-INITAL THRU 1000-EXIT",
+          "BLOCK CONTAINS 0 RECORDS",
+          "UPON CONSOLE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Food sales data processing - reads a FOODSALE.DAT sequential file and reports records",
+        "summary": "SALEREPORT reads a sequential input file (FOODSALE.DAT) record by record, displays each record, counts total records read, and reports the count at end of run. It includes file status error handling with ABEND messages on failure.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "PERFORM THRU EXIT pattern",
+        "FILE STATUS with 88-level condition names",
+        "GOBACK instead of STOP RUN for normal termination",
+        "UPON CONSOLE for error messages",
+        "Sequential file processing with read-until-EOF loop"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "No PROCEDURE DIVISION header detected by mechanical indicators but it is present in the source. Only 3 PIC clauses noted which is consistent with a simple file-reading exercise. Author name 'JIRATIP' suggests student or training context. The program does not actually produce a formatted report despite the name SALEREPORT - it simply displays raw records."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3136,
+      "completion_tokens": 413,
+      "total_tokens": 3549,
+      "cost": 0.015603,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.015603,
+        "upstream_inference_prompt_cost": 0.009408,
+        "upstream_inference_completions_cost": 0.006195
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.73,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:47:19Z"
+}

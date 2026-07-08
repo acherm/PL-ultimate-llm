@@ -1,0 +1,121 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:af612ade64b4ec73d6aa6a0af50368497bc43220",
+    "sha1_git": "af612ade64b4ec73d6aa6a0af50368497bc43220",
+    "filename": "/ZBNKPRT2.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 5230,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:af612ade64b4ec73d6aa6a0af50368497bc43220/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:af612ade64b4ec73d6aa6a0af50368497bc43220/raw/"
+  },
+  "indicators": {
+    "bytes_len": 5230,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 125,
+    "blank_lines": 1,
+    "comment_lines": 5,
+    "code_lines": 119,
+    "comment_ratio": 0.04,
+    "max_line_length": 72,
+    "avg_line_length": 40.8,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "ZBNKPRT2"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 10,
+    "goto_count": 0,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Classic IBM mainframe batch COBOL; SOURCE-COMPUTER/OBJECT-COMPUTER set to IBM; fixed format; no COMP-3 or advanced features",
+        "evidence": [
+          "SOURCE-COMPUTER. IBM",
+          "OBJECT-COMPUTER. IBM",
+          "ASSIGN BANK10 / ASSIGN REPT10 (DD-name style)",
+          "ORGANIZATION IS SEQUENTIAL",
+          "88-level condition name",
+          "fixed format max 72 cols"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "banking-finance",
+        "domain_detail": "Bank account credits reporting; reads account and product records from a sequential file and produces a formatted report",
+        "summary": "ZBNKPRT2 reads a sequential bank account file containing account and product records, accumulates product counts and credits per account, and writes a formatted report with headings, detail lines, and a grand total of accounts processed.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "88-level condition name (END-OF-DATA)",
+        "Multi-record-type sequential file (record type '1' vs other)",
+        "Page-break logic based on line counter (CTR-LINES > 30)",
+        "Formatted report with headings and grand total line",
+        "PERFORM...UNTIL loop structure",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is straightforward and complete with all four divisions present. IBM dialect inferred from SOURCE/OBJECT-COMPUTER IBM entries and DD-name style ASSIGN clauses. Standard is likely COBOL-85 based on THEN clause usage and 88-level conditions, though could be COBOL-74 compatible."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3861,
+      "completion_tokens": 413,
+      "total_tokens": 4274,
+      "cost": 0.017778,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017778,
+        "upstream_inference_prompt_cost": 0.011583,
+        "upstream_inference_completions_cost": 0.006195
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 10.62,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T11:35:43Z"
+}

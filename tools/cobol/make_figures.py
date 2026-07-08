@@ -215,6 +215,35 @@ def main():
         fig.tight_layout(); fig.savefig(OUT / "fig_corpus_1k.png"); plt.close(fig)
         print("wrote fig_corpus_1k.png")
 
+    # Fig 10 — origin-diverse (by-repo) vs by-file sampling
+    divp = STUDY / "summary_div.json"
+    scap = STUDY / "summary_scaled.json"
+    if divp.exists() and scap.exists():
+        dv = json.loads(divp.read_text()); sc = json.loads(scap.read_text())
+        def _pctd(dist):
+            t = sum(dist.values()) or 1
+            return {k: 100 * v / t for k, v in dist.items()}
+        fig, axes = plt.subplots(1, 2, figsize=(10.5, 3.8))
+        for ax, (title, key, keys) in zip(axes, [
+            ("Maturity", "judge_maturity",
+             ["production-like", "student-exercise", "toy-or-hello-world", "snippet"]),
+            ("Domain", "judge_domain",
+             ["healthcare-medical", "education-tutorial", "demo-example",
+              "banking-finance", "accounting-erp"])]):
+            dp, sp = _pctd(dv.get(key, {})), _pctd(sc.get(key, {}))
+            y = range(len(keys)); h = .38
+            ax.barh([i + h/2 for i in y], [dp.get(k, 0) for k in keys], h, color=LO,
+                    label=f"div by-repo (n={dv['n_judged']})")
+            ax.barh([i - h/2 for i in y], [sp.get(k, 0) for k in keys], h, color=UP,
+                    label=f"main by-file (n={sc['n_judged']})")
+            ax.set_yticks(list(y)); ax.set_yticklabels(keys, fontsize=8)
+            ax.invert_yaxis(); ax.set_xlabel("%"); ax.set_title(title, fontweight="bold")
+            ax.legend(fontsize=7, loc="lower right")
+        fig.suptitle("Project-level (by-repo) vs file-level (by-file) sampling",
+                     fontweight="bold")
+        fig.tight_layout(); fig.savefig(OUT / "fig_div_vs_main.png"); plt.close(fig)
+        print("wrote fig_div_vs_main.png")
+
     print(f"\next-split: .CBL judged={nU} gated={up_g} | .cbl judged={nL} gated={lo_g}")
 
 

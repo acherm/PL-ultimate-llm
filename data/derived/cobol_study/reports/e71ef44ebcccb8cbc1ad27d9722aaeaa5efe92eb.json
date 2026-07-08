@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:e71ef44ebcccb8cbc1ad27d9722aaeaa5efe92eb",
+    "sha1_git": "e71ef44ebcccb8cbc1ad27d9722aaeaa5efe92eb",
+    "filename": "/utilBreadDelRecs.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 6623,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:e71ef44ebcccb8cbc1ad27d9722aaeaa5efe92eb/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:e71ef44ebcccb8cbc1ad27d9722aaeaa5efe92eb/raw/"
+  },
+  "indicators": {
+    "bytes_len": 6623,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 187,
+    "blank_lines": 36,
+    "comment_lines": 23,
+    "code_lines": 128,
+    "comment_ratio": 0.152,
+    "max_line_length": 70,
+    "avg_line_length": 34.4,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "utilBreadDelRecs"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 1,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 20,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL (formerly OpenCOBOL) on AIX/Linux; uses COMP-X, indexed file with LOCK MODE MANUAL, file paths under /var/fedex/ssp/ on AIX 6.1",
+        "evidence": [
+          "COMP-X usage for ls-status",
+          "lock mode is manual with lock on record",
+          "organization is indexed / line sequential",
+          "file paths /var/fedex/ssp/ on AIX",
+          "COPY with full path string /home/oasis/include/cobPFopfdeldesc"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "FedEx SmartPost internal logistics - reading and displaying records from an OPF (Outbound Package File) delete-record database",
+        "summary": "This utility program opens an indexed file of deleted OPF records (dklpWFOpfDelRecs), sequentially reads all records, and displays barcode and deletion date for each. It includes error handling that logs file status errors to an ERRORCOBLOG file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "COMP-X for linkage section status field",
+        "Indexed file with LOCK MODE MANUAL / WITH LOCK ON RECORD",
+        "COPY statement using absolute file path (non-standard)",
+        "PROCEDURE DIVISION USING linkage section parameter",
+        "STRING statement for error message construction",
+        "ACCEPT from TIME and DATE YYYYMMDD",
+        "EXIT PROGRAM on error (subprogram-style exit)",
+        "File paths specific to AIX 6.1 directory structure"
+      ],
+      "maturity": "production-like",
+      "overall_confidence": "high",
+      "notes": "Program is property of FedEx SmartPost, written 2007, updated 2012 for AIX 6.1 directory structure change. Uses EXIT PROGRAM suggesting it may be called as a subprogram despite having STOP RUN. The COPY path references /home/oasis/include/ suggesting an 'oasis' system context. Tab characters appear in the file-control section (mixed indentation)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3886,
+      "completion_tokens": 504,
+      "total_tokens": 4390,
+      "cost": 0.019218,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.019218,
+        "upstream_inference_prompt_cost": 0.011658,
+        "upstream_inference_completions_cost": 0.00756
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.51,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:57:33Z"
+}

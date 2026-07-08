@@ -1,0 +1,124 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:ee1870362f5adbca91ee8962f7067576df651b5e",
+    "sha1_git": "ee1870362f5adbca91ee8962f7067576df651b5e",
+    "filename": "/UNEMP.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 19545,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:ee1870362f5adbca91ee8962f7067576df651b5e/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:ee1870362f5adbca91ee8962f7067576df651b5e/raw/"
+  },
+  "indicators": {
+    "bytes_len": 19545,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 454,
+    "blank_lines": 0,
+    "comment_lines": 62,
+    "code_lines": 392,
+    "comment_ratio": 0.137,
+    "max_line_length": 69,
+    "avg_line_length": 41.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "UNEMP"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 25,
+    "goto_count": 2,
+    "pic_count": 124,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL compiler; uses VSAM-style INDEXED file with FILE STATUS, UNSTRING/STRING verbs, RECORDING MODE F, no COMP-3, no EXEC SQL/CICS. Style consistent with GnuCOBOL student/educational use.",
+        "evidence": [
+          "ORGANIZATION IS INDEXED",
+          "ACCESS MODE IS RANDOM",
+          "RECORD KEY IS RECORD-KEY",
+          "FILE STATUS IS WS-CLMDB-STATUS",
+          "UNSTRING ... DELIMITED BY ',' OR ' '",
+          "STRING ... DELIMITED BY SIZE",
+          "RECORDING MODE F",
+          "no COMP-3, no EXEC SQL/CICS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "government-public",
+        "domain_detail": "Unemployment insurance claims data processing - reads CSV files of unemployment claims broken down by age, ethnicity, industry, race, and gender, and loads them into an indexed (VSAM-style) database file.",
+        "summary": "Reads five CSV input files containing unemployment claims statistics categorized by age, ethnicity, industry, race, and gender. Uses UNSTRING to parse CSV fields and STRING to reformat dates from MMDDYYYY to YYYYMMDD for proper key sorting. Writes records to an indexed file using WRITE for the first file and REWRITE for subsequent files.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "VSAM-style INDEXED file with RANDOM access and FILE STATUS",
+        "UNSTRING used to parse CSV input delimited by comma or space",
+        "STRING used to reformat date key from MMDDYYYY to YYYYMMDD",
+        "Five separate input CSV files merged into one indexed database",
+        "OPEN I-O after initial OPEN OUTPUT for subsequent REWRITE operations",
+        "88-level condition names for FILE STATUS values",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars but the structure is clear. The author comment ('Otto B. Employed') and the educational nature of the program (processing public unemployment CSV data into a VSAM file) strongly suggest a student exercise. The program uses WRITE for first file and REWRITE for subsequent files as noted in the comments, which is a learning exercise pattern."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7141,
+      "completion_tokens": 564,
+      "total_tokens": 7705,
+      "cost": 0.029883,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029883,
+        "upstream_inference_prompt_cost": 0.021423,
+        "upstream_inference_completions_cost": 0.00846
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.83,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T10:38:51Z"
+}

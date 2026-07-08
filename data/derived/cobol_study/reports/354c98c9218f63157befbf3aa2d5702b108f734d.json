@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:354c98c9218f63157befbf3aa2d5702b108f734d",
+    "sha1_git": "354c98c9218f63157befbf3aa2d5702b108f734d",
+    "filename": "/SalesDataValidation.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9004,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:354c98c9218f63157befbf3aa2d5702b108f734d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:354c98c9218f63157befbf3aa2d5702b108f734d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9004,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 236,
+    "blank_lines": 32,
+    "comment_lines": 6,
+    "code_lines": 198,
+    "comment_ratio": 0.029,
+    "max_line_length": 71,
+    "avg_line_length": 37.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": false
+    },
+    "n_divisions": 3,
+    "program_ids": [
+      "SALESDATAVALIDATION"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 7,
+    "goto_count": 1,
+    "pic_count": 59,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Standard COBOL-85 style; no vendor-specific extensions. Likely compiled with GnuCOBOL or similar open-source compiler given LINE SEQUENTIAL organization and simple file assignments. Author 'PEGGY FISHER' is a known COBOL educator/author.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ACCEPT WS-DATE FROM DATE",
+          "88 ENDOFSALES VALUE HIGH-VALUES",
+          "END-READ, END-IF structured delimiters",
+          "PERFORM ... THRU",
+          "GO TO paragraph"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Sales data validation for a sales personnel yearly sales file",
+        "summary": "Reads a flat file of salesperson yearly sales records, validates each record for numeric ID, alphabetic names, valid region codes (EAST/WEST/NORTH/SOUTH), numeric sales amount, and valid gender code (M/F/U). Writes valid records to a new file and prints an error report for invalid records, stopping early if more than 5 bad records are found.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "88-level condition names for end-of-file and valid-gender",
+        "PERFORM THRU range across multiple paragraphs",
+        "GO TO used for early termination on excessive errors",
+        "ACCEPT FROM DATE for report date stamping",
+        "LINE SEQUENTIAL file organization",
+        "Structured report with heading and detail lines",
+        "NEXT SENTENCE usage (older style)",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The PROCEDURE DIVISION is present in the source despite the mechanical indicator showing it absent — likely a parsing artifact. The program is consistent with a textbook or course exercise by educator Peggy Fisher. No lines exceed 72 characters confirming fixed format. The early-exit logic via GO TO on >5 bad records is a deliberate teaching example of that construct."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5051,
+      "completion_tokens": 474,
+      "total_tokens": 5525,
+      "cost": 0.022263,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.022263,
+        "upstream_inference_prompt_cost": 0.015153,
+        "upstream_inference_completions_cost": 0.00711
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 12.97,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T13:40:56Z"
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:205a1d652e8d1f04d1c536957600ddb601ade656",
+    "sha1_git": "205a1d652e8d1f04d1c536957600ddb601ade656",
+    "filename": "/CWBPAIF1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 8626,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:205a1d652e8d1f04d1c536957600ddb601ade656/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:205a1d652e8d1f04d1c536957600ddb601ade656/raw/"
+  },
+  "indicators": {
+    "bytes_len": 8626,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 239,
+    "blank_lines": 36,
+    "comment_lines": 15,
+    "code_lines": 188,
+    "comment_ratio": 0.074,
+    "max_line_length": 72,
+    "avg_line_length": 35.1,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "CWBPAIF1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 16,
+    "goto_count": 0,
+    "pic_count": 39,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "IBM mainframe QSAM file processing style with RECORDING MODE IS F, BLOCK CONTAINS 0 RECORDS, LABEL RECORDS ARE STANDARD; French comments suggest possible European mainframe environment",
+        "evidence": [
+          "RECORDING MODE IS F",
+          "BLOCK CONTAINS 0 RECORDS",
+          "LABEL RECORDS ARE STANDARD",
+          "ASSIGN TO CUSTFILE (DD name style)",
+          "FILE STATUS IS",
+          "INVALID KEY on WRITE (sequential file)"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Streaming/media subscription service - merging customer profile data with watch/viewing history records",
+        "summary": "This batch program merges two sequential QSAM files: a CUSTOMER-FILE (customer profile data including account, name, subscription info) and a WATCH-FILE (viewing history with content ID, watch percent, media type) into a single MERGED-FILE. It performs a sequential merge by accountNumber, reading both files and writing combined records.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "QSAM sequential file merge pattern",
+        "RECORDING MODE IS F on all files",
+        "FILE STATUS checking on open/read/write/close",
+        "Mixed-language comments (French and English)",
+        "PERFORM UNTIL with dual EOF flags",
+        "Sequential merge algorithm comparing account numbers",
+        "INVALID KEY clause on sequential WRITE (unusual/incorrect usage)",
+        "No COMP-3 usage despite numeric-like fields stored as PIC X"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The use of INVALID KEY on a sequential WRITE is technically incorrect (INVALID KEY applies to indexed/relative files); this suggests a student or learning exercise. French comments ('Programme COBOL de traitement de fichiers QSAM', 'Déclaration des fichiers') indicate a French-speaking developer. The merge logic has potential issues: when EOF conditions are met, the PERFORM UNTIL loop may still attempt processing. No COMP-3 or numeric PIC clauses used despite numeric data fields. The domain appears to be a streaming/media service based on field names (watchPercent, mediaType, contentId, subscriptionProgram)."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 4618,
+      "completion_tokens": 518,
+      "total_tokens": 5136,
+      "cost": 0.021624,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.021624,
+        "upstream_inference_prompt_cost": 0.013854,
+        "upstream_inference_completions_cost": 0.00777
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 15.54,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:04:49Z"
+}

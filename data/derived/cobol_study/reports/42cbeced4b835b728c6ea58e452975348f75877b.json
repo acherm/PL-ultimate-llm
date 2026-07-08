@@ -1,0 +1,116 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:42cbeced4b835b728c6ea58e452975348f75877b",
+    "sha1_git": "42cbeced4b835b728c6ea58e452975348f75877b",
+    "filename": "/read.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 383,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:42cbeced4b835b728c6ea58e452975348f75877b/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:42cbeced4b835b728c6ea58e452975348f75877b/raw/"
+  },
+  "indicators": {
+    "bytes_len": 383,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 21,
+    "blank_lines": 3,
+    "comment_lines": 0,
+    "code_lines": 18,
+    "comment_ratio": 0.0,
+    "max_line_length": 38,
+    "avg_line_length": 17.2,
+    "long_lines_over_72": 0,
+    "source_format_guess": "free",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "READDD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 2,
+    "goto_count": 0,
+    "pic_count": 1,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "ibm-mainframe",
+        "standard": "COBOL-85",
+        "detail": "Likely IBM AS/400 (iSeries/IBM i) based on DATABASE- prefix in ASSIGN clause (DATABASE-EMPPF), which is characteristic of IBM i DB2/400 file access",
+        "evidence": [
+          "ASSIGN TO DATABASE-EMPPF",
+          "SELECT FILE1 ASSIGN TO DATABASE-",
+          "FILE STATUS IS WS-FILE-STATUS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "free",
+      "purpose": {
+        "domain": "demo-example",
+        "domain_detail": "Simple employee file read demonstration, likely for an IBM i (AS/400) environment reading an employee physical file (EMPPF)",
+        "summary": "A minimal program that opens an employee physical file (EMPPF), reads all records displaying 'NAME' for each, and stops when end-of-file is reached. It appears to be a simple demonstration or student exercise for IBM i file I/O.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "DATABASE- prefix in ASSIGN clause (IBM i/AS400 style)",
+        "PERFORM UNTIL with FILE STATUS '10' (end-of-file) loop",
+        "Tab-indented free-format source",
+        "Incomplete READ logic - no INTO clause or field display"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "Very short program (21 lines). The CLOSE statement is missing the file name (should be CLOSE FILE1 or CLOSE EMPPF). The READ loop displays a literal 'NAME ' rather than actual field data, suggesting incomplete or tutorial code. The SELECT assigns FILE1 but OPEN/READ/CLOSE reference EMPPF directly, which is inconsistent and may indicate a bug or simplified example."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2369,
+      "completion_tokens": 407,
+      "total_tokens": 2776,
+      "cost": 0.013212,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.013212,
+        "upstream_inference_prompt_cost": 0.007107,
+        "upstream_inference_completions_cost": 0.006105
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.54,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:38:45Z"
+}

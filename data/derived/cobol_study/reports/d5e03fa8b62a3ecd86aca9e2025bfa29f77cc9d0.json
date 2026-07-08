@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:d5e03fa8b62a3ecd86aca9e2025bfa29f77cc9d0",
+    "sha1_git": "d5e03fa8b62a3ecd86aca9e2025bfa29f77cc9d0",
+    "filename": "/Program1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 3764,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:d5e03fa8b62a3ecd86aca9e2025bfa29f77cc9d0/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:d5e03fa8b62a3ecd86aca9e2025bfa29f77cc9d0/raw/"
+  },
+  "indicators": {
+    "bytes_len": 3764,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 109,
+    "blank_lines": 18,
+    "comment_lines": 9,
+    "code_lines": 82,
+    "comment_ratio": 0.099,
+    "max_line_length": 72,
+    "avg_line_length": 32.6,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SAVE-INVENTORY-RECORD"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 13,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL or similar open-source COBOL; uses LINE/COLUMN clauses on DISPLAY/ACCEPT (screen I/O), SELECT OPTIONAL, LINE SEQUENTIAL, and 88-level condition names consistent with COBOL-85. No IBM-specific extensions detected.",
+        "evidence": [
+          "SELECT OPTIONAL ... ORGANIZATION IS LINE SEQUENTIAL",
+          "DISPLAY ... LINE 2 COLUMN 4",
+          "ACCEPT ... LINE 2 COLUMN 25",
+          "88 WS-ENTER-RECORD-YES VALUE 'Y' 'y'",
+          "END-WRITE"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Inventory management — saving inventory records (part number, name, quantity, unit price, supplier code) to a flat file INVFILE.TXT",
+        "summary": "This program prompts the user interactively to enter inventory records (part number, part name, quantity on hand, unit price, supplier code) and writes them sequentially to a file named INVFILE.TXT. It loops until the user declines to enter another record.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SELECT OPTIONAL for auto-creating output file",
+        "LINE SEQUENTIAL file organization",
+        "Screen-oriented DISPLAY/ACCEPT with LINE/COLUMN clauses",
+        "88-level condition names for yes/no input validation",
+        "Structured paragraph naming convention (0100-, 0201-, etc.)",
+        "PIC A(1) for alphabetic field"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The program is a straightforward student exercise for inventory data entry. The AUTHOR field 'CAN SHI' and filename 'Program1.cbl' reinforce the student/educational context. Minor structural issue: WS-ENTER-RECORD is declared at level 02 outside the 01 group, which is unusual but syntactically valid in some compilers. No SQL, CICS, or advanced features present."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 3426,
+      "completion_tokens": 488,
+      "total_tokens": 3914,
+      "cost": 0.017598,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.017598,
+        "upstream_inference_prompt_cost": 0.010278,
+        "upstream_inference_completions_cost": 0.00732
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 11.42,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T09:40:23Z"
+}

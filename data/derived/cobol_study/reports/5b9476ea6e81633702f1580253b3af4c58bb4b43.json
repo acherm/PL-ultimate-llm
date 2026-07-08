@@ -1,0 +1,126 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:5b9476ea6e81633702f1580253b3af4c58bb4b43",
+    "sha1_git": "5b9476ea6e81633702f1580253b3af4c58bb4b43",
+    "filename": "/Program4.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 27370,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:5b9476ea6e81633702f1580253b3af4c58bb4b43/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:5b9476ea6e81633702f1580253b3af4c58bb4b43/raw/"
+  },
+  "indicators": {
+    "bytes_len": 27370,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 697,
+    "blank_lines": 96,
+    "comment_lines": 93,
+    "code_lines": 508,
+    "comment_ratio": 0.155,
+    "max_line_length": 90,
+    "avg_line_length": 37.3,
+    "long_lines_over_72": 23,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "MEDICINESHOWINVEN"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 3,
+    "perform_count": 28,
+    "goto_count": 0,
+    "pic_count": 170,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely compiled with GnuCOBOL (OpenCOBOL); uses LINE SEQUENTIAL organization, no COMP-3, no EXEC SQL/CICS, standard COBOL-85 constructs including 88-level condition names, OCCURS, REDEFINES, INDEXED BY, and SORT/MERGE verbs",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SD SORT-FILE",
+          "SORT SORT-FILE ON ASCENDING KEY ... USING ... GIVING",
+          "INDEXED BY X1",
+          "88-level condition names",
+          "no COMP-3, no EXEC SQL/CICS"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Medicine/pharmaceutical warehouse inventory management - sorting and merging warehouse product records from three warehouse files (NV10, CA20, WA30) and producing a sales/inventory report",
+        "summary": "This program sorts three unsorted warehouse data files by warehouse ID and vendor ID, merges them into a single file, performs multi-level control breaks (warehouse, vendor, product), validates data, does vendor table lookups, accumulates totals at product/vendor/warehouse/grand-total levels, and outputs a formatted inventory report. Bad warehouse records are written to an error file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with USING/GIVING",
+        "MERGE of multiple files into SD file",
+        "Multi-level control break (warehouse, vendor, product)",
+        "Table search with INDEXED BY and OCCURS",
+        "REDEFINES for vendor lookup table",
+        "88-level condition names",
+        "Data validation with numeric checking",
+        "Error record accumulation and separate error file output",
+        "Multiple output headers and detail lines with edited PIC clauses",
+        "No COMP-3 usage",
+        "No EXEC SQL or EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Source is truncated at 16000 chars (procedure division cut off mid-SORT statement). Program name MEDICINESHOWINVEN and author AUSTIN GRIFFIN suggest a student assignment. The domain is pharmaceutical/medicine warehouse inventory. Dialect is likely GnuCOBOL based on LINE SEQUENTIAL and overall style, though no compiler-specific directives are present."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7376,
+      "completion_tokens": 538,
+      "total_tokens": 7914,
+      "cost": 0.030198,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.030198,
+        "upstream_inference_prompt_cost": 0.022128,
+        "upstream_inference_completions_cost": 0.00807
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 24.81,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:15:19Z"
+}

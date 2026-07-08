@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:44b7abe592d5ffb70bbe1593c05769a88a27806a",
+    "sha1_git": "44b7abe592d5ffb70bbe1593c05769a88a27806a",
+    "filename": "/exmedecinpatient.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 14733,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:44b7abe592d5ffb70bbe1593c05769a88a27806a/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:44b7abe592d5ffb70bbe1593c05769a88a27806a/raw/"
+  },
+  "indicators": {
+    "bytes_len": 14733,
+    "is_text": true,
+    "decoded_with": "latin-1",
+    "total_lines": 425,
+    "blank_lines": 38,
+    "comment_lines": 0,
+    "code_lines": 387,
+    "comment_ratio": 0.0,
+    "max_line_length": 103,
+    "avg_line_length": 33.7,
+    "long_lines_over_72": 17,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "Program1"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 14,
+    "goto_count": 0,
+    "pic_count": 23,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "micro-focus",
+        "standard": "COBOL-85",
+        "detail": "Likely Micro Focus Visual COBOL or similar Windows-oriented dialect; program-id uses AS clause with dotted namespace string 'exam2012.Program1', suggesting .NET or Visual COBOL targeting. No EXEC CICS/SQL, uses indexed file I/O with ISAM-style organization.",
+        "evidence": [
+          "program-id. Program1 as \"exam2012.Program1\"",
+          "organization indexed / access dynamic",
+          "alternate record key ... with duplicates",
+          "open i-o / open input / open output pattern",
+          "END PROGRAM Program1"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "healthcare-medical",
+        "domain_detail": "Inpatient medical records management system (exmedecinpatient = 'exam medecin inpatient' in French). Manages doctors (medecins), patients, consultations, and interventions with cost tracking.",
+        "summary": "A French-language interactive menu-driven program for managing medical inpatient records. It supports creating and deleting doctors and patients, creating consultations and interventions linked to doctors and patients, listing patients of a given doctor, and displaying total costs for a patient. All data is stored in indexed ISAM files.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "Multiple indexed files with alternate record keys and duplicates",
+        "EVALUATE for menu dispatch",
+        "88-level condition names used as booleans (vrai/faux)",
+        "French-language UI strings and identifiers",
+        "program-id AS clause with dotted namespace (Micro Focus / .NET style)",
+        "Inline comments using '///////' style (non-standard, treated as code lines)",
+        "No COPY statements, no CALL statements",
+        "PERFORM UNTIL with inline READ AT END pattern"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "medium",
+      "notes": "The file is decoded with latin-1, consistent with French accented characters (é, è, etc.) in display strings. The '///////' comment-like lines are not standard COBOL comment syntax (which uses '*' in column 7 for fixed format); they appear as code lines and would likely cause compile errors or be treated as division markers depending on the compiler. The program-id AS clause strongly suggests Micro Focus Visual COBOL or .NET COBOL. The overall structure and naming ('exam2012') suggest a student exam exercise from 2012."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5941,
+      "completion_tokens": 556,
+      "total_tokens": 6497,
+      "cost": 0.026163,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.026163,
+        "upstream_inference_prompt_cost": 0.017823,
+        "upstream_inference_completions_cost": 0.00834
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 16.41,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T17:57:28Z"
+}

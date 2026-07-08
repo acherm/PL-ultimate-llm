@@ -1,0 +1,123 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:0c5c1fae5aab836191b427eac767ed502a34581d",
+    "sha1_git": "0c5c1fae5aab836191b427eac767ed502a34581d",
+    "filename": "/Program1.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 9690,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:0c5c1fae5aab836191b427eac767ed502a34581d/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:0c5c1fae5aab836191b427eac767ed502a34581d/raw/"
+  },
+  "indicators": {
+    "bytes_len": 9690,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 254,
+    "blank_lines": 42,
+    "comment_lines": 1,
+    "code_lines": 211,
+    "comment_ratio": 0.005,
+    "max_line_length": 125,
+    "avg_line_length": 37.1,
+    "long_lines_over_72": 7,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "TP_Parte1_B"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 15,
+    "goto_count": 0,
+    "pic_count": 74,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Student assignment likely compiled with GnuCOBOL (OpenCOBOL); uses ASSIGN TO DISK with relative path syntax common in GnuCOBOL on Windows, FUNCTION CURRENT-DATE, SEARCH with INDEXED BY, and Spanish-language identifiers typical of Argentine university coursework",
+        "evidence": [
+          "assign to disk \"..\\\\..\\\\alquileres.dat\"",
+          "organization is line sequential",
+          "function current-date",
+          "search vecmarcas-elem ... end-search",
+          "indexed by ind",
+          "program-id. \"TP_Parte1_B\""
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "education-tutorial",
+        "domain_detail": "Argentine university practical assignment (TP = Trabajo Practico, 1st semester 2014) involving car rental statistics",
+        "summary": "Reads two sequential files (car rentals and cars), builds a brand-by-month matrix of rental counts, and prints a statistical report showing rentals per car brand per month with monthly and grand totals. Authors are named as Maria Ines Parnisari and Ignacio Mazzara.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "ASSIGN TO DISK with Windows relative path",
+        "FUNCTION CURRENT-DATE for report date",
+        "SEARCH (linear) with INDEXED BY on a vector of car brands",
+        "OCCURS with ASCENDING KEY IS for sorted vector",
+        "MOVE CORRESPONDING between date structures",
+        "Multi-dimensional array (matrizmarcaxmes) with OCCURS ... OCCURS",
+        "Spanish-language identifiers and comments",
+        "No COMP-3, no SQL, no CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "Program ID uses quoted string literal which is non-standard but accepted by GnuCOBOL. The imprimir-fila-marca and imprimir-col-mes paragraphs have a structural oddity (both check the same condition and imprimir-fila-marca just calls imprimir-col-mes), suggesting a student implementation artifact. File paths use Windows backslash separators."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 5390,
+      "completion_tokens": 508,
+      "total_tokens": 5898,
+      "cost": 0.02379,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.02379,
+        "upstream_inference_prompt_cost": 0.01617,
+        "upstream_inference_completions_cost": 0.00762
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 14.63,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T18:11:20Z"
+}

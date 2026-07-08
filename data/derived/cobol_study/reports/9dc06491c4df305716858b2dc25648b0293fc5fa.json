@@ -1,0 +1,120 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:9dc06491c4df305716858b2dc25648b0293fc5fa",
+    "sha1_git": "9dc06491c4df305716858b2dc25648b0293fc5fa",
+    "filename": "/shop_receipt.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 1652,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:9dc06491c4df305716858b2dc25648b0293fc5fa/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:9dc06491c4df305716858b2dc25648b0293fc5fa/raw/"
+  },
+  "indicators": {
+    "bytes_len": 1652,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 58,
+    "blank_lines": 11,
+    "comment_lines": 0,
+    "code_lines": 47,
+    "comment_ratio": 0.0,
+    "max_line_length": 71,
+    "avg_line_length": 27.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "SHOP-RECEIPT"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 5,
+    "goto_count": 0,
+    "pic_count": 7,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "Likely GnuCOBOL or similar open-source COBOL; uses GOBACK, LINE SEQUENTIAL, and level-88 condition names with SET ... TO TRUE, consistent with COBOL-85 and GnuCOBOL conventions. No IBM-specific extensions detected.",
+        "evidence": [
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "SET END-OF-SHOP-RECEIPTS-FILE TO TRUE",
+          "GOBACK",
+          "END-READ",
+          "88 END-OF-SHOP-RECEIPTS-FILE VALUE HIGH-VALUES"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "retail-commerce",
+        "domain_detail": "Shop receipt processing: reads a sequential file of shop header and sale records",
+        "summary": "This program reads a sequential data file containing shop header and sale receipt records. It processes each shop header and its associated sale items, displaying shop ID and item IDs. It is a simple file-reading demonstration for retail receipt data.",
+        "program_type": "demo"
+      },
+      "notable_features": [
+        "LINE SEQUENTIAL file organization",
+        "Level-88 condition names for record type discrimination",
+        "SET ... TO TRUE for end-of-file flag",
+        "GOBACK instead of STOP RUN",
+        "Dual 01-level records sharing same FD (SHOP-HEADER and SALE-RECEIPT)",
+        "Empty WORKING-STORAGE SECTION"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "The WORKING-STORAGE SECTION is declared but empty. The program has an AUTHOR clause (SUWATINEE) suggesting a student or tutorial exercise. The dual 01-level record layout under one FD is a classic COBOL technique for handling multiple record types. No COMP-3, no SQL, no CICS."
+    },
+    "truncated": false,
+    "usage": {
+      "prompt_tokens": 2788,
+      "completion_tokens": 427,
+      "total_tokens": 3215,
+      "cost": 0.014769,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.014769,
+        "upstream_inference_prompt_cost": 0.008364,
+        "upstream_inference_completions_cost": 0.006405
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 9.87,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T14:03:55Z"
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "cobol-report/1",
+  "sample": {
+    "swhid": "swh:1:cnt:b22d1ee044f354719bffc1ee367e35b11e47b3ff",
+    "sha1_git": "b22d1ee044f354719bffc1ee367e35b11e47b3ff",
+    "filename": "/sbanjara_Program4.cbl",
+    "source_csv": ".cbl",
+    "n_filenames": 1
+  },
+  "content": {
+    "length": 26355,
+    "status": "visible",
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "swh_url": "https://archive.softwareheritage.org/swh:1:cnt:b22d1ee044f354719bffc1ee367e35b11e47b3ff/",
+    "raw_url": "https://archive.softwareheritage.org/api/1/content/sha1_git:b22d1ee044f354719bffc1ee367e35b11e47b3ff/raw/"
+  },
+  "indicators": {
+    "bytes_len": 26355,
+    "is_text": true,
+    "decoded_with": "utf-8",
+    "total_lines": 743,
+    "blank_lines": 146,
+    "comment_lines": 83,
+    "code_lines": 514,
+    "comment_ratio": 0.139,
+    "max_line_length": 71,
+    "avg_line_length": 33.5,
+    "long_lines_over_72": 0,
+    "source_format_guess": "fixed",
+    "divisions_present": {
+      "identification": true,
+      "environment": true,
+      "data": true,
+      "procedure": true
+    },
+    "n_divisions": 4,
+    "program_ids": [
+      "PROGRAM4"
+    ],
+    "has_exec_sql": false,
+    "has_exec_cics": false,
+    "copy_count": 0,
+    "call_count": 0,
+    "perform_count": 39,
+    "goto_count": 0,
+    "pic_count": 133,
+    "comp3_count": 0,
+    "has_compiler_directives": false
+  },
+  "judge": {
+    "schema": "cobol-judge/2",
+    "model": "anthropic/claude-sonnet-4.6",
+    "response_format": "json_schema",
+    "parse_ok": true,
+    "verdict": {
+      "cobol_confirmed": true,
+      "not_cobol_label": "none",
+      "dialect": {
+        "family": "gnucobol",
+        "standard": "COBOL-85",
+        "detail": "GnuCOBOL student program; uses LINE SEQUENTIAL, ASSIGN TO PRINTER, SORT/MERGE verbs, ACCEPT FROM DATE YYYYMMDD — consistent with GnuCOBOL on a PC (LENEVO-PC in SOURCE/OBJECT-COMPUTER)",
+        "evidence": [
+          "SOURCE-COMPUTER. LENEVO-PC",
+          "ORGANIZATION IS LINE SEQUENTIAL",
+          "ASSIGN TO PRINTER",
+          "ACCEPT WS-CURRENT-DATE FROM DATE YYYYMMDD",
+          "SORT/MERGE with USING/GIVING"
+        ],
+        "confidence": "medium"
+      },
+      "source_format": "fixed",
+      "purpose": {
+        "domain": "manufacturing-logistics",
+        "domain_detail": "Product inventory management across three warehouses (NV10, CA20, WA30) and seven vendors",
+        "summary": "This batch program reads three unsorted inventory input files (one per warehouse), sorts each by warehouse/vendor/product ID, merges them into a single sorted file, validates records, and produces a formatted summary report showing product details, costs, and subtotals at product, vendor, warehouse, and grand-total levels. It also writes invalid records to an error file.",
+        "program_type": "batch"
+      },
+      "notable_features": [
+        "SORT verb with USING/GIVING on three separate files",
+        "MERGE verb combining three sorted files",
+        "OCCURS 5 TIMES for product data within a record",
+        "REDEFINES used for vendor lookup table with INDEXED BY",
+        "ASSIGN TO PRINTER for report and error output",
+        "ACCEPT FROM DATE YYYYMMDD for current date",
+        "Multi-level control-break reporting (product/vendor/warehouse/grand total)",
+        "No COMP-3, no EXEC SQL, no EXEC CICS"
+      ],
+      "maturity": "student-exercise",
+      "overall_confidence": "high",
+      "notes": "File is named 'sbanjara_Program4.cbl' indicating a student submission (author SBANJARA). Source is truncated at 16000 chars; the procedure division is cut off mid-sentence. No COMP-3 usage despite numeric accumulators. LENEVO-PC (likely typo for LENOVO-PC) in CONFIGURATION SECTION confirms PC/GnuCOBOL environment."
+    },
+    "truncated": true,
+    "usage": {
+      "prompt_tokens": 7232,
+      "completion_tokens": 525,
+      "total_tokens": 7757,
+      "cost": 0.029571,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.029571,
+        "upstream_inference_prompt_cost": 0.021696,
+        "upstream_inference_completions_cost": 0.007875
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "provider": "Anthropic",
+    "latency_s": 13.95,
+    "raw": null
+  },
+  "generated_at": "2026-07-07T19:11:19Z"
+}

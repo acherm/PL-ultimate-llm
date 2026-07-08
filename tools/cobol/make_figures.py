@@ -252,6 +252,51 @@ def main():
         fig.tight_layout(); fig.savefig(OUT / "fig_div_vs_main.png"); plt.close(fig)
         print("wrote fig_div_vs_main.png (3-way)")
 
+    # Fig 11/12 — repo provenance (from the graph origin CSVs)
+    try:
+        from . import origins as orig_mod
+        g = orig_mod.graph_origins()
+    except Exception:
+        g = {}
+    if g:
+        from matplotlib.patches import Patch
+        forges = Counter(v["forge"] for v in g.values())
+        origins_c = Counter(v["origin"] for v in g.values())
+        ntot = len(g)
+
+        # forge distribution
+        top = forges.most_common(9)[::-1]
+        fig, ax = plt.subplots(figsize=(7.4, 3.6))
+        ax.barh([k for k, _ in top], [v for _, v in top], color=UP)
+        for i, (_, v) in enumerate(top):
+            ax.text(v, i, f" {v:,}", va="center", fontsize=8)
+        ax.set_xscale("log"); ax.set_xlabel("contents (log)")
+        ax.set_title(f"Forge provenance — .cbl + .CBL ({ntot:,} contents)", fontweight="bold")
+        fig.tight_layout(); fig.savefig(OUT / "fig_cobol_forges.png"); plt.close(fig)
+        print("wrote fig_cobol_forges.png")
+
+        # top repositories by content count (a few repos dominate)
+        def _short(u):
+            u = u.rstrip("/").replace(".git", "")
+            p = u.split("/")
+            return "/".join(p[-2:]) if len(p) >= 2 else u
+        tr = origins_c.most_common(12)[::-1]
+        labels = [_short(k) for k, _ in tr]
+        vals = [v for _, v in tr]
+        cols = [LO if "many-files-in-one-tree" in k else UP for k, _ in tr]
+        fig, ax = plt.subplots(figsize=(8.2, 4.4))
+        ax.barh(labels, vals, color=cols)
+        for i, v in enumerate(vals):
+            ax.text(v, i, f" {v:,}", va="center", fontsize=8)
+        ax.set_xscale("log"); ax.set_xlabel("contents (log)")
+        top1 = origins_c.most_common(1)[0]
+        ax.set_title(f"Top repositories by content count\n({ntot:,} contents from {len(origins_c):,} repos; "
+                     f"top = {round(100*top1[1]/ntot)}%)", fontweight="bold", fontsize=10)
+        ax.legend(handles=[Patch(color=LO, label="synthetic fixture (WBC)"),
+                           Patch(color=UP, label="real repo")], fontsize=8, loc="lower right")
+        fig.tight_layout(); fig.savefig(OUT / "fig_cobol_top_repos.png"); plt.close(fig)
+        print("wrote fig_cobol_top_repos.png")
+
     print(f"\next-split: .CBL judged={nU} gated={up_g} | .cbl judged={nL} gated={lo_g}")
 
 

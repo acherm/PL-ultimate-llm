@@ -17,14 +17,16 @@ from tools.fsf import taxonomy as tax  # noqa: E402
 SCHEMA_VERSION = "fsf-judge/1"
 
 SYSTEM_PROMPT = (
-    "You are a meticulous expert in scientific file formats. You are given a "
-    "file indexed under the .fsf extension in Software Heritage, plus "
-    "mechanical indicators. .fsf is typically an FSL FEAT design file (fMRI "
-    "neuroimaging analysis config, Tcl `set fmri(...)` syntax) — a "
-    "configuration format, NOT a general-purpose programming language. Decide "
-    "what THIS file actually is, judging only from the evidence. For enum "
-    "fields pick exactly one allowed value; put nuance in the *detail* fields. "
-    "Respond with a SINGLE JSON object, no prose."
+    "You are a meticulous expert in file formats and languages. You are given a "
+    "file indexed under the .fsf extension in Software Heritage, plus mechanical "
+    "indicators. Your job is to characterise WHAT THIS CONTENT IS and WHICH "
+    "LANGUAGES OR NOTATIONS IT RELATES TO — do NOT merely confirm or deny a "
+    "preconceived language, and remember an extension is polysemous. For "
+    "example, an FSL FEAT design file is a neuroimaging *configuration* but is "
+    "*expressed in* Tcl `set`-variable syntax, so it relates to Tcl. Judge only "
+    "from the evidence. For enum fields pick exactly one allowed value; use the "
+    "free-text fields (format, expressed_in, related_languages, ecosystem_tool, "
+    "purpose) for the real substance. Respond with a SINGLE JSON object."
 )
 
 
@@ -32,20 +34,29 @@ def json_schema() -> dict:
     conf = {"type": "string", "enum": tax.CONFIDENCES}
     return {
         "type": "object", "additionalProperties": False,
-        "required": ["is_programming_language", "artifact_kind", "not_fsf_label",
-                     "feat_level", "analysis_type", "generated", "domain",
-                     "feat_version", "n_evs", "summary", "confidence"],
+        "required": ["content_type", "format", "expressed_in",
+                     "related_languages", "ecosystem_tool", "domain",
+                     "is_programming_language", "artifact_kind", "feat_level",
+                     "analysis_type", "generated", "purpose", "confidence"],
         "properties": {
+            # --- what is this content, and what does it relate to? (primary) ---
+            "content_type": {"type": "string", "enum": tax.CONTENT_TYPES},
+            "format": {"type": "string",
+                       "description": "specific format name, e.g. 'FSL FEAT design file'"},
+            "expressed_in": {"type": "string",
+                             "description": "the host language/notation the content is written in, e.g. 'Tcl set-variable syntax'"},
+            "related_languages": {"type": "array", "items": {"type": "string"},
+                                  "description": "programming/markup/config languages this content is written in, embeds, or relates to, e.g. ['Tcl']"},
+            "ecosystem_tool": {"type": "string",
+                               "description": "the tool/framework/ecosystem, e.g. 'FSL / FEAT (FMRIB)'"},
+            "domain": {"type": "string", "enum": tax.DOMAINS},
             "is_programming_language": {"type": "boolean"},
+            # --- FEAT-specific detail (not-applicable when the file isn't FEAT) ---
             "artifact_kind": {"type": "string", "enum": tax.ARTIFACT_KINDS},
-            "not_fsf_label": {"type": "string", "enum": tax.NOT_FSF_LABELS},
             "feat_level": {"type": "string", "enum": tax.FEAT_LEVELS},
             "analysis_type": {"type": "string", "enum": tax.ANALYSIS_TYPES},
             "generated": {"type": "string", "enum": tax.GENERATED},
-            "domain": {"type": "string", "enum": tax.DOMAINS},
-            "feat_version": {"type": "string"},
-            "n_evs": {"type": "integer"},
-            "summary": {"type": "string"},
+            "purpose": {"type": "string"},
             "confidence": conf,
         },
     }

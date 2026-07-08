@@ -90,6 +90,18 @@ mostly a new taxonomy + indicators + reclassifier.
    (COBOL: 95 % agreement judge-vs-heuristic on source format) — cheap,
    independent confirmation.
 
+4b. **Ask "what IS this content, and what does it relate to" — not "is it
+   language X".** An extension is *polysemous*, and a single file relates to
+   *several* notations at once. `.fsf` is a neuroimaging **config/DSL** (FSL
+   FEAT) but is *expressed in* **Tcl** `set`-syntax, so it relates to Tcl — a
+   binary "is it a programming language?" throws that away. Give the judge a
+   `content_type` axis (config-or-dsl / source-code / script / data / markup /
+   …), a free-text `format`, an `expressed_in` (host notation), a
+   **`related_languages`** array (what it is written in / embeds / relates to),
+   and an `ecosystem_tool`. Aggregating `related_languages` across the corpus
+   is what surfaces the polysemy and the true PL/DSL relationships — the real
+   goal for an extension→PL mapping.
+
 5. **Gate to control cost, but measure the gate.** A cheap predicate
    (`n_divisions ≥ 2`) skipped obvious non-COBOL before spending API calls —
    but as a classifier it had recall 0.55. Know your gate's error before

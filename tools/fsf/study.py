@@ -145,17 +145,32 @@ def do_report():
         n = len(reps_f)
         has_feat = sum(r["indicators"]["has_feat"] for r in reps_f)
         is_pl = Counter(str(V(r).get("is_programming_language")) for r in judged)
+        ctype = _dist(judged, lambda r: V(r).get("content_type", ""))
         kind = _dist(judged, lambda r: V(r).get("artifact_kind", ""))
         level = _dist(judged, lambda r: V(r).get("feat_level", ""))
         atype = _dist(judged, lambda r: V(r).get("analysis_type", ""))
         gen = _dist(judged, lambda r: V(r).get("generated", ""))
         recl = _dist(reps_f, lambda r: r["reclass"]["label"])
+        # what languages/formats does the content relate to?
+        rel = Counter()
+        for r in judged:
+            for lang in (V(r).get("related_languages") or []):
+                rel[lang.strip()] += 1
+        fmt = Counter(V(r).get("format", "").strip() for r in judged)
+        eco = Counter(V(r).get("ecosystem_tool", "").strip() for r in judged)
+        expr = Counter(V(r).get("expressed_in", "").strip() for r in judged)
         origins = len({r["origin"] for r in reps_f})
         loc = [r["indicators"]["total_lines"] for r in reps_f]
+        nj = len(judged) or 1
         out[fname] = {
             "n": n, "n_judged": len(judged), "distinct_origins": origins,
             "has_feat_pct": round(100 * has_feat / n) if n else 0,
             "median_lines": statistics.median(loc) if loc else 0,
+            "content_type": ctype,
+            "related_languages": {k: (v, round(100 * v / nj)) for k, v in rel.most_common(12)},
+            "top_formats": {k: v for k, v in fmt.most_common(10)},
+            "top_ecosystems": {k: v for k, v in eco.most_common(8)},
+            "top_expressed_in": {k: v for k, v in expr.most_common(8)},
             "is_programming_language": dict(is_pl),
             "artifact_kind": kind, "feat_level": level,
             "analysis_type": atype, "generated": gen, "reclass_label": recl,
@@ -174,8 +189,12 @@ def do_report():
         print(f"\n## {fname.upper()} frame  (n={d['n']}, judged {d['n_judged']}, "
               f"{d['distinct_origins']} origins, has_feat {d['has_feat_pct']}%, "
               f"median {d['median_lines']} lines)")
+        print("  content_type:", {k: f"{v[1]}%" for k, v in list(d["content_type"].items())[:6]})
+        print("  related_languages:", {k: f"{v[1]}%" for k, v in list(d["related_languages"].items())[:8]})
+        print("  top_formats:", list(d["top_formats"].items())[:5])
+        print("  top_ecosystems:", list(d["top_ecosystems"].items())[:4])
         print("  is_programming_language:", d["is_programming_language"])
-        for lbl in ("artifact_kind", "feat_level", "analysis_type", "generated"):
+        for lbl in ("feat_level", "analysis_type", "generated"):
             top = list(d[lbl].items())[:5]
             print(f"  {lbl}:", {k: f"{v[1]}%" for k, v in top})
     print(f"\nreclassifier vs judge agree on is-FEAT: {agree}/{len(judged_all)}"

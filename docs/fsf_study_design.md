@@ -84,6 +84,14 @@ Deterministic, from bytes:
 - `is_tcl_set` (does it look like `set var value` throughout?);
 - `is_feat` = has ≥1 `set fmri(`. (This is the natural **gate**.)
 
+> **Reframing (important):** the goal is **not** the binary "is `.fsf` a
+> programming language?" but **"what is this content, and which languages/
+> notations does it relate to?"** — because the extension is polysemous and a
+> FEAT file simultaneously *is* a neuroimaging config, *is expressed in* Tcl,
+> and *relates to* Tcl. The judge leads with `content_type` + free-text
+> `format` / `expressed_in` / `related_languages` / `ecosystem_tool`; the
+> is-PL flag and FEAT-specifics are secondary detail. (See playbook lesson 4b.)
+
 ### 4.2 LLM-judge taxonomy (`taxonomy_fsf`) — enum-constrained
 ```
 is_programming_language : bool            # expected false

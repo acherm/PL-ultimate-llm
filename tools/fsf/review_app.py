@@ -16,6 +16,7 @@ import getpass
 import hashlib
 import html
 import json
+import re
 import time
 from collections import Counter
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -29,6 +30,9 @@ STUDY = ROOT / "data" / "derived" / "fsf_study"
 REPORTS = STUDY / "reports"
 CACHE = ROOT / ".cache" / "cobol"          # shared byte cache
 REVIEWS = ROOT / "reviews_fsf"
+RULES_FILE = REVIEWS / "_rules.jsonl"
+RULE_LABELS = ["not-fsl-feat", "fsl-feat", "config-other", "data",
+               "docs", "noise", "not-fsf:other"]
 SWH = "https://archive.softwareheritage.org"
 SCHEMA = "fsf-review/1"
 
@@ -81,6 +85,39 @@ def verdict(r):
     return j.get("verdict") if isinstance(j, dict) and j.get("verdict") else None
 
 
+def load_rules() -> list[dict]:
+    out = []
+    if RULES_FILE.exists():
+        for line in RULES_FILE.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                try:
+                    out.append(json.loads(line))
+                except Exception:
+                    pass
+    return out
+
+
+def save_rule(rule: dict) -> None:
+    RULES_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with RULES_FILE.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(rule) + "\n")
+
+
+def rule_for(r: dict, rules: list[dict]):
+    """First rule whose origin/filename matches this content, else None."""
+    name, origin = r.get("name", ""), r.get("origin")
+    for rule in rules:
+        if rule.get("scope") == "origin" and origin and rule.get("value") == origin:
+            return rule
+        if rule.get("scope") == "filename" and rule.get("value"):
+            try:
+                if re.search(rule["value"], name):
+                    return rule
+            except re.error:
+                pass
+    return None
+
+
 # --------------------------------------------------------------------------- #
 CSS = """
 body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;color:#1a1a1a}
@@ -125,6 +162,7 @@ def page(title, body):
             f"<header><a href='/'>◇ .fsf labels</a><a href='/list'>browse</a>"
             f"<a href='/list?flag=nonfeat'>non-FEAT</a>"
             f"<a href='/list?flag=unreviewed'>unreviewed</a>"
+            f"<a href='/list?flag=ruled'>rule-labelled</a>"
             f"<span class=muted style='color:#d9cdff'>{esc(title)}</span></header>"
             f"<main>{body}</main>").encode("utf-8")
 
@@ -138,9 +176,16 @@ class App:
         reps = list(self.reps.values())
         judged = [r for r in reps if verdict(r)]
         reviewed = sum(1 for sha in self.reps if reviews_for(sha))
+        rules = load_rules()
+        ruled = sum(1 for r in reps if rule_for(r, rules))
         cards = "".join(f"<div class=card><b>{v}</b><span class=muted>{k}</span></div>"
                         for k, v in [("contents", len(reps)), ("judged", len(judged)),
-                                     ("reviewed", reviewed)])
+                                     ("reviewed", reviewed), ("rule-labelled", ruled)])
+        rule_html = ("<div class=panel><h3>group rules</h3>" + "".join(
+            f"<div class=muted><span class=tag>{esc(rl['label'])}</span> "
+            f"{esc(rl['scope'])} = {esc(rl['value'])} "
+            f"(<a href='/list?flag=ruled'>{sum(1 for r in reps if rule_for(r,[rl]))} contents</a>)</div>"
+            for rl in rules) + "</div>") if rules else ""
 
         def dist(getter):
             c = Counter(getter(verdict(r)) for r in judged)
@@ -168,7 +213,7 @@ class App:
         rl = rellangs()
         fg = Counter(r.get("forge", "") for r in reps)
         return page("dashboard",
-                    f"<div class=cards>{cards}</div>"
+                    f"<div class=cards>{cards}</div>{rule_html}"
                     + panel("content_type", ct, nct, "content_type")
                     + panel("related_languages (what .fsf relates to)", rl, len(judged) or 1)
                     + panel("domain", dm, ndm)
@@ -185,6 +230,8 @@ class App:
             if f.get("flag") == "nonfeat" and r["reclass"]["label"] == "fsl-feat":
                 continue
             if f.get("flag") == "unreviewed" and reviews_for(sha):
+                continue
+            if f.get("flag") == "ruled" and not rule_for(r, load_rules()):
                 continue
             rl = ", ".join(v.get("related_languages") or [])
             rows.append(
@@ -241,11 +288,30 @@ class App:
         <script>async function save(){{const fd=new FormData(document.getElementById('f'));
         const res=await fetch('/api/review',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify(Object.fromEntries(fd.entries()))}});
         document.getElementById('msg').textContent=res.ok?' saved ✓':' error';}}</script>"""
+        cur = rule_for(r, load_rules())
+        pat = re.sub(r"\d+", r"\\d+", re.escape(r.get("name", "")))
+        cur_html = (f"<p class=muted>already covered: <span class=tag>{esc(cur['label'])}</span> "
+                    f"{esc(cur['scope'])}={esc(cur['value'])}</p>") if cur else ""
+        assert_html = f"""
+        <div class=panel><h3>assert for a group</h3>{cur_html}
+        <p class=muted>One statement labels every matching content (e.g. all files from a non-FEAT repo).</p>
+        <form id=rf><input type=hidden name=example_sha value="{esc(sha)}">
+        <label>Scope</label><select name=scope onchange="rscope(this.value)">
+        <option value=origin>this origin</option><option value=filename>filename pattern (regex)</option></select>
+        <label>Value</label><input name=value id=rval value="{esc(origin)}">
+        <label>Label</label><select name=label>{opts(RULE_LABELS, 'not-fsl-feat')}</select>
+        <label>Rationale</label><input name=rationale placeholder="not FSL FEAT">
+        <button type=button onclick=saverule()>Assert rule</button> <span id=rmsg class=muted></span></form></div>
+        <script>const _o={json.dumps(origin)},_p={json.dumps(pat)};
+        function rscope(v){{document.getElementById('rval').value=(v=='origin')?_o:_p;}}
+        async function saverule(){{const fd=new FormData(document.getElementById('rf'));
+        const r=await fetch('/api/rule',{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify(Object.fromEntries(fd.entries()))}});
+        const j=await r.json();document.getElementById('rmsg').textContent=r.ok?(' asserted ✓ ('+j.matched+')'):(' err');}}</script>"""
         left = (f"<h2 style='margin:4px 0'>{esc(r.get('name',''))}</h2>"
                 f"<p class=muted>swh:1:cnt:{esc(sha)} · {esc(r.get('length'))} bytes · "
                 f"<a target=_blank href='{SWH}/swh:1:cnt:{esc(sha)}/'>SWH↗</a></p>"
                 f"<pre class=code>{esc(code)}</pre>")
-        right = f"{prov}<div class=panel jbox><h3>LLM judge</h3>{jb}</div><div class=panel><h3>indicators</h3><div class=kv>{indrows}</div></div>{form}"
+        right = f"{prov}<div class=panel jbox><h3>LLM judge</h3>{jb}</div><div class=panel><h3>indicators</h3><div class=kv>{indrows}</div></div>{assert_html}{form}"
         return page(r.get("name", sha), f"<div class=grid><div>{left}</div><div>{right}</div></div>")
 
 
@@ -276,9 +342,27 @@ class Handler(BaseHTTPRequestHandler):
             self._send(page("404", "not found"), 404)
 
     def do_POST(self):
-        if urlparse(self.path).path != "/api/review":
-            self._send(b'{"error":"?"}', 404, "application/json"); return
+        path = urlparse(self.path).path
         data = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))).decode())
+        if path == "/api/rule":
+            scope, value, label = (data.get("scope") or "").strip(), (data.get("value") or "").strip(), (data.get("label") or "").strip()
+            if scope not in ("origin", "filename") or not value or not label:
+                self._send(b'{"error":"scope/value/label required"}', 400, "application/json"); return
+            if scope == "filename":
+                try:
+                    re.compile(value)
+                except re.error as e:
+                    self._send(json.dumps({"error": f"bad regex: {e}"}).encode(), 400, "application/json"); return
+            rule = {"scope": scope, "value": value, "label": label,
+                    "rationale": (data.get("rationale") or "").strip(),
+                    "example_sha": data.get("example_sha", ""),
+                    "reviewer": {"kind": "human", "id": self.reviewer_id},
+                    "created_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(time.time()))}
+            save_rule(rule)
+            matched = sum(1 for r in self.app.reps.values() if rule_for(r, [rule]))
+            self._send(json.dumps({"ok": True, "matched": matched}).encode(), 200, "application/json"); return
+        if path != "/api/review":
+            self._send(b'{"error":"?"}', 404, "application/json"); return
         sha = (data.get("sha1_git") or "").strip()
         if len(sha) != 40:
             self._send(b'{"error":"bad sha"}', 400, "application/json"); return

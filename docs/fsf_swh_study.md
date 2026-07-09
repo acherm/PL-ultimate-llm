@@ -33,7 +33,52 @@ nothing about what they contain, who wrote them, or why. We ask:
   variants and how were the files produced?
 - **Q4 — Provenance.** Which communities and repositories does it come from?
 
-## 2. Method
+## 2. Data & method
+
+### 2.1 The population we sample from
+
+We start from an extraction of every SWH content whose filename ends in `.fsf`:
+
+| `.fsf` extraction | |
+|---|---:|
+| rows | 22 900 |
+| **unique contents** (`sha1_git`) | **21 802** |
+| unique filenames | 13 457 |
+| contents with a recovered origin | 21 800 |
+| **repositories** | **757** |
+
+**Provenance skew.** As with most extensions, the distribution over repositories
+is heavy-tailed — though far less extreme than some:
+
+| contents per repository | |
+|---|---:|
+| median | **3** |
+| mean | 28.8 |
+| max | 3 883 |
+| top repository's share | 17.8 % |
+| top-10 repositories | 54.4 % |
+| **80 % of contents come from** | **44 repos (5.8 % of repos)** |
+| repositories with exactly 1 content | 247 |
+
+> **Why this matters for sampling.** Half the repositories hold ≤ 3 `.fsf`
+> files, while 44 repositories hold 80 % of all files (FEAT auto-generates one
+> design per subject × run, so a single study emits thousands). A **by-file**
+> sample therefore mostly measures those 44 studies; a **by-repo** sample
+> measures the 757 projects. The two estimate *different populations*.
+
+**Sampling fractions.**
+
+| Experiment | drawn from | N | fraction |
+|---|---|---:|---:|
+| E1 by-file | 21 802 contents | 1 000 | 4.6 % |
+| E2 by-repo | 757 repositories | 757 | **100 % — a census** |
+
+E1 is a uniform-random 4.6 % sample of contents (unbiased for the *file*
+population, ±~3 pts). E2 is not a sample at all: it draws one file from **every
+`.fsf`-containing repository in the archive**, so the project-level results are a
+complete enumeration, not an estimate.
+
+### 2.2 Pipeline
 
 We use a general content-characterisation pipeline (the same one we apply to
 other extensions):
@@ -62,7 +107,7 @@ Two sampling frames plus a classifier evaluation:
 | # | Experiment | Sample (frame) | N judged | What it shows |
 |---|---|---|---|---|
 | **E1** | File-level population | 1 000, **uniform-random** | 982 | what a typical `.fsf` *file* is |
-| **E2** | Project-level population | 757, **origin-diverse** (≤ 1 file per repo) | 706 | what a typical `.fsf` *project* is (no repo dominates) |
+| **E2** | Project-level population | 757, **origin-diverse** (1 file per repo — *all 757 repos: a census*) | 706 | what a typical `.fsf` *project* is (no repo dominates) |
 | **E3** | Cheap-classifier eval | reclassifier vs the LLM judge | 1 662 | whether a zero-API marker can replace the judge |
 
 Fixed throughout: model `anthropic/claude-sonnet-4.6`, temperature 0, structured

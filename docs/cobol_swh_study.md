@@ -25,7 +25,58 @@ COBOL, how much of it, of what kind, and from where? We answer, for `.cbl` and
 - **Q4 — Method.** Can a cheap deterministic layer + an LLM judge produce a
   reproducible characterisation we can trust?
 
-## 2. Method
+## 2. Data & method
+
+### 2.1 The population we sample from
+
+The study starts from an extraction of every SWH content whose filename ends in
+`.cbl` or `.CBL`:
+
+| | `.CBL` (upper) | `.cbl` (lower) | union |
+|---|---:|---:|---:|
+| rows in the extraction | 196 415 | 83 840 | 280 255 |
+| **unique contents** (`sha1_git`) | 196 228 | 81 446 | **276 831** |
+| unique filenames | 112 435 | 37 042 | — |
+| of which synthetic `WBC_*_FOO` | 109 999 | 0 | 109 999 (**39.7 %**) |
+
+(843 contents appear under *both* extensions.) After removing non-COBOL
+(§4.1), the estimated genuine-COBOL population is **≈150 600 contents**.
+
+**Provenance skew.** 276 600 of those contents map to **6 278 repositories**, and
+the distribution is extraordinarily heavy-tailed:
+
+| contents per repository | |
+|---|---:|
+| median | **3** |
+| mean | 44.1 |
+| max (the synthetic fixture) | 109 999 |
+| top repository's share | 39.8 % |
+| top-10 repositories | 69.7 % |
+| **80 % of all contents come from** | **71 repos (1.1 % of repos)** |
+| repositories with exactly 1 content | 1 971 |
+
+> **Why this matters for sampling.** The population is *not* a bag of
+> independent programs. Half the repositories hold ≤ 3 files, while **71
+> repositories hold 80 % of all contents**. So a **by-file** sample is, in
+> effect, a sample of those 71 repositories; a **by-repo** sample is a sample of
+> the 6 278 projects. Neither is wrong — they estimate *different populations*.
+> That is precisely what experiments E2–E4 (§3) are designed to separate.
+
+**Sampling fractions.** How much of the population each experiment sees:
+
+| Experiment | drawn from | N | fraction |
+|---|---|---:|---:|
+| E1 pilot | 276 831 contents | 100 | 0.04 % |
+| E2 filtered by-file | 166 832 contents (noise-removed) | 350 | 0.21 % |
+| E3 random by-file | 276 831 contents | 1 000 | 0.36 % |
+| E4 by-repo | **6 278 repositories** | 1 000 | **15.9 %** |
+
+E3 is a small fraction but *uniform-random*, so it is an unbiased estimate of the
+file-level population (±~3 pts at 95 %). E4 covers **one sixth of every
+COBOL-containing repository in the archive** — a genuinely representative view of
+the *project* population.
+
+### 2.2 Pipeline
 
 The same pipeline runs end-to-end and is reused across studies:
 
@@ -101,8 +152,9 @@ documented `.R`/`.r` fix). Contamination modes also differ by casing
 
 Restricting to real COBOL, one property is invariant and the rest are not.
 
-**Invariant:** **COBOL-85 ~98 %** across *every* sampling frame. This is the one
-answer that does not depend on how you sample.
+**Invariants** (true in *every* frame — not artefacts of sampling):
+**COBOL-85 ~98 %**, and the **rarity of mainframe idioms** (`EXEC CICS`,
+`EXEC SQL`, `COMP-3`: 3–7 %, see below).
 
 **Everything else depends on the frame.** E3 (uniform-random, file-level), E2
 (filtered, file-level) and E4 (one-per-repo, project-level) give sharply
@@ -135,15 +187,39 @@ COBOL-containing origins.
 
 Beyond that, the by-file view (E2, the "clean COBOL" people usually mean) is:
 GnuCOBOL ~70 %, IBM-mainframe ~11 %; fixed-format 92 %; batch 44 % / subprogram
-23 % / online-CICS 18 %; copybooks (`COPY`) 69 %, `CALL` 65 %, `EXEC CICS`/`SQL`
-/`COMP-3` all single-digit %.
+23 % / online-CICS 18 %.
 
 ![Dialect family by extension casing](assets/cobol/fig_dialect.png)
 
+**Language features by frame.** Measured over *judged real COBOL* in each frame
+(apples-to-apples — the earlier "single-digit CICS" figure was **not** an E2-only
+artefact):
+
+| feature | E3 random (file) | E2 filtered (file) | E4 by repo (project) |
+|---|---:|---:|---:|
+| `COPY` (copybooks) | 63 % | 74 % | **14 %** |
+| `CALL` (subprograms) | 63 % | 69 % | **14 %** |
+| `EXEC CICS` | 3 % | 7 % | 5 % |
+| `EXEC SQL` (DB2) | 3 % | 5 % | 4 % |
+| `COMP-3` (packed decimal) | 7 % | 5 % | 6 % |
+| *n (judged real COBOL)* | *525* | *317* | *896* |
+
+This splits the features cleanly in two:
+
+- **Frame-invariant:** the mainframe idioms — `EXEC CICS`, `EXEC SQL`, `COMP-3` —
+  are single-digit in *every* frame (3–7 %).
+- **Frame-dependent:** `COPY` and `CALL` collapse from ~70 % (by file) to
+  **14 %** (by repo), because copybooks and subprogram calls are properties of
+  *large multi-file projects*, not of the single-file programs that most
+  repositories actually contain.
+
 > **Key finding — Public COBOL ≠ enterprise COBOL.** The archive is dominated by
-> GnuCOBOL, COBOL-85, fixed-format code, and the mainframe idioms that motivate
-> "COBOL modernization" (CICS, DB2/`EXEC SQL`, COMP-3) appear in only single-
-> digit percentages.
+> GnuCOBOL, COBOL-85, fixed-format code. The mainframe idioms that motivate
+> "COBOL modernization" (CICS, DB2/`EXEC SQL`, COMP-3) are rare in **every**
+> sampling frame (3–7 %) — a robust fact, not a sampling artefact. Conversely,
+> copybooks and `CALL` look ubiquitous by-file (~70 %) but are rare by-repo
+> (14 %): they are a property of the few big projects, not of COBOL projects in
+> general.
 
 ### 4.3 Provenance — where it comes from, and how concentrated (Q3)
 
@@ -194,8 +270,10 @@ live in many repos; the graph route usually finds the upstream.
 > **Findings.**
 > 1. ~46 % of the COBOL extension space is **not COBOL** (mostly one synthetic
 >    fixture); casing (`.CBL`≠`.cbl`) indexes different populations.
-> 2. Of genuine COBOL, **COBOL-85 (~98 %) is the only frame-invariant answer**;
->    everything else depends on the sampling frame.
+> 2. Of genuine COBOL, only two answers are **frame-invariant**: COBOL-85
+>    (~98 %) and the rarity of mainframe idioms (CICS/`EXEC SQL`/COMP-3, 3–7 %).
+>    Domain, maturity, size, dialect — and even `COPY`/`CALL` — all depend on the
+>    sampling frame.
 > 3. **File vs project:** typical file = production program; typical project =
 >    student exercise.
 > 4. **Public COBOL is not enterprise COBOL** (GnuCOBOL/COBOL-85/fixed; CICS/DB2

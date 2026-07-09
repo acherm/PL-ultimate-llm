@@ -4,13 +4,13 @@
 Heritage (SWH) archive. Toolkit: `tools/cobol/`. Companion study on a
 non-programming extension: `docs/fsf_swh_study.md`.*
 
-> **Bottom line.** A file extension is a *claim*, not a fact. Of the COBOL
-> extension space in SWH, **~46 % is not COBOL** (mostly one synthetic test
-> fixture). Of the genuine COBOL, *what you conclude depends entirely on how you
-> sample*: the typical COBOL **file** is a production program, but the typical
-> COBOL **project** is a student exercise. Getting this right requires reading
-> content (not extensions) and recovering provenance (which repo each file came
-> from).
+> **Bottom line.** A file extension is a *claim*, not a fact — and *how you
+> count* changes the claim. **~46 % of COBOL-extension files are not COBOL**
+> (almost all of it one synthetic test fixture), yet **~93 % of COBOL-extension
+> repositories really do contain COBOL**. Likewise the typical COBOL **file** is
+> a production program, while the typical COBOL **project** is a student
+> exercise. Getting any of this right requires reading content (not extensions)
+> and recovering provenance (which repository each file came from).
 
 ## 1. Motivation & questions
 
@@ -122,31 +122,67 @@ experiments.
 
 ## 4. Results
 
-### 4.1 Contamination — the extension is a weak signal (Q1)
+### 4.1 Contamination — how much is not COBOL, and *at which level*? (Q1)
 
-The single largest fact about the corpus is that **most of it is not COBOL**.
+**At the file level, most of the extension space is not COBOL.**
 
 - **E1** (unfiltered pilot): 51 of 100 random files were `WBC_*_FOO.CBL` —
   literally `"This is cobol file number N"`, a *synthetic placeholder*. Corpus-
   wide these are **109 999 / 276 831 = ~40 %** of all deduplicated contents.
 - **E3** (uniform-random 1 000, content-classified): **45.6 % non-COBOL**
-  (95 % CI 42.5–48.7), independently **confirmed by the LLM at 47 %** (of 1 000,
-  526 judged real-COBOL / 474 gated; 525 of 526 judged confirmed as COBOL).
-  The non-COBOL breaks down as 40.8 % synthetic + 2.8 % other/foreign +
-  1.7 % Calibre *comic-book lists* (a `.cbl` extension collision) + 0.3 % binary.
+  (95 % CI 42.5–48.7), independently **confirmed by the LLM at 47 %**. It breaks
+  down as 40.8 % synthetic + 2.8 % other/foreign + 1.7 % Calibre *comic-book
+  lists* (a `.cbl` extension collision) + 0.3 % binary.
 
 ![Contamination of the COBOL extension space](assets/cobol/fig_corpus_1k.png)
 
-> **Key finding — Contamination.** ~46 % of the `.cbl`/`.CBL` space is not
-> COBOL, almost all of it a *single synthetic test fixture* (§4.3). Two
-> independent methods (a deterministic reclassifier and the LLM) agree to within
-> 1.4 points. **Never trust the extension; classify content.**
+**But at the repository level, it is almost all COBOL.** That 40 % synthetic mass
+is **a single repository** (the "many-files-in-one-tree" test fixture, §4.3) —
+one of 6 278. Drawing one file *per repository* (E4) instead of per file:
 
-Casing matters too: `.CBL` (192 k occurrences) and `.cbl` (57 k) are *different
-populations* — a clean single-extension slice is **83 % healthcare** for `.CBL`
-vs **36 % education** for `.cbl` — yet the project's mapping folds case (cf. the
-documented `.R`/`.r` fix). Contamination modes also differ by casing
-(synthetic stubs for `.CBL`; comic-book lists for `.cbl`).
+| | E3 — file level | E4 — repository level |
+|---|---:|---:|
+| genuinely COBOL | 54 % | **93 %** |
+| **not** COBOL | **46 %** | **7 %** |
+
+(E4: the sampled file is COBOL for 927 of 1 000 distinct repositories; the 73
+others are 53 foreign/other text, 19 binaries, 1 comic-book list.)
+
+> **Key finding — contamination is a *file-level* phenomenon.** ~46 % of
+> COBOL-extension **files** are not COBOL, but ~93 % of COBOL-extension
+> **repositories** really do contain COBOL. One synthetic fixture (0.02 % of
+> repositories) contributes 40 % of the files. **The extension is a poor signal
+> per file, and a fairly good one per project** — which statement you need
+> depends on what you are sampling.
+
+**Casing.** `.CBL` (192 k occurrences) and `.cbl` (57 k) *look* like different
+worlds: a clean single-extension slice of the by-file data is **83 % healthcare**
+for `.CBL` vs **36 % education** for `.cbl`. **This too is a file-level effect.**
+Sampling one file per repository, the gap largely closes:
+
+| by repository (E4) | `.CBL` (68 repos) | `.cbl` (932 repos) |
+|---|---:|---:|
+| education-tutorial | 39 % | 49 % |
+| demo-example | 12 % | 26 % |
+| healthcare-medical | *not in top-5* | *not in top-5* |
+| student-exercise | 58 % | 61 % |
+| production-like | **32 %** | 13 % |
+| toy-or-hello-world | 7 % | 22 % |
+
+At the *project* level both casings are education/student dominated; the residual
+difference is that `.CBL` **repositories** skew somewhat more production-like
+(32 % vs 13 %) and less toy. The dramatic "83 % healthcare" is entirely the ORCA
+system's thousands of files. (Only 68 `.CBL` repositories fall in the by-repo
+sample — most distinct repositories use lowercase — so this comparison is
+indicative, with a wide interval.) Independently of that, casing still matters
+for *coverage*: SWH preserves case while the extension→language mapping folds it
+(cf. the documented `.R`/`.r` fix), and the contamination *modes* differ
+(synthetic stubs under `.CBL`; comic-book lists under `.cbl`).
+
+> **Lesson — even the headline facts are frame-dependent.** Contamination (46 %
+> vs 7 %) and the casing split (two worlds vs nearly one) both invert when you
+> move from files to repositories. This report's own central claims obey its
+> central lesson: **state the sampling frame with every number.**
 
 ### 4.2 The genuine COBOL — and why the sampling frame decides the story (Q2)
 
@@ -268,8 +304,10 @@ live in many repos; the graph route usually finds the upstream.
 ## 5. Key findings & lessons (summary)
 
 > **Findings.**
-> 1. ~46 % of the COBOL extension space is **not COBOL** (mostly one synthetic
->    fixture); casing (`.CBL`≠`.cbl`) indexes different populations.
+> 1. **~46 % of COBOL-extension *files* are not COBOL** (one synthetic fixture),
+>    but **~93 % of COBOL-extension *repositories* do contain COBOL**. The
+>    `.CBL`/`.cbl` "two populations" split is likewise a *file-level* effect: by
+>    repository both are education/student dominated.
 > 2. Of genuine COBOL, only two answers are **frame-invariant**: COBOL-85
 >    (~98 %) and the rarity of mainframe idioms (CICS/`EXEC SQL`/COMP-3, 3–7 %).
 >    Domain, maturity, size, dialect — and even `COPY`/`CALL` — all depend on the
@@ -282,10 +320,12 @@ live in many repos; the graph route usually finds the upstream.
 >    real system.
 
 > **Lessons for extension studies.**
-> 1. The extension is a weak signal — classify **content**, measure
->    contamination first.
+> 1. The extension is a weak signal **per file** and a fairly good one **per
+>    project** — classify content, measure contamination, and always say *which
+>    level* a number refers to.
 > 2. The **sampling frame** is a first-class experimental variable; report
->    file-level *and* project-level.
+>    file-level *and* project-level. Even contamination and casing claims flip
+>    between the two.
 > 3. Constrain the judge to **enums + structured outputs**; cross-check against
 >    deterministic indicators.
 > 4. **Origins are the enabler** — they name the noise, dedup forks, and make

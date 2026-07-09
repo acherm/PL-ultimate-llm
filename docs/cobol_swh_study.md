@@ -363,3 +363,78 @@ Artefacts in `data/derived/cobol_study/`: `worklist*.csv`, per-content
 `tools/cobol/`. Total ≈ 2 900 judged contents, ~$45, 0 parse failures.
 
 *Model: claude-sonnet-4.6 (judge) · study authored with Claude Code.*
+
+## Appendix A — The review tool
+
+Every content in this study accumulates labels from **several independent
+sources**: the **LLM judge**, the deterministic **reclassifier**, an **LLM
+oracle** (used to validate the reclassifier), the cheap **division-gate**
+baseline, the recovered **origin**, and — the point of the tool — a **human**.
+`tools/cobol/review_app.py` puts them in one pane, surfaces where they
+*disagree*, and records human ground truth.
+
+```bash
+python3 -m tools.cobol.review_app        # http://127.0.0.1:8766
+```
+
+### A.1 Dashboard
+
+![Review app — dashboard](assets/review/cobol_dashboard.png)
+
+Counts (labelled contents, cached bytes, human reviews, recovered origins,
+rule-labelled), a legend of the label sources, the active **group rules**, the
+datasets each content belongs to, an **agreement panel** (judge vs
+reclassifier; reclassifier vs LLM-oracle — the disagreements are clickable), and
+the reclassifier's label distribution.
+
+### A.2 Browse & filter
+
+![Review app — disagreements](assets/review/cobol_browse.png)
+
+Filter by dataset, reclassifier label, filename, or one of
+`disagree` / `unreviewed` / `hasorigin` / `ruled`. The **disagreements** view is
+the high-value queue: a file is flagged when its available is-COBOL votes are not
+unanimous — in practice, the copybook/fragment boundary where the cheap gate and
+the content methods part ways.
+
+### A.3 Per-file view, and group assertions
+
+![Review app — a file page](assets/review/cobol_detail_wbc.png)
+
+The screenshot is `WBC_97464_FOO.CBL` — 32 bytes reading *"This is cobol file
+number 97464"*. The page shows the source, the **origin** recovered from the SWH
+graph (the GitLab `repo-with-many-files-in-one-tree` fixture, with path, branch
+and visit date), the **labels** table (reclassifier: `synthetic-placeholder`;
+division-gate: `n_divisions=0`), and two forms.
+
+The second form is the tool's key scalability feature. Labelling 110 000
+synthetic files one at a time is absurd, so **"assert for a group"** records a
+single fact scoped to an **origin** or a **filename pattern**:
+
+> `origin = gitlab.com/fbetestpublic/repo-with-many-files-in-one-tree`
+> → **`not-cobol:synthetic`** *("auto-generated placeholder; not COBOL")*
+
+One statement covers the whole fixture. Rules live append-only in
+`reviews_cobol/_rules.jsonl` and are applied to every matching content
+(deduplicated for display); the file page then shows *"already covered"*.
+
+### A.4 Storage
+
+Human reviews are **append-only JSON, one file per review**, keyed by content:
+
+```
+reviews_cobol/<sha1_git>/<UTC-stamp>--<reviewer>--<hash8>.json
+```
+
+Git is the sync layer — no database, and two reviewers can never produce a merge
+conflict. Changing your mind means writing a *new* review, not editing the old
+one.
+
+> **Why human review still matters.** The first ground-truth label recorded in
+> this study was `/01.cbl` — 5 lines, **0 divisions**, therefore *skipped by the
+> cost gate and never judged*. The human marked it `is_cobol = yes`,
+> `demo-example`. That is precisely the class of file the cheap gate misses
+> (recall 0.55, §4.4), and it is why the tool exists.
+
+An equivalent app ships for the companion `.fsf` study
+(`tools/fsf/review_app.py`, port 8767), with the same rule mechanism.

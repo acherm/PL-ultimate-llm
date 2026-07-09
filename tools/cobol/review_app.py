@@ -62,6 +62,17 @@ def save_rule(rule: dict) -> None:
         f.write(json.dumps(rule) + "\n")
 
 
+def dedupe_rules(rules: list[dict]) -> list[dict]:
+    """Distinct (scope, value, label) for display; the store stays append-only."""
+    seen, out = set(), []
+    for r in rules:
+        k = (r.get("scope"), r.get("value"), r.get("label"))
+        if k not in seen:
+            seen.add(k)
+            out.append(r)
+    return out
+
+
 def content_origin(d: dict):
     p = d.get("provenance")
     return p["primary"].get("origin") if p and p.get("primary") else None
@@ -333,8 +344,9 @@ class App:
             rule_html = "<div class=panel><h3>group rules</h3>" + "".join(
                 f"<div class=muted><span class=tag>{esc(r['label'])}</span> "
                 f"{esc(r['scope'])} = {esc(r['value'])} "
-                f"<a href='/list?flag=ruled'>({sum(1 for d in idx.values() if rule_for(d,[r]))} contents)</a></div>"
-                for r in rules) + "</div>"
+                f"<a href='/list?flag=ruled'>({sum(1 for d in idx.values() if rule_for(d,[r]))} contents)</a>"
+                f" · <span class=muted>{esc(r.get('rationale','') or '')[:70]}</span></div>"
+                for r in dedupe_rules(rules)) + "</div>"
         dsrows = "".join(
             f"<a class='tag ds' href='/list?dataset={esc(k)}'>{esc(k)}: {v}</a> "
             for k, v in ds.most_common())

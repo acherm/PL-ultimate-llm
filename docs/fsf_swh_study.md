@@ -309,3 +309,59 @@ Artefacts: `data/derived/fsf_study/` (`worklist_all.csv`, `reports/<sha>.json`,
 `docs/assets/fsf/`. Toolkit: `tools/fsf/`.
 
 *Model: claude-sonnet-4.6 · 1 662 judged · ~$31 · study authored with Claude Code.*
+
+## Appendix A — The review tool
+
+Each content accumulates labels from several sources: the **LLM judge**
+(content type, format, related languages, ecosystem, FEAT detail), the
+deterministic **reclassifier** (the `set fmri(` marker), the recovered
+**origin**, and a **human**. `tools/fsf/review_app.py` puts them in one pane and
+records human ground truth.
+
+```bash
+python3 -m tools.fsf.review_app          # http://127.0.0.1:8767
+```
+
+### A.1 Dashboard
+
+![.fsf review app — dashboard](assets/review/fsf_dashboard.png)
+
+Counts (contents, judged, reviewed, rule-labelled), then the study's four
+aggregate views: **content_type**, **related_languages** — *what `.fsf` relates
+to*, the polysemy axis of §4.2 — **domain**, and **forge**. Each row links to a
+filtered browse.
+
+### A.2 Per-file view
+
+![.fsf review app — a file page](assets/review/fsf_detail.png)
+
+Source on the left; on the right the **origin** (repository + forge), the **LLM
+judge** panel (`content_type`, `format`, `expressed_in`, `related_languages`,
+ecosystem, domain, is-PL, FEAT level / analysis / generated), the mechanical
+**indicators** (`set fmri(` count, comment ratio, EVs, FEAT version, reclassifier
+label), and a human-review form.
+
+### A.3 Group assertions
+
+Browsing to the non-FEAT tail (`flag=nonfeat`) and labelling each file
+individually does not scale. **"Assert for a group"** records one fact scoped to
+an **origin** or a **filename pattern** — e.g. *"every `.fsf` from this shader
+repository is `not-fsl-feat`"* — which is then applied to every matching content.
+Rules are append-only in `reviews_fsf/_rules.jsonl` (deduplicated for display).
+
+### A.4 Storage
+
+Human reviews are append-only JSON, one file per review, keyed by content:
+
+```
+reviews_fsf/<sha1_git>/<UTC-stamp>--<reviewer>--<hash8>.json
+```
+
+Git is the sync layer — no database, and concurrent reviewers cannot produce a
+merge conflict. Revising a judgement means appending a *new* review, never
+editing an old one.
+
+> **Why human review matters here.** The judge and the reclassifier agree on
+> is-FEAT for 100 % of files (§4.7), so agreement alone cannot tell us whether
+> both are *right*. Human labels on the `other` tail — the shaders, the
+> git-annex pointers — are the only way to close that loop.

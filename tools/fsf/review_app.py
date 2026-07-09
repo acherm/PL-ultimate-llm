@@ -103,6 +103,16 @@ def save_rule(rule: dict) -> None:
         f.write(json.dumps(rule) + "\n")
 
 
+def dedupe_rules(rules: list[dict]) -> list[dict]:
+    """Distinct (scope, value, label) for display; the store stays append-only."""
+    seen, out = set(), []
+    for r in rules:
+        k = (r.get("scope"), r.get("value"), r.get("label"))
+        if k not in seen:
+            seen.add(k); out.append(r)
+    return out
+
+
 def rule_for(r: dict, rules: list[dict]):
     """First rule whose origin/filename matches this content, else None."""
     name, origin = r.get("name", ""), r.get("origin")
@@ -185,7 +195,7 @@ class App:
             f"<div class=muted><span class=tag>{esc(rl['label'])}</span> "
             f"{esc(rl['scope'])} = {esc(rl['value'])} "
             f"(<a href='/list?flag=ruled'>{sum(1 for r in reps if rule_for(r,[rl]))} contents</a>)</div>"
-            for rl in rules) + "</div>") if rules else ""
+            for rl in dedupe_rules(rules)) + "</div>") if rules else ""
 
         def dist(getter):
             c = Counter(getter(verdict(r)) for r in judged)

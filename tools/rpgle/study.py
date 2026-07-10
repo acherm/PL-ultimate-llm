@@ -105,6 +105,27 @@ def do_run(judge_on, model, sleep):
     print("run complete", flush=True)
 
 
+def do_refresh_indicators():
+    """Recompute indicators + reclass label from cached bytes; keep judge verdicts.
+
+    Used when the mechanical layer changes (e.g. indicators v1 -> v2) so the
+    oracle does not have to be paid for twice.
+    """
+    n = 0
+    for p in sorted(REPORTS.glob("*.json")):
+        rep = json.loads(p.read_text())
+        try:
+            c = fetch_content(f"swh:1:cnt:{rep['sha1_git']}", filename=rep["name"])
+        except Exception as e:
+            print(f"{rep['sha1_git'][:10]}: {e}", file=sys.stderr)
+            continue
+        rep["indicators"] = ind_mod.compute(c.text, bytes_len=c.length, is_text=c.is_text).to_dict()
+        rep["reclass"] = rc.classify(rep["name"], c.raw)
+        p.write_text(json.dumps(rep, indent=2, ensure_ascii=False), encoding="utf-8")
+        n += 1
+    print(f"refreshed indicators on {n} reports")
+
+
 def _reports():
     return {p.stem: json.loads(p.read_text()) for p in REPORTS.glob("*.json")}
 
@@ -184,6 +205,7 @@ def main():
     ap.add_argument("--sample", action="store_true")
     ap.add_argument("--run", action="store_true")
     ap.add_argument("--report", action="store_true")
+    ap.add_argument("--refresh-indicators", action="store_true")
     ap.add_argument("--judge", action="store_true")
     ap.add_argument("--n", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=5)
@@ -194,6 +216,8 @@ def main():
         do_sample(a.n, a.seed)
     if a.run:
         do_run(a.judge, a.model, a.sleep)
+    if a.refresh_indicators:
+        do_refresh_indicators()
     if a.report:
         do_report()
 

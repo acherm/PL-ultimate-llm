@@ -31,6 +31,22 @@ _CALLP = re.compile(r"(?i)\b(callp|monitor|on-error)\b")
 _EXTPROC = re.compile(r"(?i)\bextproc\b")
 # fixed-format specification line: col6 in HFDCPOI (and col7 not '*')
 _SPEC_LETTERS = set("HFDCPOIhfdcpoi")
+# a fixed-format D spec declaring a prototype (PR) or procedure interface (PI):
+# the declaration-type sits in cols 24-25, but tolerate loose column discipline.
+_FIXED_PR = re.compile(r"(?i)^.{5}D.{10,25}?\b(PR|PI)\b")
+# free-form executable statements. Three shapes, all of which only occur in calc
+# logic (never in a declaration-only /copy member):
+#   1. an opcode              e.g.  if x > 0;   return;   exsr init;
+#   2. an assignment          e.g.  count = count + 1;   *inlr = *on;
+#   3. a bare procedure call  e.g.  printf('hi');   snd_msg(x);
+_FREE_OPCODE = re.compile(
+    r"(?i)^(if|elseif|else|endif|for|endfor|dow|dou|enddo|select|when|other|endsl|"
+    r"monitor|on-error|endmon|return|exsr|begsr|endsr|leave|iter|callp|dsply|"
+    r"chain|setll|setgt|reade?|readpe?|write|update|delete|open|close|exfmt|except|"
+    r"eval|eval-corr|clear|reset|snd-msg|data-into|data-gen|xml-into|exec\s+sql)\b")
+_FREE_ASSIGN = re.compile(r"^[*%]?[A-Za-z_@#$][\w@#$.]*\s*(\([^)]*\))?\s*(\+|-|\*|/)?=[^=]")
+_FREE_CALL = re.compile(r"^[A-Za-z_@#$][\w@#$.]*\s*\(.*\)\s*;")
+_DECL_START = re.compile(r"(?i)^(dcl-\w+|ctl-opt|end-\w+|/\w+|\*\*)")
 
 
 @dataclass
@@ -46,6 +62,14 @@ class Indicators:
     is_fully_free: bool = False
     n_free_blocks: int = 0
     n_fixed_spec_lines: int = 0
+    n_fixed_c_spec: int = 0
+    n_fixed_d_spec: int = 0
+    n_fixed_pr: int = 0
+    n_free_stmts: int = 0
+    n_free_code_col1: int = 0
+    n_free_code_col8: int = 0
+    free_code_at_col1: bool = False
+    has_executable_code: bool = False
     source_format_guess: str = "unknown"
 
     has_ctl_opt: bool = False
@@ -99,6 +123,13 @@ def compute(text: str, *, bytes_len: int = 0, is_text: bool = True) -> Indicator
         if (not ind.is_fully_free and len(ln) >= 7 and ln[5] in _SPEC_LETTERS
                 and ln[6] != "*" and ln[:5].strip() == ""):
             ind.n_fixed_spec_lines += 1
+            letter = ln[5].upper()
+            if letter == "C":
+                ind.n_fixed_c_spec += 1
+            elif letter == "D":
+                ind.n_fixed_d_spec += 1
+                if _FIXED_PR.match(ln):
+                    ind.n_fixed_pr += 1
 
     code = ind.total_lines - ind.blank_lines - ind.comment_lines
     denom = code + ind.comment_lines
@@ -117,23 +148,60 @@ def compute(text: str, *, bytes_len: int = 0, is_text: bool = True) -> Indicator
     ind.has_printer = bool(_PRINTER.search(text))
     ind.has_extproc = bool(_EXTPROC.search(text))
 
-    # source format
+    # free-form calc statements, and where in the line they start.
+    # Code beginning in columns 1-5 cannot be a positional member (those columns
+    # are the sequence number), so it is *de facto* free-form even when the
+    # `**FREE` directive is missing -- see `free_code_at_col1`.
+    for ln in lines:
+        ln = ln.rstrip("\r")
+        s = ln.lstrip(" ")
+        if not s or s.startswith("//"):
+            continue
+        if not ind.is_fully_free and s.startswith("*"):
+            continue                                  # fixed-format comment
+        if _DECL_START.match(s):
+            if not s.lower().startswith(("dcl-", "ctl-opt")):
+                continue
+        elif _FREE_OPCODE.match(s) or _FREE_ASSIGN.match(s) or _FREE_CALL.match(s):
+            ind.n_free_stmts += 1
+        else:
+            continue
+        indent = len(ln) - len(s)
+        if indent <= 4:
+            ind.n_free_code_col1 += 1
+        elif indent >= 6:
+            ind.n_free_code_col8 += 1
+    ind.free_code_at_col1 = ind.n_free_code_col1 > ind.n_free_code_col8
+
+    # Source format (v2). The `**FREE` line in column 1 of line 1 is what *defines*
+    # a fully free-form member: without it the compiler still reads columns, so
+    # free-form syntax in a positional member is "hybrid", not "fully-free".
+    # (v1 mapped free-form declarations without `**FREE` to fully-free; the judge
+    # disagreed on 27/290 files and the judge was right — see the study report.)
+    has_free_syntax = ind.n_free_blocks > 0 or ind.has_ctl_opt or ind.n_dcl > 0
     if ind.is_fully_free:
         ind.source_format_guess = "fully-free"
-    elif ind.n_free_blocks:
+    elif has_free_syntax:
         ind.source_format_guess = "hybrid-free"
     elif ind.n_fixed_spec_lines >= 3:
         ind.source_format_guess = "fixed-format"
-    elif ind.has_ctl_opt or ind.n_dcl >= 2:
-        ind.source_format_guess = "fully-free"   # free syntax without the **FREE line
     else:
         ind.source_format_guess = "unknown"
 
     ind.looks_rpgle = (ind.is_fully_free or ind.has_ctl_opt or ind.n_dcl >= 2
                        or ind.n_free_blocks > 0 or ind.n_fixed_spec_lines >= 3)
-    # a copy/header member: prototypes + include guards, no procedure bodies
-    ind.looks_copybook = (ind.n_dcl_pr > 0 and ind.n_dcl_proc == 0
-                          and (ind.n_cond_directives > 0 or ind.n_dcl_pr >= 2))
+
+    # A /copy member declares things but contains no executable code: no procedure
+    # body, no fixed-format C specs, no free-form calc statements. v1 only looked
+    # for free-form `dcl-pr`, so it missed fixed-format D-spec prototypes (the C
+    # library ports: libssh2, libxml, LDAP…) and constant/DS-only headers.
+    ind.has_executable_code = (ind.n_dcl_proc > 0 or ind.n_fixed_c_spec > 0
+                               or ind.n_free_stmts >= 2)
+    n_decls = ind.n_dcl + ind.n_fixed_d_spec
+    n_protos = ind.n_dcl_pr + ind.n_fixed_pr
+    ind.looks_copybook = (not ind.has_executable_code and not ind.has_workstn
+                          and ind.n_dcl_f == 0
+                          and (n_protos >= 1 or n_decls >= 2))
     return ind
 
 

@@ -151,3 +151,53 @@ mostly a new taxonomy + indicators + reclassifier.
 
 See `docs/fsf_study_design.md` for a worked design on a **non-programming**
 extension (`.fsf`, FSL FEAT neuroimaging config).
+
+---
+
+## Revision 2 — after `.rpgle` and `.m` (2026-09)
+
+The `.m` study (`docs/m_swh_study.md`, Part I) re-read the first three studies
+as a reviewer would. The pipeline above stands; the *evaluation* around it
+changes. Seven rules, each answering a weakness that was actually present:
+
+1. **No labeller is the oracle — not even the LLM.** Label every content with
+   several *independent* labellers, including tools you did not write (Linguist
+   heuristics, Pygments, SWH Synid) and a second LLM from another vendor. Report
+   agreement, per-class recall and abstention for each; add a Dawid–Skene
+   estimate (it needs no gold, but flag its independence assumption).
+2. **Keep the judge blind to the features it will be scored against.** The
+   cobol/fsf/rpgle judges saw the indicators, then were compared with
+   classifiers built from those indicators. The primary judge sees bytes,
+   filename, path and repository only; an ablation re-judges a subset *with*
+   indicators to measure anchoring.
+3. **Split the schema by decidability** (from rpgle): semantic fields to the
+   LLM, lexical facts to code — and when they disagree, look at the *direction*
+   of the disagreement before deciding who is wrong.
+4. **Pre-register.** Before the first judgement on the study sample, commit the
+   samples, models, prompts, frozen v1 rules, the tuning split, and written
+   predictions. Score v1 prospectively; tune v2 on the tuning split only.
+5. **Rank-based samples.** Rank each frame by `md5(seed‖key)`; every prefix is a
+   simple random sample, so a rate-limited fetch or a cost cap can stop anywhere
+   without biasing the frame.
+6. **Cheap labels on many, expensive labels on few, joined by PPI.**
+   Prediction-powered inference turns a validated cheap classifier on the whole
+   fetched sample plus the judge on a subset into valid (and narrower)
+   intervals. Post-stratified frames (by-path, by-repo) use weights computed
+   exactly from the full population table, not estimated from the sample.
+7. **Close the loop with a small, weighted, blind human audit.** Over-sample
+   disagreements, keep inverse-probability weights, and hide machine labels
+   until the reviewer has answered. The review app serves the queue; one
+   command turns the reviews into weighted accuracies for every labeller.
+
+Also: **audit the population file** before sampling (count rows in = rows
+parsed; keep defective rows with a status rather than dropping them), and
+**stress-test the mapping** against every language that claims the extension,
+not just the one you expect.
+
+### Checklist additions
+
+- 2b. Write `PREREGISTRATION.md`; commit it with the frozen rules *before* judging.
+- 4b. Store each labeller as its own layer (`labels/`, `synid.jsonl`,
+  `judge/<model>/`) so cheap layers can be regenerated without touching paid ones.
+- 5b. Run the second judge and the anchoring ablation; compute PPI estimates.
+- 6b. `audit --build`, review the queue blind, `audit --score`.

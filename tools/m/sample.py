@@ -14,7 +14,12 @@ frames cost nothing later:
   repo_n        contents in its origin          (by-repo weight   = 1/repo_n)
   path_versions contents sharing (origin, path) (by-path weight   = 1/path_versions)
 
-    .venv/bin/python -m tools.m.sample --n-uniform 2000 --n-repo 1000 --seed 17
+    .venv/bin/python -m tools.m.sample --n-uniform 10000 --n-repo 3000 --seed 17
+    .venv/bin/python -m tools.m.sample --top-repos 25 --per-repo 4   # frame T
+
+A third, descriptive frame **T** (`worklist_top.csv`) takes `per_repo` random
+contents from each of the `top_repos` largest origins, to *name* the heavy tail
+(firmware dumps, treebanks, codegen) rather than estimate a proportion.
 """
 
 from __future__ import annotations
@@ -26,8 +31,32 @@ from pathlib import Path
 from tools.m.ingest import PARQUET, STUDY
 
 WORKLIST = STUDY / "worklist_all.csv"
+WORKLIST_TOP = STUDY / "worklist_top.csv"
 COLS = ["swhid", "sha1_git", "name", "path", "origin", "forge", "branch", "ts",
         "in_uniform", "in_diverse", "u_rank", "d_rank", "repo_n", "path_versions"]
+
+
+def top_frame(con, n_repos: int, per_repo: int, s: str):
+    rows = con.execute(f"""
+        WITH m AS (SELECT sha, origin, path, branch, ts,
+                     regexp_extract(coalesce(path,''), '([^/]*)$', 1) AS name,
+                     regexp_extract(coalesce(origin,''), '^[A-Za-z+]+://([^/]+)', 1) AS forge
+                   FROM read_parquet('{PARQUET}') WHERE origin IS NOT NULL),
+        rn AS (SELECT origin, count(*) repo_n FROM m GROUP BY 1 ORDER BY 2 DESC LIMIT {n_repos}),
+        pv AS (SELECT origin, path, count(*) path_versions FROM m WHERE origin IN (SELECT origin FROM rn) GROUP BY 1,2),
+        ranked AS (SELECT m.*, rn.repo_n,
+                     row_number() OVER (PARTITION BY m.origin ORDER BY md5(m.sha || '|T|{s}')) k
+                   FROM m JOIN rn USING (origin))
+        SELECT 'swh:1:cnt:' || sha, sha, name, path, origin, forge, branch, ts,
+               0, 0, NULL, NULL, repo_n, pv.path_versions, k
+        FROM ranked LEFT JOIN pv USING (origin, path)
+        WHERE k <= {per_repo} ORDER BY repo_n DESC, k""").fetchall()
+    with WORKLIST_TOP.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(COLS + ["t_rank"])
+        for r in rows:
+            w.writerow(["" if v is None else v for v in r])
+    print(f"top frame: {len(rows)} contents from {n_repos} repos → {WORKLIST_TOP}")
 
 
 def main():
@@ -36,9 +65,15 @@ def main():
     ap.add_argument("--n-uniform", type=int, default=2000)
     ap.add_argument("--n-repo", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=17)
+    ap.add_argument("--top-repos", type=int, default=0)
+    ap.add_argument("--per-repo", type=int, default=4)
     a = ap.parse_args()
     s = str(a.seed)
     con = duckdb.connect()
+    if a.top_repos:
+        con.execute("SET threads=14")
+        top_frame(con, a.top_repos, a.per_repo, s)
+        return
     con.execute("SET threads=14")
     con.execute(f"""CREATE TEMP TABLE m AS SELECT sha, status, origin, path, branch, ts,
         regexp_extract(coalesce(path,''), '([^/]*)$', 1) AS name,

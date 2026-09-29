@@ -97,7 +97,7 @@ def stats(con):
                    FROM m WHERE status IN ('ok','multiline') GROUP BY sha""")
     with_origin = one("SELECT count(*) FROM c")[0]
     dup_rows = one("SELECT count(*) FILTER (WHERE n_rows>1), max(n_rows) FROM c")
-    con.execute("CREATE OR REPLACE TEMP TABLE r AS SELECT origin, count(*) n FROM c GROUP BY 1")
+    con.execute("CREATE OR REPLACE TEMP TABLE r AS SELECT origin, count(*) n FROM c WHERE origin IS NOT NULL GROUP BY 1")
     n_repos, med, mean, mx, p90, singles = one(
         "SELECT count(*), median(n), round(avg(n),1), max(n), quantile_cont(n, 0.9), "
         "count(*) FILTER (WHERE n=1) FROM r")

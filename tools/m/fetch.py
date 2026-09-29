@@ -75,14 +75,26 @@ def cached(sha: str) -> bool:
     return (CACHE_DIR / f"{sha}.bin").exists() and (CACHE_DIR / f"{sha}.meta.json").exists()
 
 
+def _priority(r: dict):
+    """Judge targets (rank ≤ 1000 in U or R) first, then frame T, then the rest."""
+    ranks = [int(r[k]) for k in ("u_rank", "d_rank") if r.get(k)]
+    m = min(ranks) if ranks else 10**9
+    if m <= 1000:
+        return (0, m)
+    if r.get("t_rank"):
+        return (1, int(r["t_rank"]))
+    return (2, m)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0)
     a = ap.parse_args()
-    rows = list(csv.DictReader(WORKLIST.open(encoding="utf-8")))
+    from tools.m.study import worklist
+    rows = worklist()
     if a.limit:
         rows = rows[: a.limit]
-    todo = [r for r in rows if not cached(r["sha1_git"])]
+    todo = sorted((r for r in rows if not cached(r["sha1_git"])), key=_priority)
     print(f"worklist {len(rows)} | cached {len(rows) - len(todo)} | to fetch {len(todo)}", flush=True)
     refresh_token()
     t0, done = time.time(), 0

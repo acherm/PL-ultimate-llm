@@ -33,6 +33,7 @@ from tools.cobol.common import CACHE_DIR  # noqa: E402
 from tools.m import indicators as ind_mod  # noqa: E402
 from tools.m import labellers  # noqa: E402
 from tools.m import reclassify as rc  # noqa: E402
+from tools.m import reclassify_v1 as rc_v1  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 STUDY = ROOT / "data" / "derived" / "m_study"
@@ -48,8 +49,19 @@ def slug(model: str, with_indicators: bool = False) -> str:
     return model.replace("/", "__").replace(":", "_") + ("+ind" if with_indicators else "")
 
 
+WORKLIST_TOP = STUDY / "worklist_top.csv"
+
+
 def worklist() -> list[dict]:
-    return list(csv.DictReader(WORKLIST.open(encoding="utf-8")))
+    """Frames U and R (worklist_all.csv) followed by the descriptive frame T."""
+    rows = list(csv.DictReader(WORKLIST.open(encoding="utf-8")))
+    seen = {r["sha1_git"] for r in rows}
+    if WORKLIST_TOP.exists():
+        for r in csv.DictReader(WORKLIST_TOP.open(encoding="utf-8")):
+            if r["sha1_git"] not in seen:
+                rows.append(r)
+                seen.add(r["sha1_git"])
+    return rows
 
 
 def raw_bytes(sha: str) -> bytes | None:
@@ -85,6 +97,7 @@ def label_one(row: dict) -> dict | None:
         "origin": row["origin"], "forge": row["forge"], "length": len(raw),
         "indicators": ind.to_dict(),
         "ours": rc.classify(row["name"], raw),
+        "ours_v1": rc_v1.classify(row["name"], raw),
         "linguist": labellers.linguist(txt) if ok else {"raw": None, "lang": "not-code"},
         "pygments": labellers.pygments(row["name"], txt) if ok else {"raw": None, "lang": "not-code"},
     }
@@ -107,19 +120,34 @@ def judge_targets(n: int, frames: str = "UR") -> list[dict]:
     for r in worklist():
         u = int(r["u_rank"]) if r["u_rank"] and "U" in frames else 10**9
         d = int(r["d_rank"]) if r["d_rank"] and "R" in frames else 10**9
-        if min(u, d) <= n:
+        t = int(r["t_rank"]) if r.get("t_rank") and "T" in frames else 10**9
+        if min(u, d) <= n or t <= n:
             out.append(r)
     out.sort(key=lambda r: min(int(r["u_rank"] or 10**9), int(r["d_rank"] or 10**9)))
     return out
 
 
 def do_judge(n: int, model: str, workers: int, max_cost: float, frames: str = "UR",
-             with_indicators: bool = False):
+             with_indicators: bool = False, retry_failed: bool = False):
     from tools.m import judge as judge_mod
     outdir = JUDGE / slug(model, with_indicators)
     outdir.mkdir(parents=True, exist_ok=True)
+    if retry_failed:
+        # keep an audit trail: failed verdicts move to _failed/, then get re-judged once
+        failed_dir = outdir / "_failed"
+        moved = 0
+        for p in outdir.glob("*.json"):
+            try:
+                ok = json.loads(p.read_text()).get("parse_ok")
+            except Exception:
+                ok = False
+            if not ok:
+                failed_dir.mkdir(exist_ok=True)
+                p.rename(failed_dir / p.name)
+                moved += 1
+        print(f"[{model}] moved {moved} failed verdicts to _failed/ for one retry", flush=True)
     spent = sum((json.loads(p.read_text()).get("usage") or {}).get("cost", 0) or 0
-                for p in outdir.glob("*.json"))
+                for p in list(outdir.glob("*.json")) + list(outdir.glob("_failed/*.json")))
     todo = []
     for r in judge_targets(n, frames):
         if (outdir / f"{r['sha1_git']}.json").exists():
@@ -184,13 +212,14 @@ def main():
     ap.add_argument("--model", default=PRIMARY_MODEL)
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--max-cost", type=float, default=40.0)
-    ap.add_argument("--frames", default="UR", help="U, R or UR")
+    ap.add_argument("--frames", default="UR", help="any of U, R, T (e.g. UR, T)")
     ap.add_argument("--with-indicators", action="store_true", help="anchoring ablation (E5)")
+    ap.add_argument("--retry-failed", action="store_true", help="re-judge verdicts that failed to parse")
     a = ap.parse_args()
     if a.label:
         do_label()
     if a.judge:
-        do_judge(a.n, a.model, a.workers, a.max_cost, a.frames, a.with_indicators)
+        do_judge(a.n, a.model, a.workers, a.max_cost, a.frames, a.with_indicators, a.retry_failed)
     if a.status:
         do_status()
 

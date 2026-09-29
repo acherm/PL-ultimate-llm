@@ -7,14 +7,22 @@ MATLAB family is scored, and Octave is chosen *only* on Octave-only syntax —
 MATLAB-compatible code stays "matlab" (the portability question is separate).
 
 VERSION history is recorded so the held-out evaluation stays honest:
-  v1  written before any judge label was seen (prospective)
+  v1  written before any judge label was seen (prospective) — frozen in
+      `reclassify_v1.py`, used for the PPI estimates
+  v2  revised after reading the 7 disagreements on the TUNING split only
+      (U ranks 1–300): (a) Wolfram *expressions* with no package cell
+      (`Log[`, `Zeta[`, `^n … \\` continuations) → mathematica-wolfram;
+      (b) marker-less MATLAB scripts (control toolbox calls, `;`-terminated
+      assignments, struct/cell literals) → matlab via a residual rule that
+      fires only when no other language has any marker. Octave logic is
+      deliberately unchanged: `octave` stays tied to Octave-only *syntax*.
 """
 
 from __future__ import annotations
 
 from tools.m import indicators as ind_mod
 
-VERSION = "m-reclass/1"
+VERSION = "m-reclass/2"
 
 
 def _is_binary(raw: bytes) -> bool:
@@ -45,7 +53,9 @@ def classify_ind(i: ind_mod.Indicators, text: str) -> tuple[str, str, str]:
     if i.limbo_markers >= 1 and i.ml_function_hdrs == 0:
         return "limbo", "source-code", f"limbo markers={i.limbo_markers}"
     if i.mma_package_marks >= 1 or i.mma_begin >= 1 or (i.mma_defs >= 2 and i.mma_calls >= 5
-                                                          and i.ml_pct_comments == 0):
+                                                          and i.ml_pct_comments == 0) \
+            or (i.ml_pct_comments == 0 and i.ml_function_hdrs == 0
+                and (i.mma_builtin_calls >= 3 or i.mma_pow_continuations >= 3)):
         return "mathematica-wolfram", "source-code", (f"pkg={i.mma_package_marks} "
                                                       f"defs={i.mma_defs} calls={i.mma_calls}")
     if i.mumps_labels >= 1 and (i.mumps_cmd_lines >= 3 or i.mumps_fns >= 3) and i.ml_function_hdrs == 0:
@@ -73,6 +83,12 @@ def classify_ind(i: ind_mod.Indicators, text: str) -> tuple[str, str, str]:
     # a short MATLAB script without any tell-tale is still the likeliest reading
     if 0 < ml and i.nonblank_lines <= 30 and i.objc_msg_sends == 0:
         return "matlab", "source-code", f"weak matlab score={ml}"
+    # v2 residual rule: no marker of any other language, but MATLAB-shaped statements
+    others = (i.objc_directives + i.objc_import_h + i.c_preproc + i.mercury_decls + i.mumps_labels
+              + i.magma_markers + i.maple_markers + i.limbo_markers + i.mason_markers + i.mma_builtin_calls)
+    if others == 0 and (i.ml_builtins_ext >= 2 or i.ml_assign_lines >= 3):
+        return "matlab", "source-code", (f"residual: builtins={i.ml_builtins_ext} "
+                                         f"assignments={i.ml_assign_lines}")
     return "unknown", "other", "no decisive marker"
 
 

@@ -44,3 +44,19 @@ v1 reclassifier so the git timestamp is the evidence.
   reclassifier than it does blind.
 - **H7 (inter-model).** Cohen's κ between the two judges ≥ 0.9 on `language`;
   < 0.7 on `provenance_kind` and `maturity`.
+
+---
+
+## Post-hoc notes (added after judging — not part of the pre-registration)
+
+- *Erratum.* "2,076,825 origins" should read **2,076,824**: the population count
+  grouped one NULL origin (a multi-line-path row) as an origin. The by-repo sampler
+  already excluded NULL origins, so the frame itself is unaffected.
+- *Deviation.* Frame **T** (4 random contents from each of the 25 largest
+  repositories) was added after calibration, as a descriptive frame; it is not used
+  for any proportion.
+- *Deviation.* The judge's `language="unknown"` is normalised to `not-code` when its
+  own `content_type` is markup/text/binary/empty/config (the XML treebank files).
+- *Rate limit.* The SWH quota turned out to be 1,200 requests/hour, not ~4,000; the
+  cheap-label extension of U and R stops at whatever rank prefix was fetched when the
+  report was written (each prefix is an SRS by construction).

@@ -1,0 +1,218 @@
+"""Deterministic, zero-cost indicators for a `.m` file.
+
+These are *lexical* facts (the rpgle lesson: compute lexical facts in code,
+ask the LLM only for semantic ones). Each language that claims `.m` gets a
+small set of marker counts; the reclassifier (`reclassify.py`) turns them into
+a label, and the judge sees them as context.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import asdict, dataclass
+
+M = re.M
+
+# --- Objective-C -----------------------------------------------------------
+_OBJC_DIR = re.compile(r"^\s*@(interface|implementation|end|protocol|property|synthesize|"
+                       r"dynamic|class|selector|import|autoreleasepool|optional|required)\b", M)
+_OBJC_IMPORT_H = re.compile(r"^\s*#\s*import\s+[<\"][^>\"]+\.h[>\"]", M)
+_OBJC_IMPORT_ANY = re.compile(r"^\s*#\s*import\s+[<\"]", M)
+_OBJC_NSLIT = re.compile(r"@\"")
+_OBJC_MSG = re.compile(r"\[\s*[A-Za-z_]\w*\s+[A-Za-z_]\w*\s*[:\]]")
+_OBJC_MAIN = re.compile(r"\b(UIApplicationMain|NSApplicationMain)\s*\(")
+_C_PREPROC = re.compile(r"^\s*#\s*(include|define|ifdef|ifndef|endif|pragma|if)\b", M)
+_C_MAIN = re.compile(r"\bint\s+main\s*\(")
+
+# --- MATLAB / Octave -------------------------------------------------------
+_FUNC_HDR = re.compile(r"^\s*function\b", M)
+_PCT_COMMENT = re.compile(r"^\s*%", M)
+_CELL_MARK = re.compile(r"^\s*%%", M)
+_CLASSDEF = re.compile(r"^\s*classdef\b", M)
+_END_LINE = re.compile(r"^\s*end\s*;?\s*(%.*)?$", M)
+_ML_BUILTIN = re.compile(r"\b(disp|fprintf|sprintf|zeros|ones|numel|size|length|figure|plot|"
+                         r"xlabel|ylabel|linspace|isempty|nargin|nargout|varargin|varargout|"
+                         r"cellfun|arrayfun|struct|clc|clear|hold|subplot|meshgrid|repmat|"
+                         r"load|save|error|warning|num2str|str2num|strcmp|fieldnames|isfield)\s*[\(;, ]")
+_ML_ELEMWISE = re.compile(r"\.\*|\./|\.\^")
+_ML_TILDE_NE = re.compile(r"~=")
+# Octave-only syntax (MATLAB rejects it)
+_OCT_COMMENT = re.compile(r"^\s*#(?![!{}])", M)
+_OCT_BLOCKEND = re.compile(r"^\s*(endfunction|endif|endwhile|endfor|endswitch|end_try_catch|"
+                           r"end_unwind_protect|unwind_protect|endparfor)\b", M)
+_OCT_PRINTF = re.compile(r"(?<![sf\w])printf\s*\(")
+_OCT_INCR = re.compile(r"\w\s*(\+\+|--|\+=|-=|\*=|/=)(?!\w*[\"'])")
+_OCT_NE = re.compile(r"[\w\)\]]\s*!=\s*[\w\(\[]")
+_OCT_SCRIPT1 = re.compile(r"\A(\s*(%|#).*\n)*\s*1\s*;")
+# MATLAB-only features
+_ML_ARGUMENTS = re.compile(r"^\s*arguments\b(?!\s*=)", M)
+_ML_MATLABNS = re.compile(r"\bmatlab\.(apps|ui|unittest|mixin|lang|internal|io|net)\.")
+_ML_GUIDE = re.compile(r"Begin initialization code - DO NOT EDIT")
+_ML_PARFOR = re.compile(r"^\s*parfor\b", M)
+
+# --- Wolfram / Mathematica -------------------------------------------------
+_MMA_PKG = re.compile(r"\(\*\s*::(Package|Section|Subsection|Text|Input|Title|Chapter)::")
+_MMA_COMMENT = re.compile(r"\(\*[\s\S]*?\*\)")
+_MMA_CALL = re.compile(r"\b[A-Z][A-Za-z0-9]*\[")
+_MMA_DEF = re.compile(r"\w\[[^\]]*_[^\]]*\]\s*:?=")
+_MMA_BEGIN = re.compile(r"\b(BeginPackage|Begin|EndPackage|Needs)\[")
+
+# --- Mercury ---------------------------------------------------------------
+_MERC = re.compile(r"^:-\s*(module|interface|implementation|import_module|use_module|pred|func|"
+                   r"type|mode|instance|typeclass|include_module|end_module)\b", M)
+
+# --- MUMPS (M) -------------------------------------------------------------
+_MUMPS_LABEL = re.compile(r"^[%A-Za-z][A-Za-z0-9]*(\([^)]*\))?[ \t]+;", M)
+_MUMPS_CMD = re.compile(r"^[ \t]+(?:\.[ \t]*)*(S|SET|Q|QUIT|D|DO|I|IF|W|WRITE|K|KILL|N|NEW|F|FOR|"
+                        r"G|GOTO|E|ELSE|L|LOCK|X|XECUTE|H|HALT|R|READ|M|MERGE)(:[^ ]+)?[ \t]", M)
+_MUMPS_FN = re.compile(r"\$[A-Z]{1,8}\(|\^[A-Z%][A-Z0-9]*\(")
+
+# --- Magma / Maple / Scilab -----------------------------------------------
+_MAGMA = re.compile(r"\bend\s+(function|procedure|intrinsic|for|if|while|case|try)\s*;|"
+                    r"^\s*intrinsic\s+\w+\s*\(|\b(PolynomialRing|SetVerbose|Sprintf|IsDefined|"
+                    r"AssociativeArray|RationalField|IntegerRing|Integers|Rationals)\s*\(", M)
+_MAPLE = re.compile(r"\bproc\s*\(|\bend\s+proc\b|\bod\s*[;:]|\bfi\s*[;:]|\bend\s+module\b|"
+                    r"\bwith\s*\(\s*(LinearAlgebra|plots|StringTools)\s*\)", M)
+_ASSIGN_COLONEQ = re.compile(r"\w\s*:=")
+_SCILAB = re.compile(r"^\s*(endfunction|deff|exec\s*\()|\bmprintf\s*\(|//\s*Scilab", M)
+
+# --- Limbo / MUF / Mason ---------------------------------------------------
+_LIMBO = re.compile(r"^\w+\s*:\s*module\s*\{|^\s*implement\s+\w+\s*;|^\s*include\s+\"\w+\.m\"\s*;", M)
+_MUF = re.compile(r"^:\s+\S+|^\s*;\s*$", M)
+_MASON = re.compile(r"<%(args|init|once|perl|shared|method|def|flags|attr|cleanup|doc)>|</%(init|args|perl)>|<&.+?&>")
+
+# --- non-code --------------------------------------------------------------
+_XML_START = re.compile(r"\A\s*(<\?xml|<!DOCTYPE|<[A-Za-z][\w:-]*[\s>])")
+_GENERATED = re.compile(r"(?i)(auto-?generated|generated by|do not edit|this file (was|is) "
+                        r"(automatically )?generated|machine generated|class-dump)")
+_CP_DUMMY = re.compile(r"@interface\s+PodsDummy_")
+_FLUTTER = re.compile(r"GeneratedPluginRegistrant")
+_RN_FLIPPER = re.compile(r"InitializeFlipper|RCTBridge|RCTRootView|RCTAppDelegate")
+
+
+@dataclass
+class Indicators:
+    bytes_len: int = 0
+    is_text: bool = True
+    total_lines: int = 0
+    nonblank_lines: int = 0
+    max_line_length: int = 0
+    non_ascii_ratio: float = 0.0
+
+    objc_directives: int = 0
+    objc_import_h: int = 0
+    objc_ns_literals: int = 0
+    objc_msg_sends: int = 0
+    objc_app_main: bool = False
+    c_preproc: int = 0
+    c_main: bool = False
+
+    ml_function_hdrs: int = 0
+    ml_pct_comments: int = 0
+    ml_cell_marks: int = 0
+    ml_classdef: bool = False
+    ml_end_lines: int = 0
+    ml_builtins: int = 0
+    ml_elementwise: int = 0
+    oct_hash_comments: int = 0
+    oct_block_ends: int = 0
+    oct_printf: int = 0
+    oct_incr_ops: int = 0
+    oct_ne: int = 0
+    oct_script_marker: bool = False
+    octave_only_markers: int = 0
+    ml_arguments_block: bool = False
+    ml_matlab_ns: int = 0
+    ml_guide: bool = False
+    ml_parfor: int = 0
+
+    mma_package_marks: int = 0
+    mma_comments: int = 0
+    mma_calls: int = 0
+    mma_defs: int = 0
+    mma_begin: int = 0
+    mercury_decls: int = 0
+    mumps_labels: int = 0
+    mumps_cmd_lines: int = 0
+    mumps_fns: int = 0
+    magma_markers: int = 0
+    maple_markers: int = 0
+    colon_assign: int = 0
+    scilab_markers: int = 0
+    limbo_markers: int = 0
+    muf_markers: int = 0
+    mason_markers: int = 0
+
+    starts_xml: bool = False
+    generated_marker: bool = False
+    cocoapods_dummy: bool = False
+    flutter_registrant: bool = False
+    react_native_template: bool = False
+
+    def to_dict(self):
+        return asdict(self)
+
+
+def compute(text: str, bytes_len: int | None = None, is_text: bool = True) -> Indicators:
+    t = text or ""
+    lines = t.split("\n")
+    ind = Indicators(bytes_len=bytes_len if bytes_len is not None else len(t.encode("utf-8", "replace")),
+                     is_text=is_text)
+    ind.total_lines = len(lines) if t else 0
+    ind.nonblank_lines = sum(1 for l in lines if l.strip())
+    ind.max_line_length = max((len(l) for l in lines), default=0)
+    ind.non_ascii_ratio = round(sum(1 for ch in t[:20000] if ord(ch) > 127) / max(len(t[:20000]), 1), 3)
+    if not is_text:
+        return ind
+
+    ind.objc_directives = len(_OBJC_DIR.findall(t))
+    ind.objc_import_h = len(_OBJC_IMPORT_H.findall(t)) or len(_OBJC_IMPORT_ANY.findall(t))
+    ind.objc_ns_literals = len(_OBJC_NSLIT.findall(t))
+    ind.objc_msg_sends = len(_OBJC_MSG.findall(t))
+    ind.objc_app_main = bool(_OBJC_MAIN.search(t))
+    ind.c_preproc = len(_C_PREPROC.findall(t))
+    ind.c_main = bool(_C_MAIN.search(t))
+
+    ind.ml_function_hdrs = len(_FUNC_HDR.findall(t))
+    ind.ml_pct_comments = len(_PCT_COMMENT.findall(t))
+    ind.ml_cell_marks = len(_CELL_MARK.findall(t))
+    ind.ml_classdef = bool(_CLASSDEF.search(t))
+    ind.ml_end_lines = len(_END_LINE.findall(t))
+    ind.ml_builtins = len(_ML_BUILTIN.findall(t))
+    ind.ml_elementwise = len(_ML_ELEMWISE.findall(t))
+    ind.oct_hash_comments = len(_OCT_COMMENT.findall(t)) if not ind.objc_import_h and not ind.c_preproc else 0
+    ind.oct_block_ends = len(_OCT_BLOCKEND.findall(t))
+    ind.oct_printf = len(_OCT_PRINTF.findall(t))
+    ind.oct_incr_ops = len(_OCT_INCR.findall(t))
+    ind.oct_ne = len(_OCT_NE.findall(t))
+    ind.oct_script_marker = bool(_OCT_SCRIPT1.search(t))
+    ind.octave_only_markers = (ind.oct_hash_comments + ind.oct_block_ends + ind.oct_printf
+                               + ind.oct_ne + int(ind.oct_script_marker))
+    ind.ml_arguments_block = bool(_ML_ARGUMENTS.search(t)) and ind.ml_function_hdrs > 0
+    ind.ml_matlab_ns = len(_ML_MATLABNS.findall(t))
+    ind.ml_guide = bool(_ML_GUIDE.search(t))
+    ind.ml_parfor = len(_ML_PARFOR.findall(t))
+
+    ind.mma_package_marks = len(_MMA_PKG.findall(t))
+    ind.mma_comments = len(_MMA_COMMENT.findall(t[:200000]))
+    ind.mma_calls = len(_MMA_CALL.findall(t[:200000]))
+    ind.mma_defs = len(_MMA_DEF.findall(t[:200000]))
+    ind.mma_begin = len(_MMA_BEGIN.findall(t))
+    ind.mercury_decls = len(_MERC.findall(t))
+    ind.mumps_labels = len(_MUMPS_LABEL.findall(t))
+    ind.mumps_cmd_lines = len(_MUMPS_CMD.findall(t))
+    ind.mumps_fns = len(_MUMPS_FN.findall(t))
+    ind.magma_markers = len(_MAGMA.findall(t))
+    ind.maple_markers = len(_MAPLE.findall(t))
+    ind.colon_assign = len(_ASSIGN_COLONEQ.findall(t[:200000]))
+    ind.scilab_markers = len(_SCILAB.findall(t))
+    ind.limbo_markers = len(_LIMBO.findall(t))
+    ind.muf_markers = len(_MUF.findall(t))
+    ind.mason_markers = len(_MASON.findall(t))
+
+    ind.starts_xml = bool(_XML_START.match(t))
+    ind.generated_marker = bool(_GENERATED.search(t[:4000]))
+    ind.cocoapods_dummy = bool(_CP_DUMMY.search(t))
+    ind.flutter_registrant = bool(_FLUTTER.search(t))
+    ind.react_native_template = bool(_RN_FLIPPER.search(t))
+    return ind

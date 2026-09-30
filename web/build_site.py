@@ -2495,13 +2495,56 @@ def _canonical_pl_entity(pl_id: str) -> str:
     return re.sub(r"-\d+$", "", base)
 
 
-def _ext_url_slug(ext: str) -> str:
-    """Filesystem/URL-safe key for an extension. `.m` -> 'm'; `.++` -> 'pp'."""
+# An extension is "plain" when its lowercased name (without the dot) is
+# already URL- and filesystem-safe: ASCII letters, digits, `_`, and single
+# inner hyphens (`py`, `c-objdump`). Such a name never contains `--` and never
+# starts or ends with `-`; `_ext_url_slug` relies on both facts.
+_PLAIN_EXT_RE = re.compile(r"^[a-z0-9_]+(?:-[a-z0-9_]+)*$")
+
+
+def _legacy_ext_url_slug(ext: str) -> str:
+    """The slug scheme used until 2026-09-30. `.m` -> 'm'; `.++` -> 'pp'.
+
+    NOT injective: it maps special characters to `-` (then strips/collapses
+    them) or to letters, so distinct extensions shared a slug, and their pages
+    overwrote each other in sorted order. 21 clashes on the site, e.g.
+    `.c`/`.c--` -> 'c' (the live /ext/c/ showed `.c--`), `.sh`/`.sh~` -> 'sh',
+    `.c++`/`.cpp` -> 'cpp', and 4 non-Latin extensions -> 'unknown'.
+    Still used for two things: the readable prefix of non-plain slugs, and
+    redirects from the old URLs of non-plain extensions (see the page loop in
+    `render_per_extension_pages`). For plain extensions it returns the name
+    unchanged, so their URLs are the same under both schemes.
+    """
     s = ext.lstrip(".")
     s = s.replace("+", "p").replace("#", "sharp").replace("@", "at").replace("*", "star")
     s = re.sub(r"[^a-z0-9_-]+", "-", s.lower())
     s = re.sub(r"-+", "-", s).strip("-")
     return s or "unknown"
+
+
+def _ext_url_slug(ext: str) -> str:
+    """Filesystem/URL-safe key for an extension, distinct for distinct extensions.
+
+    - Plain extensions (see `_PLAIN_EXT_RE`) keep their name: `.m` -> 'm',
+      `.c-objdump` -> 'c-objdump'. That is 12,919 of the 12,987 extensions on
+      the site, and exactly their old URL.
+    - Any other extension (containing `+ - . $ ~ ! ? #`, non-ASCII, …) gets its
+      readable legacy slug + `--` + the first 8 hex digits of the SHA-1 of its
+      lowercased name: `.c--` -> 'c--<hash>', `.c++` -> 'cpp--<hash>',
+      `.d.ts` -> 'd-ts--<hash>'.
+    Plain slugs never contain `--`, so the two families cannot clash; inside
+    the second one (68 extensions today) a clash needs a 32-bit hash
+    collision, and the page loop fails the build if one ever occurs.
+
+    Case-insensitive on purpose (`.R` and `.r` share a page: the site folds
+    case). Stateless on purpose: every link site calls it with the extension
+    alone, before or after the pages are rendered.
+    """
+    name = ext.lstrip(".").lower()
+    if _PLAIN_EXT_RE.match(name):
+        return name
+    digest = hashlib.sha1(name.encode("utf-8")).hexdigest()[:8]
+    return f"{_legacy_ext_url_slug(ext)}--{digest}"
 
 
 def compute_taxonomy_stats(
@@ -2935,9 +2978,19 @@ def render_per_extension_pages(
     ext_dir = dist_root / "ext"
     ext_dir.mkdir(parents=True, exist_ok=True)
     n_pages = 0
+    # slug -> extension whose page lives there. Guards against two extensions
+    # sharing one directory, which silently overwrote pages under the legacy
+    # slug scheme (see `_legacy_ext_url_slug`).
+    slug_owner: dict[str, str] = {}
 
     for ext in sorted(all_exts):
         url_slug = _ext_url_slug(ext)
+        if url_slug in slug_owner:
+            raise SystemExit(
+                f"ERROR: extensions {slug_owner[url_slug]!r} and {ext!r} both map to "
+                f"ext/{url_slug}/; one page would overwrite the other. Fix _ext_url_slug."
+            )
+        slug_owner[url_slug] = ext
         page = ext_dir / url_slug / "index.html"
         rel = rel_prefix(page, dist_root)
 
@@ -3859,6 +3912,35 @@ def render_per_extension_pages(
             encoding="utf-8",
         )
         n_pages += 1
+
+    # Redirects from legacy URLs. Non-plain extensions moved when the slug
+    # scheme became injective (2026-09-30): `.d.ts` went from ext/d-ts/ to
+    # ext/d-ts--<hash>/. Keep old links working by leaving a redirect at the
+    # old place, but only when (a) no page lives there now (for `.c--`, ext/c/
+    # is `.c`'s page again, as it should be) and (b) exactly one extension
+    # used that old slug (4 extensions shared ext/unknown/: no single target).
+    legacy_users: dict[str, list[str]] = defaultdict(list)
+    for ext in all_exts:
+        old = _legacy_ext_url_slug(ext)
+        if old != _ext_url_slug(ext):
+            legacy_users[old].append(ext)
+    n_redirects = 0
+    for old, exts in sorted(legacy_users.items()):
+        if old in slug_owner or len(exts) != 1:
+            continue
+        target = f"../{_ext_url_slug(exts[0])}/index.html"
+        stub = ext_dir / old / "index.html"
+        stub.parent.mkdir(parents=True, exist_ok=True)
+        stub.write_text(
+            "<!doctype html><meta charset='utf-8'>"
+            f"<title>{safe(exts[0])} · PL Catalog</title>"
+            f"<link rel='canonical' href='{target}'>"
+            f"<meta http-equiv='refresh' content='0; url={target}'>"
+            f"<p>Moved to <a href='{target}'>{safe(exts[0])}</a>.</p>",
+            encoding="utf-8",
+        )
+        n_redirects += 1
+    print(f"Wrote {n_redirects} legacy /ext/ redirects.")
 
     # /ext/index.html — a listing of all per-extension pages, sorted by SWH popularity.
     def _row_sort_key(ext: str) -> tuple:

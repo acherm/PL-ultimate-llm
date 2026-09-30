@@ -1,0 +1,10 @@
+% .m report: Latin Modern like the COBOL report, with a STIX fallback for glyphs LM lacks (κ ≥ ≈ ‖ …),
+% and smaller type in the many-column tables.
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtable}{\footnotesize}
+\directlua{luaotfload.add_fallback("mfallback", {"STIXGeneral:mode=node;", "STIX Two Math:mode=node;"})}
+\setmainfont{Latin Modern Roman}[RawFeature={fallback=mfallback}]
+\setmonofont{Latin Modern Mono}[RawFeature={fallback=mfallback}]
+% keep figures where the text discusses them
+\usepackage{float}
+\floatplacement{figure}{H}

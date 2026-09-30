@@ -192,6 +192,23 @@ def section_c(recs_j):
         "synid_text_all": {"k": sum(r.lang("synid") == "unknown" for r in cons), "n": len(cons)},
         "linguist_abstain_all": {"k": sum(r.lang("linguist") in ABSTAIN for r in cons), "n": len(cons)},
     }
+    # Synid's "unresolved" (full candidate set) vs UTF-8 validity of the bytes
+    from tools.cobol.common import CACHE_DIR
+
+    def utf8(r):
+        try:
+            (CACHE_DIR / f"{r.sha}.bin").read_bytes().decode("utf-8")
+            return True
+        except (UnicodeDecodeError, FileNotFoundError):
+            return False
+    txt = [r for r in recs_j if r.ind.get("is_text", True)]
+    unres = [r for r in txt if r.lang("synid") == "unresolved"]
+    res_ = [r for r in txt if r.lang("synid") not in ("unresolved", None)]
+    out["synid_utf8"] = {"unresolved_text": len(unres), "unresolved_non_utf8": sum(not utf8(r) for r in unres),
+                         "unresolved_matlab": sum(r.lang("judge") == "matlab" for r in unres),
+                         "unresolved_matlab_with_pct_comment": sum(r.lang("judge") == "matlab" and
+                                                                   r.ind.get("ml_pct_comments", 0) > 0 for r in unres),
+                         "resolved_text": len(res_), "resolved_non_utf8": sum(not utf8(r) for r in res_)}
     # Dawid–Skene, coarse classes, abstentions as missing, NO labeller privileged
     items = {}
     for r in recs_j:
@@ -242,7 +259,16 @@ def section_d(recs_j):
             "v2": {k: r.ind.get(k) for k in ("oct_block_ends", "oct_hash_comments", "oct_code_printf",
                                              "oct_code_ne", "oct_code_incr") if r.ind.get(k)}}
            for r in ml if (r.lang("judge") == "octave") != lexical_v2(r)]
-    return {"n_matlab_family": len(ml),
+    ml_u = [r for r in ml if r.in_frame("U", N_JUDGED)]
+    ml_only = sum(1 for r in ml_u if r.ind.get("ml_classdef") or r.ind.get("ml_arguments_block")
+                  or r.ind.get("ml_matlab_ns") or r.ind.get("ml_guide"))
+    portability = {
+        "n_by_file": len(ml_u),
+        "judge": dict(Counter(r.v("judge").get("matlab_dialect") for r in ml_u).most_common()),
+        "judge2": dict(Counter(r.v("judge2").get("matlab_dialect") for r in ml_u if r.v("judge2")).most_common()),
+        "lexical_matlab_only_features": ml_only,
+    }
+    return {"n_matlab_family": len(ml), "portability": portability,
             "judge_x_lexical_v2": {f"{a}|lexical_octave={b}": c for (a, b), c in tab_v2.items()},
             "judge2_x_lexical_v2": {f"{a}|lexical_octave={b}": c for (a, b), c in j2_v2.items()},
             "ours_x_lexical_v2": {f"{a}|lexical_octave={b}": c for (a, b), c in ours_v2.items()},
@@ -371,7 +397,10 @@ def section_i(recs, U, R, T):
     top_rows = []
     for t in pop["top_repos"]:
         top_rows.append({**t, "sampled": top.get(t["origin"], [])})
-    return {"tail": sorted(tail, key=lambda x: (x["judge"] or "", x["name"])), "top_repos": top_rows}
+    mostly_not_hand = sum(1 for rows in top.values()
+                          if sum(1 for x in rows if x["provenance_kind"] != "hand-written") >= 3)
+    return {"tail": sorted(tail, key=lambda x: (x["judge"] or "", x["name"])), "top_repos": top_rows,
+            "top_mostly_not_hand_written": mostly_not_hand, "top_n_repos": len(top)}
 
 
 # ---------------------------------------------------------------- J: duplication signals
@@ -385,7 +414,8 @@ def section_j(U, R):
         for r in fr:
             nm = npop.get(r.row["name"], {})
             by_prov[r.v("judge").get("provenance_kind")].append(nm.get("repos", 0))
-        out[fname] = {k: {"n": len(v), "median_name_repos": statistics.median(v) if v else 0}
+        out[fname] = {k: {"n": len(v), "median_name_repos": statistics.median(v) if v else 0,
+                          "quartiles": statistics.quantiles(v, n=4) if len(v) >= 4 else None}
                       for k, v in by_prov.items()}
         vers = [int(r.row["path_versions"] or 1) for r in fr]
         out[fname]["path_versions_median"] = statistics.median(vers) if vers else 0

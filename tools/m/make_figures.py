@@ -229,8 +229,52 @@ def fig_concentration():
     save(fig, "fig_m_concentration.png")
 
 
+FRAME_COL = {"by_file": "#4a3aa7", "by_repo": "#1baf7a"}   # frames, distinct from the language colours
+
+
+def fig_languages(a):
+    """Every language/format under .m, by file and by repo, on a log scale (the polysemy picture)."""
+    A = a["A_language"]
+    order = ["objective-c", "matlab", "octave", "mathematica-wolfram", "mumps-m", "magma", "mercury",
+             "c-or-cpp", "other-programming-language", "not-code", "limbo", "muf"]
+    names = {"objective-c": "Objective-C", "matlab": "MATLAB", "octave": "Octave (Octave-only syntax)",
+             "mathematica-wolfram": "Wolfram / Mathematica", "mumps-m": "MUMPS (M)", "magma": "Magma*",
+             "mercury": "Mercury", "c-or-cpp": "C*", "other-programming-language": "other languages*",
+             "not-code": "not code*", "limbo": "Limbo", "muf": "MUF"}
+    fig, ax = plt.subplots(figsize=(7.6, 4.1))
+    NONE_X = 0.045
+    for off, key, lab in ((-.17, "by_file", "by file (U, n = 1,000)"), (.17, "by_repo", "by repo (R, n = 1,000)")):
+        d, col = A[key], FRAME_COL[key]
+        for i, lang in enumerate(order):
+            y = len(order) - 1 - i + off
+            v = d.get(lang)
+            if not v or not v["n"]:
+                ax.plot(NONE_X, y, marker="x", ms=5, mew=1.4, color=col)
+                continue
+            lo, hi = max(v["ci"][0], 0.06), v["ci"][1]
+            ax.plot([lo, hi], [y, y], color=col, lw=1.6, alpha=.5, solid_capstyle="round")
+            ax.plot(v["pct"], y, "o", ms=6, color=col, mec=SURFACE, mew=1.2)
+            ax.text(hi * 1.15, y, f"{v['n']}", va="center", fontsize=7, color=INK2)
+        ax.plot([], [], "o-", color=col, label=lab)
+    ax.plot([], [], "x", color=INK2, label="none observed")
+    ax.axvline(0.07, color=GRID, lw=.8)
+    ax.set_xscale("log")
+    ax.set_xlim(0.035, 150)
+    ax.set_xticks([0.1, 1, 10, 100])
+    ax.set_xticklabels(["0.1%", "1%", "10%", "100%"])
+    ax.set_yticks(range(len(order)))
+    ax.set_yticklabels([names[l] for l in order][::-1])
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("share of judged files (log) · line = 95% CI · number = files")
+    ax.set_title("What is in the .m space? Two languages and a long tail")
+    ax.legend(loc="lower right", frameon=False, fontsize=8)
+    fig.text(0.01, -0.02, "* claimed by no source in our extension→language mapping", fontsize=7.5, color=INK2)
+    save(fig, "fig_m_languages.png")
+
+
 def main():
     a = json.loads((STUDY / "analysis.json").read_text())
+    fig_languages(a)
     fig_frames(a)
     fig_labellers(a)
     fig_kappa(a)

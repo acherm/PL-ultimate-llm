@@ -15,10 +15,10 @@ A = None
 COARSE = ["objective-c", "matlab-family", "mathematica-wolfram", "other-code", "not-code"]
 NAMES = {"objective-c": "Objective-C", "matlab-family": "MATLAB / Octave", "mathematica-wolfram": "Wolfram",
          "other-code": "other code", "not-code": "not code"}
-LAB = {"judge": "LLM judge — Sonnet 4.6 (blind)", "judge2": "LLM judge — Gemini 3.8 Flash (blind)",
-       "ours": "our reclassifier v2", "ours_v1": "our reclassifier v1 (frozen)",
-       "linguist": "Linguist `.m` heuristics", "pygments": "Pygments `guess_lexer`",
-       "synid": "SWH Synid (default content strategies)", "synid_nc": "SWH Synid (without `comment`)"}
+LAB = {"judge": "Sonnet 4.6 (judge)", "judge2": "Gemini 3.8 Flash (judge)",
+       "ours": "our rules v2", "ours_v1": "our rules v1 (frozen)",
+       "linguist": "Linguist heuristics", "pygments": "Pygments",
+       "synid": "SWH Synid (default)", "synid_nc": "SWH Synid (no `comment`)"}
 
 
 def ci(v):
@@ -189,3 +189,88 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def _p(d, *keys):
+    for k in keys:
+        d = (d or {}).get(k)
+    return d
+
+
+def composition():
+    """Q2 comparison table, by frame (COBOL-report style)."""
+    b = A["B_what"]
+    kappa = A["F_intermodel"]
+
+    def row(label, field, keys, note=""):
+        cells = []
+        for fr in ("by_file", "by_repo"):
+            v = sum((_p(b, fr, field, k, "pct") or 0) for k in keys)
+            cells.append(("<1%" if v < 1 else f"{v:.0f}%") if v else "—")
+        return f"| {label}{note} | {cells[0]} | {cells[1]} |"
+
+    rows = ["| | **by file (U)** | **by repo (R)** |", "|---|---:|---:|",
+            row("hand-written", "provenance_kind", ["hand-written"]),
+            row("IDE / framework template", "provenance_kind", ["ide-or-framework-template"]),
+            row("tool-generated", "provenance_kind", ["tool-generated"]),
+            row("vendored third-party library", "provenance_kind", ["vendored-third-party"]),
+            row("decompiled / dumped", "provenance_kind", ["decompiled-or-dumped"]),
+            row("class implementation (ObjC / `classdef`)", "unit_kind", ["class-implementation"]),
+            row("MATLAB function file", "unit_kind", ["function-file"]),
+            row("script", "unit_kind", ["script"]),
+            row("test", "unit_kind", ["test"]),
+            row("domain: iOS/macOS app or library", "domain", ["mobile-desktop-app", "mobile-library-framework"]),
+            row("domain: numerical / signal / ML / control / engineering", "domain",
+                ["numerical-scientific", "signal-image-processing", "machine-learning-data", "control-robotics",
+                 "engineering-simulation"]),
+            row("maturity: research code", "maturity", ["research-code"], "†"),
+            row("maturity: student exercise", "maturity", ["student-exercise"], "†"),
+            row("maturity: toy or snippet", "maturity", ["toy-or-hello-world", "snippet"], "†"),
+            f"| median lines | {b['by_file']['median_lines']:.0f} | {b['by_repo']['median_lines']:.0f} |"]
+    return "\n".join(rows) + (f"\n\n*† `maturity` is the least reliable field (two-judge κ "
+                              f"{kappa['maturity']['kappa']:.2f}, §4.4); read it as indicative.*")
+
+
+def per_language():
+    b = A["B_what"]
+    cols = [("Objective-C", "by_file", "objective-c"), ("Objective-C", "by_repo", "objective-c"),
+            ("MATLAB/Octave", "by_file", "matlab"), ("MATLAB/Octave", "by_repo", "matlab")]
+    head = "| | " + " | ".join(f"{l} · {'file' if f == 'by_file' else 'repo'}" for l, f, _ in cols) + " |"
+    rows = [head, "|---|" + "---:|" * len(cols)]
+
+    def cell(f, lang, field, keys):
+        d = b[f]["per_language"][lang][field]
+        v = sum((d.get(k) or {}).get("pct", 0) for k in keys)
+        return ("<1%" if v < 1 else f"{v:.0f}%") if v else "—"
+    for label, field, keys in (("hand-written", "provenance_kind", ["hand-written"]),
+                               ("IDE / framework template", "provenance_kind", ["ide-or-framework-template"]),
+                               ("vendored + generated + dumped", "provenance_kind",
+                                ["vendored-third-party", "tool-generated", "decompiled-or-dumped"]),
+                               ("research code†", "maturity", ["research-code"]),
+                               ("student exercise†", "maturity", ["student-exercise"]),
+                               ("production-like†", "maturity", ["production-like"])):
+        rows.append(f"| {label} | " + " | ".join(cell(f, l, field, keys) for _, f, l in cols) + " |")
+    rows.append("| median lines | " + " | ".join(f"{b[f]['per_language'][l]['median_lines']:.0f}" for _, f, l in cols) + " |")
+    rows.append("| *n* | " + " | ".join(str(b[f]['per_language'][l]['n']) for _, f, l in cols) + " |")
+    return "\n".join(rows)
+
+
+def top12():
+    rows = ["| repository | `.m` contents | what the sampled files are (judge) |", "|---|---:|---|"]
+    for t in A["I_tail"]["top_repos"][:12]:
+        s = t["sampled"]
+        kinds = sorted({f"{x['language']} / {x['provenance_kind']}" for x in s})
+        det = s[0]["detail"] if s else ""
+        if len(det) > 64:
+            det = det[:64].rsplit(" ", 1)[0] + "…"
+        rows.append(f"| {t['origin'].replace('https://', '')} | {t['contents']:,} | {'; '.join(kinds)} — *{det}* |")
+    return "\n".join(rows)
+
+
+def top10():
+    rows = ["| repository | `.m` contents | 4 sampled files (judge) |", "|---|---:|---|"]
+    for t in A["I_tail"]["top_repos"][:10]:
+        kinds = sorted({f"{x['language']}, {x['provenance_kind']}" for x in t["sampled"]})
+        rows.append(f"| {t['origin'].replace('https://github.com/', '').replace('https://', '')} | "
+                    f"{t['contents']:,} | {'; '.join(kinds)} |")
+    return "\n".join(rows)

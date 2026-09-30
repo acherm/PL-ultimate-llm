@@ -8,14 +8,14 @@ Companion studies: `docs/cobol_swh_study.md`, `docs/fsf_swh_study.md`,
 
 > **Bottom line.** A `.m` file is not "a MATLAB file" or "an Objective-C file":
 > which one it *probably* is depends on how you count. **By file, `.m` is
-> 54 % Objective-C and
-> 43 % MATLAB; by repository,
-> 71 % and
-> 27 %.** The remaining
-> 3.5 % spans seven more notations — Wolfram, MUMPS, Magma, Mercury, a
+> ⟪a:A_language/by_file_coarse/objective-c/pct|.0f⟫ % Objective-C and
+> ⟪a:A_language/by_file_coarse/matlab-family/pct|.0f⟫ % MATLAB; by repository,
+> ⟪a:A_language/by_repo_coarse/objective-c/pct|.0f⟫ % and
+> ⟪a:A_language/by_repo_coarse/matlab-family/pct|.0f⟫ %.** The remaining
+> ⟪X:tail_pct⟫ % spans seven more notations — Wolfram, MUMPS, Magma, Mercury, a
 > FreeBSD interface language, treebank XML. **Much of `.m` was not written by the
-> project that holds it:** 22 % of Objective-C files
-> (58 % drawn one per repository) are Xcode/CocoaPods templates,
+> project that holds it:** ⟪X:oc_nonhand_file⟫ % of Objective-C files
+> (⟪X:oc_nonhand_repo⟫ % drawn one per repository) are Xcode/CocoaPods templates,
 > vendored libraries or decompiled firmware, and SWH's deduplication cannot merge
 > them. The language identifiers the ecosystem runs — including **SWH's own
 > Synid, which answers "Text" for one Objective-C file in ten** — each fail on one
@@ -66,12 +66,12 @@ accounted for:
 
 | | |
 |---|---:|
-| rows = **unique contents** (each listed once) | **51,414,668** |
-| contents with an origin (the rest: "no predecessors in this graph") | 51,356,119 |
-| **distinct repositories** | **2,076,824** |
-| distinct `(repository, path)` files | 27,678,487 |
-| → contents that are later versions of the same file | **46.1 %** |
-| provenance path not ending in `.m` (SVN pristine copies, `.asv` autosaves, `.m~`…) | 169,231 (0.33 %) |
+| rows = **unique contents** (each listed once) | **⟪p:unique_contents|,⟫** |
+| contents with an origin (the rest: "no predecessors in this graph") | ⟪p:contents_with_origin|,⟫ |
+| **distinct repositories** | **⟪p:unique_origins|,⟫** |
+| distinct `(repository, path)` files | ⟪p:distinct_origin_path_files|,⟫ |
+| → contents that are later versions of the same file | **⟪p:version_inflation_pct⟫ %** |
+| provenance path not ending in `.m` (SVN pristine copies, `.asv` autosaves, `.m~`…) | ⟪s:non_dot_m_context_names/n|,⟫ (⟪s:non_dot_m_context_names/pct⟫ %) |
 
 Three caveats follow from the extraction itself. The reported path is *a* place
 the bytes occur, not necessarily the `.m` one (one sampled content is reported as
@@ -83,17 +83,17 @@ extracted: uppercase `.M` (~26 k occurrences) is not covered.
 
 | contents per repository | |
 |---|---:|
-| median | **4** |
-| mean | 24.7 |
-| max (a decompiled iPhone firmware image) | 429,552 |
-| top repository's share | 0.84 % |
-| top-10 repositories | 3.1 % |
-| **80 % of all contents come from** | **265,470 repos (12.8 %)** |
-| repositories with exactly 1 content | 455,575 |
+| median | **⟪p:contents_per_repo/median|.0f⟫** |
+| mean | ⟪p:contents_per_repo/mean⟫ |
+| max (a decompiled iPhone firmware image) | ⟪p:contents_per_repo/max|,⟫ |
+| top repository's share | ⟪p:concentration/top1_pct⟫ % |
+| top-10 repositories | ⟪p:concentration/top10_pct⟫ % |
+| **80 % of all contents come from** | **⟪p:concentration/repos_for_80pct|,⟫ repos (⟪p:concentration/repos_for_80pct_share|.1f⟫ %)** |
+| repositories with exactly 1 content | ⟪p:contents_per_repo/repos_with_1|,⟫ |
 
 > **Why this matters for sampling.** Unlike `.CBL` (one fixture = 40 % of files)
 > or `.rpgle` (three parser repositories = 21 %), no single repository dominates
-> `.m`. What shapes it instead is **replication**: 46 % of
+> `.m`. What shapes it instead is **replication**: ⟪p:version_inflation_pct|.0f⟫ % of
 > contents are later versions of a file already counted; a third of all
 > repositories contain an `AppDelegate.m`; and Xcode personalises every copy, so
 > content deduplication cannot merge them (§4.3). A by-file, a by-path and a
@@ -104,9 +104,9 @@ extracted: uppercase `.M` (~26 k occurrences) is not covered.
 
 | Frame | drawn from | drawn | fetched | judged |
 |---|---|---:|---:|---:|
-| **U** by file — uniform | 51,414,668 contents | 10 000 | 2,000 | 1,000 |
-| **R** by repo — uniform repo, then one file | 2,076,824 repositories | 3 000 | 2,000 | 1,000 |
-| **T** heavy tail — 4 files × 25 largest repos | 25 repositories | 100 | 100 | 100 |
+| **U** by file — uniform | ⟪p:unique_contents|,⟫ contents | 10 000 | ⟪a:n/U_used|,⟫ | ⟪a:n/U_judged|,⟫ |
+| **R** by repo — uniform repo, then one file | ⟪p:unique_origins|,⟫ repositories | 3 000 | ⟪a:n/R_used|,⟫ | ⟪a:n/R_judged|,⟫ |
+| **T** heavy tail — 4 files × 25 largest repos | 25 repositories | 100 | 100 | ⟪a:n/T_judged⟫ |
 
 The fractions are tiny, but U and R are uniform-random, so each is an unbiased
 estimate of its population (±3 points at 95 %). Samples are drawn by ranking on
@@ -178,7 +178,7 @@ The crucial design variable is again the **sampling frame**; the new one is the
 
 Fixed throughout: temperature 0, structured outputs, sources truncated to 16 000
 characters for the judges, binary contents never sent to a judge (they count as
-"not code"). Spend: Sonnet $25.41 (2,093 calls), Gemini $8.08 (2,105, 12 empty responses retried), anchoring ablation $3.99 (299) — **$37.48** for 4,481 verdicts. Seven hypotheses (H1–H7) were committed before the
+"not code"). Spend: ⟪X:spend⟫. Seven hypotheses (H1–H7) were committed before the
 first judgement; they are scored in §4.4.
 
 ## 4. Results
@@ -189,28 +189,21 @@ first judgement; they are scored in §4.4.
 
 **Two languages share the extension, and the frame decides which one is bigger.**
 
-| language | by file (U, judged) | by file, PPI | by path (U reweighted) | by repo (U reweighted) | by repo (R, judged) | by repo, PPI |
-|---|---:|---:|---:|---:|---:|---:|
-| Objective-C | 53.7% [50.6–56.8] | 55.1% [52.9–57.3] | 49.5% [45.6–53.4] | 69.9% [60.2–77.5] | 71.2% [68.3–73.9] | 70.0% [68.0–72.1] |
-| MATLAB / Octave | 42.8% [39.8–45.9] | 41.7% [39.5–43.9] | 47.4% [43.6–51.4] | 29.7% [21.6–38.8] | 27.0% [24.3–29.8] | 28.1% [26.1–30.1] |
-| Wolfram | 1.0% [0.5–1.8] | 0.4% [0.0–0.7] | 1.2% [0.5–2.3] | 0.3% [0.0–3.5] | 0.4% [0.2–1.0] | 0.4% [0.1–0.7] |
-| other code | 1.7% [1.1–2.7] | 1.9% [1.2–2.6] | 1.3% [0.6–2.5] | 0.1% [0.0–3.5] | 0.5% [0.2–1.2] | 0.5% [0.1–0.9] |
-| not code | 0.8% [0.4–1.6] | 0.8% [0.4–1.3] | 0.6% [0.2–1.6] | 0.0% [0.0–3.5] | 0.7% [0.3–1.4] | 0.6% [0.2–1.1] |
-| *n* | 1000 | 1000+1000 | n_eff≈632 | n_eff≈105 | 1000 | 1000+1000 |
+⟪T:frames⟫
 
 *(Brackets: 95 % intervals — Wilson for simple random samples, Kish effective n
 for re-weighted frames, PPI++ for the PPI columns.)*
 
 ![Language share by sampling frame](assets/m/fig_m_frames.png)
 
-By file, `.m` is 54 % Objective-C and
-43 % MATLAB. By repository it is
-71 % and
-27 % — and the re-weighted by-file
-sample reaches the same answer (70 % /
-30 %) by a completely
+By file, `.m` is ⟪a:A_language/by_file_coarse/objective-c/pct|.0f⟫ % Objective-C and
+⟪a:A_language/by_file_coarse/matlab-family/pct|.0f⟫ % MATLAB. By repository it is
+⟪a:A_language/by_repo_coarse/objective-c/pct|.0f⟫ % and
+⟪a:A_language/by_repo_coarse/matlab-family/pct|.0f⟫ % — and the re-weighted by-file
+sample reaches the same answer (⟪a:A_language/by_repo_reweighted_coarse/objective-c/pct|.0f⟫ % /
+⟪a:A_language/by_repo_reweighted_coarse/matlab-family/pct|.0f⟫ %) by a completely
 different route. With version history collapsed (by path) the two are level
-(50 % / 47 %).
+(⟪a:A_language/by_path_coarse/objective-c/pct|.0f⟫ % / ⟪a:A_language/by_path_coarse/matlab-family/pct|.0f⟫ %).
 
 > **Key finding — `.m` has no frame-free majority language.** Most `.m`
 > *repositories* are iOS/macOS projects; `.m` *files* split almost evenly; with
@@ -218,19 +211,10 @@ different route. With version history collapsed (by path) the two are level
 > template and class files; a MATLAB research repository carries many function
 > files **and** more archived revisions of each.
 
-**The tail: seven more notations.** By file, 3.5 % of `.m` is neither
+**The tail: seven more notations.** By file, ⟪X:tail_pct⟫ % of `.m` is neither
 Objective-C nor MATLAB:
 
-| language (judge) | by file (of 1 000) | by repo (of 1 000) | e.g. repositories of |
-|---|---:|---:|---|
-| mathematica-wolfram | 10 | 4 | JuliaSymbolics, GalAster, laluzamakhsyari |
-| mumps-m | 6 | 1 | jshtz4, ~ov+server, shabiel |
-| magma | 4 | 0 | michaelmusty |
-| mercury | 3 | 0 | Mercury-Language, sebgod |
-| c-or-cpp | 1 | 1 | blackreaven, pasoev |
-| other-programming-language | 3 | 3 | DamnDanielV, csrgxtu, mibrahim |
-| not-code | 8 | 7 | joaodornas, Kasia239, icestraw |
-| unknown | 0 | 2 | martin-azpillaga, Player1os |
+⟪T:tail⟫
 
 - **Wolfram** — Mathematica packages, symbolic-integration rule sets (Rubi), and
   computer-algebra *output* (a 250 kB asymptotic expansion written by Mathematica).
@@ -271,48 +255,21 @@ OpenCL/qmake/Proguard→Visual Prolog, Motoko→Modelica).
 Restricting to what the files are, one property is invariant and most are not.
 
 **Invariants** (true in both frames): MATLAB is hand-written
-(94 % by file,
-95 % by repo);
-Octave-only code is ~1 %; 99 % of files are in a
+(⟪a:B_what/by_file/per_language/matlab/provenance_kind/hand-written/pct|.0f⟫ % by file,
+⟪a:B_what/by_repo/per_language/matlab/provenance_kind/hand-written/pct|.0f⟫ % by repo);
+Octave-only code is ~1 %; ⟪a:B_what/by_file/is_pl_pct|.0f⟫ % of files are in a
 programming language at all.
 
 **Everything else depends on the frame:**
 
-| | **by file (U)** | **by repo (R)** |
-|---|---:|---:|
-| hand-written | 84% | 57% |
-| IDE / framework template | 9% | 39% |
-| tool-generated | 3% | 1% |
-| vendored third-party library | 2% | 3% |
-| decompiled / dumped | 1% | — |
-| class implementation (ObjC / `classdef`) | 50% | 56% |
-| MATLAB function file | 28% | 14% |
-| script | 13% | 13% |
-| test | 3% | 11% |
-| domain: iOS/macOS app or library | 49% | 66% |
-| domain: numerical / signal / ML / control / engineering | 30% | 20% |
-| maturity: research code† | 37% | 25% |
-| maturity: student exercise† | 13% | 16% |
-| maturity: toy or snippet† | 3% | 9% |
-| median lines | 88 | 61 |
-
-*† `maturity` is the least reliable field (two-judge κ 0.54, §4.4); read it as indicative.*
+⟪T:composition⟫
 
 ![Provenance by language and frame](assets/m/fig_m_provenance.png)
 
-| | Objective-C · file | Objective-C · repo | MATLAB/Octave · file | MATLAB/Octave · repo |
-|---|---:|---:|---:|---:|
-| hand-written | 78% | 42% | 94% | 95% |
-| IDE / framework template | 16% | 54% | <1% | 1% |
-| vendored + generated + dumped | 6% | 4% | 6% | 4% |
-| research code† | 18% | 12% | 60% | 59% |
-| student exercise† | 9% | 9% | 18% | 35% |
-| production-like† | 48% | 39% | 1% | <1% |
-| median lines | 123 | 63 | 59 | 58 |
-| *n* | 537 | 712 | 428 | 270 |
+⟪T:per_language⟫
 
-**What each frame shows.** By file, 22 % of Objective-C is not
-hand-written; by repository, **58 %** is — mostly IDE and framework
+**What each frame shows.** By file, ⟪X:oc_nonhand_file⟫ % of Objective-C is not
+hand-written; by repository, **⟪X:oc_nonhand_repo⟫ %** is — mostly IDE and framework
 templates: Xcode's `AppDelegate.m` and `main.m`, CocoaPods' `Pods-*-dummy.m`
 stubs, React Native's `AppDelegate`, Flutter's `GeneratedPluginRegistrant.m`.
 The judge's label is not self-certified: the population table records how many
@@ -320,9 +277,9 @@ repositories share each file's name, a signal the judge never saw.
 
 | judge's `provenance_kind` (by file) | n | median repositories sharing the file name |
 |---|---:|---:|
-| hand-written | 837 | 2 |
-| vendored third-party | 21 | 48 |
-| IDE / framework template | 91 | 13,334 |
+| hand-written | ⟪a:J_duplication/by_file/hand-written/n⟫ | ⟪a:J_duplication/by_file/hand-written/median_name_repos|,.0f⟫ |
+| vendored third-party | ⟪a:J_duplication/by_file/vendored-third-party/n⟫ | ⟪a:J_duplication/by_file/vendored-third-party/median_name_repos|,.0f⟫ |
+| IDE / framework template | ⟪a:J_duplication/by_file/ide-or-framework-template/n⟫ | ⟪a:J_duplication/by_file/ide-or-framework-template/median_name_repos|,.0f⟫ |
 
 > **Key finding — much of `.m` was not written by the project that holds it.**
 > MATLAB `.m` is overwhelmingly hand-written research and course code in every
@@ -331,34 +288,23 @@ repositories share each file's name, a signal the judge never saw.
 
 ### 4.3 Provenance — where it comes from, and how replicated (Q3)
 
-**Forges.** By content: GitHub 46,601,063, Bitbucket
-2,101,478, GitLab 780,805,
+**Forges.** By content: GitHub ⟪p:forges_by_content/github.com|,⟫, Bitbucket
+⟪p:forges_by_content/bitbucket.org|,⟫, GitLab ⟪p:forges_by_content/gitlab.com|,⟫,
 SourceForge SVN/CVS/Git ~470 k, then package registries and archives — npm
-(80,795), Launchpad, `doi.org` (Zenodo/Figshare
-deposits, 64,517), Ifremer's GitLab
-(52,162, the SonarScope acoustics toolbox),
-`pkg.go.dev`. By repository, npm (16,521 packages) and
-Dart's `pub.dev` (7,115) appear — Objective-C shims vendored in
+(⟪p:forges_by_content/www.npmjs.com|,⟫), Launchpad, `doi.org` (Zenodo/Figshare
+deposits, ⟪p:forges_by_content/doi.org|,⟫), Ifremer's GitLab
+(⟪p:forges_by_content/gitlab.ifremer.fr|,⟫, the SonarScope acoustics toolbox),
+`pkg.go.dev`. By repository, npm (⟪p:forges_by_repo/www.npmjs.com|,⟫ packages) and
+Dart's `pub.dev` (⟪p:forges_by_repo/pub.dev|,⟫) appear — Objective-C shims vendored in
 React Native and Flutter plugins.
 
 ![Concentration](assets/m/fig_m_concentration.png)
 
 **The largest repositories are not ordinary code** (frame T):
 
-| repository | `.m` contents | 4 sampled files (judge) |
-|---|---:|---|
-| CrackerCat/iPhone15-3_17.6.1_21G101_Restore | 429,552 | objective-c, decompiled-or-dumped |
-| michaelmusty/SolvableDessins | 256,931 | magma, tool-generated |
-| CrackerCat/iPhone17-1_18.2_22C152_Restore | 249,201 | objective-c, decompiled-or-dumped |
-| ufal/PDT-C | 186,869 | not-code, tool-generated; other-programming-language, tool-generated |
-| rueckelt/TransmissionPlanningFramework | 155,345 | matlab, tool-generated |
-| SchapplM/robsynth-serroblib | 124,473 | matlab, tool-generated |
-| Mx1014/workSource | 57,641 | objective-c, hand-written; objective-c, tool-generated |
-| Mercury-Language/mercury | 56,656 | mercury, hand-written |
-| gitlab.ifremer.fr/fleet/acoustic/sonarscope.git | 51,236 | matlab, hand-written |
-| Gong-Meng1/Matlab-funciones | 43,732 | matlab, hand-written; matlab, vendored-third-party |
+⟪T:top10⟫
 
-**12 of the 25 largest repositories are mostly not hand-written.** The six
+**⟪X:t_nonhand⟫ of the 25 largest repositories are mostly not hand-written.** The six
 largest — 2.7 % of every `.m` content — hold two **decompiled iOS firmware
 images** (IDA-style Objective-C pseudo-code), a **Magma-generated** database, the
 **Prague treebank** XML, and two research projects whose `.m` files are machine
@@ -370,10 +316,10 @@ copied into personal repositories.
 
 | family (by file name) | contents | repositories | % of `.m` repositories |
 |---|---:|---:|---:|
-| Xcode template names (`AppDelegate`, `main`, `ViewController`, `SceneDelegate`) | 3,243,345 | 880,802 | **42.41 %** |
-| CocoaPods stubs (`*-dummy.m`) | 493,666 | 241,904 | 11.65 % |
-| Coursera *Machine Learning* exercises (≥ 5 exercise names) | 449,136 | 20,942 | 1.01 % |
-| Flutter plugin registrant | 19,710 | 13,334 | 0.64 % |
+| Xcode template names (`AppDelegate`, `main`, `ViewController`, `SceneDelegate`) | ⟪s:families/xcode_template_names/contents|,⟫ | ⟪s:families/xcode_template_names/repos|,⟫ | **⟪s:families/xcode_template_names/pct_repos⟫ %** |
+| CocoaPods stubs (`*-dummy.m`) | ⟪s:families/cocoapods_dummy/contents|,⟫ | ⟪s:families/cocoapods_dummy/repos|,⟫ | ⟪s:families/cocoapods_dummy/pct_repos⟫ % |
+| Coursera *Machine Learning* exercises (≥ 5 exercise names) | ⟪s:families/coursera_ml_repos_ge5_exercises/contents|,⟫ | ⟪s:families/coursera_ml_repos_ge5_exercises/repos|,⟫ | ⟪s:families/coursera_ml_repos_ge5_exercises/pct_repos⟫ % |
+| Flutter plugin registrant | ⟪s:families/flutter_registrant/contents|,⟫ | ⟪s:families/flutter_registrant/repos|,⟫ | ⟪s:families/flutter_registrant/pct_repos⟫ % |
 
 ![Most replicated file names](assets/m/fig_m_names.png)
 
@@ -381,10 +327,10 @@ SWH deduplicates byte-identical files, yet there are 1.34 M distinct
 `AppDelegate.m` and 1.02 M distinct `main.m` contents: Xcode stamps each new
 project's template with a header comment carrying its name, author and date.
 Stripping `//` comment lines from the sampled `main.m` files collapses
-139 distinct contents to
-68, and
-55 of them become one and the same file
-— the untouched template. History inflates too: 46 % of
+⟪a:L_near_duplicates/main.m/distinct_contents⟫ distinct contents to
+⟪a:L_near_duplicates/main.m/distinct_without_comments⟫, and
+⟪a:L_near_duplicates/main.m/largest_cluster⟫ of them become one and the same file
+— the untouched template. History inflates too: ⟪p:version_inflation_pct|.0f⟫ % of
 contents are later versions of a file, including commit bots (`icestraw/EveryDayOC`
 keeps 4 016 versions of one `Code.m`; the version we sampled holds only a UUID).
 
@@ -399,41 +345,32 @@ keeps 4 016 versions of one `Code.m`; the version we sampled holds only a UUID).
 
 **Existing identifiers (E6).** The two judges, from different vendors and blind
 to our features, agree on the coarse language of
-1,991 of 1,997 files. Against that
+⟪a:C_labellers/consensus_n|,⟫ of ⟪a:C_labellers/consensus_of|,⟫ files. Against that
 consensus — a consensus, not ground truth:
 
 ![Seven labellers](assets/m/fig_m_labellers.png)
 
-| labeller | agrees | disagrees | abstains | accuracy when it answers | Dawid–Skene accuracy |
-|---|---:|---:|---:|---:|---:|
-| Sonnet 4.6 (judge) | *defines the consensus* | | | | 99.7% |
-| Gemini 3.8 Flash (judge) | *defines the consensus* | | | | 99.8% |
-| our rules v2 | 98.9% | 0.3% | 0.8% | 99.7% | 99.4% |
-| our rules v1 (frozen) | 98.6% | 0.2% | 1.2% | 99.8% | — |
-| Linguist heuristics | 93.6% | 0.1% | 6.3% | 99.9% | 100.0% |
-| SWH Synid (no `comment`) | 93.7% | 0.3% | 6.0% | 99.7% | 98.5% |
-| SWH Synid (default) | 87.6% | 0.1% | 12.3% | 99.8% | 98.7% |
-| Pygments | 93.6% | 6.4% | 0.0% | 93.6% | 93.2% |
+⟪T:labellers⟫
 
 When they answer, Linguist and Synid are almost always right; Pygments never
 abstains, so its errors surface as wrong answers. Each failure traces to a line
 of code:
 
-- **Pygments calls MATLAB "Objective-C"** — 86 / 695 (12.4 %) of MATLAB files.
+- **Pygments calls MATLAB "Objective-C"** — ⟪X:pyg⟫.
   `ObjectiveCLexer.analyse_text` scores 0.8 for `\[\s*[a-zA-Z_]\w*\s+…` — an
   Objective-C message send *or a MATLAB matrix literal* `[a b]` — while MATLAB
   scores only 0.2 for a `%` comment. Only four lexers claim `*.m`, so Wolfram,
   Mercury, MUMPS and Magma are unreachable.
-- **Linguist abstains on MATLAB** — 97 / 695 (14.0 %) of MATLAB files. Its MATLAB rule is `^\s*%`: no
+- **Linguist abstains on MATLAB** — ⟪X:ling⟫. Its MATLAB rule is `^\s*%`: no
   comment line, no decision (Linguist then falls back to a Bayesian classifier).
-- **SWH Synid answers `Text` for Objective-C** — 124 / 1,248 (9.9 %); **without its
-  `comment` strategy, 3 / 1,248 (0.2 %).** That strategy runs *before* the Linguist
+- **SWH Synid answers `Text` for Objective-C** — ⟪X:synid_text⟫; **without its
+  `comment` strategy, ⟪X:synid_nc⟫.** That strategy runs *before* the Linguist
   rules and scores each candidate by the lines that *contain* its comment symbol:
   the `%` in `@"%@"` counts for MATLAB, Objective-C's `//` scores zero, and
   Objective-C is dropped from the candidate set.
-- **SWH Synid returns all eight candidates** for 36
+- **SWH Synid returns all eight candidates** for ⟪a:C_labellers/synid_utf8/unresolved_text⟫
   text files — **every one** of them invalid UTF-8, while all
-  1,958 resolved files are valid UTF-8. In `file`
+  ⟪a:C_labellers/synid_utf8/resolved_text|,⟫ resolved files are valid UTF-8. In `file`
   mode and with the SquashFS host, a strict UTF-8 read fails and every content
   strategy is skipped.
 
@@ -445,34 +382,19 @@ of code:
 
 **Two judges (E4).** Identity is settled; judgement is not.
 
-| field | agreement | Cohen's κ |
-|---|---:|---:|
-| `language_coarse` | 99.7% | 0.99 |
-| `language` | 99.2% | 0.98 |
-| `is_programming_language` | 99.7% | 0.81 |
-| `content_type` | 98.1% | 0.86 |
-| `unit_kind` | 97.4% | 0.96 |
-| `provenance_kind` | 92.4% | 0.84 |
-| `matlab_dialect` | 82.5% | 0.67 |
-| `domain` | 78.3% | 0.73 |
-| `maturity` | 64.1% | 0.54 |
-| `confidence` | 99.7% | 0.00 |
+⟪T:intermodel⟫
 
-Language agreement is near perfect (κ 0.98). Fields that
+Language agreement is near perfect (κ ⟪a:F_intermodel/language/kappa|.2f⟫). Fields that
 ask for judgement degrade in a fixed order — provenance kind, domain, MATLAB
 dialect, maturity — and the same order appears when the *same* model re-judges
-299 files (E5: language 99.3 % identical, maturity 87.3 %).
+299 files (E5: language ⟪X:retest_lang⟫ % identical, maturity ⟪X:retest_mat⟫ %).
 `confidence` shows the κ paradox: 99.7 % agreement, κ = 0, because both models
 always say "high".
 
 **Lexical vs semantic (E3).** The prompt defined `octave` *lexically*: only when
 the file uses syntax MATLAB rejects.
 
-| label × Octave-only syntax (comment/string-aware) | Sonnet 4.6 | Gemini 3.8 Flash | our rules v2 |
-|---|---:|---:|---:|
-| `octave`, syntax present | 16 | 16 | 15 |
-| `octave`, **no** Octave-only syntax | 7 | 0 | 0 |
-| `matlab`, **with** Octave-only syntax | 2 | 0 | 3 |
+⟪T:octave3⟫
 
 As pre-registered, with regex markers, the disagreement looked two-sided (7 vs 4)
 — but three of the four "MATLAB with Octave syntax" cases were **our** errors:
@@ -482,8 +404,8 @@ definition exactly. Sonnet calls seven syntax-free files "Octave"** — three
 because they sit in an Octave-Forge package tree (`inst/`), one by its file name,
 three because they use double-quoted strings, legal MATLAB since R2017a. On the
 purely semantic *portability* question the split is starker: Sonnet calls
-84 % of MATLAB files MATLAB-specific, Gemini calls 63 % portable to
-Octave, while only 7 % use a lexical MATLAB-only construct.
+⟪X:port_s⟫ % of MATLAB files MATLAB-specific, Gemini calls ⟪X:port_g⟫ % portable to
+Octave, while only ⟪X:port_lex⟫ % use a lexical MATLAB-only construct.
 
 > **Lesson — lexical facts need a lexer; semantic facts depend on the model.**
 > Our first "lexical" rule manufactured three of four apparent judge errors
@@ -493,39 +415,29 @@ Octave, while only 7 % use a lexical MATLAB-only construct.
 > aggregate fields below ~0.7 (`maturity`, `matlab_dialect`) without a human audit.
 
 **Anchoring (E5).** Shown the indicators, the judge changed its language label on
-2 of 299 files (one toward our rules, one
-away); agreement with our rules was 99.0 % blind and
-99.0 % shown. On a task this lexical, the indicators
+⟪a:E_anchoring/language_flips⟫ of ⟪a:E_anchoring/n⟫ files (one toward our rules, one
+away); agreement with our rules was ⟪a:E_anchoring/agree_with_ours_blind⟫ % blind and
+⟪a:E_anchoring/agree_with_ours_shown⟫ % shown. On a task this lexical, the indicators
 add nothing the judge does not already read in the bytes.
 
 **Our reclassifier, prospectively.**
 
-| rules | scored on | n | fine accuracy | coarse accuracy |
-|---|---|---:|---:|---:|
-| v1 | tuning split vs judge | 300 | 98.0% | 99.0% |
-| v2 | tuning split vs judge (in-sample) | 300 | 99.0% | 100.0% |
-| v1 | held-out vs judge (prospective) | 1700 | 98.0% | 98.2% |
-| v2 | held-out vs judge | 1700 | 98.2% | 98.4% |
-| v1 | held-out vs consensus | 1691 | 98.3% | 98.5% |
-| v2 | held-out vs consensus | 1691 | 98.5% | 98.7% |
+⟪T:reclass⟫
 
 The frozen v1 — written before any judge label existed — agrees with the judge
-on 98.2 % of held-out files; v2, tuned on 300, gains
-0.2 points. Its errors are abstentions on the tail, plus a known blind
+on ⟪X:v1_heldout⟫ % of held-out files; v2, tuned on 300, gains
+⟪X:v2_gain⟫ points. Its errors are abstentions on the tail, plus a known blind
 spot: `printf(` and `!=` are Octave-only *relative to MATLAB* but ordinary in C,
 so a few C and MUMPS files are called Octave.
 
 **Cheap labels (E7).** PPI++ combines the free reclassifier labels on the
 unjudged files with the judge on the judged ones:
 
-| frame | judged + free | Objective-C (PPI++) | judged-only CI | width ratio | λ | MATLAB (PPI++) | width ratio |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| by file (U) | 1,000 + 1,000 | 55.1 % [52.9–57.3] | 50.6–56.8 | 0.71 | 0.50 | 41.7 % | 0.71 |
-| by repo (R) | 1,000 + 1,000 | 70.0 % [68.0–72.1] | 68.3–73.9 | 0.72 | 0.48 | 28.1 % | 0.73 |
+⟪X:ppi_table⟫
 
 With a free pool the size of the judged set, the tuned weight is λ ≈
-0.5 — a free label is worth about half a judged one — and intervals
-narrow by 29 %, the precision of ~2.0× as many judged files at no API
+⟪X:ppi_lambda⟫ — a free label is worth about half a judged one — and intervals
+narrow by ⟪X:ppi_gain⟫ %, the precision of ~⟪X:ppi_eff⟫× as many judged files at no API
 cost.
 
 **Pre-registration.** Seven predictions were committed before judging; the
@@ -533,13 +445,13 @@ verdicts are computed by `analysis.py`:
 
 | | Prediction | Observed | Verdict |
 |---|---|---|---|
-| H1 | Objective-C + MATLAB ≥ 95 % by file; rest spans ≥ 6 notations | 96.5 %; rest spans 7 | held |
-| H2 | Objective-C share differs ≥ 10 pts between frames | 53.7 % vs 71.2 % | held (direction guessed wrong) |
-| H3 | ≥ 15 % of Objective-C not hand-written (by file) | 22.2 % | held |
-| H4 | Linguist abstains ≥ 5 %; Pygments MATLAB→ObjC ≥ 5 %; Synid ≥ 10 % | 6.3 % · 12.4 % · 12.3 % | consistent (not a blind test) |
-| H5 | the judge's `octave` disagrees with the lexical definition one-sidedly | regex: 7 vs 4; lexer: 7 vs 2 (Gemini 0 vs 0) | **failed** as registered; holds for Sonnet only post hoc |
-| H6 | shown the indicators, the judge agrees more with our rules | 99.0 % blind vs 99.0 % shown | **failed** |
-| H7 | κ ≥ 0.9 on language; < 0.7 on provenance and maturity | κ 0.98 · 0.84 · 0.54 | half held |
+| H1 | Objective-C + MATLAB ≥ 95 % by file; rest spans ≥ 6 notations | ⟪X:h1⟫ | held |
+| H2 | Objective-C share differs ≥ 10 pts between frames | ⟪X:h2⟫ | held (direction guessed wrong) |
+| H3 | ≥ 15 % of Objective-C not hand-written (by file) | ⟪X:h3⟫ | held |
+| H4 | Linguist abstains ≥ 5 %; Pygments MATLAB→ObjC ≥ 5 %; Synid ≥ 10 % | ⟪X:h4⟫ | consistent (not a blind test) |
+| H5 | the judge's `octave` disagrees with the lexical definition one-sidedly | ⟪X:h5⟫ | **failed** as registered; holds for Sonnet only post hoc |
+| H6 | shown the indicators, the judge agrees more with our rules | ⟪X:h6⟫ | **failed** |
+| H7 | κ ≥ 0.9 on language; < 0.7 on provenance and maturity | ⟪X:h7⟫ | half held |
 
 Writing them down first is what made the failures informative: H5's failure is
 how the lexer bug in our own markers was found.
@@ -549,16 +461,16 @@ how the lexer bug in our own markers was found.
 > **Findings.**
 >
 > 1. **`.m` has no frame-free majority language:** Objective-C
->    54 % / MATLAB
->    43 % by file,
->    71 % /
->    27 % by repository, a tie by path.
-> 2. A 3.5 % **tail of seven notations** — four of them (Magma, the FreeBSD
+>    ⟪a:A_language/by_file_coarse/objective-c/pct|.0f⟫ % / MATLAB
+>    ⟪a:A_language/by_file_coarse/matlab-family/pct|.0f⟫ % by file,
+>    ⟪a:A_language/by_repo_coarse/objective-c/pct|.0f⟫ % /
+>    ⟪a:A_language/by_repo_coarse/matlab-family/pct|.0f⟫ % by repository, a tie by path.
+> 2. A ⟪X:tail_pct⟫ % **tail of seven notations** — four of them (Magma, the FreeBSD
 >    IDL, NJMC, PML XML) claimed by no source; Limbo and MUF, claimed, never seen.
-> 3. **Much of `.m` is replication:** 58 % of Objective-C drawn per
+> 3. **Much of `.m` is replication:** ⟪X:oc_nonhand_repo⟫ % of Objective-C drawn per
 >    repository is templates, vendored or dumped; Xcode template names sit in
->    42 % of `.m` repositories;
->    46 % of contents are later versions; deduplication
+>    ⟪s:families/xcode_template_names/pct_repos|.0f⟫ % of `.m` repositories;
+>    ⟪p:version_inflation_pct|.0f⟫ % of contents are later versions; deduplication
 >    cannot merge personalised templates.
 > 4. **MATLAB is the stable half:** hand-written research and course code in every
 >    frame.
@@ -587,7 +499,7 @@ how the lexer bug in our own markers was found.
   correlated evidence (same bytes, same path). The 100-item blind audit queued in
   the review app (Appendix A) is the step that replaces it — none of the four
   studies has run one yet.
-- **The tail is thin:** 3.5 % of 1 000 files is ~35 files over seven
+- **The tail is thin:** ⟪X:tail_pct⟫ % of 1 000 files is ~35 files over seven
   notations; below 1 % intervals are wide. A tail-targeted sample (the
   reclassifier makes it cheap) would size Magma, MUMPS and Mercury properly.
 - **One provenance context per content;** by-repo frames under-count widely
@@ -619,7 +531,7 @@ Artefacts in `data/derived/m_study/`: `PREREGISTRATION.md`, `population.json`,
 `population_signals.json`, `worklist_*.csv`, one layer per labeller
 (`labels/`, `synid.jsonl`, `judge/<model>/`), `analysis.json` (every number in
 this report), `audit_queue.csv`. Figures in `docs/assets/m/`. Spend:
-$37.48 for 4,481 LLM verdicts; everything else ran locally.
+⟪X:spend_short⟫.
 
 *Models: claude-sonnet-4.6 and gemini-3.8-flash (judges) · study authored with Claude Code.*
 
@@ -711,17 +623,17 @@ its comment symbol — `line.contains(c)`, string literals included — and keep
 only the maximum: `%` scores for MATLAB and Mercury, Objective-C's `//` scores
 zero, Objective-C is dropped. The Linguist rule that would have decided runs
 next, on a set that no longer contains the answer; the pipeline returns `Text`.
-Impact: 124 / 1,248 (9.9 %) of Objective-C files; 3 / 1,248 (0.2 %) without the strategy. Fixes
+Impact: ⟪X:synid_text⟫ of Objective-C files; ⟪X:synid_nc⟫ without the strategy. Fixes
 (any one): count a symbol only at line start or outside strings; run
 `hyplyheuristics` before `comment` when a Linguist disambiguation block exists;
 down-weight instead of eliminate.
 
 **2 · Non-UTF-8 content is never content-identified in `file` / SquashFS mode.**
-All 36 text files left with the full candidate
+All ⟪a:C_labellers/synid_utf8/unresolved_text⟫ text files left with the full candidate
 set are invalid UTF-8 (typically MATLAB with Latin-1 comments); all
-1,958 resolved files are valid UTF-8.
+⟪a:C_labellers/synid_utf8/resolved_text|,⟫ resolved files are valid UTF-8.
 `FileFetcher` and the SquashFS host read with `std::fs::read_to_string`, which
 fails; the AWS S3 host (`from_utf8_lossy`) and the Web API host (`reqwest`
 `text()`) decode lossily and are not affected. A lossy read everywhere would let
-Linguist's `^\s*%` rule resolve 33
-of the 35 MATLAB files.
+Linguist's `^\s*%` rule resolve ⟪a:C_labellers/synid_utf8/unresolved_matlab_with_pct_comment⟫
+of the ⟪a:C_labellers/synid_utf8/unresolved_matlab⟫ MATLAB files.

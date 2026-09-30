@@ -93,6 +93,13 @@ jobs:
         # site is rendered. Stdlib-only, ~5s on this repo.
         run: python3 tools/build_pl_taxonomy.py
 
+      - name: Build PL concepts (curated same_as decisions -> concepts)
+        # Joins records of the rebuilt taxonomy + languages/ into concepts
+        # from data/curated/pl_links.csv (docs/PL_IDENTITY.md). Fails if a
+        # decision points at a record that no longer exists: such a
+        # decision must be re-reviewed, not silently dropped. Stdlib-only.
+        run: python3 tools/build_pl_concepts.py build
+
       - name: Build site
         run: python3 web/build_site.py
 

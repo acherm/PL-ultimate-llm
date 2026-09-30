@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import sys
 from collections import Counter, defaultdict
+import dataclasses
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -85,6 +86,10 @@ class TurnInfo:
 # ---------------------------------------------------------------------------
 
 TAXONOMY_DIR = ROOT / "data" / "derived" / "pl_taxonomy"
+# PL identity layer (tools/build_pl_concepts.py): records joined into
+# concepts by the curated same_as decisions. See docs/PL_IDENTITY.md.
+PL_CONCEPT_MEMBERS_CSV = ROOT / "data" / "derived" / "pl_concepts" / "pl_concept_members.csv"
+PL_LINK_DECISIONS_CSV = ROOT / "data" / "curated" / "pl_links.csv"
 SAMPLES_DIR = ROOT / "samples"
 # Per-extension SWH popularity, built by tools/build_swh_ext_popularity.py
 # from the SWH 2026-06-04 export (docs/SWH_EXTENSIONS_DECISIONS.md §14).
@@ -870,6 +875,177 @@ def synthesize_taxonomy_only_languages(
             homepage=str(row.get("homepage") or "").strip(),
         )
     return new_langs, new_enrichments
+
+
+def _entry_record(lang: "Language", enrichments: dict[str, TaxonomyEnrichment]) -> str:
+    """The record a browsable entry stands for, in tools/build_pl_concepts.py terms.
+
+    A campaign page stands for its folder (`repo/<folder_rel>`); a
+    taxonomy-only page for its pl.csv row (`pl/<id>`). The taxonomy record
+    that the name matcher attached to a campaign page is deliberately NOT
+    used: that matcher is often wrong (docs/PL_IDENTITY.md), and a concept
+    must only join what an explicit decision joined.
+    """
+    if lang.folder_rel:
+        return "repo/" + lang.folder_rel
+    e = enrichments.get(lang.name)
+    return e.pl_id if e else ""
+
+
+def apply_pl_concepts(
+    languages: list["Language"],
+    enrichments: dict[str, TaxonomyEnrichment],
+) -> tuple[list["Language"], dict[str, dict], list[tuple["Language", "Language"]]]:
+    """Fold the entries of each PL concept into one page.
+
+    Concepts come from tools/build_pl_concepts.py: records joined by accepted
+    `same_as` decisions in data/curated/pl_links.csv. When two or more
+    browsable entries stand for records of one concept:
+      - the entry holding the concept's primary record keeps its page;
+      - the other entries leave the browse list; their names become aliases
+        of the kept page (search still finds "Python (programming language)"),
+        their programs move to it, and their URLs redirect to it;
+      - nothing is hidden: the kept page lists every record of the concept,
+        with its sources and the decision(s) that joined it.
+
+    Returns (languages, {kept name: panel data}, [(dropped, kept)]).
+    """
+    members = _read_csv(PL_CONCEPT_MEMBERS_CSV)
+    if not members:
+        return languages, {}, []
+    concept_of = {m["record"]: m["concept_id"] for m in members}
+    primary_of = {m["concept_id"]: m["record"] for m in members if m["role"] == "primary"}
+    members_of: dict[str, list[dict]] = defaultdict(list)
+    for m in members:
+        members_of[m["concept_id"]].append(m)
+    decisions = {d["link_id"]: d for d in _read_csv(PL_LINK_DECISIONS_CSV)}
+    pl_by_id, _ = load_pl_taxonomy()
+
+    entries: dict[str, list[Language]] = defaultdict(list)
+    for lang in languages:
+        cid = concept_of.get(_entry_record(lang, enrichments))
+        if cid:
+            entries[cid].append(lang)
+
+    dropped: list[tuple[Language, Language]] = []
+    replaced: dict[str, Language] = {}          # kept name -> updated Language
+    panels: dict[str, dict] = {}
+    for cid, langs in entries.items():
+        # Kept page: the one standing for the primary record; failing that
+        # (primary record has no page of its own), campaign pages first, then
+        # names without a "(programming language)" suffix, then most programs.
+        langs.sort(key=lambda l: (_entry_record(l, enrichments) != primary_of.get(cid),
+                                  not l.folder_rel, "(" in l.name, -len(l.programs), l.name))
+        kept, others = langs[0], langs[1:]
+        record_page = {_entry_record(l, enrichments): l for l in langs}
+        rows = []
+        for m in members_of[cid]:
+            ref = m["record"]
+            pl_row = pl_by_id.get(ref, {})
+            page = record_page.get(ref)
+            rows.append({
+                "record": ref, "name": m["name"], "role": m["role"], "sources": m["sources"],
+                # Where this record's content is shown: this page, a page merged
+                # into this one, or no page of its own (e.g. a pl.csv row that
+                # the matcher attached to a campaign page).
+                "page": "kept" if page is kept else ("merged" if page else "none"),
+                "old_slug": page.slug if page is not None and page is not kept else "",
+                "wikipedia": (pl_row.get("wikipedia_url") or "").strip(),
+                "wikidata": (pl_row.get("wikidata_qid") or "").strip(),
+                "esolang": (pl_row.get("esolang_url") or "").strip(),
+                "pldb": _pldb_url_for(pl_row) if pl_row.get("in_pldb") == "yes" else "",
+                "evidence": page.evidence_url if page is not None and page.folder_rel else "",
+                "links": [decisions[l] for l in m["via_links"].split(";") if l in decisions],
+            })
+        panels[kept.name] = {"concept_id": cid, "records": rows}
+        if not others:
+            continue
+        aliases = list(kept.aliases)
+        for o in others:
+            for n in [o.name, *o.aliases]:
+                if n and n != kept.name and n not in aliases:
+                    aliases.append(n)
+        replaced[kept.name] = dataclasses.replace(
+            kept, aliases=aliases, programs=[*kept.programs, *(p for o in others for p in o.programs)])
+        dropped.extend((o, kept) for o in others)
+
+    gone = {o.name for o, _ in dropped}
+    out = [replaced.get(l.name, l) for l in languages if l.name not in gone]
+    dropped = [(o, replaced.get(k.name, k)) for o, k in dropped]
+    return out, panels, dropped
+
+
+def render_merged_records_panel(info: dict, *, rel: str, github_owner_repo: str | None) -> str:
+    """"Merged records" section of a concept page: every record, how it got here."""
+    repo_url = f"https://github.com/{github_owner_repo}" if github_owner_repo else ""
+    decisions_url = f"{repo_url}/blob/main/data/curated/pl_links.csv" if repo_url else ""
+    items = []
+    for r in info["records"]:
+        role = {"kept": "this page", "merged": "had its own page, merged here",
+                "none": "record without its own page"}[r["page"]]
+        if r["role"] == "primary":
+            role += " · primary"
+        refs = []
+        if r["wikipedia"]:
+            refs.append(f"<a href='{safe(r['wikipedia'])}' target='_blank' rel='noopener'>Wikipedia</a>")
+        if r["wikidata"]:
+            refs.append(f"<a href='https://www.wikidata.org/wiki/{safe(r['wikidata'])}' target='_blank' rel='noopener'>{safe(r['wikidata'])}</a>")
+        if r["esolang"]:
+            refs.append(f"<a href='{safe(r['esolang'])}' target='_blank' rel='noopener'>Esolang</a>")
+        if r["pldb"]:
+            refs.append(f"<a href='{safe(r['pldb'])}' target='_blank' rel='noopener'>PLDB</a>")
+        if r["evidence"]:
+            refs.append(f"<a href='{safe(r['evidence'])}' target='_blank' rel='noopener'>evidence</a>")
+        links = "".join(
+            f"<div class='muted' style='font-size:13px; margin-left:12px;'>"
+            f"<code>{safe(d['link_id'])}</code> {safe(d['relation'])} "
+            f"<code>{safe(d['record_b'] if d['record_a'] == r['record'] else d['record_a'])}</code>: "
+            f"{safe(d['decision'])} ({safe(d['rule'])}, {safe(d['reviewer'])}, {safe(d['reviewed_at'])})"
+            f"{' — ' + safe(d['note']) if d.get('note') else ''}</div>"
+            for d in r["links"])
+        items.append(
+            f"<li><strong>{safe(r['name'])}</strong> <code>{safe(r['record'])}</code> "
+            f"<span class='muted'>· {safe(role)} · sources: {safe(r['sources'].replace(';', ', ') or '—')}"
+            f"{' · ' + ' · '.join(refs) if refs else ''}</span>{links}</li>")
+    return f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Merged records ({len(info['records'])})</h2>
+          <p class="muted" style="margin:0 0 8px;">Sources describe this language in separate records, kept as they are. They were
+          joined by explicit decisions in <a href="{safe(decisions_url)}" target="_blank" rel="noopener"><code>data/curated/pl_links.csv</code></a>
+          (concept <code>{safe(info['concept_id'])}</code>); names of merged pages are listed as aliases above.</p>
+          <ul style="margin:0; padding-left:18px;">{''.join(items)}</ul>
+        </section>"""
+
+
+def write_concept_redirects(*, dist_root: Path, drops: list[tuple["Language", "Language"]]) -> None:
+    """Keep the URLs of merged-away entries working: /l/<old>/ -> the concept page.
+
+    Campaign entries also get a stub at their legacy (pre-pl_id) slug, which
+    render_language_pages only writes for pages that still exist.
+    """
+    n = 0
+    for gone, kept in drops:
+        olds = [gone.slug]
+        if gone.folder_rel:
+            olds.append(make_legacy_lang_slug(gone.name))
+        for old in dict.fromkeys(olds):
+            if old == kept.slug:
+                continue
+            stub = dist_root / "l" / old / "index.html"
+            stub.parent.mkdir(parents=True, exist_ok=True)
+            target = f"../{kept.slug}/index.html"
+            stub.write_text(
+                "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
+                f"<meta http-equiv='refresh' content='0; url={target}'>"
+                f"<link rel='canonical' href='{target}'>"
+                f"<title>{safe(gone.name)} (merged) · PL Catalog</title></head><body>"
+                f"<p>{safe(gone.name)} is recorded under <a href='{target}'>{safe(kept.name)}</a> "
+                "(same language, merged by a curated decision).</p></body></html>",
+                encoding="utf-8",
+            )
+            n += 1
+    if n:
+        print(f"Wrote {n} redirects for merged PL entries.")
 
 
 def _pldb_url_for(row: dict) -> str:
@@ -4475,9 +4651,11 @@ def render_language_pages(
     related_by_language: dict[str, list[dict[str, Any]]],
     enrichments: dict[str, TaxonomyEnrichment] | None = None,
     program_provenance: dict[tuple[str, str], TurnInfo] | None = None,
+    merged_records: dict[str, dict] | None = None,
 ) -> None:
     enrichments = enrichments or {}
     program_provenance = program_provenance or {}
+    merged_records = merged_records or {}
     lang_by_name = {l.name: l for l in languages}
     # Case-insensitive name → slug map used by the Wikipedia-infobox panel
     # to cross-link `influenced_by` / `implementation_languages` items.
@@ -5063,6 +5241,8 @@ def render_language_pages(
           {alias_html}
           {prov_line}
         </section>
+        {render_merged_records_panel(merged_records[lang.name], rel=rel, github_owner_repo=github_owner_repo)
+         if lang.name in merged_records else ''}
         {cross_source_html}
         {infobox_panel_html}
         {ext_claims_html}
@@ -5821,6 +6001,21 @@ def build_site(*, out: Path, github_owner_repo: str | None) -> None:
         except Exception as e:
             print(f"WARNING: taxonomy-only expansion failed ({type(e).__name__}: {e}).")
 
+    # Phase 2d: fold the entries of each PL concept (curated same_as
+    # decisions, tools/build_pl_concepts.py) into one page per concept.
+    languages, merged_records, concept_drops = apply_pl_concepts(languages, enrichments)
+    if concept_drops:
+        # Program provenance is keyed by (folder, sha): moved programs keep theirs.
+        for gone, kept in concept_drops:
+            for p in gone.programs:
+                turn = program_provenance.get((gone.folder_rel, p.sha256))
+                if turn is not None and kept.folder_rel:
+                    program_provenance.setdefault((kept.folder_rel, p.sha256), turn)
+        counts = letter_counts(languages)
+        slug_to_prev_next = compute_prev_next(languages)
+        print(f"Merged {len(concept_drops)} entries into {len({k.name for _, k in concept_drops})} "
+              f"concept pages (total: {len(languages)}).")
+
     # Now safe to write the language index with enrichment-derived flags.
     write_index_json(out=out, languages=languages, generated_at=generated_at, enrichments=enrichments)
 
@@ -5871,7 +6066,9 @@ def build_site(*, out: Path, github_owner_repo: str | None) -> None:
         related_by_language=related_by_language,
         enrichments=enrichments,
         program_provenance=program_provenance,
+        merged_records=merged_records,
     )
+    write_concept_redirects(dist_root=out, drops=concept_drops)
     render_contribute_add_pl_page(
         dist_root=out, generated_at=generated_at, github_owner_repo=github_owner_repo,
     )

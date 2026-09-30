@@ -104,8 +104,8 @@ extracted: uppercase `.M` (~26 k occurrences) is not covered.
 
 | Frame | drawn from | drawn | fetched | judged |
 |---|---|---:|---:|---:|
-| **U** by file — uniform | ⟪p:unique_contents|,⟫ contents | 10 000 | ⟪a:n/U_used|,⟫ | ⟪a:n/U_judged|,⟫ |
-| **R** by repo — uniform repo, then one file | ⟪p:unique_origins|,⟫ repositories | 3 000 | ⟪a:n/R_used|,⟫ | ⟪a:n/R_judged|,⟫ |
+| **U** by file — uniform | ⟪p:unique_contents|,⟫ contents | 10 000 | ⟪a:n/U_used|,⟫ | ⟪a:n/U_judged|,⟫ random + ⟪a:M_tail_census/U/judged/tail|,⟫ tail census |
+| **R** by repo — uniform repo, then one file | ⟪p:unique_origins|,⟫ repositories | 3 000 | ⟪a:n/R_used|,⟫ | ⟪a:n/R_judged|,⟫ random + ⟪a:M_tail_census/R/judged/tail|,⟫ tail census |
 | **T** heavy tail — 4 files × 25 largest repos | 25 repositories | 100 | 100 | ⟪a:n/T_judged⟫ |
 
 The fractions are tiny, but U and R are uniform-random, so each is an unbiased
@@ -115,7 +115,9 @@ sample**: the rate-limited fetch (1 200 SWH requests an hour) could stop anywher
 without biasing a frame. Two more frames cost nothing: **by path** (U re-weighted
 by 1 / versions of its `(repository, path)`) and **by repo, re-weighted** (U
 re-weighted by 1 / contents in its repository — a cross-check on R). Their
-weights are computed exactly from the full population table.
+weights are computed exactly from the full population table. Finally, every
+fetched file that our rules place outside Objective-C and MATLAB is judged too —
+a **tail census** (E10) that sizes the rare notations.
 
 ### 2.2 Pipeline
 
@@ -142,7 +144,7 @@ revision: `docs/swh_extension_study_playbook.md`, *Revision 2*):
 | The judge was **shown the indicators**, then compared with a classifier built on them — so COBOL's "95 % judge vs heuristic, an independent cross-check" was not independent. | The primary judge is **blind**; an ablation (E5) re-judges 300 files with indicators to measure anchoring. |
 | One model, one run. | A second vendor on the same 2 000 files; κ per field (E4); E5 doubles as a test–retest. |
 | Rules tuned and scored on the same labels (COBOL's P 1.00 / R 0.79 over the 162 files they came from). | Seven predictions, the samples and frozen v1 rules **committed before judging**; v2 tuned on 300 files only, scored on the other 1 700. |
-| ≤ 1 000 judged files per frame; the tail invisible. | Free labels on every fetched file, joined to the judged subset by PPI++. |
+| ≤ 1 000 judged files per frame; the tail invisible. | Free labels on every fetched file, joined to the judged subset by PPI++; a judged census of the tail stratum (E10). |
 | The population file was never row-audited. | Rows read = rows parsed = 51 414 668; three defect classes counted. |
 | The mapping was tested against the one language it named. | Every claimant tested, plus the mapping's own construction (§4.1). |
 
@@ -166,9 +168,10 @@ The crucial design variable is again the **sampling frame**; the new one is the
 | **E4** | Inter-model agreement | E1 + E2, second vendor | 1 991 | how much each field depends on the model |
 | **E5** | Anchoring | U ranks 1–300, judged *with* indicators | 299 | does showing features pull the judge toward our rules? |
 | **E6** | Existing identifiers | E1 + E2, 7 labellers | — | how Linguist, Pygments and Synid fail, and why |
-| **E7** | Cheap labels | U, R ranks 1 001–2 000 (reclassifier only) | — | how much a free classifier adds to 1 000 judged files |
+| **E7** | Cheap labels | U ranks 1 001–10 000, R 1 001–3 000 (free labels only) | — | how much a free classifier adds to 1 000 judged files |
 | **E8** | Heavy tail | T, 4 files × 25 largest repos | 100 | what the biggest repositories actually contain |
 | **E9** | Human audit | 100 from E1, stratified, weighted | pending | who is right when labellers disagree |
+| **E10** | Tail census | every fetched U/R file our rules place outside Objective-C/MATLAB | ⟪X:census_judged⟫ | how big each rare notation really is (two-phase stratified) |
 
 > **Why seven labellers and two judges?** Every earlier accuracy figure was
 > agreement with *one* model that had seen *our* features. Here the question
@@ -179,7 +182,8 @@ The crucial design variable is again the **sampling frame**; the new one is the
 Fixed throughout: temperature 0, structured outputs, sources truncated to 16 000
 characters for the judges, binary contents never sent to a judge (they count as
 "not code"). Spend: ⟪X:spend⟫. Seven hypotheses (H1–H7) were committed before the
-first judgement; they are scored in §4.4.
+first judgement; they are scored in §4.4. E10 was added afterwards (disclosed in
+the pre-registration's post-hoc notes).
 
 ## 4. Results
 
@@ -211,17 +215,30 @@ different route. With version history collapsed (by path) the two are level
 > template and class files; a MATLAB research repository carries many function
 > files **and** more archived revisions of each.
 
-**The tail: seven more notations.** By file, ⟪X:tail_pct⟫ % of `.m` is neither
-Objective-C nor MATLAB:
+**The tail: seven more notations.** In the judged sample, ⟪X:tail_pct⟫ % of files
+are neither Objective-C nor MATLAB — about 35 files, too few to size anything.
+The **tail census** (E10) fixes that. Of the ⟪X:census_u_phase1⟫ by-file and
+⟪X:census_r_phase1⟫ by-repo contents fetched, our rules place ⟪X:census_u_tail⟫ and
+⟪X:census_r_tail⟫ outside the two big languages; every one of them was judged, and a
+two-phase estimator combines that census with the random judged sample of the
+rest (`tools/m/tail.py`):
 
-⟪T:tail⟫
+⟪T:tail_census⟫
 
-- **Wolfram** — Mathematica packages, symbolic-integration rule sets (Rubi), and
-  computer-algebra *output* (a 250 kB asymptotic expansion written by Mathematica).
+*(Two-phase stratified estimates, 95 % intervals. The upper end allows for tail
+files our rules missed, bounded by the ⟪X:census_main_judged⟫ judged files of the
+main stratum — only ⟪X:census_missed⟫ of which turned out to be tail; conversely
+⟪X:census_false_tail⟫ files the rules sent to the tail were Objective-C or MATLAB.
+\* = claimed by no source in our mapping.)*
+
+- **Wolfram** — Mathematica packages (IGraph/M, FeynCalc, MathSBML's SBML
+  generator), symbolic-integration rule sets (Rubi), and computer-algebra
+  *output* (a 250 kB asymptotic expansion written by Mathematica).
 - **MUMPS** — VistA and RPMS routines of the US Veterans Affairs hospital system,
   released under FOIA and mirrored across many repositories.
-- **Magma** (*claimed by nothing*) — the *SolvableDessins* database, generated by
-  Magma scripts: the second-largest `.m` repository in the archive.
+- **Magma** (*claimed by nothing*) — as frequent as MUMPS by file: the
+  *SolvableDessins* databases generated by Magma scripts (the second-largest `.m`
+  repository in the archive) and research packages such as CHAMP.
 - **Mercury** — the Mercury compiler and standard library.
 - **Other languages** (*unclaimed*) — the **FreeBSD kobj interface definition
   language** (`mmcbus_if.m`), a **New Jersey Machine-Code Toolkit** specification
@@ -233,8 +250,9 @@ Objective-C nor MATLAB:
 
 **Against the mapping.** The mapping gets the two big languages right and four
 more that are really there (Octave, Wolfram, Mercury, MUMPS). It misses **Magma**,
-lists **Limbo** and **MUF**, which never occurred in 2 000 judged files (by-file
-upper bound 0.38 %), and lists three languages that have nothing to do with `.m`:
+lists **Limbo** and **MUF**, which never occurred — not in the judged samples, not
+in the tail census (by-file upper bound ⟪a:M_tail_census/U/estimates/limbo/ci/1⟫ %) —
+and lists three languages that have nothing to do with `.m`:
 **M4, Monkey C and Win32 Message File**. The cause is in
 `tools/master_inventory.py::match_pygments_name`: when a language's name matches
 no Pygments lexer, it falls back to *any lexer sharing an extension*. All three
@@ -435,10 +453,11 @@ unjudged files with the judge on the judged ones:
 
 ⟪X:ppi_table⟫
 
-With a free pool the size of the judged set, the tuned weight is λ ≈
-⟪X:ppi_lambda⟫ — a free label is worth about half a judged one — and intervals
-narrow by ⟪X:ppi_gain⟫ %, the precision of ~⟪X:ppi_eff⟫× as many judged files at no API
-cost.
+With ⟪X:ppi_pool_u⟫ free labels by file and ⟪X:ppi_pool_r⟫ by repository, the tuned
+weights are λ = ⟪X:ppi_lambda_u⟫ and ⟪X:ppi_lambda_r⟫, and intervals narrow by
+⟪X:ppi_gain_u⟫ % and ⟪X:ppi_gain_r⟫ % — the precision of ~⟪X:ppi_eff_u⟫× and
+~⟪X:ppi_eff_r⟫× as many judged files, at no API cost. For the rare notations, where
+PPI helps little, the tail census (E10) does the work.
 
 **Pre-registration.** Seven predictions were committed before judging; the
 verdicts are computed by `analysis.py`:
@@ -465,8 +484,9 @@ how the lexer bug in our own markers was found.
 >    ⟪a:A_language/by_file_coarse/matlab-family/pct|.0f⟫ % by file,
 >    ⟪a:A_language/by_repo_coarse/objective-c/pct|.0f⟫ % /
 >    ⟪a:A_language/by_repo_coarse/matlab-family/pct|.0f⟫ % by repository, a tie by path.
-> 2. A ⟪X:tail_pct⟫ % **tail of seven notations** — four of them (Magma, the FreeBSD
->    IDL, NJMC, PML XML) claimed by no source; Limbo and MUF, claimed, never seen.
+> 2. A **tail of seven notations** (tail census, by file: ⟪X:m_u⟫) — four of them
+>    (Magma, the FreeBSD IDL, NJMC, PML XML) claimed by no source; Limbo and MUF,
+>    claimed, never seen.
 > 3. **Much of `.m` is replication:** ⟪X:oc_nonhand_repo⟫ % of Objective-C drawn per
 >    repository is templates, vendored or dumped; Xcode template names sit in
 >    ⟪s:families/xcode_template_names/pct_repos|.0f⟫ % of `.m` repositories;
@@ -489,9 +509,10 @@ how the lexer bug in our own markers was found.
 >    ablation costs little and settles the question.
 > 4. **Lexical facts need a lexer.** Regexes that cannot see strings and comments
 >    produce false "judge errors".
-> 5. **Pre-register, and use cheap labels with PPI.** Failed predictions were the
->    most informative results; a validated free classifier doubles the effective
->    judged sample.
+> 5. **Pre-register, and let cheap labels carry the volume.** Failed predictions
+>    were the most informative results; a validated free classifier multiplies the
+>    effective judged sample (~⟪X:ppi_eff_u⟫× by file via PPI++) and makes a judged
+>    census of the rare strata affordable.
 
 ## 6. Limitations
 
@@ -499,9 +520,9 @@ how the lexer bug in our own markers was found.
   correlated evidence (same bytes, same path). The 100-item blind audit queued in
   the review app (Appendix A) is the step that replaces it — none of the four
   studies has run one yet.
-- **The tail is thin:** ⟪X:tail_pct⟫ % of 1 000 files is ~35 files over seven
-  notations; below 1 % intervals are wide. A tail-targeted sample (the
-  reclassifier makes it cheap) would size Magma, MUMPS and Mercury properly.
+- **The tail is sized, not settled.** The census pins each rare notation from
+  below; the upper ends are limited by the ~1 000 judged main-stratum files per
+  frame, where a tail file our rules missed would hide (only ⟪X:census_missed⟫ did).
 - **One provenance context per content;** by-repo frames under-count widely
   shared files, so template shares are conservative. Timestamps are visit dates.
 - **Only lowercase `.m`** — `.M` and `.mm` (Objective-C++) are outside the
@@ -522,6 +543,7 @@ python3 -m tools.m.fetch                                           # SWH_TOKEN i
 python3 -m tools.m.study --label && python3 -m tools.m.run_synid   # free labellers
 python3 -m tools.m.study --judge --n 1000                          # + --model google/gemini-3.8-flash
 python3 -m tools.m.study --judge --n 300 --frames U --with-indicators   # E5
+python3 -m tools.m.tail --select && python3 -m tools.m.tail --judge     # E10 tail census
 python3 -m tools.m.analysis && .venv/bin/python -m tools.m.make_figures
 python3 -m tools.m.build_report --pdf                              # this report
 python3 -m tools.m.audit --build && python3 -m tools.m.review_app  # E9

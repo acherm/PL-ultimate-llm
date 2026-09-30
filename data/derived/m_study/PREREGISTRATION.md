@@ -60,3 +60,9 @@ v1 reclassifier so the git timestamp is the evidence.
 - *Rate limit.* The SWH quota turned out to be 1,200 requests/hour, not ~4,000; the
   cheap-label extension of U and R stops at whatever rank prefix was fetched when the
   report was written (each prefix is an SRS by construction).
+- *Addition (E10, tail census).* After the report's first version, every fetched
+  U/R content that the reclassifier places outside Objective-C/MATLAB was judged by
+  both models and combined with the judged random sample in a two-phase stratified
+  estimator (`tools/m/tail.py`, `analysis.py` section M). Not pre-registered; it
+  changes no pre-registered estimate, only sizes the tail. PPI's free pool was
+  widened at the same time to every fetched rank (U ≤ 10 000, R ≤ 3 000).

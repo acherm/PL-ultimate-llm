@@ -32,7 +32,7 @@ from tools.m.data import J1, J2, J1_IND, STUDY, load
 ROOT = Path(__file__).resolve().parents[2]
 OUT = STUDY / "analysis.json"
 N_JUDGED = 1000          # judged rank prefix in each of U and R
-PPI_MAX_RANK = 2000      # PPI unlabelled pool = ranks N_JUDGED+1 .. PPI_MAX_RANK in each frame
+PPI_MAX_RANK = {"U": 10000, "R": 3000}   # PPI unlabelled pool = every fetched rank > N_JUDGED
 TUNING_MAX_RANK = 300    # U ranks 1..300 = tuning split for reclassifier revisions
 
 MAIN_LANGS = ["objective-c", "matlab", "octave", "mathematica-wolfram", "mercury", "mumps-m",
@@ -100,7 +100,7 @@ def section_a(U, R, Uall, Rall):
     for name, lab, allf, frame in (("ppi_by_file", U, Uall, "U"), ("ppi_by_repo", R, Rall, "R")):
         labelled = {r.sha for r in lab}
         unl = [r for r in allf if r.sha not in labelled
-               and N_JUDGED < (r.u_rank if frame == "U" else r.d_rank) <= PPI_MAX_RANK]
+               and N_JUDGED < (r.u_rank if frame == "U" else r.d_rank) <= PPI_MAX_RANK[frame]]
         res = {}
         for c in COARSE:
             gold = [int(coarse(L(r)) == c) for r in lab]
@@ -429,7 +429,7 @@ def section_l(recs):
     from tools.cobol.common import CACHE_DIR
     groups = defaultdict(list)
     for r in recs.values():
-        in_scope = r.in_frame("U", PPI_MAX_RANK) or r.in_frame("R", PPI_MAX_RANK)
+        in_scope = r.in_frame("U", PPI_MAX_RANK["U"]) or r.in_frame("R", PPI_MAX_RANK["R"])
         if r.row["name"] in ("main.m", "AppDelegate.m", "ViewController.m", "SceneDelegate.m") and r.labels and in_scope:
             p = CACHE_DIR / f"{r.sha}.bin"
             if p.exists():
@@ -441,6 +441,77 @@ def section_l(recs):
                     for t in texts)
         out[name] = {"distinct_contents": len(texts), "distinct_without_comments": len(c),
                      "largest_cluster": c.most_common(1)[0][1] if c else 0}
+    return out
+
+
+# ---------------------------------------------------------------- M: tail census (two-phase stratified)
+TAIL_CLASSES = ["mathematica-wolfram", "mumps-m", "magma", "mercury", "maple", "scilab", "limbo", "muf",
+                "mason", "c-or-cpp", "other-programming-language", "not-code", "unknown", "octave"]
+
+
+def section_m(recs):
+    """p̂(c) = Σ_h W_h p̂_h(c) over strata {main, tail} defined by our rules (tools/m/tail.py).
+
+    Variance for double sampling for stratification (Cochran 1977, §12.2):
+      V = Σ_h W_h² (1 − f_h) s_h² / n_h  +  (1 / n1) Σ_h W_h (p̂_h − p̂)²
+    with f_h = n_h / m_h the judged fraction of stratum h (1 for the tail census).
+    """
+    import math
+    from tools.m.tail import phase1, stratum
+    out = {}
+    for frame in ("U", "R"):
+        p1 = phase1(recs, frame)
+        n1 = len(p1)
+        if not n1:
+            continue
+        strata = {"main": [r for _, r in p1 if stratum(r) == "main"],
+                  "tail": [r for _, r in p1 if stratum(r) == "tail"]}
+        rank = (lambda r: r.u_rank) if frame == "U" else (lambda r: r.d_rank)
+        judged = {"main": [r for r in strata["main"] if rank(r) <= N_JUDGED and r.lang("judge")],
+                  "tail": [r for r in strata["tail"] if r.lang("judge")]}
+        W = {h: len(strata[h]) / n1 for h in strata}
+        f = {h: len(judged[h]) / max(len(strata[h]), 1) for h in strata}
+        est = {}
+        for c in TAIL_CLASSES + ["objective-c", "matlab-family"]:
+            is_c = (lambda r: coarse(r.lang("judge")) == c) if c in ("objective-c", "matlab-family") \
+                else (lambda r: r.lang("judge") == c)
+            ph, s2 = {}, {}
+            for h in strata:
+                xs = [int(is_c(r)) for r in judged[h]]
+                n = len(xs)
+                ph[h] = sum(xs) / n if n else 0.0
+                s2[h] = ph[h] * (1 - ph[h]) * n / (n - 1) if n > 1 else 0.0
+            p = sum(W[h] * ph[h] for h in strata)
+            v = sum(W[h] ** 2 * (1 - min(f[h], 1)) * s2[h] / max(len(judged[h]), 1) for h in strata) \
+                + sum(W[h] * (ph[h] - p) ** 2 for h in strata) / n1
+            se = math.sqrt(max(v, 0))
+            k_tail = sum(is_c(r) for r in judged["tail"])
+            k_main = sum(is_c(r) for r in judged["main"])
+            # conservative interval: the main-stratum share enters through its Wilson interval (which
+            # does not collapse at 0 hits — rules may still miss tail files there), plus the phase-1 term
+            n_m = len(judged["main"])
+            _, lo_m, hi_m = S.wilson(k_main, n_m)
+            v1 = sum(W[h] * (ph[h] - p) ** 2 for h in strata) / n1 \
+                + W["tail"] ** 2 * (1 - min(f["tail"], 1)) * s2["tail"] / max(len(judged["tail"]), 1)
+            base = W["tail"] * ph["tail"]
+            lo = base + W["main"] * lo_m - S.Z * math.sqrt(max(v1, 0))
+            hi = base + W["main"] * hi_m + S.Z * math.sqrt(max(v1, 0))
+            est[c] = {"pct": pct(p), "ci": [pct(max(0.0, lo)), pct(min(1.0, hi))],
+                      "ci_normal": [pct(max(0.0, p - S.Z * se)), pct(min(1.0, p + S.Z * se))],
+                      "files_in_tail_census": k_tail, "files_in_main_subsample": k_main}
+        tail_j = judged["tail"]
+        out[frame] = {
+            "phase1_n": n1, "strata": {h: len(strata[h]) for h in strata},
+            "judged": {h: len(judged[h]) for h in strata},
+            "tail_stratum_not_tail_per_judge": sum(coarse(r.lang("judge")) in ("objective-c", "matlab-family")
+                                                   for r in tail_j),
+            "main_subsample_tail_per_judge": sum(coarse(r.lang("judge")) not in ("objective-c", "matlab-family")
+                                                 for r in judged["main"]),
+            "estimates": est,
+            "tail_examples": sorted({(r.lang("judge"), (r.v("judge") or {}).get("language_detail", "")[:70],
+                                      (r.row.get("origin") or "").replace("https://", ""))
+                                     for r in tail_j if coarse(r.lang("judge")) not in ("objective-c", "matlab-family")}),
+        }
     return out
 
 
@@ -525,8 +596,8 @@ def main():
     res = {
         "n": {"U_judged": len(U), "R_judged": len(R), "T_judged": len(T),
               "U_labelled": len(Uall), "R_labelled": len(Rall),
-              "U_used": sum(1 for r in Uall if r.u_rank <= PPI_MAX_RANK),
-              "R_used": sum(1 for r in Rall if r.d_rank <= PPI_MAX_RANK),
+              "U_used": sum(1 for r in Uall if r.u_rank <= PPI_MAX_RANK["U"]),
+              "R_used": sum(1 for r in Rall if r.d_rank <= PPI_MAX_RANK["R"]),
               "judge2": sum(1 for r in recs_j if r.v("judge2")),
               "judge_ind": sum(1 for r in recs.values() if r.v("judge_ind"))},
         "cost": judge_costs(),
@@ -541,6 +612,7 @@ def main():
         "I_tail": section_i(recs, U, R, T),
         "J_duplication": section_j(U, R),
         "L_near_duplicates": section_l(recs),
+        "M_tail_census": section_m(recs),
     }
     res["K_prereg"] = section_k(res, U, R, recs_j)
     OUT.write_text(json.dumps(res, indent=1, ensure_ascii=False), encoding="utf-8")

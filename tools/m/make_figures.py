@@ -243,11 +243,18 @@ def fig_languages(a):
              "not-code": "not code*", "limbo": "Limbo", "muf": "MUF"}
     fig, ax = plt.subplots(figsize=(7.6, 4.1))
     NONE_X = 0.045
-    for off, key, lab in ((-.17, "by_file", "by file (U, n = 1,000)"), (.17, "by_repo", "by repo (R, n = 1,000)")):
-        d, col = A[key], FRAME_COL[key]
+    M = a.get("M_tail_census", {})
+    for off, key, frame, lab in ((-.17, "by_file", "U", "by file (U)"), (.17, "by_repo", "R", "by repo (R)")):
+        col = FRAME_COL[key]
+        est = (M.get(frame) or {}).get("estimates", {})
         for i, lang in enumerate(order):
             y = len(order) - 1 - i + off
-            v = d.get(lang)
+            if lang in est:            # two-phase tail-census estimate (tools/m/tail.py)
+                e = est[lang]
+                v = {"pct": e["pct"], "ci": e["ci"],
+                     "n": e["files_in_tail_census"] + e["files_in_main_subsample"]}
+            else:                      # the two big languages: judged frame
+                v = A[key].get(lang)
             if not v or not v["n"]:
                 ax.plot(NONE_X, y, marker="x", ms=5, mew=1.4, color=col)
                 continue
@@ -265,7 +272,7 @@ def fig_languages(a):
     ax.set_yticks(range(len(order)))
     ax.set_yticklabels([names[l] for l in order][::-1])
     ax.grid(axis="y", visible=False)
-    ax.set_xlabel("share of judged files (log) · line = 95% CI · number = files")
+    ax.set_xlabel("share of .m (log) · line = 95% CI · number = files judged · tail: two-phase census")
     ax.set_title("What is in the .m space? Two languages and a long tail")
     ax.legend(loc="lower right", frameon=False, fontsize=8)
     fig.text(0.01, -0.02, "* claimed by no source in our extension→language mapping", fontsize=7.5, color=INK2)

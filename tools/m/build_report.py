@@ -42,7 +42,7 @@ def load():
 
 def lookup(doc, path):
     for k in path.split("/"):
-        doc = doc[k]
+        doc = doc[int(k)] if isinstance(doc, list) else doc[k]
     return doc
 
 
@@ -64,6 +64,29 @@ def tail_table(A):
             g = rows[k]
             out.append(f"| {k} | {g['U']} | {g['R']} | {', '.join(dict.fromkeys(g['ex']))} |")
     return "\n".join(out)
+
+
+def tail_census(A):
+    M = A["M_tail_census"]
+    names = {"mathematica-wolfram": "Wolfram / Mathematica", "mumps-m": "MUMPS (M)", "magma": "Magma *",
+             "mercury": "Mercury", "c-or-cpp": "C *", "other-programming-language": "other languages *",
+             "not-code": "not code *", "limbo": "Limbo", "muf": "MUF", "octave": "Octave (Octave-only syntax)"}
+    ex = defaultdict(list)
+    for lang, _detail, origin in M["U"]["tail_examples"] + M["R"]["tail_examples"]:
+        parts = [x for x in re.sub(r"^[a-z+]+://", "", origin).split("/") if x]
+        owner = parts[1] if len(parts) > 1 and parts[0] in ("github.com", "gitlab.com", "bitbucket.org") \
+            else (parts[0] if parts else "")
+        if owner and owner not in ex[lang] and len(ex[lang]) < 3:
+            ex[lang].append(owner)
+    rows = ["| notation | by file (U) | by repo (R) | files judged (U + R) | e.g. repositories of |",
+            "|---|---:|---:|---:|---|"]
+    for c in ("mathematica-wolfram", "mumps-m", "magma", "mercury", "c-or-cpp", "other-programming-language",
+              "not-code", "limbo", "muf"):
+        u, r = M["U"]["estimates"][c], M["R"]["estimates"][c]
+        k = u["files_in_tail_census"] + u["files_in_main_subsample"] + r["files_in_tail_census"] + r["files_in_main_subsample"]
+        cell = lambda v: f"{v['pct']:.1f} % [{v['ci'][0]:.1f}–{v['ci'][1]:.1f}]"  # noqa: E731
+        rows.append(f"| {names[c]} | {cell(u)} | {cell(r)} | {k} | {', '.join(ex.get(c, [])) or '—'} |")
+    return "\n".join(rows)
 
 
 def octave3(A):
@@ -130,8 +153,33 @@ def derived(D):
         "ppi_gain": f"{100 * gain:.0f}",
         "ppi_eff": f"{1 / (1 - gain) ** 2:.1f}",
         "t_nonhand": f"{A['I_tail']['top_mostly_not_hand_written']}",
+        "census_judged": f"{sum(A['M_tail_census'][f]['judged']['tail'] for f in ('U', 'R')):,}",
+        "census_u_phase1": f"{A['M_tail_census']['U']['phase1_n']:,}",
+        "census_r_phase1": f"{A['M_tail_census']['R']['phase1_n']:,}",
+        "census_u_tail": f"{A['M_tail_census']['U']['strata']['tail']:,}",
+        "census_r_tail": f"{A['M_tail_census']['R']['strata']['tail']:,}",
+        "census_u_tail_pct": f"{100 * A['M_tail_census']['U']['strata']['tail'] / A['M_tail_census']['U']['phase1_n']:.1f}",
+        "census_false_tail": f"{A['M_tail_census']['U']['tail_stratum_not_tail_per_judge'] + A['M_tail_census']['R']['tail_stratum_not_tail_per_judge']}",
+        "census_missed": f"{A['M_tail_census']['U']['main_subsample_tail_per_judge'] + A['M_tail_census']['R']['main_subsample_tail_per_judge']}",
+        "census_main_judged": f"{A['M_tail_census']['U']['judged']['main'] + A['M_tail_census']['R']['judged']['main']:,}",
+        "ppi_pool_u": f"{A['A_language']['ppi_by_file']['n_unlabelled']:,}",
+        "ppi_pool_r": f"{A['A_language']['ppi_by_repo']['n_unlabelled']:,}",
+        "ppi_gain_u": f"{100 * (1 - A['A_language']['ppi_by_file']['classes']['objective-c']['width_ratio']):.0f}",
+        "ppi_gain_r": f"{100 * (1 - A['A_language']['ppi_by_repo']['classes']['objective-c']['width_ratio']):.0f}",
+        "ppi_eff_u": f"{1 / A['A_language']['ppi_by_file']['classes']['objective-c']['width_ratio'] ** 2:.1f}",
+        "ppi_eff_r": f"{1 / A['A_language']['ppi_by_repo']['classes']['objective-c']['width_ratio'] ** 2:.1f}",
+        "ppi_lambda_u": f"{A['A_language']['ppi_by_file']['classes']['objective-c']['lambda']:.2f}",
+        "ppi_lambda_r": f"{A['A_language']['ppi_by_repo']['classes']['objective-c']['lambda']:.2f}",
+        "m_u": lambda_fmt(A, "U"), "m_r": lambda_fmt(A, "R"),
         **prereg(A),
     }
+
+
+def lambda_fmt(A, frame):
+    e = A["M_tail_census"][frame]["estimates"]
+    return "; ".join(f"{n} {e[c]['pct']:.1f} %" for c, n in (("mathematica-wolfram", "Wolfram"),
+                                                              ("mumps-m", "MUMPS"), ("magma", "Magma"),
+                                                              ("mercury", "Mercury"), ("not-code", "not code")))
 
 
 def prereg(A):
@@ -163,7 +211,8 @@ def prereg(A):
 def render(D):
     RT.A = D["a"]
     X = derived(D)
-    tables = {"tail": lambda: tail_table(D["a"]), "octave3": lambda: octave3(D["a"])}
+    tables = {"tail": lambda: tail_table(D["a"]), "octave3": lambda: octave3(D["a"]),
+              "tail_census": lambda: tail_census(D["a"])}
 
     def sub(m):
         src, key, fmt = m.group(1), m.group(2), m.group(3)

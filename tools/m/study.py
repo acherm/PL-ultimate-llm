@@ -128,7 +128,7 @@ def judge_targets(n: int, frames: str = "UR") -> list[dict]:
 
 
 def do_judge(n: int, model: str, workers: int, max_cost: float, frames: str = "UR",
-             with_indicators: bool = False, retry_failed: bool = False):
+             with_indicators: bool = False, retry_failed: bool = False, targets: list[dict] | None = None):
     from tools.m import judge as judge_mod
     outdir = JUDGE / slug(model, with_indicators)
     outdir.mkdir(parents=True, exist_ok=True)
@@ -149,7 +149,7 @@ def do_judge(n: int, model: str, workers: int, max_cost: float, frames: str = "U
     spent = sum((json.loads(p.read_text()).get("usage") or {}).get("cost", 0) or 0
                 for p in list(outdir.glob("*.json")) + list(outdir.glob("_failed/*.json")))
     todo = []
-    for r in judge_targets(n, frames):
+    for r in (targets if targets is not None else judge_targets(n, frames)):
         if (outdir / f"{r['sha1_git']}.json").exists():
             continue
         raw = raw_bytes(r["sha1_git"])

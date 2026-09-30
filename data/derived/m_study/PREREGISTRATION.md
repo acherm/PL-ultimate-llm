@@ -56,7 +56,9 @@ v1 reclassifier so the git timestamp is the evidence.
   repositories) was added after calibration, as a descriptive frame; it is not used
   for any proportion.
 - *Deviation.* The judge's `language="unknown"` is normalised to `not-code` when its
-  own `content_type` is markup/text/binary/empty/config (the XML treebank files).
+  own `content_type` is markup/text/binary/empty/config (the XML treebank files); and,
+  added with the tail census, `unknown`/`other-programming-language` is normalised to
+  `not-code` when the judge's own `is_programming_language` is false (22 verdicts).
 - *Rate limit.* The SWH quota turned out to be 1,200 requests/hour, not ~4,000; the
   cheap-label extension of U and R stops at whatever rank prefix was fetched when the
   report was written (each prefix is an SRS by construction).

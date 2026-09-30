@@ -164,8 +164,8 @@ The crucial design variable is again the **sampling frame**; the new one is the
 |---|---|---|---:|---|
 | **E1** | File-level population | U, uniform by file | 1 000 | which language a random `.m` *file* is |
 | **E2** | Project-level population | R, one file per repo (+ free re-weightings of U) | 1 000 | which language a random `.m` *repository* holds |
-| **E3** | Lexical vs semantic | MATLAB-family files of E1–E2 | 698 | who decides "Octave": the syntax or the judge? |
-| **E4** | Inter-model agreement | E1 + E2, second vendor | 1 991 | how much each field depends on the model |
+| **E3** | Lexical vs semantic | MATLAB-family files of E1–E2 | ⟪a:D_octave/n_matlab_family|,⟫ | who decides "Octave": the syntax or the judge? |
+| **E4** | Inter-model agreement | E1 + E2, second vendor | ⟪a:n/judge2|,⟫ | how much each field depends on the model |
 | **E5** | Anchoring | U ranks 1–300, judged *with* indicators | 299 | does showing features pull the judge toward our rules? |
 | **E6** | Existing identifiers | E1 + E2, 7 labellers | — | how Linguist, Pygments and Synid fail, and why |
 | **E7** | Cheap labels | U ranks 1 001–10 000, R 1 001–3 000 (free labels only) | — | how much a free classifier adds to 1 000 judged files |
@@ -242,17 +242,20 @@ main stratum — only ⟪X:census_missed⟫ of which turned out to be tail; conv
 - **Mercury** — the Mercury compiler and standard library.
 - **Other languages** (*unclaimed*) — the **FreeBSD kobj interface definition
   language** (`mmcbus_if.m`), a **New Jersey Machine-Code Toolkit** specification
-  from the Boomerang decompiler, *Monty* bytecode from a coding-school exercise, C
-  in a `main.m`.
+  from the Boomerang decompiler, a Fortran 90 module, sources of the HBC Haskell
+  compiler, *Monty* bytecode from a coding-school exercise, hobby languages, C in a
+  `main.m`, C emitted by the XMLVM cross-compiler, and a **feature-model DSL** (an
+  SPL alternative-group file).
 - **Not code** (*unclaimed*) — **PML**, the XML morphological layer of the Prague
-  Dependency Treebank; READMEs; a file holding only a UUID; macOS AppleDouble
-  metadata; one git-annex pointer.
+  Dependency Treebank; numeric matrices; MCNP simulation tallies shipped in PyPI
+  packages; READMEs; a commit bot's UUID-only `helloWorld.m`; macOS AppleDouble
+  metadata; Emacs lock files; one git-annex pointer.
 
 **Against the mapping.** The mapping gets the two big languages right and four
 more that are really there (Octave, Wolfram, Mercury, MUMPS). It misses **Magma**,
-lists **Limbo** and **MUF**, which never occurred — not in the judged samples, not
-in the tail census (by-file upper bound ⟪a:M_tail_census/U/estimates/limbo/ci/1⟫ %) —
-and lists three languages that have nothing to do with `.m`:
+lists **MUF**, which never occurred, and **Limbo**, which the tail census found
+exactly once in 10 000 files (an Inferno module interface in a git-filesystem
+project; by-file upper bound ⟪a:M_tail_census/U/estimates/limbo/ci/1⟫ %) — and lists three languages that have nothing to do with `.m`:
 **M4, Monkey C and Win32 Message File**. The cause is in
 `tools/master_inventory.py::match_pygments_name`: when a language's name matches
 no Pygments lexer, it falls back to *any lexer sharing an extension*. All three
@@ -433,8 +436,8 @@ Octave, while only ⟪X:port_lex⟫ % use a lexical MATLAB-only construct.
 > aggregate fields below ~0.7 (`maturity`, `matlab_dialect`) without a human audit.
 
 **Anchoring (E5).** Shown the indicators, the judge changed its language label on
-⟪a:E_anchoring/language_flips⟫ of ⟪a:E_anchoring/n⟫ files (one toward our rules, one
-away); agreement with our rules was ⟪a:E_anchoring/agree_with_ours_blind⟫ % blind and
+⟪a:E_anchoring/language_flips⟫ of ⟪a:E_anchoring/n⟫ files (⟪a:E_anchoring/flips_toward_ours⟫ toward
+our rules); agreement with our rules was ⟪a:E_anchoring/agree_with_ours_blind⟫ % blind and
 ⟪a:E_anchoring/agree_with_ours_shown⟫ % shown. On a task this lexical, the indicators
 add nothing the judge does not already read in the bytes.
 
@@ -484,9 +487,9 @@ how the lexer bug in our own markers was found.
 >    ⟪a:A_language/by_file_coarse/matlab-family/pct|.0f⟫ % by file,
 >    ⟪a:A_language/by_repo_coarse/objective-c/pct|.0f⟫ % /
 >    ⟪a:A_language/by_repo_coarse/matlab-family/pct|.0f⟫ % by repository, a tie by path.
-> 2. A **tail of seven notations** (tail census, by file: ⟪X:m_u⟫) — four of them
->    (Magma, the FreeBSD IDL, NJMC, PML XML) claimed by no source; Limbo and MUF,
->    claimed, never seen.
+> 2. A **tail of rare notations** (tail census, by file: ⟪X:m_u⟫) — several
+>    (Magma, the FreeBSD IDL, NJMC, PML XML, Fortran, a feature-model DSL) claimed
+>    by no source; Limbo, claimed, seen once in 10 000 files; MUF never.
 > 3. **Much of `.m` is replication:** ⟪X:oc_nonhand_repo⟫ % of Objective-C drawn per
 >    repository is templates, vendored or dumped; Xcode template names sit in
 >    ⟪s:families/xcode_template_names/pct_repos|.0f⟫ % of `.m` repositories;
@@ -528,8 +531,10 @@ how the lexer bug in our own markers was found.
 - **Only lowercase `.m`** — `.M` and `.mm` (Objective-C++) are outside the
   extraction.
 - **Post-hoc elements are marked as such:** reclassifier v2, the comment- and
-  string-aware Octave markers, the "unknown → not code" normalisation for the
-  judges' non-code labels, frame T.
+  string-aware Octave markers, frame T, the tail census (E10), and the
+  normalisation of judge labels to "not code" when the judge's own fields say so
+  (language "unknown"/"other" with `is_programming_language = false`, or
+  "unknown" on markup/text).
 
 ## 7. Reproducibility & artefacts
 

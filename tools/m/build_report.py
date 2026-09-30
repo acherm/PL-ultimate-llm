@@ -84,7 +84,10 @@ def tail_census(A):
               "not-code", "limbo", "muf"):
         u, r = M["U"]["estimates"][c], M["R"]["estimates"][c]
         k = u["files_in_tail_census"] + u["files_in_main_subsample"] + r["files_in_tail_census"] + r["files_in_main_subsample"]
-        cell = lambda v: f"{v['pct']:.1f} % [{v['ci'][0]:.1f}–{v['ci'][1]:.1f}]"  # noqa: E731
+        def cell(v):
+            n = v["files_in_tail_census"] + v["files_in_main_subsample"]
+            est = "<0.1" if n and v["pct"] < 0.05 else f"{v['pct']:.1f}"
+            return f"{est} % [{v['ci'][0]:.1f}–{v['ci'][1]:.1f}]"
         rows.append(f"| {names[c]} | {cell(u)} | {cell(r)} | {k} | {', '.join(ex.get(c, [])) or '—'} |")
     return "\n".join(rows)
 

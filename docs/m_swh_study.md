@@ -104,8 +104,8 @@ extracted: uppercase `.M` (~26 k occurrences) is not covered.
 
 | Frame | drawn from | drawn | fetched | judged |
 |---|---|---:|---:|---:|
-| **U** by file — uniform | 51,414,668 contents | 10 000 | 2,000 | 1,000 |
-| **R** by repo — uniform repo, then one file | 2,076,824 repositories | 3 000 | 2,000 | 1,000 |
+| **U** by file — uniform | 51,414,668 contents | 10 000 | 10,000 | 1,000 random + 368 tail census |
+| **R** by repo — uniform repo, then one file | 2,076,824 repositories | 3 000 | 3,000 | 1,000 random + 55 tail census |
 | **T** heavy tail — 4 files × 25 largest repos | 25 repositories | 100 | 100 | 100 |
 
 The fractions are tiny, but U and R are uniform-random, so each is an unbiased
@@ -115,7 +115,9 @@ sample**: the rate-limited fetch (1 200 SWH requests an hour) could stop anywher
 without biasing a frame. Two more frames cost nothing: **by path** (U re-weighted
 by 1 / versions of its `(repository, path)`) and **by repo, re-weighted** (U
 re-weighted by 1 / contents in its repository — a cross-check on R). Their
-weights are computed exactly from the full population table.
+weights are computed exactly from the full population table. Finally, every
+fetched file that our rules place outside Objective-C and MATLAB is judged too —
+a **tail census** (E10) that sizes the rare notations.
 
 ### 2.2 Pipeline
 
@@ -142,7 +144,7 @@ revision: `docs/swh_extension_study_playbook.md`, *Revision 2*):
 | The judge was **shown the indicators**, then compared with a classifier built on them — so COBOL's "95 % judge vs heuristic, an independent cross-check" was not independent. | The primary judge is **blind**; an ablation (E5) re-judges 300 files with indicators to measure anchoring. |
 | One model, one run. | A second vendor on the same 2 000 files; κ per field (E4); E5 doubles as a test–retest. |
 | Rules tuned and scored on the same labels (COBOL's P 1.00 / R 0.79 over the 162 files they came from). | Seven predictions, the samples and frozen v1 rules **committed before judging**; v2 tuned on 300 files only, scored on the other 1 700. |
-| ≤ 1 000 judged files per frame; the tail invisible. | Free labels on every fetched file, joined to the judged subset by PPI++. |
+| ≤ 1 000 judged files per frame; the tail invisible. | Free labels on every fetched file, joined to the judged subset by PPI++; a judged census of the tail stratum (E10). |
 | The population file was never row-audited. | Rows read = rows parsed = 51 414 668; three defect classes counted. |
 | The mapping was tested against the one language it named. | Every claimant tested, plus the mapping's own construction (§4.1). |
 
@@ -163,12 +165,13 @@ The crucial design variable is again the **sampling frame**; the new one is the
 | **E1** | File-level population | U, uniform by file | 1 000 | which language a random `.m` *file* is |
 | **E2** | Project-level population | R, one file per repo (+ free re-weightings of U) | 1 000 | which language a random `.m` *repository* holds |
 | **E3** | Lexical vs semantic | MATLAB-family files of E1–E2 | 698 | who decides "Octave": the syntax or the judge? |
-| **E4** | Inter-model agreement | E1 + E2, second vendor | 1 991 | how much each field depends on the model |
+| **E4** | Inter-model agreement | E1 + E2, second vendor | 1,991 | how much each field depends on the model |
 | **E5** | Anchoring | U ranks 1–300, judged *with* indicators | 299 | does showing features pull the judge toward our rules? |
 | **E6** | Existing identifiers | E1 + E2, 7 labellers | — | how Linguist, Pygments and Synid fail, and why |
-| **E7** | Cheap labels | U, R ranks 1 001–2 000 (reclassifier only) | — | how much a free classifier adds to 1 000 judged files |
+| **E7** | Cheap labels | U ranks 1 001–10 000, R 1 001–3 000 (free labels only) | — | how much a free classifier adds to 1 000 judged files |
 | **E8** | Heavy tail | T, 4 files × 25 largest repos | 100 | what the biggest repositories actually contain |
 | **E9** | Human audit | 100 from E1, stratified, weighted | pending | who is right when labellers disagree |
+| **E10** | Tail census | every fetched U/R file our rules place outside Objective-C/MATLAB | 423 | how big each rare notation really is (two-phase stratified) |
 
 > **Why seven labellers and two judges?** Every earlier accuracy figure was
 > agreement with *one* model that had seen *our* features. Here the question
@@ -178,8 +181,9 @@ The crucial design variable is again the **sampling frame**; the new one is the
 
 Fixed throughout: temperature 0, structured outputs, sources truncated to 16 000
 characters for the judges, binary contents never sent to a judge (they count as
-"not code"). Spend: Sonnet $25.41 (2,093 calls), Gemini $8.08 (2,105, 12 empty responses retried), anchoring ablation $3.99 (299) — **$37.48** for 4,481 verdicts. Seven hypotheses (H1–H7) were committed before the
-first judgement; they are scored in §4.4.
+"not code"). Spend: Sonnet $32.07 (2,395 calls), Gemini $10.35 (2,412, 21 empty responses retried), anchoring ablation $3.99 (299) — **$46.41** for 5,083 verdicts. Seven hypotheses (H1–H7) were committed before the
+first judgement; they are scored in §4.4. E10 was added afterwards (disclosed in
+the pre-registration's post-hoc notes).
 
 ## 4. Results
 
@@ -191,12 +195,12 @@ first judgement; they are scored in §4.4.
 
 | language | by file (U, judged) | by file, PPI | by path (U reweighted) | by repo (U reweighted) | by repo (R, judged) | by repo, PPI |
 |---|---:|---:|---:|---:|---:|---:|
-| Objective-C | 53.7% [50.6–56.8] | 55.1% [52.9–57.3] | 49.5% [45.6–53.4] | 69.9% [60.2–77.5] | 71.2% [68.3–73.9] | 70.0% [68.0–72.1] |
-| MATLAB / Octave | 42.8% [39.8–45.9] | 41.7% [39.5–43.9] | 47.4% [43.6–51.4] | 29.7% [21.6–38.8] | 27.0% [24.3–29.8] | 28.1% [26.1–30.1] |
-| Wolfram | 1.0% [0.5–1.8] | 0.4% [0.0–0.7] | 1.2% [0.5–2.3] | 0.3% [0.0–3.5] | 0.4% [0.2–1.0] | 0.4% [0.1–0.7] |
-| other code | 1.7% [1.1–2.7] | 1.9% [1.2–2.6] | 1.3% [0.6–2.5] | 0.1% [0.0–3.5] | 0.5% [0.2–1.2] | 0.5% [0.1–0.9] |
-| not code | 0.8% [0.4–1.6] | 0.8% [0.4–1.3] | 0.6% [0.2–1.6] | 0.0% [0.0–3.5] | 0.7% [0.3–1.4] | 0.6% [0.2–1.1] |
-| *n* | 1000 | 1000+1000 | n_eff≈632 | n_eff≈105 | 1000 | 1000+1000 |
+| Objective-C | 53.7% [50.6–56.8] | 55.6% [54.6–56.6] | 49.5% [45.6–53.4] | 69.9% [60.2–77.5] | 71.2% [68.3–73.9] | 69.8% [68.2–71.5] |
+| MATLAB / Octave | 42.8% [39.8–45.9] | 40.8% [39.8–41.9] | 47.4% [43.6–51.4] | 29.7% [21.6–38.8] | 27.0% [24.3–29.8] | 28.2% [26.5–29.9] |
+| Wolfram | 1.0% [0.5–1.8] | 0.4% [0.1–0.7] | 1.2% [0.5–2.3] | 0.3% [0.0–3.5] | 0.4% [0.2–1.0] | 0.3% [0.1–0.6] |
+| other code | 1.5% [0.9–2.5] | 1.6% [1.2–2.0] | 1.3% [0.6–2.5] | 0.1% [0.0–3.5] | 0.5% [0.2–1.2] | 0.5% [0.1–0.9] |
+| not code | 1.0% [0.5–1.8] | 1.2% [0.9–1.6] | 0.7% [0.3–1.8] | 0.0% [0.0–3.5] | 0.7% [0.3–1.4] | 0.8% [0.3–1.3] |
+| *n* | 1000 | 1000+9000 | n_eff≈632 | n_eff≈105 | 1000 | 1000+2000 |
 
 *(Brackets: 95 % intervals — Wilson for simple random samples, Kish effective n
 for re-weighted frames, PPI++ for the PPI columns.)*
@@ -218,39 +222,57 @@ different route. With version history collapsed (by path) the two are level
 > template and class files; a MATLAB research repository carries many function
 > files **and** more archived revisions of each.
 
-**The tail: seven more notations.** By file, 3.5 % of `.m` is neither
-Objective-C nor MATLAB:
+**The tail: seven more notations.** In the judged sample, 3.5 % of files
+are neither Objective-C nor MATLAB — about 35 files, too few to size anything.
+The **tail census** (E10) fixes that. Of the 10,000 by-file and
+3,000 by-repo contents fetched, our rules place 368 and
+55 outside the two big languages; every one of them was judged, and a
+two-phase estimator combines that census with the random judged sample of the
+rest (`tools/m/tail.py`):
 
-| language (judge) | by file (of 1 000) | by repo (of 1 000) | e.g. repositories of |
-|---|---:|---:|---|
-| mathematica-wolfram | 10 | 4 | JuliaSymbolics, GalAster, laluzamakhsyari |
-| mumps-m | 6 | 1 | jshtz4, ~ov+server, shabiel |
-| magma | 4 | 0 | michaelmusty |
-| mercury | 3 | 0 | Mercury-Language, sebgod |
-| c-or-cpp | 1 | 1 | blackreaven, pasoev |
-| other-programming-language | 3 | 3 | DamnDanielV, csrgxtu, mibrahim |
-| not-code | 8 | 7 | joaodornas, Kasia239, icestraw |
-| unknown | 0 | 2 | martin-azpillaga, Player1os |
+| notation | by file (U) | by repo (R) | files judged (U + R) | e.g. repositories of |
+|---|---:|---:|---:|---|
+| Wolfram / Mathematica | 0.5 % [0.4–0.9] | 0.3 % [0.2–0.9] | 56 | awantae, b3m2a1, fgerick |
+| MUMPS (M) | 0.5 % [0.5–0.9] | 0.1 % [0.0–0.6] | 52 | OSEHRA, zxexz, ChristopherEdwards |
+| Magma * | 0.6 % [0.6–1.1] | 0.1 % [0.0–0.5] | 64 | ulthiel, YijunYuan, assaferan |
+| Mercury | 0.2 % [0.2–0.6] | 0.1 % [0.0–0.5] | 19 | Mercury-Language, AlaskanEmily, DeadZen |
+| C * | 0.1 % [0.0–0.6] | 0.2 % [0.1–0.6] | 7 | arktouros, avh4, svn.code.sf.net |
+| other languages * | 0.1 % [0.1–0.6] | 0.2 % [0.1–0.6] | 9 | DigammaX, guoran23, bartg |
+| not code * | 1.4 % [1.3–1.9] | 0.9 % [0.6–1.6] | 165 | ekanou, ramonmc, whitegr |
+| Limbo | <0.1 % [0.0–0.4] | 0.0 % [0.0–0.4] | 1 | yihugh |
+| MUF | 0.0 % [0.0–0.4] | 0.0 % [0.0–0.4] | 0 | — |
 
-- **Wolfram** — Mathematica packages, symbolic-integration rule sets (Rubi), and
-  computer-algebra *output* (a 250 kB asymptotic expansion written by Mathematica).
+*(Two-phase stratified estimates, 95 % intervals. The upper end allows for tail
+files our rules missed, bounded by the 1,948 judged files of the
+main stratum — only 8 of which turned out to be tail; conversely
+56 files the rules sent to the tail were Objective-C or MATLAB.
+\* = claimed by no source in our mapping.)*
+
+- **Wolfram** — Mathematica packages (IGraph/M, FeynCalc, MathSBML's SBML
+  generator), symbolic-integration rule sets (Rubi), and computer-algebra
+  *output* (a 250 kB asymptotic expansion written by Mathematica).
 - **MUMPS** — VistA and RPMS routines of the US Veterans Affairs hospital system,
   released under FOIA and mirrored across many repositories.
-- **Magma** (*claimed by nothing*) — the *SolvableDessins* database, generated by
-  Magma scripts: the second-largest `.m` repository in the archive.
+- **Magma** (*claimed by nothing*) — as frequent as MUMPS by file: the
+  *SolvableDessins* databases generated by Magma scripts (the second-largest `.m`
+  repository in the archive) and research packages such as CHAMP.
 - **Mercury** — the Mercury compiler and standard library.
 - **Other languages** (*unclaimed*) — the **FreeBSD kobj interface definition
   language** (`mmcbus_if.m`), a **New Jersey Machine-Code Toolkit** specification
-  from the Boomerang decompiler, *Monty* bytecode from a coding-school exercise, C
-  in a `main.m`.
+  from the Boomerang decompiler, a Fortran 90 module, sources of the HBC Haskell
+  compiler, *Monty* bytecode from a coding-school exercise, hobby languages, C in a
+  `main.m`, C emitted by the XMLVM cross-compiler, and a **feature-model DSL** (an
+  SPL alternative-group file).
 - **Not code** (*unclaimed*) — **PML**, the XML morphological layer of the Prague
-  Dependency Treebank; READMEs; a file holding only a UUID; macOS AppleDouble
-  metadata; one git-annex pointer.
+  Dependency Treebank; numeric matrices; MCNP simulation tallies shipped in PyPI
+  packages; READMEs; a commit bot's UUID-only `helloWorld.m`; macOS AppleDouble
+  metadata; Emacs lock files; one git-annex pointer.
 
 **Against the mapping.** The mapping gets the two big languages right and four
 more that are really there (Octave, Wolfram, Mercury, MUMPS). It misses **Magma**,
-lists **Limbo** and **MUF**, which never occurred in 2 000 judged files (by-file
-upper bound 0.38 %), and lists three languages that have nothing to do with `.m`:
+lists **MUF**, which never occurred, and **Limbo**, which the tail census found
+exactly once in 10 000 files (an Inferno module interface in a git-filesystem
+project; by-file upper bound 0.4 %) — and lists three languages that have nothing to do with `.m`:
 **M4, Monkey C and Win32 Message File**. The cause is in
 `tools/master_inventory.py::match_pygments_name`: when a language's name matches
 no Pygments lexer, it falls back to *any lexer sharing an extension*. All three
@@ -350,7 +372,7 @@ React Native and Flutter plugins.
 | CrackerCat/iPhone15-3_17.6.1_21G101_Restore | 429,552 | objective-c, decompiled-or-dumped |
 | michaelmusty/SolvableDessins | 256,931 | magma, tool-generated |
 | CrackerCat/iPhone17-1_18.2_22C152_Restore | 249,201 | objective-c, decompiled-or-dumped |
-| ufal/PDT-C | 186,869 | not-code, tool-generated; other-programming-language, tool-generated |
+| ufal/PDT-C | 186,869 | not-code, tool-generated |
 | rueckelt/TransmissionPlanningFramework | 155,345 | matlab, tool-generated |
 | SchapplM/robsynth-serroblib | 124,473 | matlab, tool-generated |
 | Mx1014/workSource | 57,641 | objective-c, hand-written; objective-c, tool-generated |
@@ -381,9 +403,9 @@ SWH deduplicates byte-identical files, yet there are 1.34 M distinct
 `AppDelegate.m` and 1.02 M distinct `main.m` contents: Xcode stamps each new
 project's template with a header comment carrying its name, author and date.
 Stripping `//` comment lines from the sampled `main.m` files collapses
-139 distinct contents to
-68, and
-55 of them become one and the same file
+348 distinct contents to
+164, and
+127 of them become one and the same file
 — the untouched template. History inflates too: 46 % of
 contents are later versions of a file, including commit bots (`icestraw/EveryDayOC`
 keeps 4 016 versions of one `Code.m`; the version we sampled holds only a UUID).
@@ -399,27 +421,27 @@ keeps 4 016 versions of one `Code.m`; the version we sampled holds only a UUID).
 
 **Existing identifiers (E6).** The two judges, from different vendors and blind
 to our features, agree on the coarse language of
-1,991 of 1,997 files. Against that
+1,993 of 1,997 files. Against that
 consensus — a consensus, not ground truth:
 
 ![Seven labellers](assets/m/fig_m_labellers.png)
 
 | labeller | agrees | disagrees | abstains | accuracy when it answers | Dawid–Skene accuracy |
 |---|---:|---:|---:|---:|---:|
-| Sonnet 4.6 (judge) | *defines the consensus* | | | | 99.7% |
+| Sonnet 4.6 (judge) | *defines the consensus* | | | | 99.8% |
 | Gemini 3.8 Flash (judge) | *defines the consensus* | | | | 99.8% |
-| our rules v2 | 98.9% | 0.3% | 0.8% | 99.7% | 99.4% |
-| our rules v1 (frozen) | 98.6% | 0.2% | 1.2% | 99.8% | — |
-| Linguist heuristics | 93.6% | 0.1% | 6.3% | 99.9% | 100.0% |
-| SWH Synid (no `comment`) | 93.7% | 0.3% | 6.0% | 99.7% | 98.5% |
-| SWH Synid (default) | 87.6% | 0.1% | 12.3% | 99.8% | 98.7% |
-| Pygments | 93.6% | 6.4% | 0.0% | 93.6% | 93.2% |
+| our rules v2 | 98.9% | 0.2% | 0.9% | 99.7% | 99.4% |
+| our rules v1 (frozen) | 98.5% | 0.3% | 1.2% | 99.8% | — |
+| Linguist heuristics | 93.5% | 0.1% | 6.4% | 99.9% | 100.0% |
+| SWH Synid (no `comment`) | 93.6% | 0.3% | 6.1% | 99.7% | 98.5% |
+| SWH Synid (default) | 87.5% | 0.2% | 12.3% | 99.8% | 98.7% |
+| Pygments | 93.4% | 6.6% | 0.0% | 93.4% | 93.2% |
 
 When they answer, Linguist and Synid are almost always right; Pygments never
 abstains, so its errors surface as wrong answers. Each failure traces to a line
 of code:
 
-- **Pygments calls MATLAB "Objective-C"** — 86 / 695 (12.4 %) of MATLAB files.
+- **Pygments calls MATLAB "Objective-C"** — 87 / 695 (12.5 %) of MATLAB files.
   `ObjectiveCLexer.analyse_text` scores 0.8 for `\[\s*[a-zA-Z_]\w*\s+…` — an
   Objective-C message send *or a MATLAB matrix literal* `[a b]` — while MATLAB
   scores only 0.2 for a `%` comment. Only four lexers claim `*.m`, so Wolfram,
@@ -447,7 +469,7 @@ of code:
 
 | field | agreement | Cohen's κ |
 |---|---:|---:|
-| `language_coarse` | 99.7% | 0.99 |
+| `language_coarse` | 99.8% | 1.00 |
 | `language` | 99.2% | 0.98 |
 | `is_programming_language` | 99.7% | 0.81 |
 | `content_type` | 98.1% | 0.86 |
@@ -493,9 +515,9 @@ Octave, while only 7 % use a lexical MATLAB-only construct.
 > aggregate fields below ~0.7 (`maturity`, `matlab_dialect`) without a human audit.
 
 **Anchoring (E5).** Shown the indicators, the judge changed its language label on
-2 of 299 files (one toward our rules, one
-away); agreement with our rules was 99.0 % blind and
-99.0 % shown. On a task this lexical, the indicators
+1 of 299 files (1 toward
+our rules); agreement with our rules was 99.0 % blind and
+99.3 % shown. On a task this lexical, the indicators
 add nothing the judge does not already read in the bytes.
 
 **Our reclassifier, prospectively.**
@@ -504,13 +526,13 @@ add nothing the judge does not already read in the bytes.
 |---|---|---:|---:|---:|
 | v1 | tuning split vs judge | 300 | 98.0% | 99.0% |
 | v2 | tuning split vs judge (in-sample) | 300 | 99.0% | 100.0% |
-| v1 | held-out vs judge (prospective) | 1700 | 98.0% | 98.2% |
-| v2 | held-out vs judge | 1700 | 98.2% | 98.4% |
-| v1 | held-out vs consensus | 1691 | 98.3% | 98.5% |
-| v2 | held-out vs consensus | 1691 | 98.5% | 98.7% |
+| v1 | held-out vs judge (prospective) | 1700 | 98.1% | 98.3% |
+| v2 | held-out vs judge | 1700 | 98.2% | 98.5% |
+| v1 | held-out vs consensus | 1693 | 98.2% | 98.5% |
+| v2 | held-out vs consensus | 1693 | 98.4% | 98.6% |
 
 The frozen v1 — written before any judge label existed — agrees with the judge
-on 98.2 % of held-out files; v2, tuned on 300, gains
+on 98.3 % of held-out files; v2, tuned on 300, gains
 0.2 points. Its errors are abstentions on the tail, plus a known blind
 spot: `printf(` and `!=` are Octave-only *relative to MATLAB* but ordinary in C,
 so a few C and MUMPS files are called Octave.
@@ -520,13 +542,14 @@ unjudged files with the judge on the judged ones:
 
 | frame | judged + free | Objective-C (PPI++) | judged-only CI | width ratio | λ | MATLAB (PPI++) | width ratio |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| by file (U) | 1,000 + 1,000 | 55.1 % [52.9–57.3] | 50.6–56.8 | 0.71 | 0.50 | 41.7 % | 0.71 |
-| by repo (R) | 1,000 + 1,000 | 70.0 % [68.0–72.1] | 68.3–73.9 | 0.72 | 0.48 | 28.1 % | 0.73 |
+| by file (U) | 1,000 + 9,000 | 55.6 % [54.6–56.6] | 50.6–56.8 | 0.33 | 0.90 | 40.8 % | 0.35 |
+| by repo (R) | 1,000 + 2,000 | 69.8 % [68.2–71.5] | 68.3–73.9 | 0.59 | 0.64 | 28.2 % | 0.61 |
 
-With a free pool the size of the judged set, the tuned weight is λ ≈
-0.5 — a free label is worth about half a judged one — and intervals
-narrow by 29 %, the precision of ~2.0× as many judged files at no API
-cost.
+With 9,000 free labels by file and 2,000 by repository, the tuned
+weights are λ = 0.90 and 0.64, and intervals narrow by
+67 % and 41 % — the precision of ~9.2× and
+~2.9× as many judged files, at no API cost. For the rare notations, where
+PPI helps little, the tail census (E10) does the work.
 
 **Pre-registration.** Seven predictions were committed before judging; the
 verdicts are computed by `analysis.py`:
@@ -536,9 +559,9 @@ verdicts are computed by `analysis.py`:
 | H1 | Objective-C + MATLAB ≥ 95 % by file; rest spans ≥ 6 notations | 96.5 %; rest spans 7 | held |
 | H2 | Objective-C share differs ≥ 10 pts between frames | 53.7 % vs 71.2 % | held (direction guessed wrong) |
 | H3 | ≥ 15 % of Objective-C not hand-written (by file) | 22.2 % | held |
-| H4 | Linguist abstains ≥ 5 %; Pygments MATLAB→ObjC ≥ 5 %; Synid ≥ 10 % | 6.3 % · 12.4 % · 12.3 % | consistent (not a blind test) |
+| H4 | Linguist abstains ≥ 5 %; Pygments MATLAB→ObjC ≥ 5 %; Synid ≥ 10 % | 6.4 % · 12.5 % · 12.3 % | consistent (not a blind test) |
 | H5 | the judge's `octave` disagrees with the lexical definition one-sidedly | regex: 7 vs 4; lexer: 7 vs 2 (Gemini 0 vs 0) | **failed** as registered; holds for Sonnet only post hoc |
-| H6 | shown the indicators, the judge agrees more with our rules | 99.0 % blind vs 99.0 % shown | **failed** |
+| H6 | shown the indicators, the judge agrees more with our rules | 99.0 % blind vs 99.3 % shown | **failed** |
 | H7 | κ ≥ 0.9 on language; < 0.7 on provenance and maturity | κ 0.98 · 0.84 · 0.54 | half held |
 
 Writing them down first is what made the failures informative: H5's failure is
@@ -553,8 +576,9 @@ how the lexer bug in our own markers was found.
 >    43 % by file,
 >    71 % /
 >    27 % by repository, a tie by path.
-> 2. A 3.5 % **tail of seven notations** — four of them (Magma, the FreeBSD
->    IDL, NJMC, PML XML) claimed by no source; Limbo and MUF, claimed, never seen.
+> 2. A **tail of rare notations** (tail census, by file: Wolfram 0.5 %; MUMPS 0.5 %; Magma 0.6 %; Mercury 0.2 %; not code 1.4 %) — several
+>    (Magma, the FreeBSD IDL, NJMC, PML XML, Fortran, a feature-model DSL) claimed
+>    by no source; Limbo, claimed, seen once in 10 000 files; MUF never.
 > 3. **Much of `.m` is replication:** 58 % of Objective-C drawn per
 >    repository is templates, vendored or dumped; Xcode template names sit in
 >    42 % of `.m` repositories;
@@ -577,9 +601,10 @@ how the lexer bug in our own markers was found.
 >    ablation costs little and settles the question.
 > 4. **Lexical facts need a lexer.** Regexes that cannot see strings and comments
 >    produce false "judge errors".
-> 5. **Pre-register, and use cheap labels with PPI.** Failed predictions were the
->    most informative results; a validated free classifier doubles the effective
->    judged sample.
+> 5. **Pre-register, and let cheap labels carry the volume.** Failed predictions
+>    were the most informative results; a validated free classifier multiplies the
+>    effective judged sample (~9.2× by file via PPI++) and makes a judged
+>    census of the rare strata affordable.
 
 ## 6. Limitations
 
@@ -587,16 +612,18 @@ how the lexer bug in our own markers was found.
   correlated evidence (same bytes, same path). The 100-item blind audit queued in
   the review app (Appendix A) is the step that replaces it — none of the four
   studies has run one yet.
-- **The tail is thin:** 3.5 % of 1 000 files is ~35 files over seven
-  notations; below 1 % intervals are wide. A tail-targeted sample (the
-  reclassifier makes it cheap) would size Magma, MUMPS and Mercury properly.
+- **The tail is sized, not settled.** The census pins each rare notation from
+  below; the upper ends are limited by the ~1 000 judged main-stratum files per
+  frame, where a tail file our rules missed would hide (only 8 did).
 - **One provenance context per content;** by-repo frames under-count widely
   shared files, so template shares are conservative. Timestamps are visit dates.
 - **Only lowercase `.m`** — `.M` and `.mm` (Objective-C++) are outside the
   extraction.
 - **Post-hoc elements are marked as such:** reclassifier v2, the comment- and
-  string-aware Octave markers, the "unknown → not code" normalisation for the
-  judges' non-code labels, frame T.
+  string-aware Octave markers, frame T, the tail census (E10), and the
+  normalisation of judge labels to "not code" when the judge's own fields say so
+  (language "unknown"/"other" with `is_programming_language = false`, or
+  "unknown" on markup/text).
 
 ## 7. Reproducibility & artefacts
 
@@ -610,6 +637,7 @@ python3 -m tools.m.fetch                                           # SWH_TOKEN i
 python3 -m tools.m.study --label && python3 -m tools.m.run_synid   # free labellers
 python3 -m tools.m.study --judge --n 1000                          # + --model google/gemini-3.8-flash
 python3 -m tools.m.study --judge --n 300 --frames U --with-indicators   # E5
+python3 -m tools.m.tail --select && python3 -m tools.m.tail --judge     # E10 tail census
 python3 -m tools.m.analysis && .venv/bin/python -m tools.m.make_figures
 python3 -m tools.m.build_report --pdf                              # this report
 python3 -m tools.m.audit --build && python3 -m tools.m.review_app  # E9
@@ -619,7 +647,7 @@ Artefacts in `data/derived/m_study/`: `PREREGISTRATION.md`, `population.json`,
 `population_signals.json`, `worklist_*.csv`, one layer per labeller
 (`labels/`, `synid.jsonl`, `judge/<model>/`), `analysis.json` (every number in
 this report), `audit_queue.csv`. Figures in `docs/assets/m/`. Spend:
-$37.48 for 4,481 LLM verdicts; everything else ran locally.
+$46.41 for 5,083 LLM verdicts; everything else ran locally.
 
 *Models: claude-sonnet-4.6 and gemini-3.8-flash (judges) · study authored with Claude Code.*
 

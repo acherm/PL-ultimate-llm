@@ -108,6 +108,10 @@ class Rec:
             # "unknown" while typing the content as markup/text/binary/empty means "not code"
             if lang == "unknown" and v.get("content_type") in NON_CODE_TYPES:
                 return "not-code"
+            # ...and one that names "other"/"unknown" while its own is_programming_language
+            # field says False (treebank XML, data matrices) is taken at its word: not code
+            if lang in ("other-programming-language", "unknown") and v.get("is_programming_language") is False:
+                return "not-code"
             return lang
         if labeller == "human":
             h = self.human()

@@ -86,9 +86,30 @@ def _priority(r: dict):
     return (2, m)
 
 
+class Pacer:
+    """Stay under the SWH quota on our own clock: at most `per_hour` requests in any
+    rolling 3 600 s. Relying on the server's X-RateLimit-Reset after exhausting the
+    window made the shared back-off oversleep by 30+ minutes each hour."""
+
+    def __init__(self, per_hour: int = 1150):
+        from collections import deque
+        self.per_hour, self.times = per_hour, deque()
+
+    def wait(self):
+        now = time.time()
+        while self.times and now - self.times[0] > 3600:
+            self.times.popleft()
+        if len(self.times) >= self.per_hour:
+            pause = 3600 - (now - self.times[0]) + 1
+            print(f"[pace] {len(self.times)} requests in the last hour — pausing {pause / 60:.1f} min", flush=True)
+            time.sleep(pause)
+        self.times.append(time.time())
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--per-hour", type=int, default=1150, help="self-imposed pacing (SWH token quota: 1 200/h)")
     a = ap.parse_args()
     from tools.m.study import worklist
     rows = worklist()
@@ -97,12 +118,18 @@ def main():
     todo = sorted((r for r in rows if not cached(r["sha1_git"])), key=_priority)
     print(f"worklist {len(rows)} | cached {len(rows) - len(todo)} | to fetch {len(todo)}", flush=True)
     refresh_token()
+    pacer = Pacer(a.per_hour)
     t0, done = time.time(), 0
     for i, r in enumerate(todo, 1):
         if i % 25 == 0:
             refresh_token(verbose=False)
         try:
+            pacer.wait()
+            t1 = time.time()
             fetch_content(r["swhid"], filename=r["name"])
+            waited = time.time() - t1
+            if waited > 60:
+                print(f"[{i}/{len(todo)}] waited {waited / 60:.0f} min on the SWH rate limit", flush=True)
             done += 1
         except Exception as e:
             msg = str(e)

@@ -54,11 +54,11 @@ def fig_frames(a):
     A = a["A_language"]
     frames = [
         ("by file (U, judged)", A["by_file_coarse"], "ci"),
-        ("by file, PPI (U ≤ 2000)", A["ppi_by_file"]["classes"], "ci"),
+        ("by file, PPI (U, 10 000)", A["ppi_by_file"]["classes"], "ci"),
         ("by path (U re-weighted)", A["by_path_coarse"], "ci"),
         ("by repo (U re-weighted)", A["by_repo_reweighted_coarse"], "ci"),
         ("by repo (R, judged)", A["by_repo_coarse"], "ci"),
-        ("by repo, PPI (R ≤ 2000)", A["ppi_by_repo"]["classes"], "ci"),
+        ("by repo, PPI (R, 3 000)", A["ppi_by_repo"]["classes"], "ci"),
     ]
     fig, ax = plt.subplots(figsize=(7.6, 3.5))
     for off, cls in ((-.14, "objective-c"), (.14, "matlab-family")):

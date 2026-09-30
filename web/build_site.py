@@ -87,6 +87,7 @@ class TurnInfo:
 TAXONOMY_DIR = ROOT / "data" / "derived" / "pl_taxonomy"
 SAMPLES_DIR = ROOT / "samples"
 SWH_EXT_POPULARITY_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
+SWH_EXT_POPULARITY_META = ROOT / "data" / "derived" / "swh_extensions_popularity.meta.json"
 _TAXONOMY_SOURCES = ("pldb", "linguist", "pygments", "wikipedia",
                      "esolang", "hyperpolyglot", "rosettacode",
                      "manual_add")
@@ -177,7 +178,8 @@ def load_swh_ext_popularity() -> dict[str, dict]:
     """Load the SWH per-extension popularity table (`derived/swh_extensions_popularity.csv.gz`,
     built from the SWH 2026-06-04 export — see docs/SWH_EXTENSIONS_DECISIONS.md §14).
 
-    Returns {ext: {total_occ, recent_occ, undated_occ, first_year, last_year}}.
+    Returns {ext: {total_occ, recent_occ, undated_occ, first_year, last_year, median_year}}.
+    The recent window behind `recent_occ` is in `load_swh_ext_popularity_meta()`.
     File is ~22 MB gzipped / 4.2M rows; we keep all rows in memory (small per-row) and
     cache for the lifetime of the build (this function is called from the
     per-language render loop so caching is essential).
@@ -196,6 +198,8 @@ def load_swh_ext_popularity() -> dict[str, dict]:
     #   - undated_occ summed
     #   - first_year = min of non-null
     #   - last_year  = max of non-null
+    #   - median_year = the dominant variant's (rows come sorted by total_occ
+    #     desc, so that is the first row seen; medians don't merge exactly)
     # The case_variants field is preserved verbatim so per-ext pages can show
     # the breakdown ("case variants in archive: .r (Xm), .R (Ym)") and
     # rigorous downstream analysis can still distinguish them.
@@ -212,6 +216,7 @@ def load_swh_ext_popularity() -> dict[str, dict]:
             undated = int(r.get("undated_occ", 0) or 0)
             fy = int(r.get("first_year")) if r.get("first_year") else None
             ly = int(r.get("last_year")) if r.get("last_year") else None
+            my = int(r.get("median_year")) if r.get("median_year") else None
             entry = out.get(key)
             if entry is None:
                 out[key] = {
@@ -220,6 +225,7 @@ def load_swh_ext_popularity() -> dict[str, dict]:
                     "undated_occ": undated,
                     "first_year": fy,
                     "last_year": ly,
+                    "median_year": my,
                     "case_variants": [(raw_ext, total)],
                 }
             else:
@@ -233,6 +239,15 @@ def load_swh_ext_popularity() -> dict[str, dict]:
                 entry["case_variants"].append((raw_ext, total))
     _SWH_POPULARITY_CACHE = out
     return out
+
+
+def load_swh_ext_popularity_meta() -> dict:
+    """Sidecar of the popularity table: recent window (`recent_from`,
+    `recent_to`) and artefact years. Missing → {} (labels fall back)."""
+    try:
+        return json.loads(SWH_EXT_POPULARITY_META.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
 
 
 def _fmt_seen_swh(n: int | None) -> str:
@@ -2859,6 +2874,9 @@ def render_per_extension_pages(
 
     # SWH per-extension popularity (one row per ext, aggregated over years).
     swh_pop = load_swh_ext_popularity()
+    _swh_meta = load_swh_ext_popularity_meta()
+    recent_window = (f"{_swh_meta['recent_from']}–{_swh_meta['recent_to']}"
+                     if "recent_from" in _swh_meta else "recent")
 
     # Existing manual labels (from extension_labels.csv).
     existing_labels = _load_extension_labels()
@@ -2984,9 +3002,9 @@ def render_per_extension_pages(
         if swh_pop_info:
             total = swh_pop_info["total_occ"]
             recent = swh_pop_info["recent_occ"]
-            fy = swh_pop_info["first_year"]
-            ly = swh_pop_info["last_year"]
-            span = f"{fy}–{ly}" if (fy and ly) else "n/a"
+            # Median, not first year: stray wrong commit dates (e.g. `.go`
+            # files in 1973) make the earliest dated year meaningless.
+            my = swh_pop_info.get("median_year") or "n/a"
             recent_pct = (100 * recent / total) if total else 0
             variants = swh_pop_info.get("case_variants") or []
             variants_html = ""
@@ -3002,9 +3020,9 @@ def render_per_extension_pages(
           <h2 style="margin:0 0 8px;">SWH popularity</h2>
           <p class='muted'>Distinct files in the full <strong>Software Heritage</strong> archive (2026-06-04 export), dated by first appearance, following Desmazières, Di Cosmo, Lorentz (<em>MSR 2025</em>). Case-aggregated. <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/citations.md' target='_blank' rel='noopener'>citation</a>.</p>
           <div style='display:flex; flex-wrap:wrap; gap:10px;'>
-            <div class="stat"><div class="num">{_fmt_occ(total)}</div><div class="muted">total occurrences</div></div>
-            <div class="stat"><div class="num">{_fmt_occ(recent)}</div><div class="muted">since 2019 ({recent_pct:.1f}%)</div></div>
-            <div class="stat"><div class="num">{span}</div><div class="muted">years active</div></div>
+            <div class="stat"><div class="num">{_fmt_occ(total)}</div><div class="muted">total files</div></div>
+            <div class="stat"><div class="num">{_fmt_occ(recent)}</div><div class="muted">first seen {recent_window} ({recent_pct:.1f}%)</div></div>
+            <div class="stat"><div class="num">{my}</div><div class="muted">median year (half its files since)</div></div>
           </div>
           {variants_html}
         </section>"""
@@ -3855,7 +3873,7 @@ def render_per_extension_pages(
     </section>
     <section class="panel section">
       <table class='kv-table'>
-        <thead><tr><th>Extension</th><th>SWH occurrences</th><th>Last seen</th><th>Claimants</th><th>Primary</th><th>Flags</th></tr></thead>
+        <thead><tr><th>Extension</th><th>SWH files</th><th>Last seen</th><th>Claimants</th><th>Primary</th><th>Flags</th></tr></thead>
         <tbody>{''.join(listing_rows)}</tbody>
       </table>
     </section>

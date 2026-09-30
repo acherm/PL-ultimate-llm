@@ -77,10 +77,14 @@ Columns:
 |---|---|
 | `extension` | the ext string (e.g. `.py`) |
 | `total_occ` | sum of occurrences across all years + `-1` |
-| `recent_occ` | sum across years 2019 onward (proxy for "still alive") |
-| `undated_occ` | the `-1` column (commits SWH couldn't date) |
-| `first_year` | earliest year with a positive count (or empty) |
-| `last_year` | latest year with a positive count (or empty) |
+| `recent_occ` | sum over the last 5 full years (2021–2025 for the 2026-06-04 table; proxy for "still alive") |
+| `undated_occ` | the `-1` column + the artefact years 1970 and 1980 (see §14) |
+| `first_year` | earliest dated year with a positive count (or empty) — unreliable, see §14 |
+| `last_year` | latest dated year with a positive count (or empty) |
+| `median_year` | year by which half of the dated files had appeared (shown on the site) |
+
+The recent window and artefact years are recorded in
+`data/derived/swh_extensions_popularity.meta.json`.
 
 **This file keeps every row** (2,960,281 from SWH-MSR-ARV; 4,207,753 from the
 2026-06-04 rebuild) — no threshold is applied at the derivation step. The rationale is that anyone doing rigorous analysis (e.g.
@@ -148,7 +152,7 @@ Even within the 8,344 rendered pages, we apply heuristics:
 | Concern | What's true today | When to revisit |
 |---|---|---|
 | Alphanumeric filter at source | SWH-MSR-ARV pre-filter (Unicode-aware, any length); extensions with special chars are missing | If we find evidence of significant non-alphanumeric PL extensions (e.g., `.f95+`) |
-| "Recent" = 2019 onwards | Arbitrary 5-year window | If we want a different liveness signal |
+| "Recent" = last 5 full years | Relative to the table's last full year (2021–2025 now; 2019–2023 before the switch, which included the partial year) | If we want a different liveness signal |
 | `-1` column lumped into total | Undated occurrences count the same as dated ones | Could weight them differently |
 | Single shard (shard 0) was used for **mining sample programs**; SWH-MSR-ARV covers the whole archive | The 2.96 M-row aggregate IS for the full SWH archive; only our `samples/` mining is shard-0-only | If we run the SWH mining at full archive scale |
 | Top-8K page limit | Tunable; see § 4 | If we want to surface the "≥1K" set (~19.5K pages) |
@@ -550,7 +554,19 @@ Every extension we spot-checked grows (×1.02 `.CBL` … ×2.18 `.rs`); the 42,6
 extensions present only in SWH-MSR-ARV carry a negligible count. Rankings are
 stable; **per-year curves are not comparable**: the rebuild spreads SWH-MSR-ARV's
 8.3 B undated occurrences over real years, so any year ≤ 2021 is ~1.7–3× higher
-and `recent_occ` (2019+) jumps (e.g. `.html`: 24 % → 77 % of total).
+and a fixed "since 2019" share would jump (e.g. `.html`: 24 % → 77 % of total)
+because the window grows from 5 to 7.5 years. Hence the relative window below.
+
+**Dates: artefact years and the median.** Broken commit dates pile up at the
+Unix and MS-DOS epochs: 18.0 M files dated 1970 (vs 28 K in 1971, and 1.2 M
+`.go` files although Go dates from 2009) and 1.5 M dated 1980 (vs ~100 K in
+1979/1981). Both years are counted as undated. Stray wrong dates remain in
+every early year (`.rs` in 1971–1975), and are indistinguishable from real old
+files (Unix-history `.c`), so no first-year rule works: a 0.1 %-of-files
+threshold dates `.py` to 2007 and `.c` to 1996. The site therefore shows the
+**median year** (`.py` 2021, `.c` 2019, `.pl` 2016, `.rs` 2023) instead of
+"years active", and the recent share over the last 5 full years
+(`first seen 2021–2025`).
 
 **Status:** wired into the site on 2026-09-30.
 `data/derived/swh_extensions_popularity.csv.gz` (gzipped: 118 MB raw is over

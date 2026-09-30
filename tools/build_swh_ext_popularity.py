@@ -1,43 +1,39 @@
 #!/usr/bin/env python3
-"""Derive `data/derived/swh_extensions_popularity.csv` from the SWH-MSR-ARV dataset.
+"""Derive `data/derived/swh_extensions_popularity.csv.gz` from a per-extension × year table.
 
-The **SWH-MSR-ARV dataset** is the per-extension SWH occurrence table
-published with:
+Input: a wide `nb_extensions_alphanum*.csv` table — one row per file
+extension, columns `-1` (undated) and one per year — in either of:
 
-    Adèle Desmazières, Roberto Di Cosmo, Valentin Lorentz.
-    "50 Years of Programming Language Evolution through the Software Heritage
-     looking glass." MSR 2025: 372-383.
+  - the 2026-06-04 rebuild (current default), produced by
+    `tools/build_swh_ext_year_table.py` from the SWH "Aggregated Contents"
+    dataset of the 2026-06-04 graph export (distinct files per extension,
+    dated by first appearance; see docs/SWH_EXTENSIONS_DECISIONS.md §14);
+  - the original SWH-MSR-ARV file published with
+        Adèle Desmazières, Roberto Di Cosmo, Valentin Lorentz.
+        "50 Years of Programming Language Evolution through the Software
+         Heritage looking glass." MSR 2025: 372-383.
+    (2023 snapshot; pass `--src .../PL-roberto/nb_extensions_alphanum.csv`).
 
 See `docs/citations.md`.
 
-Input:
-  `nb_extensions_alphanum.csv` (the SWH-MSR-ARV file) — a wide table where
-  each row is one file extension and columns are year-by-year occurrence
-  counts in the Software Heritage archive (plus a `-1` column for undated
-  files).
-
 Output:
   A narrow per-extension aggregate at
-  `data/derived/swh_extensions_popularity.csv`:
+  `data/derived/swh_extensions_popularity.csv.gz`:
 
       extension, total_occ, recent_occ, undated_occ, first_year, last_year
 
   - `total_occ`   = sum across all years + the `-1` column
-  - `recent_occ`  = sum across years 2019–2023 (proxy for "still alive")
+  - `recent_occ`  = sum across years 2019 onward (proxy for "still alive")
   - `undated_occ` = the `-1` column verbatim
   - `first_year`  = earliest year with a positive count (empty if undated only)
   - `last_year`   = latest year with a positive count
 
-The output file is intentionally gitignored — it's 77 MB and trivially
-regenerable from this script. Track the script, not the artefact.
+The output is committed (gzipped: ~22 MB vs 118 MB raw, under GitHub's
+100 MB file limit) so the CI Pages deploy has it without a fetch step.
 
 Usage
 -----
-    python3 tools/build_swh_ext_popularity.py [--src PATH]
-
-Defaults to `/Users/mathieuacher/SANDBOX/PL-roberto/nb_extensions_alphanum.csv`,
-which is where the SWH-MSR-ARV file ships in the original development setup.
-Override `--src` if you keep it elsewhere.
+    python3 tools/build_swh_ext_popularity.py [--src PATH] [--out PATH]
 """
 
 from __future__ import annotations
@@ -45,8 +41,8 @@ import argparse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SRC = Path("/Users/mathieuacher/SANDBOX/PL-roberto/nb_extensions_alphanum.csv")
-OUT_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv"
+DEFAULT_SRC = Path("/Users/mathieuacher/SANDBOX/PL-swh-contents/2026-06-04/nb_extensions_alphanum_2026-06-04.csv")
+OUT_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
 
 
 def main() -> int:
@@ -54,7 +50,7 @@ def main() -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--src", default=str(DEFAULT_SRC),
-                        help="Path to the SWH-MSR-ARV nb_extensions_alphanum.csv (default: %(default)s)")
+                        help="Path to a nb_extensions_alphanum*.csv table (default: %(default)s)")
     parser.add_argument("--out", default=str(OUT_CSV),
                         help="Output path (default: %(default)s)")
     parser.add_argument("--threads", type=int, default=8)
@@ -66,9 +62,9 @@ def main() -> int:
     if not src.exists():
         raise SystemExit(
             f"ERROR: source CSV not found at {src}.\n"
-            "The SWH-MSR-ARV dataset (Desmazières/Di Cosmo/Lorentz, MSR 2025) "
-            "ships separately. Obtain `nb_extensions_alphanum.csv` from the "
-            "authors and pass --src or place it at the default path."
+            "Rebuild it with `tools/build_swh_ext_year_table.py` (SWH 2026-06-04 "
+            "export), or pass --src to the original SWH-MSR-ARV "
+            "`nb_extensions_alphanum.csv` (Desmazières/Di Cosmo/Lorentz, MSR 2025)."
         )
 
     try:
@@ -81,8 +77,13 @@ def main() -> int:
     con.execute(f"SET memory_limit='{args.memory_limit}'; SET threads={args.threads};")
 
     print(f"Reading {src} ({src.stat().st_size/1024/1024:.0f} MB)…")
-    # The CSV has a fixed schema: extension, -1, 1950, 1951, …, 2023.
-    year_cols = ["-1"] + [str(y) for y in range(1950, 2024)]
+    # Schema: extension, -1, 1950, 1951, …, <last year>. The last year depends
+    # on the snapshot (2023 for SWH-MSR-ARV; later for files rebuilt by
+    # `tools/build_swh_ext_year_table.py`), so read it from the header.
+    with open(src, encoding="utf-8") as f:
+        header = f.readline().rstrip("\r\n").split(",")
+    year_cols = [c for c in header[1:] if c.lstrip("-").isdigit()]
+    print(f"Year columns: {year_cols[0]}, {year_cols[1]} … {year_cols[-1]}")
     cols_sql = ", ".join(f'"{y}"' for y in year_cols)
 
     con.execute(f"""
@@ -111,7 +112,7 @@ COPY (
     )
     SELECT extension, total_occ, recent_occ, undated_occ, first_year, last_year
     FROM by_ext
-    ORDER BY total_occ DESC
+    ORDER BY total_occ DESC, extension
 )
 TO '{out.as_posix()}'
 WITH (HEADER, DELIMITER ',')

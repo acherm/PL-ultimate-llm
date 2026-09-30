@@ -21,11 +21,12 @@ Out:  data/derived/cobol_study/ext_claim_case_aware_prototype.csv
 from __future__ import annotations
 
 import csv
+import gzip
 from pathlib import Path
 
 from .common import ROOT, STUDY_DIR
 
-POP_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv"
+POP_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
 EXT_CLAIM = ROOT / "data" / "derived" / "pl_taxonomy" / "ext_claim.csv"
 OUT = STUDY_DIR / "ext_claim_case_aware_prototype.csv"
 
@@ -49,7 +50,7 @@ def swh_counts_for(base_ext: str) -> dict[str, int]:
     out: dict[str, int] = {}
     if not POP_CSV.exists():
         return out
-    with POP_CSV.open(encoding="utf-8") as f:
+    with gzip.open(POP_CSV, "rt", encoding="utf-8", newline="") as f:
         for row in csv.DictReader(f):
             ext = row["extension"]
             if ext.lower() == want:

@@ -18,7 +18,7 @@ Each existing source captures a different slice of "all programming languages." 
 | **Wikipedia (PL category)** | ~180 | encyclopedic prose | shallow; no extensions |
 | **PL-ultimate** (this repo, `acherm/PL-ultimate`) | **11,963** | union of the seven above | 88% appear in one source only; near-duplicates remain |
 | **PL-ultimate-llm** (`acherm/PL-ultimate-llm`) | ~4,000 | LLM-proposed + LLM-generated programs | hallucination risk; generated code may not exist anywhere |
-| **SWH-MSR-ARV** (Desmazières, Di Cosmo, Lorentz; MSR 2025) | 2.96 M (alphanumeric 1–6 char) | per-extension occurrence counts year-by-year in SWH | extensions, not languages — needs mapping. See [`docs/citations.md`](citations.md). |
+| **SWH-MSR-ARV** (Desmazières, Di Cosmo, Lorentz; MSR 2025) | 2.96 M (alphanumeric, any length) | per-extension occurrence counts year-by-year in SWH | extensions, not languages — needs mapping. See [`docs/citations.md`](citations.md). |
 | **SWH popular-content-names parquet** (`derived_datasets/<date>/contents/*.parquet`) | billions of (content, popular-filename) rows | actual files in the archive | bytes-level; no language column |
 
 **Two observations from this table.**

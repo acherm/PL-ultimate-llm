@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import gzip
 import hashlib
 import html
 import json
@@ -85,7 +86,7 @@ class TurnInfo:
 
 TAXONOMY_DIR = ROOT / "data" / "derived" / "pl_taxonomy"
 SAMPLES_DIR = ROOT / "samples"
-SWH_EXT_POPULARITY_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv"
+SWH_EXT_POPULARITY_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
 _TAXONOMY_SOURCES = ("pldb", "linguist", "pygments", "wikipedia",
                      "esolang", "hyperpolyglot", "rosettacode",
                      "manual_add")
@@ -173,10 +174,11 @@ _SWH_POPULARITY_CACHE: dict[str, dict] | None = None
 
 
 def load_swh_ext_popularity() -> dict[str, dict]:
-    """Load the SWH-MSR-ARV-derived popularity table (`derived/swh_extensions_popularity.csv`).
+    """Load the SWH per-extension popularity table (`derived/swh_extensions_popularity.csv.gz`,
+    built from the SWH 2026-06-04 export — see docs/SWH_EXTENSIONS_DECISIONS.md §14).
 
     Returns {ext: {total_occ, recent_occ, undated_occ, first_year, last_year}}.
-    File is ~80 MB / 3M rows; we keep all rows in memory (small per-row) and
+    File is ~22 MB gzipped / 4.2M rows; we keep all rows in memory (small per-row) and
     cache for the lifetime of the build (this function is called from the
     per-language render loop so caching is essential).
     Missing file → empty dict (site degrades gracefully).
@@ -187,7 +189,7 @@ def load_swh_ext_popularity() -> dict[str, dict]:
     if not SWH_EXT_POPULARITY_CSV.exists():
         _SWH_POPULARITY_CACHE = {}
         return _SWH_POPULARITY_CACHE
-    # Aggregate case variants (SWH-MSR-ARV preserves case, so `.R` and `.r`
+    # Aggregate case variants (SWH preserves case, so `.R` and `.r`
     # appear as separate rows). We collapse to the lowercase key and merge:
     #   - total_occ summed
     #   - recent_occ summed
@@ -199,7 +201,7 @@ def load_swh_ext_popularity() -> dict[str, dict]:
     # rigorous downstream analysis can still distinguish them.
     out: dict[str, dict] = {}
     import csv as _csv
-    with SWH_EXT_POPULARITY_CSV.open(encoding="utf-8") as f:
+    with gzip.open(SWH_EXT_POPULARITY_CSV, "rt", encoding="utf-8", newline="") as f:
         for r in _csv.DictReader(f):
             raw_ext = r.get("extension") or ""
             if not raw_ext.startswith("."):
@@ -2855,7 +2857,7 @@ def render_per_extension_pages(
 
     strength_rank = {"primary": 0, "secondary": 1, "unknown": 2}
 
-    # SWH-MSR-ARV-derived per-extension popularity (one row per ext, year-by-year totals).
+    # SWH per-extension popularity (one row per ext, aggregated over years).
     swh_pop = load_swh_ext_popularity()
 
     # Existing manual labels (from extension_labels.csv).
@@ -2891,8 +2893,8 @@ def render_per_extension_pages(
     all_exts.update(swh_by_ext.keys())
     all_exts.update(external_ext.keys())
     # Include top SWH-popular extensions even if our taxonomy doesn't claim them.
-    # Cap at 8000 so per-extension pages stay manageable (2.96M total in SWH-MSR-ARV's
-    # CSV; most have <100 occurrences total or are non-PL artifacts).
+    # Cap at 8000 so per-extension pages stay manageable (4.2M total in the SWH
+    # 2026-06-04 table; most have <100 occurrences total or are non-PL artifacts).
     SWH_POPULARITY_PAGE_LIMIT = 8000
     popular_swh = sorted(swh_pop.items(), key=lambda kv: -kv[1]["total_occ"])[:SWH_POPULARITY_PAGE_LIMIT]
     for ext, _ in popular_swh:
@@ -2976,7 +2978,7 @@ def render_per_extension_pages(
                 {_reviews_html(s)}
               </article>""")
 
-        # SWH popularity block (SWH-MSR-ARV-derived). Case-aggregated.
+        # SWH popularity block (SWH 2026-06-04 export). Case-aggregated.
         swh_pop_html = ""
         swh_pop_info = swh_pop.get(ext)
         if swh_pop_info:
@@ -2998,7 +3000,7 @@ def render_per_extension_pages(
             swh_pop_html = f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">SWH popularity</h2>
-          <p class='muted'>From the <strong>SWH-MSR-ARV</strong> dataset (Desmazières, Di Cosmo, Lorentz, <em>MSR 2025</em>; file <code>nb_extensions_alphanum.csv</code>) — one row per (ext, year) in the full SWH archive. Case-aggregated. <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/citations.md' target='_blank' rel='noopener'>citation</a>.</p>
+          <p class='muted'>Distinct files in the full <strong>Software Heritage</strong> archive (2026-06-04 export), dated by first appearance, following Desmazières, Di Cosmo, Lorentz (<em>MSR 2025</em>). Case-aggregated. <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/citations.md' target='_blank' rel='noopener'>citation</a>.</p>
           <div style='display:flex; flex-wrap:wrap; gap:10px;'>
             <div class="stat"><div class="num">{_fmt_occ(total)}</div><div class="muted">total occurrences</div></div>
             <div class="stat"><div class="num">{_fmt_occ(recent)}</div><div class="muted">since 2019 ({recent_pct:.1f}%)</div></div>
@@ -3849,7 +3851,7 @@ def render_per_extension_pages(
     body = f"""
     <section class="panel section">
       <h1 style="margin:0 0 8px;">All extensions ({len(all_exts):,})</h1>
-      <p class="muted">Sorted by total occurrence count in the Software Heritage archive (the <strong>SWH-MSR-ARV</strong> dataset — Desmazières, Di Cosmo, Lorentz, <em>MSR 2025</em> — file <code>nb_extensions_alphanum.csv</code>; {n_with_pop:,} of these {len(all_exts):,} have SWH popularity data). Click into any extension for claimants, disambiguation rules, and SWH-mined examples. <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/citations.md' target='_blank' rel='noopener'>citation</a>.</p>
+      <p class="muted">Sorted by number of distinct files in the <strong>Software Heritage</strong> archive (2026-06-04 export, following Desmazières, Di Cosmo, Lorentz, <em>MSR 2025</em>; {n_with_pop:,} of these {len(all_exts):,} have SWH popularity data). Click into any extension for claimants, disambiguation rules, and SWH-mined examples. <a href='https://github.com/{safe(github_owner_repo) if github_owner_repo else ''}/blob/main/docs/citations.md' target='_blank' rel='noopener'>citation</a>.</p>
     </section>
     <section class="panel section">
       <table class='kv-table'>

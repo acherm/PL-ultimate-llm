@@ -21,7 +21,7 @@ What landed beyond the original LLM-curation scope:
 | Cross-source PL taxonomy | `tools/build_pl_taxonomy.py` + `data/derived/pl_taxonomy/` | Merges PLDB + Linguist + Pygments + Wikipedia + Esolang + Hyperpolyglot + Rosetta Code into `pl`, `pl_alias`, `ext_claim` (with `source`+`strength` per claim), `ext_summary`, `heuristic` tables. |
 | Content-based PL classifier | `tools/pl_classify.py` | Runs Linguist's `heuristics.yml` (377 rules across 148 ambiguous extensions) as a runnable predicate set. |
 | SWH mining + sample fetcher | `tools/swh_extension_mining.py` + `tools/fetch_samples.py` | Mines the SWH popular-content-names parquet for real archived programs per extension; materializes bytes to `samples/<pl_id>/<sha1>/` with citation-grade qualified SWHIDs. |
-| SWH-MSR-ARV ext popularity | `tools/build_swh_ext_popularity.py` → `data/derived/swh_extensions_popularity.csv` | Per-extension occurrence aggregate (1950–2023) for ~2.96M alphanumeric extensions across the SWH archive. Source dataset: Desmazières / Di Cosmo / Lorentz, *50 Years of Programming Language Evolution through the Software Heritage looking glass*, MSR 2025: 372–383. See [`docs/citations.md`](docs/citations.md). |
+| SWH ext popularity | `tools/build_swh_ext_year_table.py` → `tools/build_swh_ext_popularity.py` → `data/derived/swh_extensions_popularity.csv.gz` | Per-extension counts of distinct files (1950–2026) for ~4.2M alphanumeric extensions across the SWH archive, from the SWH 2026-06-04 export. Approach (and the 2023 table used until 2026-09): Desmazières / Di Cosmo / Lorentz, *50 Years of Programming Language Evolution through the Software Heritage looking glass*, MSR 2025: 372–383. See [`docs/citations.md`](docs/citations.md). |
 | Extension review queue | `tools/build_extension_review_queue.py` → `data/derived/extension_review_queue.csv` | Ranked list of extensions that need a manual label (popular in SWH, no PL claim). |
 | Crowdsource label loop | `/review/extensions/`, per-ext form on `/ext/<slug>/`, GitHub Actions in `.github/workflows/ingest_ext_labels.yml` | Form on the site → pre-filled GH issue → curator script → updates `extension_labels.csv` → promotes accepted labels into `ext_claim.csv`. |
 | Site enrichment | `web/build_site.py` (extensively) | Adds cross-source pill row, ext-claim table, SWH samples section, per-ext pages (8,344), per-source pages, `/samples/` index, `/review/` views, stats additions. ~13,755 PL pages total. |
@@ -46,13 +46,12 @@ Settings → Pages → Source: **"GitHub Actions"**. Then push (or trigger
 "Deploy site to GitHub Pages" from the Actions tab); the deploy URL appears
 in the workflow run output.
 
-**Known gap on the public deploy**:
-`data/derived/swh_extensions_popularity.csv` (the SWH-MSR-ARV-derived
-per-extension aggregate) is gitignored. The CI deploy doesn't have it, so
-SWH-popularity panels and the /ext/ sort-by-popularity will be empty in
-the public site. The site otherwise works (taxonomy, samples, labelling
-form, etc.). To close the gap: either commit the 77 MB file via Git LFS
-or fetch it from cloud storage as a workflow pre-step.
+**SWH popularity on the public deploy**:
+`data/derived/swh_extensions_popularity.csv.gz` (the per-extension
+aggregate, ~22 MB gzipped) is committed, so the CI deploy renders the
+SWH-popularity panels and the /ext/ sort-by-popularity. Regenerate it with
+`tools/build_swh_ext_popularity.py` (needs duckdb and the source table
+built by `tools/build_swh_ext_year_table.py`).
 
 The original LLM-curation scope (everything below) is untouched.
 

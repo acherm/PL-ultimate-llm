@@ -15,13 +15,11 @@ name: Deploy site to GitHub Pages
 #   - `web/dist/` — the static site (~13,755 PL pages + 8,344 ext pages +
 #     /samples, /source, /review, /stats, /audit ; ~170 MB).
 #
-# Known data gap on the public deploy:
-#   - `data/derived/swh_extensions_popularity.csv` is gitignored (77 MB, the
-#     SWH-MSR-ARV-derived per-ext occurrence aggregate). The build degrades
-#     gracefully: SWH-popularity panels render empty / "—" and the /ext/ index
-#     sorts alphabetically instead of by popularity. To fix: either commit the
-#     file via Git LFS, or add a workflow step that fetches it from cloud
-#     storage before running build_site.py.
+# SWH popularity data:
+#   - `data/derived/swh_extensions_popularity.csv.gz` is committed (~22 MB
+#     gzipped, per-ext aggregate from the SWH 2026-06-04 export). If it is
+#     missing, the build degrades gracefully: SWH-popularity panels render
+#     empty / "—" and the /ext/ index sorts alphabetically.
 
 on:
   push:
@@ -82,7 +80,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pyyaml pygments
-          # duckdb is only required to regenerate swh_extensions_popularity.csv
+          # duckdb is only required to regenerate swh_extensions_popularity.csv.gz
           # from the source CSV; the build step doesn't need it.
 
       - name: Rebuild PL taxonomy (promote accepted ext labels into ext_claim.csv)

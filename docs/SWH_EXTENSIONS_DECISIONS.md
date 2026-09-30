@@ -11,6 +11,10 @@ revisited.
 > Programming Language Evolution through the Software Heritage looking
 > glass"*, MSR 2025: 372–383. See [`docs/citations.md`](citations.md).
 
+> **Since 2026-09-30 the site uses a rebuild from the SWH 2026-06-04 export
+> instead (§14).** Sections 1–13 analyse the SWH-MSR-ARV file and keep its
+> numbers; the derivation, thresholds and heuristics they describe still apply.
+
 ## 1. The input
 
 **File:** `nb_extensions_alphanum.csv` (the SWH-MSR-ARV dataset). At the time
@@ -21,13 +25,17 @@ default in `tools/build_swh_ext_popularity.py` points there.
 - Source: the SWH-MSR-ARV authors, extracted from the Software Heritage
   archive (one row per file extension, columns are year-by-year occurrence
   counts).
-- Filter applied at source: file extensions are **alphanumeric, 1–6
-  characters long** (after the leading `.`). Unicode-only extensions are
-  excluded by construction; a few literal Unicode rows do leak in (the
-  file's tail shows `.𝚁`, `.𝚓𝚜𝚘𝚗`, etc.) but they have negligible counts.
-- Shape: **2,960,281 rows** × **76 columns** (459 MB CSV).
+- Filter applied at source: file extensions are **alphanumeric** (after the
+  leading `.`), Unicode-aware and with **no length limit** — measured
+  2026-09-29: 70 % of extension rows are longer than 6 characters (max 226),
+  and 17,687 contain non-ASCII characters (`.𝚓𝚜𝚘𝚗`, `.001西西57P289M`).
+  Extensions containing `-`, `_`, `+`, etc. are excluded. (Earlier versions
+  of this doc said "1–6 characters"; the file itself contradicts that.)
+- Shape: **2,960,281 rows** × **76 columns** (459 MB CSV): one `no extension`
+  row (1.15 B occurrences, 6.0 %) + 2,960,280 extension rows.
   - Column `extension` — the extension string (e.g. `.py`, `.fzf`, `.0`, `.html`).
-  - Column `-1` — occurrences with no date / unknown commit date.
+  - Column `-1` — occurrences with no date / unknown commit date
+    (8.30 B, **43.8 %** of the total).
   - Columns `1950` … `2023` — occurrence counts per year.
 - Aggregate file-content occurrences summed across all years: **~18.97 billion**.
 
@@ -60,7 +68,7 @@ or the inline snippet in `docs/PHASE2_OVERNIGHT.md`.)
 A single per-extension aggregate, written to:
 
 ```
-data/derived/swh_extensions_popularity.csv
+data/derived/swh_extensions_popularity.csv.gz
 ```
 
 Columns:
@@ -69,16 +77,17 @@ Columns:
 |---|---|
 | `extension` | the ext string (e.g. `.py`) |
 | `total_occ` | sum of occurrences across all years + `-1` |
-| `recent_occ` | sum across years 2019–2023 (proxy for "still alive") |
+| `recent_occ` | sum across years 2019 onward (proxy for "still alive") |
 | `undated_occ` | the `-1` column (commits SWH couldn't date) |
 | `first_year` | earliest year with a positive count (or empty) |
 | `last_year` | latest year with a positive count (or empty) |
 
-**This file keeps every one of the 2,960,281 rows** — no threshold is applied at
-the derivation step. The rationale is that anyone doing rigorous analysis (e.g.
+**This file keeps every row** (2,960,281 from SWH-MSR-ARV; 4,207,753 from the
+2026-06-04 rebuild) — no threshold is applied at the derivation step. The rationale is that anyone doing rigorous analysis (e.g.
 "is there an SWH presence for `.fsf`?") needs to query the full distribution,
 not a website-sized subset. The 459 MB SWH-MSR-ARV source is preserved at its
-original path; our 77 MB derivative is the convenient form for downstream tools.
+original path; our derivative (77 MB then; 118 MB now, committed gzipped at
+~22 MB) is the convenient form for downstream tools.
 
 ## 4. The website's threshold
 
@@ -138,7 +147,7 @@ Even within the 8,344 rendered pages, we apply heuristics:
 
 | Concern | What's true today | When to revisit |
 |---|---|---|
-| 1–6 char alphanumeric filter at source | SWH-MSR-ARV pre-filter; Unicode and special-char extensions are missing | If we find evidence of significant non-alphanumeric PL extensions (e.g., `.f95+`) |
+| Alphanumeric filter at source | SWH-MSR-ARV pre-filter (Unicode-aware, any length); extensions with special chars are missing | If we find evidence of significant non-alphanumeric PL extensions (e.g., `.f95+`) |
 | "Recent" = 2019 onwards | Arbitrary 5-year window | If we want a different liveness signal |
 | `-1` column lumped into total | Undated occurrences count the same as dated ones | Could weight them differently |
 | Single shard (shard 0) was used for **mining sample programs**; SWH-MSR-ARV covers the whole archive | The 2.96 M-row aggregate IS for the full SWH archive; only our `samples/` mining is shard-0-only | If we run the SWH mining at full archive scale |
@@ -183,7 +192,7 @@ balance. They don't, by a wide margin, and the imbalance is informative.
 | PLs with **no** claimed extension | **11,028** (92.2 %) |
 | Extension pages on the site (top-8K cut) | 8,344 |
 | Extensions in our taxonomy (`ext_summary.csv`) | 1,538 |
-| Extensions in SWH-MSR-ARV (alphanumeric 1–6 char) | 2,960,280 |
+| Extensions in SWH-MSR-ARV (alphanumeric, any length) | 2,960,280 |
 | Extensions in **both** taxonomy & SWH-MSR-ARV | 1,491 |
 
 ### Per-PL: how many extensions does each PL claim?
@@ -496,12 +505,56 @@ same `ext`, resolved by maintainers in the issue thread.
 
 If we publish based on this data:
 
-- **Cite SWH-MSR-ARV** (Desmazières, Di Cosmo, Lorentz; MSR 2025; file
-  `nb_extensions_alphanum.csv`) as the source. See `docs/citations.md` for
-  the full bibliographic entry.
-- **Cite `data/derived/swh_extensions_popularity.csv`** as the per-ext aggregate
-  we computed (full 2.96 M rows, no cutoff).
+- **Cite the MSR 2025 paper** (Desmazières, Di Cosmo, Lorentz) for the approach,
+  **plus Software Heritage** (2026-06-04 Aggregated Contents export; SWH's two
+  reference papers). Numbers from §§1–13 come from SWH-MSR-ARV
+  (`nb_extensions_alphanum.csv`, 2023). See `docs/citations.md`.
+- **Cite `data/derived/swh_extensions_popularity.csv.gz`** as the per-ext aggregate
+  we computed (full 4.2 M rows, no cutoff).
 - **State explicitly** that the website's `/ext/` view is capped at top 8 K by
   popularity and that this is a UX decision, not a data-curation claim.
 - For any per-PL "SWH coverage" claim, **use the derived CSV** (query by ext),
   not the site (which truncates).
+
+## 14. A 2026 rebuild from the SWH 2026-06-04 export (not SWH-MSR-ARV)
+
+SWH-MSR-ARV stops at a 2023 snapshot, with 2022–2023 under-counted. On
+2026-09-29 we rebuilt a table of the same shape from the public
+*Aggregated Contents* dataset of the 2026-06-04 graph export
+(<https://datasets.softwareheritage.org/datasets/2026-06-04-contents/>,
+`s3://softwareheritage/derived_datasets/2026-06-04/contents/`) with
+`tools/build_swh_ext_year_table.py`.
+
+- **Outputs** (outside the repo, ~1 GB): `/Users/mathieuacher/SANDBOX/PL-swh-contents/2026-06-04/`
+  - `nb_extensions_alphanum_2026-06-04.csv` — same layout as the original
+    (`extension,-1,1950…2026`, `no extension` row, Unicode `isalnum()` filter, any length)
+  - `nb_extensions_alphanum_2026-06-04.manifest.json` — provenance + counts
+  - `swh_contents_ext_year_2026-06-04.parquet` — long format, all extensions, unfiltered
+  - `swh_extensions_popularity_2026-06-04.csv` — `build_swh_ext_popularity.py` run on it
+- **Unit:** one distinct content, counted once under its most popular
+  filename's last extension, in the year of its oldest revision/release.
+- **Cost:** reads 2 of 9 columns (~36 GB of 0.46 TB); ~2.5 h sequential over anonymous S3.
+
+**How it compares with SWH-MSR-ARV** (same row filter):
+
+| | SWH-MSR-ARV (2023) | 2026-06-04 rebuild |
+|---|---|---|
+| Rows (`no extension` + extensions) | 2,960,281 | 4,207,753 |
+| Total | 18.97 B | 29.16 B (×1.54) |
+| Undated (`-1`) | 8.30 B (**43.8 %**) | 0.23 B (**0.8 %**) |
+| Last year with full data | ~2021 | 2025 (2026 = Jan–Jun) |
+| Spearman on SWH-MSR-ARV's top 100 / 1 K / 10 K | — | 0.974 / 0.971 / 0.966 |
+| Top-100 / 1 K / 10 K overlap | — | 96 % / 93 % / 92 % |
+
+Every extension we spot-checked grows (×1.02 `.CBL` … ×2.18 `.rs`); the 42,611
+extensions present only in SWH-MSR-ARV carry a negligible count. Rankings are
+stable; **per-year curves are not comparable**: the rebuild spreads SWH-MSR-ARV's
+8.3 B undated occurrences over real years, so any year ≤ 2021 is ~1.7–3× higher
+and `recent_occ` (2019+) jumps (e.g. `.html`: 24 % → 77 % of total).
+
+**Status:** wired into the site on 2026-09-30.
+`data/derived/swh_extensions_popularity.csv.gz` (gzipped: 118 MB raw is over
+GitHub's 100 MB file limit) and `data/derived/extension_review_queue.csv` are
+regenerated from this rebuild. The COBOL study's committed outputs keep their
+SWH-MSR-ARV numbers. Citation: MSR 2025 for the approach + the SWH export
+(see `docs/citations.md`).

@@ -2,8 +2,8 @@
 """Generate a ranked review queue of unattributed file extensions.
 
 Input:
-  - data/derived/swh_extensions_popularity.csv  (SWH-MSR-ARV, aggregated;
-                                                  see docs/citations.md)
+  - data/derived/swh_extensions_popularity.csv.gz  (SWH 2026-06-04 export,
+                                                     aggregated; see docs/citations.md)
   - data/derived/pl_taxonomy/ext_summary.csv    (what we currently claim)
 
 Output:
@@ -23,6 +23,7 @@ Vocabulary lives in `docs/extension_labels.md`. Reviewers pick from there.
 from __future__ import annotations
 import argparse
 import csv
+import gzip
 import math
 import re
 from pathlib import Path
@@ -49,7 +50,7 @@ def _canonical_pl_entity(pl_id: str) -> str:
             base = base[: -len(s)]
             break
     return re.sub(r"-\d+$", "", base)
-SWH_POP_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv"
+SWH_POP_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
 EXT_SUMMARY_CSV = ROOT / "data" / "derived" / "pl_taxonomy" / "ext_summary.csv"
 OUT_CSV = ROOT / "data" / "derived" / "extension_review_queue.csv"
 
@@ -175,7 +176,7 @@ def main() -> int:
     # authoritative upstream source — they don't need manual review.
     queue: list[dict] = []
     skipped_well_attributed = 0
-    with SWH_POP_CSV.open() as f:
+    with gzip.open(SWH_POP_CSV, "rt", encoding="utf-8", newline="") as f:
         for r in csv.DictReader(f):
             ext = r["extension"]
             if not ext.startswith("."):

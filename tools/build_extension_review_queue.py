@@ -50,6 +50,7 @@ def _canonical_pl_entity(pl_id: str) -> str:
             base = base[: -len(s)]
             break
     return re.sub(r"-\d+$", "", base)
+# Gzipped: the raw CSV (118 MB) is over GitHub's 100 MB file limit.
 SWH_POP_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
 EXT_SUMMARY_CSV = ROOT / "data" / "derived" / "pl_taxonomy" / "ext_summary.csv"
 OUT_CSV = ROOT / "data" / "derived" / "extension_review_queue.csv"

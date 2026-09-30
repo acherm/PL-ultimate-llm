@@ -26,6 +26,9 @@ from pathlib import Path
 
 from .common import ROOT, STUDY_DIR
 
+# Case-preserving SWH counts (SWH 2026-06-04 export since 2026-09-30; the
+# study's committed outputs were produced from SWH-MSR-ARV, 2023). Gzipped:
+# the raw CSV (118 MB) is over GitHub's 100 MB file limit.
 POP_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
 EXT_CLAIM = ROOT / "data" / "derived" / "pl_taxonomy" / "ext_claim.csv"
 OUT = STUDY_DIR / "ext_claim_case_aware_prototype.csv"

@@ -86,6 +86,11 @@ class TurnInfo:
 
 TAXONOMY_DIR = ROOT / "data" / "derived" / "pl_taxonomy"
 SAMPLES_DIR = ROOT / "samples"
+# Per-extension SWH popularity, built by tools/build_swh_ext_popularity.py
+# from the SWH 2026-06-04 export (docs/SWH_EXTENSIONS_DECISIONS.md §14).
+# Gzipped because the raw CSV (118 MB) is over GitHub's 100 MB file limit;
+# it is committed so the CI Pages deploy has it. The .meta.json sidecar holds
+# the parameters needed to label its numbers (the recent window).
 SWH_EXT_POPULARITY_CSV = ROOT / "data" / "derived" / "swh_extensions_popularity.csv.gz"
 SWH_EXT_POPULARITY_META = ROOT / "data" / "derived" / "swh_extensions_popularity.meta.json"
 _TAXONOMY_SOURCES = ("pldb", "linguist", "pygments", "wikipedia",
@@ -243,7 +248,13 @@ def load_swh_ext_popularity() -> dict[str, dict]:
 
 def load_swh_ext_popularity_meta() -> dict:
     """Sidecar of the popularity table: recent window (`recent_from`,
-    `recent_to`) and artefact years. Missing → {} (labels fall back)."""
+    `recent_to`) and artefact years. Missing → {} (labels fall back).
+
+    The window is computed from the data (last 5 full years before the
+    partial export year: 2021–2025 for the 2026-06-04 table), so labels must
+    come from here rather than being hard-coded: the old hard-coded
+    "since 2019" silently grew from 5 to 7.5 years when the data moved on.
+    """
     try:
         return json.loads(SWH_EXT_POPULARITY_META.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -2874,6 +2885,8 @@ def render_per_extension_pages(
 
     # SWH per-extension popularity (one row per ext, aggregated over years).
     swh_pop = load_swh_ext_popularity()
+    # Label for `recent_occ`, e.g. "2021–2025". Loaded once here, not per
+    # page. Without the sidecar the numbers still render, under a vaguer label.
     _swh_meta = load_swh_ext_popularity_meta()
     recent_window = (f"{_swh_meta['recent_from']}–{_swh_meta['recent_to']}"
                      if "recent_from" in _swh_meta else "recent")
@@ -2997,6 +3010,16 @@ def render_per_extension_pages(
               </article>""")
 
         # SWH popularity block (SWH 2026-06-04 export). Case-aggregated.
+        # Three figures, all counting distinct files (blobs), each once:
+        #   - total files: dated or not;
+        #   - first seen <window>: files whose first appearance falls in the
+        #     last 5 full years, and their share of the total (a "still in
+        #     use" signal; `.py` 52 %, `.rs` 70 %);
+        #   - median year: half the dated files had appeared by then.
+        # There is deliberately no "years active first–last": first
+        # appearances carry fake dates (1970/1980 epochs, `.go` files dated
+        # 1973), so the earliest year is meaningless. See
+        # docs/SWH_EXTENSIONS_DECISIONS.md §14.
         swh_pop_html = ""
         swh_pop_info = swh_pop.get(ext)
         if swh_pop_info:
@@ -3005,6 +3028,8 @@ def render_per_extension_pages(
             # Median, not first year: stray wrong commit dates (e.g. `.go`
             # files in 1973) make the earliest dated year meaningless.
             my = swh_pop_info.get("median_year") or "n/a"
+            # Share of ALL files, undated included (0.8 % of the table), so
+            # shares are comparable across extensions.
             recent_pct = (100 * recent / total) if total else 0
             variants = swh_pop_info.get("case_variants") or []
             variants_html = ""

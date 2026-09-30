@@ -103,21 +103,39 @@ def main() -> int:
     year_cols = [c for c in header[1:] if c.lstrip("-").isdigit()]
     print(f"Year columns: {year_cols[0]}, {year_cols[1]} … {year_cols[-1]}")
     cols_sql = ", ".join(f'"{y}"' for y in year_cols)
-    # The last column is the export year, i.e. a partial year.
+
+    # Recent window = the last `--recent-years` FULL years. The last column is
+    # the export year, which is always partial (2026-06-04 -> Jan–early June
+    # 2026; SWH-MSR-ARV's 2023 was partial too), so the window ends the year
+    # before: 2021–2025 for the 2026-06-04 table, 2018–2022 for SWH-MSR-ARV.
+    # Deriving it from the data means a future rebuild moves the window
+    # without code changes; the site reads it back from the .meta.json.
     recent_to = max(int(y) for y in year_cols) - 1
     recent_from = recent_to - args.recent_years + 1
+    # Artefact years: the Unix epoch (1970-01-01, i.e. timestamp 0) and the
+    # MS-DOS/ZIP epoch (1980-01-01) are where missing or broken commit dates
+    # land. In the 2026-06-04 table 1970 holds 18.0 M files (vs 28 K in 1971),
+    # including 1.2 M `.go` files although Go dates from 2009, and 1980 holds
+    # 1.5 M (vs ~100 K in 1979/1981). Treating those whole years as undated
+    # also moves the few genuine files they contain; that loss is negligible.
     artifact_years = sorted(int(y) for y in args.artifact_years.split(",") if y.strip())
+    # `x IN (NULL)` is never true, so an empty list disables the rewrite.
     artifacts_sql = ", ".join(str(y) for y in artifact_years) or "NULL"
     print(f"Recent window: {recent_from}–{recent_to}; artefact years counted as undated: {artifact_years}")
 
     con.execute(f"""
 COPY (
     WITH src AS (
+        -- ignore_errors: skip a malformed row rather than abort the whole
+        -- derivation (a few million rows, hand-shipped CSVs).
         SELECT *
         FROM read_csv_auto('{src.as_posix()}',
                            header=true, ignore_errors=true, sample_size=20000)
     ),
     unpivoted AS (
+        -- Wide -> long: one row per (extension, year) with a positive count.
+        -- `-1` stays -1 (undated); artefact years become -1 too, so every
+        -- aggregate below treats them as undated.
         SELECT extension,
                CASE WHEN year::INTEGER IN ({artifacts_sql}) THEN -1
                     ELSE year::INTEGER END AS year,
@@ -129,15 +147,25 @@ COPY (
     by_ext AS (
         SELECT
             extension,
+            -- Everything, dated or not: the extension's size in the archive.
             sum(occ) AS total_occ,
+            -- First seen within the recent full-year window.
             sum(CASE WHEN year BETWEEN {recent_from} AND {recent_to} THEN occ ELSE 0 END) AS recent_occ,
+            -- Undated = the `-1` column + artefact years.
             sum(CASE WHEN year < 0 THEN occ ELSE 0 END) AS undated_occ,
+            -- Earliest / latest dated year. first_year is NOT a reliable start
+            -- date: stray wrong dates remain in every early year (e.g. `.rs`
+            -- files dated 1971–1975), indistinguishable from genuinely old
+            -- files (Unix-history `.c`). Kept for analysts; the site shows
+            -- median_year instead.
             min(CASE WHEN year >= 0 THEN year END) AS first_year,
             max(CASE WHEN year >= 0 THEN year END) AS last_year
         FROM unpivoted
         GROUP BY extension
     ),
     cumul AS (
+        -- Running total of dated files per extension, oldest year first (c),
+        -- next to the extension's dated total (t).
         SELECT extension, year,
                sum(occ) OVER (PARTITION BY extension ORDER BY year
                               ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS c,
@@ -146,14 +174,24 @@ COPY (
         WHERE year >= 0
     ),
     median AS (
+        -- Weighted median year: the first year by which at least half of the
+        -- dated files had appeared (c >= t/2, written 2*c >= t to stay in
+        -- integers). A few wrong dates cannot move it, unlike first_year:
+        -- .py 2021, .c 2019, .pl 2016, .rs 2023 on the 2026-06-04 table.
+        -- NULL (LEFT JOIN below) when an extension has no dated file at all.
         SELECT extension, min(year) AS median_year
         FROM cumul WHERE 2 * c >= t
         GROUP BY extension
     )
     SELECT b.extension, total_occ, recent_occ, undated_occ, first_year, last_year, median_year
     FROM by_ext b LEFT JOIN median m USING (extension)
+    -- Tie-break on extension so two runs produce byte-identical files (the
+    -- output is committed: no spurious diffs). Readers rely on the
+    -- descending order too: web/build_site.py takes the median of the most
+    -- frequent case variant, i.e. the first one it meets.
     ORDER BY total_occ DESC, b.extension
 )
+-- DuckDB infers the compression from the extension: `.csv.gz` -> gzip.
 TO '{out.as_posix()}'
 WITH (HEADER, DELIMITER ',')
 """)
@@ -162,6 +200,9 @@ WITH (HEADER, DELIMITER ',')
     ).fetchone()[0]
     print(f"Wrote {out} ({out.stat().st_size/1024/1024:.0f} MB, {n:,} rows).")
 
+    # Sidecar next to the CSV (`swh_extensions_popularity.meta.json`): the
+    # parameters needed to label the numbers correctly. web/build_site.py
+    # builds the "first seen 2021–2025" label from recent_from/recent_to.
     meta_path = out.parent / (out.name.split(".")[0] + ".meta.json")
     meta_path.write_text(json.dumps({
         "source": src.name,

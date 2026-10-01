@@ -417,6 +417,9 @@ class App:
         <input type=hidden name=sha1_git value="{esc(sha)}"><input type=hidden name=filename value="{esc(row.get('name'))}">
         <input type=hidden name=blind value="{'1' if blind else '0'}">
         <label>Language</label><select name=language>{opts(tax.LANGUAGES + ['unsure'], prev.get('language', ''))}</select>
+        <div class=muted>Same rule as the judges: <b>matlab</b> = MATLAB-family code MATLAB accepts (portable code too);
+        <b>octave</b> only if the file uses syntax MATLAB rejects (<code>#</code> comments, <code>endfunction</code>/<code>endif</code>,
+        <code>printf</code>, <code>++</code>, <code>!=</code>). Record portability in the MATLAB-dialect field.</div>
         <label>Content type</label><select name=content_type>{opts(tax.CONTENT_TYPES, prev.get('content_type', ''))}</select>
         <label>Provenance kind</label><select name=provenance_kind>{opts(tax.PROVENANCE_KINDS, prev.get('provenance_kind', ''))}</select>
         <label>MATLAB dialect (if MATLAB-family)</label><select name=matlab_dialect>{opts(tax.MATLAB_DIALECTS, prev.get('matlab_dialect', ''))}</select>

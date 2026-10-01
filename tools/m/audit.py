@@ -72,7 +72,9 @@ def score(verbose=True) -> dict:
     recs = load()
     q = queue()
     done = [(d, recs[d["sha1_git"]]) for d in q if recs[d["sha1_git"]].reviews]
-    out = {"n_queue": len(q), "n_reviewed": len(done), "labellers": {}}
+    revised = sum(1 for _, r in done if len(r.reviews) > 1 and r.reviews[0].get("blind")
+                  and not r.reviews[-1].get("blind"))
+    out = {"n_queue": len(q), "n_reviewed": len(done), "revised_after_unblinding": revised, "labellers": {}}
     if not done:
         if verbose:
             print(f"audit: 0/{len(q)} reviewed — nothing to score yet")
@@ -91,7 +93,7 @@ def score(verbose=True) -> dict:
             out["labellers"][lab] = {"n": len(xs), "accuracy": round(p, 4), "ci": [round(lo, 4), round(hi, 4)],
                                      "n_eff": round(neff, 1)}
     if verbose:
-        print(f"audit: {len(done)}/{len(q)} reviewed")
+        print(f"audit: {len(done)}/{len(q)} reviewed ({revised} revised after unblinding; the latest review counts)")
         for lab, v in out["labellers"].items():
             print(f"  {lab:10} acc={v['accuracy']:.3f}  CI [{v['ci'][0]:.3f}, {v['ci'][1]:.3f}]  n={v['n']}")
     (STUDY / "audit_score.json").write_text(json.dumps(out, indent=1))

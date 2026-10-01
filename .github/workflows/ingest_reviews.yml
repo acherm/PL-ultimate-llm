@@ -12,8 +12,10 @@ name: Ingest file reviews
 #
 # GitHub runs `issues` workflows from the default branch (main), so this file
 # must also exist on main; it checks out swh-evidence-v1, where the tools live.
-# The site rebuild is chained from pages_deploy.yml (workflow_run), because
-# bot pushes do not trigger other workflows.
+# The site rebuild is dispatched explicitly on swh-evidence-v1: bot pushes do
+# not trigger other workflows, and a `workflow_run` chain would run with ref
+# main, which the github-pages environment rejects (it only accepts
+# swh-evidence-v1). A workflow_dispatch made with GITHUB_TOKEN does run.
 
 on:
   issues:
@@ -23,6 +25,7 @@ on:
 permissions:
   contents: write
   issues: write
+  actions: write      # dispatch the site deploy
 
 concurrency:
   group: ingest-reviews
@@ -69,4 +72,12 @@ jobs:
             git commit -m "reviews: ingest from the review page${{ github.event.issue.number && format(' (issue #{0})', github.event.issue.number) || '' }}"
             git pull --rebase origin swh-evidence-v1
             git push origin HEAD:swh-evidence-v1
+            echo "pushed=1" >> "$GITHUB_OUTPUT"
           fi
+        id: commit
+
+      - name: Rebuild the site
+        if: steps.commit.outputs.pushed == '1'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run pages_deploy.yml --ref swh-evidence-v1

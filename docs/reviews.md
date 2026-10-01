@@ -146,7 +146,8 @@ reviewer  saves reviews in the browser (localStorage), presses "Submit on GitHub
           → pre-filled issue, form .github/ISSUE_TEMPLATE/review.yml, label `review`
 bot       .github/workflows/ingest_reviews.yml → tools/ingest_reviews.py
           → one file per review in reviews/<sha>/, commit, reply, close
-site      rebuilt (pages_deploy.yml, chained by workflow_run): progress updates
+site      rebuilt: the bot dispatches pages_deploy.yml on swh-evidence-v1 (the
+          only branch the github-pages environment accepts): progress updates
 ```
 
 - **Blind.** Items carry provenance only (origin, branch, path, SWH links,
@@ -174,9 +175,10 @@ site      rebuilt (pages_deploy.yml, chained by workflow_run): progress updates
   the accuracy estimate. `python3 -m tools.m.audit --score` reports human–
   human agreement.
 - **Issue forms and `issues` workflows are read from the default branch
-  (`main`)**: the form, `ingest_reviews.yml` and the `workflow_run` list in
-  `pages_deploy.yml` must be on `main` (the workflow checks out
-  `swh-evidence-v1`, where the tools live). Labels `review`,
+  (`main`)**: the form and `ingest_reviews.yml` must be on `main` (the
+  workflow checks out `swh-evidence-v1`, where the tools live). A
+  `workflow_run` chain does not rebuild the site: it runs with ref `main`,
+  which the github-pages environment rejects — hence the explicit dispatch. Labels `review`,
   `review-approved`, `review-ingested` must exist.
 - Local test: `python3 tools/ingest_reviews.py --body-file issue.md --author
   <login> --dry-run`.

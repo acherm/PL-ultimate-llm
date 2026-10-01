@@ -112,8 +112,10 @@ def approve(login: str, approved_by: str) -> str:
 
 # ---------------------------------------------------------------- batch
 def parse_batch(body: str) -> dict:
+    # The form renders the field as a ```json block; a hand-pasted batch may come
+    # without the fence, under the form's heading: take the outermost {...}.
     m = _JSON_BLOCK.search(body)
-    raw = m.group(1) if m else body.strip()
+    raw = m.group(1) if m else body[body.find("{"): body.rfind("}") + 1] if "{" in body else body.strip()
     try:
         batch = json.loads(raw)
     except json.JSONDecodeError as e:

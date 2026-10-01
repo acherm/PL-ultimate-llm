@@ -113,7 +113,10 @@ The site attached taxonomy records to in-repo pages by first name hit, so on
 Record Wikipedia URLs are not trusted alone (the Wikidata overlay over-assigns
 them, `docs/PL_IDENTITY.md` §5), hence the name requirements. Still open:
 `languages/M` is Power Query M but its name is `pl/m`'s canonical name, so its
-page shows MUMPS facts — a `cannot_link` decision for the identity layer.
+page showed MUMPS facts. Fixed by a reviewed decision in `data/curated/pl_links.csv`
+(`same_as`, `rejected`, `L-c9f8895c83`), which the site matcher now honors: a
+campaign page is never attached to a record it was rejected against, and gets no
+fallback record (the next candidate for `m` is another homonym).
 
 Samples: files a human reviewer confirmed (blind, agreeing with both judges)
 are always exported; judge-only exemplars stay capped per language.

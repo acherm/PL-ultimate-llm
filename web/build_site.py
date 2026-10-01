@@ -509,6 +509,15 @@ def load_pl_match_candidates() -> tuple[dict[str, list[str]], dict[str, set[str]
     return _PL_MATCH_CACHE
 
 
+def load_rejected_links() -> set[frozenset[str]]:
+    """Record pairs a reviewer decided are NOT the same language: `same_as` rows
+    with decision `rejected` in data/curated/pl_links.csv (e.g. repo/M — Power
+    Query M — vs pl/m — MUMPS, which Linguist calls "M")."""
+    return {frozenset((d.get("record_a", ""), d.get("record_b", "")))
+            for d in _read_csv(PL_LINK_DECISIONS_CSV)
+            if d.get("relation") == "same_as" and d.get("decision") == "rejected"}
+
+
 def pl_pages(languages: list["Language"],
              enrichments: dict[str, "TaxonomyEnrichment"]) -> tuple[dict[str, str], dict[str, str]]:
     """pl_id -> slug, and pl_id -> in-repo name, of the page that represents a
@@ -1167,6 +1176,7 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
         return {}
     candidates, own_keys = load_pl_match_candidates()
     canon_keys = {p: _name_keys(r.get("canonical_name") or "") for p, r in pl_by_id.items()}
+    rejected = load_rejected_links()
     ext_claims = load_ext_claims()
     _, heuristics_by_ext = load_heuristics()
     swh_samples = load_swh_samples()
@@ -1207,6 +1217,12 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
                          if _wikipedia_key(pl_by_id.get(p, {}).get("wikipedia_url")) == ev_wp]
             if confirmed:
                 pl_id = confirmed[0]
+        # A reviewed "not the same language" decision wins over the name match.
+        # No fallback to the next candidate: the same name usually leads to
+        # another homonym (`m` → pl/wolfram-language via a lexer alias), and no
+        # facts are better than another language's facts.
+        if lang.folder_rel and frozenset(("repo/" + lang.folder_rel, pl_id)) in rejected:
+            continue
         row = pl_by_id.get(pl_id, {})
         my_claims = ext_claims.get(pl_id, [])
         my_exts = {c[0] for c in my_claims}

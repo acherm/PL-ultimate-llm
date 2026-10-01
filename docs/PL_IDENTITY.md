@@ -155,6 +155,9 @@ larger problem is **wrong links**:
 4. Typed non-merging relations (`version_of`, `dialect_of`,
    `implementation_of`, `renamed_to`) for class G and the V labels: shown as
    a family box, not merged. `cannot_link` rows for known homonyms
-   (`Go`/`Go!`, `Small Basic`/`SmallBASIC`).
+   (`Go`/`Go!`, `Small Basic`/`SmallBASIC`). Started 2026-10-01: a `same_as`
+   row with decision `rejected` already acts as one — `web/build_site.py`
+   will not attach the campaign page to that record (first: `repo/M`, Power
+   Query M, vs `pl/m`, MUMPS — `L-c9f8895c83`).
 5. A *kind* facet (programming / markup / data / format) from Linguist and
    PLDB types — today the only type carried is `esolang`.

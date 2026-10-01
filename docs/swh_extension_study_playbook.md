@@ -241,8 +241,8 @@ Checklist addition: after judging, `python3 -m tools.jev.run --study <s> --probe
 A study is finished when what it learned is in the encyclopedia, not only in its
 report. Write `tools/<study>/export.py` against the common format
 (`tools/study_export.py`), then `python3 tools/propagate_study.py --study <id>`
-(plan) and `--apply`. Observed languages become `swh_study:<id>` claims, missing
-ones are added, wrong ones disputed; shares per frame and measured identifier
-behaviour appear on the extension's page; verified samples land in `samples/`
+(plan) and `--apply`. Wrong source claims are disputed, missing edges and
+non-PL labels become proposals for the curator workflow (a study is evidence,
+never a claimant); shares per frame appear on the extension's page; verified samples land in `samples/`
 with the judges' and reviewers' verdicts in `reviews/`. See
 `docs/STUDY_PROPAGATION.md`.

@@ -4,9 +4,11 @@
 Reads `data/derived/study_exports/<study>/` (format: tools/study_export.py) and
 shows — or applies — what each study changes in the encyclopedia:
 
-  mapping    `ext_claim.csv` rows from study claims (observe / add / dispute),
-             folded in by tools/build_pl_taxonomy.py, which reads the exports
-             directly (so the CI taxonomy rebuild keeps them);
+  mapping    disputes mark the named source's `ext_claim.csv` row `disputed`
+             (tools/build_pl_taxonomy.py reads the exports directly, so the CI
+             taxonomy rebuild keeps them); a study is never a claimant itself —
+             observations are evidence, and edges no source has (`add`) are
+             proposals, like non-PL labels;
   evidence   `pl_taxonomy/ext_evidence.csv` (observed shares per frame) and
              `pl_taxonomy/heuristic_eval.csv` (measured identifier behaviour);
   samples    verified files materialised as `samples/pl/<slug>/<sha1_git>/`
@@ -62,9 +64,7 @@ def plan(d: Path) -> dict:
     samples = read(d / "samples.csv")
     existing = SE.ext_claims()
     have = {(c["pl_id"], c["ext"], c["source"]) for c in existing}
-    src = f"swh_study:{d.name}"
-    new_rows = [c for c in claims if c["action"] in ("observe", "add") and c.get("status", "accepted") == "accepted"
-                and (c["pl_id"], c["ext"], src) not in have]
+    adds = [c for c in claims if c["action"] == "add" and c.get("status", "accepted") == "accepted"]
     disputes = [c for c in claims if c["action"] == "dispute" and c.get("status", "accepted") == "accepted"]
     disputed_now = {(c["pl_id"], c["ext"], c["source"]) for c in existing if c.get("strength") == "disputed"}
     pending_disputes = [c for c in disputes if (c["pl_id"], c["ext"], c["source_disputed"]) not in disputed_now]
@@ -72,9 +72,13 @@ def plan(d: Path) -> dict:
     print(f"\n=== study {d.name}: {meta.get('title', '')}")
     print(f"    extensions {meta.get('extensions')} · report {meta.get('report')}")
     print(f"    claims: {Counter(c['action'] for c in claims)}")
-    for c in new_rows:
-        print(f"      + ext_claim  {c['ext']:6} {c['pl_id']:28} {c['action']:8} {c['strength']:9} "
-              f"file {c['share_file_pct']}% repo {c['share_repo_pct']}%")
+    for c in claims:
+        if c["action"] == "observe":
+            print(f"      = observed   {c['ext']:6} {c['pl_id']:28} file {c['share_file_pct']}% "
+                  f"repo {c['share_repo_pct']}% (evidence only)")
+    for c in adds:
+        print(f"      ? add        {c['ext']:6} {c['pl_id']:28} (proposal: no source claims it; "
+              f"file {c['share_file_pct']}%)")
     for c in pending_disputes:
         print(f"      ! dispute    {c['ext']:6} {c['pl_id']:28} source={c['source_disputed']}")
     for c in claims:
@@ -85,7 +89,7 @@ def plan(d: Path) -> dict:
     print(f"    evidence rows: {len(read(d / 'ext_evidence.csv'))} · heuristic evaluations: "
           f"{len(read(d / 'heuristic_eval.csv'))}")
     print(f"    samples: {len(samples)} verified, {len(new_samples)} new → samples/pl/<slug>/<sha>/")
-    return {"meta": meta, "new_rows": new_rows, "disputes": pending_disputes, "samples": samples,
+    return {"meta": meta, "adds": adds, "disputes": pending_disputes, "samples": samples,
             "new_samples": new_samples}
 
 
@@ -210,7 +214,17 @@ def main() -> int:
         made = [materialise_sample(s, pl_name) for s in p["samples"]]
         n_rev = write_reviews(sid, [s for s, m in zip(p["samples"], made) if m], known)
         print(f"\n[{sid}] samples written/refreshed: {sum(1 for m in made if m)} · reviews added: {n_rev}")
-    proposals = [c for d in ds for c in read(d / "claims.csv") if c.get("action") == "label"]
+    # Proposals for the curator workflow: non-PL labels, and PL edges no source has
+    # (an `add` is proposed as the extension label `pl/<id>`).
+    proposals = []
+    for d in ds:
+        for c in read(d / "claims.csv"):
+            if c.get("status", "accepted") != "accepted":
+                continue
+            if c.get("action") == "label":
+                proposals.append(c)
+            elif c.get("action") == "add":
+                proposals.append({**c, "label": c["pl_id"]})
     out = ROOT / "data" / "derived" / "study_label_proposals.csv"
     with out.open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["study", "ext", "label", "evidence", "rationale", "status"])
@@ -228,7 +242,7 @@ def main() -> int:
     for e in exts:
         rows = [c for c in claims if c["ext"] == e]
         print(f"  {e}: {len(rows)} rows · {Counter(c['strength'] for c in rows)} · "
-              f"study rows {sum(1 for c in rows if c['source'].startswith('swh_study:'))}")
+              f"disputed by a study {sum(1 for c in rows if 'disputed by swh_study:' in c.get('evidence', ''))}")
     return 0
 
 

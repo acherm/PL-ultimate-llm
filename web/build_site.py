@@ -659,6 +659,34 @@ def load_reviews_by_sha() -> dict[str, list[dict]]:
     return out
 
 
+_REPO_BRANCH: str | None = None
+
+
+def _repo_branch() -> str:
+    """Branch the site is built from, for links to this repository's files.
+
+    Docs such as the extension-study reports live on that branch, not
+    necessarily on `main`. SITE_REPO_BRANCH overrides; a detached checkout
+    falls back to the prototype branch the site deploys from.
+    """
+    global _REPO_BRANCH
+    if _REPO_BRANCH is None:
+        b = os.environ.get("SITE_REPO_BRANCH", "").strip()
+        if not b:
+            try:
+                b = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--abbrev-ref", "HEAD"],
+                                   capture_output=True, text=True, check=True).stdout.strip()
+            except Exception:
+                b = ""
+        _REPO_BRANCH = b if b and b != "HEAD" else "swh-evidence-v1"
+    return _REPO_BRANCH
+
+
+def _repo_blob_url(owner_repo: str | None, path: str) -> str:
+    """GitHub URL of a file of this repository, on the branch the site is built from."""
+    return f"https://github.com/{owner_repo or 'acherm/PL-ultimate-llm'}/blob/{_repo_branch()}/{path}"
+
+
 def _reviews_html(s: "SwhSample") -> str:
     """Ground-truth panel for one sample card; empty string if unreviewed."""
     if not s.reviews:
@@ -684,9 +712,15 @@ def _reviews_html(s: "SwhSample") -> str:
             f"<div style='margin-top:3px;'>{icon} <strong>{safe(r['id'])}</strong>{ver}"
             f" → {label}{conf}{amended}"
             f" <span class='muted'>{safe(r['created_at'][:10])}</span></div>{comment}")
-    return ("<div style='margin-top:8px; border-top:1px solid rgba(127,127,127,.3); padding-top:6px;'>"
-            f"<span class='muted'>Reviews (ground truth · <a href='https://github.com/acherm/PL-ultimate-llm/blob/swh-evidence-v1/docs/reviews.md'>how?</a>)</span> {flag}"
-            + "".join(rows) + "</div>")
+    n_h = sum(1 for r in s.reviews if r["kind"] == "human")
+    n_m = len(s.reviews) - n_h
+    who = ", ".join(x for x in (f"{n_h} human" if n_h else "", f"{n_m} LLM" if n_m else "") if x)
+    # Folded by default (readability); the summary says what is inside.
+    return ("<details style='margin-top:8px; border-top:1px solid rgba(127,127,127,.3); padding-top:6px;'>"
+            f"<summary class='muted' style='cursor:pointer;'>Reviews ({who})</summary> {flag}"
+            f"<div class='muted' style='font-size:12px;'>Ground truth · "
+            f"<a href='{_repo_blob_url(None, 'docs/reviews.md')}'>how?</a></div>"
+            + "".join(rows) + "</details>")
 
 
 def load_swh_samples() -> dict[str, list[SwhSample]]:
@@ -1082,7 +1116,7 @@ def apply_pl_concepts(
 def render_merged_records_panel(info: dict, *, rel: str, github_owner_repo: str | None) -> str:
     """"Merged records" section of a concept page: every record, how it got here."""
     repo_url = f"https://github.com/{github_owner_repo}" if github_owner_repo else ""
-    decisions_url = f"{repo_url}/blob/main/data/curated/pl_links.csv" if repo_url else ""
+    decisions_url = f"{repo_url}/blob/{_repo_branch()}/data/curated/pl_links.csv" if repo_url else ""
     items = []
     for r in info["records"]:
         role = {"kept": "this page", "merged": "had its own page, merged here",
@@ -3194,7 +3228,7 @@ def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], stu
                               pl_canonical: dict, pl_id_to_slug: dict, rel: str,
                               github_owner_repo: str | None) -> str:
     """'Observed in Software Heritage' panel: what extension studies measured for `ext`
-    (share of each language per sampling frame) and how identifiers fared on it."""
+    (share of each language per sampling frame, and the sample behind it)."""
     if not evid and not heval:
         return ""
     blocks = []
@@ -3256,35 +3290,79 @@ def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], stu
             link = (f"<a href='{rel}l/{slug}/index.html'>{safe(display)}</a>" if same else safe(display))
             pid_html = f" <span class='muted'><code>{safe(pid)}</code></span>" if pid else ""
             lines.append(f"<tr><td>{link}{case_note}{pid_html}</td>{cell(ef, ff)}{cell(er, fr)}</tr>")
-        tools = {}
-        for e in heval:
-            if e["study"] == sid and not e.get("heuristic_id") and e["metric"] in ("accuracy_all", "abstain_rate"):
-                tools.setdefault(e["tool"], {})[e["metric"]] = e
-        tool_rows = "".join(
-            f"<tr><td>{safe(t)}</td><td>{100 * float(m['accuracy_all']['value']):.1f}%</td>"
-            f"<td>{100 * float(m.get('abstain_rate', {}).get('value') or 0):.1f}%</td></tr>"
-            for t, m in sorted(tools.items(), key=lambda kv: -float(kv[1].get('accuracy_all', {}).get('value') or 0))
-            if "accuracy_all" in m)
         report = meta.get("report")
-        report_html = (f"<a href='https://github.com/{safe(github_owner_repo)}/blob/main/{safe(report)}' "
-                       f"target='_blank' rel='noopener'>{safe(report)}</a>" if report and github_owner_repo
-                       else safe(report or ""))
+        report_html = ""
+        if report:
+            links = [f"<a href='{safe(_repo_blob_url(github_owner_repo, report))}' target='_blank' "
+                     f"rel='noopener'>{safe(report)}</a>"]
+            pdf = report.rsplit(".", 1)[0] + ".pdf"
+            if (ROOT / pdf).exists():
+                links.append(f"<a href='{safe(_repo_blob_url(github_owner_repo, pdf))}' target='_blank' "
+                             f"rel='noopener'>PDF</a>")
+            report_html = " Report: " + " · ".join(links) + "."
         pop = meta.get("population") or {}
+        frames = meta.get("frames") or {}
+        sample_html = ""
+        if frames.get("file") or frames.get("repo"):
+            parts = []
+            if frames.get("file"):
+                parts.append(f"<em>share of files</em> — {safe(frames['file'])}")
+            if frames.get("repo"):
+                parts.append(f"<em>share of repositories</em> — {safe(frames['repo'])}")
+            sample_html = "<br/><strong>Sample.</strong> " + "; ".join(parts) + "."
         blocks.append(f"""
-          <p class='muted'>Study <code>{safe(sid)}</code> — {safe(meta.get('title', ''))} Report: {report_html}.
-          Population: {pop.get('contents', '?'):,} contents in {pop.get('repositories', '?'):,} repositories.
-          Shares are of <em>files</em> and of <em>repositories</em> (one random file each); the frame is part of the fact.</p>
+          <p class='muted'>Study <code>{safe(sid)}</code> — {safe(meta.get('title', ''))}{report_html}
+          <br/><strong>Population.</strong> {pop.get('contents', '?'):,} {safe(', '.join(meta.get('extensions') or []))} files in {pop.get('repositories', '?'):,} repositories.{sample_html}
+          Each share says how it was estimated (judged sample, PPI over the rule-labelled sample, or tail census); 95 % interval in brackets.</p>
           <table class='kv-table'>
             <thead><tr><th>Language / format</th><th>Share of files</th><th>Share of repositories</th></tr></thead>
             <tbody>{''.join(lines)}</tbody>
           </table>
-          {f"<h3 style='margin:14px 0 6px;'>Within / about these files</h3><table class='kv-table'><thead><tr><th>Qualifier</th><th>Share of files</th><th>Share of repositories</th></tr></thead><tbody>{''.join(qual_lines)}</tbody></table>" if qual_lines else ""}
-          {f"<h3 style='margin:14px 0 6px;'>How identifiers fare on <code>{safe(ext)}</code></h3><table class='kv-table'><thead><tr><th>Identifier</th><th>Agrees with reference</th><th>Abstains</th></tr></thead><tbody>{tool_rows}</tbody></table><p class='muted'>Reference: two independent LLM judges in agreement (see report); not human ground truth.</p>" if tool_rows else ""}""")
+          {f"<h3 style='margin:14px 0 6px;'>Within / about these files</h3><table class='kv-table'><thead><tr><th>Qualifier</th><th>Share of files</th><th>Share of repositories</th></tr></thead><tbody>{''.join(qual_lines)}</tbody></table>" if qual_lines else ""}""")
     return f"""
         <section class="panel section">
           <h2 style="margin:0 0 8px;">Observed in Software Heritage</h2>
           {''.join(blocks)}
         </section>"""
+
+
+def _prediction_kind(predicted_via: str | None) -> str:
+    """How a sample's language was predicted, without the per-sample details
+    (`swh_study:m (judge:…; human:…)` → `swh_study:m`)."""
+    return (predicted_via or "unknown").split(" (", 1)[0].strip() or "unknown"
+
+
+def _prediction_label(kind: str) -> str:
+    if kind.startswith("swh_study:"):
+        return f"extension study <code>{safe(kind.split(':', 1)[1])}</code> (LLM judges, human reviews)"
+    return {"heuristic": "Linguist heuristic", "manual-request": "manual request",
+            "unknown": "unknown"}.get(kind, safe(kind))
+
+
+def _grouped_samples_html(groups: dict[str, dict[str, list[str]]], pl_canonical: dict,
+                          pl_id_to_slug: dict, rel: str) -> str:
+    """Sample cards grouped by predicted language (largest group first,
+    unclassified last), then by prediction method; each language folds."""
+    def n(g):
+        return sum(len(v) for v in g.values())
+    order = sorted(groups, key=lambda pid: (pid in ("", "unclassified") or pid.startswith("unclassified"),
+                                            -n(groups[pid]), pl_canonical.get(pid, pid).lower()))
+    out = []
+    for pid in order:
+        by_kind = groups[pid]
+        name = pl_canonical.get(pid, pid) or "unclassified"
+        slug = pl_id_to_slug.get(pid)
+        head = f"<a href='{rel}l/{slug}/index.html'>{safe(name)}</a>" if slug else safe(name)
+        kinds = sorted(by_kind, key=lambda k: -len(by_kind[k]))
+        breakdown = " · ".join(f"{len(by_kind[k])} via {_prediction_label(k)}" for k in kinds)
+        body = "".join(
+            (f"<h4 style='margin:10px 0 6px;' class='muted'>via {_prediction_label(k)} ({len(by_kind[k])})</h4>"
+             if len(kinds) > 1 else "") + "".join(by_kind[k])
+            for k in kinds)
+        out.append(f"<details class='sample-group' style='margin-bottom:8px;'>"
+                   f"<summary style='cursor:pointer; padding:4px 0;'><strong>{head}</strong> "
+                   f"({n(by_kind)}) <span class='muted'>— {breakdown}</span></summary>{body}</details>")
+    return "".join(out)
 
 
 def render_per_extension_pages(
@@ -3444,12 +3522,6 @@ def render_per_extension_pages(
             link = f"<a href='{rel}l/{slug}/index.html'>{safe(name)}</a>" if slug else safe(name)
             badge = f"<span class='pill strength-{c['strength']}'>{safe(c['strength'])}</span>"
             src_html = safe(c['source'])
-            if c["source"].startswith("swh_study:"):
-                sm = study_meta.get(c["source"].split(":", 1)[1], {})
-                if sm.get("report") and github_owner_repo:
-                    src_html = (f"<a href='https://github.com/{safe(github_owner_repo)}/blob/main/{safe(sm['report'])}' "
-                                f"target='_blank' rel='noopener' title='observed share: {safe(c.get('source_key',''))}'>"
-                                f"{src_html}</a> <span class='muted'>({safe(c.get('source_key',''))})</span>")
             claim_rows_html.append(
                 f"<tr><td>{link}</td><td>{src_html}</td><td>{badge}</td></tr>"
             )
@@ -3480,6 +3552,7 @@ def render_per_extension_pages(
 
         # SWH samples (grouped by predicted PL for clarity).
         sample_items = []
+        sample_groups: dict[str, dict[str, list[str]]] = {}
         for s in sorted(swh_by_ext.get(ext, []), key=lambda x: -(x.occurrences_in_swh or 0)):
             pid = s.pl_id
             name = pl_canonical.get(pid, pid)
@@ -3501,6 +3574,7 @@ def render_per_extension_pages(
                 </div>
                 {_reviews_html(s)}
               </article>""")
+            sample_groups.setdefault(pid, {}).setdefault(_prediction_kind(s.predicted_via), []).append(sample_items[-1])
 
         # SWH popularity block (SWH 2026-06-04 export). Case-aggregated.
         # Three figures, all counting distinct files (blobs), each once:
@@ -3738,8 +3812,8 @@ def render_per_extension_pages(
             swh_section = f"""
         <section id="samples" class="panel section">
           <h2 style="margin:0 0 8px;">SWH-mined examples ({len(sample_items)})</h2>
-          <div class='muted' style='margin-bottom:10px;'>Real archived programs with this extension, byte-verified against the SWH archive. Useful for deciding what this extension actually is when the attribution is uncertain.</div>
-          {''.join(sample_items)}
+          <div class='muted' style='margin-bottom:10px;'>Real archived programs with this extension, byte-verified against the SWH archive, grouped by predicted language and by how the prediction was made. Useful for deciding what this extension actually is when the attribution is uncertain.</div>
+          {_grouped_samples_html(sample_groups, pl_canonical, pl_id_to_slug, rel)}
           {sample_request_block}
         </section>"""
         elif claim_rows_html or heur_rows_html:
@@ -3905,16 +3979,15 @@ def render_per_extension_pages(
                 if slug:
                     return f"<a href='{rel}l/{safe(slug)}/index.html'>{safe(name)}</a>"
                 return safe(name)
-            primary_pl_ids = [
+            # One name per language, not per claim (`.m` has three primary
+            # claims for Objective-C: Linguist, Pygments, Wikidata).
+            primary_pl_ids = list(dict.fromkeys(
                 c["pl_id"] for c in claims if c.get("strength") == "primary" and c.get("pl_id")
-            ]
+            ))
             primary_names_html = "; ".join(_pl_link(pid) for pid in primary_pl_ids)
             # Plain-text fallback for the "no primary" branch — uses the
             # first sorted entity name when there's no primary claim.
-            primary_names = "; ".join(
-                pl_canonical.get(c["pl_id"], c["pl_id"])
-                for c in claims if c.get("strength") == "primary"
-            )
+            primary_names = "; ".join(pl_canonical.get(pid, pid) for pid in primary_pl_ids)
             disagree_link = (
                 f"<a href='{safe(label_issue_url)}' target='_blank' rel='noopener'>"
                 f"Disagree or have a correction? Open a labelling issue.</a>"

@@ -7,15 +7,19 @@ improves the encyclopedia in four concrete ways.
 
 | Channel | What a study contributes | Where it lands |
 |---|---|---|
-| **Mapping** | languages *observed* under the extension (with shares), languages *missing* from the mapping, claims that are *never observed*, claims that are *wrong* | `data/derived/pl_taxonomy/ext_claim.csv` (rows with `source = swh_study:<study>`; disputed rows) |
+| **Mapping** | claims that are *wrong* (disputes), languages *missing* from the mapping (proposals), claims that are *never observed* | `data/derived/pl_taxonomy/ext_claim.csv`: the named source's row becomes `disputed`; missing edges go to `study_label_proposals.csv` |
 | **Evidence** | share of each language/format per sampling frame, with interval and method | `data/derived/pl_taxonomy/ext_evidence.csv` → the extension page's *Observed in Software Heritage* panel |
 | **Identifiers** | measured precision/abstention of Linguist rules, Pygments, SWH Synid, the study's own rules | `data/derived/pl_taxonomy/heuristic_eval.csv` → *Measured on SWH* column and *How identifiers fare* table |
 | **Samples & ground truth** | verified files with provenance (origin + path), the judges' and humans' verdicts | `samples/pl/<id>/<sha1_git>/` and the review store `reviews/<sha1_git>/` |
 
-Two more outputs are proposals, not data: **new languages** (rare — a study
-finds a notation that is not in `pl_list.txt`) and **extension labels** for
-non-PL extensions (e.g. `.fsf` → `data:domain`). Both go to the maintainer's
-existing issue workflows (`study_label_proposals.csv` lists the labels).
+**A study is evidence, never a claimant.** `ext_claim.csv` records what
+upstream sources (Linguist, Pygments, Wikidata, …) say; a study adds no rows of
+its own there — what it observed is shown as shares in *Observed in Software
+Heritage*. Three outputs are proposals, not data: **edges no source has**
+(`.m` → Magma, proposed as the extension label `pl/magma`), **extension labels**
+for non-PL extensions (`.fsf` → `data:domain`) and, rarely, **new languages**.
+They go to the maintainer's existing issue workflows
+(`data/derived/study_label_proposals.csv` lists them).
 
 ## The export format (`tools/study_export.py`)
 
@@ -50,7 +54,7 @@ python3 -m tools.<study>.export                       # write the export
 python3 tools/propagate_study.py --study <study>      # plan: what would change
 python3 tools/propagate_study.py --study <study> --apply
 #   → samples + reviews materialised, taxonomy rebuilt (it reads the exports
-#     directly, so the CI taxonomy rebuild keeps them), label proposals listed
+#     directly, so the CI taxonomy rebuild keeps the disputes), proposals listed
 python3 web/build_site.py                             # extension pages show the evidence
 ```
 
@@ -60,8 +64,8 @@ deterministic file names (original timestamps), taxonomy rows are recomputed.
 ## What the four studies contributed (as of 2026-10)
 
 See each study's `claims.csv`. Highlights for `.m`: Objective-C and MATLAB
-observed as primary (53.6 % / 41.7 % of files; 71.2 % / 25.8 % of
-repositories); **Magma added** (claimed by no source, 0.62 % of files); Limbo
+dominate (53.6 % / 41.7 % of files; 71.2 % / 25.8 % of repositories);
+**Magma proposed** (claimed by no source, 0.62 % of files); Limbo
 observed once in 10 000 files; MUF and A+ never observed; **M4, Monkey C and
 Win32 Message File disputed** (they inherited `.m` from Pygments' Mason lexer
 through an extension-overlap join in `master_inventory.match_pygments_name`,
@@ -70,7 +74,7 @@ which affects 114 of 588 Pygments identities —
 
 Backfilled from the three earlier studies:
 
-- **`.cbl` / `.CBL` (COBOL)** — COBOL observed as primary: 54.4 % of files but
+- **`.cbl` / `.CBL` (COBOL)** — COBOL is 54.4 % of files but
   92.7 % of repositories, because 40.8 % of files (58.9 % of `.CBL`) are one
   GitLab test fixture of synthetic placeholders; Calibre comic-book lists are
   1.7 %. Exact-case rows (`.CBL` only) are kept in the evidence.
@@ -79,7 +83,7 @@ Backfilled from the three earlier studies:
   which contradicts the `pl/new:fsl` example in `docs/extension_labels.md`.
   GLSL fragment shaders appear (0.1 % of files, 0.66 % of repositories) but
   `.fsf` is not a conventional GLSL extension: evidence only.
-- **`.rpgle`** — RPG IV observed as primary (99.5 % of files); dialect shares
+- **`.rpgle`** — RPG IV is 99.5 % of files; dialect shares
   per frame (fixed-format 40.7 % of files vs 21.8 % of repositories) and the
   copy-member share (≈19 %, frame-invariant) as qualifier rows.
 

@@ -310,9 +310,14 @@ def main():
             "case_sensitive": True, "report": REPORT, "toolkit": "tools/m/",
             "population": {"contents": pop["unique_contents"], "repositories": pop["unique_origins"],
                            "source": "SWH-m-files.zip (swh-provenance on CINES, 2026-09)"},
-            "frames": {"file": "uniform over contents, n=1000 judged (10 000 rule-labelled)",
-                       "repo": "uniform over repositories, one file each, n=1000 judged (3 000 rule-labelled)",
-                       "census": "every rule-flagged tail file of U and R judged"},
+            "frames": {
+                "file": (f"{A['n']['U_labelled']:,} .m files drawn uniformly at random; "
+                         f"{A['n']['U_judged']:,} read by both LLM judges, all labelled by the study's rules, "
+                         f"and all {A['M_tail_census']['U']['judged']['tail']} rare-language candidates judged"),
+                "repo": (f"{A['n']['R_labelled']:,} repositories drawn uniformly at random, one random .m file each; "
+                         f"{A['n']['R_judged']:,} judged, all labelled by the study's rules, "
+                         f"and all {A['M_tail_census']['R']['judged']['tail']} rare-language candidates judged"),
+            },
             "judges": ["anthropic/claude-sonnet-4.6 (blind)", "google/gemini-3.8-flash (blind)"],
             "human_reviews": sum(1 for r in recs.values() if r.reviews),
             "preregistration": "data/derived/m_study/PREREGISTRATION.md (eb988475)",

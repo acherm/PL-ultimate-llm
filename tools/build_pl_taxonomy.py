@@ -359,13 +359,17 @@ def load_study_exports() -> dict[str, list[dict]]:
 def apply_study_claims(ext_claim_rows: list[dict], claims: list[dict], valid_pl_ids: set[str]) -> dict:
     """Fold accepted study claims into ext_claim (in place). Returns counters.
 
-    - observe / add → one row per (pl, ext) with source `swh_study:<study>`;
-      strength `primary`/`secondary` from the observed share (`observe`) or
-      `proposed` (`add`: an edge no other source had).
+    A study is evidence, not a claimant: ext_claim records what upstream
+    sources say, so a study never adds rows of its own.
+
     - dispute → the named source's existing row gets strength `disputed` and
       the study's evidence appended (the row itself is kept — sources are facts
       about what a source says; the study adds what the archive shows).
-    - unobserved → no ext_claim change (recorded in ext_evidence instead).
+    - observe / unobserved → no ext_claim change; the measured shares are in
+      ext_evidence.csv (shown as "Observed in Software Heritage").
+    - add / label → proposals for the curator workflow
+      (data/derived/study_label_proposals.csv, written by tools/propagate_study.py);
+      an accepted proposal enters ext_claim through the extension-label store.
     """
     n = {"observe": 0, "add": 0, "dispute": 0, "unobserved": 0, "label": 0, "skipped": 0}
     for c in claims:
@@ -381,12 +385,6 @@ def apply_study_claims(ext_claim_rows: list[dict], claims: list[dict], valid_pl_
             continue
         src = f"swh_study:{c.get('study', '')}"
         if action in ("observe", "add"):
-            ext_claim_rows.append({
-                "pl_id": pl_id, "ext": ext, "source": src,
-                "strength": c.get("strength") or ("proposed" if action == "add" else "secondary"),
-                "source_key": f"file {c.get('share_file_pct', '')}% / repo {c.get('share_repo_pct', '')}%",
-                "evidence": c.get("evidence", ""),
-            })
             n[action] += 1
         elif action == "dispute":
             hit = 0

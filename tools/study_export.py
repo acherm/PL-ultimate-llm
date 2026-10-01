@@ -11,7 +11,9 @@ files to `data/derived/study_exports/<study_id>/`, and one tool
                       per sampling frame, with a 95 % interval and the method
   claims.csv          proposed changes to the extension→language mapping:
                         observe    the language is there, with a measured share
-                        add        same, and no source claimed it before
+                                   (evidence only — a study is never a claimant)
+                        add        same, and no source claimed it before: proposed
+                                   as the extension label `pl/<id>`
                         unobserved claimed by a source, never seen in the sample
                         dispute    claimed by a source, unrelated to the extension
                         label      a non-PL classification of the extension, in the

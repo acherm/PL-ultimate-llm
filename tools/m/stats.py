@@ -17,7 +17,8 @@ from collections import Counter, defaultdict
 Z = 1.959964
 
 
-def wilson(k: int, n: int, z: float = Z) -> tuple[float, float, float]:
+def wilson(k: float, n: float, z: float = Z) -> tuple[float, float, float]:
+    """Wilson interval; k and n may be fractional (effective counts of a weighted sample)."""
     if n == 0:
         return (float("nan"),) * 3
     p = k / n
@@ -34,7 +35,7 @@ def weighted_prop(xs: list[int], ws: list[float], z: float = Z) -> tuple[float, 
         return (float("nan"),) * 4
     p = sum(x * w for x, w in zip(xs, ws)) / sw
     n_eff = sw * sw / sum(w * w for w in ws)
-    lo, hi = wilson(round(p * n_eff), max(1, round(n_eff)))[1:]
+    lo, hi = wilson(p * n_eff, n_eff)[1:]       # fractional effective counts — no rounding
     return p, lo, hi, n_eff
 
 

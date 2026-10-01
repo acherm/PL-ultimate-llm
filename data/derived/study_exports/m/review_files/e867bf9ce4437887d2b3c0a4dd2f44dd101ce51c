@@ -1,0 +1,2417 @@
+//
+//  MezzKitTests+v2_12.m
+//  MezzKit
+//
+//  Created by Zai Chang on 2/17/14.
+//  Copyright (c) 2014 Oblong Industries. All rights reserved.
+//
+
+#import "MezzKitTests+v2_12.h"
+#import "MZCommunicator+Handlers_v2_12.h"
+#import "MZTransaction+v2_12.h"
+
+
+@interface MZCommunicator (Internal)
+
+-(void) setupJoinResponseHandler;
+-(void) joinSuccessful;
+
+-(void) beginListeningPoolConnectorNotifications;
+-(void) endListeningPoolConnectorNotifications;
+
+-(NSMutableArray*) pendingFileUploads;
+
+@end
+
+
+@implementation MZCommunicator (Internal2)
+
+-(NSMutableArray*) pendingFileUploads
+{
+  return pendingFileUploads;
+}
+
+@end
+
+
+
+@interface MockPoolConnector (Internal)
+
+// Exposing internal function for unit testing
+// To simulate the reception of a protein, call [OBPoolConnector receivedProtein:]
+-(void) receivedProtein:(OBProtein*)protein;
+
+@end
+
+
+
+@implementation MezzKitTests (v2_12)
+
+#pragma mark - Setup
+
+- (void)setupCommunucatorCore
+{
+  
+  char *protein_path = getenv("MZ_TEST_PROTEIN_PATH");
+  if (protein_path)
+  {
+    NSString *path = [NSString stringWithCString:protein_path encoding:NSUTF8StringEncoding];
+    proteinSource = [[FileSystemProteinSource alloc] initWithPath:path];
+  }
+  else
+  {
+    proteinSource = [[MockProteinSourceV2_12 alloc] init];
+  }
+
+  communicator.provenance = [proteinSource parameterForKey:kCanonicalParameterProvenanceKey];
+  
+  // Begin listening to pool events, normally called in [OBCommunicator connect]
+  [communicator beginListeningPoolConnectorNotifications];
+  
+  systemModel.state = MZSystemStateWorkspace;
+  
+  ensureCommunicatorOnlySendsNonNilProteins = YES;  // Mostly to weed out the sending of old non-valid proteins
+}
+
+
+-(void) setUpUnconnectedCommunicator_v2_12
+{
+  [self setupCommunucatorCore];
+  communicator.hasJoinedSession = NO;
+  communicator.isConnected = NO;
+  communicator.isConnecting = NO;
+  [communicator setupJoinResponseHandler];
+}
+
+
+-(void) setUpConnectedCommunicator_v2_12
+{
+  [self setupCommunucatorCore];
+  communicator.remoteProteinVersion = @"2.12";
+  [communicator joinSuccessful]; // Previously [communicator setupMessageHandlers_v2_12] but internally joinSuccessful will call it
+}
+
+
+- (MZWorkspace*)prepareEmptyWorkspace
+{
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = workspaceUid;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  systemModel.currentWorkspace = workspace;
+  return workspace;
+}
+
+
+
+#pragma mark - Join Tests
+
+-(void) testClientJoinSuccessCaseWithTriptychCorkboardsWhiteboards_Using_v2_12_Communicator
+{
+  [self setUpUnconnectedCommunicator_v2_12];
+  [self performClientJoinSuccessWithTriptychCorkboardsWhiteboardsTest];
+}
+
+// A comprehensive testcase for join success with a saved workspace
+-(void) performClientJoinSuccessWithTriptychCorkboardsWhiteboardsTest
+{
+  STAssertFalse(communicator.isConnected, @"Communicator should not be connected before receiving join protein.");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting before receiving join protein.");
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameClientJoin responseType:@"response"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue(communicator.isConnected, @"Communicator should be connected after receiving join success");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting after receiving join success");
+
+  
+  // Check Mezzanine State
+  STAssertEquals(systemModel.state, MZSystemStateWorkspace, @"System state should be workspace after joining");
+
+  
+  // Check felds
+  NSUInteger numberOfFelds = 3;
+  STAssertEquals(systemModel.felds.count, numberOfFelds, @"Felds count should be equal");
+
+
+  // Check workspace
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  STAssertEqualObjects(systemModel.currentWorkspace.uid, workspaceUid, @"Current workspace's uid should be %@", workspaceUid);
+  STAssertEqualObjects(systemModel.currentWorkspace.name, workspaceName, @"Current workspace's name should be %@", workspaceName);
+
+
+  // Check corkboards
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  NSUInteger numberOfCorkboards = 3;
+  STAssertEquals(systemModel.corkboards.count, numberOfCorkboards, @"Corkboards should be received after join success");
+  if (systemModel.corkboards.count > 0)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[0]).uid, corkboard1Uid, @"Corkboard 1's uid should be %@", corkboard1Uid);
+  if (systemModel.corkboards.count > 1)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[1]).uid, corkboard2Uid, @"Corkboard 2's uid should be %@", corkboard2Uid);
+  if (systemModel.corkboards.count > 2)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[2]).uid, corkboard3Uid, @"Corkboard 3's uid should be %@", corkboard3Uid);
+
+
+  // Check whiteboards
+  NSString *whiteboardUid = [proteinSource parameterForKey:kCanonicalParameterWhiteboardUidKey];
+  NSUInteger numberOfWhiteboards = 1;
+  STAssertEquals(systemModel.whiteboards.count, numberOfWhiteboards, @"Whiteboards should be received after join success");
+  if (systemModel.whiteboards.count > 0)
+    STAssertEqualObjects(systemModel.whiteboards[0][@"uid"], whiteboardUid, @"Whiteboard's uid should be %@", whiteboardUid);
+
+
+  // Check upload limits
+  NSNumber *uploadMaxWidth = [proteinSource parameterForKey:kCanonicalParameterUploadMaxWidth];
+  NSNumber *uploadMaxHeight = [proteinSource parameterForKey:kCanonicalParameterUploadMaxHeight];
+  NSNumber *uploadMaxImageSizeMB = [proteinSource parameterForKey:kCanonicalParameterUploadImageSizeMB];
+  NSNumber *uploadMaxPDFSizeMB = [proteinSource parameterForKey:kCanonicalParameterUploadPDFSizeMB];
+  NSNumber *uploadMaxSizeMB = [proteinSource parameterForKey:kCanonicalParameterUploadSizeMB];
+  STAssertEquals(systemModel.uploadLimits.maxImageWidth.integerValue, uploadMaxWidth.integerValue, @"Upload max width should be %@", uploadMaxWidth);
+  STAssertEquals(systemModel.uploadLimits.maxImageHeight.integerValue, uploadMaxHeight.integerValue, @"Upload max height should be %@", uploadMaxHeight);
+  STAssertEquals(systemModel.uploadLimits.maxImageSize.integerValue, uploadMaxImageSizeMB.integerValue, @"Upload max image size should be %@", uploadMaxImageSizeMB);
+  STAssertEquals(systemModel.uploadLimits.maxPDFSize.integerValue, uploadMaxPDFSizeMB.integerValue, @"Upload max PDF size should be %@", uploadMaxPDFSizeMB);
+  STAssertEquals(systemModel.uploadLimits.maxGlobalSize.integerValue, uploadMaxSizeMB.integerValue, @"Upload max global size should be %@", uploadMaxSizeMB);
+}
+
+// Below test cases for join success will focus on specific deviations or combinations
+
+-(void) testClientJoinSuccessCaseWithSingleFeld_Using_v2_12_Communicator
+{
+  [self setUpUnconnectedCommunicator_v2_12];
+  [self performClientJoinSuccessWithSingleFeldTest];
+}
+
+-(void) performClientJoinSuccessWithSingleFeldTest
+{
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameClientJoin responseType:@"response?single-feld"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue(communicator.isConnected, @"Communicator should be connected after receiving join success");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting after receiving join success");
+  
+  
+  // Check felds
+  NSUInteger numberOfFelds = 1;
+  STAssertEquals(systemModel.felds.count, numberOfFelds, @"Felds count should be equal");
+}
+
+
+-(void) testClientJoinFailurePassphraseRequired_Using_v2_12_Communicator
+{
+  [self setUpUnconnectedCommunicator_v2_12];
+  [self performClientJoinFailurePassphraseRequiredTest];
+}
+
+
+-(void) performClientJoinFailurePassphraseRequiredTest
+{
+  STAssertFalse(communicator.isConnected, @"Communicator should not be connected before receiving join protein.");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting before receiving join protein.");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameClientJoin responseType:@"response?failed.passphrase-required"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertFalse(communicator.isConnected, @"Communicator should not be connected after receiving join failure");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting after receiving join failure");
+
+  STAssertTrue(systemModel.passphraseRequested, @"Passphrase requested flag should be raised.");
+  
+  // TODO - check for passphrase timer activation
+}
+
+
+-(void) testClientJoinFailurePassphraseIncorrect_Using_v2_12_Communicator
+{
+  [self setUpUnconnectedCommunicator_v2_12];
+  [self performClientJoinFailurePassphraseIncorrectTest];
+}
+
+
+-(void) performClientJoinFailurePassphraseIncorrectTest
+{
+  STAssertFalse(communicator.isConnected, @"Communicator should not be connected before receiving join protein.");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting before receiving join protein.");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameClientJoin responseType:@"response?failed.incorrect-passphrase"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertFalse(communicator.isConnected, @"Communicator should not be connected after receiving join failure");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting after receiving join failure");
+  
+  STAssertTrue(systemModel.passphraseRequested, @"Passphrase requested flag should be raised.");
+  
+  // TODO - check for passphrase timer activation
+}
+
+
+#pragma mark - Evict Tests
+
+- (void)testClientEvict
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameClientEvict responseType:@"pm"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertFalse(communicator.isConnected, @"Communicator should no logner be connected.");
+  STAssertFalse(communicator.isConnecting, @"Communicator should not be connecting after receiving evict");
+}
+
+
+
+#pragma mark - MezCaps Tests
+
+-(void) testMezCapsCorkboardAndWhiteboardAdditions
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [systemModel reset];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameMezzanineCapabilities responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  // Check corkboards
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  NSUInteger numberOfCorkboards = 3;
+  STAssertEquals(systemModel.corkboards.count, numberOfCorkboards, @"Corkboards should be received after join success");
+  if (systemModel.corkboards.count > 0)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[0]).uid, corkboard1Uid, @"Corkboard 1's uid should be %@", corkboard1Uid);
+  if (systemModel.corkboards.count > 1)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[1]).uid, corkboard2Uid, @"Corkboard 2's uid should be %@", corkboard2Uid);
+  if (systemModel.corkboards.count > 2)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[2]).uid, corkboard3Uid, @"Corkboard 3's uid should be %@", corkboard3Uid);
+  
+  
+  // Check whiteboards
+  NSString *whiteboardUid = [proteinSource parameterForKey:kCanonicalParameterWhiteboardUidKey];
+  NSUInteger numberOfWhiteboards = 1;
+  STAssertEquals(systemModel.whiteboards.count, numberOfWhiteboards, @"Whiteboards should be received after join success");
+  if (systemModel.whiteboards.count > 0)
+    STAssertEqualObjects(systemModel.whiteboards[0][@"uid"], whiteboardUid, @"Whiteboard's uid should be %@", whiteboardUid);
+}
+
+
+-(void) testMezCapsCorkboardsAndWhiteboardsReduction
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  systemModel.corkboards = [@[[[MZCorkboard alloc] initWithUid:@"these"],
+                              [[MZCorkboard alloc] initWithUid:@"don't"],
+                              [[MZCorkboard alloc] initWithUid:@"really"],
+                              [[MZCorkboard alloc] initWithUid:@"matter"],
+                              [[MZCorkboard alloc] initWithUid:@"because"],
+                              [[MZCorkboard alloc] initWithUid:@"they"],
+                              [[MZCorkboard alloc] initWithUid:@"will"],
+                              [[MZCorkboard alloc] initWithUid:@"go"],
+                              [[MZCorkboard alloc] initWithUid:@"away"],
+                              ] mutableCopy];
+  
+  systemModel.whiteboards = [@[@{@"uid" : @"and"},
+                               @{@"uid" : @"neither"},
+                               @{@"uid" : @"do"},
+                               @{@"uid" : @"these"},
+                              ] mutableCopy];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameMezzanineCapabilities responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  // Check corkboards
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  NSUInteger numberOfCorkboards = 3;
+  STAssertEquals(systemModel.corkboards.count, numberOfCorkboards, @"Corkboards should be received after join success");
+  if (systemModel.corkboards.count > 0)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[0]).uid, corkboard1Uid, @"Corkboard 1's uid should be %@", corkboard1Uid);
+  if (systemModel.corkboards.count > 1)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[1]).uid, corkboard2Uid, @"Corkboard 2's uid should be %@", corkboard2Uid);
+  if (systemModel.corkboards.count > 2)
+    STAssertEqualObjects(((MZCorkboard*)systemModel.corkboards[2]).uid, corkboard3Uid, @"Corkboard 3's uid should be %@", corkboard3Uid);
+  
+  
+  // Check whiteboards
+  NSString *whiteboardUid = [proteinSource parameterForKey:kCanonicalParameterWhiteboardUidKey];
+  NSUInteger numberOfWhiteboards = 1;
+  STAssertEquals(systemModel.whiteboards.count, numberOfWhiteboards, @"Whiteboards should be received after join success");
+  if (systemModel.whiteboards.count > 0)
+    STAssertEqualObjects(systemModel.whiteboards[0][@"uid"], whiteboardUid, @"Whiteboard's uid should be %@", whiteboardUid);
+}
+
+
+
+#pragma mark - Passphrase Tests
+
+-(void) testPassphraseEnable_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performPassphraseEnableTest];
+}
+
+-(void) performPassphraseEnableTest
+{
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePasskeyEnable responseType:@"psa"];
+  
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue(systemModel.passphraseRequested, @"Passphrase requested should be true after it is enabled.");
+  STAssertFalse(communicator.hasJoinedSession, @"Communicator should not be joined if passphrase is requested.");
+}
+
+
+-(void) testPassphraseEnabledBySelf_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performPassphraseEnabledBySelfTest];
+}
+
+-(void) performPassphraseEnabledBySelfTest
+{
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePasskeyEnable responseType:@"psa?self-test"];
+  
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertFalse(systemModel.passphraseRequested, @"Passphrase requested should be false after it is enabled by self.");
+  STAssertTrue(communicator.hasJoinedSession, @"Communicator should still be joined if passphrase is enabled by self.");
+}
+
+
+-(void) testPassphraseDisable_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performPassphraseDisableTest];
+}
+
+-(void) performPassphraseDisableTest
+{
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePasskeyDisable responseType:@"psa"];
+  
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertFalse(systemModel.passphraseRequested, @"Passphrase requested should be false after it is disabled.");
+  STAssertTrue(communicator.hasJoinedSession, @"Communicator should still be joined if passphrase is disabled.");
+}
+
+
+#pragma mark - Assets Tests
+
+-(void) testRequestFileUpload
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+
+  NSURL *fileURL = [NSURL fileURLWithPath:@"/temp/someimage.jpg"];
+  NSString *fileType = @"image/jpeg";
+  MZFileUploadInfo *uploadInfo = [[MZFileUploadInfo alloc] init];
+  uploadInfo.fileURL = fileURL;
+  uploadInfo.fileName = [fileURL lastPathComponent];
+  uploadInfo.format = fileType;
+
+  NSInteger sentProteinCountBeforeRequest = requestPoolConnector.sentProteins.count;
+
+  STAssertTrue([[communicator pendingFileUploads] count] == 0, @"No pending file uploads should be present before we start");
+
+  [communicator requestFilesUpload:@[uploadInfo]
+                      workspaceUid:workspaceUid
+                      limitReached:nil
+             singleUploadCompleted:nil
+                      errorHandler:nil];
+  
+  STAssertTrue([[communicator pendingFileUploads] count] == 1, @"One pending file upload should be present.");
+  id fileInfo = [communicator pendingFileUploads][0];
+
+  STAssertTrue([fileInfo isKindOfClass:[MZFileUploadInfo class]], @"As of 2.12 the pendingFilesUploads array should contain instances of MZFileUploadInfo.");
+
+  STAssertNotNil([fileInfo fileUid], @"File id should be set");
+  STAssertEqualObjects([fileInfo fileURL], fileURL, @"File url should equal.");
+  STAssertEqualObjects([fileInfo format], fileType, @"File types should equal.");
+  
+  STAssertTrue(requestPoolConnector.sentProteins.count == sentProteinCountBeforeRequest+1, @"One protein should've been sent.");
+  if (requestPoolConnector.sentProteins.count == 1)
+  {
+    OBProtein *sentProtein = requestPoolConnector.sentProteins[0];
+    STAssertTrue([sentProtein containsDescrip:MZTransactionNameAssetUploadProvision], @"Send protein should be of transaction type '%@'", MZTransactionNameAssetUploadProvision);
+  }
+}
+
+
+-(void) testRequestFileUploadBatch
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+
+  NSMutableArray *fileInfos = [[NSMutableArray alloc] init];
+  for (NSInteger i = 1 ; i <= 5 ; i++)
+  {
+    MZFileUploadInfo *uploadInfo = [[MZFileUploadInfo alloc] init];
+    uploadInfo.fileName = [NSString stringWithFormat:@"image%ld.jpg",(long)i];
+    uploadInfo.format = @"png";
+    uploadInfo.imageBlock = ^{
+      NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+      NSString *path = [bundle pathForResource:@"Test-Image" ofType:@"png"];
+      MZImage *image = [[MZImage alloc] initWithContentsOfFile:path];
+      return image;
+    };
+    [fileInfos addObject:uploadInfo];
+  }
+
+  NSInteger numberOfFiles = fileInfos.count;
+
+
+  STAssertTrue([[communicator pendingFileUploads] count] == 0, @"No pending file uploads should be present before we start");
+
+  [communicator requestFilesUpload:fileInfos
+                      workspaceUid:workspaceUid
+                      limitReached:nil
+             singleUploadCompleted:nil
+                      errorHandler:nil];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == numberOfFiles, @"Pending file upload should be %d, instead got %d", numberOfFiles, [[communicator pendingFileUploads] count]);
+  if (requestPoolConnector.sentProteins.count > 0)
+  {
+    OBProtein *lastProtein = requestPoolConnector.sentProteins[requestPoolConnector.sentProteins.count-1];
+    
+    NSArray *files = lastProtein.ingests[@"files"];
+    STAssertTrue(files.count == fileInfos.count, @"Number of files in protein should be 5", numberOfFiles);
+  }
+}
+
+-(void) prepareFileBatchUploadTransactionForAssetUploadTests:(NSInteger)numberOfAssets limitReach:(void (^)(MZFileBatchUploadRequestTransaction *, NSArray *, continuationBlock))limitReachedBlock
+{
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+
+  NSMutableArray *fileUploadInfos = [[NSMutableArray alloc] init];
+  for (NSInteger i = 0 ; i < numberOfAssets ; i++)
+  {
+    MZFileUploadInfo *uploadInfo = [[MZFileUploadInfo alloc] init];
+    uploadInfo.fileName = [NSString stringWithFormat:@"%ld.png",(long)i];
+    uploadInfo.format = @"png";
+    uploadInfo.imageBlock = ^{
+      NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+      NSString *path = [bundle pathForResource:@"Test-Image" ofType:@"png"];
+      MZImage *image = [[MZImage alloc] initWithContentsOfFile:path];
+      return image;
+    };
+    uploadInfo.workspaceUid = workspaceUid;
+    [fileUploadInfos addObject:uploadInfo];
+  }
+
+  [communicator requestFilesUpload:fileUploadInfos
+                      workspaceUid:workspaceUid
+                      limitReached:limitReachedBlock
+             singleUploadCompleted:nil
+                      errorHandler:nil];
+}
+
+-(OBProtein *)protein:(OBProtein *)p replacingTransactionID:(NSInteger)ix
+{
+  NSMutableArray *descrips = [NSMutableArray arrayWithArray:p.descrips];
+  NSInteger index = [descrips indexOfObject:@"to:"];
+  id provAndId = descrips[index+1];
+  if ([provAndId isKindOfClass:[NSArray class]] && [provAndId count] > 1)
+  {
+    NSArray *newProvAndId= @[provAndId[0], [NSNumber numberWithInteger:ix]];
+    [descrips replaceObjectAtIndex:index+1 withObject:newProvAndId];
+  }
+  p.descrips = descrips;
+  return p;
+}
+
+-(void) testRequestImageFileBatchUploadAllAccepted
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSInteger numberOfFiles = 3;
+  [self prepareFileBatchUploadTransactionForAssetUploadTests:numberOfFiles limitReach:nil];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == numberOfFiles, @"Pending file upload should be %d, instead got %d", numberOfFiles, [[communicator pendingFileUploads] count]);
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetUploadProvision responseType:@"response?all-images-fit"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  NSInteger sentProteinCountBeforeRequest = requestPoolConnector.sentProteins.count;
+  p = [self protein:p replacingTransactionID:sentProteinCountBeforeRequest];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == 0, @"No pending file uploads should be present before we start");
+
+  NSLog(@"Number of uploads in progress %lu", (unsigned long)[communicator progressiveTransactions].count);
+
+  STAssertTrue([communicator progressiveTransactions].count == 1, @"Progressive upload transactions should be %d, instead got %d", 1, [[communicator progressiveTransactions] count]);
+
+  [NSThread sleepForTimeInterval:3.0];
+
+  MZFileBatchUploadRequestTransaction *progressiveTransaction = [communicator progressiveTransactions][0];
+
+  STAssertTrue(progressiveTransaction.transactionsInProgress.count == numberOfFiles, @"Transactions in progress should be %d, instead got %d", numberOfFiles, progressiveTransaction.transactionsInProgress.count);
+
+  for (NSInteger i = 0 ; i < numberOfFiles; i++)
+  {
+    NSString *responseType = [NSString stringWithFormat:@"psa?image-asset-%ld", (long)i+1];
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetRefresh responseType:responseType];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+
+    STAssertTrue(progressiveTransaction.transactionsInProgress.count == numberOfFiles-1-i, @"Transactions in progress should be %d, instead got %d", numberOfFiles-1-i, progressiveTransaction.transactionsInProgress.count);
+  }
+
+  STAssertTrue([communicator progressiveTransactions].count == 0, @"Progressive upload transactions should be %d, instead got %d", 0, [[communicator progressiveTransactions] count]);
+
+  STAssertTrue([communicator pendingTransactions].count == 0, @"Pending transactions should be %d, instead got %d", 0, [[communicator pendingTransactions] count]);
+}
+
+-(void) testRequestImageFileBatchUploadSomeAccepted
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  void (^limitReached)(MZFileBatchUploadRequestTransaction *, NSArray *, continuationBlock) = ^(MZFileBatchUploadRequestTransaction *transaction, NSArray *assetUids, continuationBlock continuationBlock) {
+    continuationBlock ((MZImageBatchUploadRequestTransaction *)transaction, assetUids, @YES);
+  };
+
+  NSInteger numberOfFiles = 3;
+  NSInteger numberOfFilesThatCanBeUploaded = 2;
+
+  [self prepareFileBatchUploadTransactionForAssetUploadTests:numberOfFiles limitReach:limitReached];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == numberOfFiles, @"Pending file upload should be %d, instead got %d", numberOfFiles, [[communicator pendingFileUploads] count]);
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetUploadProvision responseType:@"response?some-images-fit"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  NSInteger sentProteinCountBeforeRequest = requestPoolConnector.sentProteins.count;
+  p = [self protein:p replacingTransactionID:sentProteinCountBeforeRequest];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == 0, @"No pending file uploads should be present before we start");
+
+  [NSThread sleepForTimeInterval:3.0];
+
+  MZFileBatchUploadRequestTransaction *progressiveTransaction = [communicator progressiveTransactions][0];
+
+  STAssertTrue(progressiveTransaction.transactionsInProgress.count == numberOfFilesThatCanBeUploaded, @"Transactions in progress should be %d, instead got %d", numberOfFilesThatCanBeUploaded, progressiveTransaction.transactionsInProgress.count);
+
+  for (NSInteger i = 0 ; i < numberOfFilesThatCanBeUploaded ; i++)
+  {
+    NSString *responseType = [NSString stringWithFormat:@"psa?image-asset-%ld", (long)i+1];
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetRefresh responseType:responseType];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+
+    STAssertTrue(progressiveTransaction.transactionsInProgress.count == numberOfFilesThatCanBeUploaded-1-i, @"Transactions in progress should be %d, instead got %d", numberOfFilesThatCanBeUploaded-1-i, progressiveTransaction.transactionsInProgress.count);
+  }
+
+  STAssertTrue([communicator progressiveTransactions].count == 0, @"Progressive upload transactions should be %d, instead got %d", 0, [[communicator progressiveTransactions] count]);
+
+  STAssertTrue([communicator pendingTransactions].count == 0, @"Pending transactions should be %d, instead got %d", 0, [[communicator pendingTransactions] count]);
+}
+
+
+-(void) testRequestImageFileBatchUploadNoneAccepted
+{
+  [self setUpConnectedCommunicator_v2_12];
+  NSInteger numberOfFiles = 3;
+  [self prepareFileBatchUploadTransactionForAssetUploadTests:numberOfFiles limitReach:nil];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == numberOfFiles, @"Pending file upload should be %d, instead got %d", numberOfFiles, [[communicator pendingFileUploads] count]);
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetUploadProvision responseType:@"response?no-images-fit"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  NSInteger sentProteinCountBeforeRequest = requestPoolConnector.sentProteins.count;
+  p = [self protein:p replacingTransactionID:sentProteinCountBeforeRequest];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == 0, @"No pending file uploads should be present before we start");
+
+  STAssertTrue([communicator progressiveTransactions].count == 0, @"Progressive upload transactions should be %d, instead got %d", 0, [[communicator progressiveTransactions] count]);
+
+  STAssertTrue([communicator pendingTransactions].count == 0, @"Pending transactions should be %d, instead got %d", 0, [[communicator pendingTransactions] count]);
+}
+
+-(void) preparePDFFileBatchUploadTransaction
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+
+  NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+  NSString *path = [bundle pathForResource:@"Test-PDF" ofType:@"pdf"];
+
+  NSMutableArray *fileUploadInfos = [[NSMutableArray alloc] init];
+  MZFileUploadInfo *uploadInfo = [[MZFileUploadInfo alloc] init];
+  uploadInfo.fileName = @"Test-PDF.pdf";
+  uploadInfo.format = @"pdf";
+  uploadInfo.fileURL = [NSURL fileURLWithPath:path];
+  uploadInfo.workspaceUid = workspaceUid;
+  [fileUploadInfos addObject:uploadInfo];
+
+  [communicator requestFilesUpload:fileUploadInfos
+                      workspaceUid:workspaceUid
+                      limitReached:nil
+             singleUploadCompleted:nil
+                      errorHandler:nil];
+
+}
+
+-(void) testRequestPDFFileUploadAccepted
+{
+  [self preparePDFFileBatchUploadTransaction];
+  NSInteger numberOfFiles = 1;
+
+  STAssertTrue([[communicator pendingFileUploads] count] == numberOfFiles, @"Pending file upload should be %d, instead got %d", numberOfFiles, [[communicator pendingFileUploads] count]);
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetUploadProvision responseType:@"pm?asset-upload-pdf"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == 0, @"No pending file uploads should be present before we start");
+
+  key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetUploadProvision responseType:@"response?pdf-all-pages-fit"];
+  p = [proteinSource proteinForKey:key];
+  NSInteger sentProteinCountBeforeRequest = requestPoolConnector.sentProteins.count;
+  p = [self protein:p replacingTransactionID:sentProteinCountBeforeRequest];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue([communicator progressiveTransactions].count == 0, @"Progressive upload transactions should be %d, instead got %d", 0, [[communicator progressiveTransactions] count]);
+
+  STAssertTrue([communicator pendingTransactions].count == 0, @"Pending transactions should be %d, instead got %d", 0, [[communicator pendingTransactions] count]);
+}
+
+-(void) testRequestPDFFileUploadNotAccepted
+{
+  [self preparePDFFileBatchUploadTransaction];
+  NSInteger numberOfFiles = 1;
+
+  STAssertTrue([[communicator pendingFileUploads] count] == numberOfFiles, @"Pending file upload should be %d, instead got %d", numberOfFiles, [[communicator pendingFileUploads] count]);
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameAssetUploadProvision responseType:@"response?pdf-does-not-fit"];
+  OBProtein *p  = [proteinSource proteinForKey:key];
+  NSInteger sentProteinCountBeforeRequest = requestPoolConnector.sentProteins.count;
+  p = [self protein:p replacingTransactionID:sentProteinCountBeforeRequest];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue([[communicator pendingFileUploads] count] == 0, @"No pending file uploads should be present before we start");
+
+  STAssertTrue([communicator progressiveTransactions].count == 0, @"Progressive upload transactions should be %d, instead got %d", 0, [[communicator progressiveTransactions] count]);
+
+  STAssertTrue([communicator pendingTransactions].count == 0, @"Pending transactions should be %d, instead got %d", 0, [[communicator pendingTransactions] count]);
+}
+
+
+
+
+#pragma mark - Infopresence Tests
+
+
+- (void)prepareSystemModelForInfopresenceTests
+{
+  void (^addRemoteMezzWithParameterKey)(NSString*) = ^(NSString *key)
+  {
+    NSString *collaborator = [proteinSource parameterForKey:key];
+    MZRemoteMezz *remoteMezz = [[MZRemoteMezz alloc] init];
+    remoteMezz.uid = collaborator;
+    remoteMezz.name = collaborator;
+    [systemModel.remoteMezzes addObject:remoteMezz];
+  };
+  
+  addRemoteMezzWithParameterKey(kCanonicalParameterInfopresenceParticipant1Key);
+  addRemoteMezzWithParameterKey(kCanonicalParameterInfopresenceParticipant2Key);
+  addRemoteMezzWithParameterKey(kCanonicalParameterInfopresenceParticipant3Key);
+  addRemoteMezzWithParameterKey(kCanonicalParameterInfopresenceParticipant4Key);
+}
+
+
+-(void) testInfopresenceDetail_FromEmpty
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  STAssertFalse(systemModel.isInCollaboration, @"Should not be in collaboration at the beginnign of test");
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionDetail responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue(systemModel.isInCollaboration, @"Should be in collaboration");
+
+  NSString *collaborator1 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant1Key];
+  NSString *collaborator2 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant2Key];
+  NSString *collaborator3 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant3Key];
+  NSString *collaborator4 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant4Key];
+
+  MZRemoteMezz *collaborator1Mezz = [systemModel remoteMezzWithUid:collaborator1];
+  MZRemoteMezz *collaborator2Mezz = [systemModel remoteMezzWithUid:collaborator2];
+  MZRemoteMezz *collaborator3Mezz = [systemModel remoteMezzWithUid:collaborator3];
+  MZRemoteMezz *collaborator4Mezz = [systemModel remoteMezzWithUid:collaborator4];
+  
+  STAssertTrue((collaborator1Mezz.collaborationState == MZRemoteMezzStateInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator1);
+  STAssertTrue((collaborator2Mezz.collaborationState == MZRemoteMezzStateInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator2);
+  STAssertTrue((collaborator3Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator3);
+  STAssertTrue((collaborator4Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator4);
+
+  STAssertNil(systemModel.mezzBeingJoined, @"Should be nil.");
+}
+
+
+-(void) testInfopresenceDetail_NotActive
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionDetail responseType:@"psa?not-active"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertFalse(systemModel.isInCollaboration, @"Should not be in collaboration");
+
+  
+  NSString *collaborator1 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant1Key];
+  NSString *collaborator2 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant2Key];
+  NSString *collaborator3 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant3Key];
+  NSString *collaborator4 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant4Key];
+  
+  MZRemoteMezz *collaborator1Mezz = [systemModel remoteMezzWithUid:collaborator1];
+  MZRemoteMezz *collaborator2Mezz = [systemModel remoteMezzWithUid:collaborator2];
+  MZRemoteMezz *collaborator3Mezz = [systemModel remoteMezzWithUid:collaborator3];
+  MZRemoteMezz *collaborator4Mezz = [systemModel remoteMezzWithUid:collaborator4];
+  
+  STAssertTrue((collaborator1Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator1);
+  STAssertTrue((collaborator2Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator2);
+  STAssertTrue((collaborator3Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator3);
+  STAssertTrue((collaborator4Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator4);
+
+  STAssertNil(systemModel.mezzBeingJoined, @"Should be nil.");
+}
+
+
+-(void) testInfopresenceDetail_WithExistingIncomingRequest
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionDetail responseType:@"psa?existing-incoming-request"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  NSString *incomingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceIncomingRequestUidKey];
+  STAssertTrue([systemModel.incomingCalls containsObject:incomingRequestUid], @"%@ should be in systemModel.incomingCalls", incomingRequestUid);
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:incomingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState == MZRemoteMezzStateJoining), @"Remote mezz %@ should be in state MZRemoteMezzStateJoining");
+  STAssertEqualObjects(systemModel.mezzBeingJoined.uid, incomingRequestUid, @"Should equal.");
+}
+
+
+-(void) testInfopresenceDetail_WithExistingOutgoingRequest
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionDetail responseType:@"psa?existing-outgoing-request"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  NSString *outgoingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceOutgoingRequestUidKey];
+  
+  STAssertEqualObjects(systemModel.mezzBeingJoined.uid, outgoingRequestUid, @"Should equal.");
+}
+
+
+-(void) testInfopresenceDetail_CollaboratorJoined
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *collaborator1 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant1Key];
+  NSString *collaborator2 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant2Key];
+  NSString *collaborator3 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant3Key];
+  NSString *collaborator4 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant4Key];
+
+  MZRemoteMezz *collaborator1Mezz = [systemModel remoteMezzWithUid:collaborator1];
+  MZRemoteMezz *collaborator2Mezz = [systemModel remoteMezzWithUid:collaborator2];
+  MZRemoteMezz *collaborator3Mezz = [systemModel remoteMezzWithUid:collaborator3];
+  MZRemoteMezz *collaborator4Mezz = [systemModel remoteMezzWithUid:collaborator4];
+  collaborator1Mezz.collaborationState = MZRemoteMezzStateInCollaboration;
+  collaborator2Mezz.collaborationState = MZRemoteMezzStateNotInCollaboration;
+  collaborator3Mezz.collaborationState = MZRemoteMezzStateNotInCollaboration;
+  collaborator4Mezz.collaborationState = MZRemoteMezzStateNotInCollaboration;
+
+  systemModel.isInCollaboration = YES;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionDetail responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSArray *collaborators = [systemModel remoteMezzesWithCollaborationState:MZRemoteMezzStateInCollaboration];
+  STAssertTrue((collaborators.count == 2), @"Number of collaborators should be 2");
+  
+  STAssertTrue((collaborator1Mezz.collaborationState == MZRemoteMezzStateInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator1);
+  STAssertTrue((collaborator2Mezz.collaborationState == MZRemoteMezzStateInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator2);
+  
+  STAssertTrue((collaborator3Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator3);
+  STAssertTrue((collaborator4Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator4);
+}
+
+
+-(void) testInfopresenceDetail_CollaboratosLeft
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *collaborator1 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant1Key];
+  NSString *collaborator2 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant2Key];
+  NSString *collaborator3 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant3Key];
+  NSString *collaborator4 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant4Key];
+  
+  MZRemoteMezz *collaborator1Mezz = [systemModel remoteMezzWithUid:collaborator1];
+  MZRemoteMezz *collaborator2Mezz = [systemModel remoteMezzWithUid:collaborator2];
+  MZRemoteMezz *collaborator3Mezz = [systemModel remoteMezzWithUid:collaborator3];
+  MZRemoteMezz *collaborator4Mezz = [systemModel remoteMezzWithUid:collaborator4];
+  collaborator1Mezz.collaborationState = MZRemoteMezzStateInCollaboration;
+  collaborator2Mezz.collaborationState = MZRemoteMezzStateInCollaboration;
+  collaborator3Mezz.collaborationState = MZRemoteMezzStateInCollaboration;
+  collaborator4Mezz.collaborationState = MZRemoteMezzStateInCollaboration;
+
+  systemModel.isInCollaboration = YES;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionDetail responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  NSArray *collaborators = [systemModel remoteMezzesWithCollaborationState:MZRemoteMezzStateInCollaboration];
+  STAssertTrue((collaborators.count == 2), @"Number of collaborators should be 2");
+  
+  STAssertTrue((collaborator1Mezz.collaborationState == MZRemoteMezzStateInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator1);
+  STAssertTrue((collaborator2Mezz.collaborationState == MZRemoteMezzStateInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator2);
+  STAssertTrue((collaborator3Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator3);
+  STAssertTrue((collaborator4Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator4);
+}
+
+
+-(void) testInfopresenceDetail_CollaborationEnded
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+
+  systemModel.isInCollaboration = YES;
+
+  STAssertTrue(systemModel.isInCollaboration, @"Should be in collaboration at the beginning of test");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionDetail responseType:@"psa?not-active"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertFalse(systemModel.isInCollaboration, @"Should not be in collaboration");
+
+  NSString *collaborator1 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant1Key];
+  NSString *collaborator2 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant2Key];
+  NSString *collaborator3 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant3Key];
+  NSString *collaborator4 = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant4Key];
+  
+  MZRemoteMezz *collaborator1Mezz = [systemModel remoteMezzWithUid:collaborator1];
+  MZRemoteMezz *collaborator2Mezz = [systemModel remoteMezzWithUid:collaborator2];
+  MZRemoteMezz *collaborator3Mezz = [systemModel remoteMezzWithUid:collaborator3];
+  MZRemoteMezz *collaborator4Mezz = [systemModel remoteMezzWithUid:collaborator4];
+
+  STAssertTrue((collaborator1Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator1);
+  STAssertTrue((collaborator2Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateInCollaboration", collaborator2);
+  STAssertTrue((collaborator3Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator3);
+  STAssertTrue((collaborator4Mezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"%@ should be in state MZRemoteMezzStateNotInCollaboration", collaborator4);
+}
+
+
+-(void) testInfopresenceSessionIncomingRequest_ReceivedFirstCall
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionIncomingRequest responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue((systemModel.incomingCalls.count == 1), @"systemModel.incomingCalls.count should be 1");
+
+  NSString *incomingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceIncomingRequestUidKey];
+  STAssertTrue([systemModel.incomingCalls containsObject:incomingRequestUid], @"systemModel.incomingCalls should contain call");
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:incomingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState == MZRemoteMezzStateJoining), @"collaborationState should be MZRemoteMezzStateJoining");
+
+  STAssertEqualObjects(systemModel.mezzBeingJoined.uid, incomingRequestUid, @"mezzBeingJoined should be the first call.");
+}
+
+
+-(void) testInfopresenceSessionIncomingRequest_ReceivedSecondCall
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  // Prepare model to have an existing incoming request
+  NSString *existingIncomingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceParticipant1Key];
+  [systemModel.incomingCalls addObject:existingIncomingRequestUid];
+  [systemModel remoteMezzWithUid:existingIncomingRequestUid].collaborationState = MZRemoteMezzStateJoining;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionIncomingRequest responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue((systemModel.incomingCalls.count == 2), @"systemModel.incomingCalls.count should be 2");
+  
+  NSString *incomingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceIncomingRequestUidKey];
+  STAssertTrue([systemModel.incomingCalls containsObject:existingIncomingRequestUid], @"systemModel.incomingCalls should contain old call");
+  STAssertTrue([systemModel.incomingCalls containsObject:incomingRequestUid], @"systemModel.incomingCalls should contain new call");
+  
+  MZRemoteMezz *remoteMezz1 = [systemModel remoteMezzWithUid:existingIncomingRequestUid];
+  STAssertTrue((remoteMezz1.collaborationState == MZRemoteMezzStateJoining), @"collaborationState should be MZRemoteMezzStateJoining");
+  
+  MZRemoteMezz *remoteMezz2 = [systemModel remoteMezzWithUid:incomingRequestUid];
+  STAssertTrue((remoteMezz2.collaborationState == MZRemoteMezzStateJoining), @"collaborationState should be MZRemoteMezzStateJoining");
+
+  STAssertEqualObjects(systemModel.mezzBeingJoined.uid, incomingRequestUid, @"First call should still be the mezzBeingJoined.");
+}
+
+
+-(void) testInfopresenceSessionIncomingRequestResolved_Accepted
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+
+  // Prepare model to have an existing incoming request
+  NSString *incomingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceIncomingRequestUidKey];
+  [systemModel.incomingCalls addObject:incomingRequestUid];
+  systemModel.mezzBeingJoined = [systemModel remoteMezzWithUid:incomingRequestUid];
+  systemModel.mezzBeingJoined.collaborationState = MZRemoteMezzStateJoining;
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionIncomingRequestResolve responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue((systemModel.incomingCalls.count == 0), @"systemModel.incomingCalls.count should be 0 after resolution");
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:incomingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState == MZRemoteMezzStateInCollaboration), @"collaborationState %d should be %d", remoteMezz.collaborationState, MZRemoteMezzStateInCollaboration);
+
+  STAssertTrue((remoteMezz.callResolution == MZInfopresenceCallResolutionAccepted), @"callResolution should be %d but is %d", MZInfopresenceCallResolutionAccepted, remoteMezz.collaborationState);
+  
+  STAssertNil(systemModel.mezzBeingJoined, @"mezzBeingJoined should no longer be set after call resolution.");
+}
+
+
+-(void) testInfopresenceSessionIncomingRequestResolved_Canceled
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *incomingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceIncomingRequestUidKey];
+  [systemModel.incomingCalls addObject:incomingRequestUid];
+  systemModel.mezzBeingJoined = [systemModel remoteMezzWithUid:incomingRequestUid];
+  systemModel.mezzBeingJoined.collaborationState = MZRemoteMezzStateJoining;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionIncomingRequestResolve responseType:@"psa?canceled"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue((systemModel.incomingCalls.count == 0), @"systemModel.incomingCalls.count should be 0 after resolution");
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:incomingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"collaborationState %d should be %d", remoteMezz.collaborationState, MZRemoteMezzStateNotInCollaboration);
+  
+  STAssertTrue((remoteMezz.callResolution == MZInfopresenceCallResolutionCanceled), @"callResolution should be %d but is %d", MZInfopresenceCallResolutionCanceled, remoteMezz.collaborationState);
+  
+  STAssertNil(systemModel.mezzBeingJoined, @"mezzBeingJoined should no longer be set after call resolution.");
+}
+
+
+-(void) testInfopresenceSessionIncomingRequestResolved_Declined
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *incomingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceIncomingRequestUidKey];
+  [systemModel.incomingCalls addObject:incomingRequestUid];
+  systemModel.mezzBeingJoined = [systemModel remoteMezzWithUid:incomingRequestUid];
+  systemModel.mezzBeingJoined.collaborationState = MZRemoteMezzStateJoining;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionIncomingRequestResolve responseType:@"psa?declined"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue((systemModel.incomingCalls.count == 0), @"systemModel.incomingCalls.count should be 0 after resolution");
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:incomingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState == MZRemoteMezzStateNotInCollaboration), @"collaborationState %d should be %d", remoteMezz.collaborationState, MZRemoteMezzStateNotInCollaboration);
+  
+  STAssertTrue((remoteMezz.callResolution == MZInfopresenceCallResolutionDeclined), @"callResolution should be %d but is %d", MZInfopresenceCallResolutionDeclined, remoteMezz.collaborationState);
+  
+  STAssertNil(systemModel.mezzBeingJoined, @"mezzBeingJoined should no longer be set after call resolution.");
+}
+
+
+-(void) testInfopresenceSessionOutgoingRequest
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionOutgoingRequest responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  
+  NSString *outgoingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceOutgoingRequestUidKey];
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:outgoingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState == MZRemoteMezzStateJoining), @"collaborationState should be MZRemoteMezzStateJoining");
+  
+  STAssertEqualObjects(systemModel.mezzBeingJoined.uid, outgoingRequestUid, @"Should equal.");
+}
+
+
+-(void) testInfopresenceSessionOutgoingRequestResolved
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *outgoingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceOutgoingRequestUidKey];
+  systemModel.mezzBeingJoined = [systemModel remoteMezzWithUid:outgoingRequestUid];
+  systemModel.mezzBeingJoined.collaborationState = MZRemoteMezzStateJoining;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionOutgoingRequestResolve responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:outgoingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState != MZRemoteMezzStateJoining), @"collaborationState should not be MZRemoteMezzStateJoining");
+  
+  STAssertTrue((remoteMezz.callResolution == MZInfopresenceCallResolutionAccepted), @"callResolution should be %d but is %d", MZInfopresenceCallResolutionAccepted, remoteMezz.collaborationState);
+
+  STAssertNil(systemModel.mezzBeingJoined, @"Should be nil.");
+}
+
+
+-(void) testInfopresenceSessionOutgoingRequestResolved_Cancelled
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *outgoingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceOutgoingRequestUidKey];
+  systemModel.mezzBeingJoined = [systemModel remoteMezzWithUid:outgoingRequestUid];
+  systemModel.mezzBeingJoined.collaborationState = MZRemoteMezzStateJoining;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionOutgoingRequestResolve responseType:@"psa?canceled"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:outgoingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState != MZRemoteMezzStateJoining), @"collaborationState should not be MZRemoteMezzStateJoining");
+  
+  STAssertTrue((remoteMezz.callResolution == MZInfopresenceCallResolutionCanceled), @"callResolution should be %d but is %d", MZInfopresenceCallResolutionCanceled, remoteMezz.collaborationState);
+  
+  STAssertNil(systemModel.mezzBeingJoined, @"Should be nil.");
+}
+
+
+-(void) testInfopresenceSessionOutgoingRequestResolved_Declined
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareSystemModelForInfopresenceTests];
+  
+  NSString *outgoingRequestUid = [proteinSource parameterForKey:kCanonicalParameterInfopresenceOutgoingRequestUidKey];
+  systemModel.mezzBeingJoined = [systemModel remoteMezzWithUid:outgoingRequestUid];
+  systemModel.mezzBeingJoined.collaborationState = MZRemoteMezzStateJoining;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameInfopresenceSessionOutgoingRequestResolve responseType:@"psa?declined"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  
+  MZRemoteMezz *remoteMezz = [systemModel remoteMezzWithUid:outgoingRequestUid];
+  STAssertTrue((remoteMezz.collaborationState != MZRemoteMezzStateJoining), @"collaborationState should not be MZRemoteMezzStateJoining");
+  
+  STAssertTrue((remoteMezz.callResolution == MZInfopresenceCallResolutionDeclined), @"callResolution should be %d but is %d", MZInfopresenceCallResolutionDeclined, remoteMezz.collaborationState);
+  
+  STAssertNil(systemModel.mezzBeingJoined, @"Should be nil.");
+}
+
+
+
+#pragma mark - Live Streams Tests
+
+- (void)testLiveStreamsDetailFromEmptyToOneToThree
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZWorkspace *workspace = [self prepareEmptyWorkspace];
+
+  NSString *liveStreamUid1 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid1Key];
+  NSString *liveStreamUid2 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid2Key];
+  NSString *liveStreamUid3 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid3Key];
+  
+
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?1-active"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 1, @"There should be %d live stream, but found %d", 1, workspace.liveStreams.count);
+  if (workspace.liveStreams.count > 0)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+  }
+  
+  
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?3-active"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 3, @"There should be %d live streams, but found %d", 3, workspace.liveStreams.count);
+  if (workspace.liveStreams.count == 3)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[1];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid2, @"Should be %@ but is %@", liveStreamUid2, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[2];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid3, @"Should be %@ but is %@", liveStreamUid3, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+  }
+}
+
+
+- (void)testLiveStreamsDetailFromOneToTwoActive
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZWorkspace *workspace = [self prepareEmptyWorkspace];
+  
+  NSString *liveStreamUid1 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid1Key];
+  NSString *liveStreamUid2 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid2Key];
+  NSString *liveStreamUid3 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid3Key];
+  
+  
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?1-active"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 1, @"There should be %d live stream, but found %d", 1, workspace.liveStreams.count);
+  if (workspace.liveStreams.count > 0)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+  }
+  
+  
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?2-active-1-inactive"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 3, @"There should be %d live streams, but found %d", 3, workspace.liveStreams.count);
+  if (workspace.liveStreams.count == 3)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[1];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid2, @"Should be %@ but is %@", liveStreamUid2, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[2];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid3, @"Should be %@ but is %@", liveStreamUid3, liveStream.uid);
+    STAssertTrue(!liveStream.active, @"Should be inactive");
+  }
+  
+}
+
+
+- (void)testLiveStreamsDetailFromThreeToOne
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZWorkspace *workspace = [self prepareEmptyWorkspace];
+  
+  NSString *liveStreamUid1 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid1Key];
+  NSString *liveStreamUid2 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid2Key];
+  NSString *liveStreamUid3 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid3Key];
+  
+  
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?3-active"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 3, @"There should be %d live streams, but found %d", 3, workspace.liveStreams.count);
+  if (workspace.liveStreams.count == 3)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[1];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid2, @"Should be %@ but is %@", liveStreamUid2, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[2];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid3, @"Should be %@ but is %@", liveStreamUid3, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+  }
+  
+  
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?1-active"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 1, @"There should be %d live stream, but found %d", 1, workspace.liveStreams.count);
+  if (workspace.liveStreams.count > 0)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+  }
+}
+
+
+- (void)testLiveStreamsDetailFromThreeToTwoActive
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZWorkspace *workspace = [self prepareEmptyWorkspace];
+  
+  NSString *liveStreamUid1 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid1Key];
+  NSString *liveStreamUid2 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid2Key];
+  NSString *liveStreamUid3 = [proteinSource parameterForKey:kCanonicalParameterLiveStreamUid3Key];
+  
+  
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?3-active"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 3, @"There should be %d live stream, but found %d", 3, workspace.liveStreams.count);
+  if (workspace.liveStreams.count > 0)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[1];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid2, @"Should be %@ but is %@", liveStreamUid2, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[2];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid3, @"Should be %@ but is %@", liveStreamUid3, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+  }
+  
+  
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameLiveStreamsDetail responseType:@"psa?2-active-1-inactive"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  STAssertTrue(workspace.liveStreams.count == 3, @"There should be %d live streams, but found %d", 3, workspace.liveStreams.count);
+  if (workspace.liveStreams.count == 3)
+  {
+    MZLiveStream *liveStream = workspace.liveStreams[0];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid1, @"Should be %@ but is %@", liveStreamUid1, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[1];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid2, @"Should be %@ but is %@", liveStreamUid2, liveStream.uid);
+    STAssertTrue(liveStream.active, @"Should be active");
+    
+    liveStream = workspace.liveStreams[2];
+    STAssertEqualObjects(liveStream.uid, liveStreamUid3, @"Should be %@ but is %@", liveStreamUid3, liveStream.uid);
+    STAssertTrue(!liveStream.active, @"Should be inactive");
+  }
+}
+
+
+#pragma mark - Porfolio Tests
+
+- (MZPresentation*)preparePresentationWithItems:(NSInteger)numberOfItems
+{
+  MZWorkspace *workspace = [self prepareEmptyWorkspace];
+  MZPresentation *presentation = workspace.presentation;
+  
+  for (NSInteger i=0; i<numberOfItems; i++)
+  {
+    MZSlide *item = [[MZSlide alloc] init];
+    item.uid = [NSString stringWithFormat:@"sl-000%ld", (long)i];
+    item.contentSource = [NSString stringWithFormat:@"as-000%ld", (long)i];
+    item.index = i;
+    [presentation.slides addObject:item];
+  }
+  
+  return presentation;
+}
+
+
+- (void)checkPresentationSlideIndex:(MZPresentation*)presentation
+{
+  NSInteger index = 0;
+  for (MZSlide *slide in presentation.slides)
+  {
+    STAssertTrue(slide.index == index, @"Slide index should be %ld but is %ld", (long)index, (long)slide.index);
+    index++;
+  }
+}
+
+
+- (void)testPorfolioItemInsert_Front
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePortfolioItemInsert responseType:@"psa?index-0"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  
+  STAssertTrue((presentation.slides.count == 6), @"Slides count should be %ld but is %ld", 6, (long)presentation.slides.count);
+
+  NSString *slideUid = [proteinSource parameterForKey:kCanonicalParameterSlideInsertionUidKey];
+  STAssertEqualObjects(((MZSlide*)presentation.slides[0]).uid, slideUid, @"Inserted slide uid should match");
+
+  [self checkPresentationSlideIndex:presentation];
+}
+
+
+- (void)testPorfolioItemInsert_Middle
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePortfolioItemInsert responseType:@"psa?index-2"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  
+  STAssertTrue((presentation.slides.count == 6), @"Slides count should be %ld but is %ld", 6, (long)presentation.slides.count);
+  
+  NSString *slideUid = [proteinSource parameterForKey:kCanonicalParameterSlideInsertionUidKey];
+  STAssertEqualObjects(((MZSlide*)presentation.slides[2]).uid, slideUid, @"Inserted slide uid should match");
+  
+  [self checkPresentationSlideIndex:presentation];
+}
+
+
+- (void)testPorfolioItemInsert_End
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePortfolioItemInsert responseType:@"psa?index-4"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  
+  STAssertTrue((presentation.slides.count == 6), @"Slides count should be %ld but is %ld", 6, (long)presentation.slides.count);
+  
+  NSString *slideUid = [proteinSource parameterForKey:kCanonicalParameterSlideInsertionUidKey];
+  STAssertEqualObjects(((MZSlide*)presentation.slides[4]).uid, slideUid, @"Inserted slide uid should match");
+  
+  [self checkPresentationSlideIndex:presentation];
+}
+
+
+- (void)testPorfolioItemDelete
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePortfolioItemDelete responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  
+  STAssertTrue((presentation.slides.count == 4), @"Slides count should be %ld but is %ld", 4, (long)presentation.slides.count);
+  
+  NSString *slideUid = [proteinSource parameterForKey:kCanonicalParameterSlideDeletionUidKey];
+  STAssertNil([presentation slideWithUid:slideUid], @"Deleted slide should no longer exist in presentation");
+  
+  [self checkPresentationSlideIndex:presentation];
+}
+
+
+- (void)testPorfolioItemReorder_To0
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+
+  NSString *slideUid = [proteinSource parameterForKey:kCanonicalParameterSlideReorderUidKey];
+  MZSlide *slide = [presentation slideWithUid:slideUid];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePortfolioItemReorder responseType:@"psa?index-0"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue((presentation.slides.count == 5), @"Slides count should be %ld but is %ld", 5, (long)presentation.slides.count);
+
+  STAssertTrue((slide.index == 0), @"Slide index should be %ld but is %ld", 0, (long)slide.index);
+
+  [self checkPresentationSlideIndex:presentation];
+}
+
+
+- (void)testPorfolioItemReorder_To4
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *slideUid = [proteinSource parameterForKey:kCanonicalParameterSlideReorderUidKey];
+  MZSlide *slide = [presentation slideWithUid:slideUid];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePortfolioItemReorder responseType:@"psa?index-4"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue((presentation.slides.count == 5), @"Slides count should be %ld but is %ld", 5, (long)presentation.slides.count);
+  
+  STAssertTrue((slide.index == 4), @"Slide index should be %ld but is %ld", 4, (long)slide.index);
+  
+  [self checkPresentationSlideIndex:presentation];
+}
+
+
+- (void)testPorfolioClear
+{
+  [self setUpConnectedCommunicator_v2_12];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePortfolioClear responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue((presentation.slides.count == 0), @"Slides count should be %ld but is %ld", 0, (long)presentation.slides.count);
+
+  [self checkPresentationSlideIndex:presentation];
+}
+
+
+
+#pragma mark - Presentation Tests
+
+- (void)testPresentationDetail
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationDetail responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue(presentation.active, @"Presentation should be active");
+  
+  NSInteger presentationScrollIndex = [[proteinSource parameterForKey:kCanonicalParameterPresentationScrollIndexKey] integerValue];
+  STAssertTrue((presentation.currentSlideIndex == presentationScrollIndex), @"Presentation current slide index should be %ld but is %ld", presentationScrollIndex, presentation.currentSlideIndex);
+}
+
+
+- (void)testPresentationDetail_WrongWorkspace
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationDetail responseType:@"psa?wrong-workspace"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  
+  STAssertFalse(presentation.active, @"Presentation should not be active");
+  STAssertTrue((presentation.currentSlideIndex == 0), @"Presentation current slide index should be %ld but is %ld", 0, presentation.currentSlideIndex);
+}
+
+
+- (void)testPresentationStart
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationStart responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue(presentation.active, @"Presentation should be active");
+  
+  NSInteger presentationScrollIndex = [[proteinSource parameterForKey:kCanonicalParameterPresentationScrollIndexKey] integerValue];
+  STAssertTrue((presentation.currentSlideIndex == presentationScrollIndex), @"Presentation current slide index should be %ld but is %ld", presentationScrollIndex, presentation.currentSlideIndex);
+}
+
+
+- (void)testPresentationStart_WrongWorkspace
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationStart responseType:@"psa?wrong-workspace"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertFalse(presentation.active, @"Presentation should not be active");
+}
+
+
+- (void)testPresentationStop
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  presentation.active = YES;  // Start with presentation active
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationStop responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertFalse(presentation.active, @"Presentation should not be active");
+}
+
+
+- (void)testPresentationStop_WrongWorkspace
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  presentation.active = YES;  // Start with presentation active
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationStop responseType:@"psa?wrong-workspace"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertTrue(presentation.active, @"Presentation should be active");
+}
+
+
+- (void)testPresentationScroll
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  NSInteger initialScrollIndex = 1;
+  presentation.currentSlideIndex = initialScrollIndex;
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationScroll responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSInteger presentationScrollIndex = [[proteinSource parameterForKey:kCanonicalParameterPresentationScrollIndexKey] integerValue];
+  STAssertTrue((presentation.currentSlideIndex == presentationScrollIndex), @"Presentation current slide index should be %ld but is %ld", presentationScrollIndex, presentation.currentSlideIndex);
+}
+
+
+- (void)testPresentationScroll_WrongWorkspace
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self prepareEmptyWorkspace];
+  MZPresentation *presentation = [self preparePresentationWithItems:5];
+  NSInteger initialScrollIndex = 1;
+  presentation.currentSlideIndex = initialScrollIndex;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNamePresentationScroll responseType:@"psa?wrong-workspace"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  
+  NSInteger presentationScrollIndex = [proteinSource parameterForKey:kCanonicalParameterPresentationScrollIndexKey];
+  STAssertTrue((presentation.currentSlideIndex != presentationScrollIndex), @"Presentation current slide index should remain the same at %ld but is %ld", presentationScrollIndex, presentation.currentSlideIndex);
+}
+
+
+
+#pragma mark - Windshield Tests
+
+-(MZWindshield*) prepareWorkspaceForWindshieldTests:(NSInteger)initialNumberOfItems
+{
+  MZWorkspace *workspace = [self prepareEmptyWorkspace];
+  
+  // Add some initial windshield items
+  MZWindshield *windshield = workspace.windshield;
+  for (NSInteger i=0; i<initialNumberOfItems; i++)
+  {
+    MZWindshieldItem *item = [[MZWindshieldItem alloc] init];
+    item.uid = [NSString stringWithFormat:@"el-000%ld", (long)i];
+    item.assetUid = [NSString stringWithFormat:@"as-000%ld", (long)i];
+    item.frame = CGRectMake(0, 0, 1, 1);
+    [windshield insertObject:item inItemsAtIndex:windshield.countOfItems];
+  }
+  
+  return windshield;
+}
+
+
+// For now not separating test from protein injection in the following tests
+// to save time. But in the future the idea is that one can run the same tests
+// and set up a different version of the communicator.
+
+-(void) testWindshieldDetailFromEmpty_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:0];
+  STAssertTrue(windshield.items.count == 0, @"Number of items before windshield details should be zero");
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldDetail responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSInteger numberOfItems = 8;
+  STAssertTrue(windshield.items.count == numberOfItems, @"Number of items after windshield details should be %d", numberOfItems);
+}
+
+
+-(void) testWindshieldDetailFromLessThanEight_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:4];
+  STAssertTrue(windshield.items.count == 4, @"Number of items before windshield details should be 4");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldDetail responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  NSInteger numberOfItems = 8;
+  STAssertTrue(windshield.items.count == numberOfItems, @"Number of items after windshield details should be %d", numberOfItems);
+}
+
+
+-(void) testWindshieldDetailFromMoreThanEight_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:11];
+  STAssertTrue(windshield.items.count == 11, @"Number of items before windshield details should be 8");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldDetail responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  NSInteger numberOfItems = 8;
+  STAssertTrue(windshield.items.count == numberOfItems, @"Number of items after windshield details should be %d", numberOfItems);
+}
+
+
+-(void) testWindshieldClearSingle_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSInteger numberOfItems = 1;
+  MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:numberOfItems];
+  STAssertTrue(windshield.items.count == numberOfItems, @"Number of items should be %d", numberOfItems);
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldClear responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue(windshield.items.count == 0, @"Number of items after clear should be zero");
+}
+
+
+-(void) testWindshieldClearMultiple_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSInteger numberOfItems = 8;
+  MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:numberOfItems];
+  STAssertTrue(windshield.items.count == numberOfItems, @"Number of items should be %d", numberOfItems);
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldClear responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue(windshield.items.count == 0, @"Number of items after clear should be zero");
+}
+
+
+-(void) testWindshieldCreate_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSInteger numberOfItems = 8;
+  MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:numberOfItems];
+  STAssertTrue(windshield.items.count == numberOfItems, @"Number of items should be %d", numberOfItems);
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldItemCreate responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue(windshield.items.count == (numberOfItems+1), @"Number of items after create should be %d", numberOfItems+1);
+}
+
+
+-(void) testWindshieldDelete_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSInteger numberOfItems = 8;
+  MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:numberOfItems];
+  STAssertTrue(windshield.items.count == numberOfItems, @"Number of items should be %d", numberOfItems);
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldItemDelete responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertTrue(windshield.items.count == (numberOfItems-1), @"Number of items after create should be %d", numberOfItems-1);
+}
+
+
+-(void) testWindshieldTransform_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  // TODO
+  /*
+   MZWindshield *windshield = [self prepareWorkspaceForWindshieldTests:3];
+   
+  NSNumber* windshieldItemAspectRatio = [proteinSource parameterForKey:kCanonicalParameterWindshieldItemAspectRatioKey];
+  NSString* windshieldItemContentSource = [proteinSource parameterForKey:kCanonicalParameterWindshieldItemContentSourceKey];
+  NSString* windshieldItemFeldId = [proteinSource parameterForKey:kCanonicalParameterWindshieldItemFeldIdKey];
+  OBVect2f64* windshieldItemFeldRelativeCoords = [proteinSource parameterForKey:kCanonicalParameterWindshieldItemFeldRelativeCoordsKey];
+  OBVect2f64* windshieldItemFeldRelativeSize = [proteinSource parameterForKey:kCanonicalParameterWindshieldItemFeldRelativeSizeKey];
+  */
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWindshieldItemTransform responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+}
+
+
+
+#pragma mark - Workspace Tests
+
+-(void) testWorkspaceCreateProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceCreateTest];
+}
+
+
+-(void) performWorkspaceCreateTest
+{
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceCreate responseType:@"psa"];
+  
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  STAssertNotNil(workspaceUid, @"workspaceUid should not be nil");
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  STAssertNotNil(workspaceName, @"workspaceName should not be nil");
+  
+  MZWorkspace *existingWorkspace = [systemModel workspaceWithUid:workspaceUid];
+  STAssertNil(existingWorkspace, @"Existing workspace with uid %@ should be nil", workspaceUid);
+  
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  MZWorkspace *newWorkspace = [systemModel workspaceWithUid:workspaceUid];
+  STAssertEqualObjects(newWorkspace.uid, workspaceUid, @"Workspace uid should be %@", workspaceUid);
+  STAssertEqualObjects(newWorkspace.name, workspaceName, @"Workspace name should be %@", workspaceName);
+  
+  STAssertFalse([systemModel.currentWorkspace.uid isEqual:workspaceUid], @"Workspace creation should not set current workspace to the newly created workspace.");
+}
+
+
+- (void)testWorkspaceCloseProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceCloseTest];
+}
+
+
+- (void)performWorkspaceCloseTest
+{
+  NSString *oldWorkspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOldUidKey];
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = oldWorkspaceUid;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  systemModel.currentWorkspace = workspace;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceClose responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  MZWorkspace *currentWorkspace = systemModel.currentWorkspace;
+  STAssertFalse([currentWorkspace.uid isEqual:oldWorkspaceUid], @"Workspace uid should not be %@ after closing", oldWorkspaceUid);
+  STAssertEqualObjects(currentWorkspace.uid, workspaceUid, @"Workspace uid should be %@ after closing", workspaceUid);
+  STAssertNil(currentWorkspace.name, @"Workspace name should be nil after closing");
+  STAssertFalse(currentWorkspace.isSaved, @"Workspace as a result of closing should be unsaved.");
+}
+
+
+- (void)testWorkspaceOpenProtein_Using_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceOpenTest];
+}
+
+
+- (void)performWorkspaceOpenTest
+{
+  NSString *oldWorkspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOldUidKey];
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = oldWorkspaceUid;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  systemModel.currentWorkspace = workspace;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceOpen responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  MZWorkspace *currentWorkspace = systemModel.currentWorkspace;
+  STAssertFalse([currentWorkspace.uid isEqual:oldWorkspaceUid], @"Workspace uid should not be %@ after opening.", oldWorkspaceUid);
+  STAssertEqualObjects(currentWorkspace.uid, workspaceUid, @"Workspace uid should be %@ after opening.", workspaceUid);
+  STAssertEqualObjects(currentWorkspace.name, workspaceName, @"Workspace name should be %@ after opening.", workspaceName);
+  STAssertTrue(currentWorkspace.isSaved, @"Workspace as a result of opening should be saved.");
+}
+
+
+- (void)testWorkspaceDiscardProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceDiscardTest];
+}
+
+
+- (void)performWorkspaceDiscardTest
+{
+  NSString *oldWorkspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOldUidKey];
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+//  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = oldWorkspaceUid;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  systemModel.currentWorkspace = workspace;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceDiscard responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  MZWorkspace *currentWorkspace = systemModel.currentWorkspace;
+  STAssertFalse([currentWorkspace.uid isEqual:oldWorkspaceUid], @"Workspace uid should not be %@ after discarding.", workspaceUid);
+  STAssertFalse(currentWorkspace.isSaved, @"Workspace as a result of discarding should be unsaved.");
+}
+
+
+- (void)testWorkspaceSaveProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceSaveTest];
+}
+
+
+- (void)performWorkspaceSaveTest
+{
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = workspaceUid;
+  workspace.name = [NSString stringWithFormat:@"%@ (before save)", workspaceName];
+  workspace.isSaved = NO;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  systemModel.currentWorkspace = workspace;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceSave responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  MZWorkspace *currentWorkspace = systemModel.currentWorkspace;
+  STAssertTrue([currentWorkspace.uid isEqual:workspaceUid], @"Workspace uid be equal after saving.", workspaceUid);
+  STAssertEqualObjects(currentWorkspace.name, workspaceName, @"Workspace name should be %@ after saving, but is %@.", workspaceName, currentWorkspace.name);
+  STAssertTrue(currentWorkspace.isSaved, @"Workspace should be saved after saving.");
+}
+
+
+- (void)testWorkspaceDeleteProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceDeleteTest];
+}
+
+
+- (void)performWorkspaceDeleteTest
+{
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = workspaceUid;
+  workspace.name = workspaceName;
+  workspace.isSaved = YES;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  
+  STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"Workspace should be present.");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceDelete responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertNil([systemModel workspaceWithUid:workspaceUid], @"Workspace should have been deleted.");
+}
+
+
+- (void)testWorkspaceRenameProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceRenameTest];
+}
+
+
+- (void)performWorkspaceRenameTest
+{
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = workspaceUid;
+  workspace.name = @"Something random";
+  workspace.isSaved = YES;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  
+  STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"Workspace should be present.");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceRename responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  MZWorkspace *workspaceAfter = [systemModel workspaceWithUid:workspaceUid];
+  STAssertNotNil(workspaceAfter, @"Workspace should be present.");
+  STAssertEqualObjects(workspaceAfter.name, workspaceName, @"Workspace name should be %@ after rename.", workspaceName);
+}
+
+
+- (void)testWorkspaceDuplicateProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceDuplicateTest];
+}
+
+
+- (void)performWorkspaceDuplicateTest
+{
+  NSString *oldWorkspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOldUidKey];
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = oldWorkspaceUid;
+  workspace.name = [NSString stringWithFormat:@"%@ before duplicate", workspaceName];
+  workspace.isSaved = YES;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  
+  STAssertNotNil([systemModel workspaceWithUid:oldWorkspaceUid], @"Workspace should be present before duplicate.");
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceDuplicate responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  MZWorkspace *workspaceAfter = [systemModel workspaceWithUid:workspaceUid];
+  STAssertNotNil(workspaceAfter, @"Workspace should be present after duplicate.");
+  STAssertEqualObjects(workspaceAfter.uid, workspaceUid, @"Workspace uid should be the same after duplicate.");
+  STAssertEqualObjects(workspaceAfter.name, workspaceName, @"Workspace name should be '%@' after duplicate.", workspaceName);
+}
+
+
+- (void)testWorkspaceReassignProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performWorkspaceReassignTest];
+}
+
+
+- (void)performWorkspaceReassignTest
+{
+  NSString *oldWorkspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOldUidKey];
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = oldWorkspaceUid;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  
+  STAssertTrue([systemModel workspaceWithUid:oldWorkspaceUid], @"Workspace with uid '%@' should exist before reassign.", oldWorkspaceUid);
+  STAssertFalse([systemModel workspaceWithUid:workspaceUid], @"Workspace with uid '%@' should not exist before reassign.", workspaceUid);
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceReassign responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertFalse([systemModel workspaceWithUid:oldWorkspaceUid], @"Workspace with uid '%@' should not exist after reassign.", oldWorkspaceUid);
+  STAssertTrue([systemModel workspaceWithUid:workspaceUid], @"Workspace with uid '%@' should exist after reassign.", workspaceUid);
+}
+
+
+- (void)testFirstWorkspaceSwitchProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performFirstWorkspaceSwitchTest];
+}
+
+
+- (void)performFirstWorkspaceSwitchTest
+{
+  NSString *oldWorkspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOldUidKey];
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = oldWorkspaceUid;
+  systemModel.currentWorkspace = workspace;
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceSwitch responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertEqualObjects(systemModel.currentWorkspace.uid, workspaceUid, @"Current workspace uid should be correct after switch.");
+  STAssertEqualObjects(systemModel.currentWorkspace.name, workspaceName, @"Current workspace name should be '%@' after switch.", workspaceName);
+}
+
+
+- (void)testSecondWorkspaceSwitchProtein_Using_v2_12_Communicator
+{
+  [self setUpConnectedCommunicator_v2_12];
+  [self performSecondWorkspaceSwitchTest];
+}
+
+
+- (void)performSecondWorkspaceSwitchTest
+{
+  NSString *workspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceUidKey];
+//  NSString *workspaceName = [proteinSource parameterForKey:kCanonicalParameterWorkspaceNameKey];
+  NSString *previousWorkspaceUid = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOldUidKey];
+
+  MZWorkspace *workspace = [[MZWorkspace alloc] init];
+  workspace.uid = workspaceUid;
+  [systemModel insertObject:workspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+  systemModel.currentWorkspace = workspace;
+
+  MZWorkspace *oldWorkspace = [[MZWorkspace alloc] init];
+  oldWorkspace.uid = previousWorkspaceUid;
+  [systemModel insertObject:oldWorkspace inWorkspacesAtIndex:systemModel.countOfWorkspaces];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceSwitch responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  STAssertNotNil([systemModel workspaceWithUid:previousWorkspaceUid], @"Previous workspace should exist.");
+  STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"Current workspace should exist.");
+
+  STAssertTrue(![systemModel.currentWorkspace.uid isEqualToString:previousWorkspaceUid], @"Current workspace uid should have already been switched.");
+  STAssertTrue([systemModel.currentWorkspace.uid isEqualToString:workspaceUid], @"Current workspace uid should be correct after switch.");
+}
+
+
+#pragma mark - Workspace List
+
+- (void)testPublicWorkspaceList
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceList responseType:@"response?public-workspaces"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSArray *publicWorkspaces = [proteinSource parameterForKey:kCanonicalParameterPublicWorkspaceUidKey];
+
+  STAssertTrue(systemModel.workspaces.count == publicWorkspaces.count, @"Number of workspaces should be %d, but is %d.", publicWorkspaces.count, systemModel.workspaces.count);
+  for (NSString *workspaceUid in publicWorkspaces)
+    STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"System model contains workspace");
+}
+
+
+- (void)testPublicAndPrivateWorkspaceList
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceList responseType:@"response?public-and-private-workspaces"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSArray *publicWorkspaces = [proteinSource parameterForKey:kCanonicalParameterPublicWorkspaceUidKey];
+  NSArray *privateWorkspaces = [proteinSource parameterForKey:kCanonicalParameterPrivateWorkspaceUidKey];
+  NSString *workspaceOwner = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOwnerKey];
+
+  STAssertTrue(systemModel.workspaces.count == publicWorkspaces.count + privateWorkspaces.count, @"Number of workspaces should be %d, but is %d.", publicWorkspaces.count + privateWorkspaces.count, systemModel.workspaces.count);
+  for (NSString *workspaceUid in publicWorkspaces)
+    STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"System model contains workspace");
+  for (NSString *workspaceUid in privateWorkspaces)
+  {
+    STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"System model contains workspace");
+    STAssertTrue([[[systemModel workspaceWithUid:workspaceUid] owner] isEqualToString:workspaceOwner], @"Private workspace has correct owner");
+  }
+}
+
+
+- (void)testWorkspaceListAfterReceivingPublicThenPrivate
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceList responseType:@"response?public-workspaces"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSString *keyPublicAndPrivate = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceList responseType:@"response?public-and-private-workspaces"];
+  OBProtein *pPublicAndPrivate = [proteinSource proteinForKey:keyPublicAndPrivate];
+  [responsePoolConnector receivedProtein:pPublicAndPrivate];
+
+  NSArray *publicWorkspaces = [proteinSource parameterForKey:kCanonicalParameterPublicWorkspaceUidKey];
+  NSArray *privateWorkspaces = [proteinSource parameterForKey:kCanonicalParameterPrivateWorkspaceUidKey];
+  NSString *workspaceOwner = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOwnerKey];
+
+  STAssertTrue(systemModel.workspaces.count == publicWorkspaces.count + privateWorkspaces.count, @"Number of workspaces should be %d, but is %d.", publicWorkspaces.count + privateWorkspaces.count, systemModel.workspaces.count);
+  for (NSString *workspaceUid in publicWorkspaces)
+    STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"System model contains workspace");
+  for (NSString *workspaceUid in privateWorkspaces)
+  {
+    STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"System model contains workspace");
+    STAssertTrue([[[systemModel workspaceWithUid:workspaceUid] owner] isEqualToString:workspaceOwner], @"Private workspace has correct owner");
+  }
+}
+
+
+- (void)testWorkspaceListAfterReceivingPrivateThenPublic
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSString *keyPublicAndPrivate = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceList responseType:@"response?public-and-private-workspaces"];
+  OBProtein *pPublicAndPrivate = [proteinSource proteinForKey:keyPublicAndPrivate];
+  [responsePoolConnector receivedProtein:pPublicAndPrivate];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameWorkspaceList responseType:@"response?public-workspaces"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSArray *publicWorkspaces = [proteinSource parameterForKey:kCanonicalParameterPublicWorkspaceUidKey];
+  NSArray *privateWorkspaces = [proteinSource parameterForKey:kCanonicalParameterPrivateWorkspaceUidKey];
+//  NSString *workspaceOwner = [proteinSource parameterForKey:kCanonicalParameterWorkspaceOwnerKey];
+
+  STAssertTrue(systemModel.workspaces.count == publicWorkspaces.count, @"Number of workspaces should be %d, but is %d.", publicWorkspaces.count, systemModel.workspaces.count);
+  for (NSString *workspaceUid in publicWorkspaces)
+    STAssertNotNil([systemModel workspaceWithUid:workspaceUid], @"System model contains workspace");
+  for (NSString *workspaceUid in privateWorkspaces)
+  {
+    STAssertNil([systemModel workspaceWithUid:workspaceUid], @"System model contains workspace"); 
+  }
+}
+
+
+#pragma mark - Corkboard Tests
+
+- (void)testCorkboardState_Empty
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  MZCorkboard *corkboard1 = [systemModel corkboardWithUid:corkboard1Uid];
+  MZCorkboard *corkboard2 = [systemModel corkboardWithUid:corkboard2Uid];
+  MZCorkboard *corkboard3 = [systemModel corkboardWithUid:corkboard3Uid];
+  
+  STAssertEqualObjects(corkboard1.uid, corkboard1Uid, @"Corkboard 1 should exist");
+  STAssertNil(corkboard1.content, @"Corkboard 1 should be empty");
+  STAssertEqualObjects(corkboard2.uid, corkboard2Uid, @"Corkboard 2 should exist");
+  STAssertNil(corkboard2.content, @"Corkboard 2 should be empty");
+  STAssertEqualObjects(corkboard3.uid, corkboard3Uid, @"Corkboard 3 should exist");
+  STAssertNil(corkboard3.content, @"Corkboard 3 should be empty");
+}
+
+
+- (void)testCorkboardState_Empty_Using_NSNull
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa?null-content-source"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  MZCorkboard *corkboard1 = [systemModel corkboardWithUid:corkboard1Uid];
+  MZCorkboard *corkboard2 = [systemModel corkboardWithUid:corkboard2Uid];
+  MZCorkboard *corkboard3 = [systemModel corkboardWithUid:corkboard3Uid];
+  
+  STAssertEqualObjects(corkboard1.uid, corkboard1Uid, @"Corkboard 1 should exist");
+  STAssertNil(corkboard1.content, @"Corkboard 1 should be empty");
+  STAssertEqualObjects(corkboard2.uid, corkboard2Uid, @"Corkboard 2 should exist");
+  STAssertNil(corkboard2.content, @"Corkboard 2 should be empty");
+  STAssertEqualObjects(corkboard3.uid, corkboard3Uid, @"Corkboard 3 should exist");
+  STAssertNil(corkboard3.content, @"Corkboard 3 should be empty");
+}
+
+
+- (void)testCorkboardState_TwoOccupied
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa?first-and-third-has-content"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  MZCorkboard *corkboard1 = [systemModel corkboardWithUid:corkboard1Uid];
+  MZCorkboard *corkboard2 = [systemModel corkboardWithUid:corkboard2Uid];
+  MZCorkboard *corkboard3 = [systemModel corkboardWithUid:corkboard3Uid];
+  
+  NSString *corkboard1ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource1Key];
+//  NSString *corkboard2ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource2Key];
+  NSString *corkboard3ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource3Key];
+  
+  STAssertNotNil([corkboard1.content uid], @"Corkboard 1 should have correct content");
+  STAssertEqualObjects([corkboard1.content uid], corkboard1ContentSource, @"Corkboard 1 should have correct content");
+  STAssertNil(corkboard2.content, @"Corkboard 2 should be empty");
+  STAssertNotNil([corkboard3.content uid], @"Corkboard 3 should have correct content");
+  STAssertEqualObjects([corkboard3.content uid], corkboard3ContentSource, @"Corkboard 3 should have correct content");
+}
+
+
+- (void)testCorkboardState_TwoOccupiedTheOneGotDeleted
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  // Set up 3 empty corkboards first
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+  
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  MZCorkboard *corkboard1 = [systemModel corkboardWithUid:corkboard1Uid];
+  MZCorkboard *corkboard2 = [systemModel corkboardWithUid:corkboard2Uid];
+  MZCorkboard *corkboard3 = [systemModel corkboardWithUid:corkboard3Uid];
+  NSString *corkboard1ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource1Key];
+  NSString *corkboard2ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource2Key];
+//  NSString *corkboard3ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource3Key];
+  
+  corkboard1.content = [MZAsset assetWithUid:corkboard1ContentSource];
+  corkboard2.content = [MZAsset assetWithUid:corkboard2ContentSource];
+
+
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa?first-has-content"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertNotNil([corkboard1.content uid], @"Corkboard 1 should have correct content");
+  STAssertEqualObjects([corkboard1.content uid], corkboard1ContentSource, @"Corkboard 1 should have correct content");
+  STAssertNil(corkboard2.content, @"Corkboard 2 should be empty");
+  STAssertNil(corkboard3.content, @"Corkboard 3 should be empty");
+}
+
+
+- (void)testCorkboardState_TwoOccupiedTheBothGotDeleted_UsingNSNull
+{
+  [self setUpConnectedCommunicator_v2_12];
+  
+  // Set up 3 empty corkboards first
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  MZCorkboard *corkboard1 = [systemModel corkboardWithUid:corkboard1Uid];
+  MZCorkboard *corkboard2 = [systemModel corkboardWithUid:corkboard2Uid];
+  MZCorkboard *corkboard3 = [systemModel corkboardWithUid:corkboard3Uid];
+  NSString *corkboard1ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource1Key];
+  NSString *corkboard2ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource2Key];
+//  NSString *corkboard3ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource3Key];
+  
+  corkboard1.content = [MZAsset assetWithUid:corkboard1ContentSource];
+  corkboard2.content = [MZAsset assetWithUid:corkboard2ContentSource];
+  
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa?null-content-source"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertNil(corkboard1.content, @"Corkboard 1 should be empty");
+  STAssertNil(corkboard2.content, @"Corkboard 2 should be empty");
+  STAssertNil(corkboard3.content, @"Corkboard 3 should be empty");
+}
+
+
+- (void)testCorkboardState_OneOccupiedThenImageMovedToAnotherCorkboard
+{
+  [self setUpConnectedCommunicator_v2_12];
+
+  // Set up 3 empty corkboards first
+  {
+    NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa"];
+    OBProtein *p = [proteinSource proteinForKey:key];
+    [responsePoolConnector receivedProtein:p];
+  }
+
+  NSString *corkboard1Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid1Key];
+  NSString *corkboard2Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid2Key];
+  NSString *corkboard3Uid = [proteinSource parameterForKey:kCanonicalParameterCorkboardUid3Key];
+  MZCorkboard *corkboard1 = [systemModel corkboardWithUid:corkboard1Uid];
+  MZCorkboard *corkboard2 = [systemModel corkboardWithUid:corkboard2Uid];
+  MZCorkboard *corkboard3 = [systemModel corkboardWithUid:corkboard3Uid];
+  NSString *corkboard1ContentSource = [proteinSource parameterForKey:kCanonicalParameterCorkboardContentSource1Key];
+  
+  corkboard2.content = [MZAsset assetWithUid:corkboard1ContentSource];
+  
+  
+  NSString *key = [proteinSource proteinKeyForTransactionName:MZTransactionNameCorkboardState responseType:@"psa?first-has-content"];
+  OBProtein *p = [proteinSource proteinForKey:key];
+  [responsePoolConnector receivedProtein:p];
+  
+  STAssertNotNil([corkboard1.content uid], @"Corkboard 1 should have correct content");
+  STAssertEqualObjects([corkboard1.content uid], corkboard1ContentSource, @"Corkboard 1 should have correct content");
+  STAssertNil(corkboard2.content, @"Corkboard 2 should be empty");
+  STAssertNil(corkboard3.content, @"Corkboard 3 should be empty");
+}
+
+
+
+@end

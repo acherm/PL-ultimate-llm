@@ -24,6 +24,11 @@ files to `data/derived/study_exports/<study_id>/`, and one tool
                       with who verified them (judges, human reviewer)
   heuristic_eval.csv  measured behaviour of identifiers on this extension
                       (Linguist rules, Pygments, SWH Synid, the study's rules)
+  review_items.json   (optional) files offered for human review on the online
+                      review page (/review/study/<id>/): provenance only, the
+                      form's fields and options, who already reviewed each item.
+                      Reviews come back as GitHub issues (tools/ingest_reviews.py)
+                      and land in the review store `reviews/`.
 
 Conventions
 -----------
@@ -93,6 +98,54 @@ def qualified_swhid(sha: str, origin: str | None, path: str | None) -> str:
     if path:
         s += f";path={path if path.startswith('/') else '/' + path}"
     return s
+
+
+REVIEW_ITEMS_SCHEMA = "review-items/1"
+
+
+def write_review_items(study_id: str, spec: dict, raw=None) -> Path:
+    """Write the review items an exporter offers to the online review page.
+
+    `spec`: {"schema", "study", "ext", "title", "queue", "queue_note",
+    "fields": [{"id", "label", "required"?, "options"?: [{"value","label"}],
+    "type"?: "text", "help"?}], "expertise"?: {"topics", "levels"},
+    "items": [{"sha1_git", "filename", "origin", "path", …, "reviewed_by": [ids]}]}.
+    Items carry no machine label: the page is blind by construction.
+
+    `raw(sha) -> bytes | None` supplies each item's bytes; they are written to
+    `review_files/<sha1_git>` (re-hashed against the sha) and served by the site
+    next to the page — Software Heritage puts a bot challenge in front of its
+    API for browsers, so the page cannot fetch the files from SWH itself.
+    """
+    if spec.get("schema") != REVIEW_ITEMS_SCHEMA:
+        raise SystemExit(f"review items: schema must be {REVIEW_ITEMS_SCHEMA}")
+    ids = [f["id"] for f in spec.get("fields", [])]
+    if "confidence" not in ids or not any(f.get("required") for f in spec["fields"]):
+        raise SystemExit("review items: fields need a required label field and `confidence`")
+    for it in spec.get("items", []):
+        if not (len(it.get("sha1_git", "")) == 40 and it.get("filename")):
+            raise SystemExit(f"review items: bad item {it.get('sha1_git')!r}")
+    out = EXPORTS / study_id
+    out.mkdir(parents=True, exist_ok=True)
+    if raw is not None:
+        fdir = out / "review_files"
+        fdir.mkdir(exist_ok=True)
+        keep = set()
+        for it in spec.get("items", []):
+            data = raw(it["sha1_git"])
+            if data is None or git_blob_sha1(data) != it["sha1_git"]:
+                it["served"] = False
+                continue
+            (fdir / it["sha1_git"]).write_bytes(data)
+            it["served"], it["size"] = True, len(data)
+            keep.add(it["sha1_git"])
+        for f in fdir.iterdir():
+            if f.name not in keep:
+                f.unlink()
+    path = out / "review_items.json"
+    path.write_text(json.dumps(spec, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"review items {study_id}: {len(spec.get('items', []))} → {path}")
+    return path
 
 
 def write_export(study_id: str, meta: dict, tables: dict[str, list[dict]]) -> Path:

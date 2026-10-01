@@ -1,0 +1,64 @@
+LA7SBCR	;DALISC/JMC - Shipping Barcode Reader Utility ; 7 Feb 1997
+	;;5.2;LAB MESSAGING;**27**;Sep 27, 1994
+	Q
+	;
+BAR(Y)	; Ask user if utilizing a barcode reader
+	; Returns -1 = user aborted
+	;          0 = No
+	;          1 = Yes
+	;
+	N DIR,DIRUT,DTOUT,DUOUT,X,Y
+	S DIR(0)="Y0",DIR("A")="Are you using a barcode reader",DIR("B")="YES"
+	D ^DIR
+	I $G(DIRUT) Q -1
+	Q Y
+	;
+RD(LA7SDP)	; Read input from barcode reader.
+	; Input
+	;   LA7SDP=default prompt to display
+	; Returns
+	;        Y=1^barcode value.
+	;         =0 if user quits/timeouts
+	;         =-1 if invalid read
+	;
+	N DIR,DIRUT,DTOUT,DUOUT,Y
+	I $G(LA7SDP)="" S LA7SDP="Scan barcode"
+	S DIR("A")=LA7SDP
+	S DIR(0)="FUO^3:245"
+	D ^DIR
+	I $D(DIRUT) Q 0 ; User quit
+	I Y="" Q -1 ; Invalid read
+	Q "1^"_Y
+	;
+RD2(LA7SDP,TYPE,CASE)	; Read input from barcode reader Type sensitive.
+	; Input - All input variables are optional.
+	;   LA7SDP=default prompt to display
+	;   TYPE=The barcode type being scanned
+	;   CASE=1 indicates the scanned text should be returned in all upper case.
+	;   CASE=2 indicates the scanned text should be returned in all lower case.
+	; Returns
+	;        Y=1^barcode value.
+	;         =0 if user quits/timeouts
+	;         =-1 if invalid read
+	;
+EN2	N DIR,DIRUT,DTOUT,DUOUT,Y
+	I $G(LA7SDP)="" S LA7SDP="Scan barcode"
+	I $L($G(TYPE)) S TYPE=$S($G(CASE)=1:$$UPCASE^LRAFUNC(TYPE),$G(CASE)=2:$$LOWCASE^LRAFUNC(TYPE),1:TYPE)
+	S DIR("A")=LA7SDP D DIR
+	I $D(DIRUT) Q 0  ; User quit
+	I $L($G(TYPE)),$P(Y,U,2)'=TYPE D
+	. W !?5,"Incorrect Bar-code Scanned ",!,"- Please re-scan [ "_LA7SDP_" ] "
+	. D DIR I $P(Y,U,2)'=TYPE S Y=""
+	I $D(DIRUT) Q 0
+	I Y="" Q -1  ; Invalid read
+	Q "1^"_Y
+	;
+DIR	S DIR(0)="FUO^3:245"
+	D ^DIR S Y=$S($G(CASE)=1:$$UPCASE^LRAFUNC(Y),$G(CASE)=2:$$LOWCASE^LRAFUNC(Y),1:Y)
+	Q
+	;
+DT(X)	; Validate date/time
+	N %DT,Y
+	S %DT="ST" D ^%DT
+	I Y<1 S Y=""
+	Q Y

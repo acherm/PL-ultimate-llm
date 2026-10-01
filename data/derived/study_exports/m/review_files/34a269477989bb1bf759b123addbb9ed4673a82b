@@ -1,0 +1,76 @@
+
+clear all; close all; clc;
+
+format longG;
+warning('off');
+
+[G_tmin, G_tmax, G_len, G_true, log] = sf_ue_model(100,3);
+
+% load('temp.mat','G_exp');
+% 
+% G_tmin = G_exp{1};
+% G_tmax = G_exp{2};
+% G_len  = G_exp{3};
+% G_true = G_exp{4};
+
+% d1 = G_tmax.Edges.Weight - G_tmin.Edges.Weight;
+% 
+% dgap = d1./5;
+% 
+% a = G_tmin.Edges.Weight;
+% b = a  + dgap * 1;
+% r = (b-a).*rand(length(a),1) + a;
+% G_true.Edges.Weight = r;
+
+
+
+%# generate synthetic traces
+traces_true = gen_trace(G_true, 100, -1);
+
+
+%# solve the convex optimization problem, FOUR OPTIONS!
+G_cvx = recon_traffic_cvx(G_tmin, G_tmax, traces_true, 1);
+%fprintf('MSE between cvx sol and ground truth: %f\n',mse2(G_true.Edges.Weight, G_cvx.Edges.Weight));
+
+
+% [G_recon, sample_pths, sample_pths_time] = recon_traffic(G_free, traces_true, e_len, e_spd_max, 'dir', G_cvx.Edges.Weight, ndxy);  % two options: avg, dir
+% fprintf('MSE between reconstrunction and ground truth: %f\n',mse2(G_true.Edges.Weight, G_recon.Edges.Weight));
+
+
+ 
+%# option 1: our technique
+nIterMy = 200;    
+nIterEM = 5; % number of iterations for EM
+nSpEM = 100; % during one iteration of EM, each sample is a division of an aggregate travel time to its consititution links
+mm_method = 1;
+
+log = [];
+G_iter = G_tmin;
+[mm_acc_before, traces_est, traces_time] = check_map_matching(G_iter, G_len, traces_true, mm_method);
+mse_before = mse2(G_iter.Edges.Weight,G_true.Edges.Weight);
+log = [log; [mse_before,mm_acc_before]];
+fprintf('Before: net mse = %f, map matching acc = %f, map matching time diff = %f\n',mse_before, mm_acc_before(1), mm_acc_before(2));
+
+fprintf('Start to iterate...\n');
+G_iter = G_cvx;
+for k = 1:nIterMy
+       
+    [update_weight, update_mse] = traffic_em(G_iter.Edges.Weight, G_true.Edges.Weight, traces_est, traces_time(:,2), nIterEM, nSpEM);
+    [mm_acc, traces_est, traces_time] = check_map_matching(G_iter, G_len, traces_true, mm_method);
+    G_iter.Edges.Weight = update_weight; 
+    
+    log = [log; [update_mse mm_acc]]; 
+    fprintf('Iteration %d: net mse = %f, mm acc = %f, mm time diff = %f\n',k, update_mse, mm_acc(1), mm_acc(2));
+end
+fprintf('Finished iterating.\n');
+
+
+
+
+
+
+
+
+
+
+

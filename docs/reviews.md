@@ -130,20 +130,76 @@ python3 tools/review_server.py --autocommit     # git-commit reviews on Ctrl-C
 
 - Push access → review, commit (`--autocommit` or manual), push. File-per-
   review means pushes never conflict.
-- No push access → (Phase 4) export a review pack and have a maintainer run
-  `ingest_reviews.py`. Until then: send the `reviews/<sha>/*.json` files.
+- No push access → the **online review page** (below): review in the
+  browser, submit as a GitHub issue, a bot writes the files.
+
+## Online review page (no clone, no push access)
+
+Extension studies publish files for review on the site, at
+`/review/study/<study>/` (first: `.m`, its blind audit queue of 100 files).
+
+```
+exporter  tools/<study>/export.py → data/derived/study_exports/<study>/review_items.json
+                                    + review_files/<sha1_git>   (bytes, re-hashed)
+site      web/build_site.py → /review/study/<study>/  (page, items.json, files/)
+reviewer  saves reviews in the browser (localStorage), presses "Submit on GitHub"
+          → pre-filled issue, form .github/ISSUE_TEMPLATE/review.yml, label `review`
+bot       .github/workflows/ingest_reviews.yml → tools/ingest_reviews.py
+          → one file per review in reviews/<sha>/, commit, reply, close
+site      rebuilt (pages_deploy.yml, chained by workflow_run): progress updates
+```
+
+- **Blind.** Items carry provenance only (origin, branch, path, SWH links,
+  population signals) — no machine label, stratum or weight. The bot's reply
+  on the issue is the reveal: the study's LLM judges' labels for the same
+  files. Judge outputs are public in the repo, so blindness is an honour
+  system; each record says what the page showed (`shown.machine_labels_shown:
+  false`).
+- **Files are served by the site**, not fetched from Software Heritage: SWH
+  answers browsers with a bot challenge ("Making sure you're not a bot!"),
+  which a cross-origin `fetch` cannot pass.
+- **Who.** The reviewer is the GitHub account that opens the issue. Logins in
+  `data/curated/reviewers.csv` are ingested directly (`acherm` →
+  `mathieu-acher`); a newcomer's first batch waits for a maintainer's
+  `review-approved` label, which adds them to that file.
+- **Record.** A normal review (kind `human`, `verdict.label` in the
+  vocabulary above, mapped from the study's answer) plus a `study` block with
+  the exact study answer (`study.human`: language, content type, provenance,
+  dialect, confidence, notes) and `shown.via = "review-page"`,
+  `shown.issue`, `shown.expertise` (self-declared). `created_at` is the
+  issue's creation time, so re-running the bot writes nothing new.
+- **Study side.** `tools/m/data.py` reads these records back next to
+  `reviews_m/`; with several reviewers per file, each reviewer's latest
+  review counts, and a file the humans disagree on is *disputed* and leaves
+  the accuracy estimate. `python3 -m tools.m.audit --score` reports human–
+  human agreement.
+- **Issue forms and `issues` workflows are read from the default branch
+  (`main`)**: the form, `ingest_reviews.yml` and the `workflow_run` list in
+  `pages_deploy.yml` must be on `main` (the workflow checks out
+  `swh-evidence-v1`, where the tools live). Labels `review`,
+  `review-approved`, `review-ingested` must exist.
+- Local test: `python3 tools/ingest_reviews.py --body-file issue.md --author
+  <login> --dry-run`.
+
+## Consensus
+
+`python3 tools/build_review_consensus.py` → `data/derived/review_consensus.csv`,
+one row per reviewed content: each reviewer's latest label, tier `gold`
+(≥ 2 humans agree), `silver` (1 human), `disputed` (humans disagree),
+`machine-only`, and how many LLM judges agree with the human label.
 - Note the commit-message hook: commits need a `List-Digest:` trailer
   (`--autocommit` handles it).
 
 ## Roadmap
 
-- Phase 2 — `build_review_consensus.py` (gold/silver/disputed,
-  Krippendorff's α) + `auto_review.py` (pygments first, blinded +
-  filename-aware modes; LLM reviewers later).
+- Phase 2 — ✅ partial: `build_review_consensus.py` (gold/silver/disputed).
+  Remaining: Krippendorff's α + `auto_review.py` (pygments first, blinded +
+  filename-aware modes; LLM reviewers come from the extension studies).
 - Phase 3 — public-site integration. ✅ partial: sample cards on ext/PL
   pages render a read-only "Reviews (ground truth)" panel (latest verdict
   per reviewer, ✓ agree / ⚠ disputed pill when ≥2 humans). Note: pushed
   reviews are public — a reviewer determined to peek before submitting
   can; the local UI still blinds by default. Remaining: `/reviews/`
   dashboard (coverage, agreement, tool-vs-human).
-- Phase 4 — review packs + `ingest_reviews.py` for clone-less reviewers.
+- Phase 4 — ✅ the online review page + `ingest_reviews.py` (above), for
+  study queues. Remaining: the same page for the encyclopedia's own samples.

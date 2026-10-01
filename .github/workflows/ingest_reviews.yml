@@ -1,0 +1,72 @@
+name: Ingest file reviews
+
+# Closes the loop of the online review page (/review/study/<study>/):
+# a reviewer submits a batch as an issue (form .github/ISSUE_TEMPLATE/review.yml,
+# label `review`); this workflow records each review as one file in reviews/
+# (tools/ingest_reviews.py), commits to swh-evidence-v1, replies on the issue
+# with the study's machine labels for the same files, and closes it.
+#
+# Newcomers: a login not in data/curated/reviewers.csv waits until a
+# maintainer adds the `review-approved` label (that `labeled` event re-runs
+# this workflow and adds the login to the file).
+#
+# GitHub runs `issues` workflows from the default branch (main), so this file
+# must also exist on main; it checks out swh-evidence-v1, where the tools live.
+# The site rebuild is chained from pages_deploy.yml (workflow_run), because
+# bot pushes do not trigger other workflows.
+
+on:
+  issues:
+    types: [opened, edited, labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: ingest-reviews
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (contains(github.event.issue.labels.*.name, 'review') &&
+       !contains(github.event.issue.labels.*.name, 'review-ingested'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: swh-evidence-v1
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ingest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 tools/ingest_reviews.py --all
+          else
+            python3 tools/ingest_reviews.py --issue ${{ github.event.issue.number }}
+          fi
+
+      - name: Commit new reviews
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A reviews/ data/curated/reviewers.csv
+          if git diff --cached --quiet; then
+            echo "No new reviews."
+          else
+            git commit -m "reviews: ingest from the review page${{ github.event.issue.number && format(' (issue #{0})', github.event.issue.number) || '' }}"
+            git pull --rebase origin swh-evidence-v1
+            git push origin HEAD:swh-evidence-v1
+          fi

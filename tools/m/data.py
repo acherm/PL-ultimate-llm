@@ -5,7 +5,8 @@
 
 A record carries the worklist row (frames, ranks, population weights), the
 deterministic labels, Synid, every judge layer present on disk, and the human
-reviews / group rules from `reviews_m/`. Each *labeller* is exposed under a
+reviews / group rules from `reviews_m/` (local review app) and `reviews/`
+(online review page → GitHub issue → tools/ingest_reviews.py). Each *labeller* is exposed under a
 uniform name → language label, so agreement code never special-cases a tool.
 """
 
@@ -25,6 +26,11 @@ JUDGE = STUDY / "judge"
 SYNID = STUDY / "synid.jsonl"
 REVIEWS = ROOT / "reviews_m"
 RULES_FILE = REVIEWS / "_rules.jsonl"
+# The encyclopedia's review store. Reviews submitted through the online review
+# page land there (one record per review, `study.id == "m"`, `shown.via ==
+# "review-page"`); the study reads them back in its own m-review/1 shape.
+ONLINE_REVIEWS = ROOT / "reviews"
+ONLINE_VIA = "review-page"
 
 J1 = "anthropic__claude-sonnet-4.6"
 J2 = "google__gemini-3.8-flash"
@@ -126,12 +132,36 @@ class Rec:
             return synid_lang(self.synid.get("nocomment")) if self.synid else None
         raise KeyError(labeller)
 
+    def human_latest(self) -> list[dict]:
+        """Each human reviewer's latest review (a reviewer revises by writing a new one)."""
+        latest: dict[str, dict] = {}
+        for rv in self.reviews:
+            if rv.get("human"):
+                latest[(rv.get("reviewer") or {}).get("id") or "?"] = rv
+        return sorted(latest.values(), key=lambda rv: rv.get("created_at") or "")
+
     def human(self) -> dict | None:
-        if self.reviews:
-            return self.reviews[-1].get("human")
+        """The human reference label: one reviewer → their latest review; several →
+        the label they agree on (`unsure` abstains), or `unsure` with `_disputed`
+        when they disagree, so a disputed file drops out of accuracy estimates."""
+        latest = self.human_latest()
+        if latest:
+            langs = {rv["human"].get("language") for rv in latest} - {"unsure", "", None}
+            if len(langs) <= 1:
+                agreeing = [rv for rv in latest if rv["human"].get("language") in langs] or latest
+                return agreeing[-1]["human"]
+            return {"language": "unsure", "_disputed": sorted(langs)}
         if self.rule:
             return {"language": self.rule.get("label"), "_rule": True}
         return None
+
+    def human_reviewers(self) -> list[str]:
+        """Reviewers whose latest label is the reference label (for `verified_by`)."""
+        h = self.human()
+        if not h or h.get("_rule") or h.get("_disputed"):
+            return []
+        return [(rv.get("reviewer") or {}).get("id") for rv in self.human_latest()
+                if rv["human"].get("language") == h.get("language")]
 
     @property
     def ind(self) -> dict:
@@ -176,17 +206,39 @@ def rule_for(row: dict, rules: list[dict]) -> dict | None:
     return None
 
 
-def reviews_for(sha: str) -> list[dict]:
-    d = REVIEWS / sha
+def _online_reviews(sha: str) -> list[dict]:
+    """Online reviews of this content from the encyclopedia store, as m-review/1 dicts."""
+    d = ONLINE_REVIEWS / sha
     if not d.is_dir():
         return []
     out = []
     for p in sorted(d.glob("*.json")):
         try:
-            out.append(json.loads(p.read_text(encoding="utf-8")))
+            rec = json.loads(p.read_text(encoding="utf-8"))
         except Exception:
-            pass
+            continue
+        study, shown = rec.get("study") or {}, rec.get("shown") or {}
+        if study.get("id") != "m" or shown.get("via") != ONLINE_VIA or not study.get("human"):
+            continue
+        out.append({"schema": "m-review/1", "subject": rec.get("subject"),
+                    "reviewer": {"kind": "human", "id": (rec.get("reviewer") or {}).get("id")},
+                    "blind": bool(shown.get("blind")), "audit": bool(shown.get("audit")),
+                    "human": study["human"], "created_at": rec.get("created_at"),
+                    "source": shown.get("issue"), "online": True})
     return out
+
+
+def reviews_for(sha: str) -> list[dict]:
+    d = REVIEWS / sha
+    out = []
+    if d.is_dir():
+        for p in sorted(d.glob("*.json")):
+            try:
+                out.append(json.loads(p.read_text(encoding="utf-8")))
+            except Exception:
+                pass
+    out += _online_reviews(sha)
+    return sorted(out, key=lambda rv: rv.get("created_at") or "")
 
 
 def load(with_reviews: bool = True) -> dict[str, Rec]:

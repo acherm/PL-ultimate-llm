@@ -1,0 +1,240 @@
+(* ::Package:: *)
+
+(* ::Input::Initialization:: *)
+<<Utilities`;
+<<FormOptimize`;
+
+SetDirectoryFromSelf[];
+
+
+VtoSij = {v[1]->s12, v[2]->s23, v[3]-> s34, v[4] -> s45, v[5] -> s15};
+
+
+$abbrev = Let[
+    WtoVexplicit = {W[1] -> v[1], W[2] -> v[2], W[3] -> v[3], W[4] -> v[4], W[5] -> v[5], W[6] -> v[3] + v[4], W[7] -> v[4] + v[5], W[8] -> v[1] + v[5], W[9] -> v[1] + v[2], W[10] -> v[2] + v[3], 
+      W[11] -> v[1] - v[4], W[12] -> v[2] - v[5], W[13] -> -v[1] + v[3], W[14] -> -v[2] + v[4], W[15] -> -v[3] + v[5], W[16] -> v[1] + v[2] - v[4], W[17] -> v[2] + v[3] - v[5], W[18] -> -v[1] + v[3] + v[4], 
+      W[19] -> -v[2] + v[4] + v[5], W[20] -> v[1] - v[3] + v[5], W[21] -> -v[1] - v[2] + v[3] + v[4], W[22] -> -v[2] - v[3] + v[4] + v[5], W[23] -> v[1] - v[3] - v[4] + v[5], W[24] -> v[1] + v[2] - v[4] - v[5], 
+      W[25] -> -v[1] + v[2] + v[3] - v[5], 
+      (*W[26] -> (-DeltaS + v[1]*v[2] - v[2]*v[3] + v[3]*v[4] - v[1]*v[5] - v[4]*v[5])/(DeltaS + v[1]*v[2] - v[2]*v[3] + v[3]*v[4] - v[1]*v[5] - v[4]*v[5]), *)
+      (*W[27] -> (-DeltaS - v[1]*v[2] + v[2]*v[3] - v[3]*v[4] - v[1]*v[5] + v[4]*v[5])/(DeltaS - v[1]*v[2] + v[2]*v[3] - v[3]*v[4] - v[1]*v[5] + v[4]*v[5]), *)
+      (*W[28] -> (-DeltaS - v[1]*v[2] - v[2]*v[3] + v[3]*v[4] + v[1]*v[5] - v[4]*v[5])/(DeltaS - v[1]*v[2] - v[2]*v[3] + v[3]*v[4] + v[1]*v[5] - v[4]*v[5]), *)
+      (*W[29] -> (-DeltaS + v[1]*v[2] - v[2]*v[3] - v[3]*v[4] - v[1]*v[5] + v[4]*v[5])/(DeltaS + v[1]*v[2] - v[2]*v[3] - v[3]*v[4] - v[1]*v[5] + v[4]*v[5]), *)
+      (*W[30] -> (-DeltaS - v[1]*v[2] + v[2]*v[3] - v[3]*v[4] + v[1]*v[5] - v[4]*v[5])/(DeltaS - v[1]*v[2] + v[2]*v[3] - v[3]*v[4] + v[1]*v[5] - v[4]*v[5]), *)
+      (*W[31] -> DeltaS,*)
+      W[26] -> s12^2*s15^2 - 2*s12^2*s15*s23 + s12^2*s23^2 + 2*s12*s15*s23*s34 - 2*s12*s23^2*s34 + s23^2*s34^2 - 2*s12*s15^2*s45 + 2*s12*s15*s23*s45 + 2*s12*s15*s34*s45 + 2*s12*s23*s34*s45 + 2*s15*s23*s34*s45 - 2*s23*s34^2*s45 + s15^2*s45^2 - 2*s15*s34*s45^2 + s34^2*s45^2
+    }, 
+
+    reversed = (#1[[2]] -> 1/iW @@ #1[[1]] & ) /@ Select[WtoVexplicit /. VtoSij, FreeQ[DeltaS]], 
+
+    withminus = Join[reversed, (-#1[[1]] -> -#1[[2]] & ) /@ reversed], 
+
+    SortBy[withminus, -LeafCount[#1[[1]]^2] & ]
+]; 
+
+abbrevDen[HoldPattern[expr_Plus]] := (Let[{num, den} = NumeratorDenominator[#1], num/(Factor[den] //. $abbrev)] & ) /@ expr; 
+abbrevDen[HoldPattern[expr_Times]] := (Let[{num, den} = NumeratorDenominator[#1], num/(Factor[den] //. $abbrev)] & ) /@ expr; 
+abbrevDen[(x_)?NumericQ] := x; 
+
+
+abbrevCoeff[expr_]:=Let[
+	c0 = Coefficient[expr,tr5,0],
+	c1 = Coefficient[expr,tr5,1],
+	sijtov = Apply[#2->#1&]/@VtoSij,
+	{abbrevDen[c0], abbrevDen[c1]}/.sijtov
+];
+
+
+funcName[ampl_String,ind_?IntegerQ] := "eval_coef_"<>ampl<>"_"<>ToString[ind];
+
+$functionTemplate = StringTemplate["\
+template <typename T> T `fname`(const std::array<T,5>& v, const std::array<T,26>& iW)
+`body1`
+
+template <typename T> T `fname`_tr5(const std::array<T,5>& v, const std::array<T,26>& iW)
+`body2`
+"
+];
+
+$remainderTemplate = StringTemplate["\
+#pragma once
+#include \"`aname`_coefficients.hpp\"
+
+template <typename T> class remainder_`aname` {
+	static constexpr size_t NCOEFFS = `NCOEFFS`;
+	static constexpr size_t NFUNCS = `NFUNCS`;
+	static constexpr size_t NLETTERS = 26;
+	
+	enum class f_type { f, bc, one };
+
+	using TC = std::complex<T>;
+	using RCoeffsType = T(*)(const std::array<T,5>&, const std::array<T,NLETTERS>&);
+
+	std::shared_ptr<FunctionsManager> f_manager;
+
+	const std::array<std::pair<RCoeffsType, RCoeffsType>, NCOEFFS> coeff_basis;
+	const std::array<std::vector<std::pair<f_type,int>>, NFUNCS> functions_basis;
+	// {index of coefficient, index of function, matrix element}
+	const std::array<std::tuple<size_t,size_t, T>, `NMATRIX`> m_matrix;
+
+  public:
+	remainder_`aname`();
+	remainder_`aname`(std::shared_ptr<FunctionsManager>);
+	
+	TC eval(const std::array<T,5>&, int);
+};
+
+template <typename T> remainder_`aname`<T>::remainder_`aname`(std::shared_ptr<FunctionsManager> mng) : f_manager(mng),
+	coeff_basis{
+`coeffbasis`
+	},
+
+	functions_basis{
+`funcbasis`
+	},
+
+	m_matrix{
+`mmatrix`
+	}
+{}
+
+template <typename T> remainder_`aname`<T>::remainder_`aname`() : remainder_`aname`(std::make_shared<FunctionsManager>()) {}
+
+template <typename T> std::complex<T> remainder_`aname`<T>::eval(const std::array<T,5>& v_in, int str5) {
+    using std::array;
+
+    Kin<T> kin(v_in);
+
+    array<T,NLETTERS> iW;
+    for (size_t i = 0; i < NLETTERS; ++i) {
+        iW[i] = 1/(kin.W[i].real());
+    }
+    {
+        T d5 = kin.SqrtDelta.imag();
+        d5*=d5;
+        iW[NLETTERS-1] = (-1)/d5;
+    }
+
+    array<TC,NCOEFFS> coeffs;
+
+    for (size_t i = 0; i < NCOEFFS; ++i) {
+        T re = coeff_basis[i].first(v_in, iW);
+        T im = coeff_basis[i].second(v_in, iW);
+        
+        coeffs[i] = re + (str5*im) * kin.SqrtDelta;
+    }
+
+    const auto& function_values = f_manager->eval(kin);
+    array<TC,NFUNCS> functions_basis_values;
+
+    for (size_t i = 0; i < NFUNCS; ++i) {
+        TC c{1};
+        for (const auto& el : functions_basis[i]) {
+            switch (el.first) {
+                case f_type::f:
+                    c *= function_values.at(el.second);
+                    break;
+                case f_type::bc:
+                    c *= bc<T>.at(el.second);
+                    break;
+                case f_type::one:
+                    break;
+            }
+        }
+        functions_basis_values[i] = std::move(c);
+    }
+
+    // Neumaier summation (for improved numerical stability) [doi:10.1002/zamm.19740540106]
+    TC sum{0};
+    TC c{0};
+    for (const auto& mi : m_matrix) {
+        using std::get;
+        using std::abs;
+        auto si = (coeffs.at(get<0>(mi)) * functions_basis_values.at(get<1>(mi)) * get<T>(mi));
+        auto t = sum + si;
+        if (abs(sum) >= abs(si)) {
+            c += ((sum - t) + si);
+        }
+        else {
+            c += ((si - t) + sum);
+        }
+        sum = t;
+    }
+    sum += c;
+    return sum;
+}
+"
+];
+
+cppCoeff[{c0_String,ctr5_String}, ampl_String, id_?Positive]:= Let[
+	$functionTemplate[<|
+	"fname"->funcName[ampl,id],
+	"body1"->c0,
+	"body2"->ctr5
+	|>]
+];
+
+cppMMatrix[rules_List]:= StringRiffle[Flatten[{#[[1]]-1,ToCCodeString@cppiseExpression2[#[[2]]]}] & /@ rules, {"{",",\n","}"}];
+
+cppCoeffBasis[amplstr_String,n_?IntegerQ] := Let[
+	all = Table[
+		{funcName[amplstr,i]<>"<T>", funcName[amplstr,i]<>"_tr5<T>"},
+		{i,1,n}
+		],
+	
+	StringRiffle[all, {"{",",\n","}"}]
+];
+
+cppFunctionsSpace[fmonomials_List] := Let[
+	rules = failingReplace[{
+		1->"{f_type::one,1}",
+		bc[i_?IntegerQ]:>"{f_type::bc,"<>ToString[i-1]<>"}",
+		F[args:(_?IntegerQ..)]:> "{f_type::f,"<>StringRiffle[{args},{"f_manager->add({",",","})"}]<>"}"
+		}],
+	flat = Flatten /@ Map[Replace[{x_,p_}:>Table[x,p]], Rest/@FactorList/@ fmonomials, {2}]/.{}->{1},
+	all = Map[rules, flat, {2}],
+	StringRiffle[all, {"{",",\n","}"}]
+];
+
+
+prepareCoeff[coeff_]:=ToCCodeString /@ FormOptimizeCPP /@ abbrevCoeff[coeff];
+
+
+Get["~/workspace/5partonReconstruct/analytics/ancillary/TwoLoopRemainders/ggggg_mpmpp_Nf1.txt"];
+
+Let[
+	amplstr = {"ggggg","mpmpp","Nf1"},
+	amplName = StringRiffle[amplstr,"_"],
+	rb = rationalBasis@@amplstr,
+	fspace = Array[F[4,#]&,Length[projectionMatrix@@amplstr//First]],
+	
+	prepared = ParallelMap[prepareCoeff,rb, DistributedContexts->{"Global`","FormOptimize`","Utilities`","SymbolicCExtras`"}],
+	
+	mmatrix = ArrayRules[projectionMatrix@@amplstr]//Most,
+	coeffsconstr = cppCoeffBasis[amplName,Length@rb],
+	
+	coefffunctions = MapIndexed[
+		cppCoeff[#1,amplName,First@#2]&, 
+		prepared
+	],
+	
+	cppfile = $remainderTemplate[<|
+		"aname" -> amplName,
+		"NCOEFFS" -> Length@rb,
+		"NFUNCS" -> Length@fspace,
+		"NMATRIX" -> Length@mmatrix,
+		
+		"coeffbasis" -> coeffsconstr,
+		"funcbasis" -> cppFunctionsSpace[fspace],
+		"mmatrix" -> cppMMatrix[mmatrix],
+		
+		Nothing
+	|>],
+	
+	Export["remainders/"<>amplName<>"_coefficients.hpp", StringRiffle[coefffunctions,"\n"], "Text"];
+	Export["remainders/"<>amplName<>".hpp", cppfile,"Text"]
+]
+
+
+
+
+

@@ -201,7 +201,7 @@ def pick_samples(recs, A):
                         "branch": r.row.get("branch", ""), "visit_ts": r.row.get("ts", ""),
                         "qualified_swhid": SE.qualified_swhid(r.sha, r.row.get("origin"), r.row.get("path")),
                         "verified_by": "judge:claude-sonnet-4.6; judge:gemini-3.8-flash"
-                                       + ("; human:" + r.reviews[-1]["reviewer"]["id"] if human_ok else ""),
+                                       + "".join(f"; human:{rid}" for rid in (r.human_reviewers() if human_ok else [])),
                         "language_detail": v.get("language_detail", ""), "provenance_kind": v.get("provenance_kind", ""),
                         "note": (v.get("purpose") or "")[:160]})
             n_judge_only += not human_ok
@@ -253,6 +253,115 @@ def heuristic_rows(recs, A):
     return rows
 
 
+# ---------------------------------------------------------------- online review (review page)
+# The audit queue, published as review items for the static review page
+# (/review/study/m/, web/build_site.py). Reviews come back as GitHub issues and
+# are ingested by tools/ingest_reviews.py, which calls the hooks below.
+SWH = "https://archive.softwareheritage.org"
+HUMAN_FIELDS = ("language", "content_type", "provenance_kind", "matlab_dialect", "confidence", "notes")
+OCTAVE_RULE = ("Same rule as the judges: <b>matlab</b> = MATLAB-family code MATLAB accepts (portable code too); "
+               "<b>octave</b> only if the file uses syntax MATLAB rejects (<code>#</code> comments, "
+               "<code>endfunction</code>/<code>endif</code>, <code>printf</code>, <code>++</code>, <code>!=</code>). "
+               "Record portability in the MATLAB-dialect field.")
+# study label → encyclopedia review label (docs/reviews.md vocabulary); the exact
+# study answer is kept in the record's `study` block
+NOT_CODE_LABEL = {"markup-or-xml": "data:xml-like", "docs-or-text": "docs", "binary": "binary:other",
+                  "config": "data:config", "data-or-expression": "data:domain", "empty-or-trivial": "noise"}
+
+
+def _forge_url(row: dict) -> str:
+    from urllib.parse import quote
+    o, br, p = row.get("origin") or "", row.get("branch") or "", (row.get("path") or "").lstrip("/")
+    b = br.replace("refs/heads/", "").replace("refs/tags/", "")
+    if not (o and b and p):
+        return o
+    if "github.com" in o:
+        return f"{o}/blob/{quote(b)}/{quote(p)}"
+    if "gitlab" in o:
+        return f"{o.removesuffix('.git')}/-/blob/{quote(b)}/{quote(p)}"
+    if "bitbucket.org" in o:
+        return f"{o}/src/{quote(b)}/{quote(p)}"
+    return o
+
+
+def _swh_browse_url(row: dict) -> str:
+    from urllib.parse import urlencode
+    q = {k: v for k, v in (("branch", row.get("branch")), ("origin_url", row.get("origin")),
+                           ("path", row.get("path")), ("timestamp", row.get("ts"))) if v}
+    return f"{SWH}/browse/origin/directory/?{urlencode(q)}" if row.get("origin") else ""
+
+
+def review_spec(recs=None) -> dict:
+    """Review items for the online page: the blind audit queue, with provenance and
+    population context only — no machine label, stratum or weight (they would hint)."""
+    from tools.m import audit as audit_mod
+    from tools.m import taxonomy as tax
+    recs = recs if recs is not None else load()
+    npop = json.loads((STUDY / "name_popularity.json").read_text()) if (STUDY / "name_popularity.json").exists() else {}
+    items = []
+    for d in audit_mod.queue():
+        r = recs.get(d["sha1_git"])
+        if r is None:
+            continue
+        row, np_ = r.row, npop.get(r.row.get("name", ""), {})
+        items.append({
+            "sha1_git": r.sha, "filename": row.get("name", ""), "origin": row.get("origin", ""),
+            "branch": row.get("branch", ""), "path": row.get("path", ""), "visit_ts": row.get("ts", ""),
+            "forge_url": _forge_url(row), "swh_browse_url": _swh_browse_url(row),
+            "qualified_swhid": SE.qualified_swhid(r.sha, row.get("origin"), row.get("path")),
+            "repo_contents": row.get("repo_n", ""), "path_versions": row.get("path_versions", ""),
+            "name_repos": np_.get("repos", ""), "name_contents": np_.get("contents", ""),
+            "reviewed_by": sorted({(rv.get("reviewer") or {}).get("id") for rv in r.human_latest()}),
+        })
+    opt = lambda vals, disp=None: [{"value": v, "label": (disp or {}).get(v, v)} for v in vals]  # noqa: E731
+    return {
+        "schema": "review-items/1", "study": "m", "ext": EXT,
+        "title": "Which language is this .m file written in?",
+        "queue": "audit",
+        "queue_note": ("A stratified random sample of the study's files (the blind audit). The page shows no "
+                       "machine label; after you submit, the bot replies with how the two LLM judges labelled "
+                       "the same files."),
+        "fields": [
+            {"id": "language", "label": "Language", "required": True,
+             "options": opt(tax.LANGUAGES + ["unsure"], {**DISPLAY, "unsure": "unsure (skip in the estimate)"}),
+             "help": OCTAVE_RULE},
+            {"id": "content_type", "label": "Content type", "options": opt(tax.CONTENT_TYPES)},
+            {"id": "provenance_kind", "label": "Provenance kind", "options": opt(tax.PROVENANCE_KINDS)},
+            {"id": "matlab_dialect", "label": "MATLAB dialect (if MATLAB-family)", "options": opt(tax.MATLAB_DIALECTS)},
+            {"id": "confidence", "label": "Your confidence", "required": True, "options": opt(tax.CONFIDENCES)},
+            {"id": "notes", "label": "Notes", "type": "text"},
+        ],
+        "expertise": {"topics": ["MATLAB", "GNU Octave", "Objective-C", "Wolfram / Mathematica", "MUMPS",
+                                 "Mercury", "Magma"],
+                      "levels": ["none", "some", "expert"]},
+        "items": items,
+    }
+
+
+def review_label(human: dict) -> str:
+    """Encyclopedia label (docs/reviews.md) for a study answer."""
+    lang = human.get("language") or ""
+    if lang in PL:
+        return PL[lang]
+    if lang == "mason":
+        return "pl/new:mason"
+    if lang == "not-code":
+        return NOT_CODE_LABEL.get(human.get("content_type") or "", "unknown")
+    return "unknown"                       # other-programming-language, unknown, unsure
+
+
+def judge_labels(shas: list[str]) -> dict[str, dict[str, str | None]]:
+    """The two blind judges' labels (study vocabulary, normalised as in the report),
+    for the reveal the ingest bot posts after a reviewer submits."""
+    recs = load(with_reviews=False)
+    out = {}
+    for sha in shas:
+        r = recs.get(sha)
+        out[sha] = ({"claude-sonnet-4.6": r.lang("judge"), "gemini-3.8-flash": r.lang("judge2")}
+                    if r else {})
+    return out
+
+
 _RECS = None
 
 
@@ -286,8 +395,8 @@ def study_reviews(s: dict) -> list[dict]:
         out.append(rev)
     for h in r.reviews:
         hu = h.get("human") or {}
-        if hu.get("language") not in PL:
-            continue
+        if hu.get("language") not in PL or h.get("online"):
+            continue                      # online reviews already live in reviews/ (tools/ingest_reviews.py)
         rev = RS.new_review(
             subject=subject, reviewer={"kind": "human", "id": h["reviewer"]["id"]},
             label=PL[hu["language"]],
@@ -306,6 +415,9 @@ def main():
     samples = pick_samples(recs, A)
     tables = {"ext_evidence.csv": evidence_rows(A), "samples.csv": samples,
               "claims.csv": claim_rows(A, samples), "heuristic_eval.csv": heuristic_rows(recs, A)}
+    SE.write_review_items("m", review_spec(recs),
+                          raw=lambda sha: (CACHE_DIR / f"{sha}.bin").read_bytes()
+                          if (CACHE_DIR / f"{sha}.bin").exists() else None)
     meta = {"title": "What is actually in the .m extension on Software Heritage?", "extensions": [EXT],
             "case_sensitive": True, "report": REPORT, "toolkit": "tools/m/",
             "population": {"contents": pop["unique_contents"], "repositories": pop["unique_origins"],

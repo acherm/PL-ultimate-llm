@@ -1989,7 +1989,7 @@ def render_recent_submissions_page(
         <section class="panel section">
           <h1 style="margin:0 0 8px;">Recent community submissions</h1>
           <p class='muted'>One row per submission across all three channels — languages, programs, and extension labels. Auto-merged on arrival; this page is the after-the-fact audit view. Revert any row by reverting the corresponding commit / issue.</p>
-          <p class='muted'>Curator deep-dives: <a href="{rel}review/curator/index.html">/review/curator/</a> for the full ext-review CSV state; <a href="{rel}review/extensions/index.html">/review/extensions/</a> for the unlabelled-extension queue.</p>
+          <p class='muted'>Curator deep-dives: <a href="{rel}review/curator/index.html">/review/curator/</a> for the full ext-review CSV state; <a href="{rel}review/extensions/index.html">/review/extensions/</a> for the unlabelled-extension queue; <a href="{rel}review/study/index.html">/review/study/</a> to review archived files of the extension studies.</p>
         </section>
         {table_html}"""
 
@@ -1998,6 +1998,338 @@ def render_recent_submissions_page(
                generated_at=generated_at, github_owner_repo=github_owner_repo),
         encoding="utf-8",
     )
+
+
+STUDY_EXPORTS_DIR = ROOT / "data" / "derived" / "study_exports"
+REVIEWERS_CSV = ROOT / "data" / "curated" / "reviewers.csv"
+
+_REVIEW_PAGE_CSS = """
+.rv-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}
+@media (max-width:980px){.rv-grid{grid-template-columns:minmax(0,1fr)}}
+.rv-kv{display:grid;grid-template-columns:160px minmax(0,1fr);gap:2px 10px;font-size:13px}
+.rv-kv>div{overflow-wrap:anywhere;min-width:0}
+.rv-kv>div:nth-child(odd){color:var(--muted)}
+.rv-code{font:12px/1.45 var(--mono);background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:8px 0;overflow:auto;max-height:70vh;margin:10px 0 0;white-space:pre}
+.rv-code .ln{display:inline-block;width:44px;text-align:right;padding-right:10px;color:var(--muted);user-select:none}
+.rv-form label{display:block;margin:9px 0 3px;font-size:13px;font-weight:600}
+.rv-form select,.rv-form textarea,.rv-setup input,.rv-setup select{width:100%;padding:6px;border-radius:6px;
+  border:1px solid var(--border);background:var(--bg);color:var(--text);font:inherit}
+.rv-help{font-size:12px;color:var(--muted);margin-top:4px}
+.rv-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.rv-actions .btn,.rv-batch .btn{cursor:pointer}
+.rv-bar{height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin:6px 0}
+.rv-bar>div{height:8px;background:var(--link)}
+.rv-setup{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 12px}
+.rv-msg{font-size:13px;color:var(--muted);margin-top:6px}
+.rv-batch table{width:100%;border-collapse:collapse;font-size:13px}
+.rv-batch td,.rv-batch th{text-align:left;padding:4px 6px;border-bottom:1px solid var(--border)}
+"""
+
+_REVIEW_PAGE_JS = r"""
+(async function () {
+  const CFG = JSON.parse(document.getElementById('rv-config').textContent);
+  const SWH = 'https://archive.softwareheritage.org';
+  const KEY = 'plreview:' + CFG.study;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) =>
+    ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+  const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9+._-]+/g, '-').replace(/^-+|-+$/g, '');
+  function loadState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+  const st = Object.assign({login: '', expertise: {}, drafts: {}, sent: {}, seed: 0}, loadState());
+  function saveState() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
+  if (!st.seed) { st.seed = Math.floor(Math.random() * 2147483647) + 1; saveState(); }
+
+  let spec;
+  try { spec = await (await fetch('items.json', {cache: 'no-cache'})).json(); }
+  catch (e) { $('rv-file').innerHTML = '<p>Could not load the review items.</p>'; return; }
+  const items = spec.items;
+  const bySha = Object.fromEntries(items.map((it) => [it.sha1_git, it]));
+
+  function myIds() {
+    const l = (st.login || '').trim().toLowerCase();
+    if (!l) return [];
+    return spec.reviewers[l] ? [spec.reviewers[l]] : [slug(l), 'gh-' + slug(l)];
+  }
+  const doneByMe = (it) => myIds().some((id) => it.reviewed_by.includes(id));
+  // A file a reviewer sent is reviewed once the bot has ingested it.
+  for (const sha of Object.keys(st.sent)) if (bySha[sha] && doneByMe(bySha[sha])) delete st.sent[sha];
+  saveState();
+
+  function seedOf() {
+    if (!st.login) return st.seed;
+    let h = 2166136261; for (const c of st.login.toLowerCase()) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+    return h >>> 0;
+  }
+  function order() {           // a different, stable order per reviewer
+    let a = seedOf() || 1;
+    const rnd = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    const xs = items.slice();
+    for (let i = xs.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [xs[i], xs[j]] = [xs[j], xs[i]]; }
+    return xs;
+  }
+  const pending = () => order().filter((it) => !doneByMe(it) && !st.drafts[it.sha1_git] && !st.sent[it.sha1_git]);
+
+  // ---------- setup (who you are, what you know)
+  function renderSetup() {
+    const ex = spec.expertise || {topics: [], levels: []};
+    $('rv-setup').innerHTML =
+      '<div><label class="muted">Your GitHub username (orders the queue, skips what you already reviewed)</label>' +
+      '<input id="rv-login" value="' + esc(st.login) + '" placeholder="e.g. octocat"></div>' +
+      ex.topics.map((t) => '<div><label class="muted">' + esc(t) + '</label><select data-topic="' + esc(t) + '">' +
+        ['<option value="">—</option>'].concat(ex.levels.map((l) => '<option' +
+        (st.expertise[t] === l ? ' selected' : '') + '>' + esc(l) + '</option>')).join('') + '</select></div>').join('');
+    $('rv-login').addEventListener('change', (e) => { st.login = e.target.value.trim(); saveState(); refresh(); });
+    $('rv-setup').querySelectorAll('select[data-topic]').forEach((sel) => sel.addEventListener('change', (e) => {
+      if (e.target.value) st.expertise[e.target.dataset.topic] = e.target.value; else delete st.expertise[e.target.dataset.topic];
+      saveState();
+    }));
+  }
+
+  // ---------- progress
+  function renderProgress() {
+    const any = items.filter((it) => it.reviewed_by.length).length;
+    const mine = items.filter(doneByMe).length;
+    const nd = Object.keys(st.drafts).length, ns = Object.keys(st.sent).length;
+    $('rv-progress').innerHTML =
+      '<div class="rv-bar"><div style="width:' + (100 * any / items.length).toFixed(1) + '%"></div></div>' +
+      '<span class="muted"><b>' + any + '</b> of ' + items.length + ' files reviewed by at least one person' +
+      (st.login ? ' · you: <b>' + mine + '</b> recorded' : '') +
+      ' · <b>' + nd + '</b> saved here, not yet submitted' + (ns ? ' · <b>' + ns + '</b> submitted, awaiting the bot' : '') +
+      '</span>';
+  }
+
+  // ---------- one file
+  let current = null;
+  async function showItem(it, prefill) {
+    current = it;
+    const left = pending().length;
+    $('rv-file').innerHTML =
+      '<h2 style="margin:0 0 4px;">' + esc(it.filename) + '</h2>' +
+      '<div class="muted" style="margin-bottom:8px;">' + left + ' file(s) left in your queue</div>' +
+      '<div class="rv-kv">' +
+      '<div>origin</div><div><a href="' + esc(it.origin) + '" target="_blank" rel="noopener">' + esc(it.origin) + '</a></div>' +
+      '<div>at branch</div><div><a href="' + esc(it.forge_url) + '" target="_blank" rel="noopener">' + esc(it.branch) + '</a></div>' +
+      '<div>path</div><div>' + esc(it.path) + '</div>' +
+      '<div>archived (visit)</div><div>' + esc(it.visit_ts) + '</div>' +
+      '<div>Software Heritage</div><div><a href="' + esc(it.swh_browse_url) + '" target="_blank" rel="noopener">browse in context</a> · ' +
+      '<a href="' + SWH + '/' + esc(it.qualified_swhid) + '/" target="_blank" rel="noopener">qualified SWHID</a></div>' +
+      '<div>contents in repo</div><div>' + esc(it.repo_contents) + '</div>' +
+      '<div>versions of this path</div><div>' + esc(it.path_versions) + '</div>' +
+      '<div>repos with this filename</div><div>' + esc(it.name_repos) + ' <span class="muted">(' + esc(it.name_contents) + ' contents, whole population)</span></div>' +
+      '</div><div id="rv-code" class="rv-code"><span class="muted" style="padding:0 12px;">loading…</span></div>';
+    renderForm(prefill || st.drafts[it.sha1_git] || {});
+    try {
+      // Served next to this page (verified against its SWH hash at export time).
+      const res = it.served === false ? null : await fetch('files/' + it.sha1_git);
+      if (current !== it) return;
+      if (!res || !res.ok) {
+        $('rv-code').innerHTML = '<span style="padding:0 12px;">This file is not served here. ' +
+          '<a href="' + SWH + '/' + esc(it.qualified_swhid) + '/" target="_blank" rel="noopener">Open it in Software Heritage</a>.</span>';
+        return;
+      }
+      const buf = new Uint8Array(await res.arrayBuffer());
+      if (current !== it) return;
+      let note = '', text;
+      if (buf.slice(0, 8192).includes(0)) {
+        $('rv-code').innerHTML = '<span style="padding:0 12px;">Binary content (' + buf.length + ' bytes, contains NUL bytes).</span>';
+        return;
+      }
+      try { text = new TextDecoder('utf-8', {fatal: true}).decode(buf); }
+      catch (e) { text = new TextDecoder('windows-1252').decode(buf); note = 'not valid UTF-8 — shown as Latin-1'; }
+      const lines = text.split('\n'), MAX = 3000;
+      $('rv-code').innerHTML = (note ? '<div class="muted" style="padding:0 12px 6px;">' + note + '</div>' : '') +
+        lines.slice(0, MAX).map((l, i) => '<span class="ln">' + (i + 1) + '</span>' + esc(l)).join('\n') +
+        (lines.length > MAX ? '\n<span class="muted">… ' + (lines.length - MAX) + ' more lines</span>' : '');
+    } catch (e) {
+      $('rv-code').innerHTML = '<span style="padding:0 12px;">Could not fetch the file (' + esc(e.message) + ').</span>';
+    }
+  }
+
+  function renderForm(v) {
+    $('rv-form').innerHTML = '<h2 style="margin:0 0 4px;">Your review</h2>' +
+      '<div class="muted">Blind: no machine label is shown. The bot tells you how the LLM judges labelled these files after you submit.</div>' +
+      spec.fields.map((f) => {
+        const lab = '<label for="rv-f-' + f.id + '">' + esc(f.label) + (f.required ? ' *' : '') + '</label>';
+        const ctl = f.type === 'text'
+          ? '<textarea id="rv-f-' + f.id + '" rows="3">' + esc(v[f.id] || '') + '</textarea>'
+          : '<select id="rv-f-' + f.id + '"><option value="">—</option>' + f.options.map((o) =>
+              '<option value="' + esc(o.value) + '"' + (v[f.id] === o.value ? ' selected' : '') + '>' + esc(o.label) + '</option>').join('') + '</select>';
+        return lab + ctl + (f.help ? '<div class="rv-help">' + f.help + '</div>' : '');
+      }).join('') +
+      '<div class="rv-actions"><button class="btn" id="rv-save">Save &amp; next ▶</button>' +
+      '<button class="btn" id="rv-skip" type="button">Skip</button></div><div class="rv-msg" id="rv-msg"></div>';
+    $('rv-save').addEventListener('click', saveCurrent);
+    $('rv-skip').addEventListener('click', () => next(current));
+  }
+
+  function saveCurrent() {
+    if (!current) return;
+    const ans = {};
+    for (const f of spec.fields) {
+      const val = ($('rv-f-' + f.id).value || '').trim();
+      if (f.required && !val) { $('rv-msg').textContent = esc(f.label) + ' is required.'; return; }
+      if (val) ans[f.id] = val;
+    }
+    ans.saved_at = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+    st.drafts[current.sha1_git] = ans; saveState();
+    next(current);
+  }
+
+  function next(after) {
+    const q = pending();
+    const i = after ? q.findIndex((it) => it.sha1_git === after.sha1_git) : -1;
+    const it = q.length ? q[(i + 1) % q.length] : null;
+    refresh(false);
+    if (it && it !== after) showItem(it);
+    else if (!q.length) {
+      current = null;
+      $('rv-file').innerHTML = '<h2 style="margin:0;">Queue done 🎉</h2><p class="muted">Every file is reviewed, saved or submitted. Submit your saved reviews below.</p>';
+      $('rv-form').innerHTML = '';
+    }
+  }
+
+  // ---------- batch → GitHub issue
+  function batchFor(shas) {
+    return {schema: 'review-batch/1', study: CFG.study, items_rev: spec.generated_at || '',
+            expertise: st.expertise, reviews: shas.map((sha) => Object.assign({sha1_git: sha}, st.drafts[sha]))};
+  }
+  function issueUrl(batch) {
+    const n = batch.reviews.length;
+    return 'https://github.com/' + CFG.repo + '/issues/new?template=review.yml' +
+      '&title=' + encodeURIComponent('[review] ' + CFG.study + ': ' + n + ' file' + (n > 1 ? 's' : '')) +
+      '&reviews=' + encodeURIComponent(JSON.stringify(batch));
+  }
+  function renderBatch() {
+    const shas = Object.keys(st.drafts), sent = Object.keys(st.sent);
+    const row = (sha, d, act) => '<tr><td><a href="#" data-open="' + esc(sha) + '">' + esc((bySha[sha] || {}).filename || sha.slice(0, 12)) +
+      '</a></td><td><code>' + esc(d.language || '') + '</code></td><td>' + esc(d.confidence || '') + '</td><td>' + act + '</td></tr>';
+    $('rv-batch').innerHTML = '<h2 style="margin:0 0 6px;">Submit your reviews</h2>' +
+      '<p class="muted">Saved reviews stay in this browser until you submit them. Submitting opens a pre-filled GitHub issue ' +
+      '(you need a GitHub account): press <b>Submit new issue</b> there. A bot records each review in the repository\'s ' +
+      'review store and replies with the judges\' labels.</p>' +
+      (shas.length ? '<table><tr><th>file</th><th>language</th><th>confidence</th><th></th></tr>' +
+        shas.map((sha) => row(sha, st.drafts[sha], '<a href="#" data-drop="' + esc(sha) + '">remove</a>')).join('') + '</table>' +
+        '<div class="rv-actions"><button class="btn" id="rv-submit">Submit ' + shas.length + ' review' + (shas.length > 1 ? 's' : '') + ' on GitHub ↗</button>' +
+        '<button class="btn" id="rv-copy" type="button">Copy JSON</button></div>'
+        : '<p class="muted">Nothing saved yet.</p>') +
+      (sent.length ? '<h3 style="margin:14px 0 4px;">Submitted, awaiting the bot</h3><table>' +
+        sent.map((sha) => row(sha, st.sent[sha], '<a href="#" data-unsend="' + esc(sha) + '">I did not submit it</a>')).join('') + '</table>' : '') +
+      '<div class="rv-msg" id="rv-bmsg"></div>';
+    $('rv-batch').querySelectorAll('[data-open]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault(); const it = bySha[a.dataset.open]; if (it) { showItem(it, st.drafts[it.sha1_git] || st.sent[it.sha1_git]); window.scrollTo(0, 0); } }));
+    $('rv-batch').querySelectorAll('[data-drop]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault(); delete st.drafts[a.dataset.drop]; saveState(); refresh(); }));
+    $('rv-batch').querySelectorAll('[data-unsend]').forEach((a) => a.addEventListener('click', (e) => {
+      e.preventDefault(); st.drafts[a.dataset.unsend] = st.sent[a.dataset.unsend]; delete st.sent[a.dataset.unsend]; saveState(); refresh(); }));
+    if ($('rv-submit')) $('rv-submit').addEventListener('click', () => {
+      // GitHub accepts URLs up to ~8 KB: send as many reviews as fit; the rest stay saved for the next issue.
+      let take = shas.slice();
+      while (take.length > 1 && issueUrl(batchFor(take)).length > 7500) take = take.slice(0, take.length - 1);
+      window.open(issueUrl(batchFor(take)), '_blank', 'noopener');
+      for (const sha of take) { st.sent[sha] = st.drafts[sha]; delete st.drafts[sha]; }
+      saveState(); refresh();
+      $('rv-bmsg').textContent = take.length < shas.length
+        ? 'Opened an issue with ' + take.length + ' reviews (GitHub limits the URL size). Submit it, then click again for the rest.'
+        : 'Opened the GitHub issue in a new tab — press "Submit new issue" there.';
+    });
+    if ($('rv-copy')) $('rv-copy').addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(JSON.stringify(batchFor(shas), null, 1)); $('rv-bmsg').textContent = 'Copied. Paste it into a new "Submit file reviews" issue.'; }
+      catch (e) { $('rv-bmsg').textContent = 'Copy failed: ' + e.message; }
+    });
+  }
+
+  function refresh(reshow = true) {
+    renderProgress(); renderBatch();
+    if (reshow && (!current || doneByMe(current))) next(null);
+  }
+  renderSetup(); refresh(false); next(null);
+})();
+"""
+
+
+def render_study_review_pages(*, dist_root: Path, generated_at: str, github_owner_repo: str | None) -> int:
+    """Online review page per extension study: /review/study/<study>/.
+
+    Built from `data/derived/study_exports/<study>/review_items.json` (written
+    by the study's exporter): blind items (provenance only), the form's fields.
+    Who already reviewed each item is recomputed here from the review store
+    `reviews/` (online reviews ingested by tools/ingest_reviews.py), so the page
+    shows progress without re-running the exporter. Reviews go out as a
+    pre-filled GitHub issue (`.github/ISSUE_TEMPLATE/review.yml`)."""
+    if not STUDY_EXPORTS_DIR.is_dir():
+        return 0
+    login_to_id = {r["login"].lower(): r["reviewer_id"] for r in _read_csv(REVIEWERS_CSV) if r.get("login")}
+    n = 0
+    listed = []
+    for d in sorted(p for p in STUDY_EXPORTS_DIR.iterdir() if p.is_dir()):
+        spec_path = d / "review_items.json"
+        if not spec_path.exists():
+            continue
+        sid = d.name
+        spec = json.loads(spec_path.read_text(encoding="utf-8"))
+        for it in spec.get("items", []):
+            ids = set(it.get("reviewed_by") or [])
+            for f in (REVIEWS_DIR / it["sha1_git"]).glob("*.json") if (REVIEWS_DIR / it["sha1_git"]).is_dir() else []:
+                try:
+                    rec = json.loads(f.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                if (rec.get("study") or {}).get("id") == sid and (rec.get("shown") or {}).get("via") == "review-page":
+                    ids.add((rec.get("reviewer") or {}).get("id"))
+            it["reviewed_by"] = sorted(i for i in ids if i)
+        spec["reviewers"] = login_to_id
+        spec["generated_at"] = generated_at
+        out_dir = dist_root / "review" / "study" / sid
+        out_dir.mkdir(parents=True, exist_ok=True)
+        # The files themselves are served from here: SWH's API answers browsers
+        # with a bot challenge, so the page cannot fetch them cross-origin.
+        if (d / "review_files").is_dir():
+            shutil.copytree(d / "review_files", out_dir / "files", dirs_exist_ok=True)
+        (out_dir / "items.json").write_text(json.dumps(spec, ensure_ascii=False), encoding="utf-8")
+        page = out_dir / "index.html"
+        rel = rel_prefix(page, dist_root)
+        cfg = json.dumps({"study": sid, "repo": github_owner_repo or "acherm/PL-ultimate-llm"})
+        n_rev = sum(1 for it in spec["items"] if it["reviewed_by"])
+        body = f"""
+        <style>{_REVIEW_PAGE_CSS}</style>
+        <section class="panel section">
+          <h1 style="margin:0 0 6px;">{safe(spec.get('title') or 'Review files')}</h1>
+          <p class='muted' style='margin:0 0 6px;'>Extension study <code>{safe(sid)}</code> ·
+            <a href="{rel}ext/{_ext_url_slug(spec.get('ext', ''))}/index.html">what the study found on <code>{safe(spec.get('ext', ''))}</code></a> ·
+            <a href="{safe(_repo_blob_url(github_owner_repo, 'docs/reviews.md'))}" target="_blank" rel="noopener">how reviews are stored</a></p>
+          <p class='muted' style='margin:0;'>{safe(spec.get('queue_note', ''))}</p>
+          <div id="rv-progress"></div>
+          <details style="margin-top:8px;"><summary class="muted" style="cursor:pointer;">About you (optional, stays in this browser; expertise is sent with your reviews)</summary>
+            <div id="rv-setup" class="rv-setup" style="margin-top:8px;"></div></details>
+        </section>
+        <div class="rv-grid">
+          <section class="panel section" id="rv-file"><p class="muted">Loading…</p></section>
+          <section class="panel section rv-form" id="rv-form"></section>
+        </div>
+        <section class="panel section rv-batch" id="rv-batch"></section>
+        <script type="application/json" id="rv-config">{cfg}</script>
+        <script>{_REVIEW_PAGE_JS}</script>"""
+        page.write_text(layout(title=f"Review .{sid} files · PL Catalog", rel=rel, body=body, generated_at=generated_at,
+                               description=spec.get("title", ""), github_owner_repo=github_owner_repo),
+                        encoding="utf-8")
+        listed.append((sid, spec, n_rev))
+        n += 1
+    if listed:
+        index = dist_root / "review" / "study" / "index.html"
+        rel = rel_prefix(index, dist_root)
+        rows = "".join(f"<tr><td><a href='{sid}/index.html'>{safe(sp.get('title', sid))}</a></td>"
+                       f"<td><code>{safe(sp.get('ext', ''))}</code></td><td>{nr} / {len(sp['items'])}</td></tr>"
+                       for sid, sp, nr in listed)
+        index.write_text(layout(title="Review archived files · PL Catalog", rel=rel, generated_at=generated_at,
+                                github_owner_repo=github_owner_repo, body=f"""
+        <section class="panel section"><h1 style="margin:0 0 6px;">Review archived files</h1>
+          <p class='muted'>Extension studies publish files for human review. Your reviews become ground truth in the
+          repository's review store and measure how well the study's LLM judges and identification tools did.</p>
+          <table class='kv-table'><thead><tr><th>Study</th><th>Extension</th><th>Files reviewed</th></tr></thead>
+          <tbody>{rows}</tbody></table></section>"""), encoding="utf-8")
+    return n
 
 
 def render_curator_review_page(
@@ -3310,10 +3642,16 @@ def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], stu
             if frames.get("repo"):
                 parts.append(f"<em>share of repositories</em> — {safe(frames['repo'])}")
             sample_html = "<br/><strong>Sample.</strong> " + "; ".join(parts) + "."
+        review_html = ""
+        rv_items = STUDY_EXPORTS_DIR / sid / "review_items.json"
+        if rv_items.exists():
+            n_items = len(json.loads(rv_items.read_text(encoding="utf-8")).get("items", []))
+            review_html = (f"<br/><strong>Help review.</strong> <a href='{rel}review/study/{safe(sid)}/index.html'>"
+                           f"Review {n_items} of these files</a> (blind, in your browser; submitted as a GitHub issue).")
         blocks.append(f"""
           <p class='muted'>Study <code>{safe(sid)}</code> — {safe(meta.get('title', ''))}{report_html}
           <br/><strong>Population.</strong> {pop.get('contents', '?'):,} {safe(', '.join(meta.get('extensions') or []))} files in {pop.get('repositories', '?'):,} repositories.{sample_html}
-          Each share says how it was estimated (judged sample, PPI over the rule-labelled sample, or tail census); 95 % interval in brackets.</p>
+          Each share says how it was estimated (judged sample, PPI over the rule-labelled sample, or tail census); 95 % interval in brackets.{review_html}</p>
           <table class='kv-table'>
             <thead><tr><th>Language / format</th><th>Share of files</th><th>Share of repositories</th></tr></thead>
             <tbody>{''.join(lines)}</tbody>
@@ -6486,6 +6824,16 @@ def build_site(*, out: Path, github_owner_repo: str | None) -> None:
     except Exception as e:
         import traceback
         print(f"WARNING: recent-submissions rendering failed ({type(e).__name__}: {e}).")
+        print(traceback.format_exc())
+
+    # Online review pages of the extension studies (/review/study/<id>/).
+    try:
+        n_rv = render_study_review_pages(dist_root=out, generated_at=generated_at,
+                                         github_owner_repo=github_owner_repo)
+        print(f"Wrote {n_rv} study review page(s) under /review/study/.")
+    except Exception as e:
+        import traceback
+        print(f"WARNING: study review pages failed ({type(e).__name__}: {e}).")
         print(traceback.format_exc())
 
     # Phase 2 polish: /samples/ index — every PL that has real SWH evidence.

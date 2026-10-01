@@ -92,8 +92,31 @@ def score(verbose=True) -> dict:
             p, lo, hi, neff = S.weighted_prop(xs, ws)
             out["labellers"][lab] = {"n": len(xs), "accuracy": round(p, 4), "ci": [round(lo, 4), round(hi, 4)],
                                      "n_eff": round(neff, 1)}
+    # Several reviewers per file (online review page): how often humans agree with
+    # each other, pairwise over files with ≥ 2 reviewers. A disputed file has no
+    # reference label, so it is excluded from the accuracies above.
+    pairs = agree = 0
+    multi = disputed = 0
+    for _, r in done:
+        langs = [rv["human"].get("language") for rv in r.human_latest()
+                 if rv["human"].get("language") not in ("unsure", "", None)]
+        if len(langs) >= 2:
+            multi += 1
+            disputed += len(set(langs)) > 1
+            for i in range(len(langs)):
+                for j in range(i + 1, len(langs)):
+                    pairs += 1
+                    agree += langs[i] == langs[j]
+    out["humans"] = {"files_with_2plus_reviewers": multi, "disputed_files": disputed,
+                     "pairwise_agreement": round(agree / pairs, 4) if pairs else None, "pairs": pairs,
+                     "reviewers": sorted({(rv.get("reviewer") or {}).get("id") for _, r in done
+                                          for rv in r.human_latest()})}
     if verbose:
         print(f"audit: {len(done)}/{len(q)} reviewed ({revised} revised after unblinding; the latest review counts)")
+        h = out["humans"]
+        print(f"  humans: {len(h['reviewers'])} reviewer(s); {h['files_with_2plus_reviewers']} file(s) with ≥ 2 "
+              f"reviewers, {h['disputed_files']} disputed"
+              + (f"; pairwise agreement {h['pairwise_agreement']:.3f} over {h['pairs']} pairs" if h["pairs"] else ""))
         for lab, v in out["labellers"].items():
             print(f"  {lab:10} acc={v['accuracy']:.3f}  CI [{v['ci'][0]:.3f}, {v['ci'][1]:.3f}]  n={v['n']}")
     (STUDY / "audit_score.json").write_text(json.dumps(out, indent=1))

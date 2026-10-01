@@ -201,3 +201,48 @@ not just the one you expect.
   `judge/<model>/`) so cheap layers can be regenerated without touching paid ones.
 - 5b. Run the second judge and the anchoring ablation; compute PPI estimates.
 - 6b. `audit --build`, review the queue blind, `audit --score`.
+
+---
+
+## Revision 3 — a secondary judge of a different kind (2026-09-30)
+
+All four studies were revisited with **Jev** (`typesafe/jev-1.13`, OpenRouter
+Decisions API: typed questions in, answer + probabilities out, no text) as a
+secondary judge — `tools/jev/`, integrated report `docs/msr_extension_studies/`.
+~$6 for 47k decisions over 11.9k contents (~100× cheaper than the Sonnet judge).
+
+1. **Run a cheap second judge over everything already judged.** It costs
+   nothing and answers "would another labeller have told the same story?".
+   Here: every frame effect kept its direction; identity numbers kept their
+   magnitude; judgement-field *levels* (maturity, hand-edited, dialect) moved.
+   Report the latter as labeller-dependent.
+2. **Ask a cheap classifier yes/no questions on content, without the filename.**
+   Its open "which language?" question is lured by the word in the file
+   (84 % of the `WBC` stubs "This is cobol file number N" → COBOL); the yes/no
+   "is this COBOL?" is not (0 %). Showing the filename adds ≤ 0.6 points on
+   genuine content and pulls hard towards the extension's claim where the
+   extension lies (annex pointers 4 % → 71 % "FEAT"). Question design is
+   judge-specific: the open question that protects an LLM from confirmation
+   exposes this model to lexical lures.
+3. **Use its disagreements as the human queue.** 105 identity discrepancies
+   across the four studies; they sort into reference errors (42 gate-skipped
+   COBOL copybooks, confirmed by re-judging — by-repo contamination 5.1 → 3.4 %),
+   the model's own blind spots (annex pointers, tiny snippets, DDS), and
+   contested files (where two LLMs already disagreed). Served by `flag=jev` in
+   every review app.
+4. **A generic cheap labeller can replace per-extension rules for PPI++**
+   (`.m`: identical interval narrowing, width ratio 0.58–0.60).
+
+Checklist addition: after judging, `python3 -m tools.jev.run --study <s> --probe
+{mirror,target,langid}` → `tools.jev.analysis` → `tools.jev.queue`; review the queue.
+
+### Stage 8 — propagate into the encyclopedia
+
+A study is finished when what it learned is in the encyclopedia, not only in its
+report. Write `tools/<study>/export.py` against the common format
+(`tools/study_export.py`), then `python3 tools/propagate_study.py --study <id>`
+(plan) and `--apply`. Observed languages become `swh_study:<id>` claims, missing
+ones are added, wrong ones disputed; shares per frame and measured identifier
+behaviour appear on the extension's page; verified samples land in `samples/`
+with the judges' and reviewers' verdicts in `reviews/`. See
+`docs/STUDY_PROPAGATION.md`.

@@ -332,6 +332,76 @@ def load_accepted_manual_labels() -> list[dict]:
     return out
 
 
+STUDY_EXPORTS = ROOT / "data" / "derived" / "study_exports"
+
+
+def load_study_exports() -> dict[str, list[dict]]:
+    """Read every extension study's export (see tools/study_export.py).
+
+    Returns {"claims": [...], "evidence": [...], "heuristic_eval": [...]} merged
+    over `data/derived/study_exports/<study>/`. Only claims whose `status` is
+    `accepted` are promoted; a maintainer rejects one by editing the export's
+    claims.csv (status=rejected) — the export is the reviewed artifact.
+    """
+    out: dict[str, list[dict]] = {"claims": [], "evidence": [], "heuristic_eval": []}
+    if not STUDY_EXPORTS.exists():
+        return out
+    for d in sorted(p for p in STUDY_EXPORTS.iterdir() if p.is_dir()):
+        for key, name in (("claims", "claims.csv"), ("evidence", "ext_evidence.csv"),
+                          ("heuristic_eval", "heuristic_eval.csv")):
+            f = d / name
+            if f.exists():
+                with f.open(encoding="utf-8") as fh:
+                    out[key].extend(csv.DictReader(fh))
+    return out
+
+
+def apply_study_claims(ext_claim_rows: list[dict], claims: list[dict], valid_pl_ids: set[str]) -> dict:
+    """Fold accepted study claims into ext_claim (in place). Returns counters.
+
+    - observe / add → one row per (pl, ext) with source `swh_study:<study>`;
+      strength `primary`/`secondary` from the observed share (`observe`) or
+      `proposed` (`add`: an edge no other source had).
+    - dispute → the named source's existing row gets strength `disputed` and
+      the study's evidence appended (the row itself is kept — sources are facts
+      about what a source says; the study adds what the archive shows).
+    - unobserved → no ext_claim change (recorded in ext_evidence instead).
+    """
+    n = {"observe": 0, "add": 0, "dispute": 0, "unobserved": 0, "label": 0, "skipped": 0}
+    for c in claims:
+        if (c.get("status") or "accepted") != "accepted":
+            n["skipped"] += 1
+            continue
+        if c.get("action") == "label":          # non-PL label proposals go to the curator workflow
+            n["label"] += 1
+            continue
+        pl_id, ext, action = c.get("pl_id", ""), c.get("ext", ""), c.get("action", "")
+        if pl_id not in valid_pl_ids or not ext.startswith("."):
+            n["skipped"] += 1
+            continue
+        src = f"swh_study:{c.get('study', '')}"
+        if action in ("observe", "add"):
+            ext_claim_rows.append({
+                "pl_id": pl_id, "ext": ext, "source": src,
+                "strength": c.get("strength") or ("proposed" if action == "add" else "secondary"),
+                "source_key": f"file {c.get('share_file_pct', '')}% / repo {c.get('share_repo_pct', '')}%",
+                "evidence": c.get("evidence", ""),
+            })
+            n[action] += 1
+        elif action == "dispute":
+            hit = 0
+            for row in ext_claim_rows:
+                if row["pl_id"] == pl_id and row["ext"] == ext and row["source"] == c.get("source_disputed"):
+                    row["strength"] = "disputed"
+                    row["evidence"] = (row.get("evidence", "") + f" | disputed by {src}: "
+                                       + (c.get("rationale") or "") + f" ({c.get('evidence', '')})")
+                    hit += 1
+            n["dispute"] += hit
+        elif action == "unobserved":
+            n["unobserved"] += 1
+    return n
+
+
 def load_repo_meta_aliases() -> dict[str, list[tuple[str, str]]]:
     """Map directory canonical -> [(alias, 'repo')...] from per-lang meta.json."""
     out: dict[str, list[tuple[str, str]]] = defaultdict(list)
@@ -1755,6 +1825,15 @@ def main() -> int:
               f"(skipped {skipped} unknown-pl_id, "
               f"deduped {dedup_skipped} already-in-meta.json).")
 
+    # Extension studies (tools/study_export.py → data/derived/study_exports/):
+    # observed edges, newly found edges, and disputes from reading SWH content.
+    study = load_study_exports()
+    if study["claims"]:
+        n_study = apply_study_claims(ext_claim_rows, study["claims"], {p["pl_id"] for p in pl_rows})
+        print(f"  study claims: {n_study['observe']} observed, {n_study['add']} added, "
+              f"{n_study['dispute']} rows disputed, {n_study['unobserved']} unobserved "
+              f"(evidence only), {n_study['skipped']} skipped.")
+
     # Phase 2: fill paradigms/typing/designer/year/influenced_by/license/
     # implementation_languages/homepage from the structured-wikipedia
     # facts sidecar. PLDB-primary rule: wide cells only get filled when
@@ -1816,7 +1895,19 @@ def main() -> int:
         "pattern_kind", "predicates_json", "source",
     ])
 
-    print(f"\nWrote {out_dir}/{{pl,pl_alias,ext_claim,ext_summary,heuristic}}.csv")
+    # Study evidence tables (observed shares per frame; measured identifier behaviour).
+    if study["evidence"]:
+        write_csv(out_dir / "ext_evidence.csv", study["evidence"], [
+            "study", "ext", "label", "display", "pl_id", "frame", "share_pct", "ci_lo_pct", "ci_hi_pct",
+            "n_class", "n_frame", "method", "note",
+        ])
+    if study["heuristic_eval"]:
+        write_csv(out_dir / "heuristic_eval.csv", study["heuristic_eval"], [
+            "study", "ext", "heuristic_id", "tool", "metric", "value", "n", "reference", "note",
+        ])
+
+    print(f"\nWrote {out_dir}/{{pl,pl_alias,ext_claim,ext_summary,heuristic}}.csv"
+          + (" + ext_evidence.csv, heuristic_eval.csv" if study["evidence"] else ""))
 
     # Refresh the review queue automatically. The review-queue logic reads
     # ext_summary + ext_claim to decide which extensions still need a label;

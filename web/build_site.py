@@ -3049,6 +3049,92 @@ def _load_extension_labels() -> dict[str, list[dict]]:
     return out
 
 
+_STUDY_FILE_FRAMES = ("file-ppi", "file-census", "file")
+_STUDY_REPO_FRAMES = ("repo-ppi", "repo-census", "repo")
+_STUDY_FRAME_LABEL = {"file": "judged sample", "repo": "judged sample", "file-ppi": "PPI++",
+                      "repo-ppi": "PPI++", "file-census": "tail census", "repo-census": "tail census"}
+
+
+def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], study_meta: dict, *,
+                              pl_canonical: dict, pl_id_to_slug: dict, rel: str,
+                              github_owner_repo: str | None) -> str:
+    """'Observed in Software Heritage' panel: what extension studies measured for `ext`
+    (share of each language per sampling frame) and how identifiers fared on it."""
+    if not evid and not heval:
+        return ""
+    blocks = []
+    for sid in sorted({e["study"] for e in evid} | {e["study"] for e in heval}):
+        meta = study_meta.get(sid, {})
+        rows_by_label: dict[tuple, dict] = {}
+        for e in evid:
+            if e["study"] == sid:
+                rows_by_label.setdefault((e["label"], e.get("pl_id", "")), {})[e["frame"]] = e
+
+        def pick(frames_d, order):
+            for f in order:
+                if f in frames_d:
+                    return frames_d[f], f
+            return None, None
+
+        def cell(e, f):
+            if not e:
+                return "<td class='muted'>—</td>"
+            try:
+                share = float(e["share_pct"])
+            except ValueError:
+                share = 0.0
+            txt = f"{share:.2f}%" if 0 < share < 1 else f"{share:.1f}%"
+            return (f"<td>{txt} <span class='muted'>[{safe(e['ci_lo_pct'])}–{safe(e['ci_hi_pct'])}] "
+                    f"· {safe(_STUDY_FRAME_LABEL.get(f, f))}</span></td>")
+
+        lines = []
+        ranked = sorted(rows_by_label.items(),
+                        key=lambda kv: -float((pick(kv[1], _STUDY_FILE_FRAMES)[0] or {}).get("share_pct") or 0))
+        for (label, pid), frames_d in ranked:
+            ef, ff = pick(frames_d, _STUDY_FILE_FRAMES)
+            er, fr = pick(frames_d, _STUDY_REPO_FRAMES)
+            if not ef and not er:
+                continue
+            display = (ef or er).get("display") or label
+            site_name = pl_canonical.get(pid, "") if pid else ""
+            slug = pl_id_to_slug.get(pid)
+            # Link only when the site's page for this pl_id is the same language — the study's
+            # own name is authoritative here, and the site matcher can attach a pl_id to the
+            # wrong folder (see docs/PL_IDENTITY.md).
+            same = slug and site_name and (site_name.lower() in display.lower() or display.lower() in site_name.lower())
+            link = (f"<a href='{rel}l/{slug}/index.html'>{safe(display)}</a>" if same else safe(display))
+            pid_html = f" <span class='muted'><code>{safe(pid)}</code></span>" if pid else ""
+            lines.append(f"<tr><td>{link}{pid_html}</td>{cell(ef, ff)}{cell(er, fr)}</tr>")
+        tools = {}
+        for e in heval:
+            if e["study"] == sid and not e.get("heuristic_id") and e["metric"] in ("accuracy_all", "abstain_rate"):
+                tools.setdefault(e["tool"], {})[e["metric"]] = e
+        tool_rows = "".join(
+            f"<tr><td>{safe(t)}</td><td>{100 * float(m['accuracy_all']['value']):.1f}%</td>"
+            f"<td>{100 * float(m.get('abstain_rate', {}).get('value') or 0):.1f}%</td></tr>"
+            for t, m in sorted(tools.items(), key=lambda kv: -float(kv[1].get('accuracy_all', {}).get('value') or 0))
+            if "accuracy_all" in m)
+        report = meta.get("report")
+        report_html = (f"<a href='https://github.com/{safe(github_owner_repo)}/blob/main/{safe(report)}' "
+                       f"target='_blank' rel='noopener'>{safe(report)}</a>" if report and github_owner_repo
+                       else safe(report or ""))
+        pop = meta.get("population") or {}
+        blocks.append(f"""
+          <p class='muted'>Study <code>{safe(sid)}</code> — {safe(meta.get('title', ''))} Report: {report_html}.
+          Population: {pop.get('contents', '?'):,} contents in {pop.get('repositories', '?'):,} repositories.
+          Shares are of <em>files</em> and of <em>repositories</em> (one random file each); the frame is part of the fact.</p>
+          <table class='kv-table'>
+            <thead><tr><th>Language / format</th><th>Share of files</th><th>Share of repositories</th></tr></thead>
+            <tbody>{''.join(lines)}</tbody>
+          </table>
+          {f"<h3 style='margin:14px 0 6px;'>How identifiers fare on <code>{safe(ext)}</code></h3><table class='kv-table'><thead><tr><th>Identifier</th><th>Agrees with reference</th><th>Abstains</th></tr></thead><tbody>{tool_rows}</tbody></table><p class='muted'>Reference: two independent LLM judges in agreement (see report); not human ground truth.</p>" if tool_rows else ""}""")
+    return f"""
+        <section class="panel section">
+          <h2 style="margin:0 0 8px;">Observed in Software Heritage</h2>
+          {''.join(blocks)}
+        </section>"""
+
+
 def render_per_extension_pages(
     *,
     dist_root: Path,
@@ -3090,6 +3176,20 @@ def render_per_extension_pages(
     heur_by_ext: dict[str, list[dict]] = {}
     for h in heuristic_rows:
         heur_by_ext.setdefault(h["applies_to_ext"], []).append(h)
+    # Extension studies (tools/study_export.py → build_pl_taxonomy): observed shares
+    # per sampling frame, and measured identifier behaviour on that extension.
+    evid_by_ext: dict[str, list[dict]] = {}
+    for e in _read_csv(TAXONOMY_DIR / "ext_evidence.csv"):
+        evid_by_ext.setdefault(e["ext"], []).append(e)
+    heval_by_ext: dict[str, list[dict]] = {}
+    for e in _read_csv(TAXONOMY_DIR / "heuristic_eval.csv"):
+        heval_by_ext.setdefault(e["ext"], []).append(e)
+    study_meta: dict[str, dict] = {}
+    for sj in (ROOT / "data" / "derived" / "study_exports").glob("*/study.json"):
+        try:
+            study_meta[sj.parent.name] = json.loads(sj.read_text(encoding="utf-8"))
+        except Exception:
+            pass
 
     swh_by_pl = load_swh_samples()
     # `swh_by_ext` is built independently via `load_swh_samples_by_ext` so that
@@ -3195,8 +3295,15 @@ def render_per_extension_pages(
             slug = pl_id_to_slug.get(pid)
             link = f"<a href='{rel}l/{slug}/index.html'>{safe(name)}</a>" if slug else safe(name)
             badge = f"<span class='pill strength-{c['strength']}'>{safe(c['strength'])}</span>"
+            src_html = safe(c['source'])
+            if c["source"].startswith("swh_study:"):
+                sm = study_meta.get(c["source"].split(":", 1)[1], {})
+                if sm.get("report") and github_owner_repo:
+                    src_html = (f"<a href='https://github.com/{safe(github_owner_repo)}/blob/main/{safe(sm['report'])}' "
+                                f"target='_blank' rel='noopener' title='observed share: {safe(c.get('source_key',''))}'>"
+                                f"{src_html}</a> <span class='muted'>({safe(c.get('source_key',''))})</span>")
             claim_rows_html.append(
-                f"<tr><td>{link}</td><td>{safe(c['source'])}</td><td>{badge}</td></tr>"
+                f"<tr><td>{link}</td><td>{src_html}</td><td>{badge}</td></tr>"
             )
 
         # Heuristics table.
@@ -3206,12 +3313,21 @@ def render_per_extension_pages(
             name = pl_canonical.get(pid, h.get("predicts_language", "") or pid or "?")
             slug = pl_id_to_slug.get(pid)
             link = f"<a href='{rel}l/{slug}/index.html'>{safe(name)}</a>" if slug else safe(name)
+            measured = []
+            for ev in heval_by_ext.get(ext, []):
+                if ev.get("heuristic_id") == h.get("heuristic_id") and ev.get("metric") in ("fires", "precision"):
+                    val = ev["value"]
+                    if ev["metric"] == "precision":
+                        val = f"{float(val):.2f}"
+                    measured.append(f"{ev['metric']} {val}")
+            measured_html = (f"<span class='muted'>{safe(' · '.join(measured))}</span>" if measured else "")
             heur_rows_html.append(
                 f"<tr><td><code>{safe(h.get('heuristic_id',''))}</code></td>"
                 f"<td>{link}</td>"
                 f"<td>{safe(h.get('pattern_kind',''))}</td>"
                 f"<td><code style='white-space:pre-wrap; word-break:break-all;'>"
-                f"{safe((h.get('predicates_json','') or '')[:200])}</code></td></tr>"
+                f"{safe((h.get('predicates_json','') or '')[:200])}</code></td>"
+                f"<td>{measured_html}</td></tr>"
             )
 
         # SWH samples (grouped by predicted PL for clarity).
@@ -3280,6 +3396,11 @@ def render_per_extension_pages(
           </div>
           {variants_html}
         </section>"""
+
+        study_section = _render_ext_study_section(
+            ext, evid_by_ext.get(ext, []), heval_by_ext.get(ext, []), study_meta,
+            pl_canonical=pl_canonical, pl_id_to_slug=pl_id_to_slug, rel=rel,
+            github_owner_repo=github_owner_repo)
 
         claimants_section = ""
         if claim_rows_html:
@@ -3458,7 +3579,7 @@ def render_per_extension_pages(
           <h2 style="margin:0 0 8px;">Disambiguation rules ({len(heur_rows_html)})</h2>
           <div class='muted' style='margin-bottom:8px;'>Linguist heuristics that decide, by content, which language a <code>{safe(ext)}</code> file actually is.</div>
           <table class='kv-table'>
-            <thead><tr><th>Rule</th><th>Predicts</th><th>Kind</th><th>Predicates (truncated)</th></tr></thead>
+            <thead><tr><th>Rule</th><th>Predicts</th><th>Kind</th><th>Predicates (truncated)</th><th>Measured on SWH</th></tr></thead>
             <tbody>{''.join(heur_rows_html)}</tbody>
           </table>
         </section>"""
@@ -4075,6 +4196,7 @@ def render_per_extension_pages(
           </div>
         </section>
         {swh_pop_html}
+        {study_section}
         {label_section}
         {claimants_section}
         {external_section}

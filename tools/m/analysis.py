@@ -496,7 +496,8 @@ def section_m(recs):
             base = W["tail"] * ph["tail"]
             lo = base + W["main"] * lo_m - S.Z * math.sqrt(max(v1, 0))
             hi = base + W["main"] * hi_m + S.Z * math.sqrt(max(v1, 0))
-            est[c] = {"pct": pct(p), "ci": [pct(max(0.0, lo)), pct(min(1.0, hi))],
+            est[c] = {"pct": pct(p), "pct_exact": round(100 * p, 4),
+                      "ci": [pct(max(0.0, lo)), pct(min(1.0, hi))],
                       "ci_normal": [pct(max(0.0, p - S.Z * se)), pct(min(1.0, p + S.Z * se))],
                       "files_in_tail_census": k_tail, "files_in_main_subsample": k_main}
         tail_j = judged["tail"]

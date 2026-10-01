@@ -162,6 +162,33 @@ def write_reviews(study_id: str, samples: list[dict], known: set[str]) -> int:
     return n
 
 
+# ---------------------------------------------------------------- apply: prune
+def prune_orphans(study_id: str, samples: list[dict]) -> int:
+    """Remove samples this study propagated earlier but no longer exports (and the
+    study's own review records on them), so re-exporting with a different pick
+    does not leave stale files behind. Samples from other sources are untouched."""
+    import shutil
+    keep = {s["sha1_git"] for s in samples}
+    n = 0
+    for meta_path in SAMPLES.glob("*/*/metadata.json"):
+        try:
+            via = json.loads(meta_path.read_text()).get("predicted_via") or ""
+        except (OSError, json.JSONDecodeError):
+            continue
+        sha = meta_path.parent.name
+        if not via.startswith(f"swh_study:{study_id} ") or sha in keep:
+            continue
+        shutil.rmtree(meta_path.parent)
+        for r in (ROOT / "reviews" / sha).glob("*.json"):
+            if (json.loads(r.read_text()).get("shown") or {}).get("study") == study_id:
+                r.unlink()
+        if (ROOT / "reviews" / sha).is_dir() and not any((ROOT / "reviews" / sha).iterdir()):
+            (ROOT / "reviews" / sha).rmdir()
+        print(f"      pruned {meta_path.parent.relative_to(ROOT)} (no longer in the export)")
+        n += 1
+    return n
+
+
 # ---------------------------------------------------------------- main
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -179,6 +206,7 @@ def main() -> int:
     pl_name = {r["pl_id"]: r["canonical_name"] for r in read(SE.PL_CSV)}
     known = set(pl_name)
     for sid, p in plans.items():
+        prune_orphans(sid, p["samples"])
         made = [materialise_sample(s, pl_name) for s in p["samples"]]
         n_rev = write_reviews(sid, [s for s, m in zip(p["samples"], made) if m], known)
         print(f"\n[{sid}] samples written/refreshed: {sum(1 for m in made if m)} · reviews added: {n_rev}")

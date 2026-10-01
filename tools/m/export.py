@@ -160,8 +160,10 @@ def claim_rows(A, samples):
 
 
 def pick_samples(recs, A):
-    """Up to 3 exemplars per conventional language: both judges agree, text, 15–400 lines,
-    hand-written or library code, distinct repositories; a human review that agrees ranks first."""
+    """Exemplars per conventional language: both judges agree, text, 15–400 lines,
+    hand-written or library code, distinct repositories. Files a human reviewer
+    confirmed are always kept and rank first; judge-only picks are capped at 3
+    (2 for Objective-C and MATLAB)."""
     out, by_lab = [], {}
     for r in recs.values():
         j, j2 = r.lang("judge"), r.lang("judge2")
@@ -183,9 +185,11 @@ def pick_samples(recs, A):
         if j in CONVENTIONAL and j == r.lang("judge2") and j not in by_lab and r.ind.get("is_text", True):
             by_lab.setdefault(j, []).append((True, True, 0, r.sha, r, False))
     for lab, cands in by_lab.items():
-        seen_origins = set()
+        seen_origins, n_judge_only = set(), 0
         for *_k, r, human_ok in sorted(cands, key=lambda c: c[:4]):
             if r.row.get("origin") in seen_origins:
+                continue
+            if not human_ok and n_judge_only >= (3 if lab not in ("objective-c", "matlab") else 2):
                 continue
             raw = (CACHE_DIR / f"{r.sha}.bin").read_bytes()
             if SE.git_blob_sha1(raw) != r.sha:
@@ -200,8 +204,7 @@ def pick_samples(recs, A):
                                        + ("; human:" + r.reviews[-1]["reviewer"]["id"] if human_ok else ""),
                         "language_detail": v.get("language_detail", ""), "provenance_kind": v.get("provenance_kind", ""),
                         "note": (v.get("purpose") or "")[:160]})
-            if len(seen_origins) >= (3 if lab not in ("objective-c", "matlab") else 2):
-                break
+            n_judge_only += not human_ok
     return out
 
 

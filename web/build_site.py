@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote, urlencode, urlparse
+from urllib.parse import quote, unquote, urlencode, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -456,6 +456,101 @@ def _legacy_wikipedia_url_for(canonical_name: str) -> str:
             title = titles[key]
             return "https://en.wikipedia.org/wiki/" + title.replace(" ", "_")
     return ""
+
+
+_PL_OWN_NAME_COLS = ("canonical_name", "linguist_key", "pygments_name",
+                     "hyperpolyglot_name", "rosettacode_name")
+
+
+def _name_keys(s: str) -> set[str]:
+    """The three match keys of a name, as used by the name index."""
+    if not s:
+        return set()
+    return {k for k in (s.lower(), _normalize_name(s), _normalize_name_with_roman(s)) if k}
+
+
+def _wikipedia_key(url: str | None) -> str | None:
+    """`<lang>:<article title>` (decoded, case-folded) for a Wikipedia article URL, else None."""
+    if not url:
+        return None
+    p = urlparse(url.strip())
+    host = p.netloc.lower().replace(".m.wikipedia.org", ".wikipedia.org")
+    if not host.endswith("wikipedia.org") or not p.path.startswith("/wiki/"):
+        return None
+    title = unquote(p.path[len("/wiki/"):]).replace(" ", "_").rstrip("/").lower()
+    return f"{host.split('.')[0]}:{title}" if title else None
+
+
+_PL_MATCH_CACHE: tuple[dict[str, list[str]], dict[str, set[str]]] | None = None
+
+
+def load_pl_match_candidates() -> tuple[dict[str, list[str]], dict[str, set[str]]]:
+    """(key -> every pl_id the key names, in name-index order; pl_id -> the
+    record's own-name keys, i.e. not from pl_alias.csv)."""
+    global _PL_MATCH_CACHE
+    if _PL_MATCH_CACHE is None:
+        cands: dict[str, list[str]] = {}
+        own: dict[str, set[str]] = {}
+        for r in _read_csv(TAXONOMY_DIR / "pl.csv"):
+            pid = r.get("pl_id")
+            if not pid:
+                continue
+            for col in _PL_OWN_NAME_COLS:
+                for k in _name_keys(r.get(col) or ""):
+                    own.setdefault(pid, set()).add(k)
+                    if pid not in cands.setdefault(k, []):
+                        cands[k].append(pid)
+        for a in _read_csv(TAXONOMY_DIR / "pl_alias.csv"):
+            pid = a.get("pl_id")
+            for k in _name_keys(a.get("alias") or ""):
+                if pid and pid not in cands.setdefault(k, []):
+                    cands[k].append(pid)
+        _PL_MATCH_CACHE = (cands, own)
+    return _PL_MATCH_CACHE
+
+
+def pl_pages(languages: list["Language"],
+             enrichments: dict[str, "TaxonomyEnrichment"]) -> tuple[dict[str, str], dict[str, str]]:
+    """pl_id -> slug, and pl_id -> in-repo name, of the page that represents a
+    taxonomy record on extension / source pages.
+
+    The name matcher can attach several in-repo languages to one record (pl/m:
+    `CML`, `M` = Power Query M, `MUMPS`). Pick, in order: the language whose own
+    name is one of the record's own names *and* whose evidence is the record's
+    Wikipedia article; whose name is the record's canonical name; whose name is
+    one of the record's own names; otherwise the first in site order. Record
+    Wikipedia URLs alone are not trusted (Wikidata over-assignment,
+    docs/PL_IDENTITY.md §5), hence the name requirement.
+    """
+    _, own = load_pl_match_candidates()
+    rows = {r["pl_id"]: r for r in _read_csv(TAXONOMY_DIR / "pl.csv") if r.get("pl_id")}
+    by_pl: dict[str, list[Language]] = {}
+    for lang in languages:
+        enr = enrichments.get(lang.name)
+        if enr:
+            by_pl.setdefault(enr.pl_id, []).append(lang)
+
+    def rank(lang: "Language", pid: str) -> int:
+        row = rows.get(pid, {})
+        names = _name_keys(lang.name)
+        own_hit = bool(names & own.get(pid, set()))
+        rec_wp = _wikipedia_key(row.get("wikipedia_url"))
+        confirmed = bool(rec_wp) and _wikipedia_key(lang.evidence_url) == rec_wp
+        if own_hit and confirmed:
+            return 0
+        if names & _name_keys(row.get("canonical_name") or ""):
+            return 1
+        return 2 if own_hit else 3
+
+    slug_by_pl: dict[str, str] = {}
+    name_by_pl: dict[str, str] = {}
+    for pid, langs in by_pl.items():
+        best = min(langs, key=lambda l: rank(l, pid))      # stable: site order on ties
+        slug_by_pl[pid] = best.slug
+        named = [l for l in sorted(langs, key=lambda l: rank(l, pid)) if l.folder_rel and l.name]
+        if named:
+            name_by_pl[pid] = named[0].name
+    return slug_by_pl, name_by_pl
 
 
 def load_pl_taxonomy() -> tuple[dict[str, dict], dict[str, str]]:
@@ -1070,6 +1165,8 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
     pl_by_id, name_index = load_pl_taxonomy()
     if not pl_by_id:
         return {}
+    candidates, own_keys = load_pl_match_candidates()
+    canon_keys = {p: _name_keys(r.get("canonical_name") or "") for p, r in pl_by_id.items()}
     ext_claims = load_ext_claims()
     _, heuristics_by_ext = load_heuristics()
     swh_samples = load_swh_samples()
@@ -1085,9 +1182,31 @@ def build_taxonomy_enrichments(languages: list["Language"]) -> dict[str, Taxonom
             keys_to_try.append(raw.lower())
             keys_to_try.append(_normalize_name(raw))
             keys_to_try.append(_normalize_name_with_roman(raw))
-        pl_id = next((name_index[k] for k in keys_to_try if k and k in name_index), None)
-        if not pl_id:
+        hit = next((k for k in keys_to_try if k and k in name_index), None)
+        if not hit:
             continue
+        pl_id = name_index[hit]
+        ev_wp = _wikipedia_key(lang.evidence_url)
+        rec_wp = _wikipedia_key(pl_by_id.get(pl_id, {}).get("wikipedia_url"))
+        # A key can be an own name of several records (`octave`: Rosetta Code's
+        # name on pl/matlab, canonical name of pl/octave). Prefer the record whose
+        # canonical name it is — when the key is the language's own name (not one
+        # of its aliases) and its own Wikipedia evidence does not already confirm
+        # the first hit (MUMPS stays on pl/m, the Linguist record).
+        if (hit in _name_keys(lang.name) and hit not in canon_keys.get(pl_id, set())
+                and not (ev_wp and rec_wp == ev_wp)):
+            pl_id = next((p for p in candidates.get(hit, []) if hit in canon_keys.get(p, set())), pl_id)
+            rec_wp = _wikipedia_key(pl_by_id.get(pl_id, {}).get("wikipedia_url"))
+        # First hit wins — unless it came through an alias only (pl_alias.csv:
+        # Wikidata / lexer aliases, the polluted layer, docs/PL_IDENTITY.md §5),
+        # the record's Wikipedia article contradicts the language's own evidence,
+        # and another candidate record has exactly that article. E.g. `CML`
+        # (evidence: Concurrent_ML) hit pl/m (MUMPS) through a Wikidata alias.
+        if ev_wp and rec_wp and rec_wp != ev_wp and hit not in own_keys.get(pl_id, set()):
+            confirmed = [p for k in keys_to_try if k for p in candidates.get(k, [])
+                         if _wikipedia_key(pl_by_id.get(p, {}).get("wikipedia_url")) == ev_wp]
+            if confirmed:
+                pl_id = confirmed[0]
         row = pl_by_id.get(pl_id, {})
         my_claims = ext_claims.get(pl_id, [])
         my_exts = {c[0] for c in my_claims}
@@ -2419,13 +2538,12 @@ def render_source_pages(
     index at /source/. Each lists all PLs the source asserts the existence of.
     Returns count of source pages written (excludes the index)."""
     # pl_id -> slug for linking back to PL pages.
-    pl_id_to_slug: dict[str, str] = {}
+    pl_id_to_slug, _ = pl_pages(languages, enrichments)
     pl_id_to_name: dict[str, str] = {}
     for lang in languages:
         enr = enrichments.get(lang.name)
-        if enr:
-            pl_id_to_slug.setdefault(enr.pl_id, lang.slug)
-            pl_id_to_name.setdefault(enr.pl_id, lang.name)
+        if enr and pl_id_to_slug.get(enr.pl_id) == lang.slug:
+            pl_id_to_name[enr.pl_id] = lang.name
 
     # Group enriched langs by source. Per-PL external URLs (esolang_url,
     # rosettacode_url) are carried alongside so source roster pages can
@@ -3164,20 +3282,14 @@ def render_per_extension_pages(
     """Write /ext/<slug>/index.html for every extension that has at least one
     taxonomy claim, heuristic, or mined SWH sample. Returns page count."""
     # Build pl_id -> in-site language slug index (for linking).
-    pl_id_to_slug: dict[str, str] = {}
     # Build pl_id -> in-repo canonical name (overrides the taxonomy row's
     # canonical_name, which is sometimes lowercase or otherwise stale —
     # e.g., pl/oaklisp had canonical_name="oaklisp" from the Esolang
     # import, while languages/Oaklisp/meta.json says "Oaklisp"). The
     # in-repo name is authoritative because a human / the LLM curator
-    # explicitly set it.
-    pl_name_override: dict[str, str] = {}
-    for lang in languages:
-        enr = enrichments.get(lang.name)
-        if enr:
-            pl_id_to_slug.setdefault(enr.pl_id, lang.slug)
-            if lang.folder_rel and lang.name:
-                pl_name_override.setdefault(enr.pl_id, lang.name)
+    # explicitly set it. When several in-repo languages attach to one record,
+    # pl_pages() picks the one that is that record (pl/m -> MUMPS, not CML).
+    pl_id_to_slug, pl_name_override = pl_pages(languages, enrichments)
 
     ext_summary_rows = _read_csv(TAXONOMY_DIR / "ext_summary.csv")
     ext_claim_rows = _read_csv(TAXONOMY_DIR / "ext_claim.csv")

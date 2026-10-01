@@ -92,10 +92,28 @@ files *Algol 68* and misses all GLSL shaders; on `.rpgle` it is right for
 98.9 % (it never catches the non-RPG tail). Extension-first identification is
 only as good as the extension.
 
-## Known issue surfaced while propagating
+## Site linking fixed while propagating (2026-10-01)
 
-The site's name matcher attaches some `pl_id`s to the wrong in-repo language
-folder: on `/ext/m/`, `pl/matlab` renders as *GNU Octave* and `pl/m` (MUMPS) as
-*CML*, although `languages/MATLAB` and `languages/M` exist. The study panel
-therefore shows the study's own names and links only when the site's page is
-the same language. This belongs to the identity work (`docs/PL_IDENTITY.md`).
+The site attached taxonomy records to in-repo pages by first name hit, so on
+`/ext/m/` `pl/matlab` linked to *GNU Octave* and `pl/m` (MUMPS) to *CML*
+(through a Wikidata alias "CML" on the MUMPS record). `web/build_site.py` now:
+
+- **chooses the page of a record** (`pl_pages`) when several in-repo languages
+  attach to it: own name is one of the record's names *and* its evidence is the
+  record's Wikipedia article › own name is the record's canonical name › own
+  name is one of the record's names › site order. 69 records change page, e.g.
+  `pl/m` → MUMPS, `pl/matlab` → MATLAB, `pl/ocaml` → OCaml, `pl/raku` → Raku;
+- **attaches a language to a better record** in two narrow cases: its own name
+  is the *canonical* name of another record that shares the key (`Octave`,
+  `TypeScript`, `SBASIC`, `S`, `PASM`), unless its Wikipedia evidence confirms
+  the first hit; or the first hit came only through an alias and its Wikipedia
+  article contradicts the language's evidence while another candidate matches
+  it (`CML`, `Small Basic`). 7 languages change record; no page disappears.
+
+Record Wikipedia URLs are not trusted alone (the Wikidata overlay over-assigns
+them, `docs/PL_IDENTITY.md` §5), hence the name requirements. Still open:
+`languages/M` is Power Query M but its name is `pl/m`'s canonical name, so its
+page shows MUMPS facts — a `cannot_link` decision for the identity layer.
+
+Samples: files a human reviewer confirmed (blind, agreeing with both judges)
+are always exported; judge-only exemplars stay capped per language.

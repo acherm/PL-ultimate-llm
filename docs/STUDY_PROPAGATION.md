@@ -68,6 +68,30 @@ through an extension-overlap join in `master_inventory.match_pygments_name`,
 which affects 114 of 588 Pygments identities —
 `data/derived/m_study/mapping_pygments_ext_fallback.json`).
 
+Backfilled from the three earlier studies:
+
+- **`.cbl` / `.CBL` (COBOL)** — COBOL observed as primary: 54.4 % of files but
+  92.7 % of repositories, because 40.8 % of files (58.9 % of `.CBL`) are one
+  GitLab test fixture of synthetic placeholders; Calibre comic-book lists are
+  1.7 %. Exact-case rows (`.CBL` only) are kept in the evidence.
+- **`.fsf`** — no language claim; a **label proposal** `.fsf → data:domain`
+  (FSL FEAT fMRI design files, 80.6 % of files, configuration in Tcl syntax),
+  which contradicts the `pl/new:fsl` example in `docs/extension_labels.md`.
+  GLSL fragment shaders appear (0.1 % of files, 0.66 % of repositories) but
+  `.fsf` is not a conventional GLSL extension: evidence only.
+- **`.rpgle`** — RPG IV observed as primary (99.5 % of files); dialect shares
+  per frame (fixed-format 40.7 % of files vs 21.8 % of repositories) and the
+  copy-member share (≈19 %, frame-invariant) as qualifier rows.
+
+**SWH Synid, measured on four extensions** (`heuristic_eval.csv`): on `.m` it
+answers `Text` for 9.9 % of Objective-C (comment strategy) and never
+content-identifies non-UTF-8 files in file mode; on `.cbl`/`.CBL` it answers
+COBOL for every file — including the synthetic fixtures, comic-book lists and
+binaries (precision 0.544 by file); on `.fsf` it calls 97.8 % of FEAT design
+files *Algol 68* and misses all GLSL shaders; on `.rpgle` it is right for
+98.9 % (it never catches the non-RPG tail). Extension-first identification is
+only as good as the extension.
+
 ## Known issue surfaced while propagating
 
 The site's name matcher attaches some `pl_id`s to the wrong in-repo language

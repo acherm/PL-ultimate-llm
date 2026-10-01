@@ -3049,8 +3049,9 @@ def _load_extension_labels() -> dict[str, list[dict]]:
     return out
 
 
-_STUDY_FILE_FRAMES = ("file-ppi", "file-census", "file")
+_STUDY_FILE_FRAMES = ("file-ppi", "file-census", "file", "file-filtered")
 _STUDY_REPO_FRAMES = ("repo-ppi", "repo-census", "repo")
+_STUDY_QUALIFIER_PREFIXES = ("dialect", "unit", "expressed-in", "feature")
 _STUDY_FRAME_LABEL = {"file": "judged sample", "repo": "judged sample", "file-ppi": "PPI++",
                       "repo-ppi": "PPI++", "file-census": "tail census", "repo-census": "tail census"}
 
@@ -3068,7 +3069,7 @@ def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], stu
         rows_by_label: dict[tuple, dict] = {}
         for e in evid:
             if e["study"] == sid:
-                rows_by_label.setdefault((e["label"], e.get("pl_id", "")), {})[e["frame"]] = e
+                rows_by_label.setdefault((e["label"], e.get("pl_id", ""), e["ext"]), {})[e["frame"]] = e
 
         def pick(frames_d, order):
             for f in order:
@@ -3087,10 +3088,26 @@ def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], stu
             return (f"<td>{txt} <span class='muted'>[{safe(e['ci_lo_pct'])}–{safe(e['ci_hi_pct'])}] "
                     f"· {safe(_STUDY_FRAME_LABEL.get(f, f))}</span></td>")
 
-        lines = []
+        lines, qual_lines = [], []
+        # rows measured on the page's own (case-folded) extension first, exact-case variants after
         ranked = sorted(rows_by_label.items(),
-                        key=lambda kv: -float((pick(kv[1], _STUDY_FILE_FRAMES)[0] or {}).get("share_pct") or 0))
-        for (label, pid), frames_d in ranked:
+                        key=lambda kv: (kv[0][2] != ext,
+                                        -float((pick(kv[1], _STUDY_FILE_FRAMES)[0] or {}).get("share_pct") or 0)))
+        for (label, pid, row_ext), frames_d in ranked:
+            case_note = (f" <span class='muted'>(<code>{safe(row_ext)}</code> only)</span>"
+                         if row_ext != ext else "")
+            # Qualifier rows (a dialect, a unit kind, the host notation) describe files of a
+            # language; they are not languages under the extension — separate table.
+            if label.split(":", 1)[0] in _STUDY_QUALIFIER_PREFIXES:
+                ef, ff = pick(frames_d, _STUDY_FILE_FRAMES)
+                er, fr = pick(frames_d, _STUDY_REPO_FRAMES)
+                if ef or er:
+                    display = (ef or er).get("display") or label
+                    note = (ef or er).get("note") or ""
+                    qual_lines.append(f"<tr><td>{safe(display)}{case_note}"
+                                      f"{' <span class=muted>(' + safe(note[:90]) + ')</span>' if note else ''}</td>"
+                                      f"{cell(ef, ff)}{cell(er, fr)}</tr>")
+                continue
             ef, ff = pick(frames_d, _STUDY_FILE_FRAMES)
             er, fr = pick(frames_d, _STUDY_REPO_FRAMES)
             if not ef and not er:
@@ -3104,7 +3121,7 @@ def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], stu
             same = slug and site_name and (site_name.lower() in display.lower() or display.lower() in site_name.lower())
             link = (f"<a href='{rel}l/{slug}/index.html'>{safe(display)}</a>" if same else safe(display))
             pid_html = f" <span class='muted'><code>{safe(pid)}</code></span>" if pid else ""
-            lines.append(f"<tr><td>{link}{pid_html}</td>{cell(ef, ff)}{cell(er, fr)}</tr>")
+            lines.append(f"<tr><td>{link}{case_note}{pid_html}</td>{cell(ef, ff)}{cell(er, fr)}</tr>")
         tools = {}
         for e in heval:
             if e["study"] == sid and not e.get("heuristic_id") and e["metric"] in ("accuracy_all", "abstain_rate"):
@@ -3127,6 +3144,7 @@ def _render_ext_study_section(ext: str, evid: list[dict], heval: list[dict], stu
             <thead><tr><th>Language / format</th><th>Share of files</th><th>Share of repositories</th></tr></thead>
             <tbody>{''.join(lines)}</tbody>
           </table>
+          {f"<h3 style='margin:14px 0 6px;'>Within / about these files</h3><table class='kv-table'><thead><tr><th>Qualifier</th><th>Share of files</th><th>Share of repositories</th></tr></thead><tbody>{''.join(qual_lines)}</tbody></table>" if qual_lines else ""}
           {f"<h3 style='margin:14px 0 6px;'>How identifiers fare on <code>{safe(ext)}</code></h3><table class='kv-table'><thead><tr><th>Identifier</th><th>Agrees with reference</th><th>Abstains</th></tr></thead><tbody>{tool_rows}</tbody></table><p class='muted'>Reference: two independent LLM judges in agreement (see report); not human ground truth.</p>" if tool_rows else ""}""")
     return f"""
         <section class="panel section">
@@ -3178,12 +3196,14 @@ def render_per_extension_pages(
         heur_by_ext.setdefault(h["applies_to_ext"], []).append(h)
     # Extension studies (tools/study_export.py → build_pl_taxonomy): observed shares
     # per sampling frame, and measured identifier behaviour on that extension.
+    # Extension pages are case-aggregated (`.CBL` shows on `.cbl`); evidence keeps
+    # case, so exact-case rows are attached to the folded page and labelled.
     evid_by_ext: dict[str, list[dict]] = {}
     for e in _read_csv(TAXONOMY_DIR / "ext_evidence.csv"):
-        evid_by_ext.setdefault(e["ext"], []).append(e)
+        evid_by_ext.setdefault(e["ext"].lower(), []).append(e)
     heval_by_ext: dict[str, list[dict]] = {}
     for e in _read_csv(TAXONOMY_DIR / "heuristic_eval.csv"):
-        heval_by_ext.setdefault(e["ext"], []).append(e)
+        heval_by_ext.setdefault(e["ext"].lower(), []).append(e)
     study_meta: dict[str, dict] = {}
     for sj in (ROOT / "data" / "derived" / "study_exports").glob("*/study.json"):
         try:

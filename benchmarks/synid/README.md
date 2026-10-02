@@ -1,7 +1,8 @@
 # Synid benchmark (non-regression suite)
 
-A frozen, reusable benchmark to assess [SWH Synid](https://gitlab.softwareheritage.org/teams/codecommons/swh-syntax-identification)
-— Software Heritage's syntax identifier — on real archived files, version after
+A frozen, reusable benchmark to assess SWH Synid — Software Heritage's syntax
+identifier (`teams/codecommons/swh-syntax-identification` on SWH's GitLab; the
+repository is access-restricted) — on real archived files, version after
 version. It answers: *is this Synid version better or worse than the last one,
 on which files, and on which known failure triggers?*
 
@@ -48,7 +49,7 @@ tracked on its own:
 ## Use
 
 ```bash
-# build Synid (any version)
+# build Synid (any version) — needs access to the repository
 git clone https://gitlab.softwareheritage.org/teams/codecommons/swh-syntax-identification
 cd swh-syntax-identification && cargo build --release --bin synid && cd -
 
@@ -66,7 +67,9 @@ from a file's name and bytes). `--disable <strategy>` runs an ablation.
 **New Synid version accepted?** Copy its run into `baselines/` and re-run
 `history.py`. `.github/workflows/synid_bench.yml` builds Synid's `main` weekly
 (and on demand), scores it against the latest baseline, and fails — opening an
-issue — when a gold case regresses.
+issue — when a gold case regresses. It needs a GitLab token with
+`read_repository` as the repository secret `SYNID_GITLAB_TOKEN`; without it,
+runs are skipped.
 
 **Adding cases** (other extensions: the COBOL, `.fsf`, `.rpgle` studies) means a
 new benchmark version (`synid-bench/2`): cases are frozen within a version so

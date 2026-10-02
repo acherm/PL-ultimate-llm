@@ -1839,12 +1839,29 @@ def main() -> int:
     # (pl_id, field, value) edge with provenance.
     pl_fact_rows = fill_wikipedia_pl_facts(pl_rows, alias_rows, wikipedia_pl_facts)
 
+    # Deny list (data/curated/deny_list.csv, docs/DENY_LIST.md): languages that
+    # must not appear, whatever the sources say — drop the records and every
+    # row that points at them.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import denylist
+    dl = denylist.get()
+    denied_ids: set[str] = set()
+    if dl:
+        denied_ids = {p["pl_id"] for p in pl_rows if dl.match_record(p["pl_id"]) or dl.row_denied(p)}
+        if denied_ids:
+            pl_rows = [p for p in pl_rows if p["pl_id"] not in denied_ids]
+            alias_rows = [a for a in alias_rows if a.get("pl_id") not in denied_ids]
+            ext_claim_rows = [c for c in ext_claim_rows if c.get("pl_id") not in denied_ids]
+            pl_fact_rows = [f for f in pl_fact_rows if f.get("pl_id") not in denied_ids]
+            print(f"  deny list: dropped {len(denied_ids)} record(s): {', '.join(sorted(denied_ids))}")
+
     ext_summary = build_ext_summary(ext_claim_rows, pl_rows)
 
     # Map Linguist language name -> pl_id (via linguist_key on pl rows).
     linguist_to_pl_id = {p["linguist_key"]: p["pl_id"]
                          for p in pl_rows if p.get("linguist_key")}
     heuristic_rows = build_heuristic_rows(heuristics or {}, linguist_to_pl_id)
+    heuristic_rows = [h for h in heuristic_rows if h.get("predicts_pl_id") not in denied_ids]
 
     print(f"  pl:         {len(pl_rows):>6}")
     print(f"  pl_alias:   {len(alias_rows):>6}")

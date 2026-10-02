@@ -81,6 +81,17 @@ def generate_prefixes(n: int) -> list[str]:
     return chosen
 
 
+def _get_denied_names() -> list[str]:
+    """Names on the deny list (tools/denylist.py)."""
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    try:
+        import denylist
+        return denylist.get().names()
+    except Exception:
+        return []
+
+
 def _slugify(name: str) -> str:
     """Convert a language name to a short slug for commit trailers."""
     slug = re.sub(r'[^a-zA-Z0-9]+', '-', name).strip('-').lower()
@@ -331,6 +342,16 @@ def build_prompt(
             parts.append(WEB_SEARCH_INSTRUCTIONS.strip())
         else:
             parts.append(NO_WEB_SEARCH_INSTRUCTIONS.strip())
+
+    # Deny list (data/curated/deny_list.csv): languages whose maintainers opted
+    # out, or removed for legal reasons. The pre-commit check refuses them too.
+    denied = _get_denied_names()
+    if denied:
+        parts.append(
+            "DENY LIST — never add these languages (their maintainers opted out, or they were removed "
+            f"for legal reasons), whatever name or spelling: {', '.join(denied)}. "
+            'Check a candidate with: python3 tools/denylist.py check "LangName" --url <evidence_url>'
+        )
 
     # Add rejection list if any
     if rejected_languages:

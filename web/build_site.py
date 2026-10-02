@@ -6261,6 +6261,27 @@ def render_candidates_page(
     return len(rows)
 
 
+def drop_denied_languages(languages: list["Language"]) -> list["Language"]:
+    """Deny list (data/curated/deny_list.csv, docs/DENY_LIST.md): no page for a
+    language whose maintainers opted out — defensive: the campaign check and the
+    taxonomy build already keep it out of the data."""
+    sys.path.insert(0, str(ROOT / "tools"))
+    try:
+        import denylist
+        dl = denylist.get()
+    except Exception as e:
+        print(f"WARNING: deny list not loaded ({e}).")
+        return languages
+    if not dl:
+        return languages
+    kept = [l for l in languages
+            if not dl.match_language(l.name, l.aliases, [l.evidence_url],
+                                     f"repo/{Path(l.folder_rel).name}" if l.folder_rel else "")]
+    if len(kept) != len(languages):
+        print(f"Deny list: skipped {len(languages) - len(kept)} language page(s).")
+    return kept
+
+
 def load_canonical_to_pl_id() -> dict[str, str]:
     """Map lower(canonical_name) → pl_id from pl_taxonomy/pl.csv.
 
@@ -6633,6 +6654,7 @@ def build_site(*, out: Path, github_owner_repo: str | None) -> None:
         turns_by_language=turns_by_language,
         canonical_to_pl_id=canonical_to_pl_id,
     )
+    languages = drop_denied_languages(languages)
     counts = letter_counts(languages)
     programs_total = sum(len(l.programs) for l in languages)
     top_domains, top_licenses, top_exts = compute_top_domains_licenses_exts(languages)

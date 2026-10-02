@@ -1,6 +1,7 @@
 import os, json, argparse, re, csv
 from schema import Proposal
 from util import read_pl_list, code_hash, now_iso
+import denylist
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
 CATALOG = os.path.join(DATA_DIR, "catalog.csv")
@@ -27,8 +28,18 @@ def validate_proposal(p: dict, max_code_lines=200) -> Proposal:
 
 
 def check_membership(name: str) -> bool:
+    """True when `name` must not be added: already listed, or on the deny list."""
     existing = {n.lower() for n in read_pl_list(PL_LIST)}
-    return name.lower() in existing
+    return name.lower() in existing or bool(denylist.get().match_name(name))
+
+
+def check_deny_list() -> None:
+    """Refuse a commit that (re-)adds a language on the deny list
+    (data/curated/deny_list.csv, docs/DENY_LIST.md)."""
+    problems = denylist.scan()
+    if problems:
+        raise SystemExit("[validate] deny list violation — remove these and pick another language:\n  "
+                         + "\n  ".join(problems))
 
 
 def refresh_catalog():
@@ -50,5 +61,6 @@ if __name__ == "__main__":
     ap.add_argument("--refresh-catalog", action="store_true")
     args = ap.parse_args()
     if args.refresh_catalog:
+        check_deny_list()
         refresh_catalog()
         print("[validate] refreshed catalog.csv")

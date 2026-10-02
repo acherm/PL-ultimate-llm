@@ -26,6 +26,8 @@ digest = hashlib.sha256(content.encode()).hexdigest()[:8]
 ### Step 2: Choose a Language
 
 - Must **NOT** be in the existing list (case-insensitive check)
+- Must **NOT** be on the deny list `data/curated/deny_list.csv` (languages whose maintainers opted out):
+  `python3 tools/denylist.py check "<Name>" --url <evidence_url>` must exit 0
 - Must be a real programming language (not an IDE, framework, library, or tool)
 - Prefer lesser-known languages to increase collection diversity
 
@@ -169,7 +171,7 @@ For other languages, use the standard file extension for that language.
 
 ## Critical Rules
 
-1. **NEVER** propose a language already in `pl_list.txt`
+1. **NEVER** propose a language already in `pl_list.txt`, or one on the deny list (`data/curated/deny_list.csv`) — the pre-commit check refuses it
 2. **NEVER** invent a fake programming language
 3. **NEVER** fabricate evidence URLs or program origin URLs
 4. The `code_sha256` must match the actual SHA256 of the normalized code

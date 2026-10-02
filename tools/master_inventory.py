@@ -1283,8 +1283,24 @@ def compute_extension_inventory(master_rows: list[dict[str, Any]]) -> list[dict[
     )
 
 
+def _deny_list():
+    """tools/denylist.py — languages that must not reappear when sources are refreshed."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    try:
+        import denylist
+        return denylist.get()
+    except Exception:
+        return None
+
+
 def write_csv_rows(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
     ensure_dir(path.parent)
+    dl = _deny_list()
+    if dl:
+        kept = [r for r in rows if not dl.row_denied(r)]
+        if len(kept) != len(rows):
+            print(f"[deny-list] {path.name}: dropped {len(rows) - len(kept)} row(s)")
+        rows = kept
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()

@@ -208,6 +208,13 @@ def main() -> int:
     if _already_in_pl_list(name):
         print(f"ERROR: '{name}' already exists in pl_list.txt — refusing to duplicate.")
         return 2
+    sys.path.insert(0, str(ROOT / "tools"))
+    import denylist
+    denied = denylist.get().match_language(name, parsed.get("aliases") or [],
+                                           [parsed.get("evidence_url") or ""])
+    if denied:
+        print("ERROR: " + denylist.describe(denied))
+        return 2
 
     if args.dry_run:
         print("\n--- DRY RUN — exiting before file writes ---")

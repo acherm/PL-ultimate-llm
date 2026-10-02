@@ -358,6 +358,14 @@ def main() -> int:
     else:
         print("program: (none)")
 
+    sys.path.insert(0, str(ROOT / "tools"))
+    import denylist
+    denied = denylist.get().match_language(parsed.get("pl_name") or "", [], [parsed.get("reference_url") or ""],
+                                           parsed.get("pl_id") or "")
+    if denied:
+        print("ERROR: " + denylist.describe(denied))
+        return 2
+
     # Must do something — an empty submission would produce no diff.
     if not parsed["ext"] and not (prog and prog.get("code")):
         print("ERROR: submission has neither an extension nor a program. "

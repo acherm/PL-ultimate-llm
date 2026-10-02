@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+from collections import Counter
 import hashlib
 import json
 
@@ -79,15 +80,23 @@ def score(verbose=True) -> dict:
         if verbose:
             print(f"audit: 0/{len(q)} reviewed — nothing to score yet")
         return out
+    # Post-stratified weights: a stratum's files weigh N_h / n_h, with n_h the files
+    # *reviewed* in it with a usable label — not the planned sample size, since a
+    # partial audit covers the strata unevenly.
+    usable = [(d, r) for d, r in done if r.human().get("language") not in (None, "", "unsure")]
+    n_h = Counter(d["stratum"] for d, _ in usable)
+    w_h = {d["stratum"]: int(d["stratum_N"]) / n_h[d["stratum"]] for d, _ in usable}
+    out["strata"] = {h: {"N": int(next(d["stratum_N"] for d, _ in usable if d["stratum"] == h)),
+                         "reviewed": n_h[h], "weight": round(w_h[h], 3)} for h in n_h}
     for lab in LABS + ["judge_ind"]:
         xs, ws = [], []
-        for d, r in done:
+        for d, r in usable:
             y = r.lang(lab)
             h = r.human().get("language")
-            if y is None or not h or h == "unsure":
+            if y is None:
                 continue
             xs.append(int(coarse(y) == coarse(h)))
-            ws.append(float(d["weight"]))
+            ws.append(w_h[d["stratum"]])
         if xs:
             p, lo, hi, neff = S.weighted_prop(xs, ws)
             out["labellers"][lab] = {"n": len(xs), "accuracy": round(p, 4), "ci": [round(lo, 4), round(hi, 4)],

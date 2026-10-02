@@ -218,7 +218,10 @@ def _online_reviews(sha: str) -> list[dict]:
         except Exception:
             continue
         study, shown = rec.get("study") or {}, rec.get("shown") or {}
-        if study.get("id") != "m" or shown.get("via") != ONLINE_VIA or not study.get("human"):
+        # reviews from the review page, and corrections recorded at a reviewer's
+        # request (shown.via == "correction"); copies propagated from reviews_m/
+        # carry no `study` block and are skipped
+        if study.get("id") != "m" or not study.get("human"):
             continue
         out.append({"schema": "m-review/1", "subject": rec.get("subject"),
                     "reviewer": {"kind": "human", "id": (rec.get("reviewer") or {}).get("id")},

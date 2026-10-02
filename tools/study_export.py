@@ -86,6 +86,28 @@ def ext_claims() -> list[dict]:
         return list(csv.DictReader(f))
 
 
+CACHE = ROOT / ".cache" / "cobol"              # local SWH byte cache of the studies (not in git)
+SAMPLES = ROOT / "samples" / "pl"
+
+
+def content_bytes(study_id: str, sha: str) -> bytes | None:
+    """The bytes of a content, verified against its sha1_git, from wherever they are:
+    the local SWH cache, the files the review page serves
+    (`study_exports/<study>/review_files/`), or an existing sample. The last two are
+    in git, so exports and propagation also run where the cache is absent (the
+    review-ingest workflow). PL_NO_CACHE=1 skips the cache (to test that path)."""
+    import os
+    candidates = [] if os.environ.get("PL_NO_CACHE") else [CACHE / f"{sha}.bin"]
+    candidates.append(EXPORTS / study_id / "review_files" / sha)
+    candidates += [f for f in SAMPLES.glob(f"*/{sha}/*") if f.name != "metadata.json"]
+    for c in candidates:
+        if c.is_file():
+            data = c.read_bytes()
+            if git_blob_sha1(data) == sha:
+                return data
+    return None
+
+
 def git_blob_sha1(data: bytes) -> str:
     """sha1_git of a blob — lets an exporter prove the bytes are the SWH content."""
     return hashlib.sha1(b"blob %d\x00" % len(data) + data).hexdigest()

@@ -15,7 +15,6 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools import study_export as SE  # noqa: E402
-from tools.cobol.common import CACHE_DIR  # noqa: E402
 from tools.m.analysis import LABS, coarse  # noqa: E402
 from tools.m.data import STUDY, load  # noqa: E402
 
@@ -193,8 +192,8 @@ def pick_samples(recs, A):
                 continue
             if not human_ok and n_judge_only >= (3 if lab not in ("objective-c", "matlab") else 2):
                 continue
-            raw = (CACHE_DIR / f"{r.sha}.bin").read_bytes()
-            if SE.git_blob_sha1(raw) != r.sha:
+            raw = SE.content_bytes("m", r.sha)
+            if raw is None:
                 continue
             seen_origins.add(r.row.get("origin"))
             v = r.v("judge")
@@ -417,9 +416,7 @@ def main():
     samples = pick_samples(recs, A)
     tables = {"ext_evidence.csv": evidence_rows(A), "samples.csv": samples,
               "claims.csv": claim_rows(A, samples), "heuristic_eval.csv": heuristic_rows(recs, A)}
-    SE.write_review_items("m", review_spec(recs),
-                          raw=lambda sha: (CACHE_DIR / f"{sha}.bin").read_bytes()
-                          if (CACHE_DIR / f"{sha}.bin").exists() else None)
+    SE.write_review_items("m", review_spec(recs), raw=lambda sha: SE.content_bytes("m", sha))
     meta = {"title": "What is actually in the .m extension on Software Heritage?", "extensions": [EXT],
             "case_sensitive": True, "report": REPORT, "toolkit": "tools/m/",
             "population": {"contents": pop["unique_contents"], "repositories": pop["unique_origins"],

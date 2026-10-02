@@ -223,7 +223,8 @@ def ingest(issue: dict, *, dry_run: bool, approved_by: str) -> dict:
     reply = None
     if written or errors:
         reply = reveal(mod, answers, items, rid, written, skipped, errors)
-    return {"status": "ingested", "written": written, "skipped": skipped, "errors": errors, "reply": reply}
+    return {"status": "ingested", "written": written, "skipped": skipped, "errors": errors, "reply": reply,
+            "study": batch["study"]}
 
 
 def reveal(mod, answers: dict, items: dict, rid: str, written: int, skipped: int, errors: list[str]) -> str:
@@ -269,6 +270,7 @@ def main() -> int:
         return 0 if res["status"] != "invalid" else 1
 
     numbers = open_review_issues() if a.all else [a.issue]
+    touched: set[str] = set()                    # studies that received new reviews
     for n in numbers:
         issue = fetch_issue(n)
         if LABEL_SUBMIT not in issue["labels"] or LABEL_DONE in issue["labels"]:
@@ -284,6 +286,15 @@ def main() -> int:
             comment(n, res["reply"])
         if res["status"] == "ingested" and (res["written"] or res["skipped"]) and not res["errors"]:
             finish(n)
+        if res["written"] and res.get("study"):
+            touched.add(res["study"])
+    # The workflow then runs each touched study's export + propagation, so that
+    # newly human-confirmed files become samples on the site.
+    out = os.environ.get("GITHUB_OUTPUT")
+    if out:
+        with open(out, "a", encoding="utf-8") as f:
+            f.write(f"studies={' '.join(sorted(touched))}\n")
+    print(f"studies with new reviews: {' '.join(sorted(touched)) or '(none)'}")
     return 0
 
 

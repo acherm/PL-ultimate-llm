@@ -41,7 +41,6 @@ import reviewstore as RS  # noqa: E402
 from tools import study_export as SE  # noqa: E402
 
 SAMPLES = ROOT / "samples" / "pl"
-CACHE = ROOT / ".cache" / "cobol"          # shared SWH byte cache of the extension studies
 SWH = "https://archive.softwareheritage.org"
 
 
@@ -99,13 +98,9 @@ def slug(pl_id: str) -> str:
 
 # ---------------------------------------------------------------- apply: samples
 def materialise_sample(s: dict, pl_name: dict) -> Path | None:
-    raw_path = CACHE / f"{s['sha1_git']}.bin"
-    if not raw_path.exists():
-        print(f"      skip {s['sha1_git'][:10]}: bytes not in cache")
-        return None
-    raw = raw_path.read_bytes()
-    if SE.git_blob_sha1(raw) != s["sha1_git"]:
-        print(f"      skip {s['sha1_git'][:10]}: sha1_git mismatch")
+    raw = SE.content_bytes(s["study"], s["sha1_git"])      # cache, review files or existing sample
+    if raw is None:
+        print(f"      skip {s['sha1_git'][:10]}: bytes not available (or sha1_git mismatch)")
         return None
     d = SAMPLES / slug(s["pl_id"]) / s["sha1_git"]
     d.mkdir(parents=True, exist_ok=True)

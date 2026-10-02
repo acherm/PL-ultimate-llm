@@ -51,6 +51,7 @@ jobs:
           python-version: "3.12"
 
       - name: Ingest
+        id: ingest
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -61,15 +62,30 @@ jobs:
             python3 tools/ingest_reviews.py --issue ${{ github.event.issue.number }}
           fi
 
+      # Newly human-confirmed files become samples (tools/propagate_study.py).
+      # Runs without the local SWH byte cache: the bytes come from the files the
+      # review page serves (study_exports/<study>/review_files/) or existing
+      # samples, each checked against its sha1_git (tools/study_export.content_bytes).
+      - name: Propagate into the encyclopedia
+        if: steps.ingest.outputs.studies != ''
+        run: |
+          for s in ${{ steps.ingest.outputs.studies }}; do
+            python3 -m tools.$s.export
+            python3 tools/propagate_study.py --study $s --apply
+          done
+
       - name: Commit new reviews
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A reviews/ data/curated/reviewers.csv
+          # not data/derived/pl_taxonomy: the deploy rebuilds it, and some of its
+          # inputs are not in git, so a CI-built copy must not replace the committed one
+          git add -A reviews/ data/curated/reviewers.csv samples/pl data/derived/study_exports \
+            data/derived/study_label_proposals.csv
           if git diff --cached --quiet; then
             echo "No new reviews."
           else
-            git commit -m "reviews: ingest from the review page${{ github.event.issue.number && format(' (issue #{0})', github.event.issue.number) || '' }}"
+            git commit -m "reviews: ingest from the review page${{ github.event.issue.number && format(' (issue #{0})', github.event.issue.number) || '' }} + propagate samples"
             git pull --rebase origin swh-evidence-v1
             git push origin HEAD:swh-evidence-v1
             echo "pushed=1" >> "$GITHUB_OUTPUT"

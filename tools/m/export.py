@@ -187,7 +187,9 @@ def pick_samples(recs, A):
     for lab, cands in by_lab.items():
         seen_origins, n_judge_only = set(), 0
         for *_k, r, human_ok in sorted(cands, key=lambda c: c[:4]):
-            if r.row.get("origin") in seen_origins:
+            # distinct repositories and the cap shape the judge-only picks; a file a
+            # human confirmed is always kept, even next to another from its repository
+            if not human_ok and r.row.get("origin") in seen_origins:
                 continue
             if not human_ok and n_judge_only >= (3 if lab not in ("objective-c", "matlab") else 2):
                 continue

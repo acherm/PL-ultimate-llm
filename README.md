@@ -14,6 +14,16 @@ This is a minimal scaffold for an infinite loop where, at each turn, a randomly 
 > yet, but the prototype is documented in detail so the design can be
 > reviewed / criticised / refined.
 
+> **The LLM-collected example programs are an experiment.** The goal is a
+> complete list of programming languages grounded in sources (PLDB, Wikipedia,
+> Rosetta Code, …) together with real programs archived by Software Heritage.
+> The programs gathered by LLM agents in `languages/*/programs/` are not
+> verified — an audit of the ArkScript entries (PR #36) found one invented
+> (attributed to a file that does not exist, in a syntax ArkScript does not
+> have) and one altered while copying — and may be dropped. The site labels
+> them "experimental · unverified". Languages whose maintainers opt out are on
+> the deny list (`docs/DENY_LIST.md`).
+
 What landed beyond the original LLM-curation scope:
 
 | Piece | Where | What it does |

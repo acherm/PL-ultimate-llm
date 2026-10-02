@@ -1795,13 +1795,13 @@ def render_home_page(
     <div class="stats">
       <div class="stat"><div class="num">{len(languages):,}</div><div class="muted">PL pages</div></div>
       <div class="stat"><div class="num">{n_in_repo:,}</div><div class="muted">in-repo (LLM-curated)</div></div>
-      <div class="stat"><div class="num">{programs_total:,}</div><div class="muted">LLM programs</div></div>
+      <div class="stat" title="Collected by LLM agents during the experiment; not verified"><div class="num">{programs_total:,}</div><div class="muted">LLM-collected programs<br/>(experimental)</div></div>
       <div class="stat" title="Progress KPI — grows as manual labelling lands new (PL, ext) edges in ext_claim.csv"><div class="num">{n_pls_with_ext:,} <span style="font-size:60%; color:var(--muted);">({pct_pls_with_ext:.1f}%)</span></div><div class="muted">PLs with ≥1 ext claim<br/>(of {n_pls_in_taxonomy:,} in taxonomy)</div></div>
       <div class="stat"><div class="num">{n_with_swh:,}</div><div class="muted">PLs with SWH samples</div></div>
       <div class="stat"><div class="num">{n_swh_samples:,}</div><div class="muted">SWH samples</div></div>
       <div class="stat"><div class="num">{generated_at.split('T')[0]}</div><div class="muted">last build (UTC)</div></div>
     </div>
-    <p class="muted" style="margin:12px 0 0;">Indexed languages are cross-referenced from <code>languages/**/meta.json</code> (LLM-curated) and seven upstream sources (PLDB, Linguist, Pygments, Wikipedia, Esolang, Hyperpolyglot, Rosetta Code). Each PL page shows which sources mention it, what extensions it claims, and real archived programs from Software Heritage. See <a href="{rel}stats/index.html">Stats</a> for coverage and <a href="{rel}ext/index.html">Extensions catalog</a> for per-extension claimants &amp; heuristics.</p>
+    <p class="muted" style="margin:12px 0 0;">Indexed languages are cross-referenced from <code>languages/**/meta.json</code> (LLM-curated) and seven upstream sources (PLDB, Linguist, Pygments, Wikipedia, Esolang, Hyperpolyglot, Rosetta Code). Each PL page shows which sources mention it, what extensions it claims, and real archived programs from Software Heritage. The example programs gathered by LLM agents are an <strong>experiment</strong> and are not verified (some were found altered or invented); the goal is a complete list of programming languages grounded in sources, with programs archived by Software Heritage. See <a href="{rel}stats/index.html">Stats</a> for coverage and <a href="{rel}ext/index.html">Extensions catalog</a> for per-extension claimants &amp; heuristics.</p>
     """
 
     body = f"""
@@ -5929,12 +5929,7 @@ def render_language_pages(
         {ext_claims_html}
         {related_html}
         {no_programs_html}
-        {(
-            '<section class="panel section">'
-            '<h2 style="margin:0 0 10px;">LLM-contributed programs</h2>'
-            + "".join(llm_programs_html) +
-            '</section>'
-        ) if llm_programs_html else ''}
+        {swh_samples_html}
         {(
             '<section class="panel section">'
             '<h2 style="margin:0 0 10px;">Community-contributed programs</h2>'
@@ -5945,7 +5940,22 @@ def render_language_pages(
             + "".join(community_programs_html) +
             '</section>'
         ) if community_programs_html else ''}
-        {swh_samples_html}
+        {(
+            '<section class="panel section">'
+            '<h2 style="margin:0 0 6px;">Programs collected by LLM agents '
+            '<span class="pill" title="part of the PL-ultimate-llm experiment; not verified">experimental · unverified</span></h2>'
+            '<div class="muted" style="margin-bottom:8px; font-size:13px;">'
+            'Gathered by LLM agents during the experiment that started this catalogue. '
+            'They are <strong>not verified</strong>: the agent names an origin, but a program can be '
+            'altered or invented — an audit found one attributed to a file that does not exist, in a '
+            'syntax the language does not have. '
+            + ('Prefer the programs archived by Software Heritage above. ' if swh_samples_html else '')
+            + 'The catalogue\'s goal is the languages themselves, grounded in sources (PLDB, '
+            'Wikipedia, Rosetta Code, …), with real archived programs; these examples may be dropped.'
+            '</div>'
+            + "".join(llm_programs_html) +
+            '</section>'
+        ) if llm_programs_html else ''}
         {heuristics_html}
         {contribute_html}
         {pager}

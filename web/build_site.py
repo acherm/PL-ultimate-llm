@@ -2052,9 +2052,17 @@ _REVIEW_PAGE_JS = r"""
     return spec.reviewers[l] ? [spec.reviewers[l]] : [slug(l), 'gh-' + slug(l)];
   }
   const doneByMe = (it) => myIds().some((id) => it.reviewed_by.includes(id));
-  // A file a reviewer sent is reviewed once the bot has ingested it.
-  for (const sha of Object.keys(st.sent)) if (bySha[sha] && doneByMe(bySha[sha])) delete st.sent[sha];
-  saveState();
+  // A submitted review is done once the bot has ingested it: recognised by the
+  // moment it was saved here (stored with the record), or by the reviewer's id.
+  function reconcile() {
+    let changed = false;
+    for (const sha of Object.keys(st.sent)) {
+      const it = bySha[sha], saved = (st.sent[sha] || {}).saved_at;
+      if (it && (((it.ingested || []).includes(saved)) || doneByMe(it))) { delete st.sent[sha]; changed = true; }
+    }
+    if (changed) saveState();
+  }
+  reconcile();
 
   function seedOf() {
     if (!st.login) return st.seed;
@@ -2241,7 +2249,7 @@ _REVIEW_PAGE_JS = r"""
   }
 
   function refresh(reshow = true) {
-    renderProgress(); renderBatch();
+    reconcile(); renderProgress(); renderBatch();
     if (reshow && (!current || doneByMe(current))) next(null);
   }
   renderSetup(); refresh(false); next(null);
@@ -2271,14 +2279,21 @@ def render_study_review_pages(*, dist_root: Path, generated_at: str, github_owne
         spec = json.loads(spec_path.read_text(encoding="utf-8"))
         for it in spec.get("items", []):
             ids = set(it.get("reviewed_by") or [])
+            ingested = set()
             for f in (REVIEWS_DIR / it["sha1_git"]).glob("*.json") if (REVIEWS_DIR / it["sha1_git"]).is_dir() else []:
                 try:
                     rec = json.loads(f.read_text(encoding="utf-8"))
                 except Exception:
                     continue
-                if (rec.get("study") or {}).get("id") == sid and (rec.get("shown") or {}).get("via") == "review-page":
+                shown = rec.get("shown") or {}
+                if (rec.get("study") or {}).get("id") == sid and shown.get("via") == "review-page":
                     ids.add((rec.get("reviewer") or {}).get("id"))
+                    if shown.get("saved_at"):
+                        ingested.add(shown["saved_at"])
             it["reviewed_by"] = sorted(i for i in ids if i)
+            # When each ingested review was saved in the reviewer's browser: lets the
+            # page clear its "awaiting the bot" list without knowing who the viewer is.
+            it["ingested"] = sorted(ingested)
         spec["reviewers"] = login_to_id
         spec["generated_at"] = generated_at
         out_dir = dist_root / "review" / "study" / sid

@@ -1,0 +1,95 @@
+name: Synid benchmark
+
+# Builds SWH Synid (default: its `main`) and scores it on benchmarks/synid/
+# against the latest stored baseline (README.md there). Weekly and on demand;
+# also on pushes that touch the benchmark (to test it). A regression on a gold
+# case fails the run and, for scheduled/manual runs, opens an issue.
+#
+# `schedule` runs from the default branch (main): this file must be there too;
+# it checks out swh-evidence-v1, where the benchmark lives.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"          # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      synid_ref:
+        description: "Synid branch, tag or commit"
+        default: "main"
+  push:
+    branches: [swh-evidence-v1]
+    paths: ["benchmarks/synid/**", ".github/workflows/synid_bench.yml"]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: swh-evidence-v1
+          sparse-checkout: |
+            benchmarks/synid
+          fetch-depth: 1
+
+      - name: Fetch Synid
+        run: |
+          git clone --filter=blob:none https://gitlab.softwareheritage.org/teams/codecommons/swh-syntax-identification synid
+          git -C synid checkout -q "${{ github.event.inputs.synid_ref || 'main' }}"
+          echo "SYNID_COMMIT=$(git -C synid rev-parse --short HEAD)" >> "$GITHUB_ENV"
+          git -C synid log -1 --format='Synid %h %ad %s' --date=short
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            synid/target
+          key: synid-${{ runner.os }}-${{ hashFiles('synid/Cargo.lock') }}
+          restore-keys: synid-${{ runner.os }}-
+
+      - name: Build Synid
+        run: cargo build --release --bin synid --manifest-path synid/Cargo.toml
+
+      - name: Run the benchmark
+        run: python3 benchmarks/synid/run.py --synid synid/target/release/synid --label "ci-${SYNID_COMMIT}"
+
+      - name: Score against the latest baseline
+        id: score
+        run: |
+          base=$(python3 -c "
+          import json, pathlib
+          runs = [(json.loads(p.read_text().splitlines()[0])['meta'].get('date', ''), p)
+                  for p in pathlib.Path('benchmarks/synid/baselines').glob('*.jsonl')]
+          print(max(runs)[1])")
+          echo "baseline: $base"
+          set +e
+          python3 benchmarks/synid/score.py "benchmarks/synid/results/ci-${SYNID_COMMIT}.jsonl" \
+            --baseline "$base" --report "benchmarks/synid/results/ci-${SYNID_COMMIT}.md" --fail-on gold
+          status=$?
+          cat "benchmarks/synid/results/ci-${SYNID_COMMIT}.md" >> "$GITHUB_STEP_SUMMARY"
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: synid-bench-${{ env.SYNID_COMMIT }}
+          path: benchmarks/synid/results/
+
+      - name: Report a regression
+        if: steps.score.outputs.status != '0' && github.event_name != 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create --repo "${{ github.repository }}" \
+            --title "Synid benchmark: regression at Synid ${SYNID_COMMIT}" \
+            --body-file "benchmarks/synid/results/ci-${SYNID_COMMIT}.md"
+
+      - name: Fail on regression
+        if: steps.score.outputs.status != '0'
+        run: exit 1

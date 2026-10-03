@@ -319,6 +319,16 @@ def mediawiki_api_get(api_bases: list[str] | str, params: dict[str, str]) -> dic
     raise RuntimeError(f"MediaWiki API request failed: {last_error}") from last_error
 
 
+def load_source_renames(source: str) -> dict[str, tuple[str, str]]:
+    """data/curated/source_renames.csv: a source's new name → (record id, canonical name to keep)."""
+    path = ROOT / "data" / "curated" / "source_renames.csv"
+    if not path.exists():
+        return {}
+    with path.open(encoding="utf-8") as f:
+        rows = csv.DictReader(line for line in f if not line.startswith("#"))
+        return {r["name"]: (r["lang_id"], r["canonical"]) for r in rows if r["source"] == source}
+
+
 def fetch_linguist_yaml(*, offline: bool) -> Path:
     ensure_dir(RAW_DIR)
     out = RAW_DIR / "linguist_languages.yml"
@@ -1387,20 +1397,25 @@ def build_inventory(args: argparse.Namespace) -> None:
     rows: list[dict[str, Any]] = []
     alias_records: list[dict[str, str]] = []
 
+    renames = load_source_renames("linguist")
     linguist = yaml.safe_load(linguist_path.read_text(encoding="utf-8"))
     for name, meta in sorted(linguist.items(), key=lambda item: normalize_key(item[0])):
-        rows.append(
-            base_row(
-                name=name,
-                source_flags="linguist",
-                evidence_url=LINGUIST_URL,
-                extensions=" ".join(meta.get("extensions") or []),
-                linguist_key=name,
-            )
+        row = base_row(
+            name=name,
+            source_flags="linguist",
+            evidence_url=LINGUIST_URL,
+            extensions=" ".join(meta.get("extensions") or []),
+            linguist_key=name,
         )
+        lang_id = make_id(name)
+        if name in renames:  # a renamed language keeps its record
+            lang_id, row["canonical_name"] = renames[name]
+            row["lang_id"] = lang_id
+            alias_records.append({"alias": name, "lang_id": lang_id, "source": "linguist"})
+        rows.append(row)
         for alias in meta.get("aliases") or []:
             alias_records.append(
-                {"alias": str(alias).strip(), "lang_id": make_id(name), "source": "linguist"}
+                {"alias": str(alias).strip(), "lang_id": lang_id, "source": "linguist"}
             )
 
     wikipedia_titles = json.loads(wikipedia_path.read_text(encoding="utf-8"))
